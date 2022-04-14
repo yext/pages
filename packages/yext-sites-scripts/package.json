@@ -1,0 +1,71 @@
+{
+  "name": "@yext/yext-sites-scripts",
+  "version": "0.0.12",
+  "description": "The default React development toolchain provided by Yext",
+  "keywords": [
+    "Yext",
+    "React"
+  ],
+  "author": "Yext",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "engines": {
+    "node": ">=16.14.0"
+  },
+  "scripts": {
+    "dev": "node --loader=ts-node/esm --experimental-specifier-resolution=node entry-server.ts",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "release": "npm-run-all release:* --parallel release:compile:*",
+    "release:clean": "rm -rf dist && mkdir dist",
+    "release:copy": "cp 404.html dist/ && sed -e '/\"private\"/d' package.json > dist/package.json",
+    "release:compile:esm": "npx tsc && node bundler.js",
+    "prepare": "npm run release",
+    "prepublishOnly": "npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A",
+    "postversion": "git push && git push --tags",
+    "format": "prettier --write \"yext-sites-scripts/**/*.ts\" \"yext-sites-scripts/**/*.tsx\" \"server.ts\"",
+    "lint": "eslint .",
+    "devbuild": "npm run release:clean && node bundler.js"
+  },
+  "bin": {
+    "yss": "dist/bin/yext-sites-scripts.js"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "dependencies": {
+    "@yext/vite-plugin-yext-sites-ssg": "mancusi/ssg-plugin#5ba89bcb3beb449088b474c543f3e4560621b445",
+    "cli-spinners": "^2.6.1",
+    "commander": "^9.1.0",
+    "cross-fetch": "^3.1.5",
+    "esm-module-paths": "^1.1.1",
+    "express": "^4.17.3",
+    "ink": "^3.2.0",
+    "react-dom": "^17.0.2",
+    "shelljs": "^0.8.5",
+    "typescript": "^4.6.2"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.1.18",
+    "@types/express": "^4.17.13",
+    "@types/react": "^17.0.40",
+    "@types/react-dom": "^17.0.10",
+    "@types/shelljs": "^0.8.11",
+    "@types/ws": "^8.5.3",
+    "@typescript-eslint/eslint-plugin": "^5.17.0",
+    "@typescript-eslint/parser": "^5.17.0",
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-react": "^7.29.4",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.6.1"
+  },
+  "peerDependencies": {
+    "@vitejs/plugin-react": "^1.2.0",
+    "react": "^17.0.2",
+    "vite": "^2.9.3"
+  }
+}

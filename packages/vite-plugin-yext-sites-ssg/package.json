@@ -1,0 +1,41 @@
+{
+  "name": "@yext/vite-plugin-yext-sites-ssg",
+  "author": "Yext",
+  "version": "0.0.2",
+  "private": true,
+  "description": "A vite plugin which provides automatic bundling of JS templates and an accompanying deno function used for static site generation in Yext Sites.",
+  "main": "dist/esm/plugin.js",
+  "type": "module",
+  "types": "dist/types/plugin.d.ts",
+  "engines": {
+    "node": ">=17"
+  },
+  "scripts": {
+    "build": "node src/bundler.js",
+    "types": "npx tsc",
+    "release": "npm run build && npm run types",
+    "fmt": "npx prettier -w src"
+  },
+  "prepublish": "npm run release",
+  "keywords": [
+    "rollup-plugin",
+    "vite-plugin"
+  ],
+  "dependencies": {
+    "chalk": "^5.0.0",
+    "fs-extra": "^10.0.1",
+    "glob": "^7.2.0",
+    "handlebars": "^4.7.7",
+    "ora": "^6.1.0",
+    "pretty-ms": "^7.0.1",
+    "rollup": "^0.54.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.21",
+    "@types/ws": "^8.5.3",
+    "esbuild": "^0.14.25",
+    "prettier": "^2.5.1",
+    "typescript": "^4.6.2",
+    "vite": "^2.8.6"
+  }
+}

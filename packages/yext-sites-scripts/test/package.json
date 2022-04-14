@@ -1,0 +1,32 @@
+{
+  "name": "yext-sites-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npx yss dev",
+    "build": "npx yss build",
+    "directbuild": "node --experimental-specifier-resolution=node node_modules/.bin/yss build",
+    "preview": "npx yss preview",
+    "format": "prettier --write \"src/**/*.tsx\" \"entry.js\"",
+    "lint": "eslint .",
+    "clean": "rm -rf .artifact-output .yext/ dist/ localData sites-rendered-output"
+  },
+  "engines": {
+    "node": ">=17"
+  },
+  "dependencies": {
+    "react": "../node_modules/react",
+    "react-dom": "../node_modules/react-dom",
+    "typescript": "^4.6.2",
+    "@yext/yext-sites-scripts": "file:.."
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.40",
+    "@types/react-dom": "^17.0.10",
+    "autoprefixer": "^10.4.4",
+    "postcss": "^8.4.12",
+    "prettier": "^2.6.1",
+    "tailwindcss": "^3.0.23"
+  }
+}
