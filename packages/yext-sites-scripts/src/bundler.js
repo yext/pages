@@ -3,12 +3,13 @@ import glob from "glob";
 
 const builds = []
 
-const files = glob.sync("./{scripts,yext-sites-scripts,bin}/**/*\\.*");
+const files = glob.sync("./src/**/*\\.*").filter(f => f !== "./src/bundler.js");
+console.log(files);
 
 const commonBuildOpts = {
   bundle: false,
   minify: false,
-  entryPoints: files.concat("server.ts", "index.ts", "entry-server.ts"),
+  entryPoints: files,
   loader: { ".ts": "ts" },
   tsconfig: "tsconfig.json",
   logLevel: "error",
@@ -19,7 +20,10 @@ const commonBuildOpts = {
 try {
   builds.push(esbuild.build({
     ...commonBuildOpts,
-    outdir: "dist/",
+    outdir: "dist",
+    outbase: "src",
     format: "esm",
   }));
-} catch (e) { console.error(e); }
+} catch (e) {
+  console.error(e);
+}
