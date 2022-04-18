@@ -1,5 +1,5 @@
 # Yext Sites Scripts
-
+ 
 An out-of-the-box toolchain integrated with Yext Sites. 
 
 There are 2 npm packages which live in this repository. 
