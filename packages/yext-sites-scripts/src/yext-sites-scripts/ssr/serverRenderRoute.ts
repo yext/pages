@@ -19,12 +19,16 @@ export const serverRenderRoute =
   ({ vite, dynamicGenerateData }: Props): RequestHandler =>
     async (req, res, next) => {
       const url = req.originalUrl;
-      try {
 
       const { feature, entityId } = urlToFeature(url);
 
       let templateFilename = null;
-      templateFilename = await featureToTemplate(vite, feature);
+      try {
+        templateFilename = await featureToTemplate(vite, feature);
+      } catch (e: any) {
+        console.error(e);
+        return res.status(500).end(await vite.transformIndexHtml(url, page500));
+      }
 
       if (!templateFilename) {
         return res.status(404).end(page404);
@@ -33,6 +37,7 @@ export const serverRenderRoute =
       const templateConfig = await getTemplateConfig(vite, templateFilename);
       const featureConfig = buildFeatureConfig(templateConfig);
 
+      try {
         const { template, Page, App, props } = await pageLoader({
           url,
           vite,
@@ -70,7 +75,6 @@ export const serverRenderRoute =
         // If an error is caught, let vite fix the stracktrace so it maps back to
         // your actual source code.
         vite.ssrFixStacktrace(e);
-        console.error(e);
-        return res.status(500).end(await vite.transformIndexHtml(url, page500));
+        next(e);
       }
     };
