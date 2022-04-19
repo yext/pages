@@ -6,6 +6,7 @@ export default async () => {
   await build({
     // root: path.resolve(__dirname, './project'),
     // base: '/foo/',
+    // @ts-ignore
     plugins: [react(), yextSSG()],
   });
 };
