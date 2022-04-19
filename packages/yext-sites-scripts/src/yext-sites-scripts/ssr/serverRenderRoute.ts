@@ -25,7 +25,7 @@ export const serverRenderRoute =
       try {
         templateFilename = await featureToTemplate(vite, feature);
       } catch (e: any) {
-        console.log(e);
+        console.error(e);
         return res.status(500).end(await vite.transformIndexHtml(url, fs.readFileSync('node_modules/@yext/yext-sites-scripts/dist/500.html').toString()));
       }
 
