@@ -20,10 +20,19 @@ export const serverRenderRoute =
       const url = req.originalUrl;
 
       const { feature, entityId } = urlToFeature(url);
-      const templateFilename = await featureToTemplate(vite, feature);
+
+      let templateFilename = null;
+      try {
+        templateFilename = await featureToTemplate(vite, feature);
+      } catch (e: any) {
+        console.error(e);
+        return res.status(500).end(await vite.transformIndexHtml(url, fs.readFileSync('node_modules/@yext/yext-sites-scripts/dist/500.html').toString()));
+      }
+
       if (!templateFilename) {
         return res.status(404).end(fs.readFileSync('node_modules/@yext/yext-sites-scripts/dist/404.html').toString());
       }
+    
       const templateConfig = await getTemplateConfig(vite, templateFilename);
       const featureConfig = buildFeatureConfig(templateConfig);
 
