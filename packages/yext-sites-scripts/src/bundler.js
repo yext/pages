@@ -4,7 +4,6 @@ import glob from "glob";
 const builds = []
 
 const files = glob.sync("./src/**/*\\.*").filter(f => f !== "./src/bundler.js");
-console.log(files);
 
 const commonBuildOpts = {
   bundle: false,
