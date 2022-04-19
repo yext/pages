@@ -19,7 +19,7 @@
     "preview": "vite preview",
     "release": "npm-run-all release:* --parallel release:compile:*",
     "release:clean": "rm -rf dist && mkdir dist",
-    "release:copy": "cp 404.html 500.html dist/ && sed -e '/\"private\"/d' package.json > dist/package.json",
+    "release:copy": "sed -e '/\"private\"/d' package.json > dist/package.json",
     "release:compile:esm": "npx tsc && node src/bundler.js",
     "prepare": "npm run release",
     "prepublishOnly": "npm run lint",
@@ -28,7 +28,7 @@
     "postversion": "git push && git push --tags",
     "format": "prettier --write \"yext-sites-scripts/**/*.ts\" \"yext-sites-scripts/**/*.tsx\" \"server.ts\"",
     "lint": "eslint .",
-    "devbuild": "npm run release:clean && npm run release:copy && node src/bundler.js"
+    "devbuild": "npm run release:clean && node src/bundler.js"
   },
   "bin": {
     "yss": "dist/bin/yext-sites-scripts.js"
