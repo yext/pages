@@ -20,6 +20,7 @@
     "noEmit": false,
     "jsx": "react-jsx",
     "outDir": "./dist",
+    "rootDir": "./src",
     "declaration": true,
     "emitDeclarationOnly": true,
     "types": [
@@ -27,15 +28,10 @@
     ],
   },
   "include": [
-    "yextssg.d.ts",
-    "yext-sites-scripts",
-    "index.ts",
-    "server.ts",
-    "entry-server.ts",
-    "bin",
-    "scripts"
+    "src",
   ],
   "exclude": [
+    "src/bundler.js",
     "node_modules"
   ]
 }
