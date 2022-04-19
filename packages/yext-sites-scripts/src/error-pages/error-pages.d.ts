@@ -1,6 +1,6 @@
 /**
  * ESBuild is configured to load html files as text modules. We declare custom modules so that tsc
- * doesn't error when we content from these modules.
+ * doesn't error when we import content from these modules.
  */
 
 
