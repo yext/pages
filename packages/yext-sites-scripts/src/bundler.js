@@ -9,7 +9,10 @@ const commonBuildOpts = {
   bundle: false,
   minify: false,
   entryPoints: files,
-  loader: { ".ts": "ts" },
+  loader: {
+    ".ts": "ts",
+    ".html": "text"
+  },
   tsconfig: "tsconfig.json",
   logLevel: "error",
   platform: "node",

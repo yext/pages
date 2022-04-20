@@ -7,7 +7,8 @@ import { ViteDevServer } from 'vite';
 import { featureToTemplate } from './featureToTemplate.js';
 import { pageLoader } from './pageLoader.js';
 import { urlToFeature } from './urlToFeature.js';
-import fs from 'fs';
+import page404 from '../../error-pages/404';
+import page500 from '../../error-pages/500';
 
 type Props = {
   vite: ViteDevServer;
@@ -26,13 +27,13 @@ export const serverRenderRoute =
         templateFilename = await featureToTemplate(vite, feature);
       } catch (e: any) {
         console.error(e);
-        return res.status(500).end(await vite.transformIndexHtml(url, fs.readFileSync('node_modules/@yext/yext-sites-scripts/dist/500.html').toString()));
+        return res.status(500).end(await vite.transformIndexHtml(url, page500));
       }
 
       if (!templateFilename) {
-        return res.status(404).end(fs.readFileSync('node_modules/@yext/yext-sites-scripts/dist/404.html').toString());
+        return res.status(404).end(page404);
       }
-    
+
       const templateConfig = await getTemplateConfig(vite, templateFilename);
       const featureConfig = buildFeatureConfig(templateConfig);
 
