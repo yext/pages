@@ -9,7 +9,9 @@
   "author": "Yext",
   "type": "module",
   "types": "dist/index.d.ts",
-  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/yext-sites-scripts/clientHydrate.js"
+  },
   "engines": {
     "node": ">=16.14.0"
   },
