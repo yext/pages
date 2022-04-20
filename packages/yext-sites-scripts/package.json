@@ -8,9 +8,8 @@
   ],
   "author": "Yext",
   "type": "module",
-  "types": "dist/index.d.ts",
   "exports": {
-    ".": "./dist/yext-sites-scripts/clientHydrate.js"
+    "./clientHydrate": "./dist/yext-sites-scripts/clientHydrate.js"
   },
   "engines": {
     "node": ">=16.14.0"

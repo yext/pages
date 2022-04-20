@@ -1,5 +1,5 @@
 import { createElement } from "react";
-import { hydrate } from '@yext/yext-sites-scripts';
+import { hydrate } from '@yext/yext-sites-scripts/clientHydrate';
 
 export const App = ({ page }) => {
   return createElement(page?.component, page?.props);
