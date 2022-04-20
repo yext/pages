@@ -53,6 +53,7 @@ type TemplateModule = {
   };
   getPath: (data: any) => string;
   render: (data: any) => string;
+  getStaticProps: () => any;
 };
 
 /**
@@ -80,6 +81,14 @@ export const generateResponses = async (
   const validModule = featureToValidTemplateModule.get(feature);
   if (!validModule) {
     throw new Error(`could not find module for feature ${feature}`);
+  }
+
+  if (validModule.getStaticProps) {
+    const staticProps = await validModule.getStaticProps();
+    data = {
+      ...data,
+      ...staticProps,
+    }
   }
 
   return {
