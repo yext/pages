@@ -5,6 +5,7 @@ import { Paths } from "../paths.js";
 import logger from "../log.js";
 import { generateManifestFile } from "./manifest.js";
 import { loadTemplateModules, TemplateModuleCollection } from "./moduleLoader.js";
+import { pluginCopy } from "./pluginCopy.js";
 
 export default (paths: Paths) => {
   return async () => {
@@ -32,6 +33,16 @@ export default (paths: Paths) => {
       finisher.succeed(`Successfully wrote ${paths.featureJsonDir}`);
     } catch (e) {
       finisher.fail(`Failed to write ${paths.featureJsonDir}`);
+      console.error(e);
+      return;
+    }
+
+    finisher = logger.timedLog({ startLog: `Copying Yext plugin files` });
+    try {
+      pluginCopy(paths);
+      finisher.succeed(`Successfully copied Yext plugin files`);
+    } catch (e) {
+      finisher.fail(`Failed to copy Yext plugin files`);
       console.error(e);
       return;
     }

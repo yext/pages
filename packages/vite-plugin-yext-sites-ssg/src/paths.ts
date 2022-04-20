@@ -1,17 +1,14 @@
 import * as path from "path";
 
-const fileUrl = new URL("http://www.example.com");
-const __dirname = path.dirname(fileUrl.pathname);
-
 /**
  * Creates an absolute filepath by evaluating a path relative to the YextJS executable.
  * @param relativePath: A file path relative to the root of the site repo.
  */
 const resolvePath = (relativePath: string): string => {
-  return path.resolve(__dirname, path.relative(__dirname, relativePath));
+  return path.resolve(relativePath);
 };
 
-// Path Defaults
+// Starter Path Defaults
 const templatePath = "./src/templates";
 const yextPath = "./.yext";
 const hydrationOut = `${yextPath}/hydration_templates`;
