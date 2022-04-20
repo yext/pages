@@ -1,5 +1,5 @@
 import esbuild from "esbuild";
-import { copyFile, mkdirSync,rmSync } from "fs";
+import { copyFile, mkdirSync, rmSync } from "fs";
 import glob from "glob";
 import path from "path";
 
