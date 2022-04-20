@@ -3,7 +3,6 @@ import { TEMPLATE_PATH } from './constants.js';
 import fs from 'fs';
 import path from 'path';
 import { ViteDevServer } from 'vite';
-import { __dirname } from 'esm-module-paths';
 import { generateTestData } from './generateTestData.js';
 
 type Props = {
@@ -38,15 +37,12 @@ export const pageLoader = async ({
   //    from @vitejs/plugin-react-refresh
   template = await vite.transformIndexHtml(url, template);
 
-  // Get the entry file's directory relative to the current file's directory
-  const entryDir = __dirname().replace(/\/[^/]+$/, '');
-
   // 3. Load the server entry. vite.ssrLoadModule automatically transforms
   //    your ESM source code to be usable in Node.js! There is no bundling
   //    required, and provides efficient invalidation similar to HMR.
   const [{ default: Page, getStaticProps }, { App }] = await Promise.all([
     vite.ssrLoadModule(`/${TEMPLATE_PATH}/${templateFilename}`),
-    vite.ssrLoadModule(`${entryDir}/entry`),
+    vite.ssrLoadModule(`/entry`),
   ]);
 
   let dataDoc;
