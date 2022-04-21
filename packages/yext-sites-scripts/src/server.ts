@@ -5,6 +5,7 @@ import { getServerSideProps } from './yext-sites-scripts/ssr/getServerSideProps.
 import react from '@vitejs/plugin-react';
 import escapeHtml from 'escape-html';
 import page500 from './error-pages/500'
+import Convert from 'ansi-to-html';
 
 export const createServer = async (dynamicGenerateData: boolean) => {
   // creates a standard express app
@@ -64,8 +65,10 @@ const errorMiddleware = (vite : ViteDevServer): ErrorRequestHandler =>
         ? String(errorString).split('\n').slice(1)
         : [errorString];
 
+      const ansiToHtmlConverter = new Convert({fg: "#000", bg: "#FFF"});
+
       const escapedStackTrace = stackTrace
-        .map((unescapedLine) => '<li>' + escapeHtmlBlock(unescapedLine) + '</li>')
+        .map((unescapedLine) => '<li>' + ansiToHtmlConverter.toHtml(escapeHtmlBlock(unescapedLine)) + '</li>')
         .join('');
 
       const htmlResponseString = page500

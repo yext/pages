@@ -38,6 +38,7 @@
   ],
   "dependencies": {
     "@yext/vite-plugin-yext-sites-ssg": "mancusi/ssg-plugin#5ba89bcb3beb449088b474c543f3e4560621b445",
+    "ansi-to-html": "^0.7.2",
     "cli-spinners": "^2.6.1",
     "commander": "^9.1.0",
     "cross-fetch": "^3.1.5",
