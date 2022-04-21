@@ -12,9 +12,10 @@
   },
   "scripts": {
     "build": "node src/bundler.js",
-    "types": "npx tsc",
-    "release": "npm run build && npm run types",
-    "fmt": "npx prettier -w src"
+    "watch": "node src/bundler.js --watch",
+    "types": "tsc",
+    "fmt": "prettier -w src",
+    "release": "npm run build && npm run types"
   },
   "prepublish": "npm run release",
   "keywords": [

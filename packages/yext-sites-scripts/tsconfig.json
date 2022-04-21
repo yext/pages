@@ -19,8 +19,7 @@
     "isolatedModules": true,
     "noEmit": false,
     "jsx": "react-jsx",
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "outDir": "./dist/types",
     "declaration": true,
     "emitDeclarationOnly": true,
     "types": [
