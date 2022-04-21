@@ -1,14 +1,13 @@
-import { buildFeatureConfig } from "./buildFeatureConfig.js";
-import { getTemplateConfig } from "./getTemplateConfig.js";
-import { RequestHandler } from "express-serve-static-core";
-import React from "react";
-import ReactDOMServer from "react-dom/server.js";
-import { ViteDevServer } from "vite";
-import { featureToTemplate } from "./featureToTemplate.js";
-import { pageLoader } from "./pageLoader.js";
-import { urlToFeature } from "./urlToFeature.js";
-import page404 from "../../error-pages/404";
-import page500 from "../../error-pages/500";
+import { buildFeatureConfig } from './buildFeatureConfig.js';
+import { getTemplateConfig } from './getTemplateConfig.js';
+import { RequestHandler } from 'express-serve-static-core';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server.js';
+import { ViteDevServer } from 'vite';
+import { featureToTemplate } from './featureToTemplate.js';
+import { pageLoader } from './pageLoader.js';
+import { urlToFeature } from './urlToFeature.js';
+import page404 from '../../error-pages/404';
 
 type Props = {
   vite: ViteDevServer;
@@ -17,35 +16,28 @@ type Props = {
 
 export const serverRenderRoute =
   ({ vite, dynamicGenerateData }: Props): RequestHandler =>
-  async (req, res, next) => {
-    const url = req.originalUrl;
+    async (req, res, next) => {
+      try {
+        const url = req.originalUrl;
 
-    const { feature, entityId } = urlToFeature(url);
+        const { feature, entityId } = urlToFeature(url);
 
-    let templateFilename = null;
-    try {
-      templateFilename = await featureToTemplate(vite, feature);
-    } catch (e: any) {
-      console.error(e);
-      return res.status(500).end(await vite.transformIndexHtml(url, page500));
-    }
+        const templateFilename = await featureToTemplate(vite, feature);
+        if (!templateFilename) {
+          return res.status(404).end(page404);
+        }
 
-    if (!templateFilename) {
-      return res.status(404).end(page404);
-    }
+        const templateConfig = await getTemplateConfig(vite, templateFilename);
+        const featureConfig = buildFeatureConfig(templateConfig);
 
-    const templateConfig = await getTemplateConfig(vite, templateFilename);
-    const featureConfig = buildFeatureConfig(templateConfig);
-
-    try {
-      const { template, Page, App, props } = await pageLoader({
-        url,
-        vite,
-        templateFilename,
-        entityId,
-        featureConfig,
-        dynamicGenerateData,
-      });
+        const { template, Page, App, props } = await pageLoader({
+          url,
+          vite,
+          templateFilename,
+          entityId,
+          featureConfig,
+          dynamicGenerateData,
+        });
 
       // render the component to its html
       // Since we are on the server using plain TS, and outside
@@ -69,12 +61,11 @@ export const serverRenderRoute =
           </script></head>`
       );
 
-      // Send the rendered HTML back.
-      res.status(200).set({ "Content-Type": "text/html" }).end(html);
-    } catch (e: any) {
-      // If an error is caught, let vite fix the stracktrace so it maps back to
-      // your actual source code.
-      vite.ssrFixStacktrace(e);
-      next(e);
-    }
-  };
+        // Send the rendered HTML back.
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+      } catch (e: any) {
+        // If an error is caught, calling next with the error will invoke
+        // our error handling middleware which will then handle it.
+        next(e);
+      }
+    };
