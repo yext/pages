@@ -64,9 +64,6 @@ export const serverRenderRoute =
         // Send the rendered HTML back.
         res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
       } catch (e: any) {
-        // If an error is caught, let vite fix the stracktrace so it maps back to
-        // your actual source code.
-        vite.ssrFixStacktrace(e);
         next(e);
       }
     };

@@ -1,9 +1,8 @@
 import express, { ErrorRequestHandler } from 'express';
-import { createServer as createViteServer } from 'vite';
+import { createServer as createViteServer, ViteDevServer } from 'vite';
 import { serverRenderRoute } from './yext-sites-scripts/ssr/serverRenderRoute.js';
 import { getServerSideProps } from './yext-sites-scripts/ssr/getServerSideProps.js';
 import react from '@vitejs/plugin-react';
-import { ViteDevServer } from 'vite';
 import escapeHtml from 'escape-html';
 import page500 from './error-pages/500'
 
@@ -48,6 +47,10 @@ function ignoreFavicon(req: any, res: any, next: any) {
 const errorMiddleware = (vite : ViteDevServer): ErrorRequestHandler =>
   async (err, req, res, next) => {
     try {
+      // If an error is caught, let vite fix the stracktrace so it maps back to
+      // your actual source code.
+      vite.ssrFixStacktrace(err);
+
       console.error(err.toString());
 
       const errorString = err.stack ? String(err.stack) : err.toString();
