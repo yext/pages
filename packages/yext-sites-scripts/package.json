@@ -14,9 +14,6 @@
     "node": ">=16.14.0"
   },
   "scripts": {
-    "dev": "node --loader=ts-node/esm --experimental-specifier-resolution=node entry-server.ts",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
     "release": "npm-run-all release:* --parallel release:compile:*",
     "release:clean": "rm -rf dist && mkdir dist",
     "release:copy": "sed -e '/\"private\"/d' package.json > dist/package.json",
