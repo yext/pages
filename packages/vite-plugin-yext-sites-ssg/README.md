@@ -6,6 +6,7 @@ on template modules, and provides a Yext plugin used to generate html pages from
 for a particular feature.
 
 ## Development
+
 Yext Sites Scripts has a number of scripts to assist with development. Since this package is
 typically used as a dependency
 
@@ -19,6 +20,7 @@ dependency to `file:path/to/this/package/`.
 ```
 npm run build
 ```
+
 This command uses esbuild to transpile assets and puts them into `dist`. Since this package's `bin`
 specifies an entry-point in the `dist` directory you'll need to run this command whenever you make
 changes in source so that they're picked up in any test repositories you're working on.
@@ -26,15 +28,18 @@ changes in source so that they're picked up in any test repositories you're work
 ```
 npm run watch
 ```
+
 This command does the same this as `build` except it does it in watchmode anytime a source file is
 updated the build will be automatically re-run.
 
 ```
 npm run types
 ```
+
 This command runs `tsc` to generate type declaration files and outputs them in `dist/types`.
 
 ```
 npm run fmt
 ```
+
 This command runs prettier for standardized formatting across all files.

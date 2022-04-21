@@ -2,12 +2,12 @@ import esbuild from "esbuild";
 import glob from "glob";
 import { rmSync } from "fs";
 
-let watch = false
-const args = process.argv.slice(2)
+let watch = false;
+const args = process.argv.slice(2);
 if (args.length > 0) {
   if (args[0] === "--watch") {
     console.log("Starting watch build. Listening for changes...");
-    watch = true
+    watch = true;
   }
 }
 
@@ -16,7 +16,9 @@ if (args.length > 0) {
  */
 rmSync("./dist", { recursive: true, force: true });
 
-const files = glob.sync("./src/**/*\\.*").filter(f => f !== "./src/bundler.js");
+const files = glob
+  .sync("./src/**/*\\.*")
+  .filter((f) => f !== "./src/bundler.js");
 
 const commonBuildOpts = {
   bundle: false,
@@ -24,7 +26,7 @@ const commonBuildOpts = {
   entryPoints: files,
   loader: {
     ".ts": "ts",
-    ".html": "text"
+    ".html": "text",
   },
   tsconfig: "tsconfig.json",
   logLevel: "error",
@@ -32,14 +34,14 @@ const commonBuildOpts = {
   watch: watch && {
     onRebuild(error) {
       if (error) {
-        console.error('watch build failed:', error)
+        console.error("watch build failed:", error);
         return;
       }
 
-      console.log('Watch build succeeded. Listening for changes...')
+      console.log("Watch build succeeded. Listening for changes...");
     },
   },
-}
+};
 
 // CJS
 try {

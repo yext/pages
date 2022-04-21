@@ -9,11 +9,11 @@ export default async (folderToCreate: string | null) => {
     const files = await fs.promises.readdir(".");
     if (files.length) {
       process.stdout.write(
-        "Refusing to generate project: Directory not empty.\n",
+        "Refusing to generate project: Directory not empty.\n"
       );
       process.exit(1);
     }
   }
 
   runGenerate();
-}
+};

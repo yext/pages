@@ -13,10 +13,6 @@
     "declaration": true,
     "emitDeclarationOnly": true
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "plugin"
-  ]
+  "include": ["src"],
+  "exclude": ["plugin"]
 }

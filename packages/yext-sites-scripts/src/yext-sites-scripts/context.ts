@@ -1,5 +1,5 @@
-import { createContext, useContext } from 'react';
-import { Page } from './ssr/types.js';
+import { createContext, useContext } from "react";
+import { Page } from "./ssr/types.js";
 
 type Route = {
   name: string;
@@ -8,12 +8,12 @@ type Route = {
 };
 
 // Can't use string interpolation here so src/templates is hardcoded
-const templates = import.meta.glob('/src/templates/*.(jsx|tsx)');
+const templates = import.meta.glob("/src/templates/*.(jsx|tsx)");
 
 export const routes: Route[] = Object.keys(templates).map((path) => {
   return {
     // get the filename from the path and remove its extension, default to index
-    name: path.split('/').pop()?.split('.')[0] || 'index',
+    name: path.split("/").pop()?.split(".")[0] || "index",
     path,
     getComponent: templates[path],
   };
@@ -24,7 +24,9 @@ type ReactSitesScriptsContextType = {
   setActivePage: (page: Page) => void;
 };
 
-export const ReactSitesContext = createContext<ReactSitesScriptsContextType>({} as any);
+export const ReactSitesContext = createContext<ReactSitesScriptsContextType>(
+  {} as any
+);
 
 const getServerData = async (to: any) => {
   const res = await fetch(`/data/${to}`);
@@ -42,7 +44,7 @@ export const useReactSitesScripts = () => {
       ]);
 
       setActivePage({ path: to, component, props });
-      history.pushState(null, '', to);
+      history.pushState(null, "", to);
     },
   };
 };

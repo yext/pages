@@ -3,13 +3,12 @@
  * doesn't error when we import content from these modules.
  */
 
-
-declare module '*error-pages/500' {
+declare module "*error-pages/500" {
   const value: string;
   export default value;
 }
 
-declare module '*error-pages/404' {
+declare module "*error-pages/404" {
   const value: string;
   export default value;
 }

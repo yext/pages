@@ -1,3 +1,3 @@
-import shell from 'shelljs';
+import shell from "shelljs";
 
 export default () => shell.exec("vite preview");
