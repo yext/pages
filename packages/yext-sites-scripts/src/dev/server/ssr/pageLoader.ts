@@ -66,7 +66,7 @@ export const pageLoader = async ({
     dataDoc = {
       ...dataDoc,
       ...staticProps,
-    }
+    };
   }
 
   const props = { data: { document: { streamOutput: dataDoc } }, __meta: { mode: 'development' } };

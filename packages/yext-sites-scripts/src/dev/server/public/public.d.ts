@@ -3,7 +3,6 @@
  * doesn't error when we import content from these modules.
  */
 
-
 declare module '*public/500' {
   const value: string;
   export default value;
