@@ -8,7 +8,6 @@ import { featureToTemplate } from './featureToTemplate.js';
 import { pageLoader } from './pageLoader.js';
 import { urlToFeature } from './urlToFeature.js';
 import page404 from '../../error-pages/404';
-import page500 from '../../error-pages/500';
 
 type Props = {
   vite: ViteDevServer;
@@ -18,26 +17,19 @@ type Props = {
 export const serverRenderRoute =
   ({ vite, dynamicGenerateData }: Props): RequestHandler =>
     async (req, res, next) => {
-      const url = req.originalUrl;
-
-      const { feature, entityId } = urlToFeature(url);
-
-      let templateFilename = null;
       try {
-        templateFilename = await featureToTemplate(vite, feature);
-      } catch (e: any) {
-        console.error(e);
-        return res.status(500).end(await vite.transformIndexHtml(url, page500));
-      }
+        const url = req.originalUrl;
 
-      if (!templateFilename) {
-        return res.status(404).end(page404);
-      }
+        const { feature, entityId } = urlToFeature(url);
 
-      const templateConfig = await getTemplateConfig(vite, templateFilename);
-      const featureConfig = buildFeatureConfig(templateConfig);
+        const templateFilename = await featureToTemplate(vite, feature);
+        if (!templateFilename) {
+          return res.status(404).end(page404);
+        }
 
-      try {
+        const templateConfig = await getTemplateConfig(vite, templateFilename);
+        const featureConfig = buildFeatureConfig(templateConfig);
+
         const { template, Page, App, props } = await pageLoader({
           url,
           vite,
@@ -72,9 +64,8 @@ export const serverRenderRoute =
         // Send the rendered HTML back.
         res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
       } catch (e: any) {
-        // If an error is caught, let vite fix the stracktrace so it maps back to
-        // your actual source code.
-        vite.ssrFixStacktrace(e);
+        // If an error is caught, calling next with the error will invoke
+        // our error handling middleware which will then handle it.
         next(e);
       }
     };
