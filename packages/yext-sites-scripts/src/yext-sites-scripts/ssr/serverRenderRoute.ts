@@ -64,6 +64,8 @@ export const serverRenderRoute =
         // Send the rendered HTML back.
         res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
       } catch (e: any) {
+        // If an error is caught, calling next with the error will invoke
+        // our error handling middleware which will then handle it.
         next(e);
       }
     };
