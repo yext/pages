@@ -4,6 +4,13 @@ import Convert from 'ansi-to-html';
 import escapeHtml from 'escape-html';
 import page500 from '../public/500'
 
+const STACK_HTML_TAG = "{stack}";
+const TITLE_HTML_TAG = "{title}";
+const STATUS_CODE_HTML_TAG = "{statusCode}";
+const ERROR_HTML_TAG = /\{error\}/g;
+const DOUBLE_SPACE_REGEXP = "/\x20{2}/g";
+const NEW_LINE_REGEXP = "/\n/g";
+
 export const errorMiddleware = (vite : ViteDevServer): ErrorRequestHandler =>
   async (err, req, res, next) => {
     try {
@@ -31,10 +38,10 @@ export const errorMiddleware = (vite : ViteDevServer): ErrorRequestHandler =>
         .join('');
 
       const htmlResponseString = page500
-        .replace("{stack}", escapedStackTrace)
-        .replace("{title}", "Error 500")
-        .replace("{statusCode}", "500")
-        .replace(/\{error\}/g, topLevelError);
+        .replace(STACK_HTML_TAG, escapedStackTrace)
+        .replace(TITLE_HTML_TAG, "Error 500")
+        .replace(STATUS_CODE_HTML_TAG, "500")
+        .replace(ERROR_HTML_TAG, topLevelError);
 
       res.status(500).end(await vite.transformIndexHtml(req.originalUrl, htmlResponseString));
     } catch (e: any) {
@@ -44,8 +51,7 @@ export const errorMiddleware = (vite : ViteDevServer): ErrorRequestHandler =>
 };
 
 const escapeHtmlBlock = (inputString: string): string => {
-  const DOUBLE_SPACE_REGEXP = "/\x20{2}/g";
-  const NEW_LINE_REGEXP = "/\n/g";
-
-  return escapeHtml(inputString).replace(DOUBLE_SPACE_REGEXP, ' &nbsp;').replace(NEW_LINE_REGEXP, '<br>');
+  return escapeHtml(inputString)
+    .replace(DOUBLE_SPACE_REGEXP, ' &nbsp;')
+    .replace(NEW_LINE_REGEXP, '<br>');
 }
