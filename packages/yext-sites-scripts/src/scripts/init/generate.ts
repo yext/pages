@@ -5,9 +5,13 @@ export interface GenerationInfo {
 
 export async function generate(info: GenerationInfo) {
   info.startStep("Copying files");
-  const gitCloneExitCode = await info.runCommand("git clone https://github.com/mkilpatrick/yext-sites-starter.git .");
+  const gitCloneExitCode = await info.runCommand(
+    "git clone https://github.com/mkilpatrick/yext-sites-starter.git ."
+  );
   if (gitCloneExitCode) {
-    throw new Error("git clone returned a non-zero exit code " + gitCloneExitCode);
+    throw new Error(
+      "git clone returned a non-zero exit code " + gitCloneExitCode
+    );
   }
 
   info.startStep("Installing dependencies (this may take a while)");

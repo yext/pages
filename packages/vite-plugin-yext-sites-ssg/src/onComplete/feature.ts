@@ -43,10 +43,7 @@ export const createFeatureJson = async (
   }
 
   const featuresJson = mergeFeatureJson(featurePath, features, streams);
-  fs.writeFileSync(
-    featurePath,
-    JSON.stringify(featuresJson, null, "  ")
-  );
+  fs.writeFileSync(featurePath, JSON.stringify(featuresJson, null, "  "));
   return featureNameToBundlePath;
 };
 
@@ -67,7 +64,7 @@ const mergeFeatureJson = (
   return {
     ...originalFeaturesJson,
     features,
-    streams
+    streams,
   };
 };
 

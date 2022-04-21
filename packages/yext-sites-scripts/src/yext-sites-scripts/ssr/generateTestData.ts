@@ -1,48 +1,55 @@
-import { spawn } from 'child_process';
+import { spawn } from "child_process";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const generateTestData = async (featureConfig: any, entityId: string): Promise<any> => {
+export const generateTestData = async (
+  featureConfig: any,
+  entityId: string
+): Promise<any> => {
   return new Promise((resolve) => {
     const generateTestDataExec = spawn(
-      'yext',
+      "yext",
       [
-        'sites',
-        'generate-test-data',
-        '--featureName',
+        "sites",
+        "generate-test-data",
+        "--featureName",
         `'${featureConfig?.features[0]?.name}'`,
-        '--entityId',
+        "--entityId",
         entityId,
-        '--featuresConfig',
+        "--featuresConfig",
         `'${JSON.stringify(featureConfig)}'`,
-        '--locale',
-        'en',
-        '--printDocuments',
+        "--locale",
+        "en",
+        "--printDocuments",
       ],
       {
-        stdio: ['pipe', 'pipe', 'pipe'],
+        stdio: ["pipe", "pipe", "pipe"],
         shell: true,
-      },
+      }
     );
 
-    let testData = '';
+    let testData = "";
 
-    generateTestDataExec.stdout.setEncoding('utf8');
-    generateTestDataExec.stdout.on('data', (chunk) => {
-      if (chunk.startsWith('{')) {
+    generateTestDataExec.stdout.setEncoding("utf8");
+    generateTestDataExec.stdout.on("data", (chunk) => {
+      if (chunk.startsWith("{")) {
         testData += chunk;
-      } else if (chunk.includes('This is a beta version of the Yext Command Line Interface')) {
+      } else if (
+        chunk.includes(
+          "This is a beta version of the Yext Command Line Interface"
+        )
+      ) {
         return;
       } else {
         process.stdout.write(chunk);
       }
     });
 
-    generateTestDataExec.stderr.setEncoding('utf8');
-    generateTestDataExec.stderr.on('data', (chunk) => {
+    generateTestDataExec.stderr.setEncoding("utf8");
+    generateTestDataExec.stderr.on("data", (chunk) => {
       process.stderr.write(chunk);
     });
 
-    generateTestDataExec.on('close', () => {
+    generateTestDataExec.on("close", () => {
       if (testData) {
         testData = JSON.parse(testData.trim());
       }

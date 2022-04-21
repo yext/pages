@@ -7,7 +7,7 @@ const pathToModule = new Map();
  */
 export const readTemplateModules = async (
   feature: string,
-  manifest: Manifest,
+  manifest: Manifest
 ): Promise<TemplateModule[]> => {
   const modules = [] as TemplateModule[];
   const path = manifest.bundlePaths[feature];
@@ -42,9 +42,9 @@ export type Document = {
 };
 
 type Data = {
-  document: Document,
-  __meta: any,
-}
+  document: Document;
+  __meta: any;
+};
 
 type TemplateModule = {
   config: {
@@ -66,7 +66,7 @@ export const generateResponses = async (
   modules: TemplateModule[],
   data: Data
 ): Promise<GeneratedPage> => {
-  const {document} = data;
+  const { document } = data;
   const featureToValidTemplateModule = new Map<string, TemplateModule>();
   for (const mod of modules) {
     const { config, getPath, render } = mod;
@@ -88,7 +88,7 @@ export const generateResponses = async (
     data = {
       ...data,
       ...staticProps,
-    }
+    };
   }
 
   return {
