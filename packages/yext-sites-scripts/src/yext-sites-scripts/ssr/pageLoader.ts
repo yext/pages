@@ -62,11 +62,7 @@ export const pageLoader = async ({
   }
 
   if (getStaticProps) {
-    const staticProps = await getStaticProps(dataDoc);
-    dataDoc = {
-      ...dataDoc,
-      ...staticProps,
-    };
+    dataDoc = await getStaticProps(dataDoc);
   }
 
   const props = { data: { document: { streamOutput: dataDoc } }, __meta: { mode: 'development' } };

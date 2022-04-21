@@ -9,11 +9,11 @@ export const getPath = (data: any) => {
   return `static/${Math.random().toString()}`;
 };
 
-export const getStaticProps = (document: any) => async () => {
+export const getStaticProps = async (document: any): Promise<any> => {
   const url = `https://pokeapi.co/api/v2/pokemon/1`;
   const pokemon = await fetch(url).then((res) => res.json());
 
-  return pokemon;
+  return { ...document, ...pokemon };
 };
 
 const Static = ({ data }: { data: any }) => {

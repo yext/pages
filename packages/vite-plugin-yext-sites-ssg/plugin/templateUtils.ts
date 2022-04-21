@@ -53,7 +53,7 @@ type TemplateModule = {
   };
   getPath: (data: any) => string;
   render: (data: any) => string;
-  getStaticProps: () => any;
+  getStaticProps: (document: any) => Promise<any>;
 };
 
 /**
@@ -84,11 +84,7 @@ export const generateResponses = async (
   }
 
   if (validModule.getStaticProps) {
-    const staticProps = await validModule.getStaticProps();
-    data = {
-      ...data,
-      ...staticProps,
-    }
+    data.document = await validModule.getStaticProps(document);
   }
 
   return {
