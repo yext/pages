@@ -1,11 +1,11 @@
-import express, { ErrorRequestHandler } from 'express';
-import { createServer as createViteServer, ViteDevServer } from 'vite';
-import { serverRenderRoute } from './yext-sites-scripts/ssr/serverRenderRoute.js';
-import { getServerSideProps } from './yext-sites-scripts/ssr/getServerSideProps.js';
-import react from '@vitejs/plugin-react';
-import escapeHtml from 'escape-html';
-import page500 from './error-pages/500'
-import Convert from 'ansi-to-html';
+import express, { ErrorRequestHandler } from "express";
+import { createServer as createViteServer, ViteDevServer } from "vite";
+import { serverRenderRoute } from "./yext-sites-scripts/ssr/serverRenderRoute.js";
+import { getServerSideProps } from "./yext-sites-scripts/ssr/getServerSideProps.js";
+import react from "@vitejs/plugin-react";
+import escapeHtml from "escape-html";
+import page500 from "./error-pages/500";
+import Convert from "ansi-to-html";
 
 export const createServer = async (dynamicGenerateData: boolean) => {
   // creates a standard express app
@@ -45,7 +45,8 @@ function ignoreFavicon(req: any, res: any, next: any) {
   next();
 }
 
-const errorMiddleware = (vite : ViteDevServer): ErrorRequestHandler =>
+const errorMiddleware =
+  (vite: ViteDevServer): ErrorRequestHandler =>
   async (err, req, res, next) => {
     try {
       // If an error is caught, let vite fix the stracktrace so it maps back to
@@ -57,19 +58,24 @@ const errorMiddleware = (vite : ViteDevServer): ErrorRequestHandler =>
       const errorString = err.stack ? String(err.stack) : err.toString();
       const canInspect = !err.stack && String(err) === toString.call(err);
 
-      const topLevelError = !canInspect 
-        ? escapeHtmlBlock(errorString.split('\n', 1)[0] || 'Error') 
-        : 'Error';
+      const topLevelError = !canInspect
+        ? escapeHtmlBlock(errorString.split("\n", 1)[0] || "Error")
+        : "Error";
 
       const stackTrace = !canInspect
-        ? String(errorString).split('\n').slice(1)
+        ? String(errorString).split("\n").slice(1)
         : [errorString];
 
-      const ansiToHtmlConverter = new Convert({fg: "#000", bg: "#FFF"});
+      const ansiToHtmlConverter = new Convert({ fg: "#000", bg: "#FFF" });
 
       const escapedStackTrace = stackTrace
-        .map((unescapedLine) => '<li>' + ansiToHtmlConverter.toHtml(escapeHtmlBlock(unescapedLine)) + '</li>')
-        .join('');
+        .map(
+          (unescapedLine) =>
+            "<li>" +
+            ansiToHtmlConverter.toHtml(escapeHtmlBlock(unescapedLine)) +
+            "</li>"
+        )
+        .join("");
 
       const htmlResponseString = page500
         .replace("{stack}", escapedStackTrace)
@@ -77,16 +83,22 @@ const errorMiddleware = (vite : ViteDevServer): ErrorRequestHandler =>
         .replace("{statusCode}", "500")
         .replace(/\{error\}/g, topLevelError);
 
-      res.status(500).end(await vite.transformIndexHtml(req.originalUrl, htmlResponseString));
+      res
+        .status(500)
+        .end(
+          await vite.transformIndexHtml(req.originalUrl, htmlResponseString)
+        );
     } catch (e: any) {
       console.error(e);
       next(e);
     }
-};
+  };
 
 const escapeHtmlBlock = (inputString: string): string => {
   const DOUBLE_SPACE_REGEXP = "/\x20{2}/g";
   const NEW_LINE_REGEXP = "/\n/g";
 
-  return escapeHtml(inputString).replace(DOUBLE_SPACE_REGEXP, ' &nbsp;').replace(NEW_LINE_REGEXP, '<br>');
-}
+  return escapeHtml(inputString)
+    .replace(DOUBLE_SPACE_REGEXP, " &nbsp;")
+    .replace(NEW_LINE_REGEXP, "<br>");
+};
