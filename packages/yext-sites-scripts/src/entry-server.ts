@@ -1,4 +1,4 @@
-import { createServer } from "./server.js";
+import { createServer } from "./dev/server/server.js";
 
 const [, , ...args] = process.argv;
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env node --experimental-specifier-resolution=node
-import init from "../scripts/init.js"
-import build from "../scripts/build.js";
-import dev from "../scripts/dev.js";
-import preview from "../scripts/preview.js";
+import init from "../init/init.js"
+import build from "../build/build.js";
+import dev from "../dev/dev.js";
+import preview from "../preview/preview.js";
 
 const [, , ...args] = process.argv;
 
