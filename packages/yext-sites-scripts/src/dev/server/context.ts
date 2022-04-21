@@ -1,6 +1,11 @@
 import { createContext, useContext } from "react";
 import { Page } from "./ssr/types.js";
 
+/**
+ * TODO (SUMO-4392) - document.
+ *
+ * @public
+ */
 type Route = {
   name: string;
   path: string;
@@ -10,6 +15,11 @@ type Route = {
 // Can't use string interpolation here so src/templates is hardcoded
 const templates = import.meta.glob("/src/templates/*.(jsx|tsx)");
 
+/**
+ * TODO (SUMO-4392) - document.
+ *
+ * @public
+ */
 export const routes: Route[] = Object.keys(templates).map((path) => {
   return {
     // get the filename from the path and remove its extension, default to index
@@ -24,6 +34,11 @@ type ReactSitesScriptsContextType = {
   setActivePage: (page: Page) => void;
 };
 
+/**
+ * TODO (SUMO-4392) - document.
+ *
+ * @public
+ */
 export const ReactSitesContext = createContext<ReactSitesScriptsContextType>(
   {} as any
 );
@@ -33,6 +48,11 @@ const getServerData = async (to: any) => {
   return await res.json();
 };
 
+/**
+ * TODO (SUMO-4392) - document.
+ *
+ * @public
+ */
 export const useReactSitesScripts = () => {
   const { setActivePage } = useContext(ReactSitesContext);
 
