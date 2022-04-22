@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState } from "react";
 import fetch from "cross-fetch";
 
 export const config = {
-  name: 'static',
+  name: "static",
 };
 
 export const getPath = (data: any) => {
@@ -11,8 +11,7 @@ export const getPath = (data: any) => {
 
 export const getStaticProps: any = async () => {
   const url = `https://pokeapi.co/api/v2/pokemon/1`;
-  const pokemon = await fetch(url)
-    .then(res => res.json());
+  const pokemon = await fetch(url).then((res) => res.json());
 
   return pokemon;
 };

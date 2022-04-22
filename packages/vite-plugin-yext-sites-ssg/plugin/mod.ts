@@ -5,9 +5,7 @@ import {
   Document,
 } from "./templateUtils.ts";
 
-import {
-  loadManifest,
-} from "./manifest.ts"
+import { loadManifest } from "./manifest.ts";
 
 /**
  * The functionality below will need to be transformed into an exported function to adhere
@@ -25,4 +23,3 @@ export const Generate = async (data: Document): Promise<GeneratedPage> => {
 
   return responses;
 };
-

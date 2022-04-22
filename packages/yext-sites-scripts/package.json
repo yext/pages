@@ -7,31 +7,23 @@
     "React"
   ],
   "author": "Yext",
+  "private": "true",
   "type": "module",
-  "types": "dist/index.d.ts",
-  "main": "./dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "main": "./dist/src/index.js",
   "engines": {
     "node": ">=16.14.0"
   },
   "scripts": {
-    "dev": "node --loader=ts-node/esm --experimental-specifier-resolution=node entry-server.ts",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "release": "npm-run-all release:* --parallel release:compile:*",
-    "release:clean": "rm -rf dist && mkdir dist",
-    "release:copy": "sed -e '/\"private\"/d' package.json > dist/package.json",
-    "release:compile:esm": "npx tsc && node src/bundler.js",
-    "prepare": "npm run release",
-    "prepublishOnly": "npm run lint",
-    "preversion": "npm run lint",
-    "version": "npm run format && git add -A",
-    "postversion": "git push && git push --tags",
-    "format": "prettier --write \"yext-sites-scripts/**/*.ts\" \"yext-sites-scripts/**/*.tsx\" \"server.ts\"",
-    "lint": "eslint .",
-    "devbuild": "npm run release:clean && node src/bundler.js"
+    "watch": "node src/bundler --watch",
+    "build": "node src/bundler.js",
+    "types": "tsc",
+    "fmt": "prettier -w .",
+    "release": "npm run build && npm run types",
+    "lint": "eslint ."
   },
   "bin": {
-    "yss": "dist/bin/yext-sites-scripts.js"
+    "yss": "dist/src/bin/yext-sites-scripts.js"
   },
   "files": [
     "dist/**/*"
@@ -64,8 +56,7 @@
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.29.4",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^2.6.1"
+    "npm-run-all": "^4.1.5"
   },
   "peerDependencies": {
     "@vitejs/plugin-react": "^1.2.0",

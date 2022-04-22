@@ -5,19 +5,12 @@ export const config = {
   hydrate: true,
   streamId: "products",
   stream: {
-    "$id": "products",
-    "source": "knowledgeGraph",
-    "destination": "pages",
-    "fields": [
-      "name",
-      "meta",
-      "id",
-      "uid"
-    ],
-    "filter": {
-      "entityTypes": [
-        "location"
-      ]
+    $id: "products",
+    source: "knowledgeGraph",
+    destination: "pages",
+    fields: ["name", "meta", "id", "uid"],
+    filter: {
+      entityTypes: ["location"],
     },
   },
 };
@@ -37,13 +30,11 @@ const Test = ({ data }: { data: any }) => {
 
   return (
     <>
-      <div>
-        Hello from {name} wooo
-      </div>
+      <div>Hello from {name} wooo</div>
       <button onClick={() => setNum(num + 1)}>Click me</button>
       Num: {num}
     </>
   );
 };
 
-export default Test; 
+export default Test;

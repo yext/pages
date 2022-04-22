@@ -191,10 +191,7 @@
       }
     }
   ],
-  "services": [
-    "Clothing",
-    "Tailoring"
-  ],
+  "services": ["Clothing", "Tailoring"],
   "siteAttributes": {},
   "siteId": 0,
   "slug": "loc6-chelsea",

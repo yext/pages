@@ -1,9 +1,24 @@
 import esbuild from "esbuild";
 import glob from "glob";
+import { rmSync } from "fs";
 
-const builds = []
+let watch = false;
+const args = process.argv.slice(2);
+if (args.length > 0) {
+  if (args[0] === "--watch") {
+    console.log("Starting watch build. Listening for changes...");
+    watch = true;
+  }
+}
 
-const files = glob.sync("./src/**/*\\.*").filter(f => f !== "./src/bundler.js");
+/**
+ * rm -f dist/ to have a clean build.
+ */
+rmSync("./dist", { recursive: true, force: true });
+
+const files = glob
+  .sync("./src/**/*\\.*")
+  .filter((f) => f !== "./src/bundler.js");
 
 const commonBuildOpts = {
   bundle: false,
@@ -11,21 +26,31 @@ const commonBuildOpts = {
   entryPoints: files,
   loader: {
     ".ts": "ts",
-    ".html": "text"
+    ".html": "text",
   },
   tsconfig: "tsconfig.json",
   logLevel: "error",
   platform: "node",
-}
+  watch: watch && {
+    onRebuild(error) {
+      if (error) {
+        console.error("watch build failed:", error);
+        return;
+      }
+
+      console.log("Watch build succeeded. Listening for changes...");
+    },
+  },
+};
 
 // CJS
 try {
-  builds.push(esbuild.build({
+  esbuild.build({
     ...commonBuildOpts,
     outdir: "dist",
-    outbase: "src",
+    outbase: ".",
     format: "esm",
-  }));
+  });
 } catch (e) {
   console.error(e);
 }
