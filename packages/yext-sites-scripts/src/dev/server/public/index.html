@@ -1,16 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
 
-  <body>
-    <div id="root">
-      <!--app-html-->
-    </div>
-    <script type="module" src="/entry.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite App</title>
+</head>
+
+<body>
+  <div id="root">
+    <!--app-html-->
+  </div>
+  <script type="module">
+    import ReactDOM from "react-dom";
+    import React, { createElement } from "react";
+    const App = ({ page }) => {
+      return createElement(page?.component, page?.props);
+    };
+    const hydrate = async () => {
+      const templates = import.meta.glob("/src/templates/*.(jsx|tsx)");
+      const routes = Object.keys(templates).map((path) => {
+        return {
+          name: path.split("/").pop()?.split(".")[0] || "index",
+          path,
+          getComponent: templates[path]
+        };
+      });
+      const templateFilename = window._RSS_TEMPLATE_?.split(".")[0];
+      const { default: component } = await routes.find((route) => route.name === templateFilename)?.getComponent() || {};
+      ReactDOM.hydrate(/* @__PURE__ */ React.createElement(App, {
+        page: {
+          props: window._RSS_PROPS_,
+          path: window.location.pathname,
+          component
+        }
+      }), document.getElementById("root"));
+    };
+    if (!import.meta.env.SSR)
+      hydrate();
+    export {
+      App
+    };
+  </script>
+</body>
+
 </html>
