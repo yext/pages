@@ -1,5 +1,5 @@
 import fs from "fs";
-import { runGenerate } from "./init/interface.js";
+import { runGenerate } from "./generate/interface.js";
 
 export default async (folderToCreate: string | null) => {
   if (folderToCreate) {
