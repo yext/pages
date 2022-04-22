@@ -1,4 +1,5 @@
 import { createServer } from "./server/server.js";
+import open from "open";
 
 export default async () => {
   const [, , ...args] = process.argv;
@@ -8,4 +9,6 @@ export default async () => {
   } else {
     await createServer(false);
   }
+
+  await open("http://localhost:3000/replaceWithTemplateName/replaceWithEntityId");
 };
