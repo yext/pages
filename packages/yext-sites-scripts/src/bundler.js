@@ -16,11 +16,8 @@ if (args.length > 0) {
  */
 rmSync("./dist", { recursive: true, force: true });
 
-const filters = new Set([
-  "./src/bundler.js",
-  "./src/dev/client/**/*\\.*",
-])
-const files = glob.sync("./src/**/*\\.*").filter(f => !filters.has(f));
+const filters = new Set(["./src/bundler.js", "./src/dev/client/**/*\\.*"]);
+const files = glob.sync("./src/**/*\\.*").filter((f) => !filters.has(f));
 
 const commonBuildOpts = {
   bundle: false,
@@ -56,7 +53,6 @@ try {
 } catch (e) {
   console.error(e);
 }
-
 
 // Client
 const clientFiles = glob.sync("./src/dev/client/**/*\\.*");

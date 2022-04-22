@@ -3,7 +3,7 @@ import { TEMPLATE_PATH } from "./constants.js";
 import { ViteDevServer } from "vite";
 import { __dirname } from "esm-module-paths";
 import { generateTestData } from "./generateTestData.js";
-import index from '../public/index';
+import index from "../public/index";
 
 type Props = {
   url: string;
