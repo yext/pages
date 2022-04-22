@@ -6,6 +6,11 @@ type Props = {
   page?: Page;
 };
 
+/**
+ * TODO (SUMO-4392) - document.
+ *
+ * @public
+ */
 export const App = ({ page }: Props) => {
   // let [activePage, setActivePage] = useState(page);
 
