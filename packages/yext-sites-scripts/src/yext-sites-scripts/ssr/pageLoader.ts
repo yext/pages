@@ -61,11 +61,12 @@ export const pageLoader = async ({
     }
   }
 
+  let data = { document: { streamOutput: streamOutput } };
   if (getStaticProps) {
-    streamOutput = await getStaticProps(streamOutput);
+    data = await getStaticProps(data);
   }
 
-  const props = { data: { document: { streamOutput: streamOutput } }, __meta: { mode: 'development' } };
+  const props = { data: data, __meta: { mode: 'development' } };
 
   return { template, Page, props, App };
 };

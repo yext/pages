@@ -84,7 +84,7 @@ export const generateResponses = async (
   }
 
   if (validModule.getStaticProps) {
-    data.document = await validModule.getStaticProps(document);
+    data = await validModule.getStaticProps(data);
   }
 
   return {
