@@ -16,9 +16,11 @@ if (args.length > 0) {
  */
 rmSync("./dist", { recursive: true, force: true });
 
-const files = glob
-  .sync("./src/**/*\\.*")
-  .filter((f) => f !== "./src/bundler.js");
+const filters = new Set([
+  "./src/bundler.js",
+  "./src/dev/client/**/*\\.*",
+])
+const files = glob.sync("./src/**/*\\.*").filter(f => !filters.has(f));
 
 const commonBuildOpts = {
   bundle: false,
@@ -47,6 +49,23 @@ const commonBuildOpts = {
 try {
   esbuild.build({
     ...commonBuildOpts,
+    outdir: "dist",
+    outbase: ".",
+    format: "esm",
+  });
+} catch (e) {
+  console.error(e);
+}
+
+
+// Client
+const clientFiles = glob.sync("./src/dev/client/**/*\\.*");
+try {
+  esbuild.build({
+    ...commonBuildOpts,
+    entryPoints: clientFiles,
+    platform: "browser",
+    bundle: true,
     outdir: "dist",
     outbase: ".",
     format: "esm",
