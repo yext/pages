@@ -56,3 +56,21 @@ npm run fmt
 ```
 
 This command runs prettier for standardized formatting across all files.
+
+```
+npm run docs:dev
+```
+
+This command will start the vitepress devserver with hot module reloading to quickly test changes to documentation. It will generate a webpage for each markdown file in the `docs` directory according to the config specified in `docs/.vitepress/config.ts`
+
+```
+npm run docs:build
+```
+
+This command will use vitepress to fully build the html pages for the documentation site and puts them into `docs/.vitepress/dist`. Similar to the `docs:dev` command, it will generate an html page for each markdown file in the `docs` directory according to the configuration specified in `docs/.vitepress/config.ts`.
+
+```
+npm run docs:serve
+```
+
+This command will run the same build as the `docs:build` command and it will then serve the fully generated html files on a local server. This allows inspection of the documentation webpages in a way that's fully consistent with what will be served on the real website.
