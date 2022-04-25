@@ -10,31 +10,40 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+ build-vite-plugin:
     runs-on: ubuntu-latest
-
+    defaults:
+        run:
+          working-directory:  ./packages/vite-plugin-yext-sites-ssg
     strategy:
       matrix:
         node-version: [16.x, 17.x]
-
     steps:
     - uses: actions/checkout@v3
-    - name: "@yext/yext-sites-scripts: Use Node.js ${{ matrix.node-version }}"
+    - name: "@yext/vite-plugin-yext-sites-ssg: build with node ${{ matrix.node-version }}"
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: cd packages/yext-sites-scripts
     - run: npm ci
     - run: npm run build
     - run: npm run types
-    - name: "@yext/vite-plugin-yext-sites-ssg: Use Node.js ${{ matrix.node-version }}"
+
+ build-yext-sites-scripts:
+    runs-on: ubuntu-latest
+    defaults:
+        run:
+          working-directory:  ./packages/yext-sites-scripts
+    strategy:
+      matrix:
+        node-version: [16.x, 17.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: "@yext/yext-sites-scripts: build with node ${{ matrix.node-version }}"
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: cd packages/vite-plugin-yext-sites-ssg
     - run: npm ci
     - run: npm run build
     - run: npm run types
