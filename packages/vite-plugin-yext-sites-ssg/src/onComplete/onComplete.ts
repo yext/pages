@@ -4,7 +4,10 @@ import { createFeatureJson } from "./feature.js";
 import { Paths } from "../paths.js";
 import logger from "../log.js";
 import { generateManifestFile } from "./manifest.js";
-import { loadTemplateModules, TemplateModuleCollection } from "./moduleLoader.js";
+import {
+  loadTemplateModules,
+  TemplateModuleCollection,
+} from "./moduleLoader.js";
 import { pluginCopy } from "./pluginCopy.js";
 
 export default (paths: Paths) => {

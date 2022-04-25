@@ -7,31 +7,28 @@
     "React"
   ],
   "author": "Yext",
+  "private": "true",
   "type": "module",
-  "types": "dist/index.d.ts",
-  "main": "./dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "main": "./dist/src/index.js",
   "engines": {
     "node": ">=16.14.0"
   },
   "scripts": {
-    "dev": "node --loader=ts-node/esm --experimental-specifier-resolution=node entry-server.ts",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "release": "npm-run-all release:* --parallel release:compile:*",
-    "release:clean": "rm -rf dist && mkdir dist",
-    "release:copy": "sed -e '/\"private\"/d' package.json > dist/package.json",
-    "release:compile:esm": "npx tsc && node src/bundler.js",
-    "prepare": "npm run release",
-    "prepublishOnly": "npm run lint",
-    "preversion": "npm run lint",
-    "version": "npm run format && git add -A",
-    "postversion": "git push && git push --tags",
-    "format": "prettier --write \"yext-sites-scripts/**/*.ts\" \"yext-sites-scripts/**/*.tsx\" \"server.ts\"",
+    "watch": "node src/bundler --watch",
+    "build": "node src/bundler.js",
+    "types": "tsc && npm run api-extractor && npm run generate-docs",
+    "fmt": "prettier -w .",
+    "release": "npm run build && npm run types",
     "lint": "eslint .",
-    "devbuild": "npm run release:clean && node src/bundler.js"
+    "api-extractor": "api-extractor run --local --verbose",
+    "generate-docs": "api-documenter markdown --input-folder temp --output-folder docs/api && rm -rf temp",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs"
   },
   "bin": {
-    "yss": "dist/bin/yext-sites-scripts.js"
+    "yss": "dist/src/bin/yext-sites-scripts.js"
   },
   "files": [
     "dist/**/*"
@@ -46,11 +43,14 @@
     "esm-module-paths": "^1.1.1",
     "express": "^4.17.3",
     "ink": "^3.2.0",
+    "open": "^8.4.0",
     "react-dom": "^17.0.2",
     "shelljs": "^0.8.5",
     "typescript": "^4.6.2"
   },
   "devDependencies": {
+    "@microsoft/api-documenter": "^7.17.9",
+    "@microsoft/api-extractor": "^7.22.2",
     "@types/babel__core": "^7.1.18",
     "@types/escape-html": "^1.0.2",
     "@types/express": "^4.17.13",
@@ -63,8 +63,7 @@
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.29.4",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^2.6.1"
+    "vitepress": "^0.22.3"
   },
   "peerDependencies": {
     "@vitejs/plugin-react": "^1.2.0",

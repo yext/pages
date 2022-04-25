@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import fetch from 'cross-fetch';
+import { useState } from "react";
+import fetch from "cross-fetch";
 
 export const config = {
-  name: 'static',
+  name: "static",
 };
 
 export const getPath = (data: any) => {

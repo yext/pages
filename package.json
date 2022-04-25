@@ -1,0 +1,21 @@
+{
+  "name": "sites-scripts",
+  "version": "0.0.1",
+  "description": "A monorepo containing all packages used in Yext Sites rendering",
+  "main": "index.js",
+  "scripts": {
+    "fmt": "prettier -w ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yext/sites-scripts.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/yext/sites-scripts/issues"
+  },
+  "homepage": "https://github.com/yext/sites-scripts#readme",
+  "devDependencies": {
+    "prettier": "^2.6.2"
+  }
+}

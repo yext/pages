@@ -10,5 +10,5 @@ export type Manifest = {
 };
 
 export const loadManifest = (): Manifest => {
-    return manifest;
-}
+  return manifest;
+};
