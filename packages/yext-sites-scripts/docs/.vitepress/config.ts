@@ -13,9 +13,14 @@ export default defineConfig({
     editLinks: false,
     lastUpdated: "Last Updated",
 
-    nav: [{ text: "API", link: "/api/index.html", activeMatch: "^/$|^/api/" }],
+    nav: [
+      { text: "Guide", link: "/index.html", activeMatch: "^/$|^/index.html" },
+      { text: "API", link: "/api/index.html", activeMatch: "^/$|^/api/" }
+    ],
 
     sidebar: {
+      "/basics/": getSidebar(),
+      "/advanced/": getSidebar(),
       "/api/": getSidebar(),
       "/": getSidebar(),
     },
@@ -24,16 +29,30 @@ export default defineConfig({
 
 function getSidebar() {
   return [
+    { text: "Guide", link: "/index.html" },
     {
-      text: "Introduction",
+      text: "Basics",
       children: [
-        { text: "What is Yext Sites Scripts?", link: "/" },
-        { text: "API Docs", link: "/api/index.html" },
+        { text: "Global Data", link: "/basics/global-data.html" },
+        { text: "Pages", link: "/basics/pages.html" },
+        { text: "Redirects", link: "/basics/redirects.html" },
+        { text: "Repo Structure", link: "/basics/repo-structure.html" },
+        { text: "Styling", link: "/basics/styling.html" },
+        { text: "Templates", link: "/basics/templates.html" }
       ],
     },
     {
       text: "Advanced",
-      children: [{ text: "TODO - add stuff", link: "/" }],
+      children: [
+        { text: "Entry Points", link: "/advanced/entry-points.html" },
+        { text: "Vite Build Process", link: "/advanced/vite-build-process.html"}
+      ],
+    },
+    {
+      text: "API",
+      children: [
+        { text: "API Docs", link: "/api/index.html" }
+      ],
     },
   ];
 }
