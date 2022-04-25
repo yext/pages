@@ -1,0 +1,32 @@
+{
+  "artifactStructure": {
+    "assets": [
+      {
+        "root": "packages/yext-sites-scripts/docs/.vitepress/dist",
+        "pattern": "**/*.html"
+      },
+      {
+        "root": "packages/yext-sites-scripts/docs/.vitepress/dist",
+        "pattern": "**/*.js"
+      },
+      {
+        "root": "packages/yext-sites-scripts/docs/.vitepress/dist",
+        "pattern": "**/*.css"
+      }
+    ]
+  },
+  "dependencies": {
+    "installDepsCmd": "(cd packages/yext-sites-scripts && npm install)",
+    "requiredFiles": [
+      "packages/yext-sites-scripts/package.json",
+      "packages/yext-sites-scripts/package-lock.json"
+    ]
+  },
+  "buildArtifacts": {
+    "buildCmd": "(cd packages/yext-sites-scripts && npm run docs:build)"
+  },
+  "livePreview": {
+    "serveSetupCmd": "(cd packages/yext-sites-scripts && npm run docs:build)",
+    "serveCmd": "(cd packages/yext-sites-scripts && npm run docs:serve)"
+  }
+}
