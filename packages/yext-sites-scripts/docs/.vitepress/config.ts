@@ -15,7 +15,7 @@ export default defineConfig({
 
     nav: [
       { text: "Guide", link: "/index.html", activeMatch: "^/$|^/index.html" },
-      { text: "API", link: "/api/index.html", activeMatch: "^/$|^/api/" }
+      { text: "API", link: "/api/index.html", activeMatch: "^/$|^/api/" },
     ],
 
     sidebar: {
@@ -38,21 +38,22 @@ function getSidebar() {
         { text: "Redirects", link: "/basics/redirects.html" },
         { text: "Repo Structure", link: "/basics/repo-structure.html" },
         { text: "Styling", link: "/basics/styling.html" },
-        { text: "Templates", link: "/basics/templates.html" }
+        { text: "Templates", link: "/basics/templates.html" },
       ],
     },
     {
       text: "Advanced",
       children: [
         { text: "Entry Points", link: "/advanced/entry-points.html" },
-        { text: "Vite Build Process", link: "/advanced/vite-build-process.html"}
+        {
+          text: "Vite Build Process",
+          link: "/advanced/vite-build-process.html",
+        },
       ],
     },
     {
       text: "API",
-      children: [
-        { text: "API Docs", link: "/api/index.html" }
-      ],
+      children: [{ text: "API Docs", link: "/api/index.html" }],
     },
   ];
 }

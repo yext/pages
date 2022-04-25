@@ -1,6 +1,6 @@
 # Pages
 
-Pages are static pages that aren’t used with a stream. You can use a static page for your homepage, your search results page and any other page that doesn’t correspond to an entity in your Knowledge Graph. 
+Pages are static pages that aren’t used with a stream. You can use a static page for your homepage, your search results page and any other page that doesn’t correspond to an entity in your Knowledge Graph.
 
 # Path
 
@@ -24,12 +24,11 @@ The URL of the page is based upon the file path inside the repo. For example:
 A simple page looks like this:
 
 ```jsx
-
 const Index = () => {
   return (
-		<div>
-			<div>Hello World</div>
-		</div>
+    <div>
+      <div>Hello World</div>
+    </div>
   );
 };
 
@@ -42,7 +41,7 @@ Each page exports a few key functions:
 
 ## `default`
 
-*required*
+_required_
 
 The default export must be a React component. Here are the props that are passed into that component:
 
@@ -53,29 +52,33 @@ The default export must be a React component. Here are the props that are passed
 
 ## `getMeta`
 
-*optional*
+_optional_
 
 `meta` is an optional function that allows you to set meta information on the page. While it’s optional it’s highly recommended for SEO best practices. Here is an example:
 
 ```jsx
 export const getMeta: GetMeta = async ({ global, manifest, siteStream }) => {
-   return { 
-		title: document.title,
-		description: document.description
-	}
-}
+  return {
+    title: document.title,
+    description: document.description,
+  };
+};
 ```
 
 ## `getStaticProps`
 
-*optional*
+_optional_
 
 Loader is a function that allows you to perform data loading tasks during the page generation. Here is an example:
 
 ```tsx
-export const getStaticProps: GetStaticProps = async ({ global, manifest, siteStream }) => {
-   return { hello: "world"}
-}
+export const getStaticProps: GetStaticProps = async ({
+  global,
+  manifest,
+  siteStream,
+}) => {
+  return { hello: "world" };
+};
 ```
 
 It should return an object. This object is then passed into the default component as a prop. Some things to note:
@@ -85,7 +88,7 @@ It should return an object. This object is then passed into the default componen
 
 ## `getHeaders`
 
-*option*
+_option_
 
 `getHeaders` is a function that allows you to customize the headers that are returned for a given template. This also works on pages. Here is an example:
 
@@ -95,5 +98,5 @@ export const getHeaders: GetHeaders = ({ global, manifest, siteStream }) => {
     "X-Stretchy-Pants": "its for fun",
     "Cache-Control": "max-age=300, s-maxage=3600",
   };
-}
+};
 ```

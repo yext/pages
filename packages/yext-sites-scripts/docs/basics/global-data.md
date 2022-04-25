@@ -1,6 +1,6 @@
 # Global Data
 
-Global data is specified in the `global.ts` file that is at the root of the site. 
+Global data is specified in the `global.ts` file that is at the root of the site.
 
 ### Sample File
 
@@ -9,26 +9,20 @@ Global data is specified in the `global.ts` file that is at the root of the site
 
 // Global Data goes here
 export const global = {
-	"hello": "world"
-}
+  hello: "world",
+};
 
 // Global Stream goes here
 export const streamConfig = {
-source: "knowledgeGraph",
-    fields: [
-      "id",      
-      "name",
-      "address",
-      "slug"
-    ],
-		entityId: [234724],
-    filter: {
-      entityTypes: ["location"],
-    },
-    localization: {
-      locales: ["en"],
-      primary: false,
-    },
-}
-
+  source: "knowledgeGraph",
+  fields: ["id", "name", "address", "slug"],
+  entityId: [234724],
+  filter: {
+    entityTypes: ["location"],
+  },
+  localization: {
+    locales: ["en"],
+    primary: false,
+  },
+};
 ```
