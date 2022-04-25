@@ -10,8 +10,8 @@ TODO (SUMO-4392) - document.
 
 ```typescript
 export declare type Page = {
-    path: string;
-    props: any;
-    component: any;
+  path: string;
+  props: any;
+  component: any;
 };
 ```
