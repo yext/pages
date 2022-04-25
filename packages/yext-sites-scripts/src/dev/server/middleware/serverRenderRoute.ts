@@ -18,7 +18,7 @@ export const serverRenderRoute =
   ({ vite, dynamicGenerateData }: Props): RequestHandler =>
   async (req, res, next) => {
     try {
-      const url = req.originalUrl;
+      const url = req.baseUrl;
 
       const { feature, entityId } = urlToFeature(url);
 
