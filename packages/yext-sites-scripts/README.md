@@ -74,3 +74,9 @@ npm run docs:serve
 ```
 
 This command will run the same build as the `docs:build` command and it will then serve the fully generated html files on a local server. This allows inspection of the documentation webpages in a way that's fully consistent with what will be served on the real website.
+
+```
+npm run test
+```
+
+This command will run all the tests in the package using Jest as the test runner.
