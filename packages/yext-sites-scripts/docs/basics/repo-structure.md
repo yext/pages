@@ -32,7 +32,7 @@ Here are the key files and folders:
 
 The `src` folder is the key folder in the repo. This is where you will spend most of your time managing your site.
 
-- `templates` - This folder contains page template. Each template references a stream in Yext and turns into a collection of pages based on the entities in the stream. [Learn more about templates](Templates%2017ff9e34f8064fa8bcee1442cfc02e5f.md)
+- `templates` - This folder contains page template. Each template references a stream in Yext and turns into a collection of pages based on the entities in the stream. [Learn more about templates](./templates.md)
 - `pages` - This folder contains static pages. Each file in this folder represents a single page at a single URL.
 - `components` - There is nothing special about this folder however it is common convention to store any shared components across pages and templates in this folder.
 
