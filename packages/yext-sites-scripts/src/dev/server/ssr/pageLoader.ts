@@ -47,7 +47,7 @@ export const pageLoader = async ({
   if (!Component) {
     throw Error(
       "Default export missing in template: " +
-      `/${TEMPLATE_PATH}/${templateFilename}`
+        `/${TEMPLATE_PATH}/${templateFilename}`
     );
   }
 
