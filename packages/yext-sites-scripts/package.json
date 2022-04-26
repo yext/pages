@@ -25,7 +25,8 @@
     "generate-docs": "api-documenter markdown --input-folder temp --output-folder docs/api && rm -rf temp",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs --port 8080"
+    "docs:serve": "vitepress serve docs --port 8080",
+    "test": "jest"
   },
   "bin": {
     "yss": "dist/src/bin/yext-sites-scripts.js"
@@ -49,11 +50,14 @@
     "typescript": "^4.6.2"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7",
     "@microsoft/api-documenter": "^7.17.9",
     "@microsoft/api-extractor": "^7.22.2",
     "@types/babel__core": "^7.1.18",
     "@types/escape-html": "^1.0.2",
     "@types/express": "^4.17.13",
+    "@types/jest": "^27.4.1",
     "@types/react": "^17.0.40",
     "@types/react-dom": "^17.0.10",
     "@types/shelljs": "^0.8.11",
@@ -63,11 +67,35 @@
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.29.4",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.4",
     "vitepress": "^0.22.3"
   },
   "peerDependencies": {
     "@vitejs/plugin-react": "^1.2.0",
     "react": "^17.0.2",
     "vite": "^2.9.3"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "@babel/preset-typescript"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.ts"
+    ],
+    "verbose": true,
+    "testMatch": [
+      "**/tests/**/*.ts"
+    ]
   }
 }
