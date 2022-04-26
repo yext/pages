@@ -42,7 +42,6 @@ export const pageLoader = async ({
   //    required, and provides efficient invalidation similar to HMR.
   const [{ default: Component, getStaticProps }] = await Promise.all([
     vite.ssrLoadModule(`/${TEMPLATE_PATH}/${templateFilename}`),
-    // vite.ssrLoadModule(`${__dirname()}/../entry-server.js`),
   ]);
 
   if (!Component) {
