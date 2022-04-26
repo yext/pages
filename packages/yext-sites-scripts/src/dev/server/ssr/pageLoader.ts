@@ -4,6 +4,7 @@ import { ViteDevServer } from "vite";
 import { __dirname } from "esm-module-paths";
 import { generateTestData } from "./generateTestData.js";
 import index from "../public/index";
+import { FC } from "react";
 
 type Props = {
   url: string;
@@ -16,8 +17,7 @@ type Props = {
 
 type PageLoaderResult = {
   template: string;
-  Page: any;
-  App: any;
+  Component: FC;
   props: any;
 };
 
@@ -40,10 +40,17 @@ export const pageLoader = async ({
   // 3. Load the server entry. vite.ssrLoadModule automatically transforms
   //    your ESM source code to be usable in Node.js! There is no bundling
   //    required, and provides efficient invalidation similar to HMR.
-  const [{ default: Page, getStaticProps }, { App }] = await Promise.all([
+  const [{ default: Component, getStaticProps }] = await Promise.all([
     vite.ssrLoadModule(`/${TEMPLATE_PATH}/${templateFilename}`),
-    vite.ssrLoadModule(`${__dirname()}/../entry-server.js`),
+    // vite.ssrLoadModule(`${__dirname()}/../entry-server.js`),
   ]);
+
+  if (!Component) {
+    throw Error(
+      "Default export missing in template: " +
+      `/${TEMPLATE_PATH}/${templateFilename}`
+    );
+  }
 
   let streamOutput;
   // Don't try to pull stream data if one isn't defined. This is primarily for static pages.
@@ -64,5 +71,5 @@ export const pageLoader = async ({
 
   const props = { data: data, __meta: { mode: "development" } };
 
-  return { template, Page, props, App };
+  return { template, Component, props };
 };

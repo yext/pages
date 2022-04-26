@@ -1,19 +1,4 @@
 import ReactDOM from "react-dom";
-import React, { createElement } from "react";
-import { Page } from "../server/ssr/types";
-
-type Props = {
-  page?: Page;
-};
-
-/**
- * TODO (SUMO-4392) - document.
- *
- * @public
- */
-export const App = ({ page }: Props) => {
-  return createElement(page?.component, page?.props);
-};
 
 const hydrate = async () => {
   type Route = {
@@ -37,21 +22,28 @@ const hydrate = async () => {
   /**
    * Get the templateFilename from the template. See {@link ./ssr/serverRenderRoute.ts}.
    */
-  const templateFilename = (window as any)._RSS_TEMPLATE_?.split(".")[0];
+  const templateFilename = (window as any)._RSS_TEMPLATE_;
+  const templateFilenameWithoutSuffix = templateFilename?.split(".")[0];
 
-  const { default: component } =
-    (await routes
-      .find((route) => route.name === templateFilename)
-      ?.getComponent()) || {};
+  const template = routes.find(
+    (route) => route.name === templateFilenameWithoutSuffix
+  ) || {
+    name: templateFilename?.split(".")[0],
+    path: `/src/templates/${templateFilename}`,
+    getComponent: function (): Promise<any> {
+      throw new Error("Function not implemented.");
+    },
+  };
+
+  const { default: Component } = await template.getComponent();
+
+  if (!Component) {
+    console.error("Default export missing in template: " + template.path);
+    return;
+  }
 
   ReactDOM.hydrate(
-    <App
-      page={{
-        props: (window as any)._RSS_PROPS_,
-        path: window.location.pathname,
-        component,
-      }}
-    />,
+    <Component {...(window as any)._RSS_PROPS_} />,
     document.getElementById("root")
   );
 };

@@ -1,7 +1,7 @@
 import { buildFeatureConfig } from "../ssr/buildFeatureConfig.js";
 import { getTemplateConfig } from "../ssr/getTemplateConfig.js";
 import { RequestHandler } from "express-serve-static-core";
-import React from "react";
+import React, { FC } from "react";
 import ReactDOMServer from "react-dom/server.js";
 import { ViteDevServer } from "vite";
 import { featureToTemplate } from "../ssr/featureToTemplate.js";
@@ -30,7 +30,11 @@ export const serverRenderRoute =
       const templateConfig = await getTemplateConfig(vite, templateFilename);
       const featureConfig = buildFeatureConfig(templateConfig);
 
-      const { template, Page, App, props } = await pageLoader({
+      const {
+        template,
+        Component,
+        props,
+      }: { template: any; Component: FC; props: any } = await pageLoader({
         url,
         vite,
         templateFilename,
@@ -43,13 +47,7 @@ export const serverRenderRoute =
       // Since we are on the server using plain TS, and outside
       // of Vite, we are not using JSX here
       const appHtml = await ReactDOMServer.renderToString(
-        React.createElement(App, {
-          page: {
-            props,
-            path: req.originalUrl,
-            component: Page,
-          },
-        })
+        React.createElement(Component, props)
       );
 
       // Inject the app-rendered HTML into the template.

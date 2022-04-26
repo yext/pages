@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import fetch from "cross-fetch";
 
 export const config = {
