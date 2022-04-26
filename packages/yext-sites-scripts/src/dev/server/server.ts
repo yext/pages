@@ -5,8 +5,6 @@ import { getServerSideProps } from "./middleware/getServerSideProps.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import react from "@vitejs/plugin-react";
-import { __dirname } from "esm-module-paths";
-import path from "path";
 
 export const createServer = async (dynamicGenerateData: boolean) => {
   // creates a standard express app
@@ -32,12 +30,6 @@ export const createServer = async (dynamicGenerateData: boolean) => {
   app.use(ignoreFavicon);
 
   app.use("/data/*", getServerSideProps({ vite }));
-
-  // Handle client-side request for entry.js since, by default, it looks for the file at the cwd,
-  // which won't exist in a starter.
-  // app.use('/entry.js', async (req: any, res: any) => {
-  //   res.sendFile(path.resolve(__dirname(), '../client/entry-client.js'));
-  // });
 
   // when a page is requested, call our serverRenderRoute method
   app.use("*", serverRenderRoute({ vite, dynamicGenerateData }));
