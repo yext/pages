@@ -9,17 +9,15 @@ export const getPath = (data: any) => {
   return `static/${Math.random().toString()}`;
 };
 
-export const getStaticProps: any = async () => {
+export const getStaticProps = async (data: any): Promise<any> => {
   const url = `https://pokeapi.co/api/v2/pokemon/1`;
   const pokemon = await fetch(url).then((res) => res.json());
 
-  return pokemon;
+  return { ...data, ...pokemon };
 };
 
 const Static = ({ data }: { data: any }) => {
-  const { document } = data;
-  const { streamOutput } = document;
-  const { name } = streamOutput;
+  const { name } = data;
 
   const [num, setNum] = useState<number>(0);
 

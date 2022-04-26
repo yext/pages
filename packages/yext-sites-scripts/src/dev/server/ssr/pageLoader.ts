@@ -52,30 +52,24 @@ export const pageLoader = async ({
     vite.ssrLoadModule(`${entryDir}/entry`),
   ]);
 
-  let dataDoc;
+  let streamOutput;
   // Don't try to pull stream data if one isn't defined. This is primarily for static pages.
   if (featureConfig.streams) {
     if (dynamicGenerateData) {
       // Call generate-test-data
-      dataDoc = await generateTestData(featureConfig, entityId);
+      streamOutput = await generateTestData(featureConfig, entityId);
     } else {
       // Get the data from localData
-      dataDoc = await getLocalData(entityId);
+      streamOutput = await getLocalData(entityId);
     }
   }
 
+  let data = { document: { streamOutput: streamOutput } };
   if (getStaticProps) {
-    const staticProps = await getStaticProps();
-    dataDoc = {
-      ...dataDoc,
-      ...staticProps,
-    };
+    data = await getStaticProps(data);
   }
 
-  const props = {
-    data: { document: { streamOutput: dataDoc } },
-    __meta: { mode: "development" },
-  };
+  const props = { data: data, __meta: { mode: "development" } };
 
   return { template, Page, props, App };
 };
