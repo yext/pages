@@ -1,5 +1,6 @@
 import { getLocalData } from "./getLocalData.js";
 import { TEMPLATE_PATH } from "./constants.js";
+import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
 import { ViteDevServer } from "vite";
@@ -56,8 +57,15 @@ export const pageLoader = async ({
   // Don't try to pull stream data if one isn't defined. This is primarily for static pages.
   if (featureConfig.streams) {
     if (dynamicGenerateData) {
-      // Call generate-test-data
-      streamOutput = await generateTestData(featureConfig, entityId);
+      streamOutput = await generateTestData(
+        {
+          stdin: process.stdin,
+          stdout: process.stdout,
+          stderr: process.stderr,
+        },
+        featureConfig,
+        entityId
+      );
     } else {
       // Get the data from localData
       streamOutput = await getLocalData(entityId);
