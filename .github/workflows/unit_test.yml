@@ -1,0 +1,30 @@
+name: Run unit tests
+
+on:
+  workflow_call:
+    inputs:
+      package:
+        description: The name of the package to build
+        required: true
+        type: string
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/${{ inputs.package }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - run: npm ci
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          path: dist/
+      - run: npm run test

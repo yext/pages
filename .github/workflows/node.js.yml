@@ -9,25 +9,25 @@ on:
   pull_request:
     branches: [main]
 
-jobs:
-  build-vite-plugin:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./packages/vite-plugin-yext-sites-ssg
-    strategy:
-      matrix:
-        node-version: [16.x, 17.x]
-    steps:
-      - uses: actions/checkout@v3
-      - name: "@yext/vite-plugin-yext-sites-ssg: build with node ${{ matrix.node-version }}"
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: npm ci
-      - run: npm run build
-      - run: npm run types
+# jobs:
+#   build-vite-plugin:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: ./packages/vite-plugin-yext-sites-ssg
+#     strategy:
+#       matrix:
+#         node-version: [16.x, 17.x]
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: "@yext/vite-plugin-yext-sites-ssg: build with node ${{ matrix.node-version }}"
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{ matrix.node-version }}
+#           cache: "npm"
+#       - run: npm ci
+#       - run: npm run build
+#       - run: npm run types
 
   build-yext-sites-scripts:
     runs-on: ubuntu-latest
