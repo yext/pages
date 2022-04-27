@@ -1,6 +1,5 @@
 import {
   SpawnOptionsWithoutStdio,
-  ChildProcessWithoutNullStreams,
 } from "child_process";
 import path from "path";
 import { ReadStream, WriteStream } from "tty";
@@ -8,19 +7,27 @@ import fs from "fs";
 import { generateTestData } from "../../../src/dev/server/ssr/generateTestData";
 import { EventEmitter } from "stream";
 
-const mockChildProcessStdin = new WriteStream(0);
-const mockChildProcessStdout = new ReadStream(1);
-const mockChildProcessStderr = new ReadStream(2);
-
-const testEventEmitter = new EventEmitter();
-
+let mockChildProcessStdin = new WriteStream(0);
+let mockChildProcessStdout = new ReadStream(1);
+let mockChildProcessStderr = new ReadStream(2);
+let mockParentProcessStdout = new WriteStream(0);
+let mockChildProcessEventEmitter = new EventEmitter();
 let mockChildProcess = {
   stdin: mockChildProcessStdin,
   stdout: mockChildProcessStdout,
   stderr: mockChildProcessStderr,
-  on: testEventEmitter.on,
-  emit: testEventEmitter.emit,
+  on: mockChildProcessEventEmitter.on,
+  emit: mockChildProcessEventEmitter.emit,
 };
+
+afterAll((done) => {
+  mockChildProcessStdin.destroy();
+  mockChildProcessStdout.destroy();
+  mockChildProcessStderr.destroy();
+  mockParentProcessStdout.destroy();
+
+  done();
+});
 
 jest.mock("child_process", () => ({
   ...(jest.requireActual("child_process") as object),
@@ -45,8 +52,6 @@ const mockFeatureConfig = JSON.parse(
 
 describe("generateTestData", () => {
   it("properly reads stream data and returns it", async () => {
-    const mockParentProcessStdout = new WriteStream(1);
-
     async function testRunner() {
       return await generateTestData(
         mockParentProcessStdout,
@@ -55,13 +60,7 @@ describe("generateTestData", () => {
       );
     }
 
-    testRunner()
-      .then((datadoc) => {
-        expect(datadoc).toBeTruthy();
-      })
-      .catch(() => {
-        expect(1).toBeFalsy();
-      });
+    const testRunnerPromise = testRunner();
 
     mockChildProcessStdout.emit(
       "data",
@@ -69,6 +68,12 @@ describe("generateTestData", () => {
     );
 
     mockChildProcess.emit("close");
+
+    testRunnerPromise.then((datadoc) => {
+      console.log("resolved");
+      console.log(datadoc);
+      expect(1).toBeTruthy();
+    });
   });
 
   it("properly ignores CLI Boilerplate", async () => {
