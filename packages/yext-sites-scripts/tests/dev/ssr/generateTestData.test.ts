@@ -1,6 +1,6 @@
 import {
   SpawnOptionsWithoutStdio,
-  ChildProcessWithoutNullStreams
+  ChildProcessWithoutNullStreams,
 } from "child_process";
 import path from "path";
 import { ReadStream, WriteStream } from "tty";
@@ -12,11 +12,14 @@ const mockChildProcessStdin = new WriteStream(0);
 const mockChildProcessStdout = new ReadStream(1);
 const mockChildProcessStderr = new ReadStream(2);
 
+const testEventEmitter = new EventEmitter();
+
 let mockChildProcess = {
   stdin: mockChildProcessStdin,
   stdout: mockChildProcessStdout,
   stderr: mockChildProcessStderr,
-  ...new EventEmitter(),
+  on: testEventEmitter.on,
+  emit: testEventEmitter.emit,
 };
 
 jest.mock("child_process", () => ({
@@ -26,8 +29,7 @@ jest.mock("child_process", () => ({
       command: string,
       args?: readonly string[] | undefined,
       options?: SpawnOptionsWithoutStdio | undefined
-    ): ChildProcessWithoutNullStreams => {
-      console.log("I called my mock func");
+    ): any => {
       return mockChildProcess;
     }
   ),
@@ -42,93 +44,38 @@ const mockFeatureConfig = JSON.parse(
 );
 
 describe("generateTestData", () => {
-  it("properly spawns a child process", async () => {
-    expect(1).toBeTruthy();
-  });
-
-  it("properly redirects the stdout of the child process", async () => {
-    const mockParentProcessStdin = new ReadStream(0);
+  it("properly reads stream data and returns it", async () => {
     const mockParentProcessStdout = new WriteStream(1);
-    const mockParentProcessStderr = new WriteStream(2);
 
-    
     async function testRunner() {
-      console.log("test runner");
-      const dataDoc = await generateTestData(
-        {
-          stdin: mockParentProcessStdin,
-          stdout: mockParentProcessStdout,
-          stderr: mockParentProcessStderr,
-        },
+      return await generateTestData(
+        mockParentProcessStdout,
         mockFeatureConfig,
         "loc3"
       );
+    }
 
-      console.log("I finished the generateTestData stuff");
+    testRunner()
+      .then((datadoc) => {
+        expect(datadoc).toBeTruthy();
+      })
+      .catch(() => {
+        expect(1).toBeFalsy();
+      });
 
-      console.log(dataDoc);
-
-      expect(dataDoc).toBeTruthy();
-
-      return;
-    };
-
-    testRunner();
-
-    mockChildProcessStdout.emit("data", "{ I AM DATA THAT SHOULD BE RECEIVED");
+    mockChildProcessStdout.emit(
+      "data",
+      '{ "field": "I AM DATA THAT SHOULD BE RECEIVED" }'
+    );
 
     mockChildProcess.emit("close");
+  });
 
+  it("properly ignores CLI Boilerplate", async () => {
     expect(1).toBeTruthy();
   });
 
-  it("properly redirects the stderr of the child process", async () => {
-    expect(1).toBeTruthy();
-  });
-
-  it("propoerly pipes input from parent to child process", async () => {
+  it("properly redirects other output to the parent process' stdout", async () => {
     expect(1).toBeTruthy();
   });
 });
-
-
-// const mockChildProcess = {
-//   stdin: mockChildProcessStdin,
-//   stdout: mockChildProcessStdout,
-//   stderr: mockChildProcessStderr,
-//   channel: undefined,
-//   stdio: [
-//     mockChildProcessStdin,
-//     mockChildProcessStdout,
-//     mockChildProcessStdout,
-//     mockChildProcessStderr,
-//     mockChildProcessStdout,
-//   ],
-//   killed: false,
-//   pid: undefined,
-//   connected: true,
-//   exitCode: null,
-//   signalCode: null,
-//   spawnargs: [],
-//   spawnfile: "",
-//   kill: jest.fn(),
-//   send: jest.fn(),
-//   disconnect: jest.fn(),
-//   unref: jest.fn(),
-//   ref: jest.fn(),
-//   emit: jest.fn(),
-//   addListener: jest.fn(),
-//   on: jest.fn(),
-//   once: jest.fn(),
-//   prependListener: jest.fn(),
-//   removeListener: jest.fn(),
-//   removeAllListeners: jest.fn(),
-//   prependOnceListener: jest.fn(),
-//   setMaxListeners: jest.fn(),
-//   off: jest.fn(),
-//   getMaxListeners: jest.fn(),
-//   listeners: jest.fn(),
-//   rawListeners: jest.fn(),
-//   listenerCount: jest.fn(),
-//   eventNames: jest.fn(),
-// };

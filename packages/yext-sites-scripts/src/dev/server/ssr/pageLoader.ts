@@ -58,11 +58,7 @@ export const pageLoader = async ({
   if (featureConfig.streams) {
     if (dynamicGenerateData) {
       streamOutput = await generateTestData(
-        {
-          stdin: process.stdin,
-          stdout: process.stdout,
-          stderr: process.stderr,
-        },
+        process.stdout,
         featureConfig,
         entityId
       );
