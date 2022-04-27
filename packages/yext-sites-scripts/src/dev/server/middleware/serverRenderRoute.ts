@@ -1,3 +1,4 @@
+import { PageLoaderResult } from "./../ssr/pageLoader";
 import { buildFeatureConfig } from "../ssr/buildFeatureConfig.js";
 import { getTemplateConfig } from "../ssr/getTemplateConfig.js";
 import { RequestHandler } from "express-serve-static-core";
@@ -30,18 +31,16 @@ export const serverRenderRoute =
       const templateConfig = await getTemplateConfig(vite, templateFilename);
       const featureConfig = buildFeatureConfig(templateConfig);
 
-      const {
-        template,
-        Component,
-        props,
-      }: { template: any; Component: FC; props: any } = await pageLoader({
-        url,
-        vite,
-        templateFilename,
-        entityId,
-        featureConfig,
-        dynamicGenerateData,
-      });
+      const { template, Component, props }: PageLoaderResult = await pageLoader(
+        {
+          url,
+          vite,
+          templateFilename,
+          entityId,
+          featureConfig,
+          dynamicGenerateData,
+        }
+      );
 
       // render the component to its html
       // Since we are on the server using plain TS, and outside
