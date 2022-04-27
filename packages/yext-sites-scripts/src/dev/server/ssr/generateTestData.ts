@@ -4,14 +4,8 @@ import {
   STREAM_DATA_CHUNK_BEGIN,
 } from "./constants";
 
-type ParentProcess = {
-  stdin: NodeJS.ReadStream;
-  stdout: NodeJS.WriteStream;
-  stderr: NodeJS.WriteStream;
-};
-
 export const generateTestData = async (
-  parentProcess: ParentProcess,
+  stdout: NodeJS.WriteStream,
   featureConfig: any,
   entityId: string
 ): Promise<any> => {
@@ -34,29 +28,15 @@ export const generateTestData = async (
         "--printDocuments",
       ],
       {
-        stdio: ["pipe", "pipe", "pipe"],
+        stdio: ["inherit", "pipe", "inherit"],
         shell: true,
       }
     );
 
-    // console.log("I HAVE SPAWNED A CHILD PROCESS:");
-    // console.log(childProcess);
-
-    // Read the child process' stdout and stderr streams as UTF-8 encoded strings.
-    childProcess.stdout.setEncoding("utf8");
-    childProcess.stderr.setEncoding("utf8");
-
-    // Pipe input from the parent process to the child process so the user can respond to any interactive prompts (i.e. auth flow) from the parent
-    // process.
-    parentProcess.stdin.pipe(childProcess.stdin);
-
-    // When the child process receives a chunk of data on stdout, redirect it to the
-    // appropriate place.
-    childProcess.stdout.on("data", (chunk) => {
+    childProcess.stdout.on("data", (chunkBuff: Buffer) => {
       // If the chunk is actual stream data, write to local variable.
+      const chunk = chunkBuff.toString("utf-8");
       if (chunk.startsWith(STREAM_DATA_CHUNK_BEGIN)) {
-        console.log("I RECEIVED A CHUNK OF DATA");
-        console.log(chunk);
         testData += chunk;
       }
       // If the chunk is CLI Boilerplate, ignore.
@@ -67,16 +47,10 @@ export const generateTestData = async (
       // the parent process. It's main usage is to allow the user to go through the
       // authentication flow from the parent process.
       else {
-        parentProcess.stdout.write(chunk);
+        stdout.write(chunk);
       }
     });
 
-    // Write back anything on stderr to the parent process so the user can see and respond.
-    childProcess.stderr.on("data", (chunk) => {
-      parentProcess.stderr.write(chunk);
-    });
-
-    // When the stream is closed, resolve with the testData we've collected.
     childProcess.on("close", () => {
       if (testData) {
         testData = JSON.parse(testData.trim());
