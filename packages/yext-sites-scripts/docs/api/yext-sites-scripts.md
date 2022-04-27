@@ -8,7 +8,6 @@
 
 | Variable                                                             | Description                  |
 | -------------------------------------------------------------------- | ---------------------------- |
-| [App](./yext-sites-scripts.app.md)                                   | TODO (SUMO-4392) - document. |
 | [ReactSitesContext](./yext-sites-scripts.reactsitescontext.md)       | TODO (SUMO-4392) - document. |
 | [routes](./yext-sites-scripts.routes.md)                             | TODO (SUMO-4392) - document. |
 | [useReactSitesScripts](./yext-sites-scripts.usereactsitesscripts.md) | TODO (SUMO-4392) - document. |

@@ -16,9 +16,8 @@ if (args.length > 0) {
  */
 rmSync("./dist", { recursive: true, force: true });
 
-const files = glob
-  .sync("./src/**/*\\.*")
-  .filter((f) => f !== "./src/bundler.js");
+const filters = new Set(["./src/bundler.js"]);
+const files = glob.sync("./src/**/*\\.*").filter((f) => !filters.has(f));
 
 const commonBuildOpts = {
   bundle: false,

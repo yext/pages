@@ -14,9 +14,13 @@ export const createServer = async (dynamicGenerateData: boolean) => {
   const vite = await createViteServer({
     server: { middlewareMode: "ssr" },
     plugins: [react()],
-    // Temporary solution https://github.com/vitejs/vite/issues/6215
     optimizeDeps: {
+      // Temporary solution https://github.com/vitejs/vite/issues/6215
       include: ["react/jsx-runtime"],
+      esbuildOptions: {
+        // Temporary solution to allow optimized deps to access import.meta https://github.com/vitejs/vite/issues/5270
+        target: "es2020",
+      },
     },
   });
   // register vite's middleware

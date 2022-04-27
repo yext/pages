@@ -6,14 +6,6 @@
 /// <reference types="react" />
 
 import { Context } from "react";
-import { default as React_2 } from "react";
-
-// Warning: (ae-forgotten-export) The symbol "Props" needs to be exported by the entry point index.d.ts
-//
-// @public
-export const App: ({
-  page,
-}: Props) => React_2.CElement<any, React_2.Component<any, any, any>>;
 
 // Warning: (ae-forgotten-export) The symbol "ServerSideArgs" needs to be exported by the entry point index.d.ts
 //
