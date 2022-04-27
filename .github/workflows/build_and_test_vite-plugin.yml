@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: .github/workflows/build.yml
+      - uses: ./.github/workflows/build.yml
         with:
           package: "vite-plugin-yext-sites-ssg"
 
@@ -20,6 +20,6 @@ jobs:
     needs: call_build
 
     steps:
-      - uses: .github/workflows/unit_test.yml
+      - uses: ./.github/workflows/unit_test.yml
         with:
           package: "vite-plugin-yext-sites-ssg"

@@ -29,24 +29,37 @@ on:
 #       - run: npm run build
 #       - run: npm run types
 
-  build-yext-sites-scripts:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./packages/yext-sites-scripts
-    strategy:
-      matrix:
-        node-version: [16.x, 17.x]
-    steps:
-      - uses: actions/checkout@v3
-      - name: "@yext/yext-sites-scripts: build with node ${{ matrix.node-version }}"
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - name: Authenticate with private NPM package
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-      - run: npm ci
-      - run: npm run build
-      - run: npm run types
-      - run: npm run test
+#   build-yext-sites-scripts:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: ./packages/yext-sites-scripts
+#     strategy:
+#       matrix:
+#         node-version: [16.x, 17.x]
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: "@yext/yext-sites-scripts: build with node ${{ matrix.node-version }}"
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{ matrix.node-version }}
+#           cache: "npm"
+#       - run: npm ci
+#       - run: npm run build
+#       - run: npm run types
+#       - run: npm run test
+
+  # release:
+  #   runs-on: ubuntu-latest
+  #   if: github.event.push
+  #   needs: [build-yext-sites-scripts, build-vite-plugin]
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #     - name: Semantic Release
+  #       uses: cycjimmy/semantic-release-action@v3
+  #       with:
+  #         semantic_version: 19.0.2
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
