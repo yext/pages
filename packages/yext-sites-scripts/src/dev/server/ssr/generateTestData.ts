@@ -39,12 +39,14 @@ export const generateTestData = async (
       }
     );
 
+    // console.log("I HAVE SPAWNED A CHILD PROCESS:");
+    // console.log(childProcess);
+
     // Read the child process' stdout and stderr streams as UTF-8 encoded strings.
     childProcess.stdout.setEncoding("utf8");
     childProcess.stderr.setEncoding("utf8");
 
-    // Pipe input from the parent process to the generateTestDataChildProcess so the
-    // user can respond to any interactive prompts (i.e. auth flow) from the parent
+    // Pipe input from the parent process to the child process so the user can respond to any interactive prompts (i.e. auth flow) from the parent
     // process.
     parentProcess.stdin.pipe(childProcess.stdin);
 
@@ -53,6 +55,8 @@ export const generateTestData = async (
     childProcess.stdout.on("data", (chunk) => {
       // If the chunk is actual stream data, write to local variable.
       if (chunk.startsWith(STREAM_DATA_CHUNK_BEGIN)) {
+        console.log("I RECEIVED A CHUNK OF DATA");
+        console.log(chunk);
         testData += chunk;
       }
       // If the chunk is CLI Boilerplate, ignore.
