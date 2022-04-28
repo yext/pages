@@ -1,45 +1,47 @@
 import { SpawnOptionsWithoutStdio } from "child_process";
-import { ReadStream, WriteStream } from "tty";
+import { WriteStream } from "tty";
 import { generateTestData } from "../../../src/dev/server/ssr/generateTestData";
 import { EventEmitter } from "stream";
 import { CLI_BOILERPLATE } from "../../fixtures/cli_boilerplate";
 import { CLI_STREAM_DATA } from "../../fixtures/cli_stream_data";
 import { FEATURE_CONFIG } from "../../fixtures/feature_config";
+import { Socket } from "net";
 
-let mockParentProcessStdout = new WriteStream(0);
+let mockParentProcessStdout = jest.mocked(new WriteStream(0));
+mockParentProcessStdout.write = jest.fn();
 
 let mockChildProcessEventEmitter = new EventEmitter();
 
 let mockChildProcess = {
-  stdin: new WriteStream(0),
-  stdout: new ReadStream(1),
-  stderr: new ReadStream(2),
+  stdin: new Socket,
+  stdout: new Socket,
+  stderr: new Socket,
   on: mockChildProcessEventEmitter.on,
   emit: mockChildProcessEventEmitter.emit,
 };
 
 afterEach(() => {
-  // after each unit test, destroy the streams associated with the previous
+  // After each unit test, destroy the streams associated with the previous
   // and create fresh ones.
   mockChildProcess.stdin.destroy();
   mockChildProcess.stdout.destroy();
   mockChildProcess.stderr.destroy();
-  mockParentProcessStdout.destroy();
 
-  // stale listeners from previous runs must be removed each test.
+  // Stale listeners from previous runs must be removed each test.
   mockChildProcessEventEmitter.removeAllListeners();
 
+  // Reset the mockParentProcessStdout's write function.
+  mockParentProcessStdout.write = jest.fn();
+
   mockChildProcess = {
-    stdin: new WriteStream(0),
-    stdout: new ReadStream(1),
-    stderr: new ReadStream(2),
+    stdin: new Socket,
+    stdout: new Socket,
+    stderr: new Socket,
     // The on and emit functions must be explicitly re-assigned after the stale
     // listeners have been removed before each run.
     on: mockChildProcessEventEmitter.on,
     emit: mockChildProcessEventEmitter.emit,
   };
-
-  mockParentProcessStdout = new WriteStream(0);
 });
 
 jest.mock("child_process", () => ({
@@ -72,7 +74,7 @@ describe("generateTestData", () => {
 
     expect(datadoc).toEqual(CLI_STREAM_DATA);
     // There is no unrecognized data, so nothing should be written back to the parent process.
-    expect(mockParentProcessStdout.bytesWritten).toBeFalsy();
+    expect(mockParentProcessStdout.write).toBeCalledTimes(0);
   });
 
   it("properly ignores CLI Boilerplate when parsing stream data", async () => {
@@ -87,7 +89,7 @@ describe("generateTestData", () => {
 
     expect(datadoc).toEqual(CLI_STREAM_DATA);
     // There is no unrecognized data, so nothing should be written back to the parent process.
-    expect(mockParentProcessStdout.bytesWritten).toBeFalsy();
+    expect(mockParentProcessStdout.write).toBeCalledTimes(0);
   });
 
   it("properly redirects other output to the parent process' stdout", async () => {
@@ -104,8 +106,6 @@ describe("generateTestData", () => {
 
     expect(datadoc).toEqual(CLI_STREAM_DATA);
     // There is unrecognized data, make sure we write back the expected message to the parent process.
-    expect(mockParentProcessStdout.bytesWritten).toEqual(
-      new TextEncoder().encode(unrecognizedData).length
-    );
+    expect(mockParentProcessStdout.write).toHaveBeenCalledWith(unrecognizedData);
   });
 });
