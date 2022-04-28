@@ -1,8 +1,5 @@
 import { spawn } from "child_process";
-import {
-  CLI_BOILERPLATE_CHUNK_BEGIN,
-  STREAM_DATA_CHUNK_BEGIN,
-} from "./constants";
+import { STREAM_DATA_CHUNK_BEGIN } from "./constants";
 
 export const generateTestData = async (
   stdout: NodeJS.WriteStream,
