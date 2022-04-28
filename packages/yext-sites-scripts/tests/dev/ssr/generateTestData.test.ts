@@ -73,7 +73,7 @@ describe("generateTestData", () => {
     const datadoc = await testRunnerPromise;
 
     expect(datadoc).toEqual(CLI_STREAM_DATA);
-    // There is no output from the CLI other than the stream data, so nothing should be 
+    // There is no output from the CLI other than the stream data, so nothing should be
     // written back to the parent process.
     expect(mockParentProcessStdout.write).toBeCalledTimes(0);
   });
