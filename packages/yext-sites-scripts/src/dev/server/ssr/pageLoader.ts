@@ -1,10 +1,9 @@
 import { getLocalData } from "./getLocalData.js";
 import { TEMPLATE_PATH } from "./constants.js";
-import fs from "fs";
-import path from "path";
 import { ViteDevServer } from "vite";
-import { __dirname } from "esm-module-paths";
 import { generateTestData } from "./generateTestData.js";
+import index from "../public/index";
+import { FC } from "react";
 
 type Props = {
   url: string;
@@ -15,10 +14,9 @@ type Props = {
   dynamicGenerateData: boolean;
 };
 
-type PageLoaderResult = {
+export type PageLoaderResult = {
   template: string;
-  Page: any;
-  App: any;
+  Component: FC;
   props: any;
 };
 
@@ -31,26 +29,26 @@ export const pageLoader = async ({
   dynamicGenerateData,
 }: Props): Promise<PageLoaderResult> => {
   // 1. Read index.html
-  let template = fs.readFileSync(
-    path.resolve(process.cwd(), "index.html"),
-    "utf-8"
-  );
+  let template = index;
 
   // 2. Apply vite HTML transforms. This injects the vite HMR client, and
   //    also applies HTML transforms from Vite plugins, e.g. global preambles
   //    from @vitejs/plugin-react-refresh
   template = await vite.transformIndexHtml(url, template);
 
-  // Get the entry file's directory relative to the current file's directory
-  const entryDir = __dirname().replace(/\/[^/]+$/, "");
-
   // 3. Load the server entry. vite.ssrLoadModule automatically transforms
   //    your ESM source code to be usable in Node.js! There is no bundling
   //    required, and provides efficient invalidation similar to HMR.
-  const [{ default: Page, getStaticProps }, { App }] = await Promise.all([
+  const [{ default: Component, getStaticProps }] = await Promise.all([
     vite.ssrLoadModule(`/${TEMPLATE_PATH}/${templateFilename}`),
-    vite.ssrLoadModule(`${entryDir}/entry`),
   ]);
+
+  if (!Component) {
+    throw Error(
+      "Default export missing in template: " +
+        `/${TEMPLATE_PATH}/${templateFilename}`
+    );
+  }
 
   let streamOutput;
   // Don't try to pull stream data if one isn't defined. This is primarily for static pages.
@@ -74,5 +72,5 @@ export const pageLoader = async ({
 
   const props = { data: data, __meta: { mode: "development" } };
 
-  return { template, Page, props, App };
+  return { template, Component, props };
 };
