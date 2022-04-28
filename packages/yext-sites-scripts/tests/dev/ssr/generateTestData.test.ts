@@ -13,9 +13,9 @@ mockParentProcessStdout.write = jest.fn();
 let mockChildProcessEventEmitter = new EventEmitter();
 
 let mockChildProcess = {
-  stdin: new Socket,
-  stdout: new Socket,
-  stderr: new Socket,
+  stdin: new Socket(),
+  stdout: new Socket(),
+  stderr: new Socket(),
   on: mockChildProcessEventEmitter.on,
   emit: mockChildProcessEventEmitter.emit,
 };
@@ -34,9 +34,9 @@ afterEach(() => {
   mockParentProcessStdout.write = jest.fn();
 
   mockChildProcess = {
-    stdin: new Socket,
-    stdout: new Socket,
-    stderr: new Socket,
+    stdin: new Socket(),
+    stdout: new Socket(),
+    stderr: new Socket(),
     // The on and emit functions must be explicitly re-assigned after the stale
     // listeners have been removed before each run.
     on: mockChildProcessEventEmitter.on,
@@ -106,6 +106,8 @@ describe("generateTestData", () => {
 
     expect(datadoc).toEqual(CLI_STREAM_DATA);
     // There is unrecognized data, make sure we write back the expected message to the parent process.
-    expect(mockParentProcessStdout.write).toHaveBeenCalledWith(unrecognizedData);
+    expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
+      unrecognizedData
+    );
   });
 });
