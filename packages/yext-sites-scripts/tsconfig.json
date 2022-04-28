@@ -20,6 +20,6 @@
     "emitDeclarationOnly": true,
     "types": ["vite/client", "jest", "node"]
   },
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["src"],
   "exclude": ["src/bundler.js", "node_modules"]
 }

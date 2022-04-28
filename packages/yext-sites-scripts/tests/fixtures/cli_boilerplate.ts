@@ -1,0 +1,8 @@
+export const CLI_BOILERPLATE = `This is a beta version of the Yext Command Line Interface
+
+Please upgrade the Yext CLI. Current version: 0.1_248. Top version: 0.1_250.
+
+In order to upgrade, please run \`brew upgrade yext\`
+
+
+`;

@@ -1,6 +1,5 @@
 import { getLocalData } from "./getLocalData.js";
 import { TEMPLATE_PATH } from "./constants.js";
-import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
 import { ViteDevServer } from "vite";
