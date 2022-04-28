@@ -27,7 +27,7 @@ afterEach(() => {
   mockChildProcess.stdout.destroy();
   mockChildProcess.stderr.destroy();
 
-  // Stale listeners from previous runs must be removed each test.
+  // Stale listeners from previous runs must be removed after each test.
   mockChildProcessEventEmitter.removeAllListeners();
 
   // Reset the mockParentProcessStdout's write function.
@@ -38,7 +38,7 @@ afterEach(() => {
     stdout: new Socket(),
     stderr: new Socket(),
     // The on and emit functions must be explicitly re-assigned after the stale
-    // listeners have been removed before each run.
+    // listeners have been removed after each test.
     on: mockChildProcessEventEmitter.on,
     emit: mockChildProcessEventEmitter.emit,
   };
@@ -73,22 +73,8 @@ describe("generateTestData", () => {
     const datadoc = await testRunnerPromise;
 
     expect(datadoc).toEqual(CLI_STREAM_DATA);
-    // There is no unrecognized data, so nothing should be written back to the parent process.
-    expect(mockParentProcessStdout.write).toBeCalledTimes(0);
-  });
-
-  it("properly ignores CLI Boilerplate when parsing stream data", async () => {
-    const testRunnerPromise = getGenerateTestDataRunner();
-
-    mockChildProcess.stdout.emit("data", `${CLI_BOILERPLATE}`);
-    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA)}`);
-    mockChildProcess.stdout.emit("data", `${CLI_BOILERPLATE}`);
-    mockChildProcess.emit("close");
-
-    const datadoc = await testRunnerPromise;
-
-    expect(datadoc).toEqual(CLI_STREAM_DATA);
-    // There is no unrecognized data, so nothing should be written back to the parent process.
+    // There is no output from the CLI other than the stream data, so nothing should be 
+    // written back to the parent process.
     expect(mockParentProcessStdout.write).toBeCalledTimes(0);
   });
 
@@ -105,7 +91,9 @@ describe("generateTestData", () => {
     const datadoc = await testRunnerPromise;
 
     expect(datadoc).toEqual(CLI_STREAM_DATA);
-    // There is unrecognized data, make sure we write back the expected message to the parent process.
+    // Make sure we write back the expected messages to the parent process.
+    expect(mockParentProcessStdout.write).toHaveBeenCalledTimes(2);
+    expect(mockParentProcessStdout.write).toHaveBeenCalledWith(CLI_BOILERPLATE);
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
       unrecognizedData
     );
