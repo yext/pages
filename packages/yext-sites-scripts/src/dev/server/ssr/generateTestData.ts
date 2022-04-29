@@ -45,7 +45,7 @@ export const generateTestData = async (
       }
 
       // If the CLI Boilerplate indicates that the user's version of the YextCLI is
-      // out of date, write back the relevant lines to the parent process so they can 
+      // out of date, write back the relevant lines to the parent process so they can
       // see their current version relative to the most recent and upgrade instructions.
       if (chunk.startsWith(CLI_BOILERPLATE_CHUNK_BEGIN)) {
         const upgadeLinesInCliBoilerplate = chunk
@@ -62,8 +62,8 @@ export const generateTestData = async (
         return;
       }
 
-      // This will act as a catch-all to write back any prompts to the the parent process 
-      // so the user can see it. Its main usage is to allow the user to go through the 
+      // This will act as a catch-all to write back any prompts to the the parent process
+      // so the user can see it. Its main usage is to allow the user to go through the
       // authentication flow from the parent process.
       stdout.write(chunk);
     });
