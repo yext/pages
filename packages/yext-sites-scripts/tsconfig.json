@@ -18,7 +18,7 @@
     "outDir": "./dist/types",
     "declaration": true,
     "emitDeclarationOnly": true,
-    "types": ["vite/client", "jest"]
+    "types": ["vite/client", "jest", "node"]
   },
   "include": ["src"],
   "exclude": ["src/bundler.js", "node_modules"]

@@ -1,12 +1,20 @@
 import { spawn } from "child_process";
+import {
+  CLI_BOILERPLATE_CHUNK_BEGIN,
+  STREAM_DATA_CHUNK_BEGIN,
+  UPGRADE_MESSAGE_LINE_BEGIN,
+  UPGRADE_INSTRUCTIONS_LINE_BEGIN,
+} from "./constants";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const generateTestData = async (
+  stdout: NodeJS.WriteStream,
   featureConfig: any,
   entityId: string
 ): Promise<any> => {
   return new Promise((resolve) => {
-    const generateTestDataExec = spawn(
+    let testData = "";
+
+    const childProcess = spawn(
       "yext",
       [
         "sites",
@@ -22,41 +30,50 @@ export const generateTestData = async (
         "--printDocuments",
       ],
       {
-        stdio: ["pipe", "pipe", "pipe"],
+        stdio: ["inherit", "pipe", "inherit"],
         shell: true,
       }
     );
 
-    let testData = "";
+    childProcess.stdout.on("data", (chunkBuff: Buffer) => {
+      const chunk = chunkBuff.toString("utf-8");
 
-    generateTestDataExec.stdout.setEncoding("utf8");
-    generateTestDataExec.stdout.on("data", (chunk) => {
-      if (chunk.startsWith("{")) {
+      // If the chunk is actual stream data, write to local variable.
+      if (chunk.startsWith(STREAM_DATA_CHUNK_BEGIN)) {
         testData += chunk;
-      } else if (
-        chunk.includes(
-          "This is a beta version of the Yext Command Line Interface"
-        )
-      ) {
         return;
-      } else {
-        process.stdout.write(chunk);
       }
+
+      // If the CLI Boilerplate indicates that the user's version of the YextCLI is
+      // out of date, write back the relevant lines to the parent process so they can
+      // see their current version relative to the most recent and upgrade instructions.
+      if (chunk.startsWith(CLI_BOILERPLATE_CHUNK_BEGIN)) {
+        const upgadeLinesInCliBoilerplate = chunk
+          .split("\n")
+          .filter(
+            (boilerplateLine) =>
+              boilerplateLine.startsWith(UPGRADE_MESSAGE_LINE_BEGIN) ||
+              boilerplateLine.startsWith(UPGRADE_INSTRUCTIONS_LINE_BEGIN)
+          )
+          .join("\n");
+
+        upgadeLinesInCliBoilerplate &&
+          stdout.write(upgadeLinesInCliBoilerplate);
+        return;
+      }
+
+      // This will act as a catch-all to write back any prompts to the the parent process
+      // so the user can see it. Its main usage is to allow the user to go through the
+      // authentication flow from the parent process.
+      stdout.write(chunk);
     });
 
-    generateTestDataExec.stderr.setEncoding("utf8");
-    generateTestDataExec.stderr.on("data", (chunk) => {
-      process.stderr.write(chunk);
-    });
-
-    generateTestDataExec.on("close", () => {
+    childProcess.on("close", () => {
       if (testData) {
         testData = JSON.parse(testData.trim());
       }
 
       resolve(testData);
     });
-
-    process.stdin.pipe(generateTestDataExec.stdin);
   });
 };
