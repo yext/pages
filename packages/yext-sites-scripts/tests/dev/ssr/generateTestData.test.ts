@@ -82,6 +82,28 @@ describe("generateTestData", () => {
     expect(mockParentProcessStdout.write).toBeCalledTimes(0);
   });
 
+  it("properly reads multi-chunk stream data from stdout and returns it as parsed JSON", async () => {
+    const testRunnerPromise = getGenerateTestDataRunner();
+
+    const streamDataAsString = JSON.stringify(CLI_STREAM_DATA);
+    mockChildProcess.stdout.emit(
+      "data",
+      `${streamDataAsString.slice(0, streamDataAsString.length / 2)}`
+    );
+    mockChildProcess.stdout.emit(
+      "data",
+      `${streamDataAsString.slice(streamDataAsString.length / 2)}`
+    );
+    mockChildProcess.emit("close");
+
+    const datadoc = await testRunnerPromise;
+
+    expect(datadoc).toEqual(CLI_STREAM_DATA);
+    // There is no output from the CLI other than the stream data, so nothing should be
+    // written back to the parent process.
+    expect(mockParentProcessStdout.write).toBeCalledTimes(0);
+  });
+
   it("properly redirects other output to the parent process' stdout", async () => {
     const testRunnerPromise = getGenerateTestDataRunner();
 
@@ -91,12 +113,12 @@ describe("generateTestData", () => {
       "data",
       `${CLI_BOILERPLATE_WITHOUT_UPGRADE_LINES}`
     );
-    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA)}`);
     mockChildProcess.stdout.emit("data", `${unrecognizedData}`);
     mockChildProcess.stdout.emit(
       "data",
       `${CLI_BOILERPLATE_WITHOUT_UPGRADE_LINES}`
     );
+    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA)}`);
     mockChildProcess.emit("close");
 
     const datadoc = await testRunnerPromise;
@@ -118,8 +140,8 @@ describe("generateTestData", () => {
       "data",
       `${CLI_BOILERPLATE_WITH_UPGRADE_LINES}`
     );
-    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA)}`);
     mockChildProcess.stdout.emit("data", `${unrecognizedData}`);
+    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA)}`);
     mockChildProcess.emit("close");
 
     const datadoc = await testRunnerPromise;

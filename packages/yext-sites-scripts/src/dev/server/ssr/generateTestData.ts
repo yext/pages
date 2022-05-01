@@ -35,11 +35,15 @@ export const generateTestData = async (
       }
     );
 
+    // Assume that all CLI chunks will come before any stream data. Once stream data is found
+    // assume the rest is relevant.
+    let foundTestData = false;
     childProcess.stdout.on("data", (chunkBuff: Buffer) => {
       const chunk = chunkBuff.toString("utf-8");
 
       // If the chunk is actual stream data, write to local variable.
-      if (chunk.startsWith(STREAM_DATA_CHUNK_BEGIN)) {
+      if (chunk.startsWith(STREAM_DATA_CHUNK_BEGIN) || foundTestData) {
+        foundTestData = true;
         testData += chunk;
         return;
       }
