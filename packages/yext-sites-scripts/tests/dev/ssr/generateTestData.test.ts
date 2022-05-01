@@ -86,8 +86,14 @@ describe("generateTestData", () => {
     const testRunnerPromise = getGenerateTestDataRunner();
 
     const streamDataAsString = JSON.stringify(CLI_STREAM_DATA);
-    mockChildProcess.stdout.emit("data", `${streamDataAsString.slice(0, streamDataAsString.length / 2)}`);
-    mockChildProcess.stdout.emit("data", `${streamDataAsString.slice(streamDataAsString.length / 2)}`);
+    mockChildProcess.stdout.emit(
+      "data",
+      `${streamDataAsString.slice(0, streamDataAsString.length / 2)}`
+    );
+    mockChildProcess.stdout.emit(
+      "data",
+      `${streamDataAsString.slice(streamDataAsString.length / 2)}`
+    );
     mockChildProcess.emit("close");
 
     const datadoc = await testRunnerPromise;
