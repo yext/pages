@@ -4,7 +4,10 @@
   "description": "A monorepo containing all packages used in Yext Sites rendering",
   "main": "index.js",
   "scripts": {
-    "fmt": "prettier -w ."
+    "fmt": "prettier -w .",
+    "release": "npm-run-all release:*",
+    "release:plugin": " npm --prefix packages/vite-plugin-yext-sites-ssg i && npm --prefix packages/vite-plugin-yext-sites-ssg run release",
+    "release:yss": " npm --prefix packages/yext-sites-scripts i && npm --prefix packages/yext-sites-scripts run release"
   },
   "repository": {
     "type": "git",
@@ -16,6 +19,7 @@
   },
   "homepage": "https://github.com/yext/sites-scripts#readme",
   "devDependencies": {
-    "prettier": "^2.6.2"
+    "prettier": "^2.6.2",
+    "npm-run-all": "^4.1.5"
   }
 }
