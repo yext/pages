@@ -21,8 +21,8 @@ export const config = {
 //   return JSON.parse(cogData.toString());
 // };
 
-const Test = ({ data }: { data: any }) => {
-  const { document } = data;
+const Test = (props: any) => {
+  const { document } = props;
   const { streamOutput } = document;
   const { name } = streamOutput;
 
