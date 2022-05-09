@@ -10,12 +10,12 @@ jobs:
   call_build:
     runs-on: ubuntu-latest
     uses: ./.github/workflows/build.yml
-      with:
-        package: "yext-sites-scripts"
+    with:
+      package: "yext-sites-scripts"
 
   call_unit_test:
     runs-on: ubuntu-latest
     needs: call_build
     uses: ./.github/workflows/unit_test.yml
-      with:
-        package: "yext-sites-scripts"
+    with:
+      package: "yext-sites-scripts"
