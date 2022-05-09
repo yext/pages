@@ -4,8 +4,8 @@ on:
   push:
     branches-ignore:
       - "main"
-    paths:
-      - "./packages/yext-sites-scripts/**"
+    # paths:
+    #   - "./packages/yext-sites-scripts/**"
 
 jobs:
   call_build:
