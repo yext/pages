@@ -2,7 +2,8 @@ name: Build and Test (Vite Plugin)
 
 on:
   pull_request:
-    paths: ["packages/vite-plugin-yext-sites-ssg/**"]
+    paths:
+      - "./packages/vite-plugin-yext-sites-ssg/**"
 
 jobs:
   call_build:

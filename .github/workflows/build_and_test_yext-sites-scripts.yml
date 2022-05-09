@@ -2,7 +2,8 @@ name: Build and Test (Yext Sites Scripts)
 
 on:
   pull_request:
-    paths: ["packages/yext-sites-scripts/**"]
+    paths:
+      - "./packages/yext-sites-scripts/**"
 
 jobs:
   call_build:
