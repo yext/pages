@@ -5,7 +5,7 @@ on:
     branches-ignore:
       - "main"
     paths:
-      - "./packages/yext-sites-scripts/**"
+      - "packages/yext-sites-scripts/**"
 
 jobs:
   call_build:

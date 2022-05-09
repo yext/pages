@@ -5,7 +5,7 @@ on:
     branches-ignore:
       - "main"
     paths:
-      - "./packages/vite-plugin-yext-sites-ssg/**"
+      - "packages/vite-plugin-yext-sites-ssg/**"
 
 jobs:
   call_build:
