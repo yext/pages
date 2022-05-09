@@ -18,7 +18,7 @@ export type Options = {
 const plugin = (opts: Options = {}): PluginOption[] => {
   const paths = pathsInit({ featuresOut: opts.featuresOut });
   const closeBundle = onComplete(paths);
- //update to see if action fires.
+  //update to see if action fires.
   return [
     {
       name: "yext-sites-ssg",
