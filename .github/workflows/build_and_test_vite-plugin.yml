@@ -1,10 +1,8 @@
 name: Build and Test (Vite Plugin)
 
 on:
-  push:
-    # paths: ["packages/vite-plugin-yext-sites-ssg/**"]
-    # branches-ignore:
-      # - main
+  pull_request:
+    paths: ["packages/vite-plugin-yext-sites-ssg/**"]
 
 jobs:
   call_build:

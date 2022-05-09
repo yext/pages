@@ -1,10 +1,8 @@
 name: Build and Test (Yext Sites Scripts)
 
 on:
-  push:
-    # paths: ["packages/yext-sites-scripts/**"]
-    # branches-ignore:
-    #   - main
+  pull_request:
+    paths: ["packages/yext-sites-scripts/**"]
 
 jobs:
   call_build:
