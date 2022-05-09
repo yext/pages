@@ -21,7 +21,8 @@ jobs:
       matrix:
         node-version: [16.x, 17.x]
     steps:
-      - uses: actions/checkout@v2
+      - name: "Checkout"
+        uses: actions/checkout@v3
       - name: "@yext/${{ inputs.package }}: build with node ${{ matrix.node-version }}"
         uses: actions/setup-node@v3
         with:
