@@ -27,4 +27,4 @@ jobs:
         with:
           name: build-output
           path: dist/
-      - run: npm run test
+      - run: npm run test --if-present
