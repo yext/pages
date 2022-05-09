@@ -8,13 +8,11 @@ on:
 
 jobs:
   call_build:
-    runs-on: ubuntu-latest
     uses: ./.github/workflows/build.yml
     with:
       package: "vite-plugin-yext-sites-ssg"
 
   call_unit_test:
-    runs-on: ubuntu-latest
     needs: call_build
     uses: ./.github/workflows/unit_test.yml
     with:
