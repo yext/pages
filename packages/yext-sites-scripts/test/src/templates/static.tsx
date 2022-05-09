@@ -13,11 +13,11 @@ export const getStaticProps = async (data: any): Promise<any> => {
   const url = `https://pokeapi.co/api/v2/pokemon/1`;
   const pokemon = await fetch(url).then((res) => res.json());
 
-  return { ...data, ...pokemon };
+  return { ...data, pokemon };
 };
 
-const Static = ({ data }: { data: any }) => {
-  const { name } = data;
+const Static = (props: any) => {
+  const { name } = props.pokemon;
 
   const [num, setNum] = useState<number>(0);
 
