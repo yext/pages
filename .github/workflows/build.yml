@@ -30,7 +30,6 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run types
-      - run: pwd
       - name: Create build-output artifact
         uses: actions/upload-artifact@v3
         with:
