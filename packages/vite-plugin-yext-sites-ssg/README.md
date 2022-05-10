@@ -43,5 +43,3 @@ npm run fmt
 ```
 
 This command runs prettier for standardized formatting across all files.
-
-test

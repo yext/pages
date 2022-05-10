@@ -80,5 +80,3 @@ npm run test
 ```
 
 This command will run all the tests in the package using Jest as the test runner.
-
-test
