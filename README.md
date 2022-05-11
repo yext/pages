@@ -19,6 +19,7 @@ Clone this repository
 `cd sites-scripts`
 
 Log into the yext npm account.
+
 1. You must have access to the org.
 1. You can check for access if you can see this package: https://www.npmjs.com/package/@yext/vite-plugin-yext-sites-ssg
 1. If you don't have access, ask in #discuss-react-on-sites
@@ -32,8 +33,9 @@ Build sites-scripts
 ## How to use sites-scripts now that it's pulled and built locally
 
 Update your package.json like the following (assuming your repo is in the same root directory as sites-scripts):
+
 ```json
 "@yext/yext-sites-scripts": "file:../sites-scripts/packages/yext-sites-scripts",
 "react": "../sites-scripts/packages/yext-sites-scripts/node_modules/react",
-"react-dom": "../sites-scripts/packages/yext-sites-scripts/node_modules/react-dom", 
+"react-dom": "../sites-scripts/packages/yext-sites-scripts/node_modules/react-dom",
 ```
