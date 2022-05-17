@@ -10,10 +10,9 @@ const resolvePath = (relativePath: string): string => {
 
 // Starter Path Defaults
 const templatePath = "./src/templates";
-const yextPath = "./.yext";
-const hydrationOut = `${yextPath}/hydration_templates`;
-let featureJson = "./sites-config/features.json";
 const distPath = "./dist";
+const hydrationOut = `${resolvePath(distPath)}/hydration_templates`;
+let featureJson = "./sites-config/features.json";
 const serverBundleOut = `${distPath}/assets/server`;
 
 /**
@@ -21,12 +20,15 @@ const serverBundleOut = `${distPath}/assets/server`;
  * @param filePath: an absolute filepath
  */
 const manifestPath = (filePath: string): string =>
-  `./${path.relative(yextPath, filePath)}`;
+  `./${path.relative(distPath, filePath)}`;
 
 const rootPath = (filePath: string): string =>
   `./${path.relative("./", filePath)}`;
 
-declare type PathOptions = {
+const serverBundlePath = (filePath: string): string =>
+  `../../desktop/${path.relative("./dist", filePath)}`;
+
+declare type PathOptions = { 
   /**
    * The path to output the feature.json to. By default, this is sites-config/feature.json.
    */
@@ -41,7 +43,6 @@ export default (opts?: PathOptions): Paths => {
   }
 
   const templateDir = resolvePath(templatePath);
-  const yextDir = resolvePath(yextPath);
   const hydrationOutputDir = resolvePath(hydrationOut);
   const hydrationBundleOutputDir = resolvePath(`${distPath}/hydration`);
   const serverBundleOutputDir = resolvePath(serverBundleOut);
@@ -50,7 +51,6 @@ export default (opts?: PathOptions): Paths => {
   return {
     resolvePath,
     templateDir,
-    yextDir,
     hydrationBundleOutputDir,
     hydrationOutputDir,
     serverBundleOutputDir,
@@ -58,13 +58,13 @@ export default (opts?: PathOptions): Paths => {
     distDir,
     manifestPath,
     rootPath,
+    serverBundlePath,
   };
 };
 
 export type Paths = {
   resolvePath: (string) => string;
   templateDir: string;
-  yextDir: string;
   hydrationBundleOutputDir: string;
   hydrationOutputDir: string;
   serverBundleOutputDir: string;
@@ -72,4 +72,5 @@ export type Paths = {
   distDir: string;
   manifestPath: (string) => string;
   rootPath: (string) => string;
+  serverBundlePath: (string) => string;
 };
