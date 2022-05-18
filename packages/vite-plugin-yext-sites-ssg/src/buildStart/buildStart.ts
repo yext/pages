@@ -57,9 +57,7 @@ const clean = (yextDir: string) => {
   }
 };
 
-const copyPluginFiles = (
-  fileEmitter: (emittedFile: EmittedFile) => string,
-) => {
+const copyPluginFiles = (fileEmitter: (emittedFile: EmittedFile) => string) => {
   const currentPath = new URL(import.meta.url).pathname;
   const pathToPluginsDir = path.resolve(currentPath, "../../../plugin");
   const pluginFiles = glob.sync(`${pathToPluginsDir}/*.ts`);
