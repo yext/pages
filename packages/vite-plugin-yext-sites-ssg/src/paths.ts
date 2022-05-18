@@ -28,7 +28,7 @@ const rootPath = (filePath: string): string =>
 const serverBundlePath = (filePath: string): string =>
   `../../desktop/${path.relative("./dist", filePath)}`;
 
-declare type PathOptions = { 
+declare type PathOptions = {
   /**
    * The path to output the feature.json to. By default, this is sites-config/feature.json.
    */
