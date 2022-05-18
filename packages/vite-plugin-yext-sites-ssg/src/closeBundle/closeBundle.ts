@@ -8,7 +8,6 @@ import {
   loadTemplateModules,
   TemplateModuleCollection,
 } from "./moduleLoader.js";
-import { copy } from "fs-extra";
 
 export default (paths: Paths) => {
   return async () => {
