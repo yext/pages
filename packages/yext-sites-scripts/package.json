@@ -35,7 +35,7 @@
     "dist/**/*"
   ],
   "dependencies": {
-    "@yext/vite-plugin-yext-sites-ssg": "file:../vite-plugin-yext-sites-ssg",
+    "@yext/vite-plugin-yext-sites-ssg": "^0.0.3",
     "ansi-to-html": "^0.7.2",
     "cli-spinners": "^2.6.1",
     "commander": "^9.1.0",
