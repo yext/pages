@@ -16,7 +16,7 @@ jobs:
         working-directory: ./packages/${{ inputs.package }}
     strategy:
       matrix:
-        node-version: [16.x, 17.x, 18.x]
+        node-version: [17.x, 18.x]
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
