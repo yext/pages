@@ -24,20 +24,16 @@ export default (paths: Paths) => {
       REACT_EXTENSIONS.has(path.parse(templatePath).ext)
     );
 
-    let finisher1 = logger.timedLog({
-      startLog: "Copying Yext plugin files",
-    });
     copyPluginFiles(this.emitFile);
-    finisher1.succeed("Successfully copied Yext plugin files");
 
-    let finisher2 = logger.timedLog({
+    let finisher = logger.timedLog({
       startLog: "Generating entry-points for hydration",
     });
     await generateHydrationEntryPoints(
       reactTemplates,
       paths.hydrationOutputDir
     );
-    finisher2.succeed(
+    finisher.succeed(
       `Generated ${reactTemplates.length} hydration entry-point${
         reactTemplates.length > 1 ? "s" : ""
       }`
@@ -58,6 +54,10 @@ const clean = (yextDir: string) => {
 };
 
 const copyPluginFiles = (fileEmitter: (emittedFile: EmittedFile) => string) => {
+  let finisher = logger.timedLog({
+    startLog: "Copying Yext plugin files",
+  });
+
   const currentPath = new URL(import.meta.url).pathname;
   const pathToPluginsDir = path.resolve(currentPath, "../../../plugin");
   const pluginFiles = glob.sync(`${pathToPluginsDir}/*.ts`);
@@ -69,6 +69,8 @@ const copyPluginFiles = (fileEmitter: (emittedFile: EmittedFile) => string) => {
       source: fs.readFileSync(filepath).toString(),
     });
   });
+
+  finisher.succeed("Successfully copied Yext plugin files");
 };
 
 const yextBanner = `
