@@ -8,10 +8,10 @@ import { Paths } from "../paths.js";
  */
 export const generateManifestFile = (
   featureNameToBundlePath: Map<string, string>,
-  { distDir, yextDir, rootPath }: Paths
+  { distDir, serverBundlePath }: Paths
 ): void => {
   const relativeBundlePaths = Array.from(featureNameToBundlePath.entries()).map(
-    ([name, path]) => [name, rootPath(path)]
+    ([name, path]) => [name, serverBundlePath(path)]
   );
 
   let bundlerManifest = Buffer.from("{}");
@@ -24,7 +24,9 @@ export const generateManifestFile = (
   };
 
   fs.writeFileSync(
-    `${yextDir}/manifest.json`,
+    `${distDir}/plugin/manifest.json`,
     JSON.stringify(manifest, null, "  ")
   );
+
+  fs.remove(`${distDir}/manifest.json`);
 };

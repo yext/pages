@@ -8,7 +8,6 @@ import {
   loadTemplateModules,
   TemplateModuleCollection,
 } from "./moduleLoader.js";
-import { pluginCopy } from "./pluginCopy.js";
 
 export default (paths: Paths) => {
   return async () => {
@@ -40,22 +39,12 @@ export default (paths: Paths) => {
       return;
     }
 
-    finisher = logger.timedLog({ startLog: `Copying Yext plugin files` });
-    try {
-      pluginCopy(paths);
-      finisher.succeed(`Successfully copied Yext plugin files`);
-    } catch (e) {
-      finisher.fail(`Failed to copy Yext plugin files`);
-      console.error(e);
-      return;
-    }
-
-    finisher = logger.timedLog({ startLog: "Writing .yext/manifest.json" });
+    finisher = logger.timedLog({ startLog: "Writing manifest.json" });
     try {
       await generateManifestFile(featureNameToBundlePath, paths);
-      finisher.succeed("Successfully wrote .yext/manifest.json");
+      finisher.succeed("Successfully wrote manifest.json");
     } catch (e) {
-      finisher.fail("Failed to write .yext/manifest.json");
+      finisher.fail("Failed to write manifest.json");
       console.error(e);
     }
   };

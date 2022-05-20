@@ -1,6 +1,6 @@
-import { Plugin, PluginOption } from "vite";
+import { PluginOption, UserConfig } from "vite";
 import buildStart from "./buildStart/buildStart.js";
-import onComplete from "./onComplete/onComplete.js";
+import closeBundle from "./closeBundle/closeBundle.js";
 import { readdir } from "fs/promises";
 import { parse } from "path";
 import pathsInit from "./paths.js";
@@ -17,13 +17,11 @@ export type Options = {
 
 const plugin = (opts: Options = {}): PluginOption[] => {
   const paths = pathsInit({ featuresOut: opts.featuresOut });
-  const closeBundle = onComplete(paths);
 
   return [
     {
-      name: "yext-sites-ssg",
-      config: async (config) => {
-        await buildStart(paths);
+      name: "vite-plugin-yext-sites-ssg",
+      config: async (config: UserConfig): Promise<UserConfig> => {
         return {
           build: {
             manifest: true,
@@ -46,11 +44,16 @@ const plugin = (opts: Options = {}): PluginOption[] => {
                 },
                 {}
               ),
+              output: {
+                assetFileNames: "assets/static/[name]-[hash][extname]",
+                chunkFileNames: "assets/static/[name]-[hash].js",
+              },
             },
           },
         };
       },
-      closeBundle,
+      buildStart: buildStart(paths),
+      closeBundle: closeBundle(paths),
     },
   ];
 };
