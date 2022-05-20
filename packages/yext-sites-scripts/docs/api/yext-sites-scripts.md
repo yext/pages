@@ -6,15 +6,16 @@
 
 ## Variables
 
-| Variable                                                             | Description                  |
-| -------------------------------------------------------------------- | ---------------------------- |
-| [ReactSitesContext](./yext-sites-scripts.reactsitescontext.md)       | TODO (SUMO-4392) - document. |
-| [routes](./yext-sites-scripts.routes.md)                             | TODO (SUMO-4392) - document. |
-| [useReactSitesScripts](./yext-sites-scripts.usereactsitesscripts.md) | TODO (SUMO-4392) - document. |
+|  Variable | Description |
+|  --- | --- |
+|  [ReactSitesContext](./yext-sites-scripts.reactsitescontext.md) | TODO (SUMO-4392) - document. |
+|  [routes](./yext-sites-scripts.routes.md) | TODO (SUMO-4392) - document. |
+|  [useReactSitesScripts](./yext-sites-scripts.usereactsitesscripts.md) | TODO (SUMO-4392) - document. |
 
 ## Type Aliases
 
-| Type Alias                                                       | Description                  |
-| ---------------------------------------------------------------- | ---------------------------- |
-| [GetServerSideProps](./yext-sites-scripts.getserversideprops.md) | TODO (SUMO-4392) - document. |
-| [Page](./yext-sites-scripts.page.md)                             | TODO (SUMO-4392) - document. |
+|  Type Alias | Description |
+|  --- | --- |
+|  [GetServerSideProps](./yext-sites-scripts.getserversideprops.md) | TODO (SUMO-4392) - document. |
+|  [Page](./yext-sites-scripts.page.md) | TODO (SUMO-4392) - document. |
+
