@@ -1,7 +1,7 @@
 {
   "name": "@yext/vite-plugin-yext-sites-ssg",
   "author": "Yext",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "description": "A vite plugin which provides automatic bundling of JS templates and an accompanying deno function used for static site generation in Yext Sites.",
   "main": "dist/esm/src/plugin.js",
