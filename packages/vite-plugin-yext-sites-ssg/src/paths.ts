@@ -13,7 +13,7 @@ const templatePath = "./src/templates";
 const distPath = "./dist";
 const hydrationOut = `${resolvePath(distPath)}/hydration_templates`;
 let featureJson = "./sites-config/features.json";
-const serverBundleOut = `${resolvePath(distPath)}/assets/server`;
+const serverBundleOut = `${distPath}/assets/server`;
 
 /**
  * Creates a filepath relative to the generated manifest.json, which lives under .yext
