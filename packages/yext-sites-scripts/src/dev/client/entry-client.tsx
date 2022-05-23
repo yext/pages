@@ -1,4 +1,5 @@
-import ReactDOM from "react-dom";
+import * as ReactDOM from "react-dom";
+import * as React from "react";
 
 const hydrate = async () => {
   type Route = {
