@@ -8,11 +8,13 @@ const [, , ...args] = process.argv;
 
 // Yext-sites-scripts requires react and react-dom be installed to function appropriately. If
 // these are not installed in instruct the user to install them.
-["react", "react-dom"].forEach(dep => {
+["react", "react-dom"].forEach((dep) => {
   try {
-  import(dep);
+    import(dep);
   } catch (e) {
-    console.error(`Cannot find "${dep}" which is a necessary dependency for generation. Please install this module.`);
+    console.error(
+      `Cannot find "${dep}" which is a necessary dependency for generation. Please install this module.`
+    );
     process.exit(1);
   }
 });
