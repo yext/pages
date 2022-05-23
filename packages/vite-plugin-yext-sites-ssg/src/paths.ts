@@ -13,7 +13,7 @@ const templatePath = "./src/templates";
 const distPath = "./dist";
 const hydrationOut = `${resolvePath(distPath)}/hydration_templates`;
 let featureJson = "./sites-config/features.json";
-const serverBundleOut = `${distPath}/assets/server`;
+const serverBundleOut = `${resolvePath(distPath)}/assets/server`;
 
 /**
  * Creates a filepath relative to the generated manifest.json, which lives under .yext
@@ -26,7 +26,7 @@ const rootPath = (filePath: string): string =>
   `./${path.relative("./", filePath)}`;
 
 const serverBundlePath = (filePath: string): string =>
-  `../../desktop/${path.relative("./dist", filePath)}`;
+  `./${path.relative(distPath, filePath)}`;
 
 declare type PathOptions = {
   /**
