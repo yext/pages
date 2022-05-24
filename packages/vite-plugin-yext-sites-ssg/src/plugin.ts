@@ -45,6 +45,7 @@ const plugin = (opts: Options = {}): PluginOption[] => {
                 {}
               ),
               output: {
+                intro: 'let global = globalThis;',
                 assetFileNames: "assets/static/[name]-[hash][extname]",
                 chunkFileNames: "assets/static/[name]-[hash].js",
               },
