@@ -1,3 +1,5 @@
+import { TemplateModule } from "../../../common/templateModule/types";
+
 /**
  * Imports modules from the server bundle paths and validates that they are of the expected form.
  * If they are not valid then an error is thrown.
@@ -20,7 +22,7 @@ export const loadTemplateModules = async (
     if (!mod.config) {
       throw new Error(`Template at "${p}" does not export a config$`);
     }
-    importedModules.push({ ...mod, serverPath: p });
+    importedModules.push({ ...mod, path: p });
   }
 
   validateModules(importedModules);
@@ -51,20 +53,6 @@ const validateUniqueFeatureName = (templateModules: TemplateModule[]) => {
       featureNames.add(featureName);
     });
 };
-
-// A domain representation of a template module. Contains all fields from an imported module as well
-// as metadata about the module used in downstream processing.
-export interface TemplateModule {
-  // The path to the server bundle this module was imported from
-  serverPath: string;
-  config: {
-    name: string;
-    stream: any;
-    streamId?: string;
-  };
-  getPath: any;
-  render: any;
-}
 
 // A TemplateModule which also exports a Page component used for hydration.
 export interface HydrationTemplateModule extends TemplateModule {
