@@ -5,10 +5,35 @@ import path from "path";
 
 const builds = [];
 
+let watch = false;
+const args = process.argv.slice(2);
+if (args.length > 0) {
+  if (args[0] === "--watch") {
+    console.log("Starting watch build. Listening for changes...");
+    watch = true;
+  }
+}
+
 /**
  * rm -f dist/ to have a clean build.
  */
 rmSync("./dist", { recursive: true, force: true });
+
+/**
+ * Copy yext plugin files from src/ to dist/ so they can be copied into the starter by the Vite
+ * plugin.
+ */
+const cjsPluginPath = "./dist/cjs/plugin/";
+const esmPluginPath = "./dist/esm/plugin/";
+const pluginFiles = glob.sync("./plugin/**.ts");
+mkdirSync(cjsPluginPath, {recursive: true});
+mkdirSync(esmPluginPath, {recursive: true});
+pluginFiles.map((filepath) =>
+  copyFile(filepath, `${cjsPluginPath}${path.basename(filepath)}`, () => {})
+);
+pluginFiles.map((filepath) =>
+  copyFile(filepath, `${esmPluginPath}${path.basename(filepath)}`, () => {})
+);
 
 // Transpile all files except this one
 const files = glob.sync("./src/**/*.*").filter((f) => f !== "./src/bundler.js");
@@ -43,24 +68,18 @@ try {
       ...commonBuildOpts,
       outdir: "dist/esm/src",
       format: "esm",
+      watch: watch && {
+        onRebuild(error) {
+          if (error) {
+            console.error("watch build failed:", error);
+            return;
+          }
+
+          console.log("Watch build succeeded. Listening for changes...");
+        },
+      },
     })
   );
 } catch (e) {
   console.error(e);
 }
-
-/**
- * Copy yext plugin files from src/ to dist/ so they can be copied into the starter by the Vite
- * plugin.
- */
-const cjsPluginPath = "./dist/cjs/plugin/";
-const esmPluginPath = "./dist/esm/plugin/";
-const pluginFiles = glob.sync("./plugin/**.ts");
-mkdirSync(cjsPluginPath);
-mkdirSync(esmPluginPath);
-pluginFiles.map((filepath) =>
-  copyFile(filepath, `${cjsPluginPath}${path.basename(filepath)}`, () => {})
-);
-pluginFiles.map((filepath) =>
-  copyFile(filepath, `${esmPluginPath}${path.basename(filepath)}`, () => {})
-);
