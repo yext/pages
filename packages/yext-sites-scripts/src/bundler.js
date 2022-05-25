@@ -20,7 +20,10 @@ const filters = new Set(["./src/bundler.js"]);
 const files = glob.sync("./src/**/*\\.*").filter((f) => !filters.has(f));
 
 // Add common shared code
-files.push.apply(files, glob.sync("../common/**/*.*").filter((f) => f !== "../common/tsconfig.json"));
+files.push.apply(
+  files,
+  glob.sync("../common/**/*.*").filter((f) => f !== "../common/tsconfig.json")
+);
 
 const commonBuildOpts = {
   bundle: false,

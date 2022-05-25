@@ -4,7 +4,7 @@ import { ViteDevServer } from "vite";
 import { pageLoader } from "../ssr/pageLoader.js";
 import { urlToFeature } from "../ssr/urlToFeature.js";
 import page404 from "../public/404";
-import { convertConfigToValidCogFormat } from "../../../../../common/feature/cogFeature"
+import { convertConfigToValidCogFormat } from "../../../../../common/feature/cogFeature";
 import { validateTemplateModule } from "../ssr/validateTemplateModule";
 import { featureNameToTemplateModule } from "../ssr/featureNameToTemplateModule.js";
 
@@ -23,13 +23,17 @@ export const serverRenderRoute =
 
       const templateModule = await featureNameToTemplateModule(vite, feature);
       if (!templateModule) {
-        console.error(`Cannot find template corresponding to feature: ${feature}`);
+        console.error(
+          `Cannot find template corresponding to feature: ${feature}`
+        );
         return res.status(404).end(page404);
       }
 
       validateTemplateModule(templateModule);
 
-      const cogFeatureConfig = convertConfigToValidCogFormat(templateModule.config);
+      const cogFeatureConfig = convertConfigToValidCogFormat(
+        templateModule.config
+      );
 
       const React = await import("react");
       const ReactDOMServer = await import("react-dom/server");

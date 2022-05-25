@@ -1,7 +1,10 @@
 import fs from "fs-extra";
 import path from "path";
 import { TemplateModuleCollection } from "./moduleLoader.js";
-import { FeatureConfig, convertConfigToValidFeatureFormat } from "../../../common/feature/feature.js";
+import {
+  FeatureConfig,
+  convertConfigToValidFeatureFormat,
+} from "../../../common/feature/feature.js";
 import { CogFeatureConfig } from "../../../common/feature/cogFeature";
 
 /**

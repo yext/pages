@@ -39,7 +39,10 @@ pluginFiles.map((filepath) =>
 let files = glob.sync("./src/**/*.*").filter((f) => f !== "./src/bundler.js");
 
 // Add common shared code
-files.push.apply(files, glob.sync("../common/**/*.*").filter((f) => f !== "../common/tsconfig.json"));
+files.push.apply(
+  files,
+  glob.sync("../common/**/*.*").filter((f) => f !== "../common/tsconfig.json")
+);
 
 const commonBuildOpts = {
   bundle: false,
