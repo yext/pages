@@ -6,6 +6,19 @@ import preview from "../preview/preview.js";
 
 const [, , ...args] = process.argv;
 
+// Yext-sites-scripts requires react and react-dom be installed to function appropriately. If
+// these are not installed in instruct the user to install them.
+["react", "react-dom"].forEach((dep) => {
+  try {
+    import(dep);
+  } catch (e) {
+    console.error(
+      `Cannot find "${dep}" which is a necessary dependency for generation. Please install this module.`
+    );
+    process.exit(1);
+  }
+});
+
 const [command] = args;
 
 if (!args.some((arg) => ["dev", "build", "preview", "init"].includes(arg))) {
