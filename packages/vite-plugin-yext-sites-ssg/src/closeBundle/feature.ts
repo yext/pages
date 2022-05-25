@@ -1,6 +1,8 @@
 import fs from "fs-extra";
 import path from "path";
 import { TemplateModuleCollection } from "./moduleLoader.js";
+import { FeatureConfig, convertConfigToValidFeatureFormat } from "../../../common/feature/feature.js";
+import { CogFeatureConfig } from "../../../common/feature/cogFeature";
 
 /**
  * Run feature.json Generation. Returns a mapping of feature name to bundle path.
@@ -12,29 +14,11 @@ export const createFeatureJson = async (
   const features: FeatureConfig[] = [];
   const streams = [];
   const featureNameToBundlePath = new Map();
-  for (const [featureName, mod] of templateModules.entries()) {
-    const streamConfig = mod.config.stream || null;
-    const streamId = mod.config.streamId;
-    let featureConfig: FeatureConfig = {
-      name: featureName,
-      streamId: streamConfig ? streamConfig["$id"] : streamId ? streamId : "",
-      templateType: "JS",
-      entityPageSet: {
-        plugin: {},
-      },
-    };
-    if (!streamId && (!streamConfig || !streamConfig["$id"])) {
-      featureConfig = {
-        ...featureConfig,
-        staticPage: {
-          plugin: {},
-        },
-      };
-      delete featureConfig["entityPageSet"];
-    }
+  for (const [featureName, module] of templateModules.entries()) {
+    const featureConfig = convertConfigToValidFeatureFormat(module.config);
     features.push(featureConfig);
-    featureNameToBundlePath.set(featureName, mod.serverPath);
-    streamConfig && streams.push({ ...streamConfig });
+    featureNameToBundlePath.set(featureName, module.path);
+    module.config.stream && streams.push({ ...module.config.stream });
   }
 
   const featureDir = path.dirname(featurePath);
@@ -55,7 +39,7 @@ const mergeFeatureJson = (
   featurePath: string,
   features: FeatureConfig[],
   streams: any
-) => {
+): CogFeatureConfig => {
   let originalFeaturesJson = {} as any;
   if (fs.existsSync(featurePath)) {
     originalFeaturesJson = JSON.parse(fs.readFileSync(featurePath));
@@ -67,22 +51,3 @@ const mergeFeatureJson = (
     streams,
   };
 };
-
-interface FeatureConfigBase {
-  name: string;
-  streamId: string;
-  templateType: "JS";
-}
-
-interface EntityPageSetConfig extends FeatureConfigBase {
-  entityPageSet: {
-    plugin: {};
-  };
-}
-interface StaticPageConfig extends FeatureConfigBase {
-  staticPage: {
-    plugin: {};
-  };
-}
-
-type FeatureConfig = EntityPageSetConfig | StaticPageConfig;

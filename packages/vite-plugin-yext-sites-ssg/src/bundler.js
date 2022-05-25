@@ -11,7 +11,10 @@ const builds = [];
 rmSync("./dist", { recursive: true, force: true });
 
 // Transpile all files except this one
-const files = glob.sync("./src/**/*.*").filter((f) => f !== "./src/bundler.js");
+let files = glob.sync("./src/**/*.*").filter((f) => f !== "./src/bundler.js");
+
+// Add common shared code
+files.push.apply(files, glob.sync("../common/**/*.*").filter((f) => f !== "../common/tsconfig.json"));
 
 const commonBuildOpts = {
   bundle: false,
