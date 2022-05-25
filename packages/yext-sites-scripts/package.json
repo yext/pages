@@ -9,8 +9,8 @@
   "author": "Yext",
   "private": "true",
   "type": "module",
-  "types": "dist/types/index.d.ts",
-  "main": "./dist/src/index.js",
+  "types": "dist/types/yext-sites-scripts/src/index.d.ts",
+  "main": "./dist/yext-sites-scripts/src/index.js",
   "engines": {
     "node": ">=17"
   },
@@ -29,7 +29,7 @@
     "test": "jest"
   },
   "bin": {
-    "yss": "dist/src/bin/yext-sites-scripts.js"
+    "yss": "dist/yext-sites-scripts/src/bin/yext-sites-scripts.js"
   },
   "files": [
     "dist/**/*"

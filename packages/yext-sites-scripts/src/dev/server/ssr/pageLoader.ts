@@ -4,13 +4,14 @@ import { ViteDevServer } from "vite";
 import { generateTestData } from "./generateTestData.js";
 import index from "../public/index";
 import { FC } from "react";
+import { CogFeatureConfig } from "../../../../../common/feature/cogFeature.js";
 
 type Props = {
   url: string;
   vite: ViteDevServer;
   templateFilename: string;
   entityId: string;
-  featureConfig: any;
+  cogFeatureConfig: CogFeatureConfig | null;
   dynamicGenerateData: boolean;
 };
 
@@ -25,7 +26,7 @@ export const pageLoader = async ({
   vite,
   templateFilename,
   entityId,
-  featureConfig,
+  cogFeatureConfig,
   dynamicGenerateData,
 }: Props): Promise<PageLoaderResult> => {
   // 1. Read index.html
@@ -52,16 +53,20 @@ export const pageLoader = async ({
 
   let streamOutput;
   // Don't try to pull stream data if one isn't defined. This is primarily for static pages.
-  if (featureConfig.streams) {
+  if (cogFeatureConfig?.streams) {
     if (dynamicGenerateData) {
       streamOutput = await generateTestData(
         process.stdout,
-        featureConfig,
+        cogFeatureConfig,
         entityId
       );
     } else {
       // Get the data from localData
       streamOutput = await getLocalData(entityId);
+    }
+    
+    if (!streamOutput) {
+      throw new Error(`Could not find document data for entityId: ${entityId}`);
     }
   }
 
