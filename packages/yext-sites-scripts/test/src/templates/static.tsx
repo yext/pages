@@ -31,3 +31,7 @@ const Static = (props: any) => {
 };
 
 export default Static;
+
+export const render = () => {
+  
+}
