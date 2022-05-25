@@ -16,7 +16,9 @@ export const featureNameToTemplateModule = async (
   for (const fileName of dir) {
     const templateModule = await loadTemplateModule(devserver, fileName);
 
-    if (feature === templateModule.config?.name?.replace(/\s/g, "").toLowerCase()) {
+    if (
+      feature === templateModule.config?.name?.replace(/\s/g, "").toLowerCase()
+    ) {
       return templateModule;
     }
   }

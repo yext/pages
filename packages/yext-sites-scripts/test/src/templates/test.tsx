@@ -29,10 +29,6 @@ const Test = (props: any) => {
 
 export default Test;
 
-export const getPath = () => {
+export const getPath = () => {};
 
-}
-
-export const render = () => {
-  
-}
+export const render = () => {};
