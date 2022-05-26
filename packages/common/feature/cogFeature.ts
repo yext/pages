@@ -2,7 +2,10 @@ import { Config } from "../templateModule/types";
 import { convertConfigToValidFeatureFormat, FeatureConfig } from "./feature";
 import { convertConfigToValidStreamFormat, StreamConfig } from "./stream";
 
-export type CogFeatureConfig = {
+/**
+ * Represents the feature configuration required by SitesCog - a features.json file.
+ */
+export interface CogFeatureConfig {
   locales?: string[];
   features: FeatureConfig[];
   streams?: StreamConfig[];

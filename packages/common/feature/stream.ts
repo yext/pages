@@ -1,6 +1,9 @@
 import { Config } from "../templateModule/types";
 
-export type StreamConfig = {
+/**
+ * A single stream representation for a {@link CogFeatureConfig.streams}.
+ */
+export interface StreamConfig {
   $id: string;
   source: string;
   destination: string;
