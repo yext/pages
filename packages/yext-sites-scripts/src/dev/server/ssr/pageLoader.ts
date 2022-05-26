@@ -28,7 +28,7 @@ export type PageLoaderResult = {
 type SsrLoadedModule = {
   default: React.FC;
   getStaticProps?: GetStaticProps<any>;
-}
+};
 
 export const pageLoader = async ({
   url,
@@ -49,7 +49,9 @@ export const pageLoader = async ({
   // 3. Load the server entry. vite.ssrLoadModule automatically transforms
   //    your ESM source code to be usable in Node.js! There is no bundling
   //    required, and provides efficient invalidation similar to HMR.
-  const module = await vite.ssrLoadModule(`/${TEMPLATE_PATH}/${templateFilename}`);
+  const module = await vite.ssrLoadModule(
+    `/${TEMPLATE_PATH}/${templateFilename}`
+  );
 
   if (!module.default) {
     throw Error(

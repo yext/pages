@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Data, Default, GetPath, TemplateConfig, Render } from "@yext/yext-sites-scripts";
+import {
+  Data,
+  Default,
+  GetPath,
+  TemplateConfig,
+  Render,
+} from "@yext/yext-sites-scripts";
 
 export const config: TemplateConfig = {
   name: "Product Test",

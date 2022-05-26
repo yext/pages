@@ -10,6 +10,6 @@ Additional metadata add by the toolchain
 
 ```typescript
 __meta: {
-        mode: "development" | "production";
-    };
+  mode: "development" | "production";
+}
 ```

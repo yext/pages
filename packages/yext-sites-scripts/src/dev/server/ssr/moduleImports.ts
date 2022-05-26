@@ -14,5 +14,7 @@ export async function importFresh(
   modulePath: string
 ): Promise<TemplateModule<any>> {
   const cacheBustingModulePath = `${modulePath}?update=${Date.now()}`;
-  return await devserver.ssrLoadModule(cacheBustingModulePath) as TemplateModule<any>;
+  return (await devserver.ssrLoadModule(
+    cacheBustingModulePath
+  )) as TemplateModule<any>;
 }
