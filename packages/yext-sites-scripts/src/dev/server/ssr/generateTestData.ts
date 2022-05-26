@@ -1,6 +1,5 @@
 import { spawn } from "child_process";
 import { CogFeatureConfig } from "../../../../../common/feature/cogFeature";
-import { Config } from "../../../../../common/templateModule/types";
 import {
   CLI_BOILERPLATE_CHUNK_BEGIN,
   STREAM_DATA_CHUNK_BEGIN,
@@ -15,14 +14,13 @@ export const generateTestData = async (
 ): Promise<any> => {
   return new Promise((resolve) => {
     let testData = "";
-
     const childProcess = spawn(
       "yext",
       [
         "sites",
         "generate-test-data",
         "--featureName",
-        `'${cogFeatureConfig.features[0].name}'`,
+        `'${cogFeatureConfig.features[0]?.name}'`,
         "--entityId",
         entityId,
         "--featuresConfig",

@@ -1,7 +1,5 @@
-import path from "path";
 import { TEMPLATE_PATH } from "./constants.js";
 import { readdir } from "fs/promises";
-import { importFresh } from "./moduleImports.js";
 import { ViteDevServer } from "vite";
 import { loadTemplateModule } from "./loadTemplateModule.js";
 import { TemplateModule } from "../../../../../common/templateModule/types.js";
@@ -10,9 +8,9 @@ import { TemplateModule } from "../../../../../common/templateModule/types.js";
 export const featureNameToTemplateModule = async (
   devserver: ViteDevServer,
   feature: string
-): Promise<TemplateModule | null> => {
+): Promise<TemplateModule<any> | null> => {
   const dir = await readdir(`./${TEMPLATE_PATH}`);
-  let templateFilename = null;
+
   for (const fileName of dir) {
     const templateModule = await loadTemplateModule(devserver, fileName);
 

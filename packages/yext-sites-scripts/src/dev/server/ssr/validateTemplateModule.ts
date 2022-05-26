@@ -3,7 +3,7 @@ import {
   TemplateModule,
 } from "../../../../../common/templateModule/types";
 
-export const validateTemplateModule = (templateModule: TemplateModule) => {
+export const validateTemplateModule = (templateModule: TemplateModule<any>) => {
   if (!templateModule.config) {
     throw new Error(
       `Template ${templateModule.filename} is missing an exported config function.`
