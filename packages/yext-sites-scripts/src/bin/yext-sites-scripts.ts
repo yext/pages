@@ -37,12 +37,12 @@ switch (command) {
     preview();
     break;
   case "init": {
-    let folderToCreate = null;
+    let folderToCreate;
 
     if (args.length == 2) {
       folderToCreate = args[1];
     }
-    init(folderToCreate);
+    init(folderToCreate || null);
     break;
   }
 }
