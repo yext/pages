@@ -4,8 +4,10 @@
 
 ## TemplateModule.getPath property
 
+The exported getPath function
+
 <b>Signature:</b>
 
 ```typescript
-getPath: (data: TData) => string;
+getPath: GetPath<T>;
 ```

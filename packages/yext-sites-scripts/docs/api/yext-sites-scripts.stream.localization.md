@@ -4,11 +4,13 @@
 
 ## Stream.localization property
 
+The localization used by the filter
+
 <b>Signature:</b>
 
 ```typescript
 localization: {
-        locales: string[];
+        locales?: string[];
         primary: boolean;
     };
 ```

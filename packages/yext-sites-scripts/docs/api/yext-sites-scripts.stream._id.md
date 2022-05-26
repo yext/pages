@@ -4,6 +4,8 @@
 
 ## Stream.$id property
 
+The identifier of the stream
+
 <b>Signature:</b>
 
 ```typescript

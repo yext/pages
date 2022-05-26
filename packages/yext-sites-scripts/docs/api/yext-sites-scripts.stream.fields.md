@@ -4,6 +4,8 @@
 
 ## Stream.fields property
 
+The fields to apply to the stream
+
 <b>Signature:</b>
 
 ```typescript

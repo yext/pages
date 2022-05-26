@@ -4,6 +4,8 @@
 
 ## Stream.filter property
 
+The filter to apply to the stream
+
 <b>Signature:</b>
 
 ```typescript

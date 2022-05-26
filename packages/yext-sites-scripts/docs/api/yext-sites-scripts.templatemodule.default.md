@@ -4,8 +4,10 @@
 
 ## TemplateModule.default property
 
+The exported default function
+
 <b>Signature:</b>
 
 ```typescript
-default: (data: TData) => JSX.Element;
+default: Default<T>;
 ```
