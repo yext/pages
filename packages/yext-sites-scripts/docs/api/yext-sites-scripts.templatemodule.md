@@ -9,17 +9,18 @@ A domain representation of a template module. Contains all fields from an import
 <b>Signature:</b>
 
 ```typescript
-export interface TemplateModule<TData>
+export interface TemplateModule<T> 
 ```
 
 ## Properties
 
-| Property                                                                 | Type                                                                            | Description       |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------- | ----------------- |
-| [config](./yext-sites-scripts.templatemodule.config.md)                  | [Config](./yext-sites-scripts.config.md)                                        |                   |
-| [default](./yext-sites-scripts.templatemodule.default.md)                | (data: TData) =&gt; JSX.Element                                                 |                   |
-| [filename](./yext-sites-scripts.templatemodule.filename.md)              | string                                                                          |                   |
-| [getPath](./yext-sites-scripts.templatemodule.getpath.md)                | (data: TData) =&gt; string                                                      |                   |
-| [getStaticProps?](./yext-sites-scripts.templatemodule.getstaticprops.md) | (data: [Data](./yext-sites-scripts.data.md)<!-- -->) =&gt; Promise&lt;TData&gt; | <i>(Optional)</i> |
-| [path](./yext-sites-scripts.templatemodule.path.md)                      | string                                                                          |                   |
-| [render](./yext-sites-scripts.templatemodule.render.md)                  | (data: TData) =&gt; string                                                      |                   |
+|  Property | Type | Description |
+|  --- | --- | --- |
+|  [config](./yext-sites-scripts.templatemodule.config.md) | [TemplateConfig](./yext-sites-scripts.templateconfig.md) | The exported config function |
+|  [default](./yext-sites-scripts.templatemodule.default.md) | [Default](./yext-sites-scripts.default.md)<!-- -->&lt;T&gt; | The exported default function |
+|  [filename](./yext-sites-scripts.templatemodule.filename.md) | string | The name of the file |
+|  [getPath](./yext-sites-scripts.templatemodule.getpath.md) | [GetPath](./yext-sites-scripts.getpath.md)<!-- -->&lt;T&gt; | The exported getPath function |
+|  [getStaticProps?](./yext-sites-scripts.templatemodule.getstaticprops.md) | [GetStaticProps](./yext-sites-scripts.getstaticprops.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> The optional exported getStaticProps function |
+|  [path](./yext-sites-scripts.templatemodule.path.md) | string | The filepath to the template file. This can be the raw TSX file when used during dev mode or the path to the server bundle this module was imported from during prod build. |
+|  [render](./yext-sites-scripts.templatemodule.render.md) | [Render](./yext-sites-scripts.render.md)<!-- -->&lt;T&gt; | The exported render function |
+

@@ -4,6 +4,8 @@
 
 ## TemplateModule.filename property
 
+The name of the file
+
 <b>Signature:</b>
 
 ```typescript

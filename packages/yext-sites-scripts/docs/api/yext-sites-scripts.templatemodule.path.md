@@ -4,6 +4,8 @@
 
 ## TemplateModule.path property
 
+The filepath to the template file. This can be the raw TSX file when used during dev mode or the path to the server bundle this module was imported from during prod build.
+
 <b>Signature:</b>
 
 ```typescript

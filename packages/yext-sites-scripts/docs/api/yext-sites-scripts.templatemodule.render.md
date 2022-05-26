@@ -4,8 +4,10 @@
 
 ## TemplateModule.render property
 
+The exported render function
+
 <b>Signature:</b>
 
 ```typescript
-render: (data: TData) => string;
+render: Render<T>;
 ```

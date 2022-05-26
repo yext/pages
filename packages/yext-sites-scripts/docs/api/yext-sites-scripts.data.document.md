@@ -4,10 +4,12 @@
 
 ## Data.document property
 
+The entire document returned after applying the stream to a single entity
+
 <b>Signature:</b>
 
 ```typescript
 document: {
-  streamOutput: any;
-}
+        streamOutput: Record<string, any>;
+    };
 ```

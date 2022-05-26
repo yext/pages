@@ -4,8 +4,10 @@
 
 ## TemplateModule.config property
 
+The exported config function
+
 <b>Signature:</b>
 
 ```typescript
-config: Config;
+config: TemplateConfig;
 ```

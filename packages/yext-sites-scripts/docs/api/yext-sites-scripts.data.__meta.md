@@ -4,10 +4,12 @@
 
 ## Data.\_\_meta property
 
+Additional metadata add by the toolchain
+
 <b>Signature:</b>
 
 ```typescript
 __meta: {
-  mode: "development" | "production";
-}
+        mode: "development" | "production";
+    };
 ```

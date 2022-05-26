@@ -4,17 +4,18 @@
 
 ## Data interface
 
-The shape of the data that Sites Cog generates.
+The shape of the data passed directly to the different template functions (render, getPath, etc).
 
 <b>Signature:</b>
 
 ```typescript
-export interface Data
+export interface Data 
 ```
 
 ## Properties
 
-| Property                                          | Type                                     | Description |
-| ------------------------------------------------- | ---------------------------------------- | ----------- |
-| [\_\_meta](./yext-sites-scripts.data.__meta.md)   | { mode: "development" \| "production"; } |             |
-| [document](./yext-sites-scripts.data.document.md) | { streamOutput: any; }                   |             |
+|  Property | Type | Description |
+|  --- | --- | --- |
+|  [\_\_meta](./yext-sites-scripts.data.__meta.md) | { mode: "development" \| "production"; } | Additional metadata add by the toolchain |
+|  [document](./yext-sites-scripts.data.document.md) | { streamOutput: Record&lt;string, any&gt;; } | The entire document returned after applying the stream to a single entity |
+

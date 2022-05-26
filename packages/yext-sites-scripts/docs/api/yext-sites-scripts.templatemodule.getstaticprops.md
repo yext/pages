@@ -4,8 +4,10 @@
 
 ## TemplateModule.getStaticProps property
 
+The optional exported getStaticProps function
+
 <b>Signature:</b>
 
 ```typescript
-getStaticProps?: (data: Data) => Promise<TData>;
+getStaticProps?: GetStaticProps<T>;
 ```
