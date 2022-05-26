@@ -26,8 +26,8 @@ rmSync("./dist", { recursive: true, force: true });
 const cjsPluginPath = "./dist/cjs/plugin/";
 const esmPluginPath = "./dist/esm/plugin/";
 const pluginFiles = glob.sync("./plugin/**.ts");
-mkdirSync(cjsPluginPath, {recursive: true});
-mkdirSync(esmPluginPath, {recursive: true});
+mkdirSync(cjsPluginPath, { recursive: true });
+mkdirSync(esmPluginPath, { recursive: true });
 pluginFiles.map((filepath) =>
   copyFile(filepath, `${cjsPluginPath}${path.basename(filepath)}`, () => {})
 );

@@ -3,7 +3,12 @@ import * as path from "path";
 import glob from "glob";
 import logger from "../log.js";
 import fs from "fs";
-import { PluginContext, NormalizedInputOptions, EmittedFile } from "rollup";
+import {
+  PluginContext,
+  NormalizedInputOptions,
+  EmittedFile,
+  EmitFile,
+} from "rollup";
 import { generateHydrationEntryPoints } from "./hydration.js";
 
 const REACT_EXTENSIONS = new Set([".tsx", ".jsx"]);
@@ -38,6 +43,8 @@ export default (paths: Paths) => {
         reactTemplates.length > 1 ? "s" : ""
       }`
     );
+
+    await injectRenderer(this.emitFile);
   };
 };
 
@@ -53,7 +60,7 @@ const clean = (yextDir: string) => {
   }
 };
 
-const copyPluginFiles = (fileEmitter: (emittedFile: EmittedFile) => string) => {
+const copyPluginFiles = (fileEmitter: EmitFile) => {
   let finisher = logger.timedLog({
     startLog: "Copying Yext plugin files",
   });
@@ -71,6 +78,22 @@ const copyPluginFiles = (fileEmitter: (emittedFile: EmittedFile) => string) => {
   });
 
   finisher.succeed("Successfully copied Yext plugin files");
+};
+
+// Injects the renderer module which is needed for all sites built with yss as an entrypoint chunk.
+const injectRenderer = async (fileEmitter: EmitFile) => {
+  let finisher = logger.timedLog({
+    startLog: "Injecting template renderer.",
+  });
+
+  const currentDir = new URL(".", import.meta.url).pathname;
+  fileEmitter({
+    type: "chunk",
+    id: `${currentDir}/rendering/renderer.js`,
+    fileName: "assets/renderer/templateRenderer.js",
+  });
+
+  finisher.succeed("Injected template renderer.");
 };
 
 const yextBanner = `
