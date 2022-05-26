@@ -4,17 +4,27 @@
 
 ## yext-sites-scripts package
 
+## Interfaces
+
+|  Interface | Description |
+|  --- | --- |
+|  [Config](./yext-sites-scripts.config.md) | The exported <code>config</code> function's definition. |
+|  [Data](./yext-sites-scripts.data.md) | The shape of the data that Sites Cog generates. |
+|  [Stream](./yext-sites-scripts.stream.md) | The stream portion of the exported <code>config</code> function's definition. |
+|  [TemplateModule](./yext-sites-scripts.templatemodule.md) | A domain representation of a template module. Contains all fields from an imported module as well as metadata about the module used in downstream processing. |
+
 ## Variables
 
-| Variable                                                             | Description                  |
-| -------------------------------------------------------------------- | ---------------------------- |
-| [ReactSitesContext](./yext-sites-scripts.reactsitescontext.md)       | TODO (SUMO-4392) - document. |
-| [routes](./yext-sites-scripts.routes.md)                             | TODO (SUMO-4392) - document. |
-| [useReactSitesScripts](./yext-sites-scripts.usereactsitesscripts.md) | TODO (SUMO-4392) - document. |
+|  Variable | Description |
+|  --- | --- |
+|  [ReactSitesContext](./yext-sites-scripts.reactsitescontext.md) | TODO (SUMO-4392) - document. |
+|  [routes](./yext-sites-scripts.routes.md) | TODO (SUMO-4392) - document. |
+|  [useReactSitesScripts](./yext-sites-scripts.usereactsitesscripts.md) | TODO (SUMO-4392) - document. |
 
 ## Type Aliases
 
-| Type Alias                                                       | Description                  |
-| ---------------------------------------------------------------- | ---------------------------- |
-| [GetServerSideProps](./yext-sites-scripts.getserversideprops.md) | TODO (SUMO-4392) - document. |
-| [Page](./yext-sites-scripts.page.md)                             | TODO (SUMO-4392) - document. |
+|  Type Alias | Description |
+|  --- | --- |
+|  [GetServerSideProps](./yext-sites-scripts.getserversideprops.md) | TODO (SUMO-4392) - document. |
+|  [Page](./yext-sites-scripts.page.md) | TODO (SUMO-4392) - document. |
+
