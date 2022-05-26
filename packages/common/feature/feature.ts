@@ -17,6 +17,9 @@ interface StaticPageConfig extends FeatureConfigBase {
   };
 }
 
+/**
+ * A single feature representation for a {@link CogFeatureConfig.features}.
+ */
 export type FeatureConfig = EntityPageSetConfig | StaticPageConfig;
 
 export const convertConfigToValidFeatureFormat = (
