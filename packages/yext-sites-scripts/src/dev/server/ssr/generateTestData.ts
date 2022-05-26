@@ -1,5 +1,5 @@
 import { spawn } from "child_process";
-import { CogFeatureConfig } from "../../../../../common/feature/cogFeature";
+import { FeaturesConfig } from "../../../../../common/src/feature/features";
 import {
   CLI_BOILERPLATE_CHUNK_BEGIN,
   STREAM_DATA_CHUNK_BEGIN,
@@ -9,7 +9,7 @@ import {
 
 export const generateTestData = async (
   stdout: NodeJS.WriteStream,
-  cogFeatureConfig: CogFeatureConfig,
+  featuresConfig: FeaturesConfig,
   entityId: string
 ): Promise<any> => {
   return new Promise((resolve) => {
@@ -20,11 +20,11 @@ export const generateTestData = async (
         "sites",
         "generate-test-data",
         "--featureName",
-        `'${cogFeatureConfig.features[0]?.name}'`,
+        `'${featuresConfig.features[0]?.name}'`,
         "--entityId",
         entityId,
         "--featuresConfig",
-        `'${JSON.stringify(cogFeatureConfig)}'`,
+        `'${JSON.stringify(featuresConfig)}'`,
         "--locale",
         "en",
         "--printDocuments",

@@ -10,7 +10,7 @@
   "private": "true",
   "type": "module",
   "types": "dist/types/yext-sites-scripts/src/index.d.ts",
-  "main": "./dist/yext-sites-scripts/src/index.js",
+  "main": "dist/yext-sites-scripts/src/index.js",
   "engines": {
     "node": ">=17"
   },

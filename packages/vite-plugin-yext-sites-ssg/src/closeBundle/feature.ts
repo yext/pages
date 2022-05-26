@@ -1,11 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import { TemplateModuleCollection } from "./moduleLoader.js";
-import {
-  FeatureConfig,
-  convertConfigToValidFeatureFormat,
-} from "../../../common/feature/feature.js";
-import { CogFeatureConfig } from "../../../common/feature/cogFeature";
+import { FeaturesConfig, FeatureConfig, convertTemplateConfigFeatureConfig } from "../../../common/src/feature/features";
 
 /**
  * Run feature.json Generation. Returns a mapping of feature name to bundle path.
@@ -18,7 +14,7 @@ export const createFeatureJson = async (
   const streams = [];
   const featureNameToBundlePath = new Map();
   for (const [featureName, module] of templateModules.entries()) {
-    const featureConfig = convertConfigToValidFeatureFormat(module.config);
+    const featureConfig = convertTemplateConfigFeatureConfig(module.config);
     features.push(featureConfig);
     featureNameToBundlePath.set(featureName, module.path);
     module.config.stream && streams.push({ ...module.config.stream });
@@ -42,7 +38,7 @@ const mergeFeatureJson = (
   featurePath: string,
   features: FeatureConfig[],
   streams: any
-): CogFeatureConfig => {
+): FeaturesConfig => {
   let originalFeaturesJson = {} as any;
   if (fs.existsSync(featurePath)) {
     originalFeaturesJson = JSON.parse(fs.readFileSync(featurePath));

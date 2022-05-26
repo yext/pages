@@ -1,7 +1,7 @@
 import {
-  Config,
+  TemplateConfig,
   TemplateModule,
-} from "../../../../../common/templateModule/types";
+} from "../../../../../common/src/template/types.js";
 
 export const validateTemplateModule = (templateModule: TemplateModule<any>) => {
   if (!templateModule.config) {
@@ -25,7 +25,7 @@ export const validateTemplateModule = (templateModule: TemplateModule<any>) => {
   }
 };
 
-const validateConfig = (filename: string, config: Config) => {
+const validateConfig = (filename: string, config: TemplateConfig) => {
   if (!config.name) {
     throw new Error(`Template ${filename} is a "name" in the config function.`);
   }

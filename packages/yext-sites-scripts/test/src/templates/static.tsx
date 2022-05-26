@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import fetch from "cross-fetch";
-import { Data, TemplateModule } from "@yext/yext-sites-scripts";
+import { Data, Default, GetPath, GetStaticProps, Render } from "@yext/yext-sites-scripts";
 
 export const config = {
   name: "static",
@@ -8,11 +8,11 @@ export const config = {
 
 type Pokemon = Data & { pokemon: { name: string } };
 
-export const getPath: TemplateModule<Pokemon>["getPath"] = (data: Pokemon) => {
+export const getPath: GetPath<Pokemon> = (data) => {
   return `static/${Math.random().toString()}`;
 };
 
-export const getStaticProps: TemplateModule<Pokemon>["getStaticProps"] = async (
+export const getStaticProps: GetStaticProps<Pokemon> = async (
   data: Data
 ) => {
   const url = `https://pokeapi.co/api/v2/pokemon/1`;
@@ -21,8 +21,8 @@ export const getStaticProps: TemplateModule<Pokemon>["getStaticProps"] = async (
   return { ...data, pokemon: { name: pokemon.name } };
 };
 
-const Static: TemplateModule<Pokemon>["default"] = (props: Pokemon) => {
-  const { name } = props.pokemon;
+const Static: Default<Pokemon> = (data) => {
+  const { name } = data.pokemon;
 
   const [num, setNum] = useState<number>(0);
 
@@ -37,4 +37,6 @@ const Static: TemplateModule<Pokemon>["default"] = (props: Pokemon) => {
 
 export default Static;
 
-export const render = () => {};
+export const render: Render<Pokemon> = (data) => {
+  return "";
+};

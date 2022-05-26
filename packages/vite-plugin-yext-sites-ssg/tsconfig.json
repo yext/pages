@@ -1,18 +1,13 @@
 {
   "extends": "../common/tsconfig",
   "compilerOptions": {
-    "target": "esnext",
-    "outDir": "./dist/types/",
-    "module": "esnext",
-    "noImplicitAny": false,
-    "jsx": "react",
     "allowJs": true,
-    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
-    "resolveJsonModule": true,
     "declaration": true,
-    "emitDeclarationOnly": true
+    "downlevelIteration": true,
+    "jsx": "react",
+    "outDir": "./dist/types/",
+    "resolveJsonModule": true
   },
   "include": ["src"],
   "exclude": ["plugin"]
