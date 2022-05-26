@@ -1,11 +1,11 @@
-import { PageLoaderResult } from "../ssr/pageLoader";
+import { PageLoaderResult } from "../ssr/pageLoader.js";
 import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
 import { pageLoader } from "../ssr/pageLoader.js";
 import { urlToFeature } from "../ssr/urlToFeature.js";
 import page404 from "../public/404";
-import { convertConfigToValidCogFormat } from "../../../../../common/feature/cogFeature";
-import { validateTemplateModule } from "../ssr/validateTemplateModule";
+import { convertTemplateConfigToFeaturesConfig } from "../../../../../common/src/feature/features.js";
+import { validateTemplateModule } from "../ssr/validateTemplateModule.js";
 import { featureNameToTemplateModule } from "../ssr/featureNameToTemplateModule.js";
 
 type Props = {
@@ -31,7 +31,7 @@ export const serverRenderRoute =
 
       validateTemplateModule(templateModule);
 
-      const cogFeatureConfig = convertConfigToValidCogFormat(
+      const featuresConfig = convertTemplateConfigToFeaturesConfig(
         templateModule.config
       );
 
@@ -44,7 +44,7 @@ export const serverRenderRoute =
           vite,
           templateFilename: templateModule.filename,
           entityId,
-          cogFeatureConfig,
+          featuresConfig,
           dynamicGenerateData,
         }
       );

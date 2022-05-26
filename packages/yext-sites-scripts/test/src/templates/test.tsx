@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Data, TemplateModule } from "@yext/yext-sites-scripts";
+import { Data, Default, GetPath, TemplateConfig, Render } from "@yext/yext-sites-scripts";
 
-export const config: TemplateModule<Data>["config"] = {
+export const config: TemplateConfig = {
   name: "Product Test",
   stream: {
     $id: "products",
@@ -16,7 +16,7 @@ export const config: TemplateModule<Data>["config"] = {
   },
 };
 
-const Test: TemplateModule<Data>["default"] = (data: Data) => {
+const Test: Default<Data> = (data) => {
   const { document } = data;
   const { streamOutput } = document;
   const { name } = streamOutput;
@@ -34,8 +34,10 @@ const Test: TemplateModule<Data>["default"] = (data: Data) => {
 
 export default Test;
 
-export const getPath: TemplateModule<Data>["getPath"] = (data: Data) => {
+export const getPath: GetPath<Data> = (data) => {
   return "";
 };
 
-export const render = () => {};
+export const render: Render<Data> = (data) => {
+  return "";
+};

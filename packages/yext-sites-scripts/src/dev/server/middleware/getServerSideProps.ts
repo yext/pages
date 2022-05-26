@@ -16,7 +16,6 @@ export const getServerSideProps =
       vite,
       templateFilename: "",
       entityId: "",
-      cogFeatureConfig: null,
       dynamicGenerateData: false,
     });
 

@@ -1,17 +1,13 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "outDir": "./dist/types/",
-    "module": "esnext",
-    "noImplicitAny": false,
-    "jsx": "react",
-    "allowJs": true,
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
-    "resolveJsonModule": true,
     "declaration": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "noImplicitAny": false,
+    "outDir": "./dist/types/",
+    "target": "ESNext"
   },
-  "include": ["common"]
+  "include": ["src"]
 }
