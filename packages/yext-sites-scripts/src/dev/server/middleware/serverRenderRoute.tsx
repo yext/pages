@@ -53,7 +53,7 @@ export const serverRenderRoute =
       // Since we are on the server using plain TS, and outside
       // of Vite, we are not using JSX here
       const appHtml = await ReactDOMServer.renderToString(
-        <Component {...props} />
+        React.createElement(Component, props)
       );
 
       // Inject the app-rendered HTML into the template.
