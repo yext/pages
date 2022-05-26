@@ -6,14 +6,11 @@ import { TemplateModule } from "../../../../../common/src/template/types.js";
 export const loadTemplateModule = async (
   devserver: ViteDevServer,
   templateFilename: string,
-  templateFilepath: string,
+  templateFilepath: string
 ): Promise<TemplateModule<any>> => {
   // Cache bust the module so a page refresh gets the updated module data
   // (such as a change to the config's name).
-  let templateModule = (await importFresh(
-    devserver,
-    templateFilepath
-  ));
+  let templateModule = await importFresh(devserver, templateFilepath);
 
   return {
     ...templateModule,

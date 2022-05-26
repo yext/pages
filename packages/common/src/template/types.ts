@@ -5,7 +5,7 @@
  * @public
  */
 export interface TemplateModule<T> {
-  /** 
+  /**
    * The filepath to the template file. This can be the raw TSX file when used during dev mode or
    * the path to the server bundle this module was imported from during prod build.
    */
@@ -26,31 +26,31 @@ export interface TemplateModule<T> {
 
 /**
  * The type definition for the template's getStaticProps function.
- * 
+ *
  * @public
  */
 export type GetStaticProps<T> = (data: Data) => Promise<T>;
 
 /**
  * The type definition for the template's getPath function.
- * 
+ *
  * @public
  */
- export type GetPath<T> = (data: T) => string;
+export type GetPath<T> = (data: T) => string;
 
- /**
+/**
  * The type definition for the template's render function.
- * 
+ *
  * @public
  */
-  export type Render<T> = (data: T) => string;
+export type Render<T> = (data: T) => string;
 
 /**
  * The type definition for the template's default function.
- * 
+ *
  * @public
  */
- export type Default<T> = (data: T) => JSX.Element;
+export type Default<T> = (data: T) => JSX.Element;
 
 /**
  * The exported `config` function's definition.
@@ -99,7 +99,7 @@ export interface Stream {
  */
 export interface Data {
   /** The entire document returned after applying the stream to a single entity */
-  document: { 
+  document: {
     /** The stream's entire output */
     streamOutput: Record<string, any>;
   };

@@ -12,7 +12,11 @@ export const featureNameToTemplateModule = async (
   const directoryFilenames = await readdir(`./${TEMPLATE_PATH}`);
 
   for (const fileName of directoryFilenames) {
-    const templateModule = await loadTemplateModule(devserver, fileName, `${TEMPLATE_PATH}/${fileName}`);
+    const templateModule = await loadTemplateModule(
+      devserver,
+      fileName,
+      `${TEMPLATE_PATH}/${fileName}`
+    );
 
     if (!templateModule.config || !templateModule.config.name) {
       continue;
@@ -29,4 +33,4 @@ export const featureNameToTemplateModule = async (
 
 const normalizeTemplateName = (name: string) => {
   return name.replace(/\s/g, "").toLowerCase();
-}
+};
