@@ -1,7 +1,7 @@
 /**
  * A domain representation of a template module. Contains all fields from an imported module as well
  * as metadata about the module used in downstream processing.
- * 
+ *
  * @public
  */
 export interface TemplateModule<TData> {
@@ -18,18 +18,18 @@ export interface TemplateModule<TData> {
 
 /**
  * The exported `config` function's definition.
- * 
+ *
  * @public
  */
 export interface Config {
   name: string;
   streamId?: string;
   stream?: Stream;
-};
+}
 
 /**
  * The stream portion of the exported `config` function's definition.
- * 
+ *
  * @public
  */
 export interface Stream {
@@ -43,11 +43,11 @@ export interface Stream {
     locales: string[];
     primary: boolean;
   };
-};
+}
 
 /**
  * The shape of the data that Sites Cog generates.
- * 
+ *
  * @public
  */
 export interface Data {
@@ -55,4 +55,4 @@ export interface Data {
   __meta: {
     mode: "development" | "production";
   };
-};
+}

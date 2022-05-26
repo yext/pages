@@ -9,15 +9,14 @@ The stream portion of the exported `config` function's definition.
 <b>Signature:</b>
 
 ```typescript
-export interface Stream 
+export interface Stream
 ```
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [$id](./yext-sites-scripts.stream._id.md) | string |  |
-|  [fields](./yext-sites-scripts.stream.fields.md) | string\[\] |  |
-|  [filter](./yext-sites-scripts.stream.filter.md) | { entityTypes?: string\[\]; savedFilterIds?: string\[\]; } |  |
-|  [localization](./yext-sites-scripts.stream.localization.md) | { locales: string\[\]; primary: boolean; } |  |
-
+| Property                                                    | Type                                                       | Description |
+| ----------------------------------------------------------- | ---------------------------------------------------------- | ----------- |
+| [$id](./yext-sites-scripts.stream._id.md)                   | string                                                     |             |
+| [fields](./yext-sites-scripts.stream.fields.md)             | string\[\]                                                 |             |
+| [filter](./yext-sites-scripts.stream.filter.md)             | { entityTypes?: string\[\]; savedFilterIds?: string\[\]; } |             |
+| [localization](./yext-sites-scripts.stream.localization.md) | { locales: string\[\]; primary: boolean; }                 |             |

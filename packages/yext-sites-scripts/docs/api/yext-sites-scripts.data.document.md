@@ -8,6 +8,6 @@
 
 ```typescript
 document: {
-        streamOutput: any;
-    };
+  streamOutput: any;
+}
 ```

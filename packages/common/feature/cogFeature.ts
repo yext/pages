@@ -9,7 +9,7 @@ export interface CogFeatureConfig {
   locales?: string[];
   features: FeatureConfig[];
   streams?: StreamConfig[];
-};
+}
 
 export const convertConfigToValidCogFormat = (
   config: Config

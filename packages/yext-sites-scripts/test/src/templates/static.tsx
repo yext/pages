@@ -6,16 +6,15 @@ export const config = {
   name: "static",
 };
 
-type Pokemon = Data & 
-  { pokemon: 
-    { name: string}
-  };
+type Pokemon = Data & { pokemon: { name: string } };
 
 export const getPath: TemplateModule<Pokemon>["getPath"] = (data: Pokemon) => {
   return `static/${Math.random().toString()}`;
 };
 
-export const getStaticProps: TemplateModule<Pokemon>["getStaticProps"] = async (data: Data) => {
+export const getStaticProps: TemplateModule<Pokemon>["getStaticProps"] = async (
+  data: Data
+) => {
   const url = `https://pokeapi.co/api/v2/pokemon/1`;
   const pokemon = await fetch(url).then((res) => res.json());
 

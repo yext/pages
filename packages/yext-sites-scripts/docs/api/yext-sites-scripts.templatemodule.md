@@ -9,18 +9,17 @@ A domain representation of a template module. Contains all fields from an import
 <b>Signature:</b>
 
 ```typescript
-export interface TemplateModule<TData> 
+export interface TemplateModule<TData>
 ```
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [config](./yext-sites-scripts.templatemodule.config.md) | [Config](./yext-sites-scripts.config.md) |  |
-|  [default](./yext-sites-scripts.templatemodule.default.md) | (data: TData) =&gt; JSX.Element |  |
-|  [filename](./yext-sites-scripts.templatemodule.filename.md) | string |  |
-|  [getPath](./yext-sites-scripts.templatemodule.getpath.md) | (data: TData) =&gt; string |  |
-|  [getStaticProps?](./yext-sites-scripts.templatemodule.getstaticprops.md) | (data: [Data](./yext-sites-scripts.data.md)<!-- -->) =&gt; Promise&lt;TData&gt; | <i>(Optional)</i> |
-|  [path](./yext-sites-scripts.templatemodule.path.md) | string |  |
-|  [render](./yext-sites-scripts.templatemodule.render.md) | (data: TData) =&gt; string |  |
-
+| Property                                                                 | Type                                                                            | Description       |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------- | ----------------- |
+| [config](./yext-sites-scripts.templatemodule.config.md)                  | [Config](./yext-sites-scripts.config.md)                                        |                   |
+| [default](./yext-sites-scripts.templatemodule.default.md)                | (data: TData) =&gt; JSX.Element                                                 |                   |
+| [filename](./yext-sites-scripts.templatemodule.filename.md)              | string                                                                          |                   |
+| [getPath](./yext-sites-scripts.templatemodule.getpath.md)                | (data: TData) =&gt; string                                                      |                   |
+| [getStaticProps?](./yext-sites-scripts.templatemodule.getstaticprops.md) | (data: [Data](./yext-sites-scripts.data.md)<!-- -->) =&gt; Promise&lt;TData&gt; | <i>(Optional)</i> |
+| [path](./yext-sites-scripts.templatemodule.path.md)                      | string                                                                          |                   |
+| [render](./yext-sites-scripts.templatemodule.render.md)                  | (data: TData) =&gt; string                                                      |                   |
