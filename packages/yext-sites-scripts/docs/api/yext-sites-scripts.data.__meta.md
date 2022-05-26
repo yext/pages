@@ -8,6 +8,6 @@
 
 ```typescript
 __meta: {
-        mode: "development" | "production";
-    };
+  mode: "development" | "production";
+}
 ```

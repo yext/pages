@@ -16,7 +16,7 @@ export interface StreamConfig {
     locales: string[];
     primary: boolean;
   };
-};
+}
 
 export const convertConfigToValidStreamFormat = (
   config: Config

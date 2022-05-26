@@ -12,7 +12,7 @@ export const config: TemplateModule<Data>["config"] = {
     localization: {
       locales: ["en"],
       primary: false,
-    }
+    },
   },
 };
 

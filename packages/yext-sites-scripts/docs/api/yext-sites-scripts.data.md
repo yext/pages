@@ -9,13 +9,12 @@ The shape of the data that Sites Cog generates.
 <b>Signature:</b>
 
 ```typescript
-export interface Data 
+export interface Data
 ```
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [\_\_meta](./yext-sites-scripts.data.__meta.md) | { mode: "development" \| "production"; } |  |
-|  [document](./yext-sites-scripts.data.document.md) | { streamOutput: any; } |  |
-
+| Property                                          | Type                                     | Description |
+| ------------------------------------------------- | ---------------------------------------- | ----------- |
+| [\_\_meta](./yext-sites-scripts.data.__meta.md)   | { mode: "development" \| "production"; } |             |
+| [document](./yext-sites-scripts.data.document.md) | { streamOutput: any; }                   |             |

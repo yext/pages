@@ -9,14 +9,13 @@ The exported `config` function's definition.
 <b>Signature:</b>
 
 ```typescript
-export interface Config 
+export interface Config
 ```
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [name](./yext-sites-scripts.config.name.md) | string |  |
-|  [stream?](./yext-sites-scripts.config.stream.md) | [Stream](./yext-sites-scripts.stream.md) | <i>(Optional)</i> |
-|  [streamId?](./yext-sites-scripts.config.streamid.md) | string | <i>(Optional)</i> |
-
+| Property                                             | Type                                     | Description       |
+| ---------------------------------------------------- | ---------------------------------------- | ----------------- |
+| [name](./yext-sites-scripts.config.name.md)          | string                                   |                   |
+| [stream?](./yext-sites-scripts.config.stream.md)     | [Stream](./yext-sites-scripts.stream.md) | <i>(Optional)</i> |
+| [streamId?](./yext-sites-scripts.config.streamid.md) | string                                   | <i>(Optional)</i> |
