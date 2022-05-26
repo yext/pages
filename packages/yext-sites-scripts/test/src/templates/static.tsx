@@ -1,22 +1,28 @@
 import React, { useState } from "react";
 import fetch from "cross-fetch";
+import { Data, TemplateModule } from "@yext/yext-sites-scripts";
 
 export const config = {
   name: "static",
 };
 
-export const getPath = (data: any) => {
+type Pokemon = Data & 
+  { pokemon: 
+    { name: string}
+  };
+
+export const getPath: TemplateModule<Pokemon>["getPath"] = (data: Pokemon) => {
   return `static/${Math.random().toString()}`;
 };
 
-export const getStaticProps = async (data: any): Promise<any> => {
+export const getStaticProps: TemplateModule<Pokemon>["getStaticProps"] = async (data: Data) => {
   const url = `https://pokeapi.co/api/v2/pokemon/1`;
   const pokemon = await fetch(url).then((res) => res.json());
 
-  return { ...data, pokemon };
+  return { ...data, pokemon: { name: pokemon.name } };
 };
 
-const Static = (props: any) => {
+const Static: TemplateModule<Pokemon>["default"] = (props: Pokemon) => {
   const { name } = props.pokemon;
 
   const [num, setNum] = useState<number>(0);

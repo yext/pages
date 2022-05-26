@@ -2,16 +2,13 @@ import path from "path";
 import { ViteDevServer } from "vite";
 import { TEMPLATE_PATH } from "./constants.js";
 import { importFresh } from "./moduleImports.js";
-import {
-  TemplateModule,
-  Config,
-} from "../../../../../common/templateModule/types.js";
+import { TemplateModule } from "../../../../../common/templateModule/types.js";
 
 // Load the template file as a module given its filename
 export const loadTemplateModule = async (
   devserver: ViteDevServer,
   templateFilename: string
-): Promise<TemplateModule> => {
+): Promise<TemplateModule<any>> => {
   const filepath = path.resolve(
     process.cwd(),
     `${TEMPLATE_PATH}/${templateFilename}`
@@ -22,7 +19,7 @@ export const loadTemplateModule = async (
   let templateModule = (await importFresh(
     devserver,
     filepath
-  )) as TemplateModule;
+  )) as TemplateModule<any>;
 
   return {
     ...templateModule,
