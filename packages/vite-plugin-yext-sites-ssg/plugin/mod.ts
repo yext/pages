@@ -1,5 +1,5 @@
 import manifest from "./manifest.json" assert { type: "json" };
-import {default as render} from "./assets/renderer/templateRenderer.js";
+import { default as render } from "./assets/renderer/templateRenderer.js";
 
 /**
  * Generate simply executes the templateRenderer function bundled as part of yss build and returns
