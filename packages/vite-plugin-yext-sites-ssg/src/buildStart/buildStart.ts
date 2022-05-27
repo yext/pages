@@ -6,7 +6,6 @@ import fs from "fs";
 import {
   PluginContext,
   NormalizedInputOptions,
-  EmittedFile,
   EmitFile,
 } from "rollup";
 import { generateHydrationEntryPoints } from "./hydration.js";

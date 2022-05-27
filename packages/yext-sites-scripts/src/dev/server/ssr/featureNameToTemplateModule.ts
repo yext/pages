@@ -18,7 +18,7 @@ export const featureNameToTemplateModule = async (
       `${TEMPLATE_PATH}/${fileName}`
     );
 
-    if (!templateModule?.config || !templateModule?.config?.name) {
+    if (!templateModule?.config?.name) {
       continue;
     }
 
