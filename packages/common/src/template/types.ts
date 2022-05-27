@@ -103,7 +103,7 @@ export interface Data {
     /** The stream's entire output */
     streamOutput: Record<string, any>;
   };
-  /** Additional metadata add by the toolchain */
+  /** Additional metadata added by the toolchain */
   __meta: {
     /** Specifies if the data is returned in development or production mode */
     mode: "development" | "production";
