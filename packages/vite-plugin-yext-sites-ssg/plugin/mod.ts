@@ -1,25 +1,13 @@
-import {
-  generateResponses,
-  readTemplateModules,
-  GeneratedPage,
-  Document,
-} from "./templateUtils.ts";
-
-import { loadManifest } from "./manifest.ts";
+import manifest from "./manifest.json" assert { type: "json" };
+import { default as render } from "./assets/renderer/templateRenderer.js";
 
 /**
- * The functionality below will need to be transformed into an exported function to adhere
- * to the Yext Plugin interface. Similarly, any relative paths will need to be updated depending
- * on the final decision on where Plugin files will live.
+ * Generate simply executes the templateRenderer function bundled as part of yss build and returns
+ * the result.
  */
-
-export const Generate = async (data: Document): Promise<GeneratedPage> => {
-  const manifest = await loadManifest();
-  const templates = await readTemplateModules(data.feature, manifest);
-  const responses = await generateResponses(templates, {
+export const Generate = async (data): Promise<Record<any, any>> => {
+  return await render({
     document: data,
     __meta: { manifest },
   });
-
-  return responses;
 };
