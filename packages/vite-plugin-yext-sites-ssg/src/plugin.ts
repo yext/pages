@@ -50,8 +50,12 @@ const plugin = (opts: Options = {}): PluginOption[] => {
 };
 
 /**
+ * Produces a {@link InputOption} by first adding all templates at {@link templateDir} to be output
+ * at {@code server/}. Also adds an additional entry-point for all templates ending in tsx to be
+ * used to hydrate the bundle.
+ *
  * @param templateDir the directory where templates are stored.
- * @param hydrationOutputDir  the directory where hydration inputs will be generated at.
+ * @param hydrationOutputDir the directory where hydration inputs will be generated at.
  * @returns
  */
 const discoverInputs = async (

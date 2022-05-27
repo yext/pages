@@ -48,7 +48,7 @@ const validateModule = (mod: MaybeTemplateModule) => {
 
   if (!mod.default && !mod.render) {
     throw new Error(
-      "Module does not have the necessary exports to product page. A module should" +
+      "Module does not have the necessary exports to produce page. A module should" +
         "either have a React component as a default export or a render function."
     );
   }
