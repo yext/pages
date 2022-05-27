@@ -94,7 +94,7 @@ export interface Stream {
 
 /**
  * A manifest of bundled files present during a production build.
- * 
+ *
  * @public
  */
 export type Manifest = {
