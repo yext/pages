@@ -1,4 +1,5 @@
 import { ViteDevServer } from "vite";
+import { TemplateModule } from "../../../../../common/src/template/types";
 
 /**
  * Loads a module path with a cache-busting query param (the date) to ensure the loaded module is
@@ -11,7 +12,9 @@ import { ViteDevServer } from "vite";
 export async function importFresh(
   devserver: ViteDevServer,
   modulePath: string
-): Promise<Record<any, any>> {
+): Promise<TemplateModule<any>> {
   const cacheBustingModulePath = `${modulePath}?update=${Date.now()}`;
-  return await devserver.ssrLoadModule(cacheBustingModulePath);
+  return (await devserver.ssrLoadModule(
+    cacheBustingModulePath
+  )) as TemplateModule<any>;
 }

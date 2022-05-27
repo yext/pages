@@ -1,19 +1,14 @@
 {
+  "extends": "../common/tsconfig",
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
     "isolatedModules": true,
     "jsx": "react",
-    "outDir": "./dist/types",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "types": ["vite/client", "jest", "node"]
+    "target": "ESNext",
+    "outDir": "./dist/types/",
+    "types": ["vite/client", "jest", "node"],
+    "strict": true
   },
   "include": ["src"],
   "exclude": ["src/bundler.js", "node_modules"]

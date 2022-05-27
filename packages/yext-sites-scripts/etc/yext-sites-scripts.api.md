@@ -7,10 +7,29 @@
 
 import { Context } from "react";
 
+// @public
+export interface Data {
+  __meta: {
+    mode: "development" | "production";
+  };
+  document: {
+    streamOutput: Record<string, any>;
+  };
+}
+
+// @public
+export type Default<T> = (data: T) => JSX.Element;
+
+// @public
+export type GetPath<T> = (data: T) => string;
+
 // Warning: (ae-forgotten-export) The symbol "ServerSideArgs" needs to be exported by the entry point index.d.ts
 //
 // @public
 export type GetServerSideProps = (data: ServerSideArgs) => any;
+
+// @public
+export type GetStaticProps<T> = (data: Data) => Promise<T>;
 
 // @public
 export type Page = {
@@ -24,10 +43,45 @@ export type Page = {
 // @public
 export const ReactSitesContext: Context<ReactSitesScriptsContextType>;
 
+// @public
+export type Render<T> = (data: T) => string;
+
 // Warning: (ae-forgotten-export) The symbol "Route" needs to be exported by the entry point index.d.ts
 //
 // @public
 export const routes: Route[];
+
+// @public
+export interface Stream {
+  $id: string;
+  fields: string[];
+  filter: {
+    entityTypes?: string[];
+    savedFilterIds?: string[];
+  };
+  localization: {
+    locales?: string[];
+    primary: boolean;
+  };
+}
+
+// @public
+export interface TemplateConfig {
+  name: string;
+  stream?: Stream;
+  streamId?: string;
+}
+
+// @public
+export interface TemplateModule<T> {
+  config: TemplateConfig;
+  default: Default<T>;
+  filename: string;
+  getPath: GetPath<T>;
+  getStaticProps?: GetStaticProps<T>;
+  path: string;
+  render: Render<T>;
+}
 
 // @public
 export const useReactSitesScripts: () => {

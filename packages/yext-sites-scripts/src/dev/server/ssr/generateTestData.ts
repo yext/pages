@@ -1,4 +1,5 @@
 import { spawn } from "child_process";
+import { FeaturesConfig } from "../../../../../common/src/feature/features";
 import {
   CLI_BOILERPLATE_CHUNK_BEGIN,
   STREAM_DATA_CHUNK_BEGIN,
@@ -8,23 +9,22 @@ import {
 
 export const generateTestData = async (
   stdout: NodeJS.WriteStream,
-  featureConfig: any,
+  featuresConfig: FeaturesConfig,
   entityId: string
 ): Promise<any> => {
   return new Promise((resolve) => {
     let testData = "";
-
     const childProcess = spawn(
       "yext",
       [
         "sites",
         "generate-test-data",
         "--featureName",
-        `'${featureConfig?.features[0]?.name}'`,
+        `'${featuresConfig.features[0]?.name}'`,
         "--entityId",
         entityId,
         "--featuresConfig",
-        `'${JSON.stringify(featureConfig)}'`,
+        `'${JSON.stringify(featuresConfig)}'`,
         "--locale",
         "en",
         "--printDocuments",

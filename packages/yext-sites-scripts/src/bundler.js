@@ -19,6 +19,12 @@ rmSync("./dist", { recursive: true, force: true });
 const filters = new Set(["./src/bundler.js"]);
 const files = glob.sync("./src/**/*\\.*").filter((f) => !filters.has(f));
 
+// Add common shared code
+files.push.apply(
+  files,
+  glob.sync("../common/**/*.*").filter((f) => f !== "../common/tsconfig.json")
+);
+
 const commonBuildOpts = {
   bundle: false,
   minify: false,
@@ -42,12 +48,11 @@ const commonBuildOpts = {
   },
 };
 
-// CJS
+// ESM
 try {
-  esbuild.build({
+  await esbuild.build({
     ...commonBuildOpts,
     outdir: "dist",
-    outbase: ".",
     format: "esm",
   });
 } catch (e) {

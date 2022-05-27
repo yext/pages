@@ -4,9 +4,9 @@
   "version": "0.0.7",
   "private": true,
   "description": "A vite plugin which provides automatic bundling of JS templates and an accompanying deno function used for static site generation in Yext Sites.",
-  "main": "dist/esm/src/plugin.js",
+  "main": "dist/esm/src/vite-plugin-yext-sites-ssg/src/plugin.js",
   "type": "module",
-  "types": "dist/types/plugin.d.ts",
+  "types": "dist/types/vite-plugin-yext-sites-ssg/plugin.d.ts",
   "engines": {
     "node": ">=17"
   },
@@ -36,8 +36,8 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.21",
-    "@types/react": "^18.0.9",
-    "@types/react-dom": "^18.0.5",
+    "@types/react": "^17.0.40",
+    "@types/react-dom": "^17.0.10",
     "@types/ws": "^8.5.3",
     "esbuild": "^0.14.25",
     "typescript": "^4.6.2",

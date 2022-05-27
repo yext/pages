@@ -1,12 +1,12 @@
-import { PageLoaderResult } from "../ssr/pageLoader";
-import { buildFeatureConfig } from "../ssr/buildFeatureConfig.js";
-import { getTemplateConfig } from "../ssr/getTemplateConfig.js";
+import { PageLoaderResult } from "../ssr/pageLoader.js";
 import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
-import { featureToTemplate } from "../ssr/featureToTemplate.js";
 import { pageLoader } from "../ssr/pageLoader.js";
 import { urlToFeature } from "../ssr/urlToFeature.js";
 import page404 from "../public/404";
+import { convertTemplateConfigToFeaturesConfig } from "../../../../../common/src/feature/features.js";
+import { validateTemplateModule } from "../ssr/validateTemplateModule.js";
+import { featureNameToTemplateModule } from "../ssr/featureNameToTemplateModule.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -21,13 +21,19 @@ export const serverRenderRoute =
 
       const { feature, entityId } = urlToFeature(url);
 
-      const templateFilename = await featureToTemplate(vite, feature);
-      if (!templateFilename) {
+      const templateModule = await featureNameToTemplateModule(vite, feature);
+      if (!templateModule) {
+        console.error(
+          `Cannot find template corresponding to feature: ${feature}`
+        );
         return res.status(404).end(page404);
       }
 
-      const templateConfig = await getTemplateConfig(vite, templateFilename);
-      const featureConfig = buildFeatureConfig(templateConfig);
+      validateTemplateModule(templateModule);
+
+      const featuresConfig = convertTemplateConfigToFeaturesConfig(
+        templateModule.config
+      );
 
       const React = await import("react");
       const ReactDOMServer = await import("react-dom/server");
@@ -36,9 +42,9 @@ export const serverRenderRoute =
         {
           url,
           vite,
-          templateFilename,
+          templateFilename: templateModule.filename,
           entityId,
-          featureConfig,
+          featuresConfig,
           dynamicGenerateData,
         }
       );
@@ -47,7 +53,7 @@ export const serverRenderRoute =
       // Since we are on the server using plain TS, and outside
       // of Vite, we are not using JSX here
       const appHtml = await ReactDOMServer.renderToString(
-        <Component {...props} />
+        React.createElement(Component, props)
       );
 
       // Inject the app-rendered HTML into the template.
@@ -55,7 +61,7 @@ export const serverRenderRoute =
         "</head>",
         `<script type="text/javascript">
             window._RSS_PROPS_ = ${JSON.stringify(props)};
-            window._RSS_TEMPLATE_ = '${templateFilename}';
+            window._RSS_TEMPLATE_ = '${templateModule.filename}';
           </script></head>`
       );
 

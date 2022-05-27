@@ -1,28 +1,29 @@
 import React, { useState } from "react";
+import {
+  Data,
+  Default,
+  GetPath,
+  TemplateConfig,
+  Render,
+} from "@yext/yext-sites-scripts";
 
-export const config = {
+export const config: TemplateConfig = {
   name: "Product Test",
-  hydrate: true,
-  streamId: "products",
   stream: {
     $id: "products",
-    source: "knowledgeGraph",
-    destination: "pages",
     fields: ["name", "meta", "id", "uid"],
     filter: {
       entityTypes: ["location"],
     },
+    localization: {
+      locales: ["en"],
+      primary: false,
+    },
   },
 };
 
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const cogData = fs.readFileSync('localData/fastfood__631a91f020286f3ddf808a2dd52ce209.json')
-
-//   return JSON.parse(cogData.toString());
-// };
-
-const Test = (props: any) => {
-  const { document } = props;
+const Test: Default<Data> = (data) => {
+  const { document } = data;
   const { streamOutput } = document;
   const { name } = streamOutput;
 
@@ -38,3 +39,11 @@ const Test = (props: any) => {
 };
 
 export default Test;
+
+export const getPath: GetPath<Data> = (data) => {
+  return "";
+};
+
+export const render: Render<Data> = (data) => {
+  return "";
+};

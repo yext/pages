@@ -3,21 +3,31 @@ import { TEMPLATE_PATH } from "./constants.js";
 import { ViteDevServer } from "vite";
 import { generateTestData } from "./generateTestData.js";
 import index from "../public/index";
-import { FC } from "react";
+import { FeaturesConfig } from "../../../../../common/src/feature/features.js";
+import {
+  Data,
+  GetStaticProps,
+} from "../../../../../common/src/template/types.js";
+import React from "react";
 
-type Props = {
+type PageLoaderValues = {
   url: string;
   vite: ViteDevServer;
   templateFilename: string;
   entityId: string;
-  featureConfig: any;
+  featuresConfig?: FeaturesConfig;
   dynamicGenerateData: boolean;
 };
 
 export type PageLoaderResult = {
   template: string;
-  Component: FC;
+  Component: React.FC;
   props: any;
+};
+
+type SsrLoadedModule = {
+  default: React.FC;
+  getStaticProps?: GetStaticProps<any>;
 };
 
 export const pageLoader = async ({
@@ -25,9 +35,9 @@ export const pageLoader = async ({
   vite,
   templateFilename,
   entityId,
-  featureConfig,
+  featuresConfig,
   dynamicGenerateData,
-}: Props): Promise<PageLoaderResult> => {
+}: PageLoaderValues): Promise<PageLoaderResult> => {
   // 1. Read index.html
   let template = index;
 
@@ -39,33 +49,42 @@ export const pageLoader = async ({
   // 3. Load the server entry. vite.ssrLoadModule automatically transforms
   //    your ESM source code to be usable in Node.js! There is no bundling
   //    required, and provides efficient invalidation similar to HMR.
-  const [{ default: Component, getStaticProps }] = await Promise.all([
-    vite.ssrLoadModule(`/${TEMPLATE_PATH}/${templateFilename}`),
-  ]);
+  const module = await vite.ssrLoadModule(
+    `/${TEMPLATE_PATH}/${templateFilename}`
+  );
 
-  if (!Component) {
+  if (!module.default) {
     throw Error(
       "Default export missing in template: " +
         `/${TEMPLATE_PATH}/${templateFilename}`
     );
   }
 
+  const { default: Component, getStaticProps } = module as SsrLoadedModule;
+
   let streamOutput;
   // Don't try to pull stream data if one isn't defined. This is primarily for static pages.
-  if (featureConfig.streams) {
+  if (featuresConfig?.streams) {
     if (dynamicGenerateData) {
       streamOutput = await generateTestData(
         process.stdout,
-        featureConfig,
+        featuresConfig,
         entityId
       );
     } else {
       // Get the data from localData
       streamOutput = await getLocalData(entityId);
     }
+
+    if (!streamOutput) {
+      throw new Error(`Could not find document data for entityId: ${entityId}`);
+    }
   }
 
-  let props = { document: { streamOutput }, __meta: { mode: "development" } };
+  let props: Data = {
+    document: { streamOutput },
+    __meta: { mode: "development" },
+  };
   if (getStaticProps) {
     props = await getStaticProps(props);
   }
