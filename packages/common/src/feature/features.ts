@@ -2,7 +2,7 @@ import { TemplateConfig } from "../template/types.js";
 import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
 
 /**
- * The shape of data that represents a features.json file, used by our internal site generator.
+ * The shape of data that represents a features.json file, used by Yext Sites.
  */
 export interface FeaturesConfig {
   /** The feature configurations */
