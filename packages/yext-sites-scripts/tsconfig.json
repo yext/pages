@@ -8,8 +8,7 @@
     "target": "ESNext",
     "outDir": "./dist/types/",
     "types": ["vite/client", "jest", "node"],
-    "strict": true,
-    "useDefineForClassFields": true
+    "strict": true
   },
   "include": ["src"],
   "exclude": ["src/bundler.js", "node_modules"]

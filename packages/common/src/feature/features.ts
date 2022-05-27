@@ -54,6 +54,8 @@ export type FeatureConfig = EntityPageSetConfig | StaticPageConfig;
 export const convertTemplateConfigFeatureConfig = (
   config: TemplateConfig
 ): FeatureConfig => {
+  validate(config);
+  
   const streamConfig = config.stream || null;
 
   let featureConfigBase: FeatureConfigBase = {
@@ -86,3 +88,9 @@ export const convertTemplateConfigFeatureConfig = (
 
   return featureConfig;
 };
+
+const validate = (config: TemplateConfig) => {
+  if (config.streamId && config.stream) {
+    throw new Error(`TemplateConfig must not define both a "streamId" and a "stream".`);
+  }
+}

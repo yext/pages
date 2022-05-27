@@ -93,6 +93,20 @@ export interface Stream {
 }
 
 /**
+ * A manifest of bundled files present during a production build.
+ * 
+ * @public
+ */
+export type Manifest = {
+  /** A map of feature name to the bundle path of the feature */
+  bundlePaths: {
+    [key: string]: string;
+  };
+  /** If the bundler used generates a manifest.json then this field will contain that json object */
+  bundlerManifest?: any;
+};
+
+/**
  * The shape of the data passed directly to the different template functions (render, getPath, etc).
  *
  * @public
@@ -108,4 +122,6 @@ export interface Data {
     /** Specifies if the data is returned in development or production mode */
     mode: "development" | "production";
   };
+  /** A manifest of bundled files present during production mode */
+  manifest?: Manifest;
 }

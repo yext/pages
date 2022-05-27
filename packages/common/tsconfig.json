@@ -5,7 +5,6 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "noImplicitAny": false,
     "outDir": "./dist/types/",
     "target": "ESNext"
   },

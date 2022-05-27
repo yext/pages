@@ -10,7 +10,7 @@ export const validateTemplateModule = (templateModule: TemplateModule<any>) => {
     );
   }
 
-  validateConfig(templateModule.filename, templateModule.config);
+  validateConfig(templateModule);
 
   if (!templateModule.getPath) {
     throw new Error(
@@ -25,8 +25,12 @@ export const validateTemplateModule = (templateModule: TemplateModule<any>) => {
   }
 };
 
-const validateConfig = (filename: string, config: TemplateConfig) => {
-  if (!config.name) {
-    throw new Error(`Template ${filename} is a "name" in the config function.`);
+const validateConfig = (templateModule: TemplateModule<any>) => {
+  if (!templateModule.config.name) {
+    throw new Error(`Template ${templateModule.filename} is missing a "name" in the config function.`);
+  }
+
+  if (templateModule.config.streamId && templateModule.config.stream) {
+    throw new Error(`Template ${templateModule.filename} must not define both a "streamId" and a "stream".`);
   }
 };
