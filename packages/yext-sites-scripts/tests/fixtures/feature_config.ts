@@ -7,7 +7,7 @@ export const FEATURE_CONFIG: FeaturesConfig = {
       streamId: "products",
       templateType: "JS",
       entityPageSet: {
-        plugin: {}
+        plugin: {},
       },
     },
   ],

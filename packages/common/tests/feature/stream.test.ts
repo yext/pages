@@ -1,4 +1,7 @@
-import { convertTemplateConfigToStreamConfig, StreamConfig } from "../../src/feature/stream";
+import {
+  convertTemplateConfigToStreamConfig,
+  StreamConfig,
+} from "../../src/feature/stream";
 import { TemplateConfig } from "../../src/template/types";
 
 describe("stream", () => {
@@ -6,7 +9,7 @@ describe("stream", () => {
     const templateConfig: TemplateConfig = {
       name: "myTemplateConfig",
     };
-    
+
     const streamConfig = convertTemplateConfigToStreamConfig(templateConfig);
 
     expect(streamConfig).toEqual(void 0);
@@ -21,20 +24,20 @@ describe("stream", () => {
         filter: {},
         localization: {
           primary: true,
-        }
-      }
+        },
+      },
     };
-    
+
     const streamConfig = convertTemplateConfigToStreamConfig(templateConfig);
     const expectedStreamConfig: StreamConfig = {
       $id: "$id",
       source: "knowledgeGraph",
-      "destination": "pages",
+      destination: "pages",
       fields: ["foo"],
       filter: {},
       localization: {
         primary: true,
-      }
+      },
     };
 
     expect(streamConfig).toEqual(expectedStreamConfig);
