@@ -12,7 +12,7 @@ describe("stream", () => {
     expect(streamConfig).toEqual(void 0);
   });
 
-  it("adds source and destination if streamConfig defined", async () => {
+  it("adds source and destination if StreamConfig defined", async () => {
     const templateConfig: TemplateConfig = {
       name: "myTemplateConfig",
       stream: {
