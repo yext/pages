@@ -6,9 +6,10 @@
   "scripts": {
     "fmt": "prettier -w .",
     "release": "npm-run-all release:*",
-    "release:plugin": " npm --prefix packages/vite-plugin-yext-sites-ssg i && npm --prefix packages/vite-plugin-yext-sites-ssg run release",
-    "release:yss": " npm --prefix packages/yext-sites-scripts i && npm --prefix packages/yext-sites-scripts run release"
+    "release:plugin": "npm --prefix packages/vite-plugin-yext-sites-ssg run release",
+    "release:yss": " npm --prefix packages/yext-sites-scripts run release"
   },
+  "workspaces": ["./packages/*"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yext/sites-scripts.git"
