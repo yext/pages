@@ -45,6 +45,29 @@
           }),
           document.getElementById("root")
         );
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const enableDebug = urlParams.get('yextCFDebug');
+        if (enableDebug) {
+          console.log('enable Custom Field Debugger');
+          import("/src/customFieldDebugger/index.js")
+            .then(module => {
+              function rerender(props, container=document.getElementById('root')) {
+                ReactDOM.render(/* @__PURE__ */ React.createElement(Component, {
+                  ...props,
+                }),
+                container);
+              }
+
+              // Set up the profile proxy
+              const proxyProfile = module.getProxyProfile(window._RSS_PROPS_.document.streamOutput);
+              // Save a non-proxied version of the props so the CF Debugger doesn't trigger itself
+              window._RSS_PROPS_NOPROXY_ = structuredClone(window._RSS_PROPS_);
+              window._RSS_PROPS_.document.streamOutput = proxyProfile;
+
+              module.initCFDebugger(rerender);
+            });
+        }
       };
       hydrate();
     </script>
