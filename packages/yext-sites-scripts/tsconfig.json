@@ -10,6 +10,6 @@
     "types": ["vite/client", "jest", "node"],
     "strict": true
   },
-  "include": ["src"],
+  "include": ["src", "tests"],
   "exclude": ["src/bundler.js", "node_modules"]
 }
