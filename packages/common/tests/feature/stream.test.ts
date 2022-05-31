@@ -1,5 +1,5 @@
-import { convertTemplateConfigToStreamConfig, StreamConfig } from '../../src/feature/stream';
-import { TemplateConfig } from '../../src/template/types';
+import { convertTemplateConfigToStreamConfig, StreamConfig } from "../../src/feature/stream";
+import { TemplateConfig } from "../../src/template/types";
 
 describe("stream", () => {
   it("returns void if no stream", async () => {
