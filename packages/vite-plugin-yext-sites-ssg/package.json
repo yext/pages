@@ -18,6 +18,7 @@
     "watch": "node src/bundler.js --watch",
     "types": "tsc",
     "fmt": "prettier -w src",
+    "test": "",
     "release": "npm run build && npm run types"
   },
   "prepublish": "npm run release",
