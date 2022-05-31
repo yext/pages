@@ -99,6 +99,9 @@
     "testMatch": [
       "<rootDir>/yext-sites-scripts/tests/**/*.test.ts",
       "<rootDir>/common/**/tests/**/*.test.ts"
-    ]
+    ],
+    "transform": {
+      "^.+\\.ts?$": "ts-jest"
+    }
   }
 }
