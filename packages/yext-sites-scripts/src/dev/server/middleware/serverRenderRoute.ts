@@ -46,6 +46,7 @@ export const serverRenderRoute =
           entityId,
           featuresConfig,
           dynamicGenerateData,
+          feature,
         }
       );
 
