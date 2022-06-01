@@ -114,6 +114,8 @@ export type Manifest = {
 export interface Data {
   /** The entire document returned after applying the stream to a single entity */
   document: {
+    /** The name of the feature */
+    feature: string;
     /** The stream's entire output */
     streamOutput: Record<string, any>;
   };
@@ -121,7 +123,7 @@ export interface Data {
   __meta: {
     /** Specifies if the data is returned in development or production mode */
     mode: "development" | "production";
+    /** A manifest of bundled files present during production mode */
+    manifest?: Manifest;
   };
-  /** A manifest of bundled files present during production mode */
-  manifest?: Manifest;
 }

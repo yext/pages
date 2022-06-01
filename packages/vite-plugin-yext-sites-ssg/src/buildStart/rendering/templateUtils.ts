@@ -1,17 +1,13 @@
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
+import {
+  Data,
+  Manifest,
+  TemplateModule,
+} from "../../../../common/src/template/types";
 import { reactWrapper } from "./wrapper";
 
 const pathToModule = new Map();
-
-type Manifest = {
-  // A map of feature name to the bundle path of the feature.
-  bundlePaths: {
-    [key: string]: string;
-  };
-  // If the bundler used generates a manifest.json then this field will contain that json object.
-  bundlerManifest?: any;
-};
 
 /**
  * @returns an array of template modules matching the document's feature.
@@ -19,7 +15,7 @@ type Manifest = {
 export const readTemplateModules = async (
   feature: string,
   manifest: Manifest
-): Promise<TemplateModule> => {
+): Promise<TemplateModule<any>> => {
   const path = manifest.bundlePaths[feature].replace("assets", "..");
   if (!path) {
     throw new Error(`Could not find path for feature ${feature}`);
@@ -61,31 +57,6 @@ export type GeneratedPage = {
   redirects: string[];
 };
 
-export type Document = {
-  feature: string;
-  streamOutput: any;
-};
-
-export type Data = {
-  document: Document;
-  __meta: any;
-};
-
-type TemplateModule = {
-  config: {
-    name: string;
-    streamId: string;
-  };
-  getPath: (data: any) => string;
-  render: (data: any) => string;
-  getStaticProps?: (document: any) => Promise<any>;
-  /**
-   * A template module will have a default export if it is a react template. In this case, the
-   * default export will be the component class or function to render.
-   */
-  default?: any;
-};
-
 /**
  * Takes an array of template modules info and stream documents, processes them, and
  * writes them to disk.
@@ -93,7 +64,7 @@ type TemplateModule = {
  * @param data
  */
 export const generateResponses = async (
-  mod: TemplateModule,
+  mod: TemplateModule<any>,
   data: Data
 ): Promise<GeneratedPage> => {
   if (mod.getStaticProps) {
@@ -116,7 +87,7 @@ export const generateResponses = async (
  * 2. If a module exports a default export or a render function, use whatever is exported
  * 3. If a module doesn't export either, throw an error.
  */
-const renderHtml = (mod: TemplateModule, data: Data) => {
+const renderHtml = (mod: TemplateModule<any>, data: Data) => {
   const { default: component, render } = mod;
   if (!component && !render) {
     throw new Error(
