@@ -48,14 +48,17 @@
         );
 
         // Initialize custom field debugger
-        const CFDrerender = (props, container = document.getElementById("root")) => {
+        const CFDrerender = (
+          props,
+          container = document.getElementById("root")
+        ) => {
           ReactDOM.render(
             /* @__PURE__ */ React.createElement(Component, {
               ...props,
             }),
             container
           );
-        }
+        };
         CustomFieldDebugger(CFDrerender, window._RSS_PROPS_);
       };
       hydrate();
