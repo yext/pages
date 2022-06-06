@@ -1,7 +1,6 @@
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import { serverRenderRoute } from "./middleware/serverRenderRoute.js";
-import { getServerSideProps } from "./middleware/getServerSideProps.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import react from "@vitejs/plugin-react";
@@ -28,8 +27,6 @@ export const createServer = async (dynamicGenerateData: boolean) => {
 
   // Ignore favicon requests if it doesn't exist
   app.use(ignoreFavicon);
-
-  app.use("/data/*", getServerSideProps({ vite }));
 
   // when a page is requested, call our serverRenderRoute method
   app.use("*", serverRenderRoute({ vite, dynamicGenerateData }));
