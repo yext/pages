@@ -1,8 +1,8 @@
+import { Data } from "../../../../common/src/template/types";
 import {
   generateResponses,
   readTemplateModules,
   GeneratedPage,
-  Data,
 } from "./templateUtils";
 
 /**

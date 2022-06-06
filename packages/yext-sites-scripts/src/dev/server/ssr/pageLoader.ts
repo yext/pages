@@ -17,6 +17,7 @@ type PageLoaderValues = {
   entityId: string;
   featuresConfig?: FeaturesConfig;
   dynamicGenerateData: boolean;
+  feature: string;
 };
 
 export type PageLoaderResult = {
@@ -37,6 +38,7 @@ export const pageLoader = async ({
   entityId,
   featuresConfig,
   dynamicGenerateData,
+  feature,
 }: PageLoaderValues): Promise<PageLoaderResult> => {
   // 1. Read index.html
   let template = index;
@@ -82,7 +84,10 @@ export const pageLoader = async ({
   }
 
   let props: Data = {
-    document: { streamOutput },
+    document: {
+      feature: feature,
+      streamOutput,
+    },
     __meta: { mode: "development" },
   };
   if (getStaticProps) {

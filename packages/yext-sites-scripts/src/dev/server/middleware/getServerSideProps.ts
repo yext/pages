@@ -17,6 +17,7 @@ export const getServerSideProps =
       templateFilename: "",
       entityId: "",
       dynamicGenerateData: false,
+      feature: "",
     });
 
     res.send(props);

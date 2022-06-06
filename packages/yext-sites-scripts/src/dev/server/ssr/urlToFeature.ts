@@ -12,8 +12,7 @@ export const urlToFeature = (
     );
   }
 
-  // Remove all whitespaces and lowercase
-  const feature = uriSegments[0].replace(/\s/g, "").toLowerCase();
+  const feature = uriSegments[0];
   const entityId = uriSegments[1];
 
   return {
