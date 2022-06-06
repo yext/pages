@@ -14,6 +14,7 @@
     <script type="module">
       import ReactDOM from "react-dom";
       import React from "react";
+      import CustomFieldDebugger from "@yext/custom-field-debugger";
       const hydrate = async () => {
         const templates = import.meta.glob("/src/templates/*.(jsx|tsx)");
         const routes = Object.keys(templates).map((path) => {
@@ -46,34 +47,16 @@
           document.getElementById("root")
         );
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const enableDebug = urlParams.get("yextCFDebug");
-        if (enableDebug) {
-          console.log("enable Custom Field Debugger");
-          import("/src/customFieldDebugger/index.ts").then((module) => {
-            function rerender(
-              props,
-              container = document.getElementById("root")
-            ) {
-              ReactDOM.render(
-                /* @__PURE__ */ React.createElement(Component, {
-                  ...props,
-                }),
-                container
-              );
-            }
-
-            // Set up the profile proxy - this will log accesses to any field during rendering to `window.cfdProxyUsage`
-            const proxyProps = module.getProxyProfile(window._RSS_PROPS_);
-            // Provide the CF Debugger with a non-proxied version of the profile data so it doesn't trigger itself
-            const noProxyProps = structuredClone(window._RSS_PROPS_);
-            // Use the profile proxy & Rerender the page to log field accesses
-            window._RSS_PROPS_ = proxyProps;
-            rerender(window._RSS_PROPS_);
-
-            module.initCFDebugger(rerender, noProxyProps);
-          });
+        // Initialize custom field debugger
+        const CFDrerender = (props, container = document.getElementById("root")) => {
+          ReactDOM.render(
+            /* @__PURE__ */ React.createElement(Component, {
+              ...props,
+            }),
+            container
+          );
         }
+        CustomFieldDebugger(CFDrerender, window._RSS_PROPS_);
       };
       hydrate();
     </script>
