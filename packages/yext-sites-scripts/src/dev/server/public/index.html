@@ -50,7 +50,7 @@
         const enableDebug = urlParams.get("yextCFDebug");
         if (enableDebug) {
           console.log("enable Custom Field Debugger");
-          import("/src/customFieldDebugger/index.js").then((module) => {
+          import("/src/customFieldDebugger/index.ts").then((module) => {
             function rerender(
               props,
               container = document.getElementById("root")
@@ -63,15 +63,15 @@
               );
             }
 
-            // Set up the profile proxy
-            const proxyProfile = module.getProxyProfile(
-              window._RSS_PROPS_.document.streamOutput
-            );
-            // Save a non-proxied version of the props so the CF Debugger doesn't trigger itself
-            window._RSS_PROPS_NOPROXY_ = structuredClone(window._RSS_PROPS_);
-            window._RSS_PROPS_.document.streamOutput = proxyProfile;
+            // Set up the profile proxy - this will log accesses to any field during rendering to `window.cfdProxyUsage`
+            const proxyProps = module.getProxyProfile(window._RSS_PROPS_);
+            // Provide the CF Debugger with a non-proxied version of the profile data so it doesn't trigger itself
+            const noProxyProps = structuredClone(window._RSS_PROPS_);
+            // Use the profile proxy & Rerender the page to log field accesses
+            window._RSS_PROPS_ = proxyProps;
+            rerender(window._RSS_PROPS_);
 
-            module.initCFDebugger(rerender);
+            module.initCFDebugger(rerender, noProxyProps);
           });
         }
       };
