@@ -6,7 +6,8 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "outDir": "./dist/types/",
-    "target": "ESNext"
+    "target": "ESNext",
+    "types": ["jest"]
   },
-  "include": ["src"]
+  "include": ["src", "tests"]
 }

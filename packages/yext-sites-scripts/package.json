@@ -56,8 +56,8 @@
     "@types/babel__core": "^7.1.18",
     "@types/escape-html": "^1.0.2",
     "@types/express": "^4.17.13",
-    "@types/jest": "^27.4.1",
-    "@types/node": "^17.0.28",
+    "@types/jest": "^27.5.1",
+    "@types/node": "^17.0.36",
     "@types/react": "^17.0.40",
     "@types/react-dom": "^17.0.10",
     "@types/shelljs": "^0.8.11",
@@ -91,12 +91,17 @@
     ]
   },
   "jest": {
+    "rootDir": "..",
     "collectCoverageFrom": [
-      "<rootDir>/src/**/*.ts"
+      "<rootDir>/yext-sites-scripts/src/**/*.ts"
     ],
     "verbose": true,
     "testMatch": [
-      "**/tests/**/*.test.ts"
-    ]
+      "<rootDir>/yext-sites-scripts/tests/**/*.test.ts",
+      "<rootDir>/common/**/tests/**/*.test.ts"
+    ],
+    "transform": {
+      "^.+\\.ts?$": "ts-jest"
+    }
   }
 }

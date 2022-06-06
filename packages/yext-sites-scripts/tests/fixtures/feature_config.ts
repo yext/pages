@@ -1,11 +1,14 @@
-export const FEATURE_CONFIG = {
-  locales: ["en"],
+import { FeaturesConfig } from "../../../common/src/feature/features";
+
+export const FEATURE_CONFIG: FeaturesConfig = {
   features: [
     {
       name: "index",
       streamId: "products",
       templateType: "JS",
-      entityPageSet: {},
+      entityPageSet: {
+        plugin: {},
+      },
     },
   ],
   streams: [
@@ -15,7 +18,9 @@ export const FEATURE_CONFIG = {
       destination: "pages",
       fields: [],
       filter: {},
-      localization: {},
+      localization: {
+        primary: false,
+      },
     },
   ],
 };

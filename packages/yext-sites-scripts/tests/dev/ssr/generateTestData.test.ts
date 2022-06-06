@@ -63,9 +63,8 @@ jest.mock("child_process", () => ({
   ),
 }));
 
-const getGenerateTestDataRunner = () => {
-  return generateTestData(mockParentProcessStdout, FEATURE_CONFIG, "loc3");
-};
+const getGenerateTestDataRunner = () =>
+  generateTestData(mockParentProcessStdout, FEATURE_CONFIG, "loc3");
 
 describe("generateTestData", () => {
   it("properly reads stream data from stdout and returns it as parsed JSON", async () => {

@@ -1,5 +1,5 @@
-import { TemplateConfig } from "../template/types.js";
-import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
+import { TemplateConfig } from "../template/types";
+import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream";
 
 /**
  * The shape of data that represents a features.json file, used by Yext Sites.
@@ -28,7 +28,7 @@ export const convertTemplateConfigToFeaturesConfig = (
 
 interface FeatureConfigBase {
   name: string;
-  streamId: string;
+  streamId?: string;
   templateType: "JS";
 }
 
@@ -64,7 +64,7 @@ export const convertTemplateConfigFeatureConfig = (
       ? streamConfig.$id
       : config.streamId
       ? config.streamId
-      : "",
+      : undefined,
     templateType: "JS",
   };
 
