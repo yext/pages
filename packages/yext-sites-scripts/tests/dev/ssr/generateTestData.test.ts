@@ -1,4 +1,3 @@
-import { SpawnOptionsWithoutStdio } from "child_process";
 import { WriteStream } from "tty";
 import { generateTestData } from "../../../src/dev/server/ssr/generateTestData";
 import { EventEmitter } from "stream";
@@ -11,10 +10,10 @@ import { CLI_STREAM_DATA } from "../../fixtures/cli_stream_data";
 import { FEATURE_CONFIG } from "../../fixtures/feature_config";
 import { Socket } from "net";
 
-let mockParentProcessStdout = jest.mocked(new WriteStream(0));
+const mockParentProcessStdout = jest.mocked(new WriteStream(0));
 mockParentProcessStdout.write = jest.fn();
 
-let mockChildProcessEventEmitter = new EventEmitter();
+const mockChildProcessEventEmitter = new EventEmitter();
 
 let mockChildProcess = {
   stdin: new Socket(),
@@ -52,15 +51,9 @@ jest.mock("child_process", () => ({
   // this pattern allows us to only override the method we want to mock in the
   // child_process module while leaving the rest of the module's functionality intact.
   ...(jest.requireActual("child_process") as object),
-  spawn: jest.fn(
-    (
-      command: string,
-      args?: readonly string[] | undefined,
-      options?: SpawnOptionsWithoutStdio | undefined
-    ): any => {
-      return mockChildProcess;
-    }
-  ),
+  spawn: jest.fn((): any => {
+    return mockChildProcess;
+  }),
 }));
 
 const getGenerateTestDataRunner = () =>

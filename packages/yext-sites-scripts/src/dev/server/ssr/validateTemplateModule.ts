@@ -1,7 +1,4 @@
-import {
-  TemplateConfig,
-  TemplateModule,
-} from "../../../../../common/src/template/types.js";
+import { TemplateModule } from "../../../../../common/src/template/types.js";
 
 export const validateTemplateModule = (templateModule: TemplateModule<any>) => {
   if (!templateModule.config) {
