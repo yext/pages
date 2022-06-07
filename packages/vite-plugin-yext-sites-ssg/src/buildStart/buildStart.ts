@@ -1,23 +1,25 @@
-import { Paths } from "../paths.js";
 import * as path from "path";
 import glob from "glob";
 import logger from "../log.js";
 import fs from "fs";
 import { PluginContext, NormalizedInputOptions, EmitFile } from "rollup";
 import { generateHydrationEntryPoints } from "./hydration.js";
+import { ProjectStructure } from "../../../common/src/project/structure.js";
 
 const REACT_EXTENSIONS = new Set([".tsx", ".jsx"]);
 
-export default (paths: Paths) => {
+export default (projectStructure: ProjectStructure) => {
   return async function (
     this: PluginContext,
     options: NormalizedInputOptions
   ): Promise<void> {
     console.log(yextBanner);
-    clean(paths.distDir);
+    clean(projectStructure.getAbsolutePath("distRoot"));
 
     const templates: string[] = glob.sync(
-      `${paths.templateDir}/**/*.{tsx,jsx,js,ts}`
+      `${projectStructure.getAbsolutePath(
+        "templatesRoot"
+      )}/**/*.{tsx,jsx,js,ts}`
     );
 
     const reactTemplates = templates.filter((templatePath) =>
@@ -31,7 +33,7 @@ export default (paths: Paths) => {
     });
     await generateHydrationEntryPoints(
       reactTemplates,
-      paths.hydrationOutputDir
+      projectStructure.getAbsolutePath("hydrationBundleOutputRoot")
     );
     finisher.succeed(
       `Generated ${reactTemplates.length} hydration entry-point${

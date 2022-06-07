@@ -3,23 +3,26 @@ import buildStart from "./buildStart/buildStart.js";
 import closeBundle from "./closeBundle/closeBundle.js";
 import { readdir } from "fs/promises";
 import { parse } from "path";
-import pathsInit from "./paths.js";
 import { InputOption } from "rollup";
+import {
+  ProjectStructure,
+  ProjectStructureConfig,
+} from "../../common/src/project/structure.js";
 
 /**
  * Options to configure functionality of the plugin.
+ *
+ * @public
  */
 export type Options = {
-  /**
-   * The path to output the feature.json to. By default, this is sites-config/feature.json.
-   */
-  featuresOut?: string;
+  /** The structure of your project if overridden from the default */
+  projectStructureConfig?: ProjectStructureConfig;
 };
 
 const intro = `var global = globalThis;`;
 
 const plugin = (opts: Options = {}): PluginOption[] => {
-  const paths = pathsInit({ featuresOut: opts.featuresOut });
+  const projectStructure = new ProjectStructure(opts.projectStructureConfig);
 
   return [
     {
@@ -31,8 +34,8 @@ const plugin = (opts: Options = {}): PluginOption[] => {
             rollupOptions: {
               preserveEntrySignatures: "strict",
               input: await discoverInputs(
-                paths.templateDir,
-                paths.hydrationOutputDir
+                projectStructure.getAbsolutePath("templatesRoot"),
+                projectStructure.getAbsolutePath("hydrationBundleOutputRoot")
               ),
               output: {
                 intro,
@@ -43,8 +46,8 @@ const plugin = (opts: Options = {}): PluginOption[] => {
           },
         };
       },
-      buildStart: buildStart(paths),
-      closeBundle: closeBundle(paths),
+      buildStart: buildStart(projectStructure),
+      closeBundle: closeBundle(projectStructure),
     },
   ];
 };

@@ -1,5 +1,5 @@
 import fs from "fs-extra";
-import { Paths } from "../paths.js";
+import { ProjectStructure } from "../../../common/src/project/structure.js";
 
 /**
  * Creates a manifest.json for use with the Yext Sites plugin
@@ -8,15 +8,17 @@ import { Paths } from "../paths.js";
  */
 export const generateManifestFile = (
   featureNameToBundlePath: Map<string, string>,
-  { distDir, serverBundlePath }: Paths
+  projectStructure: ProjectStructure
+  // { distDir, serverBundlePath }: Paths
 ): void => {
+  const distRoot = projectStructure.getAbsolutePath("distRoot");
   const relativeBundlePaths = Array.from(featureNameToBundlePath.entries()).map(
-    ([name, path]) => [name, serverBundlePath(path)]
+    ([name, path]) => [name, projectStructure.getRelativePath("distRoot", path)]
   );
 
   let bundlerManifest = Buffer.from("{}");
-  if (fs.existsSync(`${distDir}/manifest.json`)) {
-    bundlerManifest = fs.readFileSync(`${distDir}/manifest.json`);
+  if (fs.existsSync(`${distRoot}/manifest.json`)) {
+    bundlerManifest = fs.readFileSync(`${distRoot}/manifest.json`);
   }
   const manifest = {
     bundlePaths: Object.fromEntries(relativeBundlePaths),
@@ -24,9 +26,9 @@ export const generateManifestFile = (
   };
 
   fs.writeFileSync(
-    `${distDir}/plugin/manifest.json`,
+    `${distRoot}/plugin/manifest.json`,
     JSON.stringify(manifest, null, "  ")
   );
 
-  fs.remove(`${distDir}/manifest.json`);
+  fs.remove(`${distRoot}/manifest.json`);
 };
