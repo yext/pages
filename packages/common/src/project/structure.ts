@@ -37,8 +37,8 @@ export interface ProjectFilesConfig {
  * @public
  */
 export interface ProjectStructureConfig {
-  pathsConfig: ProjectPathsConfig;
-  filesConfig: ProjectFilesConfig;
+  pathsConfig?: ProjectPathsConfig;
+  filesConfig?: ProjectFilesConfig;
 }
 
 const defaultConfig: ProjectStructureConfig = {
