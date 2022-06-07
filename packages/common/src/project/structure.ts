@@ -1,4 +1,5 @@
 import path from "path";
+import _ from "lodash";
 
 /**
  * Defines the folder paths where certain files live, relative to the root of the project.
@@ -7,15 +8,15 @@ import path from "path";
  */
 export interface ProjectPathsConfig {
   /** The folder path where the template files live */
-  templatesRoot: string;
+  templatesRoot?: string;
   /** The folder path where the sites-config files live */
-  sitesConfigRoot: string;
+  sitesConfigRoot?: string;
   /** The folder path where the compiled files should go */
-  distRoot: string;
+  distRoot?: string;
   /** The folder path where the compiled hydration bundles should go */
-  hydrationBundleOutputRoot: string;
+  hydrationBundleOutputRoot?: string;
   /** The folder path where the compiled server bundles should go */
-  serverBundleOutputRoot: string;
+  serverBundleOutputRoot?: string;
 }
 
 /**
@@ -25,9 +26,9 @@ export interface ProjectPathsConfig {
  */
 export interface ProjectFilesConfig {
   /** The name of the ci.json file */
-  ciConfig: string;
+  ciConfig?: string;
   /** The name of the features.json file */
-  featuresConfig: string;
+  featuresConfig?: string;
 }
 
 /**
@@ -45,8 +46,8 @@ const defaultConfig: ProjectStructureConfig = {
     templatesRoot: "src/templates",
     sitesConfigRoot: "sites-config",
     distRoot: "dist",
-    hydrationBundleOutputRoot: "dist/hydration_templates",
-    serverBundleOutputRoot: "dist/assets/server",
+    hydrationBundleOutputRoot: "hydration_templates",
+    serverBundleOutputRoot: "assets/server",
   },
   filesConfig: {
     ciConfig: "ci.json",
@@ -62,9 +63,22 @@ const defaultConfig: ProjectStructureConfig = {
 export class ProjectStructure {
   config: ProjectStructureConfig;
 
-  constructor(config: ProjectStructureConfig = defaultConfig) {
-    console.log(config);
-    this.config = config;
+  constructor(config: ProjectStructureConfig) {
+      this.config = this.updatePaths(_.merge(defaultConfig, config));
+      console.log(this.config);
+  }
+
+  /**
+   * Updates certain paths with their roots if not already specified. This makes it so you can do
+   * things like only change the distRoot without having to also update the hydrationBundleOutputRoot
+   * manually.
+   */
+  updatePaths = (config: ProjectStructureConfig): ProjectStructureConfig => {
+      const distRoot = config.pathsConfig.distRoot;
+      config.pathsConfig.hydrationBundleOutputRoot = distRoot + "/" + config.pathsConfig.hydrationBundleOutputRoot;
+      config.pathsConfig.serverBundleOutputRoot = distRoot + "/" + config.pathsConfig.serverBundleOutputRoot;
+
+      return config;
   }
 
   getRelativePath = <T extends keyof ProjectPathsConfig>(
