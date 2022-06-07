@@ -30,6 +30,7 @@ const yextSSG = (opts: Options = {}): PluginOption[] => {
       config: async (config: UserConfig): Promise<UserConfig> => {
         return {
           build: {
+            outDir: projectStructure.config.pathsConfig.distRoot,
             manifest: true,
             rollupOptions: {
               preserveEntrySignatures: "strict",
