@@ -9,7 +9,6 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
 export const generateManifestFile = (
   featureNameToBundlePath: Map<string, string>,
   projectStructure: ProjectStructure
-  // { distDir, serverBundlePath }: Paths
 ): void => {
   const distRoot = projectStructure.getAbsolutePath("distRoot");
   const relativeBundlePaths = Array.from(featureNameToBundlePath.entries()).map(
@@ -25,6 +24,9 @@ export const generateManifestFile = (
     bundlerManifest: JSON.parse(bundlerManifest.toString()),
   };
 
+  if (!fs.existsSync(`${distRoot}/plugin`)) {
+    fs.mkdirSync(`${distRoot}/plugin`);
+  }
   fs.writeFileSync(
     `${distRoot}/plugin/manifest.json`,
     JSON.stringify(manifest, null, "  ")

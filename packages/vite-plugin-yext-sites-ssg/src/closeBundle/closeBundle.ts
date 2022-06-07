@@ -34,7 +34,7 @@ export default (projectStructure: ProjectStructure) => {
     try {
       featureNameToBundlePath = await createFeatureJson(
         templateModules,
-        sitesConfigRoot
+        path.join(sitesConfigRoot, projectStructure.config.filesConfig.featuresConfig),
       );
       finisher.succeed(`Successfully wrote ${sitesConfigRoot}`);
     } catch (e) {
