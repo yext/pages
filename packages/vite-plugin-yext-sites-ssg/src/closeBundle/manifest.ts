@@ -24,9 +24,6 @@ export const generateManifestFile = (
     bundlerManifest: JSON.parse(bundlerManifest.toString()),
   };
 
-  if (!fs.existsSync(`${distRoot}/plugin`)) {
-    fs.mkdirSync(`${distRoot}/plugin`);
-  }
   fs.writeFileSync(
     `${distRoot}/plugin/manifest.json`,
     JSON.stringify(manifest, null, "  ")
