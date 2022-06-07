@@ -21,7 +21,7 @@ export type Options = {
 
 const intro = `var global = globalThis;`;
 
-const plugin = (opts: Options = {}): PluginOption[] => {
+const yextSSG = (opts: Options = {}): PluginOption[] => {
   const projectStructure = new ProjectStructure(opts.projectStructureConfig);
 
   return [
@@ -77,4 +77,4 @@ const discoverInputs = async (
   }, {});
 };
 
-export default plugin;
+export default yextSSG;
