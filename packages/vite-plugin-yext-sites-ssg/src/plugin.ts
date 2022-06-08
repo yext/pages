@@ -3,23 +3,20 @@ import buildStart from "./buildStart/buildStart.js";
 import closeBundle from "./closeBundle/closeBundle.js";
 import { readdir } from "fs/promises";
 import { parse } from "path";
-import pathsInit from "./paths.js";
 import { InputOption } from "rollup";
+import { ProjectStructure } from "../../common/src/project/structure.js";
 
 /**
  * Options to configure functionality of the plugin.
+ *
+ * @public
  */
-export type Options = {
-  /**
-   * The path to output the feature.json to. By default, this is sites-config/feature.json.
-   */
-  featuresOut?: string;
-};
+export type Options = {};
 
 const intro = `var global = globalThis;`;
 
 const plugin = (opts: Options = {}): PluginOption[] => {
-  const paths = pathsInit({ featuresOut: opts.featuresOut });
+  const projectStructure = new ProjectStructure();
 
   return [
     {
@@ -27,12 +24,13 @@ const plugin = (opts: Options = {}): PluginOption[] => {
       config: async (config: UserConfig): Promise<UserConfig> => {
         return {
           build: {
+            outDir: projectStructure.distRoot.path,
             manifest: true,
             rollupOptions: {
               preserveEntrySignatures: "strict",
               input: await discoverInputs(
-                paths.templateDir,
-                paths.hydrationOutputDir
+                projectStructure.templatesRoot.getAbsolutePath(),
+                projectStructure.hydrationBundleOutputRoot.getAbsolutePath()
               ),
               output: {
                 intro,
@@ -43,8 +41,8 @@ const plugin = (opts: Options = {}): PluginOption[] => {
           },
         };
       },
-      buildStart: buildStart(paths),
-      closeBundle: closeBundle(paths),
+      buildStart: buildStart(projectStructure),
+      closeBundle: closeBundle(projectStructure),
     },
   ];
 };
@@ -75,3 +73,4 @@ const discoverInputs = async (
 };
 
 export default plugin;
+export { plugin as yextSSG };
