@@ -6,7 +6,7 @@ import _ from "lodash";
  *
  * @public
  */
-export interface ProjectPathsConfig {
+export interface ProjectFilepathsConfig {
   /** The folder path where the template files live */
   templatesRoot?: string;
   /** The folder path where the sites-config files live */
@@ -24,7 +24,7 @@ export interface ProjectPathsConfig {
  *
  * @public
  */
-export interface ProjectFilesConfig {
+export interface ProjectFilenamesConfig {
   /** The name of the ci.json file */
   ciConfig?: string;
   /** The name of the features.json file */
@@ -37,19 +37,19 @@ export interface ProjectFilesConfig {
  * @public
  */
 export interface ProjectStructureConfig {
-  pathsConfig?: ProjectPathsConfig;
-  filesConfig?: ProjectFilesConfig;
+  filepathsConfig?: ProjectFilepathsConfig;
+  filenamesConfig?: ProjectFilenamesConfig;
 }
 
 const defaultConfig: ProjectStructureConfig = {
-  pathsConfig: {
+  filepathsConfig: {
     templatesRoot: "src/templates",
     sitesConfigRoot: "sites-config",
     distRoot: "dist",
     hydrationBundleOutputRoot: "hydration_templates",
     serverBundleOutputRoot: "assets/server",
   },
-  filesConfig: {
+  filenamesConfig: {
     ciConfig: "ci.json",
     featuresConfig: "features.json",
   },
@@ -74,25 +74,25 @@ export class ProjectStructure {
    * manually.
    */
   updatePaths = (config: ProjectStructureConfig): ProjectStructureConfig => {
-    const distRoot = config.pathsConfig.distRoot;
-    config.pathsConfig.hydrationBundleOutputRoot =
-      distRoot + "/" + config.pathsConfig.hydrationBundleOutputRoot;
-    config.pathsConfig.serverBundleOutputRoot =
-      distRoot + "/" + config.pathsConfig.serverBundleOutputRoot;
+    const distRoot = config.filepathsConfig.distRoot;
+    config.filepathsConfig.hydrationBundleOutputRoot =
+      distRoot + "/" + config.filepathsConfig.hydrationBundleOutputRoot;
+    config.filepathsConfig.serverBundleOutputRoot =
+      distRoot + "/" + config.filepathsConfig.serverBundleOutputRoot;
 
     return config;
   };
 
-  getRelativePath = <T extends keyof ProjectPathsConfig>(
+  getRelativePath = <T extends keyof ProjectFilepathsConfig>(
     pathType: T,
     to: string
   ): string => {
-    return `./${path.relative(this.config.pathsConfig[pathType], to)}`;
+    return `./${path.relative(this.config.filepathsConfig[pathType], to)}`;
   };
 
-  getAbsolutePath = <T extends keyof ProjectPathsConfig>(
+  getAbsolutePath = <T extends keyof ProjectFilepathsConfig>(
     pathType: T
   ): string => {
-    return path.resolve(this.config.pathsConfig[pathType]);
+    return path.resolve(this.config.filepathsConfig[pathType]);
   };
 }

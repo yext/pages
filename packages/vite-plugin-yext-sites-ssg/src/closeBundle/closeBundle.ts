@@ -36,7 +36,7 @@ export default (projectStructure: ProjectStructure) => {
         templateModules,
         path.join(
           sitesConfigRoot,
-          projectStructure.config.filesConfig.featuresConfig
+          projectStructure.config.filenamesConfig.featuresConfig
         )
       );
       finisher.succeed(`Successfully wrote ${sitesConfigRoot}`);
