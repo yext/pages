@@ -16,7 +16,7 @@ export default (projectStructure: ProjectStructure) => {
     try {
       const serverBundles = glob.sync(
         path.join(
-          projectStructure.getAbsolutePath("serverBundleOutputRoot"),
+          projectStructure.serverBundleOutputRoot.getAbsolutePath(),
           "**/*.js"
         )
       );
@@ -28,16 +28,13 @@ export default (projectStructure: ProjectStructure) => {
       return;
     }
 
-    const sitesConfigRoot = projectStructure.getAbsolutePath("sitesConfigRoot");
+    const sitesConfigRoot = projectStructure.sitesConfigRoot.getAbsolutePath();
     finisher = logger.timedLog({ startLog: `Writing ${sitesConfigRoot}` });
     let featureNameToBundlePath: Map<string, string>;
     try {
       featureNameToBundlePath = await createFeatureJson(
         templateModules,
-        path.join(
-          sitesConfigRoot,
-          projectStructure.config.filenamesConfig.featuresConfig
-        )
+        path.join(sitesConfigRoot, projectStructure.featuresConfig)
       );
       finisher.succeed(`Successfully wrote ${sitesConfigRoot}`);
     } catch (e) {

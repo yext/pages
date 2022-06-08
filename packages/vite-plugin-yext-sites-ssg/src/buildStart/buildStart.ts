@@ -14,12 +14,10 @@ export default (projectStructure: ProjectStructure) => {
     options: NormalizedInputOptions
   ): Promise<void> {
     console.log(yextBanner);
-    clean(projectStructure.getAbsolutePath("distRoot"));
+    clean(projectStructure.distRoot.getAbsolutePath());
 
     const templates: string[] = glob.sync(
-      `${projectStructure.getAbsolutePath(
-        "templatesRoot"
-      )}/**/*.{tsx,jsx,js,ts}`
+      `${projectStructure.templatesRoot.getAbsolutePath()}/**/*.{tsx,jsx,js,ts}`
     );
 
     const reactTemplates = templates.filter((templatePath) =>
@@ -33,7 +31,7 @@ export default (projectStructure: ProjectStructure) => {
     });
     await generateHydrationEntryPoints(
       reactTemplates,
-      projectStructure.getAbsolutePath("hydrationBundleOutputRoot")
+      projectStructure.hydrationBundleOutputRoot.getAbsolutePath()
     );
     finisher.succeed(
       `Generated ${reactTemplates.length} hydration entry-point${

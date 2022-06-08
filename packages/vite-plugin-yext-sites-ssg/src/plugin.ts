@@ -30,13 +30,13 @@ const plugin = (opts: Options = {}): PluginOption[] => {
       config: async (config: UserConfig): Promise<UserConfig> => {
         return {
           build: {
-            outDir: projectStructure.config.filepathsConfig.distRoot,
+            outDir: projectStructure.distRoot.path,
             manifest: true,
             rollupOptions: {
               preserveEntrySignatures: "strict",
               input: await discoverInputs(
-                projectStructure.getAbsolutePath("templatesRoot"),
-                projectStructure.getAbsolutePath("hydrationBundleOutputRoot")
+                projectStructure.templatesRoot.getAbsolutePath(),
+                projectStructure.hydrationBundleOutputRoot.getAbsolutePath()
               ),
               output: {
                 intro,

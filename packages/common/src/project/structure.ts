@@ -61,38 +61,55 @@ const defaultConfig: ProjectStructureConfig = {
  * @public
  */
 export class ProjectStructure {
-  config: ProjectStructureConfig;
+  #config: ProjectStructureConfig;
+
+  sitesConfigRoot: Path;
+  templatesRoot: Path;
+  distRoot: Path;
+  hydrationBundleOutputRoot: Path;
+  serverBundleOutputRoot: Path;
+  ciConfig: string;
+  featuresConfig: string;
 
   constructor(config: ProjectStructureConfig) {
-    this.config = this.updatePaths(_.merge(defaultConfig, config));
-    console.log(this.config);
+    this.#config = _.merge(defaultConfig, config);
+    this.sitesConfigRoot = new Path(
+      this.#config.filepathsConfig.sitesConfigRoot
+    );
+    this.templatesRoot = new Path(this.#config.filepathsConfig.templatesRoot);
+    this.distRoot = new Path(this.#config.filepathsConfig.distRoot);
+    this.hydrationBundleOutputRoot = new Path(
+      this.#config.filepathsConfig.distRoot +
+        "/" +
+        this.#config.filepathsConfig.hydrationBundleOutputRoot
+    );
+    this.serverBundleOutputRoot = new Path(
+      this.#config.filepathsConfig.distRoot +
+        "/" +
+        this.#config.filepathsConfig.serverBundleOutputRoot
+    );
+    this.ciConfig = this.#config.filenamesConfig.ciConfig;
+    this.featuresConfig = this.#config.filenamesConfig.featuresConfig;
+  }
+}
+
+/**
+ * Provides useful methods to operate on a specific property of {@link ProjectFilepathsConfig}.
+ *
+ * @public
+ */
+export class Path {
+  path: string;
+
+  constructor(path: string) {
+    this.path = path;
   }
 
-  /**
-   * Updates certain paths with their roots if not already specified. This makes it so you can do
-   * things like only change the distRoot without having to also update the hydrationBundleOutputRoot
-   * manually.
-   */
-  updatePaths = (config: ProjectStructureConfig): ProjectStructureConfig => {
-    const distRoot = config.filepathsConfig.distRoot;
-    config.filepathsConfig.hydrationBundleOutputRoot =
-      distRoot + "/" + config.filepathsConfig.hydrationBundleOutputRoot;
-    config.filepathsConfig.serverBundleOutputRoot =
-      distRoot + "/" + config.filepathsConfig.serverBundleOutputRoot;
-
-    return config;
+  getRelativePath = (to: string): string => {
+    return `./${path.relative(this.path, to)}`;
   };
 
-  getRelativePath = <T extends keyof ProjectFilepathsConfig>(
-    pathType: T,
-    to: string
-  ): string => {
-    return `./${path.relative(this.config.filepathsConfig[pathType], to)}`;
-  };
-
-  getAbsolutePath = <T extends keyof ProjectFilepathsConfig>(
-    pathType: T
-  ): string => {
-    return path.resolve(this.config.filepathsConfig[pathType]);
+  getAbsolutePath = (): string => {
+    return path.resolve(this.path);
   };
 }
