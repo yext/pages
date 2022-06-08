@@ -64,8 +64,8 @@ export class ProjectStructure {
   config: ProjectStructureConfig;
 
   constructor(config: ProjectStructureConfig) {
-      this.config = this.updatePaths(_.merge(defaultConfig, config));
-      console.log(this.config);
+    this.config = this.updatePaths(_.merge(defaultConfig, config));
+    console.log(this.config);
   }
 
   /**
@@ -74,12 +74,14 @@ export class ProjectStructure {
    * manually.
    */
   updatePaths = (config: ProjectStructureConfig): ProjectStructureConfig => {
-      const distRoot = config.pathsConfig.distRoot;
-      config.pathsConfig.hydrationBundleOutputRoot = distRoot + "/" + config.pathsConfig.hydrationBundleOutputRoot;
-      config.pathsConfig.serverBundleOutputRoot = distRoot + "/" + config.pathsConfig.serverBundleOutputRoot;
+    const distRoot = config.pathsConfig.distRoot;
+    config.pathsConfig.hydrationBundleOutputRoot =
+      distRoot + "/" + config.pathsConfig.hydrationBundleOutputRoot;
+    config.pathsConfig.serverBundleOutputRoot =
+      distRoot + "/" + config.pathsConfig.serverBundleOutputRoot;
 
-      return config;
-  }
+    return config;
+  };
 
   getRelativePath = <T extends keyof ProjectPathsConfig>(
     pathType: T,
