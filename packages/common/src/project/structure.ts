@@ -71,7 +71,7 @@ export class ProjectStructure {
   ciConfig: string;
   featuresConfig: string;
 
-  constructor(config: ProjectStructureConfig) {
+  constructor(config?: ProjectStructureConfig) {
     this.#config = _.merge(defaultConfig, config);
     this.sitesConfigRoot = new Path(
       this.#config.filepathsConfig.sitesConfigRoot
