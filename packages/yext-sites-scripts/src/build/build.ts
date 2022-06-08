@@ -4,9 +4,6 @@ import yextSSG from "@yext/vite-plugin-yext-sites-ssg";
 
 export default async () => {
   await build({
-    // root: path.resolve(__dirname, './project'),
-    // base: '/foo/',
-    // @ts-ignore
     plugins: [react(), yextSSG()],
   });
 };
