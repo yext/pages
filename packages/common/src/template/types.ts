@@ -102,6 +102,13 @@ export type Manifest = {
   bundlePaths: {
     [key: string]: string;
   };
+  /** A map of project roots to their paths */
+  projectFilepaths: {
+    templatesRoot: string;
+    distRoot: string;
+    hydrationBundleOutputRoot: string;
+    serverBundleOutputRoot: string;
+  };
   /** If the bundler used generates a manifest.json then this field will contain that json object */
   bundlerManifest?: any;
 };

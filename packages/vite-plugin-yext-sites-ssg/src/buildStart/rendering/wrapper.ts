@@ -1,6 +1,8 @@
-export const reactWrapper = (
-  data: any,
-  filename: string,
+import { Data, TemplateModule } from "../../../../common/src/template/types";
+
+export const reactWrapper = <T extends Data>(
+  data: T,
+  templateModule: TemplateModule<any>,
   template: string,
   hydrate: boolean
 ): string => {
@@ -12,7 +14,7 @@ export const reactWrapper = (
         <title>React Page Usings Plugin</title>
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(data)}</script>
         ${getCssTags(
-          `src/templates/${filename}`,
+          `${data.__meta.manifest.projectFilepaths.templatesRoot}/${templateModule.config.name}.tsx`,
           data.__meta.manifest.bundlerManifest,
           new Set()
         )
@@ -23,10 +25,10 @@ export const reactWrapper = (
     <body>
         <div id="reactele">${template}</div>${
     hydrate
-      ? `<script type="module" src="/assets/hydrate/${getHydrationFilename(
-          filename,
+      ? `<script type="module" src="/assets/hydrate/${findHydrationFilename(
+          `${data.__meta.manifest.projectFilepaths.hydrationBundleOutputRoot}/${templateModule.config.name}.tsx`,
           data
-        )}.js" defer></script>`
+        )}" defer></script>`
       : ""
   }
     </body>
@@ -56,16 +58,13 @@ const getCssTags = (
   return cssFiles;
 };
 
-const getHydrationFilename = (name: string, data: any) => {
+const findHydrationFilename = (hydrationFile: string, data: any) => {
   const { __meta } = data;
   for (const [file, info] of Object.entries(__meta.manifest.bundlerManifest)) {
-    if (file !== `dist/hydration_templates/${name}`) {
+    if (file !== hydrationFile) {
       continue;
     }
-    const originalFile = (info as ManifestInfo).file;
-    const filenameIndex = originalFile.lastIndexOf("/") + 1;
-    const filename = originalFile.substring(filenameIndex);
-    return filename.split(".").slice(0, -1).join(".");
+    return (info as ManifestInfo).file;
   }
 };
 

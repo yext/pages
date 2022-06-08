@@ -58,24 +58,24 @@ export type GeneratedPage = {
 };
 
 /**
- * Takes an array of template modules info and stream documents, processes them, and
- * writes them to disk.
- * @param modules an array of TemplateModules
+ * Takes in both a template module and its stream document, processes them, and writes them to disk.
+ *
+ * @param templateModule
  * @param data
  */
 export const generateResponses = async (
-  mod: TemplateModule<any>,
+  templateModule: TemplateModule<any>,
   data: Data
 ): Promise<GeneratedPage> => {
-  if (mod.getStaticProps) {
-    data = await mod.getStaticProps(data);
+  if (templateModule.getStaticProps) {
+    data = await templateModule.getStaticProps(data);
   }
 
-  const content = renderHtml(mod, data);
+  const content = renderHtml(templateModule, data);
 
   return {
     content,
-    path: mod.getPath(data),
+    path: templateModule.getPath(data),
     redirects: [],
   };
 };
@@ -87,11 +87,11 @@ export const generateResponses = async (
  * 2. If a module exports a default export or a render function, use whatever is exported
  * 3. If a module doesn't export either, throw an error.
  */
-const renderHtml = (mod: TemplateModule<any>, data: Data) => {
-  const { default: component, render } = mod;
+const renderHtml = (templateModule: TemplateModule<any>, data: Data) => {
+  const { default: component, render } = templateModule;
   if (!component && !render) {
     throw new Error(
-      `Cannot render html from template '${mod.config.name}'. Template is missing render function or default export.`
+      `Cannot render html from template '${templateModule.config.name}'. Template is missing render function or default export.`
     );
   }
 
@@ -101,9 +101,8 @@ const renderHtml = (mod: TemplateModule<any>, data: Data) => {
 
   return reactWrapper(
     data,
-    // TODO read the filename directly from manifest.
-    `${mod.config.name}.tsx`,
-    renderToString(createElement(mod.default, data)),
+    templateModule,
+    renderToString(createElement(templateModule.default, data)),
     // TODO -- allow hydration be configurable.
     true
   );

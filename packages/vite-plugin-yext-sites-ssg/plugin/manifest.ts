@@ -1,11 +1,18 @@
 import manifest from "./manifest.json" assert { type: "json" };
 
 export type Manifest = {
-  // A map of feature name to the bundle path of the feature.
+  /** A map of feature name to the bundle path of the feature */
   bundlePaths: {
     [key: string]: string;
   };
-  // If the bundler used generates a manifest.json then this field will contain that json object.
+  /** A map of project roots to their paths */
+  projectFilepaths: {
+    templatesRoot: string;
+    distRoot: string;
+    hydrationBundleOutputRoot: string;
+    serverBundleOutputRoot: string;
+  };
+  /** If the bundler used generates a manifest.json then this field will contain that json object */
   bundlerManifest?: any;
 };
 
