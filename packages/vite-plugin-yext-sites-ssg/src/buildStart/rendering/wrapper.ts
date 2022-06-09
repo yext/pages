@@ -40,12 +40,14 @@ export const reactWrapper = <T extends Data>(
 type chunkName = string;
 type bundlerManifest = Record<chunkName, ManifestInfo>;
 
+const reactFilenameRegex = (filepath: string): RegExp => new RegExp(`${filepath}\.([a-z]*)`, "g")
+
 const getCssTags = (
   filepath: string,
   manifest: bundlerManifest,
   seen: Set<string>
 ) => {
-  const entry = Object.entries(manifest).find(([file]) => file === filepath);
+  const entry = Object.entries(manifest).find(([file]) => reactFilenameRegex(filepath).test(file));
   if (!entry) {
     return [];
   }

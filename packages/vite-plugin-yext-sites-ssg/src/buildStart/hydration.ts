@@ -46,6 +46,7 @@ const generateEntryPoint = (
   if (!fs.existsSync(hydrationOutputDir)) {
     fs.mkdirSync(hydrationOutputDir, { recursive: true });
   }
-  const outPath = `${hydrationOutputDir}/${basename}`;
+  const outName = basename.substring(0, basename.length - extension.length);
+  const outPath = `${hydrationOutputDir}/${outName}.tsx`;
   fs.writeFileSync(outPath, templateBytes, {});
 };
