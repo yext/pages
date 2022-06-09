@@ -6,7 +6,7 @@ import {
   TemplateModule,
 } from "../../../../common/src/template/types";
 import { reactWrapper } from "./wrapper";
-import { validateTemplateModule } from '../../../../common/src/template/validateTemplateModule';
+import { validateTemplateModule } from "../../../../common/src/template/validateTemplateModule";
 
 const pathToModule = new Map();
 
