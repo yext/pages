@@ -15,12 +15,12 @@ import {
  * @public
  */
 export type Options = {
-  projectStructureConfig: ProjectStructureConfig;
+  projectStructureConfig?: ProjectStructureConfig;
 };
 
 const intro = `var global = globalThis;`;
 
-const plugin = (opts: Options): PluginOption[] => {
+const plugin = (opts: Options = {}): PluginOption[] => {
   const projectStructure = new ProjectStructure(opts.projectStructureConfig);
 
   return [

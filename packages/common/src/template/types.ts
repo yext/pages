@@ -104,9 +104,13 @@ export type Manifest = {
   };
   /** A map of project roots to their paths */
   projectFilepaths: {
+    /** The folder path where the template files live */
     templatesRoot: string;
+    /** The folder path where the compiled files live */
     distRoot: string;
+    /** The folder path where the compiled hydration bundles live */
     hydrationBundleOutputRoot: string;
+    /** The folder path where the compiled server bundles live */
     serverBundleOutputRoot: string;
   };
   /** If the bundler used generates a manifest.json then this field will contain that json object */

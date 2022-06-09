@@ -6,6 +6,8 @@ export const reactWrapper = <T extends Data>(
   template: string,
   hydrate: boolean
 ): string => {
+  const projectFilepaths = data.__meta.manifest.projectFilepaths;
+
   return `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -14,7 +16,7 @@ export const reactWrapper = <T extends Data>(
         <title>React Page Usings Plugin</title>
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(data)}</script>
         ${getCssTags(
-          `${data.__meta.manifest.projectFilepaths.templatesRoot}/${templateModule.config.name}.tsx`,
+          `${projectFilepaths.templatesRoot}/${templateModule.config.name}.tsx`,
           data.__meta.manifest.bundlerManifest,
           new Set()
         )
@@ -25,8 +27,8 @@ export const reactWrapper = <T extends Data>(
     <body>
         <div id="reactele">${template}</div>${
     hydrate
-      ? `<script type="module" src="/assets/hydrate/${findHydrationFilename(
-          `${data.__meta.manifest.projectFilepaths.hydrationBundleOutputRoot}/${templateModule.config.name}.tsx`,
+      ? `<script type="module" src="/${findHydrationFilename(
+          `${projectFilepaths.hydrationBundleOutputRoot}/${templateModule.config.name}.tsx`,
           data
         )}" defer></script>`
       : ""
@@ -64,6 +66,8 @@ const findHydrationFilename = (hydrationFile: string, data: any) => {
     if (file !== hydrationFile) {
       continue;
     }
+
+    // Return the name of the fingerprinted hydration asset
     return (info as ManifestInfo).file;
   }
 };
