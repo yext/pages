@@ -1,19 +1,18 @@
-import { Data, TemplateModule } from "../../../../common/src/template/types";
+import { Data, TemplateModule, GetHeadConfig } from "../../../../common/src/template/types";
+import { renderHeadConfigToString } from "../../../../common/src/template/head";
 
 export const reactWrapper = <T extends Data>(
   data: T,
   templateModule: TemplateModule<any>,
   template: string,
-  hydrate: boolean
+  hydrate: boolean,
+  getHeadConfig?: GetHeadConfig<any>
 ): string => {
   const projectFilepaths = data.__meta.manifest.projectFilepaths;
 
   return `<!DOCTYPE html>
     <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>React Page Usings Plugin</title>
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(data)}</script>
         ${getCssTags(
           `${projectFilepaths.templatesRoot}/${templateModule.config.name}.tsx`,
@@ -23,6 +22,7 @@ export const reactWrapper = <T extends Data>(
           .map((f) => `<link rel="stylesheet" href="/${f}"/>`)
           .filter((v, i, a) => a.indexOf(v) == i)
           .join("\n")}
+        ${getHeadConfig && renderHeadConfigToString(getHeadConfig(data))}
     </head>
     <body>
         <div id="reactele">${template}</div>${

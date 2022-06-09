@@ -70,7 +70,7 @@ export const generateResponses = async (
  * 3. If a module doesn't export either, throw an error.
  */
 const renderHtml = (templateModule: TemplateModule<any>, data: Data) => {
-  const { default: component, render } = templateModule;
+  const { default: component, render, getHeadConfig } = templateModule;
   if (!component && !render) {
     throw new Error(
       `Cannot render html from template '${templateModule.config.name}'. Template is missing render function or default export.`
@@ -78,6 +78,12 @@ const renderHtml = (templateModule: TemplateModule<any>, data: Data) => {
   }
 
   if (render) {
+    if (getHeadConfig) {
+      console.warn(
+        "User's getHeadConfig will not be used since they have defined a custom render function."
+      );
+    }
+
     return render(data);
   }
 
@@ -86,6 +92,7 @@ const renderHtml = (templateModule: TemplateModule<any>, data: Data) => {
     templateModule,
     renderToString(createElement(templateModule.default, data)),
     // TODO -- allow hydration be configurable.
-    true
+    true,
+    getHeadConfig
   );
 };
