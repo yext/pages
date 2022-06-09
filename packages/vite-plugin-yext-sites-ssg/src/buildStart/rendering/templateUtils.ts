@@ -6,6 +6,7 @@ import {
   TemplateModule,
 } from "../../../../common/src/template/types";
 import { reactWrapper } from "./wrapper";
+import { validateTemplateModule } from "../../../../common/src/template/validateTemplateModule";
 
 const pathToModule = new Map();
 
@@ -24,30 +25,11 @@ export const readTemplateModules = async (
   if (!importedModule) {
     importedModule = await import(path);
 
-    validateModule(importedModule);
+    validateTemplateModule(importedModule);
     pathToModule.set(path, importedModule);
   }
 
   return importedModule;
-};
-
-// an unvalidated template module.
-type MaybeTemplateModule = any;
-
-const validateModule = (mod: MaybeTemplateModule) => {
-  if (!mod.config || !mod.getPath) {
-    throw new Error(
-      "Module does not conform to the expected template interface. Module needs " +
-        "'config' and 'getPath' exports."
-    );
-  }
-
-  if (!mod.default && !mod.render) {
-    throw new Error(
-      "Module does not have the necessary exports to produce page. A module should" +
-        "either have a React component as a default export or a render function."
-    );
-  }
 };
 
 // Represents a page produced by the generation procees.

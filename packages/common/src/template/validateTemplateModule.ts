@@ -1,4 +1,4 @@
-import { TemplateModule } from "../../../../../common/src/template/types.js";
+import { TemplateModule } from "./types.js";
 
 export const validateTemplateModule = (templateModule: TemplateModule<any>) => {
   if (!templateModule.config) {
@@ -15,9 +15,10 @@ export const validateTemplateModule = (templateModule: TemplateModule<any>) => {
     );
   }
 
-  if (!templateModule.render) {
+  if (!templateModule.default && !templateModule.render) {
     throw new Error(
-      `Template ${templateModule.filename} is missing an exported render function.`
+      `Module ${templateModule.filename} does not have the necessary exports to produce page. ` +
+        "A module should either have a React component as a default export or a render function."
     );
   }
 };
