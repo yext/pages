@@ -5,7 +5,7 @@ import { pageLoader } from "../ssr/pageLoader.js";
 import { urlToFeature } from "../ssr/urlToFeature.js";
 import page404 from "../public/404";
 import { convertTemplateConfigToFeaturesConfig } from "../../../../../common/src/feature/features.js";
-import { validateTemplateModule } from "../ssr/validateTemplateModule.js";
+import { validateTemplateModule } from "../../../../../common/src/template/validateTemplateModule.js";
 import { featureNameToTemplateModule } from "../ssr/featureNameToTemplateModule.js";
 
 type Props = {
