@@ -84,7 +84,7 @@ const renderHtml = (mod: TemplateModule<any>, data: Data) => {
   return reactWrapper(
     data,
     // TODO read the filename directly from manifest.
-    `${mod.config.name}`,
+    `${mod.config.name}.tsx`,
     renderToString(createElement(mod.default, data)),
     // TODO -- allow hydration be configurable.
     true
