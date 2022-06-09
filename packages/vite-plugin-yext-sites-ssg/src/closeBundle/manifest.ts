@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { Manifest } from "../../../common/src/template/types.js";
 
 /**
  * Creates a manifest.json for use with the Yext Sites plugin
@@ -19,8 +20,15 @@ export const generateManifestFile = (
   if (fs.existsSync(`${distRoot}/manifest.json`)) {
     bundlerManifest = fs.readFileSync(`${distRoot}/manifest.json`);
   }
-  const manifest = {
+  const manifest: Manifest = {
     bundlePaths: Object.fromEntries(relativeBundlePaths),
+    projectFilepaths: {
+      templatesRoot: projectStructure.templatesRoot.path,
+      distRoot: projectStructure.distRoot.path,
+      hydrationBundleOutputRoot:
+        projectStructure.hydrationBundleOutputRoot.path,
+      serverBundleOutputRoot: projectStructure.serverBundleOutputRoot.path,
+    },
     bundlerManifest: JSON.parse(bundlerManifest.toString()),
   };
 

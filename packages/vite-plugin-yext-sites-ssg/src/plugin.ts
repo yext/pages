@@ -4,19 +4,24 @@ import closeBundle from "./closeBundle/closeBundle.js";
 import { readdir } from "fs/promises";
 import { parse } from "path";
 import { InputOption } from "rollup";
-import { ProjectStructure } from "../../common/src/project/structure.js";
+import {
+  ProjectStructure,
+  ProjectStructureConfig,
+} from "../../common/src/project/structure.js";
 
 /**
  * Options to configure functionality of the plugin.
  *
  * @public
  */
-export type Options = {};
+export type Options = {
+  projectStructureConfig?: ProjectStructureConfig;
+};
 
 const intro = `var global = globalThis;`;
 
 const plugin = (opts: Options = {}): PluginOption[] => {
-  const projectStructure = new ProjectStructure();
+  const projectStructure = new ProjectStructure(opts.projectStructureConfig);
 
   return [
     {

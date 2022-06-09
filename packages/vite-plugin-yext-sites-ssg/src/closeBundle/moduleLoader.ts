@@ -12,22 +12,22 @@ export const loadTemplateModules = async (
 ): Promise<TemplateModuleCollection> => {
   const importedModules = [] as TemplateModule<any>[];
   for (const p of serverBundlePaths) {
-    let mod = {} as TemplateModule<any>;
+    let templateModule = {} as TemplateModule<any>;
     try {
-      mod = await import(p);
+      templateModule = await import(p);
     } catch (e) {
       throw new Error(`Could not import ${p} ${e}`);
     }
 
-    if (!mod.config) {
+    if (!templateModule.config) {
       throw new Error(`Template at "${p}" does not export a config$`);
     }
-    importedModules.push({ ...mod, path: p });
+    importedModules.push({ ...templateModule, path: p });
   }
 
   validateModules(importedModules);
   return importedModules.reduce(
-    (prev, mod) => prev.set(mod.config.name, mod),
+    (prev, module) => prev.set(module.config.name, module),
     new Map()
   );
 };

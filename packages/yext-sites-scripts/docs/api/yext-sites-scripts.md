@@ -3,3 +3,22 @@
 [Home](./index.md) &gt; [@yext/yext-sites-scripts](./yext-sites-scripts.md)
 
 ## yext-sites-scripts package
+
+## Interfaces
+
+| Interface                                                | Description                                                                                                                                                   |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Data](./yext-sites-scripts.data.md)                     | The shape of the data passed directly to the different template functions (render, getPath, etc).                                                             |
+| [Stream](./yext-sites-scripts.stream.md)                 | The stream config defined in [TemplateConfig.stream](./yext-sites-scripts.templateconfig.stream.md)<!-- -->.                                                  |
+| [TemplateConfig](./yext-sites-scripts.templateconfig.md) | The exported <code>config</code> function's definition.                                                                                                       |
+| [TemplateModule](./yext-sites-scripts.templatemodule.md) | A domain representation of a template module. Contains all fields from an imported module as well as metadata about the module used in downstream processing. |
+
+## Type Aliases
+
+| Type Alias                                               | Description                                                     |
+| -------------------------------------------------------- | --------------------------------------------------------------- |
+| [Default](./yext-sites-scripts.default.md)               | The type definition for the template's default function.        |
+| [GetPath](./yext-sites-scripts.getpath.md)               | The type definition for the template's getPath function.        |
+| [GetStaticProps](./yext-sites-scripts.getstaticprops.md) | The type definition for the template's getStaticProps function. |
+| [Manifest](./yext-sites-scripts.manifest.md)             | A manifest of bundled files present during a production build.  |
+| [Render](./yext-sites-scripts.render.md)                 | The type definition for the template's render function.         |
