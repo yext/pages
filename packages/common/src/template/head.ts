@@ -21,7 +21,14 @@ export interface HeadConfig {
   other?: string;
 }
 
-type Attributes = Record<string, string>;
+
+/**
+ * Custom type for specifying HTML element attributes in the {@link Tag}
+ * interface.
+ *
+ * @public
+ */
+export type Attributes = Record<string, string>;
 
 /**
  * Interface for an HTML tag. Can set attributes on the tag, but
@@ -31,8 +38,8 @@ type Attributes = Record<string, string>;
  * @public
  */
 export interface Tag {
-  /** The name of the element to create (i.e. meta, script, link, etc.) */
-  title: string;
+  /** The type of the element to create (i.e. meta, script, link, etc.) */
+  type: string;
   /**
    * The attributes to add to the element. Each attribute will be added in
    * the form 'key="value"' and attributes will be seperated by a space
@@ -40,6 +47,13 @@ export interface Tag {
   attributes: Attributes;
 }
 
+/**
+ * Function that takes a {@link HeadConfig} interface and outputs a valid
+ * string of HTML that will be inserted into the generated document between
+ * the <head> tags.
+ *
+ * @public
+ */
 export const renderHeadConfigToString = (headConfig: HeadConfig): string => {
   return `<title>${
     headConfig.title ? headConfig.title : "Yext Pages Site"
@@ -68,22 +82,22 @@ const validTagInterfaceElements = [
 ];
 
 const renderTag = (tag: Tag): string => {
-  switch (tag.title) {
+  switch (tag.type) {
     case "base":
     case "link":
     case "meta":
-      return `<${tag.title} ${renderAttributes(tag.attributes)}>`;
+      return `<${tag.type} ${renderAttributes(tag.attributes)}>`;
     case "style":
     case "script":
     case "noscript":
     case "template":
-      return `<${tag.title} ${renderAttributes(tag.attributes)}></${
-        tag.title
+      return `<${tag.type} ${renderAttributes(tag.attributes)}></${
+        tag.type
       }>`;
     default:
       console.warn(
         `The tag interface is not compatible with the ${
-          tag.title
+          tag.type
         } element. The following elements are compatible: ${validTagInterfaceElements.join(
           " "
         )}.`
