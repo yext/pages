@@ -6,30 +6,29 @@
 
 ## Interfaces
 
-|  Interface | Description |
-|  --- | --- |
-|  [Data](./yext-sites-scripts.data.md) | The shape of the data passed directly to the different template functions (render, getPath, etc). |
-|  [HeadConfig](./yext-sites-scripts.headconfig.md) | The configuration that allows users to entirely arbitarily set the inner contents of the <head> element that will be prepended to the generated HTML document. |
-|  [Stream](./yext-sites-scripts.stream.md) | The stream config defined in [TemplateConfig.stream](./yext-sites-scripts.templateconfig.stream.md)<!-- -->. |
-|  [Tag](./yext-sites-scripts.tag.md) | Interface for an HTML tag. Can set attributes on the tag, but if a body needs to be defined, use the other field of the [HeadConfig](./yext-sites-scripts.headconfig.md) interface. |
-|  [TemplateConfig](./yext-sites-scripts.templateconfig.md) | The exported <code>config</code> function's definition. |
-|  [TemplateModule](./yext-sites-scripts.templatemodule.md) | A domain representation of a template module. Contains all fields from an imported module as well as metadata about the module used in downstream processing. |
+| Interface                                                | Description                                                                                                                                                                         |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Data](./yext-sites-scripts.data.md)                     | The shape of the data passed directly to the different template functions (render, getPath, etc).                                                                                   |
+| [HeadConfig](./yext-sites-scripts.headconfig.md)         | The configuration that allows users to entirely arbitarily set the inner contents of the <head> element that will be prepended to the generated HTML document.                      |
+| [Stream](./yext-sites-scripts.stream.md)                 | The stream config defined in [TemplateConfig.stream](./yext-sites-scripts.templateconfig.stream.md)<!-- -->.                                                                        |
+| [Tag](./yext-sites-scripts.tag.md)                       | Interface for an HTML tag. Can set attributes on the tag, but if a body needs to be defined, use the other field of the [HeadConfig](./yext-sites-scripts.headconfig.md) interface. |
+| [TemplateConfig](./yext-sites-scripts.templateconfig.md) | The exported <code>config</code> function's definition.                                                                                                                             |
+| [TemplateModule](./yext-sites-scripts.templatemodule.md) | A domain representation of a template module. Contains all fields from an imported module as well as metadata about the module used in downstream processing.                       |
 
 ## Variables
 
-|  Variable | Description |
-|  --- | --- |
-|  [renderHeadConfigToString](./yext-sites-scripts.renderheadconfigtostring.md) | Function that takes a [HeadConfig](./yext-sites-scripts.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the <head> tags. |
+| Variable                                                                     | Description                                                                                                                                                                                    |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [renderHeadConfigToString](./yext-sites-scripts.renderheadconfigtostring.md) | Function that takes a [HeadConfig](./yext-sites-scripts.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the <head> tags. |
 
 ## Type Aliases
 
-|  Type Alias | Description |
-|  --- | --- |
-|  [Attributes](./yext-sites-scripts.attributes.md) | Custom type for specifying HTML element attributes in the [Tag](./yext-sites-scripts.tag.md) interface. |
-|  [Default](./yext-sites-scripts.default.md) | The type definition for the template's default function. |
-|  [GetHeadConfig](./yext-sites-scripts.getheadconfig.md) | The type definition for the template's getHeadConfig function. getHeadConfig takes in the provided data and will output a HeadConfig object which will be used to generate the tags inside the head tag of the generated HTML document. |
-|  [GetPath](./yext-sites-scripts.getpath.md) | The type definition for the template's getPath function. |
-|  [GetStaticProps](./yext-sites-scripts.getstaticprops.md) | The type definition for the template's getStaticProps function. |
-|  [Manifest](./yext-sites-scripts.manifest.md) | A manifest of bundled files present during a production build. |
-|  [Render](./yext-sites-scripts.render.md) | The type definition for the template's render function. |
-
+| Type Alias                                               | Description                                                                                                                                                                                                                             |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Attributes](./yext-sites-scripts.attributes.md)         | Custom type for specifying HTML element attributes in the [Tag](./yext-sites-scripts.tag.md) interface.                                                                                                                                 |
+| [Default](./yext-sites-scripts.default.md)               | The type definition for the template's default function.                                                                                                                                                                                |
+| [GetHeadConfig](./yext-sites-scripts.getheadconfig.md)   | The type definition for the template's getHeadConfig function. getHeadConfig takes in the provided data and will output a HeadConfig object which will be used to generate the tags inside the head tag of the generated HTML document. |
+| [GetPath](./yext-sites-scripts.getpath.md)               | The type definition for the template's getPath function.                                                                                                                                                                                |
+| [GetStaticProps](./yext-sites-scripts.getstaticprops.md) | The type definition for the template's getStaticProps function.                                                                                                                                                                         |
+| [Manifest](./yext-sites-scripts.manifest.md)             | A manifest of bundled files present during a production build.                                                                                                                                                                          |
+| [Render](./yext-sites-scripts.render.md)                 | The type definition for the template's render function.                                                                                                                                                                                 |

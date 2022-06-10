@@ -21,7 +21,6 @@ export interface HeadConfig {
   other?: string;
 }
 
-
 /**
  * Custom type for specifying HTML element attributes in the {@link Tag}
  * interface.
@@ -91,9 +90,7 @@ const renderTag = (tag: Tag): string => {
     case "script":
     case "noscript":
     case "template":
-      return `<${tag.type} ${renderAttributes(tag.attributes)}></${
-        tag.type
-      }>`;
+      return `<${tag.type} ${renderAttributes(tag.attributes)}></${tag.type}>`;
     default:
       console.warn(
         `The tag interface is not compatible with the ${

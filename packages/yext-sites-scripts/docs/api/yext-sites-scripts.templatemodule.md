@@ -9,19 +9,18 @@ A domain representation of a template module. Contains all fields from an import
 <b>Signature:</b>
 
 ```typescript
-export interface TemplateModule<T> 
+export interface TemplateModule<T>
 ```
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [config](./yext-sites-scripts.templatemodule.config.md) | [TemplateConfig](./yext-sites-scripts.templateconfig.md) | The exported config function |
-|  [default](./yext-sites-scripts.templatemodule.default.md) | [Default](./yext-sites-scripts.default.md)<!-- -->&lt;T&gt; | The exported default function |
-|  [filename](./yext-sites-scripts.templatemodule.filename.md) | string | The name of the file |
-|  [getHeadConfig?](./yext-sites-scripts.templatemodule.getheadconfig.md) | [GetHeadConfig](./yext-sites-scripts.getheadconfig.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> The exported, optional headFunction |
-|  [getPath](./yext-sites-scripts.templatemodule.getpath.md) | [GetPath](./yext-sites-scripts.getpath.md)<!-- -->&lt;T&gt; | The exported getPath function |
-|  [getStaticProps?](./yext-sites-scripts.templatemodule.getstaticprops.md) | [GetStaticProps](./yext-sites-scripts.getstaticprops.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> The optional exported getStaticProps function |
-|  [path](./yext-sites-scripts.templatemodule.path.md) | string | The filepath to the template file. This can be the raw TSX file when used during dev mode or the path to the server bundle this module was imported from during prod build. |
-|  [render](./yext-sites-scripts.templatemodule.render.md) | [Render](./yext-sites-scripts.render.md)<!-- -->&lt;T&gt; | The exported render function |
-
+| Property                                                                 | Type                                                                      | Description                                                                                                                                                                 |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [config](./yext-sites-scripts.templatemodule.config.md)                  | [TemplateConfig](./yext-sites-scripts.templateconfig.md)                  | The exported config function                                                                                                                                                |
+| [default](./yext-sites-scripts.templatemodule.default.md)                | [Default](./yext-sites-scripts.default.md)<!-- -->&lt;T&gt;               | The exported default function                                                                                                                                               |
+| [filename](./yext-sites-scripts.templatemodule.filename.md)              | string                                                                    | The name of the file                                                                                                                                                        |
+| [getHeadConfig?](./yext-sites-scripts.templatemodule.getheadconfig.md)   | [GetHeadConfig](./yext-sites-scripts.getheadconfig.md)<!-- -->&lt;T&gt;   | <i>(Optional)</i> The exported, optional headFunction                                                                                                                       |
+| [getPath](./yext-sites-scripts.templatemodule.getpath.md)                | [GetPath](./yext-sites-scripts.getpath.md)<!-- -->&lt;T&gt;               | The exported getPath function                                                                                                                                               |
+| [getStaticProps?](./yext-sites-scripts.templatemodule.getstaticprops.md) | [GetStaticProps](./yext-sites-scripts.getstaticprops.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> The optional exported getStaticProps function                                                                                                             |
+| [path](./yext-sites-scripts.templatemodule.path.md)                      | string                                                                    | The filepath to the template file. This can be the raw TSX file when used during dev mode or the path to the server bundle this module was imported from during prod build. |
+| [render](./yext-sites-scripts.templatemodule.render.md)                  | [Render](./yext-sites-scripts.render.md)<!-- -->&lt;T&gt;                 | The exported render function                                                                                                                                                |
