@@ -1,4 +1,8 @@
-import { Data, TemplateModule, GetHeadConfig } from "../../../../common/src/template/types";
+import {
+  Data,
+  TemplateModule,
+  GetHeadConfig,
+} from "../../../../common/src/template/types";
 import { renderHeadConfigToString } from "../../../../common/src/template/head";
 
 export const reactWrapper = <T extends Data>(
