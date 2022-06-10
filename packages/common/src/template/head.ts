@@ -18,14 +18,14 @@ export interface HeadConfig {
    *  (i.e. <template> or <style>) an arbitrary, user-defined string can
    *  be provided.
    */
-  arbitary?: string;
+  other?: string;
 }
 
 type Attributes = Record<string, string>;
 
 /**
  * Interface for an HTML tag. Can set attributes on the tag, but
- * if a body needs to be defined, use the arbitrary field of the
+ * if a body needs to be defined, use the other field of the
  * {@link HeadConfig} interface.
  *
  * @public
@@ -51,7 +51,7 @@ export const renderHeadConfigToString = (headConfig: HeadConfig): string => {
         : ""
     }
     ${headConfig.tags ? headConfig.tags.map(renderTag).join("\n") : ""}
-    ${headConfig.arbitary ? headConfig.arbitary : ""}`
+    ${headConfig.other ? headConfig.other : ""}`
     .split("\n")
     .filter((line) => line.trim() != "")
     .join("\n");

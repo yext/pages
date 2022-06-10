@@ -77,10 +77,10 @@ describe("renderHeadConfigToString", () => {
     );
   });
 
-  it("properly renders arbitrary content", async () => {
+  it("properly renders other content", async () => {
     const headConfig: HeadConfig = {
       title: "foo",
-      arbitary: `<script>window.alert("hello world!");</script>
+      other: `<script>window.alert("hello world!");</script>
             <template>
                 <div>I am a template</div>
             </template>`,
