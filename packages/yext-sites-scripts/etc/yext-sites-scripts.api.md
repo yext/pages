@@ -59,7 +59,7 @@ export interface Stream {
 
 // @public
 export interface TemplateConfig {
-  name: string;
+  name?: string;
   stream?: Stream;
   streamId?: string;
 }
@@ -73,6 +73,7 @@ export interface TemplateModule<T> {
   getStaticProps?: GetStaticProps<T>;
   path: string;
   render: Render<T>;
+  templateName: string;
 }
 
 // (No @packageDocumentation comment for this package)

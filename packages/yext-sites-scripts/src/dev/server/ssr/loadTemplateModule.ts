@@ -11,10 +11,17 @@ export const loadTemplateModule = async (
   // Cache bust the module so a page refresh gets the updated module data
   // (such as a change to the config's name).
   const templateModule = await importFresh(devserver, templateFilepath);
+  const templateName = templateFilename.split(".")[0];
+
+  // Set the config name as the template's name if not overriden
+  if (!templateModule.config.name) {
+    templateModule.config.name = templateName;
+  }
 
   return {
     ...templateModule,
     path: templateFilepath,
     filename: templateFilename,
+    templateName: templateName,
   };
 };

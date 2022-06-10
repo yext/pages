@@ -15,9 +15,13 @@ export interface FeaturesConfig {
  * Converts a {@link TemplateConfig.config} into a valid {@link FeaturesConfig} (features and streams).
  */
 export const convertTemplateConfigToFeaturesConfig = (
+  templateName: string,
   config: TemplateConfig
 ): FeaturesConfig => {
-  const featureConfig = convertTemplateConfigFeatureConfig(config);
+  const featureConfig = convertTemplateConfigFeatureConfig(
+    templateName,
+    config
+  );
   const streamConfig = convertTemplateConfigToStreamConfig(config);
 
   return {
@@ -52,14 +56,18 @@ export type FeatureConfig = EntityPageSetConfig | StaticPageConfig;
  * Converts a {@link TemplateConfig.config} into a valid single {@link FeatureConfig}.
  */
 export const convertTemplateConfigFeatureConfig = (
-  config: TemplateConfig
+  templateName: string,
+  config: TemplateConfig | undefined
 ): FeatureConfig => {
+  if (!config) {
+    config = {};
+  }
   validate(config);
 
   const streamConfig = config.stream || null;
 
   let featureConfigBase: FeatureConfigBase = {
-    name: config.name,
+    name: config.name ? config.name : templateName,
     streamId: streamConfig
       ? streamConfig.$id
       : config.streamId

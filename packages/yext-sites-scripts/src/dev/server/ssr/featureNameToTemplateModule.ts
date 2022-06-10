@@ -7,23 +7,22 @@ import { TemplateModule } from "../../../../../common/src/template/types.js";
 // Determines the template module to load from a given feature name (from the exported config)
 export const featureNameToTemplateModule = async (
   devserver: ViteDevServer,
-  feature: string
+  featureName: string
 ): Promise<TemplateModule<any> | null> => {
   const directoryFilenames = await readdir(`./${TEMPLATE_PATH}`);
 
-  for (const fileName of directoryFilenames) {
+  for (const filename of directoryFilenames) {
     const templateModule = await loadTemplateModule(
       devserver,
-      fileName,
-      `${TEMPLATE_PATH}/${fileName}`
+      filename,
+      `${TEMPLATE_PATH}/${filename}`
     );
 
     if (!templateModule?.config?.name) {
       continue;
     }
 
-    const templateName = templateModule.config.name;
-    if (feature === normalizeTemplateName(templateName)) {
+    if (featureName === normalizeTemplateName(templateModule.config.name)) {
       return templateModule;
     }
   }

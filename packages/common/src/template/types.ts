@@ -10,10 +10,12 @@ export interface TemplateModule<T> {
    * the path to the server bundle this module was imported from during prod build.
    */
   path: string;
-  /** The name of the file */
+  /** The name of the file (with extension) */
   filename: string;
+  /** The name of the file (without extension) */
+  templateName: string;
   /** The exported config function */
-  config: TemplateConfig;
+  config?: TemplateConfig;
   /** The optional exported getStaticProps function */
   getStaticProps?: GetStaticProps<T>;
   /** The exported getPath function */
@@ -58,8 +60,8 @@ export type Default<T> = (data: T) => JSX.Element;
  * @public
  */
 export interface TemplateConfig {
-  /** The name of the template feature */
-  name: string;
+  /** The name of the template feature. If not defined uses the template filename (without extension) */
+  name?: string;
   /** The stream that this template uses. If a stream is defined the streamId is not required. */
   streamId?: string;
   /** The stream configuration used by the template */

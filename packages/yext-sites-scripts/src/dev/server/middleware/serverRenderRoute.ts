@@ -32,6 +32,7 @@ export const serverRenderRoute =
       validateTemplateModule(templateModule);
 
       const featuresConfig = convertTemplateConfigToFeaturesConfig(
+        templateModule.templateName,
         templateModule.config
       );
 

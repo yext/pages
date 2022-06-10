@@ -4,7 +4,7 @@
 
 ## TemplateModule.filename property
 
-The name of the file
+The name of the file (with extension)
 
 <b>Signature:</b>
 

@@ -18,7 +18,10 @@ export const createFeatureJson = async (
   const streams = [];
   const featureNameToBundlePath = new Map();
   for (const [featureName, module] of templateModules.entries()) {
-    const featureConfig = convertTemplateConfigFeatureConfig(module.config);
+    const featureConfig = convertTemplateConfigFeatureConfig(
+      featureName,
+      module.config
+    );
     features.push(featureConfig);
     featureNameToBundlePath.set(featureName, module.path);
     module.config.stream && streams.push({ ...module.config.stream });

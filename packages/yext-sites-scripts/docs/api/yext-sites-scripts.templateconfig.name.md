@@ -4,10 +4,10 @@
 
 ## TemplateConfig.name property
 
-The name of the template feature
+The name of the template feature. If not defined uses the template filename (without extension)
 
 <b>Signature:</b>
 
 ```typescript
-name: string;
+name?: string;
 ```
