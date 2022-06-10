@@ -6,8 +6,8 @@
  * @public
  */
 export interface HeadConfig {
-  /** Title of the page. Required element in the head element. */
-  title: string;
+  /** Title of the page. Will default to 'Yext Pages Site' if omitted. */
+  title?: string;
   /** Declares the documents encoding. */
   charset?: string;
   /** Declares the size and shape of the documents viewport. */
@@ -21,24 +21,27 @@ export interface HeadConfig {
   arbitary?: string;
 }
 
-type AttributeList = Record<string, string>;
+type Attributes = Record<string, string>;
 
 /**
  * Interface for an HTML tag. Can set attributes on the tag, but
  * if a body needs to be defined, use the arbitrary field of the
- * HeadConfig interface.
+ * {@link HeadConfig} interface.
  *
  * @public
  */
 export interface Tag {
   /** The name of the element to create (i.e. meta, script, link, etc.) */
   title: string;
-  /** The attributes to add to the element */
-  attributes: AttributeList;
+  /** 
+   * The attributes to add to the element. Each attribute will be added in 
+   * the form 'key="value"' and attributes will be seperated by a space 
+   */
+  attributes: Attributes;
 }
 
 export const renderHeadConfigToString = (headConfig: HeadConfig): string => {
-  return `<title>${headConfig.title}</title>
+  return `<title>${headConfig.title ? headConfig.title : "Yext Pages Site"}</title>
     ${headConfig.charset ? `<meta charset="${headConfig.charset}">` : ""}
     ${
       headConfig.viewport
@@ -87,7 +90,7 @@ const renderTag = (tag: Tag): string => {
   }
 };
 
-const renderAttributes = (attributes: AttributeList): string => {
+const renderAttributes = (attributes: Attributes): string => {
   return Object.keys(attributes)
     .map((key) => {
       return `${key}="${attributes[key]}"`;

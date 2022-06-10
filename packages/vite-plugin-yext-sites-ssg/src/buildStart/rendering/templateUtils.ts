@@ -80,7 +80,7 @@ const renderHtml = (templateModule: TemplateModule<any>, data: Data) => {
   if (render) {
     if (getHeadConfig) {
       console.warn(
-        "User's getHeadConfig will not be used since they have defined a custom render function."
+        `getHeadConfig for template ${templateModule.config.name} will not be called since a custom render function is defined.`
       );
     }
 
