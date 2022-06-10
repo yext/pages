@@ -12,7 +12,7 @@ export interface HeadConfig {
   charset?: string;
   /** Declares the size and shape of the documents viewport. */
   viewport?: string;
-  /** Well defined interface for adding HTML tags (such as <meta> tags) */
+  /** Well-defined interface for adding HTML tags (such as <meta> tags) */
   tags?: Tag[];
   /** For any content that can't be fully encapsulted by our Tag interface,
    *  (i.e. <template> or <style>) an arbitrary, user-defined string can
