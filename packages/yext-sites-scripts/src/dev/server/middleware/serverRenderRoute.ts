@@ -60,18 +60,21 @@ export const serverRenderRoute =
 
       // Inject the app-rendered HTML into the template. Only invoke the users headFunction
       // if they are rendering by way of a default export and not a custom render function.
-      const html = template.replace(`<!--app-html-->`, appHtml).replace(
-        "</head>",
-        `<script type="text/javascript">
-            window._RSS_PROPS_ = ${JSON.stringify(props)};
-            window._RSS_TEMPLATE_ = '${templateModule.filename}';
-          </script>
-          ${
-            !templateModule.render &&
-            templateModule.getHeadConfig &&
-            renderHeadConfigToString(templateModule.getHeadConfig(props))
-          }
-        </head>`
+      const html = template
+        .replace(`<!--app-html-->`, appHtml)
+        .replace(
+          `<!--app-head-->`,
+          `<head>
+            <script type="text/javascript">
+              window._RSS_PROPS_ = ${JSON.stringify(props)};
+              window._RSS_TEMPLATE_ = '${templateModule.filename}';
+            </script>
+            ${
+              !templateModule.render &&
+              templateModule.getHeadConfig &&
+              renderHeadConfigToString(templateModule.getHeadConfig(props))
+            }
+          </head>`
       );
 
       // Send the rendered HTML back.

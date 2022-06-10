@@ -1,15 +1,15 @@
 import { HeadConfig, renderHeadConfigToString } from "../../src/template/head";
 
 describe("renderHeadConfigToString", () => {
-    it("properly renders a default title and excludes missing optionals", async () => {
-        const headConfig: HeadConfig = {};
-    
-        const expectedHeadConfig = `<title>Yext Pages Site</title>`;
-    
-        expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
-          expectedHeadConfig.replaceAll(" ", "")
-        );
-      });
+  it("properly renders a default title and excludes missing optionals", async () => {
+    const headConfig: HeadConfig = {};
+
+    const expectedHeadConfig = `<title>Yext Pages Site</title>`;
+
+    expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
+      expectedHeadConfig.replaceAll(" ", "")
+    );
+  });
 
   it("properly renders the title and excludes missing optionals", async () => {
     const headConfig: HeadConfig = {

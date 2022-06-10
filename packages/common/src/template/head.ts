@@ -33,15 +33,17 @@ type Attributes = Record<string, string>;
 export interface Tag {
   /** The name of the element to create (i.e. meta, script, link, etc.) */
   title: string;
-  /** 
-   * The attributes to add to the element. Each attribute will be added in 
-   * the form 'key="value"' and attributes will be seperated by a space 
+  /**
+   * The attributes to add to the element. Each attribute will be added in
+   * the form 'key="value"' and attributes will be seperated by a space
    */
   attributes: Attributes;
 }
 
 export const renderHeadConfigToString = (headConfig: HeadConfig): string => {
-  return `<title>${headConfig.title ? headConfig.title : "Yext Pages Site"}</title>
+  return `<title>${
+    headConfig.title ? headConfig.title : "Yext Pages Site"
+  }</title>
     ${headConfig.charset ? `<meta charset="${headConfig.charset}">` : ""}
     ${
       headConfig.viewport
