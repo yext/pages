@@ -9,6 +9,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     const templateModule: TemplateModule<any> = {
       default: {} as Default<any>,
       getPath: () => "",
+      getHeadConfig: () => {
+        return {
+          title: "foo",
+        }
+      },
       config: {
         streamId: "$id",
       },
@@ -24,6 +29,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     const expected: TemplateModuleInternal<any> = {
       default: {} as Default<any>,
       getPath: () => "",
+      getHeadConfig: () => {
+        return {
+          title: "foo",
+        }
+      },
       config: {
         name: "myTemplateName",
         streamId: "$id",
