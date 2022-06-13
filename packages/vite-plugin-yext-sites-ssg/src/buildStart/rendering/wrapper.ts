@@ -1,8 +1,9 @@
-import { Data, TemplateModule } from "../../../../common/src/template/types";
+import { TemplateModuleInternal } from "../../../../common/src/template/internal/types";
+import { Data } from "../../../../common/src/template/types";
 
 export const reactWrapper = <T extends Data>(
   data: T,
-  templateModule: TemplateModule<any>,
+  templateModuleInternal: TemplateModuleInternal<any>,
   template: string,
   hydrate: boolean
 ): string => {
@@ -16,7 +17,7 @@ export const reactWrapper = <T extends Data>(
         <title>React Page Usings Plugin</title>
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(data)}</script>
         ${getCssTags(
-          `${projectFilepaths.templatesRoot}/${templateModule.config.name}.tsx`,
+          `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`,
           data.__meta.manifest.bundlerManifest,
           new Set()
         )
@@ -28,7 +29,7 @@ export const reactWrapper = <T extends Data>(
         <div id="reactele">${template}</div>${
     hydrate
       ? `<script type="module" src="/${findHydrationFilename(
-          `${projectFilepaths.hydrationBundleOutputRoot}/${templateModule.config.name}.tsx`,
+          `${projectFilepaths.hydrationBundleOutputRoot}/${templateModuleInternal.templateName}.tsx`,
           data
         )}" defer></script>`
       : ""

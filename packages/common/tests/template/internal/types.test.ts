@@ -17,7 +17,8 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
         "src/templates/myTemplateName.tsx",
-        templateModule
+        templateModule,
+        false
       );
 
     const expected: TemplateModuleInternal<any> = {
@@ -50,7 +51,8 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
         "src/templates/myTemplateName.tsx",
-        templateModule
+        templateModule,
+        false
       );
 
     const expected: TemplateModuleInternal<any> = {
@@ -61,6 +63,39 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         streamId: "$id",
       },
       path: "src/templates/myTemplateName.tsx",
+      filename: "myTemplateName.tsx",
+      templateName: "myTemplateName",
+    };
+
+    expect(JSON.stringify(templateConfigInternal)).toEqual(
+      JSON.stringify(expected)
+    );
+  });
+
+  it("uses the filename as the config name when not set and removes the asset fingerprint", async () => {
+    const templateModule: TemplateModule<any> = {
+      default: null,
+      getPath: () => "",
+      config: {
+        streamId: "$id",
+      },
+    };
+
+    const templateConfigInternal =
+      convertTemplateModuleToTemplateModuleInternal(
+        "src/templates/myTemplateName.0ab33d.tsx",
+        templateModule,
+        true
+      );
+
+    const expected: TemplateModuleInternal<any> = {
+      default: null,
+      getPath: () => "",
+      config: {
+        name: "myTemplateName",
+        streamId: "$id",
+      },
+      path: "src/templates/myTemplateName.0ab33d.tsx",
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
     };

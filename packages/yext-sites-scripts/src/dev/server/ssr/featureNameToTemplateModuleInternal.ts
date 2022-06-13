@@ -25,7 +25,8 @@ export const featureNameToTemplateModuleInternal = async (
     const templateModuleInternal =
       convertTemplateModuleToTemplateModuleInternal(
         templateFilepath,
-        templateModule
+        templateModule,
+        false
       );
 
     if (

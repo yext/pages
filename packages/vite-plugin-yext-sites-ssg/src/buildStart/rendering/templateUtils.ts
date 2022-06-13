@@ -32,7 +32,8 @@ export const readTemplateModules = async (
 
   const templateModuleInternal = convertTemplateModuleToTemplateModuleInternal(
     path,
-    importedModule
+    importedModule,
+    true
   );
   validateTemplateModuleInternal(templateModuleInternal);
   pathToModule.set(path, templateModuleInternal);

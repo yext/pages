@@ -49,9 +49,19 @@ export interface TemplateConfigInternal {
 /**
  * Parses a filepath and returns the relevant parts, such as the base filename.
  */
-const parse = (filepath: string) => {
-  const base = filepath.split("/")[filepath.split("/").length - 1];
-  const name = base.slice(0, base.lastIndexOf("."));
+const parse = (filepath: string, adjustForFingerprintedAsset: boolean) => {
+  let base = filepath.split("/")[filepath.split("/").length - 1];
+  const extension = base.slice(base.lastIndexOf("."));
+  let name = base.slice(0, base.lastIndexOf("."));
+
+  // Removes the fingerprint portion (for server bundles)
+  if (adjustForFingerprintedAsset) {
+    base =
+      base
+        .split(extension)[0]
+        .slice(0, base.split(extension)[0].lastIndexOf(".")) + extension;
+    name = name.slice(0, name.lastIndexOf("."));
+  }
 
   return {
     base, // the root file with extension
@@ -61,9 +71,10 @@ const parse = (filepath: string) => {
 
 export const convertTemplateModuleToTemplateModuleInternal = (
   templateFilepath: string,
-  templateModule: TemplateModule<any>
+  templateModule: TemplateModule<any>,
+  adjustForFingerprintedAsset: boolean
 ): TemplateModuleInternal<any> => {
-  const templatePath = parse(templateFilepath);
+  const templatePath = parse(templateFilepath, adjustForFingerprintedAsset);
 
   return {
     ...templateModule,
