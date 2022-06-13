@@ -66,7 +66,8 @@ export const convertTemplateConfigFeatureConfig = (
   const streamConfig = config.stream || null;
 
   let featureConfigBase: FeatureConfigBase = {
-    name: config.name ? config.name : templateName,
+    name: config.name ?? templateName,
+,
     streamId: streamConfig
       ? streamConfig.$id
       : config.streamId
