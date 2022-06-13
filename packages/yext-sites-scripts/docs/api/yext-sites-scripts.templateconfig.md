@@ -9,14 +9,13 @@ The exported `config` function's definition.
 <b>Signature:</b>
 
 ```typescript
-export interface TemplateConfig 
+export interface TemplateConfig
 ```
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [name?](./yext-sites-scripts.templateconfig.name.md) | string | <i>(Optional)</i> The name of the template feature. If not defined uses the template filename (without extension) |
-|  [stream?](./yext-sites-scripts.templateconfig.stream.md) | [Stream](./yext-sites-scripts.stream.md) | <i>(Optional)</i> The stream configuration used by the template |
-|  [streamId?](./yext-sites-scripts.templateconfig.streamid.md) | string | <i>(Optional)</i> The stream that this template uses. If a stream is defined the streamId is not required. |
-
+| Property                                                     | Type                                     | Description                                                                                                       |
+| ------------------------------------------------------------ | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| [name?](./yext-sites-scripts.templateconfig.name.md)         | string                                   | <i>(Optional)</i> The name of the template feature. If not defined uses the template filename (without extension) |
+| [stream?](./yext-sites-scripts.templateconfig.stream.md)     | [Stream](./yext-sites-scripts.stream.md) | <i>(Optional)</i> The stream configuration used by the template                                                   |
+| [streamId?](./yext-sites-scripts.templateconfig.streamid.md) | string                                   | <i>(Optional)</i> The stream that this template uses. If a stream is defined the streamId is not required.        |
