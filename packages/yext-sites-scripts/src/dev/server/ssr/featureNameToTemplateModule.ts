@@ -18,10 +18,10 @@ export const featureNameToTemplateModule = async (
       `${TEMPLATE_PATH}/${filename}`
     );
 
-    const featureName =
+    const resolvedFeatureName =
       templateModule?.config?.name || templateModule.templateName;
 
-    if (featureName === normalizeTemplateName(featureName)) {
+    if (featureName === normalizeTemplateName(resolvedFeatureName)) {
       return templateModule;
     }
   }
