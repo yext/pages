@@ -6,7 +6,10 @@ import {
   TemplateModule,
 } from "../../../../common/src/template/types";
 import { reactWrapper } from "./wrapper";
-import { validateTemplateModule } from "../../../../common/src/template/validateTemplateModule";
+import {
+  convertTemplateModuleToTemplateModuleInternal,
+  TemplateModuleInternal,
+} from "../../../../common/src/template/internal/types";
 
 const pathToModule = new Map();
 
@@ -16,20 +19,25 @@ const pathToModule = new Map();
 export const readTemplateModules = async (
   feature: string,
   manifest: Manifest
-): Promise<TemplateModule<any>> => {
+): Promise<TemplateModuleInternal<any>> => {
   const path = manifest.bundlePaths[feature].replace("assets", "..");
   if (!path) {
     throw new Error(`Could not find path for feature ${feature}`);
   }
-  let importedModule = pathToModule.get(path);
+  let importedModule = pathToModule.get(path) as TemplateModule<any>;
   if (!importedModule) {
     importedModule = await import(path);
-
-    validateTemplateModule(importedModule);
-    pathToModule.set(path, importedModule);
   }
 
-  return importedModule;
+  const templateModuleInternal = convertTemplateModuleToTemplateModuleInternal(
+    path,
+    importedModule,
+    true
+  );
+
+  pathToModule.set(path, templateModuleInternal);
+
+  return templateModuleInternal;
 };
 
 // Represents a page produced by the generation procees.
@@ -42,22 +50,22 @@ export type GeneratedPage = {
 /**
  * Takes in both a template module and its stream document, processes them, and writes them to disk.
  *
- * @param templateModule
+ * @param templateModuleInternal
  * @param data
  */
 export const generateResponses = async (
-  templateModule: TemplateModule<any>,
+  templateModuleInternal: TemplateModuleInternal<any>,
   data: Data
 ): Promise<GeneratedPage> => {
-  if (templateModule.getStaticProps) {
-    data = await templateModule.getStaticProps(data);
+  if (templateModuleInternal.getStaticProps) {
+    data = await templateModuleInternal.getStaticProps(data);
   }
 
-  const content = renderHtml(templateModule, data);
+  const content = renderHtml(templateModuleInternal, data);
 
   return {
     content,
-    path: templateModule.getPath(data),
+    path: templateModuleInternal.getPath(data),
     redirects: [],
   };
 };
@@ -69,18 +77,22 @@ export const generateResponses = async (
  * 2. If a module exports a default export or a render function, use whatever is exported
  * 3. If a module doesn't export either, throw an error.
  */
-const renderHtml = (templateModule: TemplateModule<any>, data: Data) => {
-  const { default: component, render, getHeadConfig } = templateModule;
+const renderHtml = (
+  templateModuleInternal: TemplateModuleInternal<any>,
+  data: Data
+) => {
+  // TODO - fix
+  const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {
     throw new Error(
-      `Cannot render html from template '${templateModule.config.name}'. Template is missing render function or default export.`
+      `Cannot render html from template '${templateModuleInternal.config.name}'. Template is missing render function or default export.`
     );
   }
 
   if (render) {
     if (getHeadConfig) {
       console.warn(
-        `getHeadConfig for template ${templateModule.config.name} will not be called since a custom render function is defined.`
+        `getHeadConfig for template ${templateModuleInternal.config.name} will not be called since a custom render function is defined.`
       );
     }
 
@@ -89,8 +101,8 @@ const renderHtml = (templateModule: TemplateModule<any>, data: Data) => {
 
   return reactWrapper(
     data,
-    templateModule,
-    renderToString(createElement(templateModule.default, data)),
+    templateModuleInternal,
+    renderToString(createElement(templateModuleInternal.default, data)),
     // TODO -- allow hydration be configurable.
     true,
     getHeadConfig

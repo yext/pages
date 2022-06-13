@@ -1,4 +1,4 @@
-import { TemplateConfig } from "../template/types";
+import { TemplateConfigInternal } from "../template/internal/types";
 import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream";
 
 /**
@@ -12,12 +12,12 @@ export interface FeaturesConfig {
 }
 
 /**
- * Converts a {@link TemplateConfig.config} into a valid {@link FeaturesConfig} (features and streams).
+ * Converts a {@link TemplateConfigInternal} into a valid {@link FeaturesConfig} (features and streams).
  */
-export const convertTemplateConfigToFeaturesConfig = (
-  config: TemplateConfig
+export const convertTemplateConfigInternalToFeaturesConfig = (
+  config: TemplateConfigInternal
 ): FeaturesConfig => {
-  const featureConfig = convertTemplateConfigFeatureConfig(config);
+  const featureConfig = convertTemplateConfigToFeatureConfig(config);
   const streamConfig = convertTemplateConfigToStreamConfig(config);
 
   return {
@@ -49,13 +49,11 @@ interface StaticPageConfig extends FeatureConfigBase {
 export type FeatureConfig = EntityPageSetConfig | StaticPageConfig;
 
 /**
- * Converts a {@link TemplateConfig.config} into a valid single {@link FeatureConfig}.
+ * Converts a {@link TemplateConfigInternal} into a valid single {@link FeatureConfig}.
  */
-export const convertTemplateConfigFeatureConfig = (
-  config: TemplateConfig
+export const convertTemplateConfigToFeatureConfig = (
+  config: TemplateConfigInternal
 ): FeatureConfig => {
-  validate(config);
-
   const streamConfig = config.stream || null;
 
   let featureConfigBase: FeatureConfigBase = {
@@ -87,12 +85,4 @@ export const convertTemplateConfigFeatureConfig = (
   }
 
   return featureConfig;
-};
-
-const validate = (config: TemplateConfig) => {
-  if (config.streamId && config.stream) {
-    throw new Error(
-      `TemplateConfig must not define both a "streamId" and a "stream".`
-    );
-  }
 };

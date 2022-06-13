@@ -9,5 +9,5 @@ The exported config function
 <b>Signature:</b>
 
 ```typescript
-config: TemplateConfig;
+config?: TemplateConfig;
 ```

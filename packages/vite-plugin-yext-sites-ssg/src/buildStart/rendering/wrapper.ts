@@ -1,13 +1,10 @@
-import {
-  Data,
-  TemplateModule,
-  GetHeadConfig,
-} from "../../../../common/src/template/types";
+import { TemplateModuleInternal } from "../../../../common/src/template/internal/types";
 import { renderHeadConfigToString } from "../../../../common/src/template/head";
+import { Data, GetHeadConfig } from "../../../../common/src/template/types";
 
 export const reactWrapper = <T extends Data>(
   data: T,
-  templateModule: TemplateModule<any>,
+  templateModuleInternal: TemplateModuleInternal<any>,
   template: string,
   hydrate: boolean,
   getHeadConfig?: GetHeadConfig<any>
@@ -19,7 +16,7 @@ export const reactWrapper = <T extends Data>(
     <head>
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(data)}</script>
         ${getCssTags(
-          `${projectFilepaths.templatesRoot}/${templateModule.config.name}.tsx`,
+          `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`,
           data.__meta.manifest.bundlerManifest,
           new Set()
         )
@@ -32,7 +29,7 @@ export const reactWrapper = <T extends Data>(
         <div id="reactele">${template}</div>${
     hydrate
       ? `<script type="module" src="/${findHydrationFilename(
-          `${projectFilepaths.hydrationBundleOutputRoot}/${templateModule.config.name}.tsx`,
+          `${projectFilepaths.hydrationBundleOutputRoot}/${templateModuleInternal.templateName}.tsx`,
           data
         )}" defer></script>`
       : ""
@@ -44,12 +41,17 @@ export const reactWrapper = <T extends Data>(
 type chunkName = string;
 type bundlerManifest = Record<chunkName, ManifestInfo>;
 
+const reactFilenameRegex = (filepath: string): RegExp =>
+  new RegExp(`${filepath}\.(tsx|jsx)$`, "g");
+
 const getCssTags = (
   filepath: string,
   manifest: bundlerManifest,
   seen: Set<string>
 ) => {
-  const entry = Object.entries(manifest).find(([file]) => file === filepath);
+  const entry = Object.entries(manifest).find(([file]) =>
+    reactFilenameRegex(filepath).test(file)
+  );
   if (!entry) {
     return [];
   }
