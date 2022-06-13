@@ -2,7 +2,6 @@ import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../../../common/src/template/internal/types";
-import { validateTemplateModuleInternal } from "../../../common/src/template/internal/validateTemplateModuleInternal";
 import { TemplateModule } from "../../../common/src/template/types";
 
 /**
@@ -26,8 +25,6 @@ export const loadTemplateModules = async (
 
     const templateModuleInternal =
       convertTemplateModuleToTemplateModuleInternal(p, templateModule, true);
-
-    validateTemplateModuleInternal(templateModuleInternal);
 
     importedModules.push({ ...templateModuleInternal, path: p });
   }

@@ -12,9 +12,9 @@ export interface FeaturesConfig {
 }
 
 /**
- * Converts a {@link TemplateConfig.config} into a valid {@link FeaturesConfig} (features and streams).
+ * Converts a {@link TemplateConfigInternal} into a valid {@link FeaturesConfig} (features and streams).
  */
-export const convertTemplateConfigToFeaturesConfig = (
+export const convertTemplateConfigInternalToFeaturesConfig = (
   config: TemplateConfigInternal
 ): FeaturesConfig => {
   const featureConfig = convertTemplateConfigToFeatureConfig(config);
@@ -49,7 +49,7 @@ interface StaticPageConfig extends FeatureConfigBase {
 export type FeatureConfig = EntityPageSetConfig | StaticPageConfig;
 
 /**
- * Converts a {@link TemplateConfig.config} into a valid single {@link FeatureConfig}.
+ * Converts a {@link TemplateConfigInternal} into a valid single {@link FeatureConfig}.
  */
 export const convertTemplateConfigToFeatureConfig = (
   config: TemplateConfigInternal

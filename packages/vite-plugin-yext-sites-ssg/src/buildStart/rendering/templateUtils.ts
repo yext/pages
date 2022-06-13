@@ -6,7 +6,6 @@ import {
   TemplateModule,
 } from "../../../../common/src/template/types";
 import { reactWrapper } from "./wrapper";
-import { validateTemplateModuleInternal } from "../../../../common/src/template/internal/validateTemplateModuleInternal";
 import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
@@ -35,7 +34,7 @@ export const readTemplateModules = async (
     importedModule,
     true
   );
-  validateTemplateModuleInternal(templateModuleInternal);
+
   pathToModule.set(path, templateModuleInternal);
 
   return templateModuleInternal;

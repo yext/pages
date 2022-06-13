@@ -7,6 +7,7 @@ import {
   TemplateConfig,
   TemplateModule,
 } from "../types";
+import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal";
 
 /**
  * A domain representation of a template module. Contains all fields from an imported module as well
@@ -76,7 +77,7 @@ export const convertTemplateModuleToTemplateModuleInternal = (
 ): TemplateModuleInternal<any> => {
   const templatePath = parse(templateFilepath, adjustForFingerprintedAsset);
 
-  return {
+  const templateModuleInternal = {
     ...templateModule,
     config: convertTemplateConfigToTemplateConfigInternal(
       templatePath.name,
@@ -86,6 +87,10 @@ export const convertTemplateModuleToTemplateModuleInternal = (
     filename: templatePath.base,
     templateName: templatePath.name,
   };
+
+  validateTemplateModuleInternal(templateModuleInternal);
+
+  return templateModuleInternal;
 };
 
 const convertTemplateConfigToTemplateConfigInternal = (

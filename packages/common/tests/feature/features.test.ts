@@ -1,6 +1,6 @@
 import {
   convertTemplateConfigToFeatureConfig,
-  convertTemplateConfigToFeaturesConfig,
+  convertTemplateConfigInternalToFeaturesConfig,
   FeatureConfig,
   FeaturesConfig,
 } from "../../src/feature/features";
@@ -14,7 +14,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
     };
 
     const featuresConfig =
-      convertTemplateConfigToFeaturesConfig(templateConfig);
+      convertTemplateConfigInternalToFeaturesConfig(templateConfig);
 
     const expected: FeaturesConfig = {
       features: [
@@ -46,7 +46,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
     };
 
     const featuresConfig =
-      convertTemplateConfigToFeaturesConfig(templateConfig);
+      convertTemplateConfigInternalToFeaturesConfig(templateConfig);
 
     const expected: FeaturesConfig = {
       features: [
