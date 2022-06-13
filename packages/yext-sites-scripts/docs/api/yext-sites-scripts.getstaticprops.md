@@ -11,5 +11,5 @@ The type definition for the template's getStaticProps function.
 ```typescript
 export declare type GetStaticProps<T> = (data: Data) => Promise<T>;
 ```
-
 <b>References:</b> [Data](./yext-sites-scripts.data.md)
+
