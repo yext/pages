@@ -68,8 +68,9 @@ const discoverInputs = async (
   return (await readdir(templateDir)).reduce((input, template) => {
     const parsedPath = parse(template);
 
-    if (parsedPath.ext.includes("tsx")) {
-      input[`hydrate/${parsedPath.name}`] = `${hydrationOutputDir}/${template}`;
+    if (parsedPath.ext === ".tsx" || parsedPath.ext === ".jsx") {
+      input[`hydrate/${parsedPath.name}`] =
+        `${hydrationOutputDir}/${template}`.replace("jsx", "tsx");
     }
 
     input[`server/${parsedPath.name}`] = `${templateDir}/${template}`;
