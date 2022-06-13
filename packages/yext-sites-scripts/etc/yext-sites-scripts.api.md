@@ -66,7 +66,7 @@ export interface TemplateConfig {
 
 // @public
 export interface TemplateModule<T> {
-  config: TemplateConfig;
+  config?: TemplateConfig;
   default: Default<T>;
   filename: string;
   getPath: GetPath<T>;

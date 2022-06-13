@@ -80,27 +80,6 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
 });
 
 describe("features - convertTemplateConfigFeatureConfig", () => {
-  it("validates that both streamId and stream are not defined", async () => {
-    const templateConfig: TemplateConfig = {
-      streamId: "$id",
-      stream: {
-        $id: "$id",
-        fields: ["foo"],
-        filter: {},
-        localization: {
-          primary: true,
-        },
-      },
-    };
-
-    const featureConfigFunc = () =>
-      convertTemplateConfigFeatureConfig("myTemplateConfig", templateConfig);
-
-    expect(featureConfigFunc).toThrowError(
-      `TemplateConfig must not define both a "streamId" and a "stream".`
-    );
-  });
-
   it("uses the streamId if defined and return an EntityPageSetConfig", async () => {
     const templateConfig: TemplateConfig = {
       streamId: "$id",

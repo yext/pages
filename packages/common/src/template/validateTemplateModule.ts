@@ -1,13 +1,9 @@
 import { TemplateModule } from "./types.js";
 
 export const validateTemplateModule = (templateModule: TemplateModule<any>) => {
-  if (!templateModule.config) {
-    throw new Error(
-      `Template ${templateModule.filename} is missing an exported config function.`
-    );
+  if (templateModule.config) {
+    validateConfig(templateModule);
   }
-
-  validateConfig(templateModule);
 
   if (!templateModule.getPath) {
     throw new Error(
@@ -24,13 +20,7 @@ export const validateTemplateModule = (templateModule: TemplateModule<any>) => {
 };
 
 const validateConfig = (templateModule: TemplateModule<any>) => {
-  if (!templateModule.config.name) {
-    throw new Error(
-      `Template ${templateModule.filename} is missing a "name" in the config function.`
-    );
-  }
-
-  if (templateModule.config.streamId && templateModule.config.stream) {
+  if (templateModule.config?.streamId && templateModule.config?.stream) {
     throw new Error(
       `Template ${templateModule.filename} must not define both a "streamId" and a "stream".`
     );

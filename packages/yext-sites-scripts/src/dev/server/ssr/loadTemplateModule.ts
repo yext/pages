@@ -13,11 +13,6 @@ export const loadTemplateModule = async (
   const templateModule = await importFresh(devserver, templateFilepath);
   const templateName = templateFilename.split(".")[0];
 
-  // Set the config name as the template's name if not overriden
-  if (!templateModule.config.name) {
-    templateModule.config.name = templateName;
-  }
-
   return {
     ...templateModule,
     path: templateFilepath,

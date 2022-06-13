@@ -16,7 +16,7 @@ export interface FeaturesConfig {
  */
 export const convertTemplateConfigToFeaturesConfig = (
   templateName: string,
-  config: TemplateConfig
+  config: TemplateConfig | undefined
 ): FeaturesConfig => {
   const featureConfig = convertTemplateConfigFeatureConfig(
     templateName,
@@ -62,7 +62,6 @@ export const convertTemplateConfigFeatureConfig = (
   if (!config) {
     config = {};
   }
-  validate(config);
 
   const streamConfig = config.stream || null;
 
@@ -95,12 +94,4 @@ export const convertTemplateConfigFeatureConfig = (
   }
 
   return featureConfig;
-};
-
-const validate = (config: TemplateConfig) => {
-  if (config.streamId && config.stream) {
-    throw new Error(
-      `TemplateConfig must not define both a "streamId" and a "stream".`
-    );
-  }
 };
