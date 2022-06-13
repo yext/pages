@@ -50,14 +50,14 @@ export interface TemplateConfigInternal {
  * Parses a filepath and returns the relevant parts, such as the base filename.
  */
 const parse = (filepath: string) => {
-    const base = filepath.split("/")[filepath.split("/").length - 1];
-    const name = base.slice(0, base.lastIndexOf("."))
+  const base = filepath.split("/")[filepath.split("/").length - 1];
+  const name = base.slice(0, base.lastIndexOf("."));
 
-    return {
-        base, // the root file with extension
-        name, // the root file without extension
-    }
-}
+  return {
+    base, // the root file with extension
+    name, // the root file without extension
+  };
+};
 
 export const convertTemplateModuleToTemplateModuleInternal = (
   templateFilepath: string,
