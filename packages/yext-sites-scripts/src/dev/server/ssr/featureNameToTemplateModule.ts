@@ -14,7 +14,6 @@ export const featureNameToTemplateModule = async (
   for (const filename of directoryFilenames) {
     const templateModule = await loadTemplateModule(
       devserver,
-      filename,
       `${TEMPLATE_PATH}/${filename}`
     );
 
