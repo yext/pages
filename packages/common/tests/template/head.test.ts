@@ -1,4 +1,4 @@
-import { HeadConfig, renderHeadConfigToString } from "../../src/template/head";
+import { HeadConfig, renderHeadConfigToString, TagType } from "../../src/template/head";
 
 describe("renderHeadConfigToString", () => {
   it("properly renders a default title and excludes missing optionals", async () => {
@@ -44,20 +44,20 @@ describe("renderHeadConfigToString", () => {
       viewport: "bar",
       tags: [
         {
-          type: "meta",
+          type: TagType.META,
           attributes: {
             description: "foobar",
           },
         },
         {
-          type: "link",
+          type: TagType.LINK,
           attributes: {
             href: "/link/to/stylesheet",
             rel: "stylesheet",
           },
         },
         {
-          type: "script",
+          type: TagType.SCRIPT,
           attributes: {
             src: "./path/to/script",
           },

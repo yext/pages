@@ -30,6 +30,22 @@ export interface HeadConfig {
 export type Attributes = Record<string, string>;
 
 /**
+ * Enum that enumerates the allowed types of HTML elements in the document
+ * header.
+ *
+ * @public
+ */
+export enum TagType {
+    BASE = "base",
+    LINK = "link",
+    STYLE = "style",
+    META = "meta",
+    SCRIPT = "script",
+    NOSCRIPT = "noscript",
+    TEMPLATE = "template",
+}
+
+/**
  * Interface for an HTML tag. Can set attributes on the tag, but
  * if a body needs to be defined, use the other field of the
  * {@link HeadConfig} interface.
@@ -38,7 +54,7 @@ export type Attributes = Record<string, string>;
  */
 export interface Tag {
   /** The type of the element to create (i.e. meta, script, link, etc.) */
-  type: string;
+  type: TagType;
   /**
    * The attributes to add to the element. Each attribute will be added in
    * the form 'key="value"' and attributes will be seperated by a space
@@ -70,36 +86,17 @@ export const renderHeadConfigToString = (headConfig: HeadConfig): string => {
     .join("\n");
 };
 
-const validTagInterfaceElements = [
-  "base",
-  "link",
-  "style",
-  "meta",
-  "script",
-  "noscript",
-  "templates",
-];
-
 const renderTag = (tag: Tag): string => {
   switch (tag.type) {
-    case "base":
-    case "link":
-    case "meta":
+    case TagType.BASE:
+    case TagType.LINK:
+    case TagType.META:
       return `<${tag.type} ${renderAttributes(tag.attributes)}>`;
-    case "style":
-    case "script":
-    case "noscript":
-    case "template":
+    case TagType.STYLE:
+    case TagType.SCRIPT:
+    case TagType.NOSCRIPT:
+    case TagType.TEMPLATE:
       return `<${tag.type} ${renderAttributes(tag.attributes)}></${tag.type}>`;
-    default:
-      console.warn(
-        `The tag interface is not compatible with the ${
-          tag.type
-        } element. The following elements are compatible: ${validTagInterfaceElements.join(
-          " "
-        )}.`
-      );
-      return "";
   }
 };
 
