@@ -21,7 +21,7 @@ export interface TemplateModule<T> {
   /** The exported getPath function */
   getPath: GetPath<T>;
   /** The exported render function */
-  render: Render<T>;
+  render?: Render<T>;
   /** The exported default function */
   default: Default<T>;
 }

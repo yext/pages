@@ -72,7 +72,7 @@ export interface TemplateModule<T> {
   getPath: GetPath<T>;
   getStaticProps?: GetStaticProps<T>;
   path: string;
-  render: Render<T>;
+  render?: Render<T>;
   templateName: string;
 }
 
