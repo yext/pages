@@ -1,19 +1,10 @@
 /**
- * A domain representation of a template module. Contains all fields from an imported module as well
- * as metadata about the module used in downstream processing.
+ * The type to include in any template file. It defines the available functions and fields that are available
+ * to the template.
  *
  * @public
  */
 export interface TemplateModule<T> {
-  /**
-   * The filepath to the template file. This can be the raw TSX file when used during dev mode or
-   * the path to the server bundle this module was imported from during prod build.
-   */
-  path: string;
-  /** The name of the file (with extension) */
-  filename: string;
-  /** The name of the file (without extension) */
-  templateName: string;
   /** The exported config function */
   config?: TemplateConfig;
   /** The optional exported getStaticProps function */

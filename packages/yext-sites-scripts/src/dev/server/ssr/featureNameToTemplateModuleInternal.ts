@@ -3,25 +3,35 @@ import { readdir } from "fs/promises";
 import { ViteDevServer } from "vite";
 import { loadTemplateModule } from "./loadTemplateModule.js";
 import { TemplateModule } from "../../../../../common/src/template/types.js";
+import {
+  convertTemplateModuleToTemplateModuleInternal,
+  TemplateModuleInternal,
+} from "../../../../../common/src/template/internal/types.js";
 
 // Determines the template module to load from a given feature name (from the exported config)
-export const featureNameToTemplateModule = async (
+export const featureNameToTemplateModuleInternal = async (
   devserver: ViteDevServer,
   featureName: string
-): Promise<TemplateModule<any> | null> => {
+): Promise<TemplateModuleInternal<any> | null> => {
   const directoryFilenames = await readdir(`./${TEMPLATE_PATH}`);
 
   for (const filename of directoryFilenames) {
+    const templateFilepath = `${TEMPLATE_PATH}/${filename}`;
     const templateModule = await loadTemplateModule(
       devserver,
-      `${TEMPLATE_PATH}/${filename}`
+      templateFilepath
     );
 
-    const resolvedFeatureName =
-      templateModule?.config?.name || templateModule.templateName;
+    const templateModuleInternal =
+      convertTemplateModuleToTemplateModuleInternal(
+        templateFilepath,
+        templateModule
+      );
 
-    if (featureName === normalizeTemplateName(resolvedFeatureName)) {
-      return templateModule;
+    if (
+      featureName === normalizeTemplateName(templateModuleInternal.config.name)
+    ) {
+      return templateModuleInternal;
     }
   }
 

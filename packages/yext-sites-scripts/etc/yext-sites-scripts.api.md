@@ -68,12 +68,9 @@ export interface TemplateConfig {
 export interface TemplateModule<T> {
   config?: TemplateConfig;
   default: Default<T>;
-  filename: string;
   getPath: GetPath<T>;
   getStaticProps?: GetStaticProps<T>;
-  path: string;
   render?: Render<T>;
-  templateName: string;
 }
 
 // (No @packageDocumentation comment for this package)

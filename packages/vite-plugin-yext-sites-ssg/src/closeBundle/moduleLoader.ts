@@ -1,3 +1,8 @@
+import {
+  convertTemplateModuleToTemplateModuleInternal,
+  TemplateModuleInternal,
+} from "../../../common/src/template/internal/types";
+import { validateTemplateModuleInternal } from "../../../common/src/template/internal/validateTemplateModuleInternal";
 import { TemplateModule } from "../../../common/src/template/types";
 
 /**
@@ -10,7 +15,7 @@ import { TemplateModule } from "../../../common/src/template/types";
 export const loadTemplateModules = async (
   serverBundlePaths: string[]
 ): Promise<TemplateModuleCollection> => {
-  const importedModules = [] as TemplateModule<any>[];
+  const importedModules = [] as TemplateModuleInternal<any>[];
   for (const p of serverBundlePaths) {
     let templateModule = {} as TemplateModule<any>;
     try {
@@ -19,10 +24,11 @@ export const loadTemplateModules = async (
       throw new Error(`Could not import ${p} ${e}`);
     }
 
-    if (!templateModule.config) {
-      throw new Error(`Template at "${p}" does not export a config$`);
-    }
-    importedModules.push({ ...templateModule, path: p });
+    const templateModuleInternal =
+      convertTemplateModuleToTemplateModuleInternal(p, templateModule);
+    validateTemplateModuleInternal(templateModuleInternal);
+
+    importedModules.push({ ...templateModuleInternal, path: p });
   }
 
   validateModules(importedModules);
@@ -32,7 +38,7 @@ export const loadTemplateModules = async (
   );
 };
 
-const validateModules = (templateModules: TemplateModule<any>[]) => {
+const validateModules = (templateModules: TemplateModuleInternal<any>[]) => {
   validateUniqueFeatureName(templateModules);
 };
 
@@ -40,7 +46,9 @@ const validateModules = (templateModules: TemplateModule<any>[]) => {
  * Checks that a feature name doesn't appear twice in the set of template modules.
  * @param templateModules
  */
-const validateUniqueFeatureName = (templateModules: TemplateModule<any>[]) => {
+const validateUniqueFeatureName = (
+  templateModules: TemplateModuleInternal<any>[]
+) => {
   const featureNames = new Set<string>();
   templateModules
     .map((module) => module.config.name)
@@ -55,9 +63,9 @@ const validateUniqueFeatureName = (templateModules: TemplateModule<any>[]) => {
 };
 
 // A TemplateModule which also exports a Page component used for hydration.
-export interface HydrationTemplateModule extends TemplateModule<any> {
+export interface HydrationTemplateModule extends TemplateModuleInternal<any> {
   Page: any;
 }
 
 // A TemplateModuleCollection is a collection of template modules indexed by feature name.
-export type TemplateModuleCollection = Map<string, TemplateModule<any>>;
+export type TemplateModuleCollection = Map<string, TemplateModuleInternal<any>>;

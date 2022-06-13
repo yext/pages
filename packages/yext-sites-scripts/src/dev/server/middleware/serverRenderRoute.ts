@@ -5,8 +5,8 @@ import { pageLoader } from "../ssr/pageLoader.js";
 import { urlToFeature } from "../ssr/urlToFeature.js";
 import page404 from "../public/404";
 import { convertTemplateConfigToFeaturesConfig } from "../../../../../common/src/feature/features.js";
-import { validateTemplateModule } from "../../../../../common/src/template/validateTemplateModule.js";
-import { featureNameToTemplateModule } from "../ssr/featureNameToTemplateModule.js";
+import { validateTemplateModuleInternal } from "../../../../../common/src/template/internal/validateTemplateModuleInternal.js";
+import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplateModuleInternal.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -21,19 +21,21 @@ export const serverRenderRoute =
 
       const { feature, entityId } = urlToFeature(url);
 
-      const templateModule = await featureNameToTemplateModule(vite, feature);
-      if (!templateModule) {
+      const templateModuleInternal = await featureNameToTemplateModuleInternal(
+        vite,
+        feature
+      );
+      if (!templateModuleInternal) {
         console.error(
           `Cannot find template corresponding to feature: ${feature}`
         );
         return res.status(404).end(page404);
       }
 
-      validateTemplateModule(templateModule);
+      validateTemplateModuleInternal(templateModuleInternal);
 
       const featuresConfig = convertTemplateConfigToFeaturesConfig(
-        templateModule.templateName,
-        templateModule.config
+        templateModuleInternal.config
       );
 
       const React = await import("react");
@@ -43,7 +45,7 @@ export const serverRenderRoute =
         {
           url,
           vite,
-          templateFilename: templateModule.filename,
+          templateFilename: templateModuleInternal.filename,
           entityId,
           featuresConfig,
           dynamicGenerateData,
@@ -63,7 +65,7 @@ export const serverRenderRoute =
         "</head>",
         `<script type="text/javascript">
             window._RSS_PROPS_ = ${JSON.stringify(props)};
-            window._RSS_TEMPLATE_ = '${templateModule.filename}';
+            window._RSS_TEMPLATE_ = '${templateModuleInternal.filename}';
           </script></head>`
       );
 

@@ -1,4 +1,4 @@
-import { TemplateConfig } from "../template/types";
+import { TemplateConfigInternal } from "../template/internal/types";
 import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream";
 
 /**
@@ -15,13 +15,9 @@ export interface FeaturesConfig {
  * Converts a {@link TemplateConfig.config} into a valid {@link FeaturesConfig} (features and streams).
  */
 export const convertTemplateConfigToFeaturesConfig = (
-  templateName: string,
-  config: TemplateConfig | undefined
+  config: TemplateConfigInternal
 ): FeaturesConfig => {
-  const featureConfig = convertTemplateConfigFeatureConfig(
-    templateName,
-    config
-  );
+  const featureConfig = convertTemplateConfigToFeatureConfig(config);
   const streamConfig = convertTemplateConfigToStreamConfig(config);
 
   return {
@@ -55,19 +51,13 @@ export type FeatureConfig = EntityPageSetConfig | StaticPageConfig;
 /**
  * Converts a {@link TemplateConfig.config} into a valid single {@link FeatureConfig}.
  */
-export const convertTemplateConfigFeatureConfig = (
-  templateName: string,
-  config: TemplateConfig | undefined
+export const convertTemplateConfigToFeatureConfig = (
+  config: TemplateConfigInternal
 ): FeatureConfig => {
-  if (!config) {
-    config = {};
-  }
-
   const streamConfig = config.stream || null;
 
   let featureConfigBase: FeatureConfigBase = {
-    name: config.name ?? templateName,
-,
+    name: config.name,
     streamId: streamConfig
       ? streamConfig.$id
       : config.streamId

@@ -1,21 +1,20 @@
 import {
-  convertTemplateConfigFeatureConfig,
+  convertTemplateConfigToFeatureConfig,
   convertTemplateConfigToFeaturesConfig,
   FeatureConfig,
   FeaturesConfig,
 } from "../../src/feature/features";
-import { TemplateConfig } from "../../src/template/types";
+import { TemplateConfigInternal } from "../../src/template/internal/types";
 
 describe("features - convertTemplateConfigToFeaturesConfig", () => {
   it("returns a FeaturesConfig with no StreamConfig if no stream is defined", async () => {
-    const templateConfig: TemplateConfig = {
+    const templateConfig: TemplateConfigInternal = {
+      name: "myTemplateConfig",
       streamId: "$id",
     };
 
-    const featuresConfig = convertTemplateConfigToFeaturesConfig(
-      "myTemplateConfig",
-      templateConfig
-    );
+    const featuresConfig =
+      convertTemplateConfigToFeaturesConfig(templateConfig);
 
     const expected: FeaturesConfig = {
       features: [
@@ -34,7 +33,8 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
   });
 
   it("returns a FeaturesConfig with a StreamConfig if stream is defined", async () => {
-    const templateConfig: TemplateConfig = {
+    const templateConfig: TemplateConfigInternal = {
+      name: "myTemplateConfig",
       stream: {
         $id: "$id",
         fields: ["foo"],
@@ -45,10 +45,8 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
       },
     };
 
-    const featuresConfig = convertTemplateConfigToFeaturesConfig(
-      "myTemplateConfig",
-      templateConfig
-    );
+    const featuresConfig =
+      convertTemplateConfigToFeaturesConfig(templateConfig);
 
     const expected: FeaturesConfig = {
       features: [
@@ -79,16 +77,14 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
   });
 });
 
-describe("features - convertTemplateConfigFeatureConfig", () => {
+describe("features - convertTemplateConfigToFeatureConfig", () => {
   it("uses the streamId if defined and return an EntityPageSetConfig", async () => {
-    const templateConfig: TemplateConfig = {
+    const templateConfig: TemplateConfigInternal = {
+      name: "myTemplateConfig",
       streamId: "$id",
     };
 
-    const featureConfig = convertTemplateConfigFeatureConfig(
-      "myTemplateConfig",
-      templateConfig
-    );
+    const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
 
     const expected: FeatureConfig = {
       name: "myTemplateConfig",
@@ -103,7 +99,8 @@ describe("features - convertTemplateConfigFeatureConfig", () => {
   });
 
   it("uses the stream if defined and returns an EntityPageSetConfig", async () => {
-    const templateConfig: TemplateConfig = {
+    const templateConfig: TemplateConfigInternal = {
+      name: "myTemplateConfig",
       stream: {
         $id: "$id",
         fields: ["foo"],
@@ -114,10 +111,7 @@ describe("features - convertTemplateConfigFeatureConfig", () => {
       },
     };
 
-    const featureConfig = convertTemplateConfigFeatureConfig(
-      "myTemplateConfig",
-      templateConfig
-    );
+    const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
 
     const expected: FeatureConfig = {
       name: "myTemplateConfig",
@@ -131,11 +125,11 @@ describe("features - convertTemplateConfigFeatureConfig", () => {
     expect(featureConfig).toEqual(expected);
   });
 
-  it("returns a StaticPageConfig if no config defined", async () => {
-    const featureConfig = convertTemplateConfigFeatureConfig(
-      "myTemplateConfig",
-      null
-    );
+  it("returns a StaticPageConfig if 'no config' defined", async () => {
+    const templateConfig: TemplateConfigInternal = {
+      name: "myTemplateConfig",
+    };
+    const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
 
     const expected: FeatureConfig = {
       name: "myTemplateConfig",
@@ -146,32 +140,5 @@ describe("features - convertTemplateConfigFeatureConfig", () => {
     };
 
     expect(featureConfig).toEqual(expected);
-  });
-
-  it("overrides the config.name when defined", async () => {
-    const templateConfig: TemplateConfig = {
-      name: "myOverride",
-      streamId: "$id",
-    };
-
-    const featuresConfig = convertTemplateConfigToFeaturesConfig(
-      "myTemplateName",
-      templateConfig
-    );
-
-    const expected: FeaturesConfig = {
-      features: [
-        {
-          name: "myOverride",
-          streamId: "$id",
-          templateType: "JS",
-          entityPageSet: {
-            plugin: {},
-          },
-        },
-      ],
-    };
-
-    expect(featuresConfig).toEqual(expected);
   });
 });
