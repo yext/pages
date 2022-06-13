@@ -9,5 +9,5 @@ The exported render function
 <b>Signature:</b>
 
 ```typescript
-render: Render<T>;
+render?: Render<T>;
 ```

@@ -6,12 +6,12 @@
 
 ## Interfaces
 
-| Interface                                                | Description                                                                                                                                                   |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Data](./yext-sites-scripts.data.md)                     | The shape of the data passed directly to the different template functions (render, getPath, etc).                                                             |
-| [Stream](./yext-sites-scripts.stream.md)                 | The stream config defined in [TemplateConfig.stream](./yext-sites-scripts.templateconfig.stream.md)<!-- -->.                                                  |
-| [TemplateConfig](./yext-sites-scripts.templateconfig.md) | The exported <code>config</code> function's definition.                                                                                                       |
-| [TemplateModule](./yext-sites-scripts.templatemodule.md) | A domain representation of a template module. Contains all fields from an imported module as well as metadata about the module used in downstream processing. |
+| Interface                                                | Description                                                                                                                 |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| [Data](./yext-sites-scripts.data.md)                     | The shape of the data passed directly to the different template functions (render, getPath, etc).                           |
+| [Stream](./yext-sites-scripts.stream.md)                 | The stream config defined in [TemplateConfig.stream](./yext-sites-scripts.templateconfig.stream.md)<!-- -->.                |
+| [TemplateConfig](./yext-sites-scripts.templateconfig.md) | The exported <code>config</code> function's definition.                                                                     |
+| [TemplateModule](./yext-sites-scripts.templatemodule.md) | The type to include in any template file. It defines the available functions and fields that are available to the template. |
 
 ## Type Aliases
 

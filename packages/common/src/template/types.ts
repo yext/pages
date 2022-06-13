@@ -1,25 +1,18 @@
 /**
- * A domain representation of a template module. Contains all fields from an imported module as well
- * as metadata about the module used in downstream processing.
+ * The type to include in any template file. It defines the available functions and fields that are available
+ * to the template.
  *
  * @public
  */
 export interface TemplateModule<T> {
-  /**
-   * The filepath to the template file. This can be the raw TSX file when used during dev mode or
-   * the path to the server bundle this module was imported from during prod build.
-   */
-  path: string;
-  /** The name of the file */
-  filename: string;
   /** The exported config function */
-  config: TemplateConfig;
+  config?: TemplateConfig;
   /** The optional exported getStaticProps function */
   getStaticProps?: GetStaticProps<T>;
   /** The exported getPath function */
   getPath: GetPath<T>;
   /** The exported render function */
-  render: Render<T>;
+  render?: Render<T>;
   /** The exported default function */
   default: Default<T>;
 }
@@ -58,8 +51,8 @@ export type Default<T> = (data: T) => JSX.Element;
  * @public
  */
 export interface TemplateConfig {
-  /** The name of the template feature */
-  name: string;
+  /** The name of the template feature. If not defined uses the template filename (without extension) */
+  name?: string;
   /** The stream that this template uses. If a stream is defined the streamId is not required. */
   streamId?: string;
   /** The stream configuration used by the template */

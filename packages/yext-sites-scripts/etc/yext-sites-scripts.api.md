@@ -59,20 +59,18 @@ export interface Stream {
 
 // @public
 export interface TemplateConfig {
-  name: string;
+  name?: string;
   stream?: Stream;
   streamId?: string;
 }
 
 // @public
 export interface TemplateModule<T> {
-  config: TemplateConfig;
+  config?: TemplateConfig;
   default: Default<T>;
-  filename: string;
   getPath: GetPath<T>;
   getStaticProps?: GetStaticProps<T>;
-  path: string;
-  render: Render<T>;
+  render?: Render<T>;
 }
 
 // (No @packageDocumentation comment for this package)
