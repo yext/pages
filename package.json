@@ -11,6 +11,9 @@
     "release:plugin": "npm --prefix packages/vite-plugin-yext-sites-ssg run release",
     "release:yss": " npm --prefix packages/yext-sites-scripts run release"
   },
+  "engines": {
+    "node": ">=17"
+  },
   "workspaces": [
     "./packages/*"
   ],
