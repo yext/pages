@@ -12,7 +12,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       getHeadConfig: () => {
         return {
           title: "foo",
-        }
+        };
       },
       config: {
         streamId: "$id",
@@ -32,7 +32,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       getHeadConfig: () => {
         return {
           title: "foo",
-        }
+        };
       },
       config: {
         name: "myTemplateName",

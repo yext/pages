@@ -36,13 +36,13 @@ export type Attributes = Record<string, string>;
  * @public
  */
 export const enum TagType {
-    BASE = "base",
-    LINK = "link",
-    STYLE = "style",
-    META = "meta",
-    SCRIPT = "script",
-    NOSCRIPT = "noscript",
-    TEMPLATE = "template",
+  BASE = "base",
+  LINK = "link",
+  STYLE = "style",
+  META = "meta",
+  SCRIPT = "script",
+  NOSCRIPT = "noscript",
+  TEMPLATE = "template",
 }
 
 /**

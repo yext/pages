@@ -73,7 +73,9 @@ export const serverRenderRoute =
             ${
               !templateModuleInternal.render &&
               templateModuleInternal.getHeadConfig &&
-              renderHeadConfigToString(templateModuleInternal.getHeadConfig(props))
+              renderHeadConfigToString(
+                templateModuleInternal.getHeadConfig(props)
+              )
             }
           </head>`
       );
