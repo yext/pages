@@ -35,7 +35,7 @@ export type Attributes = Record<string, string>;
  *
  * @public
  */
-export enum TagType {
+export const enum TagType {
     BASE = "base",
     LINK = "link",
     STYLE = "style",
