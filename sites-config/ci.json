@@ -16,7 +16,7 @@
     ]
   },
   "dependencies": {
-    "installDepsCmd": "npm config set '//registry.npmjs.org/:_authToken' `${NPM_TOKEN}` && npm publish && npm install",
+    "installDepsCmd": "npm config set '//registry.npmjs.org/:_authToken' `${NPM_TOKEN}` && npm install",
     "requiredFiles": [
       "package.json",
       "package-lock.json"
