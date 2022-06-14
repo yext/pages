@@ -16,10 +16,11 @@
     ]
   },
   "dependencies": {
-    "installDepsCmd": "(cd packages/yext-sites-scripts && npm install)",
+    "installDepsCmd": "npm install",
     "requiredFiles": [
       "packages/yext-sites-scripts/package.json",
-      "packages/yext-sites-scripts/package-lock.json"
+      "package-lock.json",
+      ".npmrc"
     ]
   },
   "buildArtifacts": {
