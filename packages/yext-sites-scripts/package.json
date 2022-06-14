@@ -101,7 +101,10 @@
       "<rootDir>/common/**/tests/**/*.test.ts"
     ],
     "transform": {
-      "^.+\\.ts?$": "ts-jest"
+      "\\.[jt]sx?$": "ts-jest"
+    },
+    "moduleNameMapper": {
+      "^(.+)\\.js$": "$1"
     }
   }
 }
