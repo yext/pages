@@ -35,7 +35,14 @@ export type Attributes = Record<string, string>;
  *
  * @public
  */
- export type TagType = "base" | "link" | "style" | "meta" | "script" | "noscript" | "template";
+export type TagType =
+  | "base"
+  | "link"
+  | "style"
+  | "meta"
+  | "script"
+  | "noscript"
+  | "template";
 
 /**
  * Interface for an HTML tag. Can set attributes on the tag, but

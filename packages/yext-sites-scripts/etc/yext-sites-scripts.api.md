@@ -78,8 +78,18 @@ export interface Stream {
 // @public
 export interface Tag {
   attributes: Attributes;
-  type: string;
+  type: TagType;
 }
+
+// @public
+export type TagType =
+  | "base"
+  | "link"
+  | "style"
+  | "meta"
+  | "script"
+  | "noscript"
+  | "template";
 
 // @public
 export interface TemplateConfig {
@@ -92,6 +102,7 @@ export interface TemplateConfig {
 export interface TemplateModule<T> {
   config?: TemplateConfig;
   default: Default<T>;
+  getHeadConfig?: GetHeadConfig<T>;
   getPath: GetPath<T>;
   getStaticProps?: GetStaticProps<T>;
   render?: Render<T>;
