@@ -4,10 +4,10 @@
 
 ## renderHeadConfigToString variable
 
-Function that takes a [HeadConfig](./yext-sites-scripts.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the <head> tags.
+Function that takes a [HeadConfig](./yext-sites-scripts.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the head tags.
 
 <b>Signature:</b>
 
 ```typescript
-renderHeadConfigToString: (headConfig: HeadConfig) => string;
+renderHeadConfigToString: (headConfig: HeadConfig) => string
 ```

@@ -5,6 +5,7 @@ export default defineConfig({
   title: "Yext Sites Scripts",
   description: "A set of tools to allow development for Yext Sites",
   lastUpdated: true,
+  markdown: { attrs: { disable: true } },
 
   themeConfig: {
     repo: "yext/sites-scripts",
@@ -18,21 +19,16 @@ export default defineConfig({
       { text: "API", link: "/api/index.html", activeMatch: "^/$|^/api/" },
     ],
 
-    sidebar: {
-      "/basics/": getSidebar(),
-      "/advanced/": getSidebar(),
-      "/api/": getSidebar(),
-      "/": getSidebar(),
-    },
+    sidebar: getSidebar(),
   },
 });
 
 function getSidebar() {
   return [
-    { text: "Guide", link: "/index.html" },
+    { text: "Guide", items: [{ text: "Home", link: "/index.html" }] },
     {
       text: "Basics",
-      children: [
+      items: [
         { text: "Global Data", link: "/basics/global-data.html" },
         { text: "Pages", link: "/basics/pages.html" },
         { text: "Redirects", link: "/basics/redirects.html" },
@@ -43,7 +39,7 @@ function getSidebar() {
     },
     {
       text: "Advanced",
-      children: [
+      items: [
         { text: "Entry Points", link: "/advanced/entry-points.html" },
         {
           text: "Vite Build Process",
@@ -53,7 +49,7 @@ function getSidebar() {
     },
     {
       text: "API",
-      children: [{ text: "API Docs", link: "/api/index.html" }],
+      items: [{ text: "API Docs", link: "/api/index.html" }],
     },
   ];
 }
