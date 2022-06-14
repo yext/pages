@@ -36,6 +36,4 @@ Update your package.json like the following (assuming your repo is in the same r
 
 ```json
 "@yext/yext-sites-scripts": "file:../sites-scripts/packages/yext-sites-scripts",
-"react": "../sites-scripts/packages/yext-sites-scripts/node_modules/react",
-"react-dom": "../sites-scripts/packages/yext-sites-scripts/node_modules/react-dom",
 ```
