@@ -1,6 +1,6 @@
 /**
  * The configuration that allows users to entirely arbitarily
- * set the inner contents of the <head> element that will be
+ * set the inner contents of the head element that will be
  * prepended to the generated HTML document.
  *
  * @public
@@ -12,10 +12,10 @@ export interface HeadConfig {
   charset?: string;
   /** Declares the size and shape of the documents viewport. */
   viewport?: string;
-  /** Well-defined interface for adding HTML tags (such as <meta> tags) */
+  /** Well-defined interface for adding HTML tags (such as meta tags) */
   tags?: Tag[];
   /** For any content that can't be fully encapsulted by our Tag interface,
-   *  (i.e. <template> or <style>) an arbitrary, user-defined string can
+   *  (i.e. template or style) an arbitrary, user-defined string can
    *  be provided.
    */
   other?: string;
@@ -64,7 +64,7 @@ export interface Tag {
 /**
  * Function that takes a {@link HeadConfig} interface and outputs a valid
  * string of HTML that will be inserted into the generated document between
- * the <head> tags.
+ * the head tags.
  *
  * @public
  */
