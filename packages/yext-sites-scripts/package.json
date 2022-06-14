@@ -1,6 +1,6 @@
 {
   "name": "@yext/yext-sites-scripts",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "private": true,
   "description": "The default React development toolchain provided by Yext",
   "keywords": [
@@ -35,7 +35,7 @@
     "dist/**/*"
   ],
   "dependencies": {
-    "@yext/vite-plugin-yext-sites-ssg": "0.0.10",
+    "@yext/vite-plugin-yext-sites-ssg": "0.0.11",
     "ansi-to-html": "^0.7.2",
     "cli-spinners": "^2.6.1",
     "commander": "^9.1.0",
