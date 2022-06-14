@@ -12,7 +12,6 @@ export const createServer = async (dynamicGenerateData: boolean) => {
   // create vite using ssr mode
   const vite = await createViteServer({
     server: { middlewareMode: "ssr" },
-    plugins: [react()],
     optimizeDeps: {
       // Temporary solution https://github.com/vitejs/vite/issues/6215
       include: ["react/jsx-runtime"],
