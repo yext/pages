@@ -26,6 +26,7 @@ const plugin = (opts: Options = {}): PluginOption[] => {
   return [
     {
       name: "vite-plugin-yext-sites-ssg",
+      apply: "build",
       config: async (config: UserConfig): Promise<UserConfig> => {
         return {
           build: {
