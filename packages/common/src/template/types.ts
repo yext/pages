@@ -1,3 +1,5 @@
+import { HeadConfig } from "./head";
+
 /**
  * The type to include in any template file. It defines the available functions and fields that are available
  * to the template.
@@ -11,6 +13,8 @@ export interface TemplateModule<T> {
   getStaticProps?: GetStaticProps<T>;
   /** The exported getPath function */
   getPath: GetPath<T>;
+  /** The exported, optional headFunction */
+  getHeadConfig?: GetHeadConfig<T>;
   /** The exported render function */
   render?: Render<T>;
   /** The exported default function */
@@ -30,6 +34,15 @@ export type GetStaticProps<T> = (data: Data) => Promise<T>;
  * @public
  */
 export type GetPath<T> = (data: T) => string;
+
+/**
+ * The type definition for the template's getHeadConfig function. getHeadConfig
+ * takes in the provided data and will output a HeadConfig object which will
+ * be used to generate the tags inside the head tag of the generated HTML document.
+ *
+ * @public
+ */
+export type GetHeadConfig<T> = (data: T) => HeadConfig;
 
 /**
  * The type definition for the template's render function.

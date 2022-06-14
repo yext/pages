@@ -18,6 +18,7 @@ export interface TemplateModule<T>
 | ------------------------------------------------------------------------ | ------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | [config?](./yext-sites-scripts.templatemodule.config.md)                 | [TemplateConfig](./yext-sites-scripts.templateconfig.md)                  | <i>(Optional)</i> The exported config function                  |
 | [default](./yext-sites-scripts.templatemodule.default.md)                | [Default](./yext-sites-scripts.default.md)<!-- -->&lt;T&gt;               | The exported default function                                   |
+| [getHeadConfig?](./yext-sites-scripts.templatemodule.getheadconfig.md)   | [GetHeadConfig](./yext-sites-scripts.getheadconfig.md)<!-- -->&lt;T&gt;   | <i>(Optional)</i> The exported, optional headFunction           |
 | [getPath](./yext-sites-scripts.templatemodule.getpath.md)                | [GetPath](./yext-sites-scripts.getpath.md)<!-- -->&lt;T&gt;               | The exported getPath function                                   |
 | [getStaticProps?](./yext-sites-scripts.templatemodule.getstaticprops.md) | [GetStaticProps](./yext-sites-scripts.getstaticprops.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> The optional exported getStaticProps function |
 | [render?](./yext-sites-scripts.templatemodule.render.md)                 | [Render](./yext-sites-scripts.render.md)<!-- -->&lt;T&gt;                 | <i>(Optional)</i> The exported render function                  |

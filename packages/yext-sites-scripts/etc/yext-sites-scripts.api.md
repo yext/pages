@@ -6,6 +6,9 @@
 /// <reference types="react" />
 
 // @public
+export type Attributes = Record<string, string>;
+
+// @public
 export interface Data {
   __meta: {
     mode: "development" | "production";
@@ -21,10 +24,22 @@ export interface Data {
 export type Default<T> = (data: T) => JSX.Element;
 
 // @public
+export type GetHeadConfig<T> = (data: T) => HeadConfig;
+
+// @public
 export type GetPath<T> = (data: T) => string;
 
 // @public
 export type GetStaticProps<T> = (data: Data) => Promise<T>;
+
+// @public
+export interface HeadConfig {
+  charset?: string;
+  other?: string;
+  tags?: Tag[];
+  title?: string;
+  viewport?: string;
+}
 
 // @public
 export type Manifest = {
@@ -44,6 +59,9 @@ export type Manifest = {
 export type Render<T> = (data: T) => string;
 
 // @public
+export const renderHeadConfigToString: (headConfig: HeadConfig) => string;
+
+// @public
 export interface Stream {
   $id: string;
   fields: string[];
@@ -58,6 +76,22 @@ export interface Stream {
 }
 
 // @public
+export interface Tag {
+  attributes: Attributes;
+  type: TagType;
+}
+
+// @public
+export type TagType =
+  | "base"
+  | "link"
+  | "style"
+  | "meta"
+  | "script"
+  | "noscript"
+  | "template";
+
+// @public
 export interface TemplateConfig {
   name?: string;
   stream?: Stream;
@@ -68,6 +102,7 @@ export interface TemplateConfig {
 export interface TemplateModule<T> {
   config?: TemplateConfig;
   default: Default<T>;
+  getHeadConfig?: GetHeadConfig<T>;
   getPath: GetPath<T>;
   getStaticProps?: GetStaticProps<T>;
   render?: Render<T>;

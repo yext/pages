@@ -7,6 +7,7 @@ import page404 from "../public/404";
 import { convertTemplateConfigInternalToFeaturesConfig } from "../../../../../common/src/feature/features.js";
 import { validateTemplateModuleInternal } from "../../../../../common/src/template/internal/validateTemplateModuleInternal.js";
 import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplateModuleInternal.js";
+import { renderHeadConfigToString } from "../../../../../common/src/template/head";
 
 type Props = {
   vite: ViteDevServer;
@@ -60,13 +61,23 @@ export const serverRenderRoute =
         React.createElement(Component, props)
       );
 
-      // Inject the app-rendered HTML into the template.
+      // Inject the app-rendered HTML into the template. Only invoke the users headFunction
+      // if they are rendering by way of a default export and not a custom render function.
       const html = template.replace(`<!--app-html-->`, appHtml).replace(
-        "</head>",
-        `<script type="text/javascript">
-            window._RSS_PROPS_ = ${JSON.stringify(props)};
-            window._RSS_TEMPLATE_ = '${templateModuleInternal.filename}';
-          </script></head>`
+        `<!--app-head-->`,
+        `<head>
+            <script type="text/javascript">
+              window._RSS_PROPS_ = ${JSON.stringify(props)};
+              window._RSS_TEMPLATE_ = '${templateModuleInternal.filename}';
+            </script>
+            ${
+              !templateModuleInternal.render &&
+              templateModuleInternal.getHeadConfig &&
+              renderHeadConfigToString(
+                templateModuleInternal.getHeadConfig(props)
+              )
+            }
+          </head>`
       );
 
       // Send the rendered HTML back.

@@ -1,5 +1,6 @@
 import {
   Default,
+  GetHeadConfig,
   GetPath,
   GetStaticProps,
   Render,
@@ -29,6 +30,8 @@ export interface TemplateModuleInternal<T> {
   getStaticProps?: GetStaticProps<T>;
   /** The exported getPath function */
   getPath: GetPath<T>;
+  /** The exported, optional headFunction */
+  getHeadConfig?: GetHeadConfig<T>;
   /** The exported render function */
   render?: Render<T>;
   /** The exported default function */

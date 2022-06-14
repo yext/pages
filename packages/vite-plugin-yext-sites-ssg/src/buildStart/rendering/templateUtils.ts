@@ -81,7 +81,7 @@ const renderHtml = (
   templateModuleInternal: TemplateModuleInternal<any>,
   data: Data
 ) => {
-  const { default: component, render } = templateModuleInternal;
+  const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {
     throw new Error(
       `Cannot render html from template '${templateModuleInternal.config.name}'. Template is missing render function or default export.`
@@ -89,6 +89,12 @@ const renderHtml = (
   }
 
   if (render) {
+    if (getHeadConfig) {
+      console.warn(
+        `getHeadConfig for template ${templateModuleInternal.config.name} will not be called since a custom render function is defined.`
+      );
+    }
+
     return render(data);
   }
 
@@ -97,6 +103,7 @@ const renderHtml = (
     templateModuleInternal,
     renderToString(createElement(templateModuleInternal.default, data)),
     // TODO -- allow hydration be configurable.
-    true
+    true,
+    getHeadConfig
   );
 };
