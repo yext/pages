@@ -2,6 +2,7 @@
   "name": "sites-scripts",
   "version": "0.0.1",
   "description": "A monorepo containing all packages used in Yext Sites rendering",
+  "private": "true",
   "main": "index.js",
   "scripts": {
     "fmt": "prettier -w .",
