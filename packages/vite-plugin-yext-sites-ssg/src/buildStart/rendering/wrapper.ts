@@ -23,7 +23,7 @@ export const reactWrapper = <T extends Data>(
           .map((f) => `<link rel="stylesheet" href="/${f}"/>`)
           .filter((v, i, a) => a.indexOf(v) == i)
           .join("\n")}
-        ${getHeadConfig && renderHeadConfigToString(getHeadConfig(data))}
+        ${getHeadConfig ? renderHeadConfigToString(getHeadConfig(data)) : ""}
     </head>
     <body>
         <div id="reactele">${template}</div>${

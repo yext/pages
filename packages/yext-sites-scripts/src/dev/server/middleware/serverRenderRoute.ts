@@ -72,10 +72,11 @@ export const serverRenderRoute =
             </script>
             ${
               !templateModuleInternal.render &&
-              templateModuleInternal.getHeadConfig &&
-              renderHeadConfigToString(
-                templateModuleInternal.getHeadConfig(props)
-              )
+              templateModuleInternal.getHeadConfig
+                ? renderHeadConfigToString(
+                    templateModuleInternal.getHeadConfig(props)
+                  )
+                : ""
             }
           </head>`
       );
