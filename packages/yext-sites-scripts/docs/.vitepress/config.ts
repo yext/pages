@@ -8,17 +8,16 @@ export default defineConfig({
   markdown: { attrs: { disable: true } },
 
   themeConfig: {
-    repo: "yext/sites-scripts",
-    docsDir: "docs",
-    docsBranch: "main",
-    editLinks: false,
-    lastUpdated: "Last Updated",
-
+    lastUpdatedText: "Last Updated",
+    editLink: {
+      repo: "yext/sites-scripts",
+      branch: "main",
+      dir: "packages/yext-sites-scripts/docs",
+    },
     nav: [
       { text: "Guide", link: "/index.html", activeMatch: "^/$|^/index.html" },
       { text: "API", link: "/api/index.html", activeMatch: "^/$|^/api/" },
     ],
-
     sidebar: getSidebar(),
   },
 });
