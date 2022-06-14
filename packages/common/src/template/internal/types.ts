@@ -7,8 +7,8 @@ import {
   Stream,
   TemplateConfig,
   TemplateModule,
-} from "../types";
-import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal";
+} from "../types.js";
+import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal.js";
 
 /**
  * A domain representation of a template module. Contains all fields from an imported module as well

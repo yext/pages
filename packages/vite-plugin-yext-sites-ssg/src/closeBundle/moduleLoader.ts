@@ -1,8 +1,8 @@
 import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
-} from "../../../common/src/template/internal/types";
-import { TemplateModule } from "../../../common/src/template/types";
+} from "../../../common/src/template/internal/types.js";
+import { TemplateModule } from "../../../common/src/template/types.js";
 
 /**
  * Imports modules from the server bundle paths and validates that they are of the expected form.

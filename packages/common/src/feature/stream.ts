@@ -1,4 +1,4 @@
-import { TemplateConfig } from "../template/types";
+import { TemplateConfig } from "../template/types.js";
 
 /**
  * The shape of data that represents a stream configuration.
