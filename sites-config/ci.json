@@ -16,11 +16,10 @@
     ]
   },
   "dependencies": {
-    "installDepsCmd": "npm config set '//registry.npmjs.org/:_authToken' `${NPM_TOKEN}` && npm install",
+    "installDepsCmd": "npm config set '//registry.npmjs.org/:_authToken' `${NPM_TOKEN}` && (cd packages/yext-sites-scripts && npm install)",
     "requiredFiles": [
-      "package.json",
       "packages/yext-sites-scripts/package.json",
-      "package-lock.json"
+      "packages/yext-sites-scripts/package-lock.json"
     ]
   },
   "buildArtifacts": {
