@@ -48,20 +48,20 @@ describe("renderHeadConfigToString", () => {
       viewport: "bar",
       tags: [
         {
-          type: TagType.META,
+          type: "meta",
           attributes: {
             description: "foobar",
           },
         },
         {
-          type: TagType.LINK,
+          type: "link",
           attributes: {
             href: "/link/to/stylesheet",
             rel: "stylesheet",
           },
         },
         {
-          type: TagType.SCRIPT,
+          type: "script",
           attributes: {
             src: "./path/to/script",
           },

@@ -30,20 +30,12 @@ export interface HeadConfig {
 export type Attributes = Record<string, string>;
 
 /**
- * Enum that enumerates the allowed types of HTML elements in the document
+ * Type that enumerates the allowed types of HTML elements in the document
  * header.
  *
  * @public
  */
-export const enum TagType {
-  BASE = "base",
-  LINK = "link",
-  STYLE = "style",
-  META = "meta",
-  SCRIPT = "script",
-  NOSCRIPT = "noscript",
-  TEMPLATE = "template",
-}
+ export type TagType = "base" | "link" | "style" | "meta" | "script" | "noscript" | "template";
 
 /**
  * Interface for an HTML tag. Can set attributes on the tag, but
@@ -88,14 +80,14 @@ export const renderHeadConfigToString = (headConfig: HeadConfig): string => {
 
 const renderTag = (tag: Tag): string => {
   switch (tag.type) {
-    case TagType.BASE:
-    case TagType.LINK:
-    case TagType.META:
+    case "base":
+    case "link":
+    case "meta":
       return `<${tag.type} ${renderAttributes(tag.attributes)}>`;
-    case TagType.STYLE:
-    case TagType.SCRIPT:
-    case TagType.NOSCRIPT:
-    case TagType.TEMPLATE:
+    case "style":
+    case "script":
+    case "noscript":
+    case "template":
       return `<${tag.type} ${renderAttributes(tag.attributes)}></${tag.type}>`;
   }
 };
