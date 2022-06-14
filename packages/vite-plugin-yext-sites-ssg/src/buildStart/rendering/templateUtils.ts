@@ -81,7 +81,6 @@ const renderHtml = (
   templateModuleInternal: TemplateModuleInternal<any>,
   data: Data
 ) => {
-  // TODO - fix
   const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {
     throw new Error(
