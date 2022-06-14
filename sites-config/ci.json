@@ -19,8 +19,7 @@
     "installDepsCmd": "npm config set '//registry.npmjs.org/:_authToken' `${NPM_TOKEN}` && npm publish && npm install",
     "requiredFiles": [
       "packages/yext-sites-scripts/package.json",
-      "package-lock.json",
-      ".npmrc"
+      "package-lock.json"
     ]
   },
   "buildArtifacts": {
