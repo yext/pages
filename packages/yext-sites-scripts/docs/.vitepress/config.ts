@@ -10,9 +10,9 @@ export default defineConfig({
   themeConfig: {
     lastUpdatedText: "Last Updated",
     editLink: {
-      repo: "yext/sites-scripts",
-      branch: "main",
-      dir: "packages/yext-sites-scripts/docs",
+      pattern:
+        "https://github.com/yext/sites-scripts/tree/main/packages/yext-sites-scripts/docs/:path",
+      text: "Edit This Page",
     },
     nav: [
       { text: "Guide", link: "/index.html", activeMatch: "^/$|^/index.html" },
