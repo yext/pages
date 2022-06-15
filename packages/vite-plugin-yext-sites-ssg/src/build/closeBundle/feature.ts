@@ -5,7 +5,7 @@ import {
   FeaturesConfig,
   FeatureConfig,
   convertTemplateConfigToFeatureConfig,
-} from "../../../common/src/feature/features.js";
+} from "../../../../common/src/feature/features.js";
 
 /**
  * Run feature.json Generation. Returns a mapping of feature name to bundle path.

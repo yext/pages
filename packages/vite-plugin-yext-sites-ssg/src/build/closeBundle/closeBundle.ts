@@ -1,13 +1,13 @@
 import glob from "glob";
 import * as path from "path";
 import { createFeatureJson } from "./feature.js";
-import logger from "../log.js";
+import logger from "../../log.js";
 import { generateManifestFile } from "./manifest.js";
 import {
   loadTemplateModules,
   TemplateModuleCollection,
 } from "./moduleLoader.js";
-import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { ProjectStructure } from "../../../../common/src/project/structure.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
