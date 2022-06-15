@@ -17,9 +17,7 @@ export type Options = {
 const plugin = (opts: Options = {}): PluginOption[] => {
   const projectStructure = new ProjectStructure(opts.projectStructureConfig);
 
-  return [
-    build(projectStructure),
-  ]
+  return [build(projectStructure)];
 };
 
 export default plugin;

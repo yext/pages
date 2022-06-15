@@ -61,7 +61,10 @@ const copyPluginFiles = (fileEmitter: EmitFile) => {
   });
 
   const currentPath = new URL(import.meta.url).pathname;
-  const pathToPluginsDir = path.resolve(currentPath, "../../../../../../plugin");
+  const pathToPluginsDir = path.resolve(
+    currentPath,
+    "../../../../../../plugin"
+  );
   const pluginFiles = glob.sync(`${pathToPluginsDir}/*.ts`);
 
   if (pluginFiles.length == 0) {
