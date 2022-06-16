@@ -11,5 +11,5 @@ The type definition for the template's getHeadConfig function. getHeadConfig tak
 ```typescript
 export declare type GetHeadConfig<T> = (data: T) => HeadConfig;
 ```
-<b>References:</b> [HeadConfig](./yext-sites-scripts.headconfig.md)
 
+<b>References:</b> [HeadConfig](./yext-sites-scripts.headconfig.md)
