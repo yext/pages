@@ -9,12 +9,13 @@ The shape of the data passed directly to the different template functions (rende
 <b>Signature:</b>
 
 ```typescript
-export interface Data
+export interface Data 
 ```
 
 ## Properties
 
-| Property                                          | Type                                                                                                      | Description                                                               |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [\_\_meta](./yext-sites-scripts.data.__meta.md)   | { mode: "development" \| "production"; manifest?: [Manifest](./yext-sites-scripts.manifest.md)<!-- -->; } | Additional metadata added by the toolchain                                |
-| [document](./yext-sites-scripts.data.document.md) | { feature: string; streamOutput: Record&lt;string, any&gt;; }                                             | The entire document returned after applying the stream to a single entity |
+|  Property | Type | Description |
+|  --- | --- | --- |
+|  [\_\_meta](./yext-sites-scripts.data.__meta.md) | { mode: "development" \| "production"; manifest?: [Manifest](./yext-sites-scripts.manifest.md)<!-- -->; } | Additional metadata added by the toolchain |
+|  [document](./yext-sites-scripts.data.document.md) | { feature: string; streamOutput: Record&lt;string, any&gt;; } | The entire document returned after applying the stream to a single entity |
+
