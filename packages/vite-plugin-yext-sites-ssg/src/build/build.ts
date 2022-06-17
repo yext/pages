@@ -8,6 +8,11 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
 
 const intro = `var global = globalThis;`;
 
+/**
+ * This plugin defines how to build the project for production. It bundles
+ * assets, copies Yext plugin files that execute the bundled assets in a Deno
+ * environment, and puts them all in an output directory.
+ */
 export const build = (projectStructure: ProjectStructure): Plugin => {
   return {
     name: "vite-plugin-yext-sites-ssg:build",
