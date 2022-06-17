@@ -15,7 +15,7 @@ type PageLoaderValues = {
   vite: ViteDevServer;
   templateFilename: string;
   entityId: string;
-  featuresConfig?: FeaturesConfig;
+  featuresConfig: FeaturesConfig;
   dynamicGenerateData: boolean;
   feature: string;
 };
@@ -65,22 +65,19 @@ export const pageLoader = async ({
   const { default: Component, getStaticProps } = module as SsrLoadedModule;
 
   let streamOutput;
-  // Don't try to pull stream data if one isn't defined. This is primarily for static pages.
-  if (featuresConfig?.streams) {
-    if (dynamicGenerateData) {
-      streamOutput = await generateTestData(
-        process.stdout,
-        featuresConfig,
-        entityId
-      );
-    } else {
-      // Get the data from localData
-      streamOutput = await getLocalData(entityId);
-    }
+  if (dynamicGenerateData) {
+    streamOutput = await generateTestData(
+      process.stdout,
+      featuresConfig,
+      entityId
+    );
+  } else {
+    // Get the data from localData
+    streamOutput = await getLocalData(entityId);
+  }
 
-    if (!streamOutput) {
-      throw new Error(`Could not find document data for entityId: ${entityId}`);
-    }
+  if (!streamOutput) {
+    throw new Error(`Could not find document data for entityId: ${entityId}`);
   }
 
   let props: Data = {
