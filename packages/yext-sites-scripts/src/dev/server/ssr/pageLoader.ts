@@ -65,7 +65,6 @@ export const pageLoader = async ({
   const { default: Component, getStaticProps } = module as SsrLoadedModule;
 
   let streamOutput;
-  // Don't try to pull stream data if one isn't defined. This is primarily for static pages.
   if (dynamicGenerateData) {
     streamOutput = await generateTestData(
       process.stdout,
