@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A monorepo containing all packages used in Yext Sites rendering",
   "author": "sumo@yext.com",
-  "license" : "BSD-3-Clause",
+  "license": "BSD-3-Clause",
   "private": "true",
   "main": "index.js",
   "scripts": {

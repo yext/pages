@@ -3,7 +3,7 @@
   "version": "0.0.22",
   "description": "The default React development toolchain provided by Yext",
   "author": "sumo@yext.com",
-  "license" : "BSD-3-Clause",
+  "license": "BSD-3-Clause",
   "private": true,
   "keywords": [
     "Yext",

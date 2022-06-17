@@ -3,7 +3,7 @@
   "version": "0.0.11",
   "description": "A vite plugin which provides automatic bundling of JS templates and an accompanying deno function used for static site generation in Yext Sites.",
   "author": "sumo@yext.com",
-  "license" : "BSD-3-Clause",
+  "license": "BSD-3-Clause",
   "private": true,
   "main": "dist/esm/src/vite-plugin-yext-sites-ssg/src/plugin.js",
   "type": "module",
