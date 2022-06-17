@@ -4,7 +4,7 @@
   "description": "A monorepo containing all packages used in Yext Sites rendering",
   "author": "sumo@yext.com",
   "license": "BSD-3-Clause",
-  "private": "true",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "fmt": "prettier -w .",
@@ -18,9 +18,6 @@
   "engines": {
     "node": ">=17"
   },
-  "files": [
-    "THIRD-PARTY-NOTICES"
-  ],
   "workspaces": [
     "./packages/*"
   ],
