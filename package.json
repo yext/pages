@@ -2,6 +2,8 @@
   "name": "sites-scripts",
   "version": "0.0.1",
   "description": "A monorepo containing all packages used in Yext Sites rendering",
+  "author": "sumo@yext.com",
+  "license" : "BSD-3-Clause",
   "private": "true",
   "main": "index.js",
   "scripts": {
@@ -9,11 +11,16 @@
     "test": "npm run test -ws",
     "release": "npm-run-all release:*",
     "release:plugin": "npm --prefix packages/vite-plugin-yext-sites-ssg run release",
-    "release:yss": " npm --prefix packages/yext-sites-scripts run release"
+    "release:yss": " npm --prefix packages/yext-sites-scripts run release",
+    "generate-notices": "npm run generate-notices:local && npm run generate-notices -ws",
+    "generate-notices:local": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite"
   },
   "engines": {
     "node": ">=17"
   },
+  "files": [
+    "THIRD-PARTY-NOTICES"
+  ],
   "workspaces": [
     "./packages/*"
   ],
@@ -21,13 +28,13 @@
     "type": "git",
     "url": "git+https://github.com/yext/sites-scripts.git"
   },
-  "author": "",
   "bugs": {
     "url": "https://github.com/yext/sites-scripts/issues"
   },
   "homepage": "https://github.com/yext/sites-scripts#readme",
   "devDependencies": {
-    "prettier": "^2.6.2",
-    "npm-run-all": "^4.1.5"
+    "generate-license-file": "^1.3.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.6.2"
   }
 }
