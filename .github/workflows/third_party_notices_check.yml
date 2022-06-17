@@ -1,0 +1,29 @@
+name: Check and Update Third Party Notices
+
+on: pull_request
+
+jobs:
+  license-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm install -g generate-license-file
+      - uses: actions/checkout@v3
+      # Skip post-install scripts here, as a malicious
+      # script could steal the NPM_TOKEN.
+      - run: npm ci --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # `npm rebuild` will run all those post-install scripts for us.
+      - run: npm rebuild
+      - run: npm run generate-notices
+      - name: Update THIRD-PARTY-NOTICES
+        uses: EndBug/add-and-commit@v7
+        with:
+          message: "Automated update to THIRD-PARTY-NOTICES from github action's 3rd party notices check"
+          add: 'THIRD-PARTY-NOTICES'
+          push: true
+          default_author: github_actions
