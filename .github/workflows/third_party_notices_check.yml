@@ -1,21 +1,10 @@
 name: Check and Update Third Party Notices
 
-on:
-  workflow_call:
-    inputs:
-      environment:
-        required: false
-        type: string
-        default: ubuntu-latest
-    secrets:
-      NPM_TOKEN:
-        required: false
-      REPO_SCOPED_TOKEN:
-        required: true
+on: pull_request
 
 jobs:
   license-check:
-    runs-on: ${{ inputs.environment }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v3
         with:
@@ -23,8 +12,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: npm install -g generate-license-file
       - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.REPO_SCOPED_TOKEN }}
       # Skip post-install scripts here, as a malicious
       # script could steal the NPM_TOKEN.
       - run: npm ci --ignore-scripts
