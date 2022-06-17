@@ -1,6 +1,9 @@
-import { TemplateModuleInternal } from "../../../../common/src/template/internal/types.js";
-import { renderHeadConfigToString } from "../../../../common/src/template/head.js";
-import { Data, GetHeadConfig } from "../../../../common/src/template/types.js";
+import { TemplateModuleInternal } from "../../../../../common/src/template/internal/types.js";
+import { renderHeadConfigToString } from "../../../../../common/src/template/head.js";
+import {
+  Data,
+  GetHeadConfig,
+} from "../../../../../common/src/template/types.js";
 
 export const reactWrapper = <T extends Data>(
   data: T,

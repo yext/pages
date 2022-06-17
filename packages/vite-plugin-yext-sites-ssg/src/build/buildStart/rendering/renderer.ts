@@ -1,4 +1,4 @@
-import { Data } from "../../../../common/src/template/types.js";
+import { Data } from "../../../../../common/src/template/types.js";
 import {
   generateResponses,
   readTemplateModules,

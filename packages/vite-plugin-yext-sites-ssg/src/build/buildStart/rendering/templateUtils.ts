@@ -4,12 +4,12 @@ import {
   Data,
   Manifest,
   TemplateModule,
-} from "../../../../common/src/template/types.js";
+} from "../../../../../common/src/template/types.js";
 import { reactWrapper } from "./wrapper.js";
 import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
-} from "../../../../common/src/template/internal/types.js";
+} from "../../../../../common/src/template/internal/types.js";
 
 const pathToModule = new Map();
 

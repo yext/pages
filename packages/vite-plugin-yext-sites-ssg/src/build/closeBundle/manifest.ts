@@ -1,6 +1,6 @@
 import fs from "fs-extra";
-import { ProjectStructure } from "../../../common/src/project/structure.js";
-import { Manifest } from "../../../common/src/template/types.js";
+import { ProjectStructure } from "../../../../common/src/project/structure.js";
+import { Manifest } from "../../../../common/src/template/types.js";
 
 /**
  * Creates a manifest.json for use with the Yext Sites plugin
