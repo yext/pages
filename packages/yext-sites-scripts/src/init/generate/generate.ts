@@ -22,7 +22,9 @@ export async function generate(info: GenerationInfo) {
   // Remove files the user shouldn't need
   info.startStep("Cleaning up");
   const cmdExitCode = await info.runCommand(
-    `rm -rf ${filesToFilter.join(" ")} && sed '/"license": "BSD-3-Clause",/d' package.json`
+    `rm -rf ${filesToFilter.join(
+      " "
+    )} && sed '/"license": "BSD-3-Clause",/d' package.json`
   );
   if (cmdExitCode) {
     throw new Error("error cleaning up files " + cmdExitCode);
