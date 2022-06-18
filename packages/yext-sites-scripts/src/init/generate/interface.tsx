@@ -2,7 +2,6 @@ import { render, Text } from "ink";
 import React, { FC, useEffect, useState, Fragment } from "react";
 import { spawn } from "child_process";
 import { generate } from "./generate.js";
-import Spinner from "./spinner.js";
 
 export async function runGenerate() {
   return new Promise<void>(() => {
@@ -128,9 +127,7 @@ const Generator: FC = () => {
           <Fragment key={i}>
             <Text bold={isLastStep && !done}>
               {isLastStep && !done && !error ? (
-                <Text color="yellow">
-                  <Spinner />
-                </Text>
+                <Text color="yellow">❯</Text>
               ) : isLastStep && error ? (
                 <Text color="redBright">✗</Text>
               ) : (
@@ -162,12 +159,16 @@ const Generator: FC = () => {
       {done && (
         <Text color="white">
           {"\n"}
-          <Text color="greenBright">Done!</Text> Try following commands to
-          start:{"\n"}
-          <Text bold>npm run dev</Text>
-          {"   "}
-          <Text color="white"># Start a development server</Text>
-          {"\n"}
+          <Text color="greenBright">Done!</Text> Try the following commands to start:{"\n"}
+          
+          <Text bold>yext init</Text>{"\t"}
+          <Text color="white"># Initialize with your yext account</Text>{"\n"}
+          
+          <Text bold>yext sites generate-test-data</Text>{"\t"}
+          <Text color="white"># Pull down local data from the Knowledge Graph</Text>{"\n"}
+
+          <Text bold>npm run dev</Text>{"\t"}
+          <Text color="white"># Start a development server</Text>{"\n"}
         </Text>
       )}
     </>
