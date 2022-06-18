@@ -82,8 +82,7 @@ export const pageLoader = async ({
 
   let props: Data = {
     document: {
-      feature: feature,
-      streamOutput,
+      ...streamOutput,
     },
     __meta: { mode: "development" },
   };
