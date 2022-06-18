@@ -9,7 +9,7 @@ The type definition for the template's getHeadConfig function. getHeadConfig tak
 <b>Signature:</b>
 
 ```typescript
-export declare type GetHeadConfig<T> = (data: T) => HeadConfig;
+export declare type GetHeadConfig<T> = (props: T) => HeadConfig;
 ```
 
 <b>References:</b> [HeadConfig](./yext-sites-scripts.headconfig.md)

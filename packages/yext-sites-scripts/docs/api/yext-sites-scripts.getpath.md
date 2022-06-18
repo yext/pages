@@ -9,5 +9,5 @@ The type definition for the template's getPath function.
 <b>Signature:</b>
 
 ```typescript
-export declare type GetPath<T> = (data: T) => string;
+export declare type GetPath<T> = (props: T) => string;
 ```
