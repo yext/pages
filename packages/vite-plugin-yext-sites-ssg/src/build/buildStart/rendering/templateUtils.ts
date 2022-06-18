@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import {
-  Data,
+  TemplateProps,
   Manifest,
   TemplateModule,
 } from "../../../../../common/src/template/types.js";
@@ -55,7 +55,7 @@ export type GeneratedPage = {
  */
 export const generateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any>,
-  data: Data
+  data: TemplateProps
 ): Promise<GeneratedPage> => {
   if (templateModuleInternal.getStaticProps) {
     data = await templateModuleInternal.getStaticProps(data);
@@ -79,7 +79,7 @@ export const generateResponses = async (
  */
 const renderHtml = (
   templateModuleInternal: TemplateModuleInternal<any>,
-  data: Data
+  data: TemplateProps
 ) => {
   const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {

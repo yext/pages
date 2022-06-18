@@ -1,4 +1,4 @@
-import { Data } from "../../../../../common/src/template/types.js";
+import { TemplateProps } from "../../../../../common/src/template/types.js";
 import {
   generateResponses,
   readTemplateModules,
@@ -14,10 +14,10 @@ import {
  *
  * @param data The stream document for the current feature.
  */
-export default async (data: Data): Promise<GeneratedPage> => {
-  const manifest = data.__meta.manifest;
-  const template = await readTemplateModules(data.document.feature, manifest);
-  const responses = await generateResponses(template, data);
+export default async (props: TemplateProps): Promise<GeneratedPage> => {
+  const manifest = props.__meta.manifest;
+  const template = await readTemplateModules(props.document.feature, manifest);
+  const responses = await generateResponses(template, props);
 
   return responses;
 };
