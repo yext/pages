@@ -7,7 +7,7 @@ import { default as render } from "./assets/renderer/templateRenderer.js";
  */
 export const Generate = async (data): Promise<Record<any, any>> => {
   return await render({
-    document: data.streamOutput,
+    document: data,
     __meta: { manifest },
   });
 };

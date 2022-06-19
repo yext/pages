@@ -130,12 +130,7 @@ export type Manifest = {
  */
 export interface Data {
   /** The entire document returned after applying the stream to a single entity */
-  document: {
-    /** The name of the feature */
-    feature: string;
-    /** The stream's entire output */
-    streamOutput: Record<string, any>;
-  };
+  document: Record<string, any>;
   /** Additional metadata added by the toolchain */
   __meta: {
     /** Specifies if the data is returned in development or production mode */

@@ -24,8 +24,7 @@ export const config: TemplateConfig = {
 
 const Test: Default<Data> = (data) => {
   const { document } = data;
-  const { streamOutput } = document;
-  const { name } = streamOutput;
+  const { name } = document;
 
   const [num, setNum] = useState<number>(0);
 

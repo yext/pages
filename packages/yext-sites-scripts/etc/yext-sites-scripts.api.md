@@ -14,10 +14,7 @@ export interface Data {
     mode: "development" | "production";
     manifest?: Manifest;
   };
-  document: {
-    feature: string;
-    streamOutput: Record<string, any>;
-  };
+  document: Record<string, any>;
 }
 
 // @public
