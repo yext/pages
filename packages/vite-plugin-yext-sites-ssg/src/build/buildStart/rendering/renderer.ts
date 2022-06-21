@@ -12,7 +12,7 @@ import {
  * generate an HTML document. It also returns a path for the document to be stored at by
  * calling `getPath` on the template module.
  *
- * @param data The stream document for the current feature.
+ * @param props The stream document for the current feature.
  */
 export default async (props: TemplateProps): Promise<GeneratedPage> => {
   const manifest = props.__meta.manifest;

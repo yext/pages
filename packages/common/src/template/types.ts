@@ -6,7 +6,7 @@ import { HeadConfig } from "./head.js";
  *
  * @public
  */
-export interface TemplateModule<T> {
+export interface TemplateModule<T extends TemplateProps> {
   /** The exported config function */
   config?: TemplateConfig;
   /** The optional exported getStaticProps function */
@@ -26,14 +26,14 @@ export interface TemplateModule<T> {
  *
  * @public
  */
-export type GetStaticProps<T> = (props: TemplateProps) => Promise<T>;
+export type GetStaticProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 /**
  * The type definition for the template's getPath function.
  *
  * @public
  */
-export type GetPath<T> = (props: T) => string;
+export type GetPath<T extends TemplateProps> = (props: T) => string;
 
 /**
  * The type definition for the template's getHeadConfig function. getHeadConfig
@@ -42,21 +42,21 @@ export type GetPath<T> = (props: T) => string;
  *
  * @public
  */
-export type GetHeadConfig<T> = (props: T) => HeadConfig;
+export type GetHeadConfig<T extends TemplateProps> = (props: T) => HeadConfig;
 
 /**
  * The type definition for the template's render function.
  *
  * @public
  */
-export type Render<T> = (props: T) => string;
+export type Render<T extends TemplateProps> = (props: T) => string;
 
 /**
  * The type definition for the template's default function.
  *
  * @public
  */
-export type Default<T> = (props: T) => JSX.Element;
+export type Default<T extends TemplateProps> = (props: T) => JSX.Element;
 
 /**
  * The exported `config` function's definition.
