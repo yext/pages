@@ -5,6 +5,7 @@ import {
   CLI_BOILERPLATE_WITH_UPGRADE_LINES,
   CLI_BOILERPLATE_WITHOUT_UPGRADE_LINES,
   UPGRADE_LINES_OF_CLI_BOILERPLATE,
+  REAL_FULL_OUTPUT,
 } from "../../fixtures/cli_boilerplate";
 import { CLI_STREAM_DATA } from "../../fixtures/cli_stream_data";
 import { FEATURE_CONFIG } from "../../fixtures/feature_config";
@@ -63,7 +64,7 @@ describe("generateTestData", () => {
   it("properly reads stream data from stdout and returns it as parsed JSON", async () => {
     const testRunnerPromise = getGenerateTestDataRunner();
 
-    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA)}`);
+    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`);
     mockChildProcess.emit("close");
 
     const datadoc = await testRunnerPromise;
@@ -77,7 +78,7 @@ describe("generateTestData", () => {
   it("properly reads multi-chunk stream data from stdout and returns it as parsed JSON", async () => {
     const testRunnerPromise = getGenerateTestDataRunner();
 
-    const streamDataAsString = JSON.stringify(CLI_STREAM_DATA);
+    const streamDataAsString = `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`;
     mockChildProcess.stdout.emit(
       "data",
       `${streamDataAsString.slice(0, streamDataAsString.length / 2)}`
@@ -110,7 +111,7 @@ describe("generateTestData", () => {
       "data",
       `${CLI_BOILERPLATE_WITHOUT_UPGRADE_LINES}`
     );
-    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA)}`);
+    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`);
     mockChildProcess.emit("close");
 
     const datadoc = await testRunnerPromise;
@@ -133,7 +134,7 @@ describe("generateTestData", () => {
       `${CLI_BOILERPLATE_WITH_UPGRADE_LINES}`
     );
     mockChildProcess.stdout.emit("data", `${unrecognizedData}`);
-    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA)}`);
+    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`);
     mockChildProcess.emit("close");
 
     const datadoc = await testRunnerPromise;
@@ -146,6 +147,61 @@ describe("generateTestData", () => {
     );
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
       unrecognizedData
+    );
+  });
+
+  it("properly handles test data with arbitrary input when called in multiple chunks", async () => {
+    const testRunnerPromise = getGenerateTestDataRunner();
+
+    REAL_FULL_OUTPUT.split("\n").forEach((chunk) =>
+      mockChildProcess.emit("data", chunk)
+    );
+    mockChildProcess.emit("close");
+
+    const datadoc = await testRunnerPromise;
+
+    expect(datadoc).toEqual(
+      JSON.parse(`{
+        "__": {
+          "entityPageSet": {
+            "plugin": {}
+          },
+          "name": "index",
+          "streamId": "my-stream-id-1",
+          "templateType": "JS"
+        },
+        "address": {
+          "city": "Manchester",
+          "countryCode": "US",
+          "line1": "786 New Bushy Branch Road",
+          "postalCode": "37355",
+          "region": "TN"
+        },
+        "businessId": 0,
+        "geocodedCoordinate": {
+          "latitude": 35.480399,
+          "longitude": -86.060931
+        },
+        "id": "4092",
+        "key": "0:index:knowledgeGraph:45138271:en",
+        "locale": "en",
+        "meta": {
+          "entityType": {
+            "id": "location",
+            "uid": 0
+          },
+          "locale": "en",
+          "updateTimestamp": "2022-06-21T01:50:05Z"
+        },
+        "name": "Manchester Farm",
+        "siteId": 0,
+        "uid": 45138271
+      }`)
+    );
+    // Make sure we write back the expected messages to the parent process.
+    expect(mockParentProcessStdout.write).toHaveBeenCalledTimes(2);
+    expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
+      UPGRADE_LINES_OF_CLI_BOILERPLATE
     );
   });
 });
