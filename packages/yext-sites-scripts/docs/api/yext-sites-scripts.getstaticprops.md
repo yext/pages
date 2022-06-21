@@ -9,7 +9,7 @@ The type definition for the template's getStaticProps function.
 <b>Signature:</b>
 
 ```typescript
-export declare type GetStaticProps<T> = (props: TemplateProps) => Promise<T>;
+export declare type GetStaticProps<T extends TemplateProps> = (props: T) => Promise<T>;
 ```
-
 <b>References:</b> [TemplateProps](./yext-sites-scripts.templateprops.md)
+

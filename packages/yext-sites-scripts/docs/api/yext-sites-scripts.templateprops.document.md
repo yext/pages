@@ -10,7 +10,7 @@ The entire document returned after applying the stream to a single entity
 
 ```typescript
 document: {
-  feature: string;
-  streamOutput: Record<string, any>;
-}
+        feature: string;
+        streamOutput: Record<string, any>;
+    };
 ```

@@ -9,5 +9,7 @@ The type definition for the template's default function.
 <b>Signature:</b>
 
 ```typescript
-export declare type Default<T> = (props: T) => JSX.Element;
+export declare type Default<T extends TemplateProps> = (props: T) => JSX.Element;
 ```
+<b>References:</b> [TemplateProps](./yext-sites-scripts.templateprops.md)
+
