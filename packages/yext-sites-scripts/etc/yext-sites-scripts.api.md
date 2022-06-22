@@ -9,6 +9,7 @@
 export type Attributes = Record<string, string>;
 
 // @public
+<<<<<<< HEAD
 export interface Data {
   __meta: {
     mode: "development" | "production";
@@ -16,18 +17,18 @@ export interface Data {
   };
   document: Record<string, any>;
 }
+=======
+export type Default<T extends TemplateProps> = (props: T) => JSX.Element;
+>>>>>>> main
 
 // @public
-export type Default<T> = (data: T) => JSX.Element;
+export type GetHeadConfig<T extends TemplateProps> = (props: T) => HeadConfig;
 
 // @public
-export type GetHeadConfig<T> = (data: T) => HeadConfig;
+export type GetPath<T extends TemplateProps> = (props: T) => string;
 
 // @public
-export type GetPath<T> = (data: T) => string;
-
-// @public
-export type GetStaticProps<T> = (data: Data) => Promise<T>;
+export type GetStaticProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 // @public
 export interface HeadConfig {
@@ -53,7 +54,7 @@ export type Manifest = {
 };
 
 // @public
-export type Render<T> = (data: T) => string;
+export type Render<T extends TemplateProps> = (props: T) => string;
 
 // @public
 export const renderHeadConfigToString: (headConfig: HeadConfig) => string;
@@ -96,13 +97,25 @@ export interface TemplateConfig {
 }
 
 // @public
-export interface TemplateModule<T> {
+export interface TemplateModule<T extends TemplateProps> {
   config?: TemplateConfig;
   default: Default<T>;
   getHeadConfig?: GetHeadConfig<T>;
   getPath: GetPath<T>;
   getStaticProps?: GetStaticProps<T>;
   render?: Render<T>;
+}
+
+// @public
+export interface TemplateProps {
+  __meta: {
+    mode: "development" | "production";
+    manifest?: Manifest;
+  };
+  document: {
+    feature: string;
+    streamOutput: Record<string, any>;
+  };
 }
 
 // (No @packageDocumentation comment for this package)
