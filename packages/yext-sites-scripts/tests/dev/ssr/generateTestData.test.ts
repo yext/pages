@@ -153,8 +153,9 @@ describe("generateTestData", () => {
   it("properly handles test data with arbitrary input when called in multiple chunks", async () => {
     const testRunnerPromise = getGenerateTestDataRunner();
 
-    REAL_FULL_OUTPUT.split("\n").forEach((chunk) =>
-      mockChildProcess.emit("data", chunk)
+    REAL_FULL_OUTPUT.split("\n").forEach((chunk) => {
+      mockChildProcess.stdout.emit("data", chunk)
+    }
     );
     mockChildProcess.emit("close");
 
@@ -201,7 +202,7 @@ describe("generateTestData", () => {
     // Make sure we write back the expected messages to the parent process.
     expect(mockParentProcessStdout.write).toHaveBeenCalledTimes(2);
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
-      UPGRADE_LINES_OF_CLI_BOILERPLATE
+      `Generated 2 files for stream "my-stream-id-1"`
     );
   });
 });

@@ -16,6 +16,8 @@ In order to upgrade, please run \`brew upgrade yext\``;
 
 export const REAL_FULL_OUTPUT = `This is a beta version of the Yext Command Line Interface
 
+Some arbitrary text
+
 Generated 2 files for stream "my-stream-id-1"
 {
 	"__": {

@@ -38,16 +38,17 @@ export const generateTestData = async (
     let foundTestData = false;
     childProcess.stdout.on("data", (chunkBuff: Buffer) => {
       const chunk = chunkBuff.toString("utf-8");
-      // Remove the Yext boilerplate
-      let lines = chunk
-        .split("\n")
-        .filter((l) => !l.startsWith(CLI_BOILERPLATE_BETA_MESSAGE));
 
       // If we've found test data at all then we assume the rest of the output is test data.
       if (foundTestData) {
         testData += chunk;
         return;
       }
+
+      // Remove the Yext boilerplate
+      let lines = chunk
+        .split("\n")
+        .filter((l) => !l.startsWith(CLI_BOILERPLATE_BETA_MESSAGE));
 
       // Check to see if the test data has begun to be printed in this chunk.
       const dataStartIndex = lines.indexOf(STREAM_DATA_CHUNK_BEGIN);
