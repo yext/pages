@@ -9,17 +9,7 @@
 export type Attributes = Record<string, string>;
 
 // @public
-<<<<<<< HEAD
-export interface Data {
-  __meta: {
-    mode: "development" | "production";
-    manifest?: Manifest;
-  };
-  document: Record<string, any>;
-}
-=======
 export type Default<T extends TemplateProps> = (props: T) => JSX.Element;
->>>>>>> main
 
 // @public
 export type GetHeadConfig<T extends TemplateProps> = (props: T) => HeadConfig;
@@ -112,10 +102,7 @@ export interface TemplateProps {
     mode: "development" | "production";
     manifest?: Manifest;
   };
-  document: {
-    feature: string;
-    streamOutput: Record<string, any>;
-  };
+  document: Record<string, any>;
 }
 
 // (No @packageDocumentation comment for this package)
