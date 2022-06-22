@@ -9,7 +9,7 @@ The type to include in any template file. It defines the available functions and
 <b>Signature:</b>
 
 ```typescript
-export interface TemplateModule<T>
+export interface TemplateModule<T extends TemplateProps>
 ```
 
 ## Properties

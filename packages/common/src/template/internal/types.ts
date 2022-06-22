@@ -7,6 +7,7 @@ import {
   Stream,
   TemplateConfig,
   TemplateModule,
+  TemplateProps,
 } from "../types.js";
 import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal.js";
 
@@ -14,7 +15,7 @@ import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal
  * A domain representation of a template module. Contains all fields from an imported module as well
  * as metadata about the module used in downstream processing.
  */
-export interface TemplateModuleInternal<T> {
+export interface TemplateModuleInternal<T extends TemplateProps> {
   /**
    * The filepath to the template file. This can be the raw TSX file when used during dev mode or
    * the path to the server bundle this module was imported from during prod build.

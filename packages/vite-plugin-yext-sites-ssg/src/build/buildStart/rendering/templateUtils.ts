@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import {
-  Data,
+  TemplateProps,
   Manifest,
   TemplateModule,
 } from "../../../../../common/src/template/types.js";
@@ -51,21 +51,21 @@ export type GeneratedPage = {
  * Takes in both a template module and its stream document, processes them, and writes them to disk.
  *
  * @param templateModuleInternal
- * @param data
+ * @param props
  */
 export const generateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any>,
-  data: Data
+  props: TemplateProps
 ): Promise<GeneratedPage> => {
   if (templateModuleInternal.getStaticProps) {
-    data = await templateModuleInternal.getStaticProps(data);
+    props = await templateModuleInternal.getStaticProps(props);
   }
 
-  const content = renderHtml(templateModuleInternal, data);
+  const content = renderHtml(templateModuleInternal, props);
 
   return {
     content,
-    path: templateModuleInternal.getPath(data),
+    path: templateModuleInternal.getPath(props),
     redirects: [],
   };
 };
@@ -79,7 +79,7 @@ export const generateResponses = async (
  */
 const renderHtml = (
   templateModuleInternal: TemplateModuleInternal<any>,
-  data: Data
+  props: TemplateProps
 ) => {
   const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {
@@ -95,13 +95,13 @@ const renderHtml = (
       );
     }
 
-    return render(data);
+    return render(props);
   }
 
   return reactWrapper(
-    data,
+    props,
     templateModuleInternal,
-    renderToString(createElement(templateModuleInternal.default, data)),
+    renderToString(createElement(templateModuleInternal.default, props)),
     // TODO -- allow hydration be configurable.
     true,
     getHeadConfig

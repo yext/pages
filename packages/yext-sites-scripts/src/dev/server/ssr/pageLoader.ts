@@ -5,7 +5,7 @@ import { generateTestData } from "./generateTestData.js";
 import index from "../public/index";
 import { FeaturesConfig } from "../../../../../common/src/feature/features.js";
 import {
-  Data,
+  TemplateProps,
   GetStaticProps,
 } from "../../../../../common/src/template/types.js";
 import React from "react";
@@ -80,7 +80,7 @@ export const pageLoader = async ({
     throw new Error(`Could not find document data for entityId: ${entityId}`);
   }
 
-  let props: Data = {
+  let props: TemplateProps = {
     document: {
       feature: feature,
       streamOutput,

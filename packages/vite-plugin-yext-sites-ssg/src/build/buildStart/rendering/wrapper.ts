@@ -1,39 +1,39 @@
 import { TemplateModuleInternal } from "../../../../../common/src/template/internal/types.js";
 import { renderHeadConfigToString } from "../../../../../common/src/template/head.js";
 import {
-  Data,
+  TemplateProps,
   GetHeadConfig,
 } from "../../../../../common/src/template/types.js";
 
-export const reactWrapper = <T extends Data>(
-  data: T,
+export const reactWrapper = <T extends TemplateProps>(
+  props: T,
   templateModuleInternal: TemplateModuleInternal<any>,
   template: string,
   hydrate: boolean,
   getHeadConfig?: GetHeadConfig<any>
 ): string => {
-  const projectFilepaths = data.__meta.manifest.projectFilepaths;
+  const projectFilepaths = props.__meta.manifest.projectFilepaths;
 
   return `<!DOCTYPE html>
     <html lang="en">
     <head>
-        <script>window.__INITIAL__DATA__ = ${JSON.stringify(data)}</script>
+        <script>window.__INITIAL__DATA__ = ${JSON.stringify(props)}</script>
         ${getCssTags(
           `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`,
-          data.__meta.manifest.bundlerManifest,
+          props.__meta.manifest.bundlerManifest,
           new Set()
         )
           .map((f) => `<link rel="stylesheet" href="/${f}"/>`)
           .filter((v, i, a) => a.indexOf(v) == i)
           .join("\n")}
-        ${getHeadConfig ? renderHeadConfigToString(getHeadConfig(data)) : ""}
+        ${getHeadConfig ? renderHeadConfigToString(getHeadConfig(props)) : ""}
     </head>
     <body>
         <div id="reactele">${template}</div>${
     hydrate
       ? `<script type="module" src="/${findHydrationFilename(
           `${projectFilepaths.hydrationBundleOutputRoot}/${templateModuleInternal.templateName}.tsx`,
-          data
+          props
         )}" defer></script>`
       : ""
   }
