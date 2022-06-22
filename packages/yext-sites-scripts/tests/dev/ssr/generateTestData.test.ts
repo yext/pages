@@ -64,7 +64,10 @@ describe("generateTestData", () => {
   it("properly reads stream data from stdout and returns it as parsed JSON", async () => {
     const testRunnerPromise = getGenerateTestDataRunner();
 
-    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`);
+    mockChildProcess.stdout.emit(
+      "data",
+      `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`
+    );
     mockChildProcess.emit("close");
 
     const datadoc = await testRunnerPromise;
@@ -111,7 +114,10 @@ describe("generateTestData", () => {
       "data",
       `${CLI_BOILERPLATE_WITHOUT_UPGRADE_LINES}`
     );
-    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`);
+    mockChildProcess.stdout.emit(
+      "data",
+      `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`
+    );
     mockChildProcess.emit("close");
 
     const datadoc = await testRunnerPromise;
@@ -134,7 +140,10 @@ describe("generateTestData", () => {
       `${CLI_BOILERPLATE_WITH_UPGRADE_LINES}`
     );
     mockChildProcess.stdout.emit("data", `${unrecognizedData}`);
-    mockChildProcess.stdout.emit("data", `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`);
+    mockChildProcess.stdout.emit(
+      "data",
+      `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`
+    );
     mockChildProcess.emit("close");
 
     const datadoc = await testRunnerPromise;
@@ -154,9 +163,8 @@ describe("generateTestData", () => {
     const testRunnerPromise = getGenerateTestDataRunner();
 
     REAL_FULL_OUTPUT.split("\n").forEach((chunk) => {
-      mockChildProcess.stdout.emit("data", chunk)
-    }
-    );
+      mockChildProcess.stdout.emit("data", chunk);
+    });
     mockChildProcess.emit("close");
 
     const datadoc = await testRunnerPromise;

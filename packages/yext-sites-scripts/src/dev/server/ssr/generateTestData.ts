@@ -76,7 +76,7 @@ export const generateTestData = async (
         // so the user can see it. Its main usage is to allow the user to go through the
         // authentication flow from the parent process.
         const out = lines.join("\n").trim();
-        out && stdout.write(out)
+        out && stdout.write(out);
       }
     });
 

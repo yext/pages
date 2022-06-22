@@ -54,4 +54,4 @@ Generated 2 files for stream "my-stream-id-1"
 	"name": "Manchester Farm",
 	"siteId": 0,
 	"uid": 45138271
-}`
+}`;
