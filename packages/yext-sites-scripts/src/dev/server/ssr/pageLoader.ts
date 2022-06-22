@@ -64,22 +64,23 @@ export const pageLoader = async ({
 
   const { default: Component, getStaticProps } = module as SsrLoadedModule;
 
-  let data;
+  let document;
   if (dynamicGenerateData) {
-    data = await generateTestData(process.stdout, featuresConfig, entityId);
+    document = await generateTestData(process.stdout, featuresConfig, entityId);
   } else {
-    // Get the data from localData
-    data = await getLocalData(entityId);
+    // Get the document from localData
+    document = await getLocalData(entityId);
   }
 
-  if (!data) {
+  if (!document) {
     throw new Error(`Could not find document data for entityId: ${entityId}`);
   }
 
   let props: Data = {
-    document: data,
+    document: document,
     __meta: { mode: "development" },
   };
+
   if (getStaticProps) {
     props = await getStaticProps(props);
   }
