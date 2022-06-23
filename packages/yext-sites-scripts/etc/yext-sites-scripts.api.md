@@ -102,10 +102,7 @@ export interface TemplateProps {
     mode: "development" | "production";
     manifest?: Manifest;
   };
-  document: {
-    feature: string;
-    streamOutput: Record<string, any>;
-  };
+  document: Record<string, any>;
 }
 
 // (No @packageDocumentation comment for this package)

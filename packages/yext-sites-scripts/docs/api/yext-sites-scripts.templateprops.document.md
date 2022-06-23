@@ -9,8 +9,5 @@ The entire document returned after applying the stream to a single entity
 <b>Signature:</b>
 
 ```typescript
-document: {
-  feature: string;
-  streamOutput: Record<string, any>;
-}
+document: Record<string, any>;
 ```
