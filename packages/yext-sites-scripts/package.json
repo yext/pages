@@ -1,6 +1,6 @@
 {
   "name": "@yext/yext-sites-scripts",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "The default React development toolchain provided by Yext",
   "author": "sumo@yext.com",
   "license": "BSD-3-Clause",
