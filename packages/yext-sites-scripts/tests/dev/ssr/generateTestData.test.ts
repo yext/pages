@@ -1,5 +1,5 @@
 import { WriteStream } from "tty";
-import { generateTestData } from "../../../src/dev/server/ssr/generateTestData";
+import { generateTestDataForEntity } from "../../../src/dev/server/ssr/generateTestData";
 import { EventEmitter } from "stream";
 import {
   CLI_BOILERPLATE_WITH_UPGRADE_LINES,
@@ -57,12 +57,12 @@ jest.mock("child_process", () => ({
   }),
 }));
 
-const getGenerateTestDataRunner = () =>
-  generateTestData(mockParentProcessStdout, FEATURE_CONFIG, "loc3");
+const getGenerateTestDataForEntityRunner = () =>
+  generateTestDataForEntity(mockParentProcessStdout, FEATURE_CONFIG, "loc3");
 
-describe("generateTestData", () => {
+describe("generateTestDataForEntity", () => {
   it("properly reads stream data from stdout and returns it as parsed JSON", async () => {
-    const testRunnerPromise = getGenerateTestDataRunner();
+    const testRunnerPromise = getGenerateTestDataForEntityRunner();
 
     mockChildProcess.stdout.emit(
       "data",
@@ -79,7 +79,7 @@ describe("generateTestData", () => {
   });
 
   it("properly reads multi-chunk stream data from stdout and returns it as parsed JSON", async () => {
-    const testRunnerPromise = getGenerateTestDataRunner();
+    const testRunnerPromise = getGenerateTestDataForEntityRunner();
 
     const streamDataAsString = `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`;
     mockChildProcess.stdout.emit(
@@ -101,7 +101,7 @@ describe("generateTestData", () => {
   });
 
   it("properly redirects other output to the parent process' stdout", async () => {
-    const testRunnerPromise = getGenerateTestDataRunner();
+    const testRunnerPromise = getGenerateTestDataForEntityRunner();
 
     const unrecognizedData = "I am unrecognized data";
 
@@ -131,7 +131,7 @@ describe("generateTestData", () => {
   });
 
   it("properly filters CLI Boilerplate and writes back the correct lines", async () => {
-    const testRunnerPromise = getGenerateTestDataRunner();
+    const testRunnerPromise = getGenerateTestDataForEntityRunner();
 
     const unrecognizedData = "I am unrecognized data";
 
@@ -160,7 +160,7 @@ describe("generateTestData", () => {
   });
 
   it("properly handles test data with arbitrary input when called in multiple chunks", async () => {
-    const testRunnerPromise = getGenerateTestDataRunner();
+    const testRunnerPromise = getGenerateTestDataForEntityRunner();
 
     REAL_FULL_OUTPUT.split("\n").forEach((chunk) => {
       mockChildProcess.stdout.emit("data", chunk);

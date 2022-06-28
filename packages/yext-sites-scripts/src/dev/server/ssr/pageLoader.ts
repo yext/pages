@@ -1,8 +1,8 @@
-import { getLocalData } from "./getLocalData.js";
+import { getLocalDataForEntity } from "./getLocalData.js";
 import { TEMPLATE_PATH } from "./constants.js";
 import { ViteDevServer } from "vite";
-import { generateTestData } from "./generateTestData.js";
-import index from "../public/index";
+import { generateTestDataForEntity } from "./generateTestData.js";
+import templateBase from "../public/templateBase";
 import { FeaturesConfig } from "../../../../../common/src/feature/features.js";
 import {
   TemplateProps,
@@ -40,8 +40,8 @@ export const pageLoader = async ({
   dynamicGenerateData,
   feature,
 }: PageLoaderValues): Promise<PageLoaderResult> => {
-  // 1. Read index.html
-  let template = index;
+  // 1. Read templateBase.html
+  let template = templateBase;
 
   // 2. Apply vite HTML transforms. This injects the vite HMR client, and
   //    also applies HTML transforms from Vite plugins, e.g. global preambles
@@ -66,10 +66,14 @@ export const pageLoader = async ({
 
   let document;
   if (dynamicGenerateData) {
-    document = await generateTestData(process.stdout, featuresConfig, entityId);
+    document = await generateTestDataForEntity(
+      process.stdout,
+      featuresConfig,
+      entityId
+    );
   } else {
     // Get the document from localData
-    document = await getLocalData(entityId);
+    document = await getLocalDataForEntity(entityId);
   }
 
   if (!document) {

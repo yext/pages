@@ -10,7 +10,5 @@ export default async () => {
     await createServer(false);
   }
 
-  await open(
-    "http://localhost:3000/replaceWithTemplateName/replaceWithEntityId"
-  );
+  await open("http://localhost:3000/index.html");
 };
