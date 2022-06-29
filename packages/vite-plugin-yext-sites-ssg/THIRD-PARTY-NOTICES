@@ -1,8 +1,14 @@
-The following NPM package may be included in this product:
+The following NPM packages may be included in this product:
 
- - chalk@5.0.1
+ - ansi-regex@6.0.1
+ - cli-cursor@4.0.0
+ - is-interactive@2.0.0
+ - log-symbols@5.1.0
+ - ora@6.1.2
+ - restore-cursor@4.0.0
+ - strip-ansi@7.0.1
 
-This package contains the following license and notice below:
+These packages each contain the following license and notice below:
 
 MIT License
 
