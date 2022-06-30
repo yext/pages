@@ -6,6 +6,7 @@ import {
   generateTestDataWarningText,
   localModeInfoText,
   noLocalDataErrorText,
+  viteDevServerPort,
 } from "./constants.js";
 
 type Props = {
@@ -30,30 +31,58 @@ export const indexPage =
           <i class="fa fa-info-circle"></i>
           ${dynamicGenerateData ? dynamicModeInfoText : localModeInfoText}
         </div>`
-        )
-        // If there is localData, inject the lists for each entity in the localData folder.
-        // Hyperlinks will be grouped by template. Use reduce instead of map because map will
-        // automatically join entries to a string by inserting commas in-between entries. If
-        // there is no localData, then display an error message.
-        .replace(
-          `<!--list-html-->`,
-          Array.from(localDataManifest.entries()).length
-            ? `<div class="list">
-          ${Array.from(localDataManifest.keys()).reduce(
+        );
+
+      // If there is any localData, display hyperlinks to each page that will be generated
+      // from each data document.
+      if (
+        localDataManifest.static.length + localDataManifest.entity.keys.length
+      ) {
+        // If there are any data documents for static pages, render that section.
+        if (localDataManifest.static.length) {
+          indexPageHtml = indexPageHtml.replace(
+            `<!--static-pages-html-->`,
+            `<div class="section-title">Static Pages</div>
+          <div class="list">
+          ${Array.from(localDataManifest.static).reduce(
+            (templateAccumulator, templateName) =>
+              templateAccumulator +
+              `<div class="list-title"> <span class="list-title-templateName">${templateName}</span> Pages (1):</div>
+            <ul>
+              <li>
+                <a href="http://localhost:${viteDevServerPort}/${templateName}/">
+                  ${templateName}
+                </a>
+              </li>
+            </ul>`,
+            ""
+          )}
+          </div>
+          `
+          );
+        }
+
+        // If there are any data documents for entity pages, render that section.
+        if (Array.from(localDataManifest.entity.keys()).length) {
+          indexPageHtml = indexPageHtml.replace(
+            `<!--entity-pages-html-->`,
+            `<div class="section-title">Entity Pages</div>
+            <div class="list">
+          ${Array.from(localDataManifest.entity.keys()).reduce(
             (templateAccumulator, templateName) =>
               templateAccumulator +
               `<div class="list-title"> <span class="list-title-templateName">${templateName}</span> Pages (${
-                (localDataManifest.get(templateName) || []).length
+                (localDataManifest.entity.get(templateName) || []).length
               }):</div>
             <ul>
-              ${Array.from(localDataManifest.get(templateName) || []).reduce(
+              ${Array.from(
+                localDataManifest.entity.get(templateName) || []
+              ).reduce(
                 (entityAccumulator, entityId) =>
                   entityAccumulator +
                   `<li>
-                    <a href="http://localhost:3000/${templateName}/${
-                    entityId ? entityId : ""
-                  }">
-                      ${entityId ? entityId : templateName}
+                    <a href="http://localhost:${viteDevServerPort}/${templateName}/${entityId}">
+                      ${entityId}
                     </a>
                   </li>`,
                 ""
@@ -62,11 +91,18 @@ export const indexPage =
             ""
           )}
           </div>`
-            : `<div class="error">
-            <i class="fa fa-times-circle"></i>
-            ${noLocalDataErrorText}
+          );
+        }
+      } else {
+        // If there are no localData documents, inform the user with an error message.
+        indexPageHtml = indexPageHtml.replace(
+          `<!--error-html-->`,
+          `<div class="error">
+           <i class="fa fa-times-circle"></i>
+             ${noLocalDataErrorText}
           </div>`
         );
+      }
 
       if (displayGenerateTestDataWarning) {
         // If there was an issue regenerating the local test data on dev server start, then

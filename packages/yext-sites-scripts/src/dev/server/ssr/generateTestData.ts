@@ -8,7 +8,7 @@ import {
 } from "./constants";
 
 // generateTestData will run yext sites generate-test-data and return true in
-// the event of failure or false in the event of a succesful run.
+// the event of a succesful run and false in the event of a failure.
 export const generateTestData = async (): Promise<boolean> => {
   const command = "yext";
   const args = ["sites", "generate-test-data"];
@@ -20,10 +20,10 @@ export const generateTestData = async (): Promise<boolean> => {
     });
 
     if (exitCode) {
-      resolve(true);
+      resolve(false);
     }
 
-    resolve(false);
+    resolve(true);
   });
 };
 
