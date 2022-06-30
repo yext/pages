@@ -1,4 +1,5 @@
 import { createServer } from "./server/server.js";
+import { viteDevServerPort } from "./server/middleware/constants.js";
 import open from "open";
 
 export default async () => {
@@ -10,7 +11,5 @@ export default async () => {
     await createServer(false);
   }
 
-  await open(
-    "http://localhost:3000/replaceWithTemplateName/replaceWithEntityId"
-  );
+  await open(`http://localhost:${viteDevServerPort}/`);
 };

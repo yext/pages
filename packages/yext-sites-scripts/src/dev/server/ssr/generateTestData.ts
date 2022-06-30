@@ -7,7 +7,27 @@ import {
   UPGRADE_INSTRUCTIONS_LINE_BEGIN,
 } from "./constants";
 
-export const generateTestData = async (
+// generateTestData will run yext sites generate-test-data and return true in
+// the event of a succesful run and false in the event of a failure.
+export const generateTestData = async (): Promise<boolean> => {
+  const command = "yext";
+  const args = ["sites", "generate-test-data"];
+
+  return new Promise(async (resolve) => {
+    const childProcess = spawn(command, args);
+    const exitCode = await new Promise((resolve) => {
+      childProcess.on("close", resolve);
+    });
+
+    if (exitCode) {
+      resolve(false);
+    }
+
+    resolve(true);
+  });
+};
+
+export const generateTestDataForEntity = async (
   stdout: NodeJS.WriteStream,
   featuresConfig: FeaturesConfig,
   entityId: string

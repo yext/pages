@@ -1,46 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-  <!--app-head-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Yext Sites Development Page</title>
+  </head>
   <body>
-    <div id="root">
-      <!--app-html-->
-    </div>
-    <script type="module">
-      import ReactDOM from "react-dom";
-      import React from "react";
-      const hydrate = async () => {
-        const templates = import.meta.glob("/src/templates/*.(jsx|tsx)");
-        const routes = Object.keys(templates).map((path) => {
-          return {
-            name: path.split("/").pop()?.split(".")[0] || "index",
-            path,
-            getComponent: templates[path],
-          };
-        });
-        const templateFilename = window._RSS_TEMPLATE_;
-        const templateFilenameWithoutSuffix = templateFilename?.split(".")[0];
-        const template = routes.find(
-          (route) => route.name === templateFilenameWithoutSuffix
-        ) || {
-          name: templateFilename?.split(".")[0],
-          path: `/src/templates/${templateFilename}`,
-          getComponent: function () {
-            throw new Error("Function not implemented.");
-          },
-        };
-        const { default: Component } = await template.getComponent();
-        if (!Component) {
-          console.error("Default export missing in template: " + template.path);
-          return;
-        }
-        ReactDOM.hydrate(
-          /* @__PURE__ */ React.createElement(Component, {
-            ...window._RSS_PROPS_,
-          }),
-          document.getElementById("root")
-        );
-      };
-      hydrate();
-    </script>
+    <div class="title">Yext Sites Development Page</div>
+    <!--info-html-->
+    <!--warning-html-->
+    <!--error-html-->
+    <!--static-pages-html-->
+    <!--entity-pages-html-->
   </body>
 </html>
+
+<style>
+  @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+
+  body {
+    font-family: "Lato", sans-serif;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  .list {
+    margin-top: 20px;
+  }
+
+  .list-title {
+    font-size: 20px;
+  }
+
+  .list-title-templateName {
+    font-size: 20px;
+    font-weight: bolder;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  li {
+    margin-top: 10px;
+  }
+
+  a:link,
+  a:visited {
+    padding: 5px;
+    border-radius: 4px;
+  }
+
+  a:hover,
+  a:active {
+    background-color: rgb(230, 230, 230);
+  }
+
+  .title {
+    margin: auto;
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .section-title {
+    margin-top: 20px;
+    font-size: 25px;
+    font-weight: bold;
+  }
+
+  .info,
+  .success,
+  .warning,
+  .error {
+    margin: auto;
+    margin-top: 20px;
+    padding: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    max-width: 800px;
+    border-radius: 8px;
+    border: 1px solid black;
+  }
+
+  .info {
+    color: #00529b;
+    background-color: #bde5f8;
+  }
+
+  .success {
+    color: #4f8a10;
+    background-color: #dff2bf;
+  }
+
+  .warning {
+    color: #9f6000;
+    background-color: #feefb3;
+  }
+
+  .error {
+    color: #d8000c;
+    background-color: #ffd2d2;
+  }
+
+  .info i,
+  .success i,
+  .warning i,
+  .error i {
+    margin: 0 20px 0 10px;
+    font-size: 1.5em;
+    vertical-align: middle;
+  }
+</style>

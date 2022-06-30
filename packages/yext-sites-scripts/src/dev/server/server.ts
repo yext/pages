@@ -3,7 +3,10 @@ import { createServer as createViteServer } from "vite";
 import { serverRenderRoute } from "./middleware/serverRenderRoute.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
+import { viteDevServerPort } from "./middleware/constants.js";
 import react from "@vitejs/plugin-react";
+import { indexPage } from "./middleware/indexPage.js";
+import { generateTestData } from "./ssr/generateTestData.js";
 
 export const createServer = async (dynamicGenerateData: boolean) => {
   // creates a standard express app
@@ -27,11 +30,26 @@ export const createServer = async (dynamicGenerateData: boolean) => {
   // Ignore favicon requests if it doesn't exist
   app.use(ignoreFavicon);
 
-  // when a page is requested, call our serverRenderRoute method
-  app.use("*", serverRenderRoute({ vite, dynamicGenerateData }));
+  let displayGenerateTestDataWarning = false;
+  if (dynamicGenerateData) {
+    // display the warning if the call to generateTestData fails.
+    displayGenerateTestDataWarning = !(await generateTestData());
+  }
+
+  // When a page is requested that is anything except the root, call our
+  // serverRenderRoute middleware.
+  app.use(/^\/(.+)/, serverRenderRoute({ vite, dynamicGenerateData }));
+
+  // Serve the index page at the root of the dev server.
+  app.use(
+    "/",
+    indexPage({ dynamicGenerateData, displayGenerateTestDataWarning })
+  );
 
   app.use(errorMiddleware(vite));
 
   // start the server on port 3000
-  app.listen(3000, () => process.stdout.write("listening on :3000\n"));
+  app.listen(viteDevServerPort, () =>
+    process.stdout.write(`listening on :${viteDevServerPort}\n`)
+  );
 };
