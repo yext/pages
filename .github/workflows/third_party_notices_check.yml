@@ -20,22 +20,31 @@ jobs:
       - name: Run remove_workspace script
         run: ./scripts/remove_workspace.sh
         shell: bash
-
-  call_generate_licenses_yss:
-    uses: ./.github/workflows/generate_licenses.yml
-    with:
-      package: "yext-sites-scripts"
-
-  call_generate_licenses_plugin:
-    uses: ./.github/workflows/generate_licenses.yml
-    with:
-      package: "vite-plugin-yext-sites-ssg"
-      
-  license-check-teardown:
-    runs-on: ubutu-latest
-    steps:
+      - name: Generate yext-sites-scripts licenses
+        run : |
+          npm ci --ignore-scripts
+          npm rebuild
+          npm run generate-notices
+        working-directory: ./packages/yext-sites-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Generate vite-plugin-yext-sites-ssg licenses
+        run : |
+          npm ci --ignore-scripts
+          npm rebuild
+          npm run generate-notices
+        working-directory: ./packages/vite-plugin-yext-sites-ssg
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Run add_workspace script
         run: ./scripts/add_workspace.sh
         shell: bash
       - name: Remove package-lock files
         run: rm ./packages/yext-sites-scripts/package-lock.json ./packages/vite-plugin-yext-sites-ssg/package-lock.json
+      - name: Update THIRD-PARTY-NOTICES
+        uses: EndBug/add-and-commit@v7
+        with:
+          message: "Automated update to THIRD-PARTY-NOTICES from github action's 3rd party notices check"
+          add: 'THIRD-PARTY-NOTICES'
+          push: true
+          default_author: github_actions
