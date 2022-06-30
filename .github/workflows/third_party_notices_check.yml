@@ -25,6 +25,7 @@ jobs:
           npm i --ignore-scripts
           npm rebuild
           npm run generate-notices
+          echo "$(<THIRD-PARTY-NOTICES )"
         working-directory: ./packages/yext-sites-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -33,12 +34,16 @@ jobs:
           npm i --ignore-scripts
           npm rebuild
           npm run generate-notices
+          echo "$(<THIRD-PARTY-NOTICES )"
         working-directory: ./packages/vite-plugin-yext-sites-ssg
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Run add_workspace script
         run: ./scripts/add_workspace.sh
         shell: bash
+      - name: Check status
+        run : |
+          git status
       - name: Remove package-lock files
         run: rm ./packages/yext-sites-scripts/package-lock.json ./packages/vite-plugin-yext-sites-ssg/package-lock.json
       - name: Update THIRD-PARTY-NOTICES
