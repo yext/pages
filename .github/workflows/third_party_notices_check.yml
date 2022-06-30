@@ -22,7 +22,7 @@ jobs:
         shell: bash
       - name: Generate yext-sites-scripts licenses
         run : |
-          npm ci --ignore-scripts
+          npm i --ignore-scripts
           npm rebuild
           npm run generate-notices
         working-directory: ./packages/yext-sites-scripts
@@ -30,7 +30,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Generate vite-plugin-yext-sites-ssg licenses
         run : |
-          npm ci --ignore-scripts
+          npm i --ignore-scripts
           npm rebuild
           npm run generate-notices
         working-directory: ./packages/vite-plugin-yext-sites-ssg
