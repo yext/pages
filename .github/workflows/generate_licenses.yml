@@ -15,6 +15,13 @@ jobs:
       run:
         working-directory: "./packages/${{ inputs.package }}"
     steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+      - name: Build with NodeJS 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
       # Skip post-install scripts here, as a malicious
       # script could steal the NPM_TOKEN.
       - run: npm ci --ignore-scripts
