@@ -3,27 +3,55 @@ name: Check and Update Third Party Notices
 on: pull_request
 
 jobs:
-  license-check:
+  license-check-setup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
           registry-url: 'https://registry.npmjs.org'
       - run: npm install -g generate-license-file
       - uses: actions/checkout@v3
-      # Skip post-install scripts here, as a malicious
-      # script could steal the NPM_TOKEN.
-      - run: npm ci --ignore-scripts
+      # The generate license package has a dependency
+      # that makes an assumption that node_modules will
+      # live at the same level as the package.json.
+      # Therefore, for this to run correctly we have to
+      # remove the workspaces config.
+      - name: Run remove_workspace script
+        run: ./scripts/remove_workspace.sh
+        shell: bash
+      - name: Generate yext-sites-scripts licenses
+        run : |
+          npm i --ignore-scripts
+          npm rebuild
+          npm run generate-notices
+        working-directory: ./packages/yext-sites-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      # `npm rebuild` will run all those post-install scripts for us.
-      - run: npm rebuild
-      - run: npm run generate-notices
+      - name: Generate vite-plugin-yext-sites-ssg licenses
+        run : |
+          npm i --ignore-scripts
+          npm rebuild
+          npm run generate-notices
+        working-directory: ./packages/vite-plugin-yext-sites-ssg
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Remove package-lock files
+        run: rm ./packages/yext-sites-scripts/package-lock.json ./packages/vite-plugin-yext-sites-ssg/package-lock.json
+      - name: Generate root level licenses
+        run : |
+          npm i --ignore-scripts
+          npm rebuild
+          npm run generate-notices
+          git restore package-lock.json
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Run add_workspace script
+        run: ./scripts/add_workspace.sh
+        shell: bash
       - name: Update THIRD-PARTY-NOTICES
         uses: EndBug/add-and-commit@v7
         with:
           message: "Automated update to THIRD-PARTY-NOTICES from github action's 3rd party notices check"
-          add: 'THIRD-PARTY-NOTICES'
           push: true
           default_author: github_actions

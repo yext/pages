@@ -12,8 +12,7 @@
     "release": "npm-run-all release:*",
     "release:plugin": "npm --prefix packages/vite-plugin-yext-sites-ssg run release",
     "release:yss": " npm --prefix packages/yext-sites-scripts run release",
-    "generate-notices": "npm run generate-notices:local && npm run generate-notices -ws",
-    "generate-notices:local": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite"
+    "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite"
   },
   "engines": {
     "node": ">=17"
