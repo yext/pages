@@ -1,6 +1,6 @@
 The following NPM package may be included in this product:
 
- - @algolia/autocomplete-core@1.6.3
+ - @algolia/autocomplete-core@1.7.1
 
 This package contains the following license and notice below:
 
@@ -24,9 +24,33 @@ See [**Documentation**](https://www.algolia.com/doc/ui-libraries/autocomplete/ap
 
 -----------
 
+The following NPM package may be included in this product:
+
+ - @algolia/autocomplete-preset-algolia@1.7.1
+
+This package contains the following license and notice below:
+
+# @algolia/autocomplete-preset-algolia
+
+The Algolia preset provides fetching and highlighting utilities for usage with Algolia.
+
+## Installation
+
+```sh
+yarn add @algolia/autocomplete-preset-algolia
+# or
+npm install @algolia/autocomplete-preset-algolia
+```
+
+## Documentation
+
+See [**Documentation**](https://www.algolia.com/doc/ui-libraries/autocomplete/api-reference/autocomplete-preset-algolia).
+
+-----------
+
 The following NPM packages may be included in this product:
 
- - @algolia/autocomplete-shared@1.6.3
+ - @algolia/autocomplete-shared@1.7.1
  - @algolia/cache-browser-local-storage@4.13.1
  - @algolia/cache-common@4.13.1
  - @algolia/cache-in-memory@4.13.1
@@ -41,7 +65,7 @@ The following NPM packages may be included in this product:
  - @algolia/requester-common@4.13.1
  - @algolia/requester-node-http@4.13.1
  - @algolia/transporter@4.13.1
- - @vue/devtools-api@6.1.4
+ - @vue/devtools-api@6.2.0
  - tr46@0.0.3
 
 These packages each contain the following license and notice below:
@@ -346,7 +370,7 @@ THE SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - @docsearch/css@3.1.0
+ - @docsearch/css@3.1.1
 
 This package contains the following license and notice below:
 
@@ -382,7 +406,7 @@ import '@docsearch/css';
 
 The following NPM package may be included in this product:
 
- - @docsearch/js@3.1.0
+ - @docsearch/js@3.1.1
 
 This package contains the following license and notice below:
 
@@ -437,7 +461,7 @@ docsearch({
 
 The following NPM package may be included in this product:
 
- - @docsearch/react@3.1.0
+ - @docsearch/react@3.1.1
 
 This package contains the following license and notice below:
 
@@ -2662,7 +2686,7 @@ THE SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - electron-to-chromium@1.4.174
+ - electron-to-chromium@1.4.176
 
 This package contains the following license and notice below:
 
