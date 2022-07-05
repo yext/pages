@@ -1,11 +1,13 @@
 {
   "extends": "../common/tsconfig",
   "compilerOptions": {
+    "jsx": "react",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "outDir": "./dist/types/",
     "resolveJsonModule": true
+    "types": ["jest"],
   },
   "include": ["src"],
   "exclude": ["plugin"]
