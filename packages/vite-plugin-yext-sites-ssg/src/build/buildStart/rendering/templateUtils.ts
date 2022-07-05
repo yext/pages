@@ -57,8 +57,8 @@ export const generateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any>,
   props: TemplateProps
 ): Promise<GeneratedPage> => {
-  if (templateModuleInternal.getStaticProps) {
-    props = await templateModuleInternal.getStaticProps(props);
+  if (templateModuleInternal.transformProps) {
+    props = await templateModuleInternal.transformProps(props);
   }
 
   const content = renderHtml(templateModuleInternal, props);

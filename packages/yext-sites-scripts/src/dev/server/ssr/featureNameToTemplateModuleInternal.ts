@@ -2,7 +2,6 @@ import { TEMPLATE_PATH } from "./constants.js";
 import { readdir } from "fs/promises";
 import { ViteDevServer } from "vite";
 import { loadTemplateModule } from "./loadTemplateModule.js";
-import { TemplateModule } from "../../../../../common/src/template/types.js";
 import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,

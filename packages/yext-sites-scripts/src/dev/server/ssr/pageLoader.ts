@@ -6,7 +6,7 @@ import templateBase from "../public/templateBase";
 import { FeaturesConfig } from "../../../../../common/src/feature/features.js";
 import {
   TemplateProps,
-  GetStaticProps,
+  TransformProps,
 } from "../../../../../common/src/template/types.js";
 import React from "react";
 
@@ -28,7 +28,7 @@ export type PageLoaderResult = {
 
 type SsrLoadedModule = {
   default: React.FC;
-  getStaticProps?: GetStaticProps<any>;
+  transformProps?: TransformProps<any>;
 };
 
 export const pageLoader = async ({
@@ -62,7 +62,7 @@ export const pageLoader = async ({
     );
   }
 
-  const { default: Component, getStaticProps } = module as SsrLoadedModule;
+  const { default: Component, transformProps } = module as SsrLoadedModule;
 
   let document;
   if (dynamicGenerateData) {
@@ -85,8 +85,8 @@ export const pageLoader = async ({
     __meta: { mode: "development" },
   };
 
-  if (getStaticProps) {
-    props = await getStaticProps(props);
+  if (transformProps) {
+    props = await transformProps(props);
   }
 
   return { template, Component, props };
