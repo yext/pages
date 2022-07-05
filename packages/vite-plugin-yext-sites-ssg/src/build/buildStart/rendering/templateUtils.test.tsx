@@ -1,7 +1,7 @@
 import React from "react";
 import { TemplateModuleInternal } from "../../../../../common/src/template/internal/types";
 import { TemplateProps } from "../../../../../common/src/template/types";
-import { generateResponses } from "./templateUtils"
+import { generateResponses } from "./templateUtils";
 
 const baseTemplateModule: TemplateModuleInternal<any> = {
   path: "path",
@@ -27,7 +27,7 @@ describe("generateResponses", () => {
       baseProps
     );
     expect(fn).toHaveBeenCalled();
-  })
+  });
 
   it("calls getRedirects when getRedirects is defined", async () => {
     const fn = jest.fn();
@@ -37,4 +37,4 @@ describe("generateResponses", () => {
     );
     expect(fn).toHaveBeenCalled();
   });
-})
+});

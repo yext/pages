@@ -16,16 +16,21 @@ if (args.length > 0) {
  */
 rmSync("./dist", { recursive: true, force: true });
 
-const testFilter = f => !f.endsWith(".test.ts") && !f.endsWith(".test.tsx") && !f.endsWith(".test.js");
+const testFilter = (f) =>
+  !f.endsWith(".test.ts") &&
+  !f.endsWith(".test.tsx") &&
+  !f.endsWith(".test.js");
 const filters = new Set(["./src/bundler.js"]);
-const files = glob.sync("./src/**/*\\.*")
+const files = glob
+  .sync("./src/**/*\\.*")
   .filter(testFilter)
   .filter((f) => !filters.has(f));
 
 // Add common shared code
 files.push.apply(
   files,
-  glob.sync("../common/**/*.*")
+  glob
+    .sync("../common/**/*.*")
     .filter(testFilter)
     .filter((f) => f !== "../common/tsconfig.json")
 );

@@ -31,7 +31,7 @@ export interface TemplateModule<T extends TemplateProps> {
  *
  * @public
  */
-export type GetRedirects<T extends TemplateProps> = (props: T)  => string[];
+export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
 
 /**
  * The type definition for the template's getStaticProps function.
