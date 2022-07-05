@@ -23,7 +23,7 @@ export interface TemplateModule<T extends TemplateProps> {
 
 /**
  * The type definition for the template's transformProps function. Can be used
- * to alter and/or augement the props (which include the data document) passed 
+ * to alter and/or augement the props (which include the data document) passed
  * into the template at render time.
  *
  * @public

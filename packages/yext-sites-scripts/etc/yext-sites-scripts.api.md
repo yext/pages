@@ -18,9 +18,6 @@ export type GetHeadConfig<T extends TemplateProps> = (props: T) => HeadConfig;
 export type GetPath<T extends TemplateProps> = (props: T) => string;
 
 // @public
-export type GetStaticProps<T extends TemplateProps> = (props: T) => Promise<T>;
-
-// @public
 export interface HeadConfig {
   charset?: string;
   other?: string;
@@ -92,8 +89,8 @@ export interface TemplateModule<T extends TemplateProps> {
   default: Default<T>;
   getHeadConfig?: GetHeadConfig<T>;
   getPath: GetPath<T>;
-  getStaticProps?: GetStaticProps<T>;
   render?: Render<T>;
+  transformProps?: TransformProps<T>;
 }
 
 // @public
@@ -104,6 +101,9 @@ export interface TemplateProps {
   };
   document: Record<string, any>;
 }
+
+// @public
+export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 // (No @packageDocumentation comment for this package)
 ```
