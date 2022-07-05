@@ -89,7 +89,7 @@ export interface TemplateModule<T extends TemplateProps> {
     default: Default<T>;
     getHeadConfig?: GetHeadConfig<T>;
     getPath: GetPath<T>;
-    getRedirects: GetRedirects<T>;
+    getRedirects?: GetRedirects<T>;
     getStaticProps?: GetStaticProps<T>;
     render?: Render<T>;
 }

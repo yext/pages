@@ -6,8 +6,8 @@
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "outDir": "./dist/types/",
-    "resolveJsonModule": true
-    "types": ["jest"],
+    "resolveJsonModule": true,
+    "types": ["jest"]
   },
   "include": ["src"],
   "exclude": ["plugin"]
