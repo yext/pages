@@ -2,7 +2,7 @@ import {
   HeadConfig,
   renderHeadConfigToString,
   TagType,
-} from "../../src/template/head";
+} from "./head";
 
 describe("renderHeadConfigToString", () => {
   it("properly renders a default title and excludes missing optionals", async () => {

@@ -9,5 +9,5 @@
     "target": "ESNext",
     "types": ["jest"]
   },
-  "include": ["src", "tests"]
+  "include": ["src"]
 }

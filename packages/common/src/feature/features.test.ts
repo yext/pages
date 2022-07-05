@@ -3,8 +3,8 @@ import {
   convertTemplateConfigInternalToFeaturesConfig,
   FeatureConfig,
   FeaturesConfig,
-} from "../../src/feature/features";
-import { TemplateConfigInternal } from "../../src/template/internal/types";
+} from "./features";
+import { TemplateConfigInternal } from "../template/internal/types";
 
 describe("features - convertTemplateConfigToFeaturesConfig", () => {
   it("returns a FeaturesConfig with no StreamConfig if no stream is defined", async () => {
