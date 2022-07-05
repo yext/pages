@@ -11,5 +11,5 @@ The type definition for the template's render function.
 ```typescript
 export declare type Render<T extends TemplateProps> = (props: T) => string;
 ```
-
 <b>References:</b> [TemplateProps](./yext-sites-scripts.templateprops.md)
+

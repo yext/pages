@@ -66,7 +66,7 @@ export const generateResponses = async (
   return {
     content,
     path: templateModuleInternal.getPath(props),
-    redirects: [],
+    redirects: templateModuleInternal.getRedirects?.(props) ?? [],
   };
 };
 

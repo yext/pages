@@ -15,11 +15,23 @@ export interface TemplateModule<T extends TemplateProps> {
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
   getHeadConfig?: GetHeadConfig<T>;
+  /** The exported, optional, function which returns a list of redirects */
+  getRedirects?: GetRedirects<T>;
   /** The exported render function */
   render?: Render<T>;
   /** The exported default function */
   default: Default<T>;
 }
+
+/**
+ * The type definiton for the template's getRedirects function.
+ *
+ * @returns A list of redirect paths. All paths returned by this function will redirect to the path
+ * defined by the template's getPath function.
+ *
+ * @public
+ */
+export type GetRedirects<T extends TemplateProps> = (props: T)  => string[];
 
 /**
  * The type definition for the template's getStaticProps function.
