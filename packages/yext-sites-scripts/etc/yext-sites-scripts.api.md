@@ -105,5 +105,11 @@ export interface TemplateProps {
   document: Record<string, any>;
 }
 
+// @public
+export interface TemplateRenderProps extends TemplateProps {
+  path: string;
+  relativePrefixToRoot: string;
+}
+
 // (No @packageDocumentation comment for this package)
 ```

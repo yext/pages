@@ -4,7 +4,7 @@
 
 ## TemplateProps interface
 
-The shape of the data passed directly to the different template functions (render, getPath, etc).
+The shape of the data passed directly to the different template functions with the exception of the render function (getPath, getHeadConfig, etc).
 
 <b>Signature:</b>
 
@@ -14,7 +14,7 @@ export interface TemplateProps
 
 ## Properties
 
-| Property                                                   | Type                                                                                                      | Description                                                               |
-| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [\_\_meta](./yext-sites-scripts.templateprops.__meta.md)   | { mode: "development" \| "production"; manifest?: [Manifest](./yext-sites-scripts.manifest.md)<!-- -->; } | Additional metadata added by the toolchain                                |
-| [document](./yext-sites-scripts.templateprops.document.md) | Record&lt;string, any&gt;                                                                                 | The entire document returned after applying the stream to a single entity |
+| Property                                                   | Modifiers | Type                                                                                                      | Description                                                               |
+| ---------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| [\_\_meta](./yext-sites-scripts.templateprops.__meta.md)   |           | { mode: "development" \| "production"; manifest?: [Manifest](./yext-sites-scripts.manifest.md)<!-- -->; } | Additional metadata added by the toolchain                                |
+| [document](./yext-sites-scripts.templateprops.document.md) |           | Record&lt;string, any&gt;                                                                                 | The entire document returned after applying the stream to a single entity |

@@ -2,9 +2,11 @@ import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import {
   TemplateProps,
+  TemplateRenderProps,
   Manifest,
   TemplateModule,
 } from "../../../../../common/src/template/types.js";
+import { getRelativePrefixToRootFromPath } from "../../../../../common/src/template/paths.js";
 import { reactWrapper } from "./wrapper.js";
 import {
   convertTemplateModuleToTemplateModuleInternal,
@@ -51,21 +53,31 @@ export type GeneratedPage = {
  * Takes in both a template module and its stream document, processes them, and writes them to disk.
  *
  * @param templateModuleInternal
- * @param props
+ * @param preRenderProps
  */
 export const generateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any>,
-  props: TemplateProps
+  preRenderProps: TemplateProps
 ): Promise<GeneratedPage> => {
   if (templateModuleInternal.getStaticProps) {
-    props = await templateModuleInternal.getStaticProps(props);
+    preRenderProps = await templateModuleInternal.getStaticProps(
+      preRenderProps
+    );
   }
+
+  const path = templateModuleInternal.getPath(preRenderProps);
+
+  const props: TemplateRenderProps = {
+    ...preRenderProps,
+    path: path,
+    relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
+  };
 
   const content = renderHtml(templateModuleInternal, props);
 
   return {
     content,
-    path: templateModuleInternal.getPath(props),
+    path: path,
     redirects: [],
   };
 };
@@ -79,7 +91,7 @@ export const generateResponses = async (
  */
 const renderHtml = (
   templateModuleInternal: TemplateModuleInternal<any>,
-  props: TemplateProps
+  props: TemplateRenderProps
 ) => {
   const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {

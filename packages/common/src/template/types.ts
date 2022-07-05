@@ -124,7 +124,8 @@ export type Manifest = {
 };
 
 /**
- * The shape of the data passed directly to the different template functions (render, getPath, etc).
+ * The shape of the data passed directly to the different template functions with the
+ * exception of the render function (getPath, getHeadConfig, etc).
  *
  * @public
  */
@@ -138,4 +139,21 @@ export interface TemplateProps {
     /** A manifest of bundled files present during production mode */
     manifest?: Manifest;
   };
+}
+
+/**
+ * The shape of the data passed directly to the template's render function.
+ * Extends the {@link TemplateProps} interface and has the additions of a path
+ * and a relativePrefixToRoot field.
+ *
+ * @public
+ */
+export interface TemplateRenderProps extends TemplateProps {
+  /** The path that the generated file will live at on the site. */
+  path: string;
+  /** The relative path from the generated page to the root of the site.
+   *  i.e. The path example/path/foo would have the relativePrefixToRoot
+   *  of '../../'.
+   */
+  relativePrefixToRoot: string;
 }
