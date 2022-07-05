@@ -149,11 +149,15 @@ export interface TemplateProps {
  * @public
  */
 export interface TemplateRenderProps extends TemplateProps {
-  /** The path that the generated file will live at on the site. */
+  /** 
+   * The path that the generated file will live at on the site, as defined
+   * by the {@link GetPath} function. 
+   */
   path: string;
-  /** The relative path from the generated page to the root of the site.
-   *  i.e. The path example/path/foo would have the relativePrefixToRoot
-   *  of '../../'.
+  /** 
+   * The relative path from the generated page to the root of the site.
+   * i.e. The path example/path/foo would have the relativePrefixToRoot
+   * of '../../'.
    */
   relativePrefixToRoot: string;
 }

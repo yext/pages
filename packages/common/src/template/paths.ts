@@ -9,9 +9,7 @@ export const getRelativePrefixToRootFromPath = (path: string): string => {
   pathComponents.pop();
 
   let relativePrefixToRoot = "";
-  pathComponents.length > 0
-    ? pathComponents.forEach((_) => (relativePrefixToRoot += "../"))
-    : (relativePrefixToRoot = "./");
+  pathComponents.forEach((_) => (relativePrefixToRoot += "../"));
 
   return relativePrefixToRoot;
 };

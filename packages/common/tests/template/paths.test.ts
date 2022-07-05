@@ -4,7 +4,7 @@ describe("getRelativePrefixToRootFromPath", () => {
   it("properly returns the relative directory prefix when on root level", async () => {
     const path = "foobar.txt";
 
-    const expectedRelativePathPrefix = "./";
+    const expectedRelativePathPrefix = "";
 
     expect(getRelativePrefixToRootFromPath(path)).toEqual(
       expectedRelativePathPrefix
