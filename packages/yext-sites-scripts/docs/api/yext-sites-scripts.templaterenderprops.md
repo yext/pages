@@ -18,5 +18,5 @@ export interface TemplateRenderProps extends TemplateProps
 
 | Property                                                                                 | Modifiers | Type   | Description                                                                                                                                        |
 | ---------------------------------------------------------------------------------------- | --------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [path](./yext-sites-scripts.templaterenderprops.path.md)                                 |           | string | The path that the generated file will live at on the site.                                                                                         |
+| [path](./yext-sites-scripts.templaterenderprops.path.md)                                 |           | string | The path that the generated file will live at on the site, as defined by the [GetPath](./yext-sites-scripts.getpath.md) function.                  |
 | [relativePrefixToRoot](./yext-sites-scripts.templaterenderprops.relativeprefixtoroot.md) |           | string | The relative path from the generated page to the root of the site. i.e. The path example/path/foo would have the relativePrefixToRoot of '../../'. |

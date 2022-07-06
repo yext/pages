@@ -6,7 +6,7 @@ import templateBase from "../public/templateBase";
 import { FeaturesConfig } from "../../../../../common/src/feature/features.js";
 import {
   TemplateProps,
-  GetStaticProps,
+  TransformProps,
   GetPath,
   TemplateRenderProps,
 } from "../../../../../common/src/template/types.js";
@@ -32,7 +32,7 @@ export type PageLoaderResult = {
 type SsrLoadedModule = {
   default: React.FC;
   getPath: GetPath<any>;
-  getStaticProps?: GetStaticProps<any>;
+  transformProps?: TransformProps<any>;
 };
 
 export const pageLoader = async ({
@@ -68,7 +68,7 @@ export const pageLoader = async ({
 
   const {
     default: Component,
-    getStaticProps,
+    transformProps,
     getPath,
   } = module as SsrLoadedModule;
 
@@ -93,8 +93,8 @@ export const pageLoader = async ({
     __meta: { mode: "development" },
   };
 
-  if (getStaticProps) {
-    preRenderProps = await getStaticProps(preRenderProps);
+  if (transformProps) {
+    preRenderProps = await transformProps(preRenderProps);
   }
 
   const path = getPath(preRenderProps);

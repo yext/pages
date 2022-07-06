@@ -59,8 +59,8 @@ export const generateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any>,
   preRenderProps: TemplateProps
 ): Promise<GeneratedPage> => {
-  if (templateModuleInternal.getStaticProps) {
-    preRenderProps = await templateModuleInternal.getStaticProps(
+  if (templateModuleInternal.transformProps) {
+    preRenderProps = await templateModuleInternal.transformProps(
       preRenderProps
     );
   }

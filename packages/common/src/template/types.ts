@@ -9,8 +9,8 @@ import { HeadConfig } from "./head.js";
 export interface TemplateModule<T extends TemplateProps> {
   /** The exported config function */
   config?: TemplateConfig;
-  /** The optional exported getStaticProps function */
-  getStaticProps?: GetStaticProps<T>;
+  /** The optional exported transformProps function */
+  transformProps?: TransformProps<T>;
   /** The exported getPath function */
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
@@ -22,11 +22,13 @@ export interface TemplateModule<T extends TemplateProps> {
 }
 
 /**
- * The type definition for the template's getStaticProps function.
+ * The type definition for the template's transformProps function. Can be used
+ * to alter and/or augement the props (which include the data document) passed
+ * into the template at render time.
  *
  * @public
  */
-export type GetStaticProps<T extends TemplateProps> = (props: T) => Promise<T>;
+export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 /**
  * The type definition for the template's getPath function.

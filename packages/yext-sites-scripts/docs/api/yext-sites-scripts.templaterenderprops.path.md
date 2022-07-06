@@ -4,7 +4,7 @@
 
 ## TemplateRenderProps.path property
 
-The path that the generated file will live at on the site.
+The path that the generated file will live at on the site, as defined by the [GetPath](./yext-sites-scripts.getpath.md) function.
 
 <b>Signature:</b>
 
