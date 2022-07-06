@@ -2,7 +2,7 @@ import {
   Default,
   GetHeadConfig,
   GetPath,
-  GetStaticProps,
+  TransformProps,
   Render,
   Stream,
   TemplateConfig,
@@ -27,8 +27,8 @@ export interface TemplateModuleInternal<T extends TemplateProps> {
   templateName: string;
   /** The exported config function */
   config: TemplateConfigInternal;
-  /** The optional exported getStaticProps function */
-  getStaticProps?: GetStaticProps<T>;
+  /** The optional exported transformProps function */
+  transformProps?: TransformProps<T>;
   /** The exported getPath function */
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
