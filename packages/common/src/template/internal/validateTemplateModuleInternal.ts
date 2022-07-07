@@ -4,7 +4,7 @@ import {
 } from "../internal/types.js";
 
 export const validateTemplateModuleInternal = (
-  templateModule: TemplateModuleInternal<any>
+  templateModule: TemplateModuleInternal<any, any>
 ) => {
   validateConfig(templateModule.filename, templateModule.config);
 

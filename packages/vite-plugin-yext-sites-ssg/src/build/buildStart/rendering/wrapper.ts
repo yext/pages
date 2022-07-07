@@ -1,13 +1,13 @@
 import { TemplateModuleInternal } from "../../../../../common/src/template/internal/types.js";
 import { renderHeadConfigToString } from "../../../../../common/src/template/head.js";
 import {
-  TemplateProps,
+  TemplateRenderProps,
   GetHeadConfig,
 } from "../../../../../common/src/template/types.js";
 
-export const reactWrapper = <T extends TemplateProps>(
+export const reactWrapper = <T extends TemplateRenderProps>(
   props: T,
-  templateModuleInternal: TemplateModuleInternal<any>,
+  templateModuleInternal: TemplateModuleInternal<any, any>,
   template: string,
   hydrate: boolean,
   getHeadConfig?: GetHeadConfig<any>

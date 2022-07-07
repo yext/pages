@@ -12,9 +12,9 @@ import { TemplateModule } from "../../../../../common/src/template/types";
 export async function importFresh(
   devserver: ViteDevServer,
   modulePath: string
-): Promise<TemplateModule<any>> {
+): Promise<TemplateModule<any, any>> {
   const cacheBustingModulePath = `${modulePath}?update=${Date.now()}`;
   return (await devserver.ssrLoadModule(
     cacheBustingModulePath
-  )) as TemplateModule<any>;
+  )) as TemplateModule<any, any>;
 }

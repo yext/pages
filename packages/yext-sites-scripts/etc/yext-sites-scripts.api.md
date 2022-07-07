@@ -9,10 +9,12 @@
 export type Attributes = Record<string, string>;
 
 // @public
-export type Default<T extends TemplateProps> = (props: T) => JSX.Element;
+export type Default<T extends TemplateRenderProps> = (props: T) => JSX.Element;
 
 // @public
-export type GetHeadConfig<T extends TemplateProps> = (props: T) => HeadConfig;
+export type GetHeadConfig<T extends TemplateRenderProps> = (
+  props: T
+) => HeadConfig;
 
 // @public
 export type GetPath<T extends TemplateProps> = (props: T) => string;
@@ -41,7 +43,7 @@ export type Manifest = {
 };
 
 // @public
-export type Render<T extends TemplateProps> = (props: T) => string;
+export type Render<T extends TemplateRenderProps> = (props: T) => string;
 
 // @public
 export const renderHeadConfigToString: (headConfig: HeadConfig) => string;
@@ -84,12 +86,15 @@ export interface TemplateConfig {
 }
 
 // @public
-export interface TemplateModule<T extends TemplateProps> {
+export interface TemplateModule<
+  T extends TemplateProps,
+  U extends TemplateRenderProps
+> {
   config?: TemplateConfig;
-  default: Default<T>;
-  getHeadConfig?: GetHeadConfig<T>;
+  default: Default<U>;
+  getHeadConfig?: GetHeadConfig<U>;
   getPath: GetPath<T>;
-  render?: Render<T>;
+  render?: Render<U>;
   transformProps?: TransformProps<T>;
 }
 
@@ -100,6 +105,12 @@ export interface TemplateProps {
     manifest?: Manifest;
   };
   document: Record<string, any>;
+}
+
+// @public
+export interface TemplateRenderProps extends TemplateProps {
+  path: string;
+  relativePrefixToRoot: string;
 }
 
 // @public

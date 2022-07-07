@@ -11,7 +11,7 @@ import {
 export const featureNameToTemplateModuleInternal = async (
   devserver: ViteDevServer,
   featureName: string
-): Promise<TemplateModuleInternal<any> | null> => {
+): Promise<TemplateModuleInternal<any, any> | null> => {
   const directoryFilenames = await readdir(`./${TEMPLATE_PATH}`);
 
   for (const filename of directoryFilenames) {

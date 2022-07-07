@@ -4,7 +4,7 @@
 
 ## TemplateProps interface
 
-The shape of the data passed directly to the different template functions (render, getPath, etc).
+The shape of the data passed directly to the different template functions with the exception of the render function (getPath, getHeadConfig, etc).
 
 <b>Signature:</b>
 

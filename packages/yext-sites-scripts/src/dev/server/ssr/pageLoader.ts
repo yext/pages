@@ -7,7 +7,10 @@ import { FeaturesConfig } from "../../../../../common/src/feature/features.js";
 import {
   TemplateProps,
   TransformProps,
+  GetPath,
+  TemplateRenderProps,
 } from "../../../../../common/src/template/types.js";
+import { getRelativePrefixToRootFromPath } from "../../../../../common/src/template/paths.js";
 import React from "react";
 
 type PageLoaderValues = {
@@ -28,6 +31,7 @@ export type PageLoaderResult = {
 
 type SsrLoadedModule = {
   default: React.FC;
+  getPath: GetPath<any>;
   transformProps?: TransformProps<any>;
 };
 
@@ -62,7 +66,11 @@ export const pageLoader = async ({
     );
   }
 
-  const { default: Component, transformProps } = module as SsrLoadedModule;
+  const {
+    default: Component,
+    transformProps,
+    getPath,
+  } = module as SsrLoadedModule;
 
   let document;
   if (dynamicGenerateData) {
@@ -80,14 +88,22 @@ export const pageLoader = async ({
     throw new Error(`Could not find document data for entityId: ${entityId}`);
   }
 
-  let props: TemplateProps = {
+  let templateProps: TemplateProps = {
     document: document,
     __meta: { mode: "development" },
   };
 
   if (transformProps) {
-    props = await transformProps(props);
+    templateProps = await transformProps(templateProps);
   }
 
-  return { template, Component, props };
+  const path = getPath(templateProps);
+
+  const templateRenderProps: TemplateRenderProps = {
+    ...templateProps,
+    path: path,
+    relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
+  };
+
+  return { template, Component, props: templateRenderProps };
 };
