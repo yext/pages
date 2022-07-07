@@ -9,5 +9,5 @@ The exported default function
 <b>Signature:</b>
 
 ```typescript
-default: Default<T>;
+default: Default<U>;
 ```

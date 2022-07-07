@@ -21,12 +21,12 @@ const pathToModule = new Map();
 export const readTemplateModules = async (
   feature: string,
   manifest: Manifest
-): Promise<TemplateModuleInternal<any>> => {
+): Promise<TemplateModuleInternal<any, any>> => {
   const path = manifest.bundlePaths[feature].replace("assets", "..");
   if (!path) {
     throw new Error(`Could not find path for feature ${feature}`);
   }
-  let importedModule = pathToModule.get(path) as TemplateModule<any>;
+  let importedModule = pathToModule.get(path) as TemplateModule<any, any>;
   if (!importedModule) {
     importedModule = await import(path);
   }
@@ -53,27 +53,25 @@ export type GeneratedPage = {
  * Takes in both a template module and its stream document, processes them, and writes them to disk.
  *
  * @param templateModuleInternal
- * @param preRenderProps
+ * @param templateProps
  */
 export const generateResponses = async (
-  templateModuleInternal: TemplateModuleInternal<any>,
-  preRenderProps: TemplateProps
+  templateModuleInternal: TemplateModuleInternal<any, any>,
+  templateProps: TemplateProps
 ): Promise<GeneratedPage> => {
   if (templateModuleInternal.transformProps) {
-    preRenderProps = await templateModuleInternal.transformProps(
-      preRenderProps
-    );
+    templateProps = await templateModuleInternal.transformProps(templateProps);
   }
 
-  const path = templateModuleInternal.getPath(preRenderProps);
+  const path = templateModuleInternal.getPath(templateProps);
 
-  const props: TemplateRenderProps = {
-    ...preRenderProps,
+  const templateRenderProps: TemplateRenderProps = {
+    ...templateProps,
     path: path,
     relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
   };
 
-  const content = renderHtml(templateModuleInternal, props);
+  const content = renderHtml(templateModuleInternal, templateRenderProps);
 
   return {
     content,
@@ -90,7 +88,7 @@ export const generateResponses = async (
  * 3. If a module doesn't export either, throw an error.
  */
 const renderHtml = (
-  templateModuleInternal: TemplateModuleInternal<any>,
+  templateModuleInternal: TemplateModuleInternal<any, any>,
   props: TemplateRenderProps
 ) => {
   const { default: component, render, getHeadConfig } = templateModuleInternal;

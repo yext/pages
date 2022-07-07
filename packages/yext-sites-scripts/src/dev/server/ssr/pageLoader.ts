@@ -88,22 +88,22 @@ export const pageLoader = async ({
     throw new Error(`Could not find document data for entityId: ${entityId}`);
   }
 
-  let preRenderProps: TemplateProps = {
+  let templateProps: TemplateProps = {
     document: document,
     __meta: { mode: "development" },
   };
 
   if (transformProps) {
-    preRenderProps = await transformProps(preRenderProps);
+    templateProps = await transformProps(templateProps);
   }
 
-  const path = getPath(preRenderProps);
+  const path = getPath(templateProps);
 
-  let props: TemplateRenderProps = {
-    ...preRenderProps,
+  const templateRenderProps: TemplateRenderProps = {
+    ...templateProps,
     path: path,
     relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
   };
 
-  return { template, Component, props };
+  return { template, Component, props: templateRenderProps };
 };

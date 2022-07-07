@@ -14,9 +14,9 @@ import { TemplateModule } from "../../../../common/src/template/types.js";
 export const loadTemplateModules = async (
   serverBundlePaths: string[]
 ): Promise<TemplateModuleCollection> => {
-  const importedModules = [] as TemplateModuleInternal<any>[];
+  const importedModules = [] as TemplateModuleInternal<any, any>[];
   for (const p of serverBundlePaths) {
-    let templateModule = {} as TemplateModule<any>;
+    let templateModule = {} as TemplateModule<any, any>;
     try {
       templateModule = await import(p);
     } catch (e) {
@@ -36,7 +36,9 @@ export const loadTemplateModules = async (
   );
 };
 
-const validateModules = (templateModules: TemplateModuleInternal<any>[]) => {
+const validateModules = (
+  templateModules: TemplateModuleInternal<any, any>[]
+) => {
   validateUniqueFeatureName(templateModules);
 };
 
@@ -45,7 +47,7 @@ const validateModules = (templateModules: TemplateModuleInternal<any>[]) => {
  * @param templateModules
  */
 const validateUniqueFeatureName = (
-  templateModules: TemplateModuleInternal<any>[]
+  templateModules: TemplateModuleInternal<any, any>[]
 ) => {
   const featureNames = new Set<string>();
   templateModules
@@ -61,9 +63,13 @@ const validateUniqueFeatureName = (
 };
 
 // A TemplateModule which also exports a Page component used for hydration.
-export interface HydrationTemplateModule extends TemplateModuleInternal<any> {
+export interface HydrationTemplateModule
+  extends TemplateModuleInternal<any, any> {
   Page: any;
 }
 
 // A TemplateModuleCollection is a collection of template modules indexed by feature name.
-export type TemplateModuleCollection = Map<string, TemplateModuleInternal<any>>;
+export type TemplateModuleCollection = Map<
+  string,
+  TemplateModuleInternal<any, any>
+>;

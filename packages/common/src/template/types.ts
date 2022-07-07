@@ -6,7 +6,10 @@ import { HeadConfig } from "./head.js";
  *
  * @public
  */
-export interface TemplateModule<T extends TemplateProps> {
+export interface TemplateModule<
+  T extends TemplateProps,
+  U extends TemplateRenderProps
+> {
   /** The exported config function */
   config?: TemplateConfig;
   /** The optional exported transformProps function */
@@ -16,9 +19,9 @@ export interface TemplateModule<T extends TemplateProps> {
   /** The exported, optional headFunction */
   getHeadConfig?: GetHeadConfig<T>;
   /** The exported render function */
-  render?: Render<T>;
+  render?: Render<U>;
   /** The exported default function */
-  default: Default<T>;
+  default: Default<U>;
 }
 
 /**
@@ -51,14 +54,14 @@ export type GetHeadConfig<T extends TemplateProps> = (props: T) => HeadConfig;
  *
  * @public
  */
-export type Render<T extends TemplateProps> = (props: T) => string;
+export type Render<U extends TemplateRenderProps> = (props: U) => string;
 
 /**
  * The type definition for the template's default function.
  *
  * @public
  */
-export type Default<T extends TemplateProps> = (props: T) => JSX.Element;
+export type Default<U extends TemplateRenderProps> = (props: U) => JSX.Element;
 
 /**
  * The exported `config` function's definition.
