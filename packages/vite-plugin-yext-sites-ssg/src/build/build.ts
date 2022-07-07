@@ -5,6 +5,10 @@ import { readdir } from "fs/promises";
 import { parse } from "path";
 import { InputOption } from "rollup";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import {
+  ENV_VAR_DIR,
+  ENV_VAR_PUBLIC_PREFIX,
+} from "../../../common/src/project/envVars.js";
 
 const intro = `var global = globalThis;`;
 
@@ -19,6 +23,8 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
     apply: "build",
     config: async (): Promise<UserConfig> => {
       return {
+        envDir: ENV_VAR_DIR,
+        envPrefix: ENV_VAR_PUBLIC_PREFIX,
         build: {
           outDir: projectStructure.distRoot.path,
           manifest: true,
