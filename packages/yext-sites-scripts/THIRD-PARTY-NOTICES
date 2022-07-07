@@ -1157,9 +1157,9 @@ console.log(s.toString()) // let a = _ref(0); a.value++
 
 The following NPM packages may be included in this product:
 
- - @vueuse/core@8.8.1
- - @vueuse/metadata@8.8.1
- - @vueuse/shared@8.8.1
+ - @vueuse/core@8.9.0
+ - @vueuse/metadata@8.9.0
+ - @vueuse/shared@8.9.0
 
 These packages each contain the following license and notice below:
 
@@ -2686,7 +2686,7 @@ THE SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - electron-to-chromium@1.4.180
+ - electron-to-chromium@1.4.182
 
 This package contains the following license and notice below:
 
