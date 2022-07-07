@@ -47,8 +47,8 @@ export type GetPath<T extends TemplateProps> = (props: T) => string;
  *
  * @public
  */
-export type GetHeadConfig<U extends TemplateRenderProps> = (
-  props: U
+export type GetHeadConfig<T extends TemplateRenderProps> = (
+  props: T
 ) => HeadConfig;
 
 /**
@@ -56,14 +56,14 @@ export type GetHeadConfig<U extends TemplateRenderProps> = (
  *
  * @public
  */
-export type Render<U extends TemplateRenderProps> = (props: U) => string;
+export type Render<T extends TemplateRenderProps> = (props: T) => string;
 
 /**
  * The type definition for the template's default function.
  *
  * @public
  */
-export type Default<U extends TemplateRenderProps> = (props: U) => JSX.Element;
+export type Default<T extends TemplateRenderProps> = (props: T) => JSX.Element;
 
 /**
  * The exported `config` function's definition.
