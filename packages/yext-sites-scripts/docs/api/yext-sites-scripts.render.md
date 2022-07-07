@@ -9,8 +9,8 @@ The type definition for the template's render function.
 <b>Signature:</b>
 
 ```typescript
-export declare type Render<U extends TemplateRenderProps> = (
-  props: U
+export declare type Render<T extends TemplateRenderProps> = (
+  props: T
 ) => string;
 ```
 

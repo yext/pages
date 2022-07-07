@@ -9,8 +9,8 @@ The type definition for the template's default function.
 <b>Signature:</b>
 
 ```typescript
-export declare type Default<U extends TemplateRenderProps> = (
-  props: U
+export declare type Default<T extends TemplateRenderProps> = (
+  props: T
 ) => JSX.Element;
 ```
 

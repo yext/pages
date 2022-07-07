@@ -9,11 +9,11 @@
 export type Attributes = Record<string, string>;
 
 // @public
-export type Default<U extends TemplateRenderProps> = (props: U) => JSX.Element;
+export type Default<T extends TemplateRenderProps> = (props: T) => JSX.Element;
 
 // @public
-export type GetHeadConfig<U extends TemplateRenderProps> = (
-  props: U
+export type GetHeadConfig<T extends TemplateRenderProps> = (
+  props: T
 ) => HeadConfig;
 
 // @public
@@ -43,7 +43,7 @@ export type Manifest = {
 };
 
 // @public
-export type Render<U extends TemplateRenderProps> = (props: U) => string;
+export type Render<T extends TemplateRenderProps> = (props: T) => string;
 
 // @public
 export const renderHeadConfigToString: (headConfig: HeadConfig) => string;
