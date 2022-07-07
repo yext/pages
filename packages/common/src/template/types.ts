@@ -17,7 +17,7 @@ export interface TemplateModule<
   /** The exported getPath function */
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
-  getHeadConfig?: GetHeadConfig<T>;
+  getHeadConfig?: GetHeadConfig<U>;
   /** The exported render function */
   render?: Render<U>;
   /** The exported default function */
@@ -47,7 +47,9 @@ export type GetPath<T extends TemplateProps> = (props: T) => string;
  *
  * @public
  */
-export type GetHeadConfig<T extends TemplateProps> = (props: T) => HeadConfig;
+export type GetHeadConfig<U extends TemplateRenderProps> = (
+  props: U
+) => HeadConfig;
 
 /**
  * The type definition for the template's render function.

@@ -36,7 +36,7 @@ export interface TemplateModuleInternal<
   /** The exported getPath function */
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
-  getHeadConfig?: GetHeadConfig<T>;
+  getHeadConfig?: GetHeadConfig<U>;
   /** The exported render function */
   render?: Render<U>;
   /** The exported default function */

@@ -12,7 +12,9 @@ export type Attributes = Record<string, string>;
 export type Default<U extends TemplateRenderProps> = (props: U) => JSX.Element;
 
 // @public
-export type GetHeadConfig<T extends TemplateProps> = (props: T) => HeadConfig;
+export type GetHeadConfig<U extends TemplateRenderProps> = (
+  props: U
+) => HeadConfig;
 
 // @public
 export type GetPath<T extends TemplateProps> = (props: T) => string;
@@ -90,7 +92,7 @@ export interface TemplateModule<
 > {
   config?: TemplateConfig;
   default: Default<U>;
-  getHeadConfig?: GetHeadConfig<T>;
+  getHeadConfig?: GetHeadConfig<U>;
   getPath: GetPath<T>;
   render?: Render<U>;
   transformProps?: TransformProps<T>;
