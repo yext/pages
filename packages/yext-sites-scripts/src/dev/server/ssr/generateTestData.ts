@@ -18,17 +18,21 @@ export const generateTestData = async (): Promise<boolean> => {
   const command = "yext";
   const args = ["sites", "generate-test-data"];
 
-  return new Promise(async (resolve) => {
+  async function generate() {
     const childProcess = spawn(command, args);
     const exitCode = await new Promise((resolve) => {
       childProcess.on("close", resolve);
     });
 
     if (exitCode) {
-      resolve(false);
+      return false;
     }
 
-    resolve(true);
+    return true;
+  }
+
+  return new Promise((resolve) => {
+    resolve(generate());
   });
 };
 
@@ -44,7 +48,7 @@ export const generateTestDataForPage = async (
   );
 
   const command = "yext";
-  let args = [
+  const args = [
     "sites",
     "generate-test-data",
     "--featureName",

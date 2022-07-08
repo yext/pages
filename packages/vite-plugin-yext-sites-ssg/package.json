@@ -22,6 +22,7 @@
     "fmt": "prettier -w src",
     "test": "",
     "release": "npm run build && npm run types",
+    "lint": "eslint .",
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite"
   },
   "prepublish": "npm run release",
