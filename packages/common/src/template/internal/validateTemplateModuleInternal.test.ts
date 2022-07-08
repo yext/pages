@@ -47,7 +47,7 @@ describe("validateTemplateModuleInternal - validateConfig", () => {
 
 describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () => {
   it("validates that getPath is defined", async () => {
-    const templateModuleInteral: TemplateModuleInternal<any> = {
+    const templateModuleInteral: TemplateModuleInternal<any, any> = {
       default: null,
       getPath: null,
       getRedirects: null,
@@ -69,7 +69,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
   });
 
   it("validates that at least one of default or render is defined", async () => {
-    const templateModuleInteral: TemplateModuleInternal<any> = {
+    const templateModuleInteral: TemplateModuleInternal<any, any> = {
       default: null,
       getPath: () => "",
       getRedirects: () => [],
@@ -92,7 +92,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
   });
 
   it("doesn't throw an error when the template is valid", async () => {
-    const templateModuleInteral: TemplateModuleInternal<any> = {
+    const templateModuleInteral: TemplateModuleInternal<any, any> = {
       default: {} as Default<any>,
       getPath: () => "",
       templateName: "foo",

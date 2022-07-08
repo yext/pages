@@ -2,7 +2,6 @@ import { TEMPLATE_PATH } from "./constants.js";
 import { readdir } from "fs/promises";
 import { ViteDevServer } from "vite";
 import { loadTemplateModule } from "./loadTemplateModule.js";
-import { TemplateModule } from "../../../../../common/src/template/types.js";
 import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
@@ -12,7 +11,7 @@ import {
 export const featureNameToTemplateModuleInternal = async (
   devserver: ViteDevServer,
   featureName: string
-): Promise<TemplateModuleInternal<any> | null> => {
+): Promise<TemplateModuleInternal<any, any> | null> => {
   const directoryFilenames = await readdir(`./${TEMPLATE_PATH}`);
 
   for (const filename of directoryFilenames) {

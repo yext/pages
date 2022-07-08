@@ -2,13 +2,14 @@ import {
   Default,
   GetHeadConfig,
   GetPath,
-  GetStaticProps,
   GetRedirects,
+  TransformProps,
   Render,
   Stream,
   TemplateConfig,
   TemplateModule,
   TemplateProps,
+  TemplateRenderProps,
 } from "../types.js";
 import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal.js";
 
@@ -16,7 +17,10 @@ import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal
  * A domain representation of a template module. Contains all fields from an imported module as well
  * as metadata about the module used in downstream processing.
  */
-export interface TemplateModuleInternal<T extends TemplateProps> {
+export interface TemplateModuleInternal<
+  T extends TemplateProps,
+  U extends TemplateRenderProps
+> {
   /**
    * The filepath to the template file. This can be the raw TSX file when used during dev mode or
    * the path to the server bundle this module was imported from during prod build.
@@ -28,18 +32,18 @@ export interface TemplateModuleInternal<T extends TemplateProps> {
   templateName: string;
   /** The exported config function */
   config: TemplateConfigInternal;
-  /** The optional exported getStaticProps function */
-  getStaticProps?: GetStaticProps<T>;
+  /** The optional exported transformProps function */
+  transformProps?: TransformProps<T>;
   /** The exported getPath function */
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
-  getHeadConfig?: GetHeadConfig<T>;
+  getHeadConfig?: GetHeadConfig<U>;
   /** The exported, optional, function which returns a list of redirects */
-  getRedirects?: GetRedirects<T>;
+  getRedirects?: GetRedirects<U>;
   /** The exported render function */
-  render?: Render<T>;
+  render?: Render<U>;
   /** The exported default function */
-  default: Default<T>;
+  default: Default<U>;
 }
 
 /**
@@ -79,9 +83,9 @@ const parse = (filepath: string, adjustForFingerprintedAsset: boolean) => {
 
 export const convertTemplateModuleToTemplateModuleInternal = (
   templateFilepath: string,
-  templateModule: TemplateModule<any>,
+  templateModule: TemplateModule<any, any>,
   adjustForFingerprintedAsset: boolean
-): TemplateModuleInternal<any> => {
+): TemplateModuleInternal<any, any> => {
   const templatePath = parse(templateFilepath, adjustForFingerprintedAsset);
 
   const templateModuleInternal = {

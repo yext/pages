@@ -9,9 +9,7 @@ The type definition for the template's getHeadConfig function. getHeadConfig tak
 <b>Signature:</b>
 
 ```typescript
-export declare type GetHeadConfig<T extends TemplateProps> = (
-  props: T
-) => HeadConfig;
+export declare type GetHeadConfig<T extends TemplateRenderProps> = (props: T) => HeadConfig;
 ```
+<b>References:</b> [TemplateRenderProps](./yext-sites-scripts.templaterenderprops.md)<!-- -->, [HeadConfig](./yext-sites-scripts.headconfig.md)
 
-<b>References:</b> [TemplateProps](./yext-sites-scripts.templateprops.md)<!-- -->, [HeadConfig](./yext-sites-scripts.headconfig.md)

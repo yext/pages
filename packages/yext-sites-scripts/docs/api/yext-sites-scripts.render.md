@@ -9,7 +9,7 @@ The type definition for the template's render function.
 <b>Signature:</b>
 
 ```typescript
-export declare type Render<T extends TemplateProps> = (props: T) => string;
+export declare type Render<T extends TemplateRenderProps> = (props: T) => string;
 ```
+<b>References:</b> [TemplateRenderProps](./yext-sites-scripts.templaterenderprops.md)
 
-<b>References:</b> [TemplateProps](./yext-sites-scripts.templateprops.md)

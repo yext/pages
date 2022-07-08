@@ -6,8 +6,11 @@ import templateBase from "../public/templateBase";
 import { FeaturesConfig } from "../../../../../common/src/feature/features.js";
 import {
   TemplateProps,
-  GetStaticProps,
+  TransformProps,
+  GetPath,
+  TemplateRenderProps,
 } from "../../../../../common/src/template/types.js";
+import { getRelativePrefixToRootFromPath } from "../../../../../common/src/template/paths.js";
 import React from "react";
 
 type PageLoaderValues = {
@@ -28,7 +31,8 @@ export type PageLoaderResult = {
 
 type SsrLoadedModule = {
   default: React.FC;
-  getStaticProps?: GetStaticProps<any>;
+  getPath: GetPath<any>;
+  transformProps?: TransformProps<any>;
 };
 
 export const pageLoader = async ({
@@ -62,7 +66,11 @@ export const pageLoader = async ({
     );
   }
 
-  const { default: Component, getStaticProps } = module as SsrLoadedModule;
+  const {
+    default: Component,
+    transformProps,
+    getPath,
+  } = module as SsrLoadedModule;
 
   let document;
   if (dynamicGenerateData) {
@@ -80,14 +88,22 @@ export const pageLoader = async ({
     throw new Error(`Could not find document data for entityId: ${entityId}`);
   }
 
-  let props: TemplateProps = {
+  let templateProps: TemplateProps = {
     document: document,
     __meta: { mode: "development" },
   };
 
-  if (getStaticProps) {
-    props = await getStaticProps(props);
+  if (transformProps) {
+    templateProps = await transformProps(templateProps);
   }
 
-  return { template, Component, props };
+  const path = getPath(templateProps);
+
+  const templateRenderProps: TemplateRenderProps = {
+    ...templateProps,
+    path: path,
+    relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
+  };
+
+  return { template, Component, props: templateRenderProps };
 };

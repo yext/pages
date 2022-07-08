@@ -6,21 +6,24 @@ import { HeadConfig } from "./head.js";
  *
  * @public
  */
-export interface TemplateModule<T extends TemplateProps> {
+export interface TemplateModule<
+  T extends TemplateProps,
+  U extends TemplateRenderProps
+> {
   /** The exported config function */
   config?: TemplateConfig;
-  /** The optional exported getStaticProps function */
-  getStaticProps?: GetStaticProps<T>;
+  /** The optional exported transformProps function */
+  transformProps?: TransformProps<T>;
   /** The exported getPath function */
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
-  getHeadConfig?: GetHeadConfig<T>;
+  getHeadConfig?: GetHeadConfig<U>;
   /** The exported, optional, function which returns a list of redirects */
-  getRedirects?: GetRedirects<T>;
+  getRedirects?: GetRedirects<U>;
   /** The exported render function */
-  render?: Render<T>;
+  render?: Render<U>;
   /** The exported default function */
-  default: Default<T>;
+  default: Default<U>;
 }
 
 /**
@@ -34,11 +37,12 @@ export interface TemplateModule<T extends TemplateProps> {
 export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
 
 /**
- * The type definition for the template's getStaticProps function.
- *
+ * The type definition for the template's transformProps function. Can be used
+ * to alter and/or augement the props (which include the data document) passed
+ * into the template at render time.
  * @public
  */
-export type GetStaticProps<T extends TemplateProps> = (props: T) => Promise<T>;
+export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 /**
  * The type definition for the template's getPath function.
@@ -54,21 +58,23 @@ export type GetPath<T extends TemplateProps> = (props: T) => string;
  *
  * @public
  */
-export type GetHeadConfig<T extends TemplateProps> = (props: T) => HeadConfig;
+export type GetHeadConfig<T extends TemplateRenderProps> = (
+  props: T
+) => HeadConfig;
 
 /**
  * The type definition for the template's render function.
  *
  * @public
  */
-export type Render<T extends TemplateProps> = (props: T) => string;
+export type Render<T extends TemplateRenderProps> = (props: T) => string;
 
 /**
  * The type definition for the template's default function.
  *
  * @public
  */
-export type Default<T extends TemplateProps> = (props: T) => JSX.Element;
+export type Default<T extends TemplateRenderProps> = (props: T) => JSX.Element;
 
 /**
  * The exported `config` function's definition.
@@ -136,7 +142,8 @@ export type Manifest = {
 };
 
 /**
- * The shape of the data passed directly to the different template functions (render, getPath, etc).
+ * The shape of the data passed directly to the different template functions with the
+ * exception of the render function (getPath, getHeadConfig, etc).
  *
  * @public
  */
@@ -150,4 +157,25 @@ export interface TemplateProps {
     /** A manifest of bundled files present during production mode */
     manifest?: Manifest;
   };
+}
+
+/**
+ * The shape of the data passed directly to the template's render function.
+ * Extends the {@link TemplateProps} interface and has the additions of a path
+ * and a relativePrefixToRoot field.
+ *
+ * @public
+ */
+export interface TemplateRenderProps extends TemplateProps {
+  /**
+   * The path that the generated file will live at on the site, as defined
+   * by the {@link GetPath} function.
+   */
+  path: string;
+  /**
+   * The relative path from the generated page to the root of the site.
+   * i.e. The path example/path/foo would have the relativePrefixToRoot
+   * of '../../'.
+   */
+  relativePrefixToRoot: string;
 }

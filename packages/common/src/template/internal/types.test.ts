@@ -6,7 +6,7 @@ import { Default, TemplateModule } from "../types";
 
 describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () => {
   it("uses the filename as the config name when not set", async () => {
-    const templateModule: TemplateModule<any> = {
+    const templateModule: TemplateModule<any, any> = {
       default: {} as Default<any>,
       getPath: () => "",
       getHeadConfig: () => {
@@ -26,7 +26,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         false
       );
 
-    const expected: TemplateModuleInternal<any> = {
+    const expected: TemplateModuleInternal<any, any> = {
       default: {} as Default<any>,
       getPath: () => "",
       getHeadConfig: () => {
@@ -49,7 +49,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
   });
 
   it("overrides the config.name when defined", async () => {
-    const templateModule: TemplateModule<any> = {
+    const templateModule: TemplateModule<any, any> = {
       default: {} as Default<any>,
       getPath: () => "",
       config: {
@@ -65,7 +65,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         false
       );
 
-    const expected: TemplateModuleInternal<any> = {
+    const expected: TemplateModuleInternal<any, any> = {
       default: {} as Default<any>,
       getPath: () => "",
       config: {
@@ -83,7 +83,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
   });
 
   it("uses the filename as the config name when not set and removes the asset fingerprint", async () => {
-    const templateModule: TemplateModule<any> = {
+    const templateModule: TemplateModule<any, any> = {
       default: {} as Default<any>,
       getPath: () => "",
       config: {
@@ -98,7 +98,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         true
       );
 
-    const expected: TemplateModuleInternal<any> = {
+    const expected: TemplateModuleInternal<any, any> = {
       default: {} as Default<any>,
       getPath: () => "",
       config: {

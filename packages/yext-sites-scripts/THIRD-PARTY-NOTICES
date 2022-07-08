@@ -287,7 +287,7 @@ Apache License
 The following NPM packages may be included in this product:
 
  - @babel/code-frame@7.18.6
- - @babel/compat-data@7.18.6
+ - @babel/compat-data@7.18.8
  - @babel/core@7.18.6
  - @babel/generator@7.18.7
  - @babel/helper-annotate-as-pure@7.18.6
@@ -296,7 +296,7 @@ The following NPM packages may be included in this product:
  - @babel/helper-function-name@7.18.6
  - @babel/helper-hoist-variables@7.18.6
  - @babel/helper-module-imports@7.18.6
- - @babel/helper-module-transforms@7.18.6
+ - @babel/helper-module-transforms@7.18.8
  - @babel/helper-plugin-utils@7.18.6
  - @babel/helper-simple-access@7.18.6
  - @babel/helper-split-export-declaration@7.18.6
@@ -310,8 +310,8 @@ The following NPM packages may be included in this product:
  - @babel/plugin-transform-react-jsx-source@7.18.6
  - @babel/plugin-transform-react-jsx@7.18.6
  - @babel/template@7.18.6
- - @babel/traverse@7.18.6
- - @babel/types@7.18.7
+ - @babel/traverse@7.18.8
+ - @babel/types@7.18.8
 
 These packages each contain the following license and notice below:
 
@@ -342,7 +342,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - @babel/parser@7.18.6
+ - @babel/parser@7.18.8
 
 This package contains the following license and notice below:
 
@@ -543,7 +543,7 @@ SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - @jridgewell/resolve-uri@3.0.8
+ - @jridgewell/resolve-uri@3.1.0
 
 This package contains the following license and notice below:
 
@@ -1157,9 +1157,9 @@ console.log(s.toString()) // let a = _ref(0); a.value++
 
 The following NPM packages may be included in this product:
 
- - @vueuse/core@8.7.5
- - @vueuse/metadata@8.7.5
- - @vueuse/shared@8.7.5
+ - @vueuse/core@8.9.1
+ - @vueuse/metadata@8.9.1
+ - @vueuse/shared@8.9.1
 
 These packages each contain the following license and notice below:
 
@@ -2686,7 +2686,7 @@ THE SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - electron-to-chromium@1.4.179
+ - electron-to-chromium@1.4.184
 
 This package contains the following license and notice below:
 
@@ -4041,7 +4041,7 @@ SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - node-releases@2.0.5
+ - node-releases@2.0.6
 
 This package contains the following license and notice below:
 
@@ -4349,7 +4349,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - preact@10.8.2
+ - preact@10.9.0
 
 This package contains the following license and notice below:
 
@@ -4716,7 +4716,7 @@ SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - rollup@2.75.7
+ - rollup@2.76.0
 
 This package contains the following license and notice below:
 
@@ -6097,7 +6097,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - vite@2.9.13
+ - vite@2.9.14
 
 This package contains the following license and notice below:
 

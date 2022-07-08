@@ -1,5 +1,6 @@
 import { PluginOption } from "vite";
 import {
+  Optional,
   ProjectStructure,
   ProjectStructureConfig,
 } from "../../common/src/project/structure.js";
@@ -11,7 +12,7 @@ import { build } from "./build/build.js";
  * @public
  */
 export type Options = {
-  projectStructureConfig?: ProjectStructureConfig;
+  projectStructureConfig?: Optional<ProjectStructureConfig>;
 };
 
 const plugin = (opts: Options = {}): PluginOption[] => {

@@ -9,5 +9,5 @@ The exported, optional headFunction
 <b>Signature:</b>
 
 ```typescript
-getHeadConfig?: GetHeadConfig<T>;
+getHeadConfig?: GetHeadConfig<U>;
 ```

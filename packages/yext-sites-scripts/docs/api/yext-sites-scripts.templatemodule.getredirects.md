@@ -9,5 +9,5 @@ The exported, optional, function which returns a list of redirects
 <b>Signature:</b>
 
 ```typescript
-getRedirects?: GetRedirects<T>;
+getRedirects?: GetRedirects<U>;
 ```

@@ -2,9 +2,11 @@ import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import {
   TemplateProps,
+  TemplateRenderProps,
   Manifest,
   TemplateModule,
 } from "../../../../../common/src/template/types.js";
+import { getRelativePrefixToRootFromPath } from "../../../../../common/src/template/paths.js";
 import { reactWrapper } from "./wrapper.js";
 import {
   convertTemplateModuleToTemplateModuleInternal,
@@ -19,12 +21,12 @@ const pathToModule = new Map();
 export const readTemplateModules = async (
   feature: string,
   manifest: Manifest
-): Promise<TemplateModuleInternal<any>> => {
+): Promise<TemplateModuleInternal<any, any>> => {
   const path = manifest.bundlePaths[feature].replace("assets", "..");
   if (!path) {
     throw new Error(`Could not find path for feature ${feature}`);
   }
-  let importedModule = pathToModule.get(path) as TemplateModule<any>;
+  let importedModule = pathToModule.get(path) as TemplateModule<any, any>;
   if (!importedModule) {
     importedModule = await import(path);
   }
@@ -51,22 +53,30 @@ export type GeneratedPage = {
  * Takes in both a template module and its stream document, processes them, and writes them to disk.
  *
  * @param templateModuleInternal
- * @param props
+ * @param templateProps
  */
 export const generateResponses = async (
-  templateModuleInternal: TemplateModuleInternal<any>,
-  props: TemplateProps
+  templateModuleInternal: TemplateModuleInternal<any, any>,
+  templateProps: TemplateProps
 ): Promise<GeneratedPage> => {
-  if (templateModuleInternal.getStaticProps) {
-    props = await templateModuleInternal.getStaticProps(props);
+  if (templateModuleInternal.transformProps) {
+    templateProps = await templateModuleInternal.transformProps(templateProps);
   }
 
-  const content = renderHtml(templateModuleInternal, props);
+  const path = templateModuleInternal.getPath(templateProps);
+
+  const templateRenderProps: TemplateRenderProps = {
+    ...templateProps,
+    path: path,
+    relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
+  };
+
+  const content = renderHtml(templateModuleInternal, templateRenderProps);
 
   return {
     content,
-    path: templateModuleInternal.getPath(props),
-    redirects: templateModuleInternal.getRedirects?.(props) ?? [],
+    path: path,
+    redirects: templateModuleInternal.getRedirects?.(templateRenderProps) ?? [],
   };
 };
 
@@ -78,8 +88,8 @@ export const generateResponses = async (
  * 3. If a module doesn't export either, throw an error.
  */
 const renderHtml = (
-  templateModuleInternal: TemplateModuleInternal<any>,
-  props: TemplateProps
+  templateModuleInternal: TemplateModuleInternal<any, any>,
+  props: TemplateRenderProps
 ) => {
   const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {

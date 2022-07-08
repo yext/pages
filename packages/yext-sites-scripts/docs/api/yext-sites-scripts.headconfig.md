@@ -9,15 +9,16 @@ The configuration that allows users to entirely arbitarily set the inner content
 <b>Signature:</b>
 
 ```typescript
-export interface HeadConfig
+export interface HeadConfig 
 ```
 
 ## Properties
 
-| Property                                                 | Type                                           | Description                                                                                                                                                         |
-| -------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [charset?](./yext-sites-scripts.headconfig.charset.md)   | string                                         | <i>(Optional)</i> Declares the documents encoding.                                                                                                                  |
-| [other?](./yext-sites-scripts.headconfig.other.md)       | string                                         | <i>(Optional)</i> For any content that can't be fully encapsulted by our Tag interface, (i.e. template or style) an arbitrary, user-defined string can be provided. |
-| [tags?](./yext-sites-scripts.headconfig.tags.md)         | [Tag](./yext-sites-scripts.tag.md)<!-- -->\[\] | <i>(Optional)</i> Well-defined interface for adding HTML tags (such as meta tags)                                                                                   |
-| [title?](./yext-sites-scripts.headconfig.title.md)       | string                                         | <i>(Optional)</i> Title of the page. Will default to 'Yext Pages Site' if omitted.                                                                                  |
-| [viewport?](./yext-sites-scripts.headconfig.viewport.md) | string                                         | <i>(Optional)</i> Declares the size and shape of the documents viewport.                                                                                            |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [charset?](./yext-sites-scripts.headconfig.charset.md) |  | string | <i>(Optional)</i> Declares the documents encoding. |
+|  [other?](./yext-sites-scripts.headconfig.other.md) |  | string | <i>(Optional)</i> For any content that can't be fully encapsulted by our Tag interface, (i.e. template or style) an arbitrary, user-defined string can be provided. |
+|  [tags?](./yext-sites-scripts.headconfig.tags.md) |  | [Tag](./yext-sites-scripts.tag.md)<!-- -->\[\] | <i>(Optional)</i> Well-defined interface for adding HTML tags (such as meta tags) |
+|  [title?](./yext-sites-scripts.headconfig.title.md) |  | string | <i>(Optional)</i> Title of the page. Will default to 'Yext Pages Site' if omitted. |
+|  [viewport?](./yext-sites-scripts.headconfig.viewport.md) |  | string | <i>(Optional)</i> Declares the size and shape of the documents viewport. |
+

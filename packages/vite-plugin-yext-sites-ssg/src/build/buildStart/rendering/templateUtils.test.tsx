@@ -3,7 +3,7 @@ import { TemplateModuleInternal } from "../../../../../common/src/template/inter
 import { TemplateProps } from "../../../../../common/src/template/types";
 import { generateResponses } from "./templateUtils";
 
-const baseTemplateModule: TemplateModuleInternal<any> = {
+const baseTemplateModule: TemplateModuleInternal<any, any> = {
   path: "path",
   filename: "filename",
   templateName: "template",
@@ -20,10 +20,10 @@ const baseProps: TemplateProps = {
 };
 
 describe("generateResponses", () => {
-  it("calls getStaticProps when getStaticProps is defined", async () => {
+  it("calls transformProps when transformProps is defined", async () => {
     const fn = jest.fn();
     await generateResponses(
-      { ...baseTemplateModule, getStaticProps: fn },
+      { ...baseTemplateModule, transformProps: fn },
       baseProps
     );
     expect(fn).toHaveBeenCalled();

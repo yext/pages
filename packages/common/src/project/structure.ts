@@ -6,17 +6,17 @@ import _ from "lodash";
  *
  * @public
  */
-export interface ProjectFilepathsConfig {
+export interface ProjectFilepaths {
   /** The folder path where the template files live */
-  templatesRoot?: string;
+  templatesRoot: string;
   /** The folder path where the sites-config files live */
-  sitesConfigRoot?: string;
+  sitesConfigRoot: string;
   /** The folder path where the compiled files should go */
-  distRoot?: string;
+  distRoot: string;
   /** The folder path where the compiled hydration bundles should go */
-  hydrationBundleOutputRoot?: string;
+  hydrationBundleOutputRoot: string;
   /** The folder path where the compiled server bundles should go */
-  serverBundleOutputRoot?: string;
+  serverBundleOutputRoot: string;
 }
 
 /**
@@ -24,21 +24,42 @@ export interface ProjectFilepathsConfig {
  *
  * @public
  */
-export interface ProjectFilenamesConfig {
+export interface ProjectFilenames {
   /** The name of the ci.json file */
-  ciConfig?: string;
+  ciConfig: string;
   /** The name of the features.json file */
-  featuresConfig?: string;
+  featuresConfig: string;
 }
 
 /**
- * The configuration of where files live and their names for this project.
+ * Defines how environment variables will be declared and processed.
+ *
+ * @public
+ */
+export interface EnvVar {
+  /**
+   * The directory, relative to the root of the user's site that
+   * will house all the .env files which define env vars.
+   */
+  envVarDir: string;
+  /**
+   * If this prefix is prepended to an env vars name, then it will
+   * be considered public. This means that at build time it will be
+   * inline replaced in the code with the value of the env var and
+   * accessible in the user's browser.
+   */
+  envVarPrefix: string;
+}
+
+/**
+ * The configuration structure of a project.
  *
  * @public
  */
 export interface ProjectStructureConfig {
-  filepathsConfig?: ProjectFilepathsConfig;
-  filenamesConfig?: ProjectFilenamesConfig;
+  filepathsConfig: ProjectFilepaths;
+  filenamesConfig: ProjectFilenames;
+  envVarConfig: EnvVar;
 }
 
 const defaultConfig: ProjectStructureConfig = {
@@ -53,6 +74,19 @@ const defaultConfig: ProjectStructureConfig = {
     ciConfig: "ci.json",
     featuresConfig: "features.json",
   },
+  envVarConfig: {
+    envVarDir: "",
+    envVarPrefix: "YEXT_PUBLIC",
+  },
+};
+
+/**
+ * Recursively makes all fields on a given type optional.
+ *
+ * @public
+ */
+export type Optional<T> = {
+  [P in keyof T]?: Optional<T[P]>;
 };
 
 /**
@@ -70,8 +104,10 @@ export class ProjectStructure {
   serverBundleOutputRoot: Path;
   ciConfig: string;
   featuresConfig: string;
+  envVarDir: string;
+  envVarPrefix: string;
 
-  constructor(config?: ProjectStructureConfig) {
+  constructor(config?: Optional<ProjectStructureConfig>) {
     this.#config = _.merge(defaultConfig, config);
     this.sitesConfigRoot = new Path(
       this.#config.filepathsConfig.sitesConfigRoot
@@ -90,6 +126,8 @@ export class ProjectStructure {
     );
     this.ciConfig = this.#config.filenamesConfig.ciConfig;
     this.featuresConfig = this.#config.filenamesConfig.featuresConfig;
+    this.envVarDir = this.#config.envVarConfig.envVarDir;
+    this.envVarPrefix = this.#config.envVarConfig.envVarPrefix;
   }
 }
 

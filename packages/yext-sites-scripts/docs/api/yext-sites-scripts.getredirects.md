@@ -9,9 +9,7 @@ The type definiton for the template's getRedirects function.
 <b>Signature:</b>
 
 ```typescript
-export declare type GetRedirects<T extends TemplateProps> = (
-  props: T
-) => string[];
+export declare type GetRedirects<T extends TemplateProps> = (props: T) => string[];
 ```
-
 <b>References:</b> [TemplateProps](./yext-sites-scripts.templateprops.md)
+
