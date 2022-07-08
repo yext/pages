@@ -36,11 +36,11 @@ export const generateTestDataForEntity = async (
   stdout: NodeJS.WriteStream,
   featuresConfig: FeaturesConfig,
   entityId: string,
-  projectStructure: ProjectStructure,
+  projectStructure: ProjectStructure
 ): Promise<any> => {
   const siteStreamPath = path.resolve(
     process.cwd(),
-    projectStructure.sitesConfigRoot + "/" + projectStructure.siteStreamConfig,
+    projectStructure.sitesConfigRoot + "/" + projectStructure.siteStreamConfig
   );
 
   const command = "yext";

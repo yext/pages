@@ -44,7 +44,10 @@ export const createServer = async (dynamicGenerateData: boolean) => {
 
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.
-  app.use(/^\/(.+)/, serverRenderRoute({ vite, dynamicGenerateData, projectStructure }));
+  app.use(
+    /^\/(.+)/,
+    serverRenderRoute({ vite, dynamicGenerateData, projectStructure })
+  );
 
   // Serve the index page at the root of the dev server.
   app.use(

@@ -61,7 +61,12 @@ jest.mock("child_process", () => ({
 const projectStructure = new ProjectStructure();
 
 const getGenerateTestDataForEntityRunner = () =>
-  generateTestDataForEntity(mockParentProcessStdout, FEATURE_CONFIG, "loc3", projectStructure);
+  generateTestDataForEntity(
+    mockParentProcessStdout,
+    FEATURE_CONFIG,
+    "loc3",
+    projectStructure
+  );
 
 describe("generateTestDataForEntity", () => {
   it("properly reads stream data from stdout and returns it as parsed JSON", async () => {

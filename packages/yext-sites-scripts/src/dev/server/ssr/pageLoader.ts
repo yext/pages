@@ -79,7 +79,7 @@ export const pageLoader = async ({
       process.stdout,
       featuresConfig,
       entityId,
-      projectStructure,
+      projectStructure
     );
   } else {
     // Get the document from localData
