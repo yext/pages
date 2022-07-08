@@ -6,17 +6,17 @@ import _ from "lodash";
  *
  * @public
  */
-export interface ProjectFilepathsConfig {
+export interface ProjectFilepaths {
   /** The folder path where the template files live */
-  templatesRoot?: string;
+  templatesRoot: string;
   /** The folder path where the sites-config files live */
-  sitesConfigRoot?: string;
+  sitesConfigRoot: string;
   /** The folder path where the compiled files should go */
-  distRoot?: string;
+  distRoot: string;
   /** The folder path where the compiled hydration bundles should go */
-  hydrationBundleOutputRoot?: string;
+  hydrationBundleOutputRoot: string;
   /** The folder path where the compiled server bundles should go */
-  serverBundleOutputRoot?: string;
+  serverBundleOutputRoot: string;
 }
 
 /**
@@ -24,11 +24,11 @@ export interface ProjectFilepathsConfig {
  *
  * @public
  */
-export interface ProjectFilenamesConfig {
+export interface ProjectFilenames {
   /** The name of the ci.json file */
-  ciConfig?: string;
+  ciConfig: string;
   /** The name of the features.json file */
-  featuresConfig?: string;
+  featuresConfig: string;
 }
 
 /**
@@ -36,30 +36,30 @@ export interface ProjectFilenamesConfig {
  *
  * @public
  */
-export interface EnvVarConfig {
+export interface EnvVar {
   /**
    * The directory, relative to the root of the user's site that
    * will house all the .env files which define env vars.
    */
-  envVarDir?: string;
+  envVarDir: string;
   /**
    * If this prefix is prepended to an env vars name, then it will
    * be considered public. This means that at build time it will be
    * inline replaced in the code with the value of the env var and
    * accessible in the user's browser.
    */
-  envVarPrefix?: string;
+  envVarPrefix: string;
 }
 
 /**
- * The configuration of where files live and their names for this project.
+ * The configuration structure of a project.
  *
  * @public
  */
 export interface ProjectStructureConfig {
-  filepathsConfig?: ProjectFilepathsConfig;
-  filenamesConfig?: ProjectFilenamesConfig;
-  envVarConfig?: EnvVarConfig;
+  filepathsConfig: ProjectFilepaths;
+  filenamesConfig: ProjectFilenames;
+  envVarConfig: EnvVar;
 }
 
 const defaultConfig: ProjectStructureConfig = {
@@ -80,6 +80,10 @@ const defaultConfig: ProjectStructureConfig = {
   },
 };
 
+type Optional<T> = {
+  [P in keyof T]?: Optional<T[P]>;
+};
+
 /**
  * Provides useful methods to operate on a configured project structure.
  *
@@ -98,7 +102,7 @@ export class ProjectStructure {
   envVarDir: string;
   envVarPrefix: string;
 
-  constructor(config?: ProjectStructureConfig) {
+  constructor(config?: Optional<ProjectStructureConfig>) {
     this.#config = _.merge(defaultConfig, config);
     this.sitesConfigRoot = new Path(
       this.#config.filepathsConfig.sitesConfigRoot
