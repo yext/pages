@@ -101,24 +101,24 @@ export class ProjectStructure {
   constructor(config?: ProjectStructureConfig) {
     this.#config = _.merge(defaultConfig, config);
     this.sitesConfigRoot = new Path(
-      this.#config.filepathsConfig.sitesConfigRoot
+      this.#config.filepathsConfig!.sitesConfigRoot!
     );
-    this.templatesRoot = new Path(this.#config.filepathsConfig.templatesRoot);
-    this.distRoot = new Path(this.#config.filepathsConfig.distRoot);
+    this.templatesRoot = new Path(this.#config.filepathsConfig!.templatesRoot!);
+    this.distRoot = new Path(this.#config.filepathsConfig!.distRoot!);
     this.hydrationBundleOutputRoot = new Path(
-      this.#config.filepathsConfig.distRoot +
+      this.#config.filepathsConfig!.distRoot! +
         "/" +
-        this.#config.filepathsConfig.hydrationBundleOutputRoot
+        this.#config.filepathsConfig!.hydrationBundleOutputRoot!
     );
     this.serverBundleOutputRoot = new Path(
-      this.#config.filepathsConfig.distRoot +
+      this.#config.filepathsConfig!.distRoot! +
         "/" +
-        this.#config.filepathsConfig.serverBundleOutputRoot
+        this.#config.filepathsConfig!.serverBundleOutputRoot!
     );
-    this.ciConfig = this.#config.filenamesConfig.ciConfig;
-    this.featuresConfig = this.#config.filenamesConfig.featuresConfig;
-    this.envVarDir = this.#config.envVarConfig.envVarDir;
-    this.envVarPrefix = this.#config.envVarConfig.envVarPrefix;
+    this.ciConfig = this.#config.filenamesConfig!.ciConfig!;
+    this.featuresConfig = this.#config.filenamesConfig!.featuresConfig!;
+    this.envVarDir = this.#config.envVarConfig!.envVarDir!;
+    this.envVarPrefix = this.#config.envVarConfig!.envVarPrefix!;
   }
 }
 
