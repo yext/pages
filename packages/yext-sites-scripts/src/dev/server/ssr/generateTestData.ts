@@ -6,8 +6,8 @@ import {
   UPGRADE_MESSAGE_LINE_BEGIN,
   UPGRADE_INSTRUCTIONS_LINE_BEGIN,
 } from "./constants";
-import path from "path";
-import fs from "fs";
+import * as path from "path";
+import * as fs from "fs";
 import { ProjectStructure } from "../../../../../common/src/project/structure";
 
 /**
@@ -57,7 +57,7 @@ export const generateTestDataForEntity = async (
   ];
 
   if (entityId) {
-    args.push("--entityId", entityId);
+    args.push("--entityIds", entityId);
   }
 
   if (fs.existsSync(siteStreamPath)) {
