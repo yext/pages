@@ -8,14 +8,16 @@ import { convertTemplateConfigInternalToFeaturesConfig } from "../../../../../co
 import { validateTemplateModuleInternal } from "../../../../../common/src/template/internal/validateTemplateModuleInternal.js";
 import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplateModuleInternal.js";
 import { renderHeadConfigToString } from "../../../../../common/src/template/head";
+import { ProjectStructure } from "../../../../../common/src/project/structure.js";
 
 type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
+  projectStructure: ProjectStructure;
 };
 
 export const serverRenderRoute =
-  ({ vite, dynamicGenerateData }: Props): RequestHandler =>
+  ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
   async (req, res, next) => {
     try {
       const url = req.baseUrl;
@@ -50,7 +52,7 @@ export const serverRenderRoute =
           entityId,
           featuresConfig,
           dynamicGenerateData,
-          feature,
+          projectStructure,
         }
       );
 

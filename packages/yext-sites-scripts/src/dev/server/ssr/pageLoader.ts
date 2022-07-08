@@ -12,6 +12,7 @@ import {
 } from "../../../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../../../common/src/template/paths.js";
 import React from "react";
+import { ProjectStructure } from "../../../../../common/src/project/structure.js";
 
 type PageLoaderValues = {
   url: string;
@@ -20,7 +21,7 @@ type PageLoaderValues = {
   entityId: string;
   featuresConfig: FeaturesConfig;
   dynamicGenerateData: boolean;
-  feature: string;
+  projectStructure: ProjectStructure;
 };
 
 export type PageLoaderResult = {
@@ -42,7 +43,7 @@ export const pageLoader = async ({
   entityId,
   featuresConfig,
   dynamicGenerateData,
-  feature,
+  projectStructure,
 }: PageLoaderValues): Promise<PageLoaderResult> => {
   // 1. Read templateBase.html
   let template = templateBase;
@@ -77,7 +78,8 @@ export const pageLoader = async ({
     document = await generateTestDataForEntity(
       process.stdout,
       featuresConfig,
-      entityId
+      entityId,
+      projectStructure,
     );
   } else {
     // Get the document from localData

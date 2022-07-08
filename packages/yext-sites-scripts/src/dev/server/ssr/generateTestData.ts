@@ -8,6 +8,7 @@ import {
 } from "./constants";
 import path from "path";
 import fs from "fs";
+import { ProjectStructure } from "../../../../../common/src/project/structure";
 
 // generateTestData will run yext sites generate-test-data and return true in
 // the event of a succesful run and false in the event of a failure.
@@ -32,12 +33,12 @@ export const generateTestData = async (): Promise<boolean> => {
 export const generateTestDataForEntity = async (
   stdout: NodeJS.WriteStream,
   featuresConfig: FeaturesConfig,
-  entityId: string
+  entityId: string,
+  projectStructure: ProjectStructure,
 ): Promise<any> => {
-  // TODO: Use the project structure config once it's passed to the dev server
   const siteStreamPath = path.resolve(
     process.cwd(),
-    "sites-config/site-stream.json"
+    projectStructure.sitesConfigRoot + "/" + projectStructure.siteStreamConfig,
   );
 
   const command = "yext";
