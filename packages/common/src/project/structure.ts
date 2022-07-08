@@ -80,7 +80,12 @@ const defaultConfig: ProjectStructureConfig = {
   },
 };
 
-type Optional<T> = {
+/**
+ * Recursively makes all fields on a given type optional.
+ *
+ * @public
+ */
+export type Optional<T> = {
   [P in keyof T]?: Optional<T[P]>;
 };
 
