@@ -37,12 +37,12 @@ export interface ProjectFilenamesConfig {
  * @public
  */
 export interface EnvVarConfig {
-  /** 
+  /**
    * The directory, relative to the root of the user's site that
    * will house all the .env files which define env vars.
    */
   envVarDir?: string;
-  /** 
+  /**
    * If this prefix is prepended to an env vars name, then it will
    * be considered public. This means that at build time it will be
    * inline replaced in the code with the value of the env var and
@@ -59,7 +59,7 @@ export interface EnvVarConfig {
 export interface ProjectStructureConfig {
   filepathsConfig?: ProjectFilepathsConfig;
   filenamesConfig?: ProjectFilenamesConfig;
-  envVarConfig?: EnvVarConfig; 
+  envVarConfig?: EnvVarConfig;
 }
 
 const defaultConfig: ProjectStructureConfig = {
@@ -77,7 +77,7 @@ const defaultConfig: ProjectStructureConfig = {
   envVarConfig: {
     envVarDir: "env",
     envVarPrefix: "YEXT_PUBLIC",
-  }
+  },
 };
 
 /**
