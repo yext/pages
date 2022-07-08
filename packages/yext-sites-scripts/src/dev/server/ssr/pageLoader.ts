@@ -84,7 +84,7 @@ export const pageLoader = async ({
     document = await getLocalDataForEntity(entityId);
   }
 
-  if (!document) {
+  if (entityId && !document) {
     throw new Error(`Could not find document data for entityId: ${entityId}`);
   }
 

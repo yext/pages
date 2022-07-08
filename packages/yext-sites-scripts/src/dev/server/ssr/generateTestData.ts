@@ -6,6 +6,8 @@ import {
   UPGRADE_MESSAGE_LINE_BEGIN,
   UPGRADE_INSTRUCTIONS_LINE_BEGIN,
 } from "./constants";
+import path from "path";
+import fs from "fs";
 
 // generateTestData will run yext sites generate-test-data and return true in
 // the event of a succesful run and false in the event of a failure.
@@ -32,20 +34,36 @@ export const generateTestDataForEntity = async (
   featuresConfig: FeaturesConfig,
   entityId: string
 ): Promise<any> => {
+  // TODO: Use the project structure config once it's passed to the dev server
+  const siteStreamPath = path.resolve(
+    process.cwd(),
+    "sites-config/site-stream.json"
+  );
+
   const command = "yext";
-  const args = [
+  let args = [
     "sites",
     "generate-test-data",
     "--featureName",
     `'${featuresConfig.features[0]?.name}'`,
-    "--entityId",
-    entityId,
     "--featuresConfig",
     `'${JSON.stringify(featuresConfig)}'`,
     "--locale",
     "en",
     "--printDocuments",
   ];
+
+  if (entityId) {
+    args.push("--entityId", entityId);
+  }
+
+  if (fs.existsSync(siteStreamPath)) {
+    const siteStream = `'${JSON.stringify(
+      JSON.parse(fs.readFileSync(siteStreamPath).toString())
+    )}'`;
+    args.push("--siteStreamConfig", siteStream);
+  }
+
   return new Promise((resolve) => {
     const childProcess = spawn(command, args, {
       stdio: ["inherit", "pipe", "inherit"],
