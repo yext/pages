@@ -29,10 +29,18 @@ const pluginFiles = glob.sync("./plugin/**.ts");
 mkdirSync(cjsPluginPath, { recursive: true });
 mkdirSync(esmPluginPath, { recursive: true });
 pluginFiles.map((filepath) =>
-  copyFile(filepath, `${cjsPluginPath}${path.basename(filepath)}`, () => {})
+  copyFile(
+    filepath,
+    `${cjsPluginPath}${path.basename(filepath)}`,
+    () => undefined
+  )
 );
 pluginFiles.map((filepath) =>
-  copyFile(filepath, `${esmPluginPath}${path.basename(filepath)}`, () => {})
+  copyFile(
+    filepath,
+    `${esmPluginPath}${path.basename(filepath)}`,
+    () => undefined
+  )
 );
 
 // Transpile all files except this one

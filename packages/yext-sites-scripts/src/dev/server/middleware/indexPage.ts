@@ -10,8 +10,8 @@ import {
 } from "./constants.js";
 
 type Props = {
-  dynamicGenerateData: Boolean;
-  displayGenerateTestDataWarning: Boolean;
+  dynamicGenerateData: boolean;
+  displayGenerateTestDataWarning: boolean;
 };
 
 export const indexPage =

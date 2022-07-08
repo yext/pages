@@ -3,6 +3,7 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "declaration": true,
     "outDir": "./dist/types/",
     "resolveJsonModule": true

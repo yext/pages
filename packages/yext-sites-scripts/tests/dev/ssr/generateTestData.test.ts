@@ -1,5 +1,5 @@
 import { WriteStream } from "tty";
-import { generateTestDataForEntity } from "../../../src/dev/server/ssr/generateTestData";
+import { generateTestDataForPage } from "../../../src/dev/server/ssr/generateTestData";
 import { EventEmitter } from "stream";
 import {
   CLI_BOILERPLATE_WITH_UPGRADE_LINES,
@@ -10,6 +10,7 @@ import {
 import { CLI_STREAM_DATA } from "../../fixtures/cli_stream_data";
 import { FEATURE_CONFIG } from "../../fixtures/feature_config";
 import { Socket } from "net";
+import { ProjectStructure } from "../../../../common/src/project/structure";
 
 const mockParentProcessStdout = jest.mocked(new WriteStream(0));
 mockParentProcessStdout.write = jest.fn();
@@ -57,12 +58,19 @@ jest.mock("child_process", () => ({
   }),
 }));
 
-const getGenerateTestDataForEntityRunner = () =>
-  generateTestDataForEntity(mockParentProcessStdout, FEATURE_CONFIG, "loc3");
+const projectStructure = new ProjectStructure();
 
-describe("generateTestDataForEntity", () => {
+const getGenerateTestDataForPageRunner = () =>
+  generateTestDataForPage(
+    mockParentProcessStdout,
+    FEATURE_CONFIG,
+    "loc3",
+    projectStructure
+  );
+
+describe("generateTestDataForPage", () => {
   it("properly reads stream data from stdout and returns it as parsed JSON", async () => {
-    const testRunnerPromise = getGenerateTestDataForEntityRunner();
+    const testRunnerPromise = getGenerateTestDataForPageRunner();
 
     mockChildProcess.stdout.emit(
       "data",
@@ -79,7 +87,7 @@ describe("generateTestDataForEntity", () => {
   });
 
   it("properly reads multi-chunk stream data from stdout and returns it as parsed JSON", async () => {
-    const testRunnerPromise = getGenerateTestDataForEntityRunner();
+    const testRunnerPromise = getGenerateTestDataForPageRunner();
 
     const streamDataAsString = `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`;
     mockChildProcess.stdout.emit(
@@ -101,7 +109,7 @@ describe("generateTestDataForEntity", () => {
   });
 
   it("properly redirects other output to the parent process' stdout", async () => {
-    const testRunnerPromise = getGenerateTestDataForEntityRunner();
+    const testRunnerPromise = getGenerateTestDataForPageRunner();
 
     const unrecognizedData = "I am unrecognized data";
 
@@ -131,7 +139,7 @@ describe("generateTestDataForEntity", () => {
   });
 
   it("properly filters CLI Boilerplate and writes back the correct lines", async () => {
-    const testRunnerPromise = getGenerateTestDataForEntityRunner();
+    const testRunnerPromise = getGenerateTestDataForPageRunner();
 
     const unrecognizedData = "I am unrecognized data";
 
@@ -160,7 +168,7 @@ describe("generateTestDataForEntity", () => {
   });
 
   it("properly handles test data with arbitrary input when called in multiple chunks", async () => {
-    const testRunnerPromise = getGenerateTestDataForEntityRunner();
+    const testRunnerPromise = getGenerateTestDataForPageRunner();
 
     REAL_FULL_OUTPUT.split("\n").forEach((chunk) => {
       mockChildProcess.stdout.emit("data", chunk);
