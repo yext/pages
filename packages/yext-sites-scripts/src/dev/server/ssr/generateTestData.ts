@@ -38,7 +38,7 @@ export const generateTestDataForEntity = async (
     "generate-test-data",
     "--featureName",
     `'${featuresConfig.features[0]?.name}'`,
-    "--entityIds",
+    "--entityId",
     entityId,
     "--featuresConfig",
     `'${JSON.stringify(featuresConfig)}'`,
