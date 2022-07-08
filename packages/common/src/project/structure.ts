@@ -75,7 +75,7 @@ const defaultConfig: ProjectStructureConfig = {
     featuresConfig: "features.json",
   },
   envVarConfig: {
-    envVarDir: "env",
+    envVarDir: "",
     envVarPrefix: "YEXT_PUBLIC",
   },
 };
