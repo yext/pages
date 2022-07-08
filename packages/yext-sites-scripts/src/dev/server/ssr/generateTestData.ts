@@ -10,8 +10,10 @@ import path from "path";
 import fs from "fs";
 import { ProjectStructure } from "../../../../../common/src/project/structure";
 
-// generateTestData will run yext sites generate-test-data and return true in
-// the event of a succesful run and false in the event of a failure.
+/**
+ * generateTestData will run yext sites generate-test-data and return true in
+ * the event of a successful run and false in the event of a failure.
+ */
 export const generateTestData = async (): Promise<boolean> => {
   const command = "yext";
   const args = ["sites", "generate-test-data"];
