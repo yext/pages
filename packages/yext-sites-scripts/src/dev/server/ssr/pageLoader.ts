@@ -1,7 +1,7 @@
 import { getLocalDataForEntity } from "./getLocalData.js";
 import { TEMPLATE_PATH } from "./constants.js";
 import { ViteDevServer } from "vite";
-import { generateTestDataForEntity } from "./generateTestData.js";
+import { generateTestDataForPage } from "./generateTestData.js";
 import templateBase from "../public/templateBase";
 import { FeaturesConfig } from "../../../../../common/src/feature/features.js";
 import {
@@ -75,7 +75,7 @@ export const pageLoader = async ({
 
   let document;
   if (dynamicGenerateData) {
-    document = await generateTestDataForEntity(
+    document = await generateTestDataForPage(
       process.stdout,
       featuresConfig,
       entityId,

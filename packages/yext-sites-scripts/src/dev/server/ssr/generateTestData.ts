@@ -6,8 +6,8 @@ import {
   UPGRADE_MESSAGE_LINE_BEGIN,
   UPGRADE_INSTRUCTIONS_LINE_BEGIN,
 } from "./constants";
-import * as path from "path";
-import * as fs from "fs";
+import path from "path";
+import fs from "fs";
 import { ProjectStructure } from "../../../../../common/src/project/structure";
 
 /**
@@ -32,7 +32,7 @@ export const generateTestData = async (): Promise<boolean> => {
   });
 };
 
-export const generateTestDataForEntity = async (
+export const generateTestDataForPage = async (
   stdout: NodeJS.WriteStream,
   featuresConfig: FeaturesConfig,
   entityId: string,
