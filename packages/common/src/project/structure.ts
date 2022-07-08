@@ -32,6 +32,26 @@ export interface ProjectFilenamesConfig {
 }
 
 /**
+ * Defines how environment variables will be declared and processed.
+ *
+ * @public
+ */
+export interface EnvVarConfig {
+  /**
+   * The directory, relative to the root of the user's site that
+   * will house all the .env files which define env vars.
+   */
+  envVarDir?: string;
+  /**
+   * If this prefix is prepended to an env vars name, then it will
+   * be considered public. This means that at build time it will be
+   * inline replaced in the code with the value of the env var and
+   * accessible in the user's browser.
+   */
+  envVarPrefix?: string;
+}
+
+/**
  * The configuration of where files live and their names for this project.
  *
  * @public
@@ -39,6 +59,7 @@ export interface ProjectFilenamesConfig {
 export interface ProjectStructureConfig {
   filepathsConfig?: ProjectFilepathsConfig;
   filenamesConfig?: ProjectFilenamesConfig;
+  envVarConfig?: EnvVarConfig;
 }
 
 const defaultConfig: ProjectStructureConfig = {
@@ -52,6 +73,10 @@ const defaultConfig: ProjectStructureConfig = {
   filenamesConfig: {
     ciConfig: "ci.json",
     featuresConfig: "features.json",
+  },
+  envVarConfig: {
+    envVarDir: "",
+    envVarPrefix: "YEXT_PUBLIC",
   },
 };
 
@@ -70,6 +95,8 @@ export class ProjectStructure {
   serverBundleOutputRoot: Path;
   ciConfig: string;
   featuresConfig: string;
+  envVarDir: string;
+  envVarPrefix: string;
 
   constructor(config?: ProjectStructureConfig) {
     this.#config = _.merge(defaultConfig, config);
@@ -90,6 +117,8 @@ export class ProjectStructure {
     );
     this.ciConfig = this.#config.filenamesConfig.ciConfig;
     this.featuresConfig = this.#config.filenamesConfig.featuresConfig;
+    this.envVarDir = this.#config.envVarConfig.envVarDir;
+    this.envVarPrefix = this.#config.envVarConfig.envVarPrefix;
   }
 }
 
