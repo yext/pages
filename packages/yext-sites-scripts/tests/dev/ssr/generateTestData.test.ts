@@ -10,6 +10,7 @@ import {
 import { CLI_STREAM_DATA } from "../../fixtures/cli_stream_data";
 import { FEATURE_CONFIG } from "../../fixtures/feature_config";
 import { Socket } from "net";
+import { ProjectStructure } from "../../../../common/src/project/structure";
 
 const mockParentProcessStdout = jest.mocked(new WriteStream(0));
 mockParentProcessStdout.write = jest.fn();
@@ -57,8 +58,10 @@ jest.mock("child_process", () => ({
   }),
 }));
 
+const projectStructure = new ProjectStructure();
+
 const getGenerateTestDataForEntityRunner = () =>
-  generateTestDataForEntity(mockParentProcessStdout, FEATURE_CONFIG, "loc3");
+  generateTestDataForEntity(mockParentProcessStdout, FEATURE_CONFIG, "loc3", projectStructure);
 
 describe("generateTestDataForEntity", () => {
   it("properly reads stream data from stdout and returns it as parsed JSON", async () => {
