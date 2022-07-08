@@ -4,7 +4,6 @@ import { serverRenderRoute } from "./middleware/serverRenderRoute.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import { viteDevServerPort } from "./middleware/constants.js";
-import react from "@vitejs/plugin-react";
 import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../../../common/src/project/structure.js";
