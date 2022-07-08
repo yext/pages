@@ -4,7 +4,7 @@
 
 ## HeadConfig.charset property
 
-Declares the documents encoding.
+Declares the documents encoding. Will default to 'UTF-8' if omitted.
 
 <b>Signature:</b>
 

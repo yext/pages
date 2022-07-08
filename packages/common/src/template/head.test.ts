@@ -4,7 +4,9 @@ describe("renderHeadConfigToString", () => {
   it("properly renders a default title and excludes missing optionals", async () => {
     const headConfig: HeadConfig = {};
 
-    const expectedHeadConfig = `<title>Yext Pages Site</title>`;
+    const expectedHeadConfig = `<title>Yext Pages Site</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">`;
 
     expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
       expectedHeadConfig.replaceAll(" ", "")
@@ -16,7 +18,9 @@ describe("renderHeadConfigToString", () => {
       title: "foo",
     };
 
-    const expectedHeadConfig = `<title>foo</title>`;
+    const expectedHeadConfig = `<title>foo</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">`;
 
     expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
       expectedHeadConfig.replaceAll(" ", "")
@@ -26,11 +30,12 @@ describe("renderHeadConfigToString", () => {
   it("properly renders the title and optionals", async () => {
     const headConfig: HeadConfig = {
       title: "foo",
-      charset: "UTF-8",
+      charset: "foo",
     };
 
     const expectedHeadConfig = `<title>foo</title>
-        <meta charset="UTF-8">`;
+      <meta charset="foo">
+      <meta name="viewport" content="width=device-width,initial-scale=1">`;
 
     expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
       expectedHeadConfig.replaceAll(" ", "")
@@ -87,6 +92,8 @@ describe("renderHeadConfigToString", () => {
     };
 
     const expectedHeadConfig = `<title>foo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
         <script>window.alert("hello world!");</script>
         <template>
             <div>I am a template</div>

@@ -25,6 +25,7 @@ export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
 // @public
 export interface HeadConfig {
   charset?: string;
+  lang?: string;
   other?: string;
   tags?: Tag[];
   title?: string;
