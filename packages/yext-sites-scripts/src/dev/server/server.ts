@@ -7,20 +7,21 @@ import { viteDevServerPort } from "./middleware/constants.js";
 import react from "@vitejs/plugin-react";
 import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
-import {
-  ENV_VAR_DIR,
-  ENV_VAR_PUBLIC_PREFIX,
-} from "../../../../common/src/project/envVars.js";
+import { ProjectStructure } from "../../../../common/src/project/structure.js";
 
 export const createServer = async (dynamicGenerateData: boolean) => {
   // creates a standard express app
   const app = express();
 
+  // initialize the default project structure and use to help configure the
+  // dev server
+  const projectStructure = new ProjectStructure();
+
   // create vite using ssr mode
   const vite = await createViteServer({
     server: { middlewareMode: "ssr" },
-    envDir: ENV_VAR_DIR,
-    envPrefix: ENV_VAR_PUBLIC_PREFIX,
+    envDir: projectStructure.envVarDir,
+    envPrefix: projectStructure.envVarPrefix,
     optimizeDeps: {
       // Temporary solution https://github.com/vitejs/vite/issues/6215
       include: ["react/jsx-runtime"],
