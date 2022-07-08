@@ -1,5 +1,5 @@
-import * as pathLib from "path";
-import * as _ from "lodash";
+import pathLib from "path";
+import _ from "lodash";
 
 /**
  * Defines the folder paths where certain files live, relative to the root of the project.

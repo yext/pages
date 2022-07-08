@@ -101,6 +101,14 @@
     "collectCoverageFrom": [
       "<rootDir>/yext-sites-scripts/src/**/*.ts"
     ],
+    "globals": {
+      "ts-jest": {
+        "tsconfig": {
+          "allowSyntheticDefaultImports": true,
+          "esModuleInterop": true
+        }
+      }
+    },
     "verbose": true,
     "testMatch": [
       "<rootDir>/yext-sites-scripts/tests/**/*.test.ts",
