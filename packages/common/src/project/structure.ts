@@ -1,4 +1,4 @@
-import * as path from "path";
+import * as pathLib from "path";
 import * as _ from "lodash";
 
 /**
@@ -144,10 +144,10 @@ export class Path {
   }
 
   getRelativePath = (to: string): string => {
-    return `./${path.relative(this.path, to)}`;
+    return `./${pathLib.relative(this.path, to)}`;
   };
 
   getAbsolutePath = (): string => {
-    return path.resolve(this.path);
+    return pathLib.resolve(this.path);
   };
 }
