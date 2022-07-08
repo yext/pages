@@ -13,9 +13,16 @@ export const reactWrapper = <T extends TemplateRenderProps>(
   getHeadConfig?: GetHeadConfig<any>
 ): string => {
   const projectFilepaths = props.__meta.manifest.projectFilepaths;
+  const headConfig = getHeadConfig ? getHeadConfig(props) : "";
+  let lang = "en";
+  if (!!headConfig && !!headConfig.lang) {
+    lang = headConfig.lang;
+  } else if (!!props.document.locale) {
+    lang = props.document.locale;
+  }
 
   return `<!DOCTYPE html>
-    <html lang="en">
+    <html lang=${lang}>
     <head>
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(props)}</script>
         ${getCssTags(
@@ -26,7 +33,7 @@ export const reactWrapper = <T extends TemplateRenderProps>(
           .map((f) => `<link rel="stylesheet" href="/${f}"/>`)
           .filter((v, i, a) => a.indexOf(v) == i)
           .join("\n")}
-        ${getHeadConfig ? renderHeadConfigToString(getHeadConfig(props)) : ""}
+        ${headConfig ? renderHeadConfigToString(headConfig) : ""}
     </head>
     <body>
         <div id="reactele">${template}</div>${
