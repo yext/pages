@@ -50,6 +50,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
     const templateModuleInteral: TemplateModuleInternal<any, any> = {
       default: null,
       getPath: null,
+      getRedirects: null,
       templateName: "foo",
       filename: "foo.tsx",
       path: "/src/templates/foo.tsx",
@@ -71,6 +72,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
     const templateModuleInteral: TemplateModuleInternal<any, any> = {
       default: null,
       getPath: () => "",
+      getRedirects: () => [],
       templateName: "foo",
       filename: "foo.tsx",
       path: "/src/templates/foo.tsx",
@@ -96,6 +98,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
       templateName: "foo",
       filename: "foo.tsx",
       path: "/src/templates/foo.tsx",
+      getRedirects: () => [],
       config: {
         name: "foo",
         streamId: "$id",

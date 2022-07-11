@@ -4,9 +4,11 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "declaration": true,
     "outDir": "./dist/types/",
-    "resolveJsonModule": true
+    "jsx": "react",
+    "declaration": true,
+    "resolveJsonModule": true,
+    "types": ["jest"]
   },
   "include": ["src"],
   "exclude": ["plugin"]

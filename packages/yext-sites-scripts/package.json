@@ -111,8 +111,8 @@
     },
     "verbose": true,
     "testMatch": [
-      "<rootDir>/yext-sites-scripts/tests/**/*.test.ts",
-      "<rootDir>/common/**/tests/**/*.test.ts"
+      "<rootDir>/yext-sites-scripts/src/**/*.test.ts",
+      "<rootDir>/common/**/src/**/*.test.ts"
     ],
     "transform": {
       "\\.[jt]sx?$": "ts-jest"

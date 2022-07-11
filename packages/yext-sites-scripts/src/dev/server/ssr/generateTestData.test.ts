@@ -1,16 +1,16 @@
 import { WriteStream } from "tty";
-import { generateTestDataForPage } from "../../../src/dev/server/ssr/generateTestData";
+import { generateTestDataForPage } from "./generateTestData";
 import { EventEmitter } from "stream";
 import {
   CLI_BOILERPLATE_WITH_UPGRADE_LINES,
   CLI_BOILERPLATE_WITHOUT_UPGRADE_LINES,
   UPGRADE_LINES_OF_CLI_BOILERPLATE,
   REAL_FULL_OUTPUT,
-} from "../../fixtures/cli_boilerplate";
-import { CLI_STREAM_DATA } from "../../fixtures/cli_stream_data";
-import { FEATURE_CONFIG } from "../../fixtures/feature_config";
+} from "../../../../tests/fixtures/cli_boilerplate";
+import { CLI_STREAM_DATA } from "../../../../tests/fixtures/cli_stream_data";
+import { FEATURE_CONFIG } from "../../../../tests/fixtures/feature_config";
 import { Socket } from "net";
-import { ProjectStructure } from "../../../../common/src/project/structure";
+import { ProjectStructure } from "../../../../../common/src/project/structure";
 
 const mockParentProcessStdout = jest.mocked(new WriteStream(0));
 mockParentProcessStdout.write = jest.fn();

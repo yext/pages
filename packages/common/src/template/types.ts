@@ -18,6 +18,8 @@ export interface TemplateModule<
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
   getHeadConfig?: GetHeadConfig<U>;
+  /** The exported, optional, function which returns a list of redirects */
+  getRedirects?: GetRedirects<U>;
   /** The exported render function */
   render?: Render<U>;
   /** The exported default function */
@@ -25,10 +27,19 @@ export interface TemplateModule<
 }
 
 /**
+ * The type definiton for the template's getRedirects function.
+ *
+ * @returns A list of redirect paths. All paths returned by this function will redirect to the path
+ * defined by the template's getPath function.
+ *
+ * @public
+ */
+export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
+
+/**
  * The type definition for the template's transformProps function. Can be used
  * to alter and/or augement the props (which include the data document) passed
  * into the template at render time.
- *
  * @public
  */
 export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
