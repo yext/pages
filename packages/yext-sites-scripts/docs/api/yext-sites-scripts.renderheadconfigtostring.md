@@ -9,5 +9,5 @@ Function that takes a [HeadConfig](./yext-sites-scripts.headconfig.md) interface
 <b>Signature:</b>
 
 ```typescript
-renderHeadConfigToString: (headConfig: HeadConfig) => string
+renderHeadConfigToString: (headConfig: HeadConfig) => string;
 ```

@@ -10,15 +10,15 @@ A manifest of bundled files present during a production build.
 
 ```typescript
 export declare type Manifest = {
-    bundlePaths: {
-        [key: string]: string;
-    };
-    projectFilepaths: {
-        templatesRoot: string;
-        distRoot: string;
-        hydrationBundleOutputRoot: string;
-        serverBundleOutputRoot: string;
-    };
-    bundlerManifest?: any;
+  bundlePaths: {
+    [key: string]: string;
+  };
+  projectFilepaths: {
+    templatesRoot: string;
+    distRoot: string;
+    hydrationBundleOutputRoot: string;
+    serverBundleOutputRoot: string;
+  };
+  bundlerManifest?: any;
 };
 ```

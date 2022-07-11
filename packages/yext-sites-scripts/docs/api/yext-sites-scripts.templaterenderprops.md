@@ -9,14 +9,14 @@ The shape of the data passed directly to the template's render function. Extends
 <b>Signature:</b>
 
 ```typescript
-export interface TemplateRenderProps extends TemplateProps 
+export interface TemplateRenderProps extends TemplateProps
 ```
+
 <b>Extends:</b> [TemplateProps](./yext-sites-scripts.templateprops.md)
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [path](./yext-sites-scripts.templaterenderprops.path.md) |  | string | The path that the generated file will live at on the site, as defined by the [GetPath](./yext-sites-scripts.getpath.md) function. |
-|  [relativePrefixToRoot](./yext-sites-scripts.templaterenderprops.relativeprefixtoroot.md) |  | string | The relative path from the generated page to the root of the site. i.e. The path example/path/foo would have the relativePrefixToRoot of '../../'. |
-
+| Property                                                                                 | Modifiers | Type   | Description                                                                                                                                        |
+| ---------------------------------------------------------------------------------------- | --------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [path](./yext-sites-scripts.templaterenderprops.path.md)                                 |           | string | The path that the generated file will live at on the site, as defined by the [GetPath](./yext-sites-scripts.getpath.md) function.                  |
+| [relativePrefixToRoot](./yext-sites-scripts.templaterenderprops.relativeprefixtoroot.md) |           | string | The relative path from the generated page to the root of the site. i.e. The path example/path/foo would have the relativePrefixToRoot of '../../'. |
