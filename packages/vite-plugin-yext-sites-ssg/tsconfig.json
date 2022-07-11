@@ -3,9 +3,8 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "isolatedModules": true,
-    "jsx": "react",
-    "target": "ESNext",
+    "esModuleInterop": true,
+    "declaration": true,
     "outDir": "./dist/types/",
     "declaration": true,
     "resolveJsonModule": true,

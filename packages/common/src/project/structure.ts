@@ -1,4 +1,4 @@
-import path from "path";
+import pathLib from "path";
 import _ from "lodash";
 
 /**
@@ -29,6 +29,8 @@ export interface ProjectFilenames {
   ciConfig: string;
   /** The name of the features.json file */
   featuresConfig: string;
+  /** The name of the sites-stream.json file */
+  siteStreamConfig: string;
 }
 
 /**
@@ -73,6 +75,7 @@ const defaultConfig: ProjectStructureConfig = {
   filenamesConfig: {
     ciConfig: "ci.json",
     featuresConfig: "features.json",
+    siteStreamConfig: "site-stream.json",
   },
   envVarConfig: {
     envVarDir: "",
@@ -106,6 +109,7 @@ export class ProjectStructure {
   featuresConfig: string;
   envVarDir: string;
   envVarPrefix: string;
+  siteStreamConfig: string;
 
   constructor(config?: Optional<ProjectStructureConfig>) {
     this.#config = _.merge(defaultConfig, config);
@@ -128,6 +132,7 @@ export class ProjectStructure {
     this.featuresConfig = this.#config.filenamesConfig.featuresConfig;
     this.envVarDir = this.#config.envVarConfig.envVarDir;
     this.envVarPrefix = this.#config.envVarConfig.envVarPrefix;
+    this.siteStreamConfig = this.#config.filenamesConfig.siteStreamConfig;
   }
 }
 
@@ -144,10 +149,10 @@ export class Path {
   }
 
   getRelativePath = (to: string): string => {
-    return `./${path.relative(this.path, to)}`;
+    return `./${pathLib.relative(this.path, to)}`;
   };
 
   getAbsolutePath = (): string => {
-    return path.resolve(this.path);
+    return pathLib.resolve(this.path);
   };
 }

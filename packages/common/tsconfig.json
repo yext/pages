@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
     "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Node",
     "outDir": "./dist/types/",
     "target": "ESNext",
-    "types": ["jest"]
+    "types": ["jest", "node"]
   },
   "include": ["src"]
 }

@@ -18,7 +18,7 @@ class LocalDataManifest {
 // create a LocalDataManifest from it. This will allow us to generate hyperlinks
 // to each page on the dev server's index page.
 export const getLocalDataManifest = async (): Promise<LocalDataManifest> => {
-  let localDataManifest = new LocalDataManifest();
+  const localDataManifest = new LocalDataManifest();
 
   let dir;
   try {

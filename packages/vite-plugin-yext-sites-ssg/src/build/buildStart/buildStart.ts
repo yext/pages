@@ -26,7 +26,7 @@ export default (projectStructure: ProjectStructure) => {
 
     copyPluginFiles(this.emitFile);
 
-    let finisher = logger.timedLog({
+    const finisher = logger.timedLog({
       startLog: "Generating entry-points for hydration",
     });
     await generateHydrationEntryPoints(
@@ -56,7 +56,7 @@ const clean = (yextDir: string) => {
 };
 
 const copyPluginFiles = (fileEmitter: EmitFile) => {
-  let finisher = logger.timedLog({
+  const finisher = logger.timedLog({
     startLog: "Copying Yext plugin files",
   });
 
@@ -84,7 +84,7 @@ const copyPluginFiles = (fileEmitter: EmitFile) => {
 
 // Injects the renderer module which is needed for all sites built with yss as an entrypoint chunk.
 const injectRenderer = async (fileEmitter: EmitFile) => {
-  let finisher = logger.timedLog({
+  const finisher = logger.timedLog({
     startLog: "Injecting template renderer.",
   });
 

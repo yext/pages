@@ -2,6 +2,7 @@
   "extends": "../common/tsconfig",
   "compilerOptions": {
     "allowJs": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
     "jsx": "react",
