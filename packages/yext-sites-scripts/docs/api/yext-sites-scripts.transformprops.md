@@ -9,9 +9,7 @@ The type definition for the template's transformProps function. Can be used to a
 <b>Signature:</b>
 
 ```typescript
-export declare type TransformProps<T extends TemplateProps> = (
-  props: T
-) => Promise<T>;
+export declare type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 ```
-
 <b>References:</b> [TemplateProps](./yext-sites-scripts.templateprops.md)
+

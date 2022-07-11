@@ -4,8 +4,8 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "declaration": true,
     "outDir": "./dist/types/",
+    "jsx": "react",
     "declaration": true,
     "resolveJsonModule": true,
     "types": ["jest"]
