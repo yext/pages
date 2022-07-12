@@ -63,6 +63,16 @@ export const serverRenderRoute =
         React.createElement(Component, props)
       );
 
+      const headConfig = templateModuleInternal.getHeadConfig
+        ? templateModuleInternal.getHeadConfig(props)
+        : undefined;
+      let lang = "en";
+      if (!!headConfig?.lang) {
+        lang = headConfig.lang;
+      } else if (!!props?.document?.locale) {
+        lang = props?.document?.locale;
+      }
+
       // Inject the app-rendered HTML into the template. Only invoke the users headFunction
       // if they are rendering by way of a default export and not a custom render function.
       const html = template.replace(`<!--app-html-->`, appHtml).replace(
@@ -71,13 +81,11 @@ export const serverRenderRoute =
             <script type="text/javascript">
               window._RSS_PROPS_ = ${JSON.stringify(props)};
               window._RSS_TEMPLATE_ = '${templateModuleInternal.filename}';
+              window._RSS_LANG_ = '${lang}';
             </script>
             ${
-              !templateModuleInternal.render &&
-              templateModuleInternal.getHeadConfig
-                ? renderHeadConfigToString(
-                    templateModuleInternal.getHeadConfig(props)
-                  )
+              !templateModuleInternal.render && headConfig
+                ? renderHeadConfigToString(headConfig)
                 : ""
             }
           </head>`
