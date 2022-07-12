@@ -4,7 +4,7 @@
 
 ## HeadConfig.viewport property
 
-Declares the size and shape of the documents viewport. Will default to 'width=device-width, initial-scale=1' if omitted.
+Declares the size and shape of the document's viewport. Will default to 'width=device-width, initial-scale=1' if omitted.
 
 <b>Signature:</b>
 
