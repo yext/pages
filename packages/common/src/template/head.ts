@@ -102,7 +102,7 @@ const renderTag = (tag: Tag): string => {
     case "template":
       return `<${tag.type} ${renderAttributes(tag.attributes)}></${tag.type}>`;
     default: {
-      console.log(chalk.red("[WARNING]: Type of tag is undefined."));
+      console.log(chalk.yellow("[WARNING]: Type of tag is undefined."));
       return "";
     }
   }
