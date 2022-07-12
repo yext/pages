@@ -13,9 +13,9 @@ export const reactWrapper = <T extends TemplateRenderProps>(
   getHeadConfig?: GetHeadConfig<any>
 ): string => {
   const projectFilepaths = props.__meta.manifest.projectFilepaths;
-  const headConfig = getHeadConfig ? getHeadConfig(props) : "";
+  const headConfig = getHeadConfig ? getHeadConfig(props) : undefined;
   let lang = "en";
-  if (!!headConfig && !!headConfig.lang) {
+  if (!!headConfig?.lang) {
     lang = headConfig.lang;
   } else if (!!props.document.locale) {
     lang = props.document.locale;
