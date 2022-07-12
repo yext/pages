@@ -11,5 +11,6 @@ export default async () => {
     await createServer(true);
   }
 
+  console.log("test");
   await open(`http://localhost:${viteDevServerPort}/`);
 };
