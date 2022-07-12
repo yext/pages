@@ -1,5 +1,8 @@
 import { TemplateModuleInternal } from "../../../../../common/src/template/internal/types.js";
-import { renderHeadConfigToString } from "../../../../../common/src/template/head.js";
+import {
+  renderHeadConfigToString,
+  getLang,
+} from "../../../../../common/src/template/head.js";
 import {
   TemplateRenderProps,
   GetHeadConfig,
@@ -14,12 +17,7 @@ export const reactWrapper = <T extends TemplateRenderProps>(
 ): string => {
   const projectFilepaths = props.__meta.manifest.projectFilepaths;
   const headConfig = getHeadConfig ? getHeadConfig(props) : undefined;
-  let lang = "en";
-  if (!!headConfig?.lang) {
-    lang = headConfig.lang;
-  } else if (!!props.document.locale) {
-    lang = props.document.locale;
-  }
+  const lang = getLang(headConfig, props);
 
   return `<!DOCTYPE html>
     <html lang=${lang}>

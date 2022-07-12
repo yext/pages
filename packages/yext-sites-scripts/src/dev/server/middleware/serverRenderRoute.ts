@@ -7,7 +7,10 @@ import page404 from "../public/404";
 import { convertTemplateConfigInternalToFeaturesConfig } from "../../../../../common/src/feature/features.js";
 import { validateTemplateModuleInternal } from "../../../../../common/src/template/internal/validateTemplateModuleInternal.js";
 import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplateModuleInternal.js";
-import { renderHeadConfigToString } from "../../../../../common/src/template/head";
+import {
+  renderHeadConfigToString,
+  getLang,
+} from "../../../../../common/src/template/head";
 import { ProjectStructure } from "../../../../../common/src/project/structure.js";
 
 type Props = {
@@ -66,12 +69,7 @@ export const serverRenderRoute =
       const headConfig = templateModuleInternal.getHeadConfig
         ? templateModuleInternal.getHeadConfig(props)
         : undefined;
-      let lang = "en";
-      if (!!headConfig?.lang) {
-        lang = headConfig.lang;
-      } else if (!!props?.document?.locale) {
-        lang = props?.document?.locale;
-      }
+      const lang = getLang(headConfig, props);
 
       // Inject the app-rendered HTML into the template. Only invoke the users headFunction
       // if they are rendering by way of a default export and not a custom render function.

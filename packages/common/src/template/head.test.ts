@@ -1,4 +1,4 @@
-import { HeadConfig, renderHeadConfigToString, TagType } from "./head";
+import { HeadConfig, renderHeadConfigToString, TagType, getLang } from "./head";
 
 describe("renderHeadConfigToString", () => {
   it("properly renders a default title and excludes missing optionals", async () => {
@@ -102,5 +102,25 @@ describe("renderHeadConfigToString", () => {
     expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
       expectedHeadConfig.replaceAll(" ", "")
     );
+  });
+});
+
+describe("getLang", () => {
+  it("returns the correct lang when headConfig overrides it", async () => {
+    const lang = "fr";
+    const headConfig: HeadConfig = { lang: lang };
+
+    expect(getLang(headConfig, undefined)).toEqual(lang);
+  });
+
+  it("returns the correct lang when headConfig does not override it", async () => {
+    const lang = "fr";
+    const props = { document: { locale: lang } };
+
+    expect(getLang(undefined, props)).toEqual(lang);
+  });
+
+  it("returns the correct lang when both headConfig and props do not contain a lang/locale", async () => {
+    expect(getLang(undefined, undefined)).toEqual("en");
   });
 });

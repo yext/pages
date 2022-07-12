@@ -107,3 +107,24 @@ const renderAttributes = (attributes: Attributes): string => {
     })
     .join(" ");
 };
+
+/**
+ * Function that takes in a {@link HeadConfig} interface and a props, and returns the lang value
+ * that will be set on the HTML tag.
+ *
+ * @public
+ */
+export const getLang = (
+  headConfig: HeadConfig | undefined,
+  props: any
+): string => {
+  if (!!headConfig?.lang) {
+    return headConfig.lang;
+  }
+
+  if (!!props?.document?.locale) {
+    return props?.document?.locale;
+  }
+
+  return "en";
+};

@@ -17,6 +17,12 @@ export type GetHeadConfig<T extends TemplateRenderProps> = (
 ) => HeadConfig;
 
 // @public
+export const getLang: (
+  headConfig: HeadConfig | undefined,
+  props: any
+) => string;
+
+// @public
 export type GetPath<T extends TemplateProps> = (props: T) => string;
 
 // @public

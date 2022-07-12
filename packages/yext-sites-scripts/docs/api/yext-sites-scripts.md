@@ -20,6 +20,7 @@
 
 | Variable                                                                     | Description                                                                                                                                                                                  |
 | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [getLang](./yext-sites-scripts.getlang.md)                                   | Function that takes in a [HeadConfig](./yext-sites-scripts.headconfig.md) interface and a props, and returns the lang value that will be set on the HTML tag.                                |
 | [renderHeadConfigToString](./yext-sites-scripts.renderheadconfigtostring.md) | Function that takes a [HeadConfig](./yext-sites-scripts.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the head tags. |
 
 ## Type Aliases
