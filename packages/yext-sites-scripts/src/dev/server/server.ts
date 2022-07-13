@@ -18,12 +18,12 @@ export const createServer = async (dynamicGenerateData: boolean) => {
 
   // create vite using ssr mode
   const vite = await createViteServer({
-    server: {
+    server: { 
       middlewareMode: true,
     },
     appType: "custom",
     envDir: projectStructure.envVarDir,
-    envPrefix: projectStructure.envVarPrefix,
+    envPrefix: projectStructure.envVarPrefix
   });
   // register vite's middleware
   app.use(vite.middlewares);
