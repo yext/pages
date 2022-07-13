@@ -1,3 +1,5 @@
+import { TemplateRenderProps } from "./types";
+
 /**
  * The configuration that allows users to entirely arbitarily
  * set the inner contents of the head element that will be
@@ -5,6 +7,7 @@
  *
  * @public
  */
+
 export interface HeadConfig {
   /** Title of the page. Will default to 'Yext Pages Site' if omitted. */
   title?: string;
@@ -114,9 +117,9 @@ const renderAttributes = (attributes: Attributes): string => {
  *
  * @public
  */
-export const getLang = (
+export const getLang = <T extends TemplateRenderProps>(
   headConfig: HeadConfig | undefined,
-  props: any
+  props: T
 ): string => {
   if (!!headConfig?.lang) {
     return headConfig.lang;
