@@ -104,10 +104,8 @@ const renderTag = (tag: Tag): string => {
     default: {
       console.log(
         chalk.yellow(
-          "[WARNING]: Tag type ",
-          tag.type,
-          " is unsupported by the Tag interface. ",
-          'Please use "other" to render this tag.'
+          '[WARNING]: Tag type "' + tag.type + '" is unsupported by ' + 
+          'the Tag interface. Please use "other" to render this tag.'
         )
       );
       return "";
