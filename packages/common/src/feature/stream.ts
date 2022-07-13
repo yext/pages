@@ -27,7 +27,7 @@ export interface StreamConfig {
     primary: boolean;
   };
   /** The transformation to apply to the stream */
-  transform: {
+  transform?: {
     /** The option fields to be expanded to include the display fields, numeric values, and selected boolean */
     expandOptionFields?: string[];
     /** The option fields to be replaced with display names */

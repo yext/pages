@@ -60,7 +60,7 @@ export interface Stream {
     locales?: string[];
     primary: boolean;
   };
-  transform: {
+  transform?: {
     expandOptionFields?: string[];
     replaceOptionValuesWithDisplayNames?: string[];
   };

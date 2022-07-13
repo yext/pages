@@ -9,7 +9,7 @@ The transformation to apply to the stream
 <b>Signature:</b>
 
 ```typescript
-transform: {
+transform?: {
         expandOptionFields?: string[];
         replaceOptionValuesWithDisplayNames?: string[];
     };
