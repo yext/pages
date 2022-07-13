@@ -1,4 +1,4 @@
-export const viteDevServerPort = 3000;
+export const viteDevServerPort = 5173;
 
 export const dynamicModeInfoText = `Dynamic mode enabled. Below are sample URLs generated based on the contents 
 of the localData folder, but entity data will be re-fetched on each page load and reflect updates in real time. 
