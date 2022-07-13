@@ -21,7 +21,6 @@ export const FEATURE_CONFIG: FeaturesConfig = {
       localization: {
         primary: false,
       },
-      transform: {},
     },
   ],
 };
