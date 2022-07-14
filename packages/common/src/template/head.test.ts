@@ -1,4 +1,5 @@
 import { HeadConfig, renderHeadConfigToString, TagType, getLang } from "./head";
+import { TemplateRenderProps } from "./types";
 
 describe("renderHeadConfigToString", () => {
   it("properly renders a default title and excludes missing optionals", async () => {
@@ -115,7 +116,12 @@ describe("getLang", () => {
 
   it("returns the correct lang when headConfig does not override it", async () => {
     const lang = "fr";
-    const props = { document: { locale: lang } };
+    const props: TemplateRenderProps = {
+      document: { locale: lang },
+      path: "",
+      relativePrefixToRoot: "",
+      __meta: { mode: "development" },
+    };
 
     expect(getLang(undefined, props)).toEqual(lang);
   });
