@@ -34,6 +34,7 @@ describe("renderHeadConfigToString", () => {
       expectedHeadConfig.replaceAll(" ", "")
     );
   });
+  
   it("properly logs warning when rendering tag whose type is not supported", async () => {
     const headConfig = {
       title: "foo",
