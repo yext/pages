@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import chalk from "chalk";
 import { TemplateRenderProps } from "./types";
-=======
 import pc from "picocolors";
->>>>>>> cec38df (added a test rendering tag with upsupported type, changed chalk package to picocolors)
 
 /**
  * The configuration that allows users to entirely arbitarily
