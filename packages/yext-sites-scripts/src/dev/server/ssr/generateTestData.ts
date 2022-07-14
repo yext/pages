@@ -6,46 +6,71 @@ import {
   UPGRADE_MESSAGE_LINE_BEGIN,
   UPGRADE_INSTRUCTIONS_LINE_BEGIN,
 } from "./constants";
+import path from "path";
+import fs from "fs";
+import { ProjectStructure } from "../../../../../common/src/project/structure";
 
-// generateTestData will run yext sites generate-test-data and return true in
-// the event of a succesful run and false in the event of a failure.
+/**
+ * generateTestData will run yext sites generate-test-data and return true in
+ * the event of a successful run and false in the event of a failure.
+ */
 export const generateTestData = async (): Promise<boolean> => {
   const command = "yext";
   const args = ["sites", "generate-test-data"];
 
-  return new Promise(async (resolve) => {
+  async function generate() {
     const childProcess = spawn(command, args);
     const exitCode = await new Promise((resolve) => {
       childProcess.on("close", resolve);
     });
 
     if (exitCode) {
-      resolve(false);
+      return false;
     }
 
-    resolve(true);
+    return true;
+  }
+
+  return new Promise((resolve) => {
+    resolve(generate());
   });
 };
 
-export const generateTestDataForEntity = async (
+export const generateTestDataForPage = async (
   stdout: NodeJS.WriteStream,
   featuresConfig: FeaturesConfig,
-  entityId: string
+  entityId: string,
+  projectStructure: ProjectStructure
 ): Promise<any> => {
+  const siteStreamPath = path.resolve(
+    process.cwd(),
+    projectStructure.sitesConfigRoot + "/" + projectStructure.siteStreamConfig
+  );
+
   const command = "yext";
   const args = [
     "sites",
     "generate-test-data",
     "--featureName",
     `'${featuresConfig.features[0]?.name}'`,
-    "--entityId",
-    entityId,
     "--featuresConfig",
     `'${JSON.stringify(featuresConfig)}'`,
     "--locale",
     "en",
     "--printDocuments",
   ];
+
+  if (entityId) {
+    args.push("--entityIds", entityId);
+  }
+
+  if (fs.existsSync(siteStreamPath)) {
+    const siteStream = `'${JSON.stringify(
+      JSON.parse(fs.readFileSync(siteStreamPath).toString())
+    )}'`;
+    args.push("--siteStreamConfig", siteStream);
+  }
+
   return new Promise((resolve) => {
     const childProcess = spawn(command, args, {
       stdio: ["inherit", "pipe", "inherit"],

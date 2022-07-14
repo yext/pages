@@ -2,6 +2,7 @@ import {
   Default,
   GetHeadConfig,
   GetPath,
+  GetRedirects,
   TransformProps,
   Render,
   Stream,
@@ -37,6 +38,8 @@ export interface TemplateModuleInternal<
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
   getHeadConfig?: GetHeadConfig<U>;
+  /** The exported, optional, function which returns a list of redirects */
+  getRedirects?: GetRedirects<U>;
   /** The exported render function */
   render?: Render<U>;
   /** The exported default function */

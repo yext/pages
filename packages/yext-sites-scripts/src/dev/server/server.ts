@@ -4,17 +4,23 @@ import { serverRenderRoute } from "./middleware/serverRenderRoute.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import { viteDevServerPort } from "./middleware/constants.js";
-import react from "@vitejs/plugin-react";
 import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
+import { ProjectStructure } from "../../../../common/src/project/structure.js";
 
 export const createServer = async (dynamicGenerateData: boolean) => {
   // creates a standard express app
   const app = express();
 
+  // initialize the default project structure and use to help configure the
+  // dev server
+  const projectStructure = new ProjectStructure();
+
   // create vite using ssr mode
   const vite = await createViteServer({
     server: { middlewareMode: "ssr" },
+    envDir: projectStructure.envVarDir,
+    envPrefix: projectStructure.envVarPrefix,
     optimizeDeps: {
       // Temporary solution https://github.com/vitejs/vite/issues/6215
       include: ["react/jsx-runtime"],
@@ -38,7 +44,10 @@ export const createServer = async (dynamicGenerateData: boolean) => {
 
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.
-  app.use(/^\/(.+)/, serverRenderRoute({ vite, dynamicGenerateData }));
+  app.use(
+    /^\/(.+)/,
+    serverRenderRoute({ vite, dynamicGenerateData, projectStructure })
+  );
 
   // Serve the index page at the root of the dev server.
   app.use(

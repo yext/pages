@@ -5,10 +5,10 @@ import open from "open";
 export default async () => {
   const [, , ...args] = process.argv;
 
-  if (args.some((arg) => ["dynamic"].includes(arg))) {
-    await createServer(true);
-  } else {
+  if (args.some((arg) => ["local"].includes(arg))) {
     await createServer(false);
+  } else {
+    await createServer(true);
   }
 
   await open(`http://localhost:${viteDevServerPort}/`);

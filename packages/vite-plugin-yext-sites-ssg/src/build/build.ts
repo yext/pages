@@ -19,6 +19,8 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
     apply: "build",
     config: async (): Promise<UserConfig> => {
       return {
+        envDir: projectStructure.envVarDir,
+        envPrefix: projectStructure.envVarPrefix,
         build: {
           outDir: projectStructure.distRoot.path,
           manifest: true,

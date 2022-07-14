@@ -29,19 +29,38 @@ const pluginFiles = glob.sync("./plugin/**.ts");
 mkdirSync(cjsPluginPath, { recursive: true });
 mkdirSync(esmPluginPath, { recursive: true });
 pluginFiles.map((filepath) =>
-  copyFile(filepath, `${cjsPluginPath}${path.basename(filepath)}`, () => {})
+  copyFile(
+    filepath,
+    `${cjsPluginPath}${path.basename(filepath)}`,
+    () => undefined
+  )
 );
 pluginFiles.map((filepath) =>
-  copyFile(filepath, `${esmPluginPath}${path.basename(filepath)}`, () => {})
+  copyFile(
+    filepath,
+    `${esmPluginPath}${path.basename(filepath)}`,
+    () => undefined
+  )
 );
 
-// Transpile all files except this one
-let files = glob.sync("./src/**/*.*").filter((f) => f !== "./src/bundler.js");
+const testFilter = (f) =>
+  !f.endsWith(".test.ts") &&
+  !f.endsWith(".test.tsx") &&
+  !f.endsWith(".test.js");
+
+// Transpile all files except this one and tests
+let files = glob
+  .sync("./src/**/*.*")
+  .filter(testFilter)
+  .filter((f) => f !== "./src/bundler.js");
 
 // Add common shared code
 files.push.apply(
   files,
-  glob.sync("../common/**/*.*").filter((f) => f !== "../common/tsconfig.json")
+  glob
+    .sync("../common/**/*.*")
+    .filter(testFilter)
+    .filter((f) => f !== "../common/tsconfig.json")
 );
 
 const commonBuildOpts = {

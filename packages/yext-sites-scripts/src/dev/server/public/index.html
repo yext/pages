@@ -16,6 +16,28 @@
 <style>
   @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
+  :root {
+    /* Yext brand colors */
+    --concrete-300: #c5cace;
+    --concrete-650: #161616;
+    --white: #ffffff;
+    --yext-brand-blue: #1564f9;
+
+    /* light mode */
+    --background-color: white;
+    --text-color: black;
+    --link-color: var(--yext-brand-blue);
+  }
+
+  /* dark mode */
+  @media screen and (prefers-color-scheme: dark) {
+    :root {
+      --background-color: var(--concrete-650);
+      --text-color: var(--white);
+      --link-color: var(--concrete-300);
+    }
+  }
+
   body {
     font-family: "Lato", sans-serif;
     padding: 20px;
@@ -23,6 +45,8 @@
     flex-direction: column;
     max-width: 1000px;
     margin: auto;
+    background-color: var(--background-color);
+    color: var(--text-color);
   }
 
   .list {
@@ -46,6 +70,11 @@
     margin-top: 10px;
   }
 
+  a {
+    color: var(--link-color);
+    text-decoration: none;
+  }
+
   a:link,
   a:visited {
     padding: 5px;
@@ -54,7 +83,7 @@
 
   a:hover,
   a:active {
-    background-color: rgb(230, 230, 230);
+    text-decoration: underline;
   }
 
   .title {

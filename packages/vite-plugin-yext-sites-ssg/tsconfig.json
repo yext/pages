@@ -3,9 +3,12 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
+    "esModuleInterop": true,
     "outDir": "./dist/types/",
-    "resolveJsonModule": true
+    "jsx": "react",
+    "declaration": true,
+    "resolveJsonModule": true,
+    "types": ["jest"]
   },
   "include": ["src"],
   "exclude": ["plugin"]

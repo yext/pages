@@ -17,11 +17,21 @@ export type GetHeadConfig<T extends TemplateRenderProps> = (
 ) => HeadConfig;
 
 // @public
+export const getLang: <T extends TemplateRenderProps>(
+  headConfig: HeadConfig | undefined,
+  props: T
+) => string;
+
+// @public
 export type GetPath<T extends TemplateProps> = (props: T) => string;
+
+// @public
+export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
 
 // @public
 export interface HeadConfig {
   charset?: string;
+  lang?: string;
   other?: string;
   tags?: Tag[];
   title?: string;
@@ -98,6 +108,7 @@ export interface TemplateModule<
   default: Default<U>;
   getHeadConfig?: GetHeadConfig<U>;
   getPath: GetPath<T>;
+  getRedirects?: GetRedirects<U>;
   render?: Render<U>;
   transformProps?: TransformProps<T>;
 }

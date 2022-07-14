@@ -1,3 +1,5 @@
+import { TemplateRenderProps } from "./types";
+
 /**
  * The configuration that allows users to entirely arbitarily
  * set the inner contents of the head element that will be
@@ -5,12 +7,14 @@
  *
  * @public
  */
+
 export interface HeadConfig {
   /** Title of the page. Will default to 'Yext Pages Site' if omitted. */
   title?: string;
-  /** Declares the documents encoding. */
+  /** Declares the document's encoding. Will default to 'UTF-8' if omitted. */
   charset?: string;
-  /** Declares the size and shape of the documents viewport. */
+  /** Declares the size and shape of the document's viewport. Will default to
+   * 'width=device-width, initial-scale=1' if omitted. */
   viewport?: string;
   /** Well-defined interface for adding HTML tags (such as meta tags) */
   tags?: Tag[];
@@ -19,6 +23,8 @@ export interface HeadConfig {
    *  be provided.
    */
   other?: string;
+  /** Lang of the page. Will be set to the document's locale if omitted. */
+  lang?: string;
 }
 
 /**
@@ -72,12 +78,10 @@ export const renderHeadConfigToString = (headConfig: HeadConfig): string => {
   return `<title>${
     headConfig.title ? headConfig.title : "Yext Pages Site"
   }</title>
-    ${headConfig.charset ? `<meta charset="${headConfig.charset}">` : ""}
-    ${
-      headConfig.viewport
-        ? `<meta name="viewport" content="${headConfig.viewport}">`
-        : ""
-    }
+    <meta charset="${headConfig.charset || "UTF-8"}">
+    <meta name="viewport" content="${
+      headConfig.viewport || "width=device-width, initial-scale=1"
+    }">
     ${headConfig.tags ? headConfig.tags.map(renderTag).join("\n") : ""}
     ${headConfig.other ? headConfig.other : ""}`
     .split("\n")
@@ -105,4 +109,25 @@ const renderAttributes = (attributes: Attributes): string => {
       return `${key}="${attributes[key]}"`;
     })
     .join(" ");
+};
+
+/**
+ * Function that takes in a {@link HeadConfig} interface and a props, and returns the lang value
+ * that will be set on the HTML tag.
+ *
+ * @public
+ */
+export const getLang = <T extends TemplateRenderProps>(
+  headConfig: HeadConfig | undefined,
+  props: T
+): string => {
+  if (!!headConfig?.lang) {
+    return headConfig.lang;
+  }
+
+  if (!!props?.document?.locale) {
+    return props?.document?.locale;
+  }
+
+  return "en";
 };

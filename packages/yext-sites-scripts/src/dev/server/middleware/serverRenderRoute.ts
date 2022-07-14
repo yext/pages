@@ -7,15 +7,20 @@ import page404 from "../public/404";
 import { convertTemplateConfigInternalToFeaturesConfig } from "../../../../../common/src/feature/features.js";
 import { validateTemplateModuleInternal } from "../../../../../common/src/template/internal/validateTemplateModuleInternal.js";
 import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplateModuleInternal.js";
-import { renderHeadConfigToString } from "../../../../../common/src/template/head";
+import {
+  renderHeadConfigToString,
+  getLang,
+} from "../../../../../common/src/template/head";
+import { ProjectStructure } from "../../../../../common/src/project/structure.js";
 
 type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
+  projectStructure: ProjectStructure;
 };
 
 export const serverRenderRoute =
-  ({ vite, dynamicGenerateData }: Props): RequestHandler =>
+  ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
   async (req, res, next) => {
     try {
       const url = req.baseUrl;
@@ -50,7 +55,7 @@ export const serverRenderRoute =
           entityId,
           featuresConfig,
           dynamicGenerateData,
-          feature,
+          projectStructure,
         }
       );
 
@@ -61,6 +66,11 @@ export const serverRenderRoute =
         React.createElement(Component, props)
       );
 
+      const headConfig = templateModuleInternal.getHeadConfig
+        ? templateModuleInternal.getHeadConfig(props)
+        : undefined;
+      const lang = getLang(headConfig, props);
+
       // Inject the app-rendered HTML into the template. Only invoke the users headFunction
       // if they are rendering by way of a default export and not a custom render function.
       const html = template.replace(`<!--app-html-->`, appHtml).replace(
@@ -69,13 +79,11 @@ export const serverRenderRoute =
             <script type="text/javascript">
               window._RSS_PROPS_ = ${JSON.stringify(props)};
               window._RSS_TEMPLATE_ = '${templateModuleInternal.filename}';
+              window._RSS_LANG_ = '${lang}';
             </script>
             ${
-              !templateModuleInternal.render &&
-              templateModuleInternal.getHeadConfig
-                ? renderHeadConfigToString(
-                    templateModuleInternal.getHeadConfig(props)
-                  )
+              !templateModuleInternal.render && headConfig
+                ? renderHeadConfigToString(headConfig)
                 : ""
             }
           </head>`
