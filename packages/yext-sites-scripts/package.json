@@ -18,7 +18,7 @@
   "scripts": {
     "watch": "node src/bundler --watch",
     "build": "node src/bundler.js",
-    "types": "tsc && npm run api-extractor && npm run generate-docs",
+    "types": "tsc",
     "fmt": "prettier -w .",
     "release": "npm run build && npm run types",
     "lint": "eslint .",
