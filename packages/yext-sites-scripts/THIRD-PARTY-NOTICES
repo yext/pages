@@ -893,9 +893,10 @@ console.log(s.toString()) // let a = _ref(0); a.value++
 
 The following NPM packages may be included in this product:
 
- - @vueuse/core@8.9.2
- - @vueuse/metadata@8.9.2
- - @vueuse/shared@8.9.2
+
+ - @vueuse/core@8.9.3
+ - @vueuse/metadata@8.9.3
+ - @vueuse/shared@8.9.3
 
 These packages each contain the following license and notice below:
 
