@@ -1,5 +1,8 @@
 import { TemplateModuleInternal } from "../../../../../common/src/template/internal/types.js";
-import { renderHeadConfigToString } from "../../../../../common/src/template/head.js";
+import {
+  renderHeadConfigToString,
+  getLang,
+} from "../../../../../common/src/template/head.js";
 import {
   TemplateRenderProps,
   GetHeadConfig,
@@ -13,9 +16,11 @@ export const reactWrapper = <T extends TemplateRenderProps>(
   getHeadConfig?: GetHeadConfig<any>
 ): string => {
   const projectFilepaths = props.__meta.manifest.projectFilepaths;
+  const headConfig = getHeadConfig ? getHeadConfig(props) : undefined;
+  const lang = getLang(headConfig, props);
 
   return `<!DOCTYPE html>
-    <html lang="en">
+    <html lang=${lang}>
     <head>
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(props)}</script>
         ${getCssTags(
@@ -26,7 +31,7 @@ export const reactWrapper = <T extends TemplateRenderProps>(
           .map((f) => `<link rel="stylesheet" href="/${f}"/>`)
           .filter((v, i, a) => a.indexOf(v) == i)
           .join("\n")}
-        ${getHeadConfig ? renderHeadConfigToString(getHeadConfig(props)) : ""}
+        ${headConfig ? renderHeadConfigToString(headConfig) : ""}
     </head>
     <body>
         <div id="reactele">${template}</div>${
