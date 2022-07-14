@@ -1,4 +1,5 @@
 import { TemplateRenderProps } from "./types";
+import pc from "picocolors";
 
 /**
  * The configuration that allows users to entirely arbitarily
@@ -100,6 +101,15 @@ const renderTag = (tag: Tag): string => {
     case "noscript":
     case "template":
       return `<${tag.type} ${renderAttributes(tag.attributes)}></${tag.type}>`;
+    default: {
+      console.log(
+        pc.yellow(
+          `[WARNING]: Tag type ${tag.type} is unsupported by the Tag interface. ` +
+            `Please use "other" to render this tag.`
+        )
+      );
+      return "";
+    }
   }
 };
 
