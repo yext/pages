@@ -109,11 +109,6 @@
           "esModuleInterop": true,
           "allowJs": true
         }
-      },
-      "console": {
-        "log": "jest.fn()",
-        "debug": "console.debug",
-        "trace": "console.trace"
       }
     },
     "verbose": true,
