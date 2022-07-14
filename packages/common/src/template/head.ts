@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import chalk from "chalk";
 import { TemplateRenderProps } from "./types";
+=======
+import pc from "picocolors";
+>>>>>>> cec38df (added a test rendering tag with upsupported type, changed chalk package to picocolors)
 
 /**
  * The configuration that allows users to entirely arbitarily
@@ -103,9 +107,9 @@ const renderTag = (tag: Tag): string => {
       return `<${tag.type} ${renderAttributes(tag.attributes)}></${tag.type}>`;
     default: {
       console.log(
-        chalk.yellow(
+        pc.yellow(
           `[WARNING]: Tag type ${tag.type} is unsupported by the Tag interface. ` +
-          `Please use "other" to render this tag.`
+            `Please use "other" to render this tag.`
         )
       );
       return "";

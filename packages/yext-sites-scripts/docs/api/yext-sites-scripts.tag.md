@@ -9,12 +9,13 @@ Interface for an HTML tag. Can set attributes on the tag, but if a body needs to
 <b>Signature:</b>
 
 ```typescript
-export interface Tag
+export interface Tag 
 ```
 
 ## Properties
 
-| Property                                             | Type                                             | Description                                                                                                                              |
-| ---------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| [attributes](./yext-sites-scripts.tag.attributes.md) | [Attributes](./yext-sites-scripts.attributes.md) | The attributes to add to the element. Each attribute will be added in the form 'key="value"' and attributes will be seperated by a space |
-| [type](./yext-sites-scripts.tag.type.md)             | [TagType](./yext-sites-scripts.tagtype.md)       | The type of the element to create (i.e. meta, script, link, etc.)                                                                        |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [attributes](./yext-sites-scripts.tag.attributes.md) |  | [Attributes](./yext-sites-scripts.attributes.md) | The attributes to add to the element. Each attribute will be added in the form 'key="value"' and attributes will be seperated by a space |
+|  [type](./yext-sites-scripts.tag.type.md) |  | [TagType](./yext-sites-scripts.tagtype.md) | The type of the element to create (i.e. meta, script, link, etc.) |
+

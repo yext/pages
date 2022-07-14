@@ -49,6 +49,7 @@
     "ink": "^3.2.0",
     "lodash": "^4.17.21",
     "open": "^8.4.0",
+    "picocolors": "^1.0.0",
     "shelljs": "^0.8.5",
     "typescript": "^4.6.2",
     "vitepress": "1.0.0-alpha.2"
@@ -99,20 +100,26 @@
   "jest": {
     "rootDir": "..",
     "collectCoverageFrom": [
-      "<rootDir>/yext-sites-scripts/src/**/*.ts"
+      "<rootDir>/yext-sites-scripts/src/**/*.{ts,js}"
     ],
     "globals": {
       "ts-jest": {
         "tsconfig": {
           "allowSyntheticDefaultImports": true,
-          "esModuleInterop": true
+          "esModuleInterop": true,
+          "allowJs": true
         }
+      },
+      "console": {
+        "log": "jest.fn()",
+        "debug": "console.debug",
+        "trace": "console.trace"
       }
     },
     "verbose": true,
     "testMatch": [
-      "<rootDir>/yext-sites-scripts/src/**/*.test.ts",
-      "<rootDir>/common/**/src/**/*.test.ts"
+      "<rootDir>/yext-sites-scripts/src/**/*.test.{ts,js}",
+      "<rootDir>/common/**/src/**/*.test.{ts,js}"
     ],
     "transform": {
       "\\.[jt]sx?$": "ts-jest"
