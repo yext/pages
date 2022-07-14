@@ -70,6 +70,10 @@ export interface Stream {
     locales?: string[];
     primary: boolean;
   };
+  transform?: {
+    expandOptionFields?: string[];
+    replaceOptionValuesWithDisplayNames?: string[];
+  };
 }
 
 // @public
