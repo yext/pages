@@ -8,7 +8,7 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
   filename: "filename",
   templateName: "template",
   config: { name: "name" },
-  getPath: (props) => {
+  getPath: () => {
     return "path";
   },
   default: () => <div></div>,
