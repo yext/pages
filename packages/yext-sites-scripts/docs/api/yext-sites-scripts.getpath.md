@@ -11,5 +11,5 @@ The type definition for the template's getPath function.
 ```typescript
 export declare type GetPath<T extends TemplateProps> = (props: T) => string;
 ```
-<b>References:</b> [TemplateProps](./yext-sites-scripts.templateprops.md)
 
+<b>References:</b> [TemplateProps](./yext-sites-scripts.templateprops.md)

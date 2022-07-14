@@ -3,11 +3,11 @@ import pc from "picocolors";
 
 let consoleLog;
 beforeAll(() => {
-    consoleLog = jest.spyOn(console, 'log').mockImplementation();
+  consoleLog = jest.spyOn(console, "log").mockImplementation();
 });
 
 afterAll(() => {
-    consoleLog.mockRestore();
+  consoleLog.mockRestore();
 });
 
 describe("renderHeadConfigToString", () => {
@@ -34,7 +34,7 @@ describe("renderHeadConfigToString", () => {
       expectedHeadConfig.replaceAll(" ", "")
     );
   });
-  
+
   it("properly logs warning when rendering tag whose type is not supported", async () => {
     const headConfig = {
       title: "foo",
@@ -56,13 +56,13 @@ describe("renderHeadConfigToString", () => {
     );
 
     jest.clearAllMocks();
-    jest.spyOn(console, 'log');
+    jest.spyOn(console, "log");
 
     expect(console.log.mock.calls.length).toBe(0);
     renderHeadConfigToString(headConfig);
     expect(console.log.mock.calls.length).toBe(1);
     expect(console.log.mock.calls[0][0]).toBe(expectedLog);
-    
+
     jest.clearAllMocks();
   });
 });

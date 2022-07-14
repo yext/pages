@@ -9,5 +9,8 @@ Function that takes in a [HeadConfig](./yext-sites-scripts.headconfig.md) interf
 <b>Signature:</b>
 
 ```typescript
-getLang: <T extends TemplateRenderProps>(headConfig: HeadConfig | undefined, props: T) => string
+getLang: <T extends TemplateRenderProps>(
+  headConfig: HeadConfig | undefined,
+  props: T
+) => string;
 ```

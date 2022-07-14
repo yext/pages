@@ -9,16 +9,15 @@ The stream config defined in [TemplateConfig.stream](./yext-sites-scripts.templa
 <b>Signature:</b>
 
 ```typescript
-export interface Stream 
+export interface Stream
 ```
 
 ## Properties
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [$id](./yext-sites-scripts.stream._id.md) |  | string | The identifier of the stream |
-|  [fields](./yext-sites-scripts.stream.fields.md) |  | string\[\] | The fields to apply to the stream |
-|  [filter](./yext-sites-scripts.stream.filter.md) |  | { entityTypes?: string\[\]; savedFilterIds?: string\[\]; } | The filter to apply to the stream |
-|  [localization](./yext-sites-scripts.stream.localization.md) |  | { locales?: string\[\]; primary: boolean; } | The localization used by the filter |
-|  [transform?](./yext-sites-scripts.stream.transform.md) |  | { expandOptionFields?: string\[\]; replaceOptionValuesWithDisplayNames?: string\[\]; } | <i>(Optional)</i> The transformation to apply to the stream |
-
+| Property                                                    | Modifiers | Type                                                                                   | Description                                                 |
+| ----------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| [$id](./yext-sites-scripts.stream._id.md)                   |           | string                                                                                 | The identifier of the stream                                |
+| [fields](./yext-sites-scripts.stream.fields.md)             |           | string\[\]                                                                             | The fields to apply to the stream                           |
+| [filter](./yext-sites-scripts.stream.filter.md)             |           | { entityTypes?: string\[\]; savedFilterIds?: string\[\]; }                             | The filter to apply to the stream                           |
+| [localization](./yext-sites-scripts.stream.localization.md) |           | { locales?: string\[\]; primary: boolean; }                                            | The localization used by the filter                         |
+| [transform?](./yext-sites-scripts.stream.transform.md)      |           | { expandOptionFields?: string\[\]; replaceOptionValuesWithDisplayNames?: string\[\]; } | <i>(Optional)</i> The transformation to apply to the stream |
