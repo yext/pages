@@ -38,7 +38,6 @@
     "THIRD-PARTY-NOTICES"
   ],
   "dependencies": {
-    "@vitejs/plugin-react": "^2.0.0",
     "ansi-to-html": "^0.7.2",
     "chalk": "^5.0.1",
     "cli-spinners": "^2.6.1",
