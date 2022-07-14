@@ -14,12 +14,11 @@ export interface TemplateModule<T extends TemplateProps, U extends TemplateRende
 
 ## Properties
 
-| Property                                                                 | Modifiers | Type                                                                      | Description                                                                          |
-| ------------------------------------------------------------------------ | --------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| [config?](./yext-sites-scripts.templatemodule.config.md)                 |           | [TemplateConfig](./yext-sites-scripts.templateconfig.md)                  | <i>(Optional)</i> The exported config function                                       |
-| [default](./yext-sites-scripts.templatemodule.default.md)                |           | [Default](./yext-sites-scripts.default.md)<!-- -->&lt;U&gt;               | The exported default function                                                        |
-| [getHeadConfig?](./yext-sites-scripts.templatemodule.getheadconfig.md)   |           | [GetHeadConfig](./yext-sites-scripts.getheadconfig.md)<!-- -->&lt;U&gt;   | <i>(Optional)</i> The exported, optional headFunction                                |
-| [getPath](./yext-sites-scripts.templatemodule.getpath.md)                |           | [GetPath](./yext-sites-scripts.getpath.md)<!-- -->&lt;T&gt;               | The exported getPath function                                                        |
-| [getRedirects?](./yext-sites-scripts.templatemodule.getredirects.md)     |           | [GetRedirects](./yext-sites-scripts.getredirects.md)<!-- -->&lt;U&gt;     | <i>(Optional)</i> The exported, optional, function which returns a list of redirects |
-| [render?](./yext-sites-scripts.templatemodule.render.md)                 |           | [Render](./yext-sites-scripts.render.md)<!-- -->&lt;U&gt;                 | <i>(Optional)</i> The exported render function                                       |
-| [transformProps?](./yext-sites-scripts.templatemodule.transformprops.md) |           | [TransformProps](./yext-sites-scripts.transformprops.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> The optional exported transformProps function                      |
+| Property                                                                 | Type                                                                      | Description                                                     |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [config?](./yext-sites-scripts.templatemodule.config.md)                 | [TemplateConfig](./yext-sites-scripts.templateconfig.md)                  | <i>(Optional)</i> The exported config function                  |
+| [default](./yext-sites-scripts.templatemodule.default.md)                | [Default](./yext-sites-scripts.default.md)<!-- -->&lt;U&gt;               | The exported default function                                   |
+| [getHeadConfig?](./yext-sites-scripts.templatemodule.getheadconfig.md)   | [GetHeadConfig](./yext-sites-scripts.getheadconfig.md)<!-- -->&lt;U&gt;   | <i>(Optional)</i> The exported, optional headFunction           |
+| [getPath](./yext-sites-scripts.templatemodule.getpath.md)                | [GetPath](./yext-sites-scripts.getpath.md)<!-- -->&lt;T&gt;               | The exported getPath function                                   |
+| [render?](./yext-sites-scripts.templatemodule.render.md)                 | [Render](./yext-sites-scripts.render.md)<!-- -->&lt;U&gt;                 | <i>(Optional)</i> The exported render function                  |
+| [transformProps?](./yext-sites-scripts.templatemodule.transformprops.md) | [TransformProps](./yext-sites-scripts.transformprops.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> The optional exported transformProps function |

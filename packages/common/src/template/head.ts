@@ -90,16 +90,25 @@ export const renderHeadConfigToString = (headConfig: HeadConfig): string => {
 };
 
 const renderTag = (tag: Tag): string => {
-  switch (tag.type) {
-    case "base":
-    case "link":
-    case "meta":
-      return `<${tag.type} ${renderAttributes(tag.attributes)}>`;
-    case "style":
-    case "script":
-    case "noscript":
-    case "template":
-      return `<${tag.type} ${renderAttributes(tag.attributes)}></${tag.type}>`;
+  if (tag.type) {
+    switch (tag.type) {
+      case "base":
+      case "link":
+      case "meta":
+        return `<${tag.type} ${renderAttributes(tag.attributes)}>`;
+      case "style":
+      case "script":
+      case "noscript":
+      case "template":
+        return `<${tag.type} ${renderAttributes(tag.attributes)}></${
+          tag.type
+        }>`;
+    }
+  } else {
+    // If the type of tag is undefined, then
+    // throw a warning message that informs the user.
+    console.log("[WARNING]: Type of tag is undefined.");
+    return "";
   }
 };
 
