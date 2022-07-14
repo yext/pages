@@ -65,7 +65,7 @@ The following NPM packages may be included in this product:
  - @algolia/requester-common@4.13.1
  - @algolia/requester-node-http@4.13.1
  - @algolia/transporter@4.13.1
- - @vue/devtools-api@6.2.0
+ - @vue/devtools-api@6.2.1
  - tr46@0.0.3
 
 These packages each contain the following license and notice below:
@@ -1157,9 +1157,9 @@ console.log(s.toString()) // let a = _ref(0); a.value++
 
 The following NPM packages may be included in this product:
 
- - @vueuse/core@8.9.1
- - @vueuse/metadata@8.9.1
- - @vueuse/shared@8.9.1
+ - @vueuse/core@8.9.2
+ - @vueuse/metadata@8.9.2
+ - @vueuse/shared@8.9.2
 
 These packages each contain the following license and notice below:
 
@@ -1582,7 +1582,7 @@ SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - browserslist@4.21.1
+ - browserslist@4.21.2
 
 This package contains the following license and notice below:
 
@@ -1674,7 +1674,7 @@ SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - caniuse-lite@1.0.30001364
+ - caniuse-lite@1.0.30001366
 
 This package contains the following license and notice below:
 
@@ -2686,7 +2686,7 @@ THE SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - electron-to-chromium@1.4.185
+ - electron-to-chromium@1.4.189
 
 This package contains the following license and notice below:
 
@@ -3572,7 +3572,7 @@ SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - jsonc-parser@3.0.0
+ - jsonc-parser@3.1.0
 
 This package contains the following license and notice below:
 
@@ -4349,7 +4349,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - preact@10.9.0
+ - preact@10.10.0
 
 This package contains the following license and notice below:
 
@@ -4480,7 +4480,7 @@ THE SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - react-devtools-core@4.24.7
+ - react-devtools-core@4.25.0
 
 This package contains the following license and notice below:
 
@@ -10017,7 +10017,7 @@ SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - vue-demi@0.13.2
+ - vue-demi@0.13.4
 
 This package contains the following license and notice below:
 
