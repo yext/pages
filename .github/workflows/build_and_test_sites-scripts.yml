@@ -1,20 +1,20 @@
-name: Build and Test (Yext Sites Scripts)
+name: Build and Test (Sites Scripts)
 
 on:
   push:
     branches-ignore:
       - "main"
     paths:
-      - "packages/yext-sites-scripts/**"
+      - "packages/sites-scripts/**"
 
 jobs:
   call_build:
     uses: ./.github/workflows/build.yml
     with:
-      package: "yext-sites-scripts"
+      package: "sites-scripts"
 
   call_unit_test:
     needs: call_build
     uses: ./.github/workflows/unit_test.yml
     with:
-      package: "yext-sites-scripts"
+      package: "sites-scripts"

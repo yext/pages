@@ -20,12 +20,12 @@ jobs:
       - name: Run remove_workspace script
         run: ./scripts/remove_workspace.sh
         shell: bash
-      - name: Generate yext-sites-scripts licenses
+      - name: Generate sites-scripts licenses
         run : |
           npm i --ignore-scripts
           npm rebuild
           npm run generate-notices
-        working-directory: ./packages/yext-sites-scripts
+        working-directory: ./packages/sites-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Generate vite-plugin-yext-sites-ssg licenses
@@ -37,7 +37,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Remove package-lock files
-        run: rm ./packages/yext-sites-scripts/package-lock.json ./packages/vite-plugin-yext-sites-ssg/package-lock.json
+        run: rm ./packages/sites-scripts/package-lock.json ./packages/vite-plugin-yext-sites-ssg/package-lock.json
       - name: Generate root level licenses
         run : |
           npm i --ignore-scripts

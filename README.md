@@ -6,7 +6,7 @@ There are 2 npm packages which live in this repository.
 
 The first is `@yext/vite-plugin-yext-sites-ssg`, a vite plugin which provides default site generation configuration for statically generating pages from Javascript in Yext Sites.
 
-The second is `@yext/yext-sites-scripts`, a CLI which provides a default development and production toolchain bundling assets and templates for Yext Sites.
+The second is `@yext/sites-scripts`, a CLI which provides a default development and production toolchain bundling assets and templates for Yext Sites.
 Backed by vite, it provides a custom devserver for template development and a production build which leverages the vite plugin.
 <br><br>
 
@@ -35,5 +35,5 @@ Build sites-scripts
 Update your package.json like the following (assuming your repo is in the same root directory as sites-scripts):
 
 ```json
-"@yext/yext-sites-scripts": "file:../sites-scripts/packages/yext-sites-scripts",
+"@yext/sites-scripts": "file:../sites-scripts/packages/sites-scripts",
 ```

@@ -1,5 +1,5 @@
 {
-  "name": "@yext/yext-sites-scripts",
+  "name": "@yext/sites-scripts",
   "version": "0.0.23",
   "description": "The default React development toolchain provided by Yext",
   "author": "sumo@yext.com",
@@ -10,8 +10,8 @@
     "React"
   ],
   "type": "module",
-  "types": "dist/types/yext-sites-scripts/src/index.d.ts",
-  "main": "dist/yext-sites-scripts/src/index.js",
+  "types": "dist/types/sites-scripts/src/index.d.ts",
+  "main": "dist/sites-scripts/src/index.js",
   "engines": {
     "node": ">=17"
   },
@@ -31,7 +31,7 @@
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite"
   },
   "bin": {
-    "yss": "dist/yext-sites-scripts/src/bin/yext-sites-scripts.js"
+    "yss": "dist/sites-scripts/src/bin/sites-scripts.js"
   },
   "files": [
     "dist/**/*",
@@ -99,7 +99,7 @@
   "jest": {
     "rootDir": "..",
     "collectCoverageFrom": [
-      "<rootDir>/yext-sites-scripts/src/**/*.{ts,js}"
+      "<rootDir>/sites-scripts/src/**/*.{ts,js}"
     ],
     "globals": {
       "ts-jest": {
@@ -112,7 +112,7 @@
     },
     "verbose": true,
     "testMatch": [
-      "<rootDir>/yext-sites-scripts/src/**/*.test.{ts,js}",
+      "<rootDir>/sites-scripts/src/**/*.test.{ts,js}",
       "<rootDir>/common/**/src/**/*.test.{ts,js}"
     ],
     "transform": {

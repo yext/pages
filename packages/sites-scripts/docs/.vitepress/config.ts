@@ -11,7 +11,7 @@ export default defineConfig({
     lastUpdatedText: "Last Updated",
     editLink: {
       pattern:
-        "https://github.com/yext/sites-scripts/tree/main/packages/yext-sites-scripts/docs/:path",
+        "https://github.com/yext/sites-scripts/tree/main/packages/sites-scripts/docs/:path",
       text: "Edit This Page",
     },
     nav: [

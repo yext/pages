@@ -5,7 +5,7 @@ import preview from "../preview/preview.js";
 
 const [, , ...args] = process.argv;
 
-// Yext-sites-scripts requires react and react-dom be installed to function appropriately. If
+// sites-scripts requires react and react-dom be installed to function appropriately. If
 // these are not installed in instruct the user to install them.
 ["react", "react-dom"].forEach((dep) => {
   try {

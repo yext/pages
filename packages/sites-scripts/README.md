@@ -26,8 +26,8 @@ Yext Sites Scripts has a number of scripts to assist with development. Since the
 used alongside a repository set up for Yext Sites it is recommended that any changes are tested
 against a starter repository. One such starter repo is (mkilpatrick/yext-sites-starter)[https://github.com/mkilpatrick/yext-sites-starter].
 
-By default, this repository references a non-local version of `@yext/yext-sites-scripts`. To point
-the starter this local repository update the starter's `package.json`'s `@yext/yext-sites-scripts`
+By default, this repository references a non-local version of `@yext/sites-scripts`. To point
+the starter this local repository update the starter's `package.json`'s `@yext/sites-scripts`
 dependency to `file:path/to/this/package/`.
 
 ```
