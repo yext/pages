@@ -1070,7 +1070,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 The following NPM package may be included in this product:
 
- - commander@9.3.0
+ - commander@9.4.0
 
 This package contains the following license and notice below:
 
@@ -3394,7 +3394,7 @@ SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - rollup@2.76.0
+ - rollup@2.77.0
 
 This package contains the following license and notice below:
 
