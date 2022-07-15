@@ -11,10 +11,10 @@
     "test": "npm run test -ws",
     "release": "npm-run-all release:*",
     "release:plugin": "npm --prefix packages/vite-plugin-yext-sites-ssg run release",
-    "release:yss": " npm --prefix packages/yext-sites-scripts run release",
+    "release:yss": " npm --prefix packages/sites-scripts run release",
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
     "lint": "npm run lint -ws",
-    "docs": "npm --prefix packages/yext-sites-scripts run api-extractor && npm --prefix packages/yext-sites-scripts run generate-docs && npm run fmt"
+    "docs": "npm --prefix packages/sites-scripts run api-extractor && npm --prefix packages/sites-scripts run generate-docs && npm run fmt"
   },
   "engines": {
     "node": ">=17"

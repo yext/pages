@@ -1,0 +1,20 @@
+name: Build and Test (Sites Scripts)
+
+on:
+  push:
+    branches-ignore:
+      - "main"
+    paths:
+      - "packages/sites-scripts/**"
+
+jobs:
+  call_build:
+    uses: ./.github/workflows/build.yml
+    with:
+      package: "sites-scripts"
+
+  call_unit_test:
+    needs: call_build
+    uses: ./.github/workflows/unit_test.yml
+    with:
+      package: "sites-scripts"
