@@ -6,6 +6,6 @@
 
 ## Packages
 
-| Package                                             | Description |
-| --------------------------------------------------- | ----------- |
-| [@yext/yext-sites-scripts](./yext-sites-scripts.md) |             |
+| Package                                   | Description |
+| ----------------------------------------- | ----------- |
+| [@yext/sites-scripts](./sites-scripts.md) |             |
