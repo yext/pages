@@ -31,7 +31,7 @@ the starter this local repository update the starter's `package.json`'s `@yext/s
 dependency to `file:path/to/this/package/`.
 
 ```
-npm run build
+pnpm build
 ```
 
 This command uses esbuild to transpile assets and puts them into `dist`. Since this package's `bin`
@@ -39,44 +39,44 @@ specifies an entry-point in the `dist` directory you'll need to run this command
 changes in source so that they're picked up in any test repositories you're working on.
 
 ```
-npm run watch
+pnpm watch
 ```
 
 This command does the same this as `build` except it does it in watchmode anytime a source file is
 updated the build will be automatically re-run.
 
 ```
-npm run types
+pnpm types
 ```
 
 This command runs `tsc` to generate type declaration files and outputs them in `dist/types`.
 
 ```
-npm run fmt
+pnpm fmt
 ```
 
 This command runs prettier for standardized formatting across all files.
 
 ```
-npm run docs:dev
+pnpm docs:dev
 ```
 
 This command will start the vitepress devserver with hot module reloading to quickly test changes to documentation. It will generate a webpage for each markdown file in the `docs` directory according to the config specified in `docs/.vitepress/config.ts`
 
 ```
-npm run docs:build
+pnpm docs:build
 ```
 
 This command will use vitepress to fully build the html pages for the documentation site and puts them into `docs/.vitepress/dist`. Similar to the `docs:dev` command, it will generate an html page for each markdown file in the `docs` directory according to the configuration specified in `docs/.vitepress/config.ts`.
 
 ```
-npm run docs:serve
+pnpm docs:serve
 ```
 
 This command will run the same build as the `docs:build` command and it will then serve the fully generated html files on a local server. This allows inspection of the documentation webpages in a way that's fully consistent with what will be served on the real website.
 
 ```
-npm run test
+pnpm test
 ```
 
 This command will run all the tests in the package using Jest as the test runner.

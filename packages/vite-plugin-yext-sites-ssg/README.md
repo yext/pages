@@ -18,7 +18,7 @@ the starter this local repository update the starter's `package.json`'s `@yext/y
 dependency to `file:path/to/this/package/`.
 
 ```
-npm run build
+pnpm build
 ```
 
 This command uses esbuild to transpile assets and puts them into `dist`. Since this package's `bin`
@@ -26,20 +26,20 @@ specifies an entry-point in the `dist` directory you'll need to run this command
 changes in source so that they're picked up in any test repositories you're working on.
 
 ```
-npm run watch
+pnpm watch
 ```
 
 This command does the same this as `build` except it does it in watchmode anytime a source file is
 updated the build will be automatically re-run.
 
 ```
-npm run types
+pnpm types
 ```
 
 This command runs `tsc` to generate type declaration files and outputs them in `dist/types`.
 
 ```
-npm run fmt
+pnpm fmt
 ```
 
 This command runs prettier for standardized formatting across all files.

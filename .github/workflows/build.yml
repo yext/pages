@@ -17,16 +17,25 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.2
+
       - name: Build with NodeJS 18
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "npm"
+          cache: "pnpm"
+
       - name: Authenticate with private NPM package
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-      - run: npm ci
-      - run: npm run build
-      - run: npm run types
+
+      - name: Install deps
+        run: pnpm i
+
+      - name: Build
+        run: pnpm run build
+
       - name: Create build-output artifact
         uses: actions/upload-artifact@v3
         with:

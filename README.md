@@ -26,14 +26,6 @@ Log into the yext npm account.
 
 `npm login`
 
-Build sites-scripts
+This repository uses pnpm. Build all packages.
 
-`npm i && npm run release`
-
-## How to use sites-scripts now that it's pulled and built locally
-
-Update your package.json like the following (assuming your repo is in the same root directory as sites-scripts):
-
-```json
-"@yext/sites-scripts": "file:../sites-scripts/packages/sites-scripts",
-```
+`pnpm i && pnpm release`

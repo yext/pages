@@ -21,6 +21,7 @@ const testFilter = (f) =>
   !f.endsWith(".test.tsx") &&
   !f.endsWith(".test.js");
 const filters = new Set(["./src/bundler.js"]);
+
 const files = glob
   .sync("./src/**/*\\.*")
   .filter(testFilter)
@@ -30,9 +31,9 @@ const files = glob
 files.push.apply(
   files,
   glob
-    .sync("../common/**/*.*")
+    .sync("../../common/**/*.*")
     .filter(testFilter)
-    .filter((f) => f !== "../common/tsconfig.json")
+    .filter((f) => f !== "../../common/tsconfig.json")
 );
 
 const commonBuildOpts = {
