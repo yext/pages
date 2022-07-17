@@ -13,7 +13,7 @@
     "fmt": "prettier -w .",
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
     "lint": "pnpm -r run lint",
-    "docs": "pnpm -r --parallel run api-extractor && pnpm -r --parallel run generate-docs && pnpm run fmt"
+    "docs": "pnpm -r run api-extractor && pnpm -r run generate-docs && pnpm run fmt"
   },
   "engines": {
     "node": ">=17"
