@@ -41,7 +41,6 @@ jobs:
           pnpm i --ignore-scripts
           pnpm rebuild
           pnpm run generate-notices
-          git restore package-lock.json
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
