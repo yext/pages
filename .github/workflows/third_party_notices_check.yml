@@ -36,9 +36,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Remove package-lock files
-        run: rm ./packages/sites-scripts/package-lock.json ./packages/vite-plugin-yext-sites-ssg/package-lock.json
-
       - name: Generate root level licenses
         run : |
           pnpm i --ignore-scripts
