@@ -4,8 +4,6 @@ on:
   push:
     branches-ignore:
       - "main"
-    paths:
-      - "packages/sites-scripts/**"
 
 jobs:
   call_build:
