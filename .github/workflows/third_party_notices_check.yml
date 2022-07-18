@@ -5,50 +5,45 @@ on: pull_request
 jobs:
   license-check-setup:
     runs-on: ubuntu-latest
-    steps:
+    steps:  
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x
           registry-url: 'https://registry.npmjs.org'
-      - run: npm install -g generate-license-file
-      - uses: actions/checkout@v3
-      # The generate license package has a dependency
-      # that makes an assumption that node_modules will
-      # live at the same level as the package.json.
-      # Therefore, for this to run correctly we have to
-      # remove the workspaces config.
-      - name: Run remove_workspace script
-        run: ./scripts/remove_workspace.sh
-        shell: bash
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.2
+      
+      - name: Global install generate-license-file
+        run: pnpm i -g generate-license-file
+
       - name: Generate sites-scripts licenses
         run : |
-          npm i --ignore-scripts
-          npm rebuild
-          npm run generate-notices
+          pnpm i --ignore-scripts
+          pnpm rebuild
+          pnpm run generate-notices
         working-directory: ./packages/sites-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Generate vite-plugin-yext-sites-ssg licenses
         run : |
-          npm i --ignore-scripts
-          npm rebuild
-          npm run generate-notices
+          pnpm i --ignore-scripts
+          pnpm rebuild
+          pnpm run generate-notices
         working-directory: ./packages/vite-plugin-yext-sites-ssg
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Remove package-lock files
-        run: rm ./packages/sites-scripts/package-lock.json ./packages/vite-plugin-yext-sites-ssg/package-lock.json
+
       - name: Generate root level licenses
         run : |
-          npm i --ignore-scripts
-          npm rebuild
-          npm run generate-notices
-          git restore package-lock.json
+          pnpm i --ignore-scripts
+          pnpm rebuild
+          pnpm run generate-notices
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Run add_workspace script
-        run: ./scripts/add_workspace.sh
-        shell: bash
+
       - name: Update THIRD-PARTY-NOTICES
         uses: EndBug/add-and-commit@v7
         with:

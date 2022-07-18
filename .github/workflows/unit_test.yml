@@ -20,15 +20,24 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.2
+
       - name: "test with node ${{ matrix.node-version }}"
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: npm ci
+          cache: "pnpm"
+      
+      - name: Install deps
+        run: pnpm i
+
       - name: Download build artifact
         uses: actions/download-artifact@v3
         with:
           name: build-output
           path: dist/
-      - run: npm run test --if-present
+
+      - name: Run tests
+        run: pnpm run test

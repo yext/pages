@@ -58,7 +58,7 @@ let files = glob
 files.push.apply(
   files,
   glob
-    .sync("../common/**/*.*")
+    .sync("../common/src/**/*.*")
     .filter(testFilter)
     .filter((f) => f !== "../common/tsconfig.json")
 );

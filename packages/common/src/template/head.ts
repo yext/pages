@@ -1,4 +1,4 @@
-import { TemplateRenderProps } from "./types";
+import { TemplateRenderProps } from "./types.js";
 import pc from "picocolors";
 
 /**

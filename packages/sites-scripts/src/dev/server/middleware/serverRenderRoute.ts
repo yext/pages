@@ -10,7 +10,7 @@ import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplat
 import {
   renderHeadConfigToString,
   getLang,
-} from "../../../../../common/src/template/head";
+} from "../../../../../common/src/template/head.js";
 import { ProjectStructure } from "../../../../../common/src/project/structure.js";
 
 type Props = {
