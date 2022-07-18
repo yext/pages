@@ -36,6 +36,9 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Generate types
+        run: pnpm run types
+
       - name: Create build-output artifact
         uses: actions/upload-artifact@v3
         with:
