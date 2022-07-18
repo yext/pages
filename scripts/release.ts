@@ -58,14 +58,13 @@ async function main(): Promise<void> {
     throw new Error(`invalid target version: ${targetVersion}`)
   }
 
-  const tag =
-    pkgName === 'vite' ? `v${targetVersion}` : `${pkgName}@${targetVersion}`
+  const tag = `${pkgName}@${targetVersion}`;
 
   if (targetVersion.includes('beta') && !args.tag) {
-    args.tag = 'beta'
+    args.tag = 'beta';
   }
   if (targetVersion.includes('alpha') && !args.tag) {
-    args.tag = 'alpha'
+    args.tag = 'alpha';
   }
 
   const { yes }: { yes: boolean } = await prompts({
@@ -75,7 +74,7 @@ async function main(): Promise<void> {
   })
 
   if (!yes) {
-    return
+    return;
   }
 
   step('\nUpdating package version...')
@@ -92,7 +91,7 @@ async function main(): Promise<void> {
     '--commit-path',
     '.'
   ]
-  if (pkgName !== 'vite') changelogArgs.push('--lerna-package', pkgName)
+
   await run('npx', changelogArgs, { cwd: pkgDir })
 
   const { stdout } = await run('git', ['diff'], { stdio: 'pipe' })
