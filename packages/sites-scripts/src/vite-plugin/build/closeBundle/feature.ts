@@ -5,7 +5,7 @@ import {
   FeaturesConfig,
   FeatureConfig,
   convertTemplateConfigToFeatureConfig,
-} from "../../../../common/src/feature/features.js";
+} from "../../../common/src/feature/features.js";
 
 /**
  * Run feature.json Generation. Returns a mapping of feature name to bundle path.
@@ -45,7 +45,7 @@ const mergeFeatureJson = (
 ): FeaturesConfig => {
   let originalFeaturesJson = {} as any;
   if (fs.existsSync(featurePath)) {
-    originalFeaturesJson = JSON.parse(fs.readFileSync(featurePath));
+    originalFeaturesJson = JSON.parse(fs.readFileSync(featurePath).toString());
   }
 
   return {

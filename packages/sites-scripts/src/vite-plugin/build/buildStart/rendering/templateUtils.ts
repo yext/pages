@@ -5,13 +5,13 @@ import {
   TemplateRenderProps,
   Manifest,
   TemplateModule,
-} from "../../../../../common/src/template/types.js";
-import { getRelativePrefixToRootFromPath } from "../../../../../common/src/template/paths.js";
+} from "../../../../common/src/template/types.js";
+import { getRelativePrefixToRootFromPath } from "../../../../common/src/template/paths.js";
 import { reactWrapper } from "./wrapper.js";
 import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
-} from "../../../../../common/src/template/internal/types.js";
+} from "../../../../common/src/template/internal/types.js";
 
 const pathToModule = new Map();
 

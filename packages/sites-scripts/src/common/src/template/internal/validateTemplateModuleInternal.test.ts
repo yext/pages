@@ -47,10 +47,10 @@ describe("validateTemplateModuleInternal - validateConfig", () => {
 
 describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () => {
   it("validates that getPath is defined", async () => {
-    const templateModuleInteral: TemplateModuleInternal<any, any> = {
-      default: null,
-      getPath: null,
-      getRedirects: null,
+    const templateModuleInteral: Partial<TemplateModuleInternal<any, any>> = {
+      default: undefined,
+      getPath: undefined,
+      getRedirects: undefined,
       templateName: "foo",
       filename: "foo.tsx",
       path: "/src/templates/foo.tsx",
@@ -61,7 +61,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
     };
 
     const validateTemplateModuleInternalFunc = () =>
-      validateTemplateModuleInternal(templateModuleInteral);
+      validateTemplateModuleInternal(templateModuleInteral as TemplateModuleInternal<any, any>);
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
       `Template foo.tsx is missing an exported getPath function.`
@@ -69,8 +69,8 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
   });
 
   it("validates that at least one of default or render is defined", async () => {
-    const templateModuleInteral: TemplateModuleInternal<any, any> = {
-      default: null,
+    const templateModuleInteral: Partial<TemplateModuleInternal<any, any>> = {
+      default: undefined,
       getPath: () => "",
       getRedirects: () => [],
       templateName: "foo",
@@ -83,7 +83,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
     };
 
     const validateTemplateModuleInternalFunc = () =>
-      validateTemplateModuleInternal(templateModuleInteral);
+      validateTemplateModuleInternal(templateModuleInteral as TemplateModuleInternal<any, any>);
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
       `Module foo.tsx does not have the necessary exports to produce page. ` +

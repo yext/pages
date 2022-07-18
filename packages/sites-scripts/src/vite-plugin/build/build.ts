@@ -4,7 +4,7 @@ import closeBundle from "./closeBundle/closeBundle.js";
 import { readdir } from "fs/promises";
 import { parse } from "path";
 import { InputOption } from "rollup";
-import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { ProjectStructure } from "../../common/src/project/structure.js";
 
 const intro = `var global = globalThis;`;
 
@@ -57,7 +57,7 @@ const discoverInputs = async (
   templateDir: string,
   hydrationOutputDir: string
 ): Promise<InputOption> => {
-  return (await readdir(templateDir)).reduce((input, template) => {
+  return (await readdir(templateDir)).reduce((input: Record<any, any>, template) => {
     const parsedPath = parse(template);
 
     if (parsedPath.ext === ".tsx" || parsedPath.ext === ".jsx") {

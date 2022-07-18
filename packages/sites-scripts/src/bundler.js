@@ -1,6 +1,7 @@
 import esbuild from "esbuild";
 import glob from "glob";
-import { rmSync } from "fs";
+import path from "path";
+import { rmSync, mkdirSync, copyFile } from "fs";
 
 let watch = false;
 const args = process.argv.slice(2);
@@ -43,6 +44,7 @@ const commonBuildOpts = {
   loader: {
     ".ts": "ts",
     ".html": "text",
+    ".md": "text",
   },
   tsconfig: "tsconfig.json",
   logLevel: "error",
@@ -59,7 +61,21 @@ const commonBuildOpts = {
   },
 };
 
-// ESM
+/**
+ * Copy yext plugin files from src/ to dist/ so they can be copied into the starter by the Vite
+ * plugin.
+ */
+const pluginOutputPath = "./dist/plugin/";
+const pluginFiles = glob.sync("../yext-function/**.ts");
+mkdirSync(pluginOutputPath, { recursive: true });
+pluginFiles.map((filepath) =>
+  copyFile(
+    filepath,
+    `${pluginOutputPath}${path.basename(filepath)}`,
+    () => undefined
+  )
+);
+
 try {
   await esbuild.build({
     ...commonBuildOpts,

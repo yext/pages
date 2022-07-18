@@ -4,7 +4,7 @@ import logger from "../../log.js";
 import fs from "fs";
 import { PluginContext, NormalizedInputOptions, EmitFile } from "rollup";
 import { generateHydrationEntryPoints } from "./hydration.js";
-import { ProjectStructure } from "../../../../common/src/project/structure.js";
+import { ProjectStructure } from "../../../common/src/project/structure.js";
 
 const REACT_EXTENSIONS = new Set([".tsx", ".jsx"]);
 

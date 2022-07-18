@@ -1,5 +1,5 @@
 import { HeadConfig, renderHeadConfigToString, TagType, getLang } from "./head";
-import { TemplateRenderProps } from "./types";
+import { TemplateModule, TemplateRenderProps } from "./types";
 
 describe("renderHeadConfigToString", () => {
   it("properly renders a default title and excludes missing optionals", async () => {
@@ -111,7 +111,7 @@ describe("getLang", () => {
     const lang = "fr";
     const headConfig: HeadConfig = { lang: lang };
 
-    expect(getLang(headConfig, undefined)).toEqual(lang);
+    expect(getLang(headConfig, templateProps)).toEqual(lang);
   });
 
   it("returns the correct lang when headConfig does not override it", async () => {
@@ -127,6 +127,25 @@ describe("getLang", () => {
   });
 
   it("returns the correct lang when both headConfig and props do not contain a lang/locale", async () => {
-    expect(getLang(undefined, undefined)).toEqual("en");
+    expect(getLang(undefined, templateProps)).toEqual("en");
   });
 });
+
+const templateProps: TemplateRenderProps = {
+  path: "",
+  relativePrefixToRoot: "",
+  document: {},
+  __meta: {
+    mode: "development",
+    manifest: {
+      bundlePaths: {},
+      projectFilepaths: {
+        templatesRoot: "",
+        distRoot: "",
+        hydrationBundleOutputRoot: "",
+        serverBundleOutputRoot: ""
+      },
+      bundlerManifest: {}
+    }
+  }
+}
