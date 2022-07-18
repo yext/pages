@@ -1,4 +1,7 @@
-import { Manifest, TemplateProps } from "../../../../common/src/template/types.js";
+import {
+  Manifest,
+  TemplateProps,
+} from "../../../../common/src/template/types.js";
 import {
   generateResponses,
   readTemplateModules,

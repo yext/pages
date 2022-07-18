@@ -61,7 +61,9 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
     };
 
     const validateTemplateModuleInternalFunc = () =>
-      validateTemplateModuleInternal(templateModuleInteral as TemplateModuleInternal<any, any>);
+      validateTemplateModuleInternal(
+        templateModuleInteral as TemplateModuleInternal<any, any>
+      );
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
       `Template foo.tsx is missing an exported getPath function.`
@@ -83,7 +85,9 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
     };
 
     const validateTemplateModuleInternalFunc = () =>
-      validateTemplateModuleInternal(templateModuleInteral as TemplateModuleInternal<any, any>);
+      validateTemplateModuleInternal(
+        templateModuleInteral as TemplateModuleInternal<any, any>
+      );
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
       `Module foo.tsx does not have the necessary exports to produce page. ` +

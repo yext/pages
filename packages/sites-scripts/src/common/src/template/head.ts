@@ -129,7 +129,7 @@ const renderAttributes = (attributes: Attributes): string => {
  */
 export const getLang = <T extends TemplateRenderProps>(
   headConfig: HeadConfig | undefined,
-  props: T,
+  props: T
 ): string => {
   if (!!headConfig?.lang) {
     return headConfig.lang;

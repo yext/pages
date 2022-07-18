@@ -143,9 +143,9 @@ const templateProps: TemplateRenderProps = {
         templatesRoot: "",
         distRoot: "",
         hydrationBundleOutputRoot: "",
-        serverBundleOutputRoot: ""
+        serverBundleOutputRoot: "",
       },
-      bundlerManifest: {}
-    }
-  }
-}
+      bundlerManifest: {},
+    },
+  },
+};
