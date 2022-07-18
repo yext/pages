@@ -40,4 +40,4 @@ jobs:
           path: dist/
 
       - name: Run tests
-        run: pnpm run test --if-present
+        run: pnpm run test
