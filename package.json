@@ -8,13 +8,13 @@
   "main": "index.js",
   "scripts": {
     "build": "pnpm -r run build",
+    "build:release": "pnpm -r run build:release",
     "test": "pnpm -r run test",
-    "release": "pnpm -r run release",
+    "release": "tsx scripts/release.ts",
     "fmt": "prettier -w .",
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
     "lint": "pnpm -r run lint",
     "docs": "pnpm -r run api-extractor && pnpm -r run generate-docs && pnpm run fmt",
-    "release2": "tsx scripts/release.ts",
     "ci-publish": "tsx scripts/publishCI.ts"
   },
   "engines": {
