@@ -1,31 +1,27 @@
 import { args, getPackageInfo, publishPackage, step } from "./releaseUtils";
 
-async function main() {
-  const tag = args._[0];
 
-  if (!tag) {
-    throw new Error("No tag specified");
-  }
+const tag = args._[0];
 
-  const [pkgName, version] = tag.split("@");
-
-  const { currentVersion, pkgDir } = getPackageInfo(pkgName);
-  if (currentVersion !== version) {
-    throw new Error(
-      `Package version from tag "${version}" mismatches with current version "${currentVersion}"`
-    );
-  }
-
-  step("Publishing package...");
-  const releaseTag = version.includes("beta")
-    ? "beta"
-    : version.includes("alpha")
-    ? "alpha"
-    : undefined;
-  await publishPackage(pkgDir, releaseTag);
+if (!tag) {
+  console.error("No tag specified");
+  process.exit(1);
 }
 
-main().catch((err) => {
-  console.error(err);
+const [pkgName, version] = tag.split("@");
+
+const { currentVersion, pkgDir } = await getPackageInfo(pkgName);
+if (currentVersion !== version) {
+  console.error(
+    `Package version from tag "${version}" mismatches with current version "${currentVersion}"`
+  );
   process.exit(1);
-});
+}
+
+step("Publishing package...");
+const releaseTag = version.includes("beta")
+  ? "beta"
+  : version.includes("alpha")
+  ? "alpha"
+  : undefined;
+await publishPackage(pkgDir, releaseTag);
