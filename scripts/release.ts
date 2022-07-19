@@ -55,7 +55,8 @@ if (!targetVersion) {
 }
 
 if (!semver.valid(targetVersion)) {
-  throw new Error(`invalid target version: ${targetVersion}`);
+  console.error(`invalid target version: ${targetVersion}`);
+  process.exit(1);
 }
 
 const tag = `${pkgName}@${targetVersion}`;

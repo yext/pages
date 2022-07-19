@@ -42,7 +42,8 @@ export async function getPackageInfo(pkgName: string): Promise<{
   const pkgDir = path.resolve(__dirname, "../packages/" + pkgName);
 
   if (!existsSync(pkgDir)) {
-    throw new Error(`Package ${pkgName} not found`);
+    console.error(`Package ${pkgName} not found`);
+    process.exit(1);
   }
 
   const pkgPath = path.resolve(pkgDir, "package.json");
@@ -51,7 +52,8 @@ export async function getPackageInfo(pkgName: string): Promise<{
   const currentVersion = pkg.version;
 
   if (pkg.private) {
-    throw new Error(`Package ${pkgName} is private`);
+    console.error(`Package ${pkgName} is private`);
+    process.exit(1);
   }
 
   return {
