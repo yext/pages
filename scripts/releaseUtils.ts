@@ -10,6 +10,7 @@ import type { ReleaseType } from "semver";
 import semver from "semver";
 import fs from "fs-extra";
 import minimist from "minimist";
+import { fileURLToPath } from 'url';
 
 export const args = minimist(process.argv.slice(2));
 
@@ -29,13 +30,15 @@ interface Pkg {
   version: string;
   private?: boolean;
 }
-export function getPackageInfo(pkgName: string): {
+export async function getPackageInfo(pkgName: string): Promise<{
   pkg: Pkg;
   pkgName: string;
   pkgDir: string;
   pkgPath: string;
   currentVersion: string;
-} {
+}> {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
   const pkgDir = path.resolve(__dirname, "../packages/" + pkgName);
 
   if (!existsSync(pkgDir)) {
@@ -43,7 +46,8 @@ export function getPackageInfo(pkgName: string): {
   }
 
   const pkgPath = path.resolve(pkgDir, "package.json");
-  const pkg: Pkg = require(pkgPath);
+  const pkg: Pkg = await import(pkgPath);
+
   const currentVersion = pkg.version;
 
   if (pkg.private) {
