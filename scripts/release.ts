@@ -17,7 +17,6 @@ import {
   updateVersion,
 } from "./releaseUtils";
 
-
 let targetVersion: string | undefined;
 
 const { pkg }: { pkg: string } = await prompts({

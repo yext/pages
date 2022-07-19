@@ -10,7 +10,7 @@ import type { ReleaseType } from "semver";
 import semver from "semver";
 import fs from "fs-extra";
 import minimist from "minimist";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 
 export const args = minimist(process.argv.slice(2));
 

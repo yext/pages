@@ -1,6 +1,5 @@
 import { args, getPackageInfo, publishPackage, step } from "./releaseUtils";
 
-
 const tag = args._[0];
 
 if (!tag) {
