@@ -17,13 +17,14 @@
   ],
   "scripts": {
     "build": "node src/bundler.js",
+    "build:release": "pnpm run build && pnpm run types",
     "watch": "node src/bundler.js --watch",
     "types": "tsc",
     "fmt": "prettier -w src",
     "test": "jest",
-    "release": "pnpm run build && pnpm run types",
     "lint": "eslint .",
-    "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite"
+    "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
+    "prepublishOnly": "pnpm run build:release"
   },
   "prepublish": "pnpm run release",
   "keywords": [

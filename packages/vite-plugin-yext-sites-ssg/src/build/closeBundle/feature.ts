@@ -45,7 +45,7 @@ const mergeFeatureJson = (
 ): FeaturesConfig => {
   let originalFeaturesJson = {} as any;
   if (fs.existsSync(featurePath)) {
-    originalFeaturesJson = JSON.parse(fs.readFileSync(featurePath));
+    originalFeaturesJson = JSON.parse(fs.readFileSync(featurePath).toString());
   }
 
   return {
