@@ -43,7 +43,6 @@ const commonBuildOpts = {
   loader: {
     ".ts": "ts",
     ".html": "text",
-    ".md": "text",
   },
   tsconfig: "tsconfig.json",
   logLevel: "error",
