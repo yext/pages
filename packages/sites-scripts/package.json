@@ -8,11 +8,11 @@
     "Yext",
     "React"
   ],
+  "main": "./dist/index.js",
   "type": "module",
   "types": "dist/types/sites-scripts/src/index.d.ts",
   "exports": {
-    ".": "./dist/sites-scripts/src/index.js",
-    "./vite-plugin": "./dist/sites-scripts/src/vite-plugin/plugin.js"
+    "./vite-plugin": "./dist/vite-plugin/plugin.js"
   },
   "engines": {
     "node": ">=17"
@@ -34,7 +34,7 @@
     "prepublishOnly": "pnpm run build:release"
   },
   "bin": {
-    "yss": "dist/sites-scripts/src/bin/sites-scripts.js"
+    "yss": "dist/bin/sites-scripts.js"
   },
   "files": [
     "dist/**/*",

@@ -1,5 +1,5 @@
-import { HeadConfig, renderHeadConfigToString, TagType, getLang } from "./head";
-import { TemplateModule, TemplateRenderProps } from "./types";
+import { HeadConfig, renderHeadConfigToString, getLang } from "./head";
+import { TemplateRenderProps } from "./types";
 
 describe("renderHeadConfigToString", () => {
   it("properly renders a default title and excludes missing optionals", async () => {
