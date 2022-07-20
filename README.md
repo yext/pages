@@ -2,9 +2,9 @@
 
 An out-of-the-box toolchain integrated with Yext Sites.
 
-There are 1 npm package which lives in this repository.
+There is 1 npm package which lives in this repository.
 
-The second is `@yext/sites-scripts`, a CLI which provides a default development and production toolchain bundling assets and templates for Yext Sites.
+It is `@yext/sites-scripts`, a CLI which provides a default development and production toolchain bundling assets and templates for Yext Sites.
 Backed by vite, it provides a custom devserver for template development and a production build which leverages the vite plugin.
 <br><br>
 
