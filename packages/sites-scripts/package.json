@@ -121,14 +121,14 @@
         "tsconfig": {
           "allowSyntheticDefaultImports": true,
           "esModuleInterop": true,
-          "allowJs": true
+          "allowJs": true,
+          "target": "ESNext"
         }
       }
     },
     "verbose": true,
     "testMatch": [
-      "<rootDir>/sites-scripts/src/**/*.test.{ts,js}",
-      "<rootDir>/common/**/src/**/*.test.{ts,js}"
+      "<rootDir>/sites-scripts/src/**/*.test.{ts,js}"
     ],
     "transform": {
       "\\.[jt]sx?$": "ts-jest"
