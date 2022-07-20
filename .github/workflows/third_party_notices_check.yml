@@ -5,16 +5,16 @@ on: pull_request
 jobs:
   license-check-setup:
     runs-on: ubuntu-latest
-    steps:  
+    steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x
           registry-url: 'https://registry.npmjs.org'
-      
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.2
-      
+
       - name: Global install generate-license-file
         run: pnpm i -g generate-license-file
 
@@ -24,15 +24,6 @@ jobs:
           pnpm rebuild
           pnpm run generate-notices
         working-directory: ./packages/sites-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Generate vite-plugin-yext-sites-ssg licenses
-        run : |
-          pnpm i --ignore-scripts
-          pnpm rebuild
-          pnpm run generate-notices
-        working-directory: ./packages/vite-plugin-yext-sites-ssg
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

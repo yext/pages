@@ -7,7 +7,7 @@ import {
   loadTemplateModules,
   TemplateModuleCollection,
 } from "./moduleLoader.js";
-import { ProjectStructure } from "../../../../common/src/project/structure.js";
+import { ProjectStructure } from "../../../common/src/project/structure.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {

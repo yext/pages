@@ -1,12 +1,12 @@
-import { TemplateModuleInternal } from "../../../../../common/src/template/internal/types.js";
+import { TemplateModuleInternal } from "../../../../common/src/template/internal/types.js";
 import {
   renderHeadConfigToString,
   getLang,
-} from "../../../../../common/src/template/head.js";
+} from "../../../../common/src/template/head.js";
 import {
   TemplateRenderProps,
   GetHeadConfig,
-} from "../../../../../common/src/template/types.js";
+} from "../../../../common/src/template/types.js";
 
 export const reactWrapper = <T extends TemplateRenderProps>(
   props: T,
@@ -15,7 +15,7 @@ export const reactWrapper = <T extends TemplateRenderProps>(
   hydrate: boolean,
   getHeadConfig?: GetHeadConfig<any>
 ): string => {
-  const projectFilepaths = props.__meta.manifest.projectFilepaths;
+  const projectFilepaths = props.__meta.manifest!.projectFilepaths;
   const headConfig = getHeadConfig ? getHeadConfig(props) : undefined;
   const lang = getLang(headConfig, props);
 
@@ -25,7 +25,7 @@ export const reactWrapper = <T extends TemplateRenderProps>(
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(props)}</script>
         ${getCssTags(
           `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`,
-          props.__meta.manifest.bundlerManifest,
+          props.__meta.manifest!.bundlerManifest,
           new Set()
         )
           .map((f) => `<link rel="stylesheet" href="/${f}"/>`)

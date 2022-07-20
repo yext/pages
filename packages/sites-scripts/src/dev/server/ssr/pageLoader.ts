@@ -3,16 +3,16 @@ import { TEMPLATE_PATH } from "./constants.js";
 import { ViteDevServer } from "vite";
 import { generateTestDataForPage } from "./generateTestData.js";
 import templateBase from "../public/templateBase";
-import { FeaturesConfig } from "../../../../../common/src/feature/features.js";
+import { FeaturesConfig } from "../../../common/src/feature/features.js";
 import {
   TemplateProps,
   TransformProps,
   GetPath,
   TemplateRenderProps,
-} from "../../../../../common/src/template/types.js";
-import { getRelativePrefixToRootFromPath } from "../../../../../common/src/template/paths.js";
+} from "../../../common/src/template/types.js";
+import { getRelativePrefixToRootFromPath } from "../../../common/src/template/paths.js";
 import React from "react";
-import { ProjectStructure } from "../../../../../common/src/project/structure.js";
+import { ProjectStructure } from "../../../common/src/project/structure.js";
 
 type PageLoaderValues = {
   url: string;

@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - "sites-scripts*" # Push events to matching site-scripts*, i.e. sites-scripts@1.0.0
-      - "vite-plugin-yext-sites-ssg*" # Push events to matching vite-plugin-yext-sites-ssg*, i.e. vite-plugin-yext-sites-ssg@1.0.0
 
 jobs:
   publish:

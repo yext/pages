@@ -10,7 +10,7 @@ import {
 import { CLI_STREAM_DATA } from "../../../../tests/fixtures/cli_stream_data";
 import { FEATURE_CONFIG } from "../../../../tests/fixtures/feature_config";
 import { Socket } from "net";
-import { ProjectStructure } from "../../../../../common/src/project/structure";
+import { ProjectStructure } from "../../../common/src/project/structure";
 
 const mockParentProcessStdout = jest.mocked(new WriteStream(0));
 mockParentProcessStdout.write = jest.fn();

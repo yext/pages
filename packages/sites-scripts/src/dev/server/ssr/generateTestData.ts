@@ -1,5 +1,5 @@
 import { spawn } from "child_process";
-import { FeaturesConfig } from "../../../../../common/src/feature/features";
+import { FeaturesConfig } from "../../../common/src/feature/features";
 import {
   CLI_BOILERPLATE_BETA_MESSAGE,
   STREAM_DATA_CHUNK_BEGIN,
@@ -8,7 +8,7 @@ import {
 } from "./constants";
 import path from "path";
 import fs from "fs";
-import { ProjectStructure } from "../../../../../common/src/project/structure";
+import { ProjectStructure } from "../../../common/src/project/structure";
 
 /**
  * generateTestData will run yext sites generate-test-data and return true in

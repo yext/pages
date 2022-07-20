@@ -5,7 +5,7 @@ import { loadTemplateModule } from "./loadTemplateModule.js";
 import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
-} from "../../../../../common/src/template/internal/types.js";
+} from "../../../common/src/template/internal/types.js";
 
 // Determines the template module to load from a given feature name (from the exported config)
 export const featureNameToTemplateModuleInternal = async (

@@ -6,7 +6,7 @@ import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import { viteDevServerPort } from "./middleware/constants.js";
 import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
-import { ProjectStructure } from "../../../../common/src/project/structure.js";
+import { ProjectStructure } from "../../common/src/project/structure.js";
 
 export const createServer = async (dynamicGenerateData: boolean) => {
   // creates a standard express app

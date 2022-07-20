@@ -3,7 +3,7 @@ import {
   Optional,
   ProjectStructure,
   ProjectStructureConfig,
-} from "../../common/src/project/structure.js";
+} from "../common/src/project/structure.js";
 import { build } from "./build/build.js";
 
 /**

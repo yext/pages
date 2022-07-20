@@ -1,5 +1,6 @@
-import { HeadConfig, renderHeadConfigToString, TagType, getLang } from "./head";
+import { HeadConfig, renderHeadConfigToString, getLang } from "./head";
 import { TemplateRenderProps } from "./types";
+import pc from "picocolors";
 
 describe("renderHeadConfigToString", () => {
   it("properly renders a default title and excludes missing optionals", async () => {
@@ -26,6 +27,30 @@ describe("renderHeadConfigToString", () => {
     expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
       expectedHeadConfig.replaceAll(" ", "")
     );
+  });
+
+  it("properly renders tag whose type is not supported", async () => {
+    const headConfig = {
+      title: "foo",
+      charset: "UTF-8",
+      viewport: "bar",
+      tags: [
+        {
+          type: "wrongType",
+          attributes: {
+            details: "shouldnotrender",
+          },
+        },
+      ],
+    };
+
+    const expectedHeadConfig = `<title>foo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="bar">`;
+
+    expect(
+      renderHeadConfigToString(headConfig as HeadConfig).replaceAll(" ", "")
+    ).toEqual(expectedHeadConfig.replaceAll(" ", ""));
   });
 
   it("properly renders the title and optionals", async () => {
@@ -104,6 +129,37 @@ describe("renderHeadConfigToString", () => {
       expectedHeadConfig.replaceAll(" ", "")
     );
   });
+
+  it("properly logs warning when rendering tag whose type is not supported", async () => {
+    const headConfig = {
+      title: "foo",
+      charset: "UTF-8",
+      viewport: "bar",
+      tags: [
+        {
+          type: "wrongtype",
+          attributes: {
+            details: "shouldnotrender",
+          },
+        },
+      ],
+    };
+
+    const expectedLog = pc.yellow(
+      `[WARNING]: Tag type wrongtype is unsupported by the Tag interface. ` +
+        `Please use "other" to render this tag.`
+    );
+
+    jest.clearAllMocks();
+    const logMock = jest.spyOn(console, "log").mockImplementation(() => {});
+
+    expect(logMock.mock.calls.length).toBe(0);
+    renderHeadConfigToString(headConfig as HeadConfig);
+    expect(logMock.mock.calls.length).toBe(1);
+    expect(logMock.mock.calls[0][0]).toBe(expectedLog);
+
+    jest.clearAllMocks();
+  });
 });
 
 describe("getLang", () => {
@@ -111,7 +167,7 @@ describe("getLang", () => {
     const lang = "fr";
     const headConfig: HeadConfig = { lang: lang };
 
-    expect(getLang(headConfig, undefined)).toEqual(lang);
+    expect(getLang(headConfig, templateProps)).toEqual(lang);
   });
 
   it("returns the correct lang when headConfig does not override it", async () => {
@@ -127,6 +183,25 @@ describe("getLang", () => {
   });
 
   it("returns the correct lang when both headConfig and props do not contain a lang/locale", async () => {
-    expect(getLang(undefined, undefined)).toEqual("en");
+    expect(getLang(undefined, templateProps)).toEqual("en");
   });
 });
+
+const templateProps: TemplateRenderProps = {
+  path: "",
+  relativePrefixToRoot: "",
+  document: {},
+  __meta: {
+    mode: "development",
+    manifest: {
+      bundlePaths: {},
+      projectFilepaths: {
+        templatesRoot: "",
+        distRoot: "",
+        hydrationBundleOutputRoot: "",
+        serverBundleOutputRoot: "",
+      },
+      bundlerManifest: {},
+    },
+  },
+};

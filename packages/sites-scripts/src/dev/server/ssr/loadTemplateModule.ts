@@ -1,6 +1,6 @@
 import { ViteDevServer } from "vite";
 import { importFresh } from "./moduleImports.js";
-import { TemplateModule } from "../../../../../common/src/template/types.js";
+import { TemplateModule } from "../../../common/src/template/types.js";
 
 // Load the template file as a module given its filename
 export const loadTemplateModule = async (

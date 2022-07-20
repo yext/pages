@@ -1,5 +1,5 @@
 import { ViteDevServer } from "vite";
-import { TemplateModule } from "../../../../../common/src/template/types";
+import { TemplateModule } from "../../../common/src/template/types";
 
 /**
  * Loads a module path with a cache-busting query param (the date) to ensure the loaded module is

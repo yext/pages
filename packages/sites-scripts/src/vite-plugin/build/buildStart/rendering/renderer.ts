@@ -1,4 +1,7 @@
-import { TemplateProps } from "../../../../../common/src/template/types.js";
+import {
+  Manifest,
+  TemplateProps,
+} from "../../../../common/src/template/types.js";
 import {
   generateResponses,
   readTemplateModules,
@@ -15,7 +18,7 @@ import {
  * @param props The stream document for the current feature.
  */
 export default async (props: TemplateProps): Promise<GeneratedPage> => {
-  const manifest = props.__meta.manifest;
+  const manifest = props.__meta.manifest as Manifest;
   const template = await readTemplateModules(props.document.__.name, manifest);
   const responses = await generateResponses(template, props);
 

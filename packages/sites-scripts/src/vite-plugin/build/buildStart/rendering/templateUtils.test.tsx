@@ -1,6 +1,6 @@
 import React from "react";
-import { TemplateModuleInternal } from "../../../../../common/src/template/internal/types";
-import { TemplateProps } from "../../../../../common/src/template/types";
+import { TemplateModuleInternal } from "../../../../common/src/template/internal/types";
+import { TemplateProps } from "../../../../common/src/template/types";
 import { generateResponses } from "./templateUtils";
 
 const baseTemplateModule: TemplateModuleInternal<any, any> = {
