@@ -63,6 +63,7 @@ export interface Stream {
   $id: string;
   fields: string[];
   filter: {
+    entityIds?: string[];
     entityTypes?: string[];
     savedFilterIds?: string[];
   };

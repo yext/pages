@@ -10,6 +10,7 @@ The filter to apply to the stream
 
 ```typescript
 filter: {
+    entityIds?: string[];
     entityTypes?: string[];
     savedFilterIds?: string[];
   };
