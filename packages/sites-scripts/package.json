@@ -4,7 +4,6 @@
   "description": "The default React development toolchain provided by Yext",
   "author": "sumo@yext.com",
   "license": "BSD-3-Clause",
-  "private": true,
   "keywords": [
     "Yext",
     "React"
@@ -21,9 +20,9 @@
   "scripts": {
     "watch": "node src/bundler --watch",
     "build": "node src/bundler.js",
+    "build:release": "pnpm run build && pnpm run types",
     "types": "tsc",
     "fmt": "prettier -w .",
-    "release": "pnpm run build && pnpm run types",
     "lint": "eslint .",
     "api-extractor": "api-extractor run --local --verbose",
     "generate-docs": "api-documenter markdown --input-folder temp --output-folder docs/api && rm -rf temp",
@@ -31,7 +30,8 @@
     "docs:build": "vitepress build docs",
     "docs:serve": "vitepress serve docs --port 8080",
     "test": "jest",
-    "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite"
+    "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
+    "prepublishOnly": "pnpm run build:release"
   },
   "bin": {
     "yss": "dist/sites-scripts/src/bin/sites-scripts.js"
