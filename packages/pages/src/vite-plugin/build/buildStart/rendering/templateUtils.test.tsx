@@ -11,7 +11,7 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
   getPath: () => {
     return "path";
   },
-  template: () => <div></div>,
+  default: () => <div></div>,
 };
 
 const baseProps: TemplateProps = {

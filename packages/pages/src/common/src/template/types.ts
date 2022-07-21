@@ -23,7 +23,7 @@ export interface TemplateModule<
   /** The exported render function */
   render?: Render<U>;
   /** The exported default template function */
-  template: Template<U>;
+  default: Template<U>;
 }
 
 /**

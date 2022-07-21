@@ -48,7 +48,7 @@ describe("validateTemplateModuleInternal - validateConfig", () => {
 describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () => {
   it("validates that getPath is defined", async () => {
     const templateModuleInteral: Partial<TemplateModuleInternal<any, any>> = {
-      template: undefined,
+      default: undefined,
       getPath: undefined,
       getRedirects: undefined,
       templateName: "foo",
@@ -72,7 +72,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
 
   it("validates that at least one of template or render is defined", async () => {
     const templateModuleInteral: Partial<TemplateModuleInternal<any, any>> = {
-      template: undefined,
+      default: undefined,
       getPath: () => "",
       getRedirects: () => [],
       templateName: "foo",
@@ -97,7 +97,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
 
   it("doesn't throw an error when the template is valid", async () => {
     const templateModuleInteral: TemplateModuleInternal<any, any> = {
-      template: {} as Template<any>,
+      default: {} as Template<any>,
       getPath: () => "",
       templateName: "foo",
       filename: "foo.tsx",

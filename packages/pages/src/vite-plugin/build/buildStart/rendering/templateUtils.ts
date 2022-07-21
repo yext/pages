@@ -91,7 +91,7 @@ const renderHtml = (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   props: TemplateRenderProps
 ) => {
-  const { template: component, render, getHeadConfig } = templateModuleInternal;
+  const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {
     throw new Error(
       `Cannot render html from template '${templateModuleInternal.config.name}'. Template is missing render function or default export.`
@@ -111,7 +111,7 @@ const renderHtml = (
   return reactWrapper(
     props,
     templateModuleInternal,
-    renderToString(createElement(templateModuleInternal.template, props)),
+    renderToString(createElement(templateModuleInternal.default, props)),
     // TODO -- allow hydration be configurable.
     true,
     getHeadConfig
