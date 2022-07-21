@@ -18,12 +18,12 @@ jobs:
       - name: Global install generate-license-file
         run: pnpm i -g generate-license-file
 
-      - name: Generate sites-scripts licenses
+      - name: Generate pages licenses
         run : |
           pnpm i --ignore-scripts
           pnpm rebuild
           pnpm run generate-notices
-        working-directory: ./packages/sites-scripts
+        working-directory: ./packages/pages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
