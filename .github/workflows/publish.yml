@@ -3,12 +3,12 @@ name: Publish Package
 on:
   push:
     tags:
-      - "pages*" # Push events to matching pages*, i.e. pages@1.0.0
+      - "sites-scripts*" # Push events to matching site-scripts*, i.e. sites-scripts@1.0.0
 
 jobs:
   publish:
     # prevents this action from running on forks
-    if: github.repository == 'yext/pages'
+    if: github.repository == 'yext/sites-scripts'
     runs-on: ubuntu-latest
     environment: Release
     steps:
