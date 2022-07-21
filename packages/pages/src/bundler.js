@@ -65,7 +65,10 @@ const commonBuildOpts = {
  * plugin.
  */
 const pluginOutputPath = "./dist/plugin/";
-const pluginFiles = glob.sync("../yext-plugin/**.ts");
+const pluginFiles = glob.sync("../yext-function/**.ts");
+if (pluginFiles.length == 0) {
+  throw new Error("Failed to find plugin files. Stopping build");
+}
 mkdirSync(pluginOutputPath, { recursive: true });
 pluginFiles.map((filepath) =>
   copyFile(
