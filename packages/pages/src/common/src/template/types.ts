@@ -22,8 +22,11 @@ export interface TemplateModule<
   getRedirects?: GetRedirects<U>;
   /** The exported render function */
   render?: Render<U>;
-  /** The exported default template function */
-  default: Template<U>;
+  /**
+   * The exported default template function. This is expected to be a React Component.
+   * If undefined then {@link render} will be used to generate the HTML instead.
+   */
+  default?: Template<U>;
 }
 
 /**

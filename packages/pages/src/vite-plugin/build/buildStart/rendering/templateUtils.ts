@@ -45,7 +45,7 @@ export const readTemplateModules = async (
 // Represents a page produced by the generation procees.
 export type GeneratedPage = {
   path: string;
-  content: string;
+  content?: string;
   redirects: string[];
 };
 
@@ -108,12 +108,14 @@ const renderHtml = (
     return render(props);
   }
 
-  return reactWrapper(
-    props,
-    templateModuleInternal,
-    renderToString(createElement(templateModuleInternal.default, props)),
-    // TODO -- allow hydration be configurable.
-    true,
-    getHeadConfig
-  );
+  if (component) {
+    return reactWrapper(
+      props,
+      templateModuleInternal,
+      renderToString(createElement(component, props)),
+      // TODO -- allow hydration be configurable.
+      true,
+      getHeadConfig
+    );
+  }
 };
