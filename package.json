@@ -1,7 +1,7 @@
 {
-  "name": "sites-scripts",
+  "name": "pages",
   "version": "0.0.1",
-  "description": "A monorepo containing all packages used in Yext Sites rendering",
+  "description": "A monorepo containing all packages used in Yext Pages rendering",
   "author": "sumo@yext.com",
   "license": "BSD-3-Clause",
   "private": true,
@@ -23,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yext/sites-scripts.git"
+    "url": "git+https://github.com/yext/pages.git"
   },
   "bugs": {
-    "url": "https://github.com/yext/sites-scripts/issues"
+    "url": "https://github.com/yext/pages/issues"
   },
-  "homepage": "https://github.com/yext/sites-scripts#readme",
+  "homepage": "https://github.com/yext/pages#readme",
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
     "@types/lodash": "^4.14.182",
