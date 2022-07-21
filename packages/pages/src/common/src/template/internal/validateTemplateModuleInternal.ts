@@ -14,7 +14,7 @@ export const validateTemplateModuleInternal = (
     );
   }
 
-  if (!templateModule.default && !templateModule.render) {
+  if (!templateModule.template && !templateModule.render) {
     throw new Error(
       `Module ${templateModule.filename} does not have the necessary exports to produce page. ` +
         "A module should either have a React component as a default export or a render function."
