@@ -27,9 +27,6 @@ jobs:
           node-version: 18
           cache: "pnpm"
 
-      - name: Authenticate with private NPM package
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-
       - name: Install deps
         run: pnpm i
 
