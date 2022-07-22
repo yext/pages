@@ -30,6 +30,7 @@ interface FeatureConfigBase {
   name: string;
   streamId?: string;
   templateType: "JS";
+  alternateLanguageFields?: string[];
 }
 
 interface EntityPageSetConfig extends FeatureConfigBase {
@@ -64,6 +65,7 @@ export const convertTemplateConfigToFeatureConfig = (
       ? config.streamId
       : undefined,
     templateType: "JS",
+    alternateLanguageFields: config.alternateLanguageFields,
   };
 
   let featureConfig: FeatureConfig;

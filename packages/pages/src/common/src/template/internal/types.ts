@@ -56,6 +56,8 @@ export interface TemplateConfigInternal {
   streamId?: string;
   /** The stream configuration used by the template */
   stream?: Stream;
+  /** The specific fields to add additional language options to based on the stream's localization */
+  alternateLanguageFields?: string[];
 }
 
 /**
