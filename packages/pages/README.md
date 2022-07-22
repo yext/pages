@@ -13,10 +13,10 @@ This command starts a devserver with hot module reloading to be used to quickly 
 JS templates.
 
 ```
-pages build
+vite build
 ```
 
-This command runs a production build on your repo. It minifies and fingerprint assets so they are
+This command runs a production build on your repo. It minifies and fingerprints assets so they are
 prepared to be statically served by a webserver. Additionally provides a default Yext Plugin to
 generate html pages from JS templates and prepares the template modules for generation.
 
@@ -24,11 +24,13 @@ generate html pages from JS templates and prepares the template modules for gene
 
 Pages has a number of scripts to assist with development. Since the tool is meant to be
 used alongside a repository set up for Yext Pages it is recommended that any changes are tested
-against a starter repository. One such starter repo is (yext/pages-starter-react-basic)[https://github.com/yext/pages-starter-react-basic].
+against a starter repository. One such starter repo is (yext/pages-starter-react-locations)[https://github.com/yext/pages-starter-react-locations].
 
-By default, this repository references a non-local version of `@yext/pages`. To point
-the starter this local repository update the starter's `package.json`'s `@yext/pages`
-dependency to `file:path/to/this/package/`.
+By default, the starter repository references a non-local version of `@yext/pages`. To point
+the starter at this local repository, first run `pnpm pack` in `./packages/pages`, then update the starter's `package.json`'s `@yext/pages`
+dependency to `file:../path/to/the/pack.tgz`.
+
+#
 
 ```
 pnpm build
@@ -50,6 +52,12 @@ pnpm types
 ```
 
 This command runs `tsc` to generate type declaration files and outputs them in `dist/types`.
+
+```
+pnpm build:release
+```
+
+Similar to `pnpm build` but also runs types.
 
 ```
 pnpm fmt
