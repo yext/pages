@@ -1,5 +1,5 @@
 import {
-  Default,
+  Template,
   GetHeadConfig,
   GetPath,
   GetRedirects,
@@ -42,8 +42,8 @@ export interface TemplateModuleInternal<
   getRedirects?: GetRedirects<U>;
   /** The exported render function */
   render?: Render<U>;
-  /** The exported default function */
-  default: Default<U>;
+  /** The exported default template function */
+  default?: Template<U>;
 }
 
 /**

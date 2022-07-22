@@ -2,12 +2,12 @@ import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "./types";
-import { Default, TemplateModule } from "../types";
+import { Template, TemplateModule } from "../types";
 
 describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () => {
   it("uses the filename as the config name when not set", async () => {
     const templateModule: TemplateModule<any, any> = {
-      default: {} as Default<any>,
+      default: {} as Template<any>,
       getPath: () => "",
       getHeadConfig: () => {
         return {
@@ -27,7 +27,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       );
 
     const expected: TemplateModuleInternal<any, any> = {
-      default: {} as Default<any>,
+      default: {} as Template<any>,
       getPath: () => "",
       getHeadConfig: () => {
         return {
@@ -50,7 +50,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
   it("overrides the config.name when defined", async () => {
     const templateModule: TemplateModule<any, any> = {
-      default: {} as Default<any>,
+      default: {} as Template<any>,
       getPath: () => "",
       config: {
         name: "myOverriddenName",
@@ -66,7 +66,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       );
 
     const expected: TemplateModuleInternal<any, any> = {
-      default: {} as Default<any>,
+      default: {} as Template<any>,
       getPath: () => "",
       config: {
         name: "myOverriddenName",
@@ -84,7 +84,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
   it("uses the filename as the config name when not set and removes the asset fingerprint", async () => {
     const templateModule: TemplateModule<any, any> = {
-      default: {} as Default<any>,
+      default: {} as Template<any>,
       getPath: () => "",
       config: {
         streamId: "$id",
@@ -99,7 +99,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       );
 
     const expected: TemplateModuleInternal<any, any> = {
-      default: {} as Default<any>,
+      default: {} as Template<any>,
       getPath: () => "",
       config: {
         name: "myTemplateName",

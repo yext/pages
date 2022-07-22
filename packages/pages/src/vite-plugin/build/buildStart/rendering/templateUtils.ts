@@ -5,6 +5,7 @@ import {
   TemplateRenderProps,
   Manifest,
   TemplateModule,
+  Template,
 } from "../../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../../common/src/template/paths.js";
 import { reactWrapper } from "./wrapper.js";
@@ -45,7 +46,7 @@ export const readTemplateModules = async (
 // Represents a page produced by the generation procees.
 export type GeneratedPage = {
   path: string;
-  content: string;
+  content?: string;
   redirects: string[];
 };
 
@@ -111,7 +112,7 @@ const renderHtml = (
   return reactWrapper(
     props,
     templateModuleInternal,
-    renderToString(createElement(templateModuleInternal.default, props)),
+    renderToString(createElement(component as Template<any>, props)),
     // TODO -- allow hydration be configurable.
     true,
     getHeadConfig

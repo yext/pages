@@ -22,8 +22,11 @@ export interface TemplateModule<
   getRedirects?: GetRedirects<U>;
   /** The exported render function */
   render?: Render<U>;
-  /** The exported default function */
-  default: Default<U>;
+  /**
+   * The exported default template function. This is expected to be a React Component.
+   * If undefined then {@link render} will be used to generate the HTML instead.
+   */
+  default?: Template<U>;
 }
 
 /**
@@ -74,7 +77,7 @@ export type Render<T extends TemplateRenderProps> = (props: T) => string;
  *
  * @public
  */
-export type Default<T extends TemplateRenderProps> = (props: T) => JSX.Element;
+export type Template<T extends TemplateRenderProps> = (props: T) => JSX.Element;
 
 /**
  * The exported `config` function's definition.

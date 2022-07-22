@@ -6,7 +6,7 @@ import {
   validateConfig,
   validateTemplateModuleInternal,
 } from "../../../src/template/internal/validateTemplateModuleInternal";
-import { Default } from "../../../src/template/types";
+import { Template } from "../../../src/template/types";
 
 describe("validateTemplateModuleInternal - validateConfig", () => {
   it("validates that a config name is defined", async () => {
@@ -70,7 +70,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
     );
   });
 
-  it("validates that at least one of default or render is defined", async () => {
+  it("validates that at least one of template or render is defined", async () => {
     const templateModuleInteral: Partial<TemplateModuleInternal<any, any>> = {
       default: undefined,
       getPath: () => "",
@@ -97,7 +97,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
 
   it("doesn't throw an error when the template is valid", async () => {
     const templateModuleInteral: TemplateModuleInternal<any, any> = {
-      default: {} as Default<any>,
+      default: {} as Template<any>,
       getPath: () => "",
       templateName: "foo",
       filename: "foo.tsx",

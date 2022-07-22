@@ -10,7 +10,7 @@
   ],
   "main": "./dist/index.js",
   "type": "module",
-  "types": "dist/types/pages/src/index.d.ts",
+  "types": "dist/types/src/index.d.ts",
   "exports": {
     "./vite-plugin": "./dist/vite-plugin/plugin.js"
   },
