@@ -5,6 +5,7 @@ import {
   TemplateRenderProps,
   Manifest,
   TemplateModule,
+  Template,
 } from "../../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../../common/src/template/paths.js";
 import { reactWrapper } from "./wrapper.js";
@@ -108,14 +109,12 @@ const renderHtml = (
     return render(props);
   }
 
-  if (component) {
-    return reactWrapper(
-      props,
-      templateModuleInternal,
-      renderToString(createElement(component, props)),
-      // TODO -- allow hydration be configurable.
-      true,
-      getHeadConfig
-    );
-  }
+  return reactWrapper(
+    props,
+    templateModuleInternal,
+    renderToString(createElement(component as Template<any>, props)),
+    // TODO -- allow hydration be configurable.
+    true,
+    getHeadConfig
+  );
 };
