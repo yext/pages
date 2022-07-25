@@ -23,3 +23,7 @@ jobs:
             didn't match the configured pattern. Please ensure that the subject
             doesn't start with an uppercase character.
           wip: true
+          scopes: |
+            dev
+            plugin
+            components
