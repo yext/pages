@@ -5,6 +5,7 @@ import { readdir } from "fs/promises";
 import { parse } from "path";
 import { InputOption } from "rollup";
 import { ProjectStructure } from "../../common/src/project/structure.js";
+import externalGlobals from "rollup-plugin-external-globals";
 
 const intro = `var global = globalThis;`;
 
@@ -35,6 +36,11 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
               assetFileNames: "assets/static/[name]-[hash][extname]",
               chunkFileNames: "assets/static/[name]-[hash].js",
             },
+            plugins: [
+              externalGlobals({
+                "cross-fetch": "fetch"
+              })
+            ]
           },
         },
       };
