@@ -1,1 +1,1 @@
-declare module 'rollup-plugin-external-globals';
+declare module "rollup-plugin-external-globals";

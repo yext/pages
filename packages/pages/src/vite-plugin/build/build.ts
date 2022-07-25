@@ -38,9 +38,9 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
             },
             plugins: [
               externalGlobals({
-                "cross-fetch": "fetch"
-              })
-            ]
+                "cross-fetch": "fetch",
+              }),
+            ],
           },
         },
       };
