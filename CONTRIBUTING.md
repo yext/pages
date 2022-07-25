@@ -34,7 +34,7 @@ In most circumstance all changes should be associate with a unit test that lives
 - If fixing a bug:
 
   - If you are resolving a special issue, add `(fix #xxxx[,#xxxx])` (#xxxx is the issue id) in your PR title for a better release log (e.g. `fix: update entities encoding/decoding (fix #3899)`).
-  - Provide a detailed description of the bug in the PR. 
+  - Provide a detailed description of the bug in the PR.
   - Add appropriate test coverage if applicable.
 
 - It's OK to have multiple small commits as you work on the PR. GitHub can automatically squash them before merging.
@@ -43,14 +43,16 @@ In most circumstance all changes should be associate with a unit test that lives
 
 - PR titles must follow the [semantic pull request](https://github.com/marketplace/actions/semantic-pull-request) style so that changelogs can be automatically generated. PR titles are automatically validated by a Github action.
 
-    - ```
-        feat(components): add `Button` component.
-        ^    ^    ^
-        |    |    |__ Subject
-        |    |_______ Scope
-        |____________ Type
+  - ```
+      feat(components): add `Button` component.
+      ^    ^    ^
+      |    |    |__ Subject
+      |    |_______ Scope
+      |____________ Type
 
-    - See [conventional commit types](https://github.com/commitizen/conventional-commit-types/blob/master/index.json) for valid feature types.
-    - Valid scopes can be found in the [action](https://github.com/yext/pages/blob/main/.github/workflows/semantic-pull-request.yml).
+    ```
+
+  - See [conventional commit types](https://github.com/commitizen/conventional-commit-types/blob/master/index.json) for valid feature types.
+  - Valid scopes can be found in the [action](https://github.com/yext/pages/blob/main/.github/workflows/semantic-pull-request.yml).
 
 - No need to worry about code style as there's a Github action to automatically run `pnpm fmt` for you, but you may also run it before commit.

@@ -10,8 +10,8 @@ PagesJS is a collection of tools that make it easy to develop on [Yext Pages](ht
 
 ## Packages
 
-| Package      | Version (click for changelogs)  |
-| ----------- | ----------- |
+| Package                   | Version (click for changelogs)                                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | [PagesJS](packages/pages) | [![pages version](https://img.shields.io/npm/v/@yext/pages.svg?label=%20&color=blue)](packages/pages/CHANGELOG.md) |
 
 ## Contribution
