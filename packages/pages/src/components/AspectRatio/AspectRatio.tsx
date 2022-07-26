@@ -29,12 +29,14 @@ const AspectRatio = (props: AspectRatioProps) => {
     right: "0",
     bottom: "0",
     left: "0",
-  }
+  };
 
   return (
     <div className="AspectRatio" style={mainDivStyle}>
       <div className="AspectRatio-outerWrapper" style={outerWrapperStyle}>
-        <div className="AspectRatio-innerWrapper" style={innerWrapperStyle}>{children}</div>
+        <div className="AspectRatio-innerWrapper" style={innerWrapperStyle}>
+          {children}
+        </div>
       </div>
     </div>
   );
