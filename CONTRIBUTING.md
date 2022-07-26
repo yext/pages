@@ -12,9 +12,9 @@ To develop and test:
 
 2. Make your changes. Then in /packages/pages run `pnpm pack`.
 
-3. Reference the local pack file in another project that uses this one, such as https://github.com/yext/pages-starter-react-locations. You can reference it in the starter's package.json like `"@yext/pages": "file:../pages/packages/pages/yext-pages-1.0.0.tgz"` (assuming both projects live in the same root folder).
+3. Reference the local pack file in another project that uses this one, such as https://github.com/yext/pages-starter-react-locations. You can reference it in the starter's package.json like `"@yext/pages": "file:../pages/packages/pages/yext-pages-[version].tgz"` (assuming both projects live in the same root folder).
 
-4. If you make changes in PagesJS make sure to `rm -rf package-lock.json node_modules/ && npm i` in the starter first to ensure you pull in the latest packed changes.
+4. If you make changes in PagesJS make sure to `rm -rf package-lock.json node_modules/@yext/pages && npm i` in the starter first to ensure you pull in the latest packed changes.
 
 ### Unit Tests
 
