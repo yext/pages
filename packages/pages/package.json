@@ -12,7 +12,8 @@
   "type": "module",
   "types": "dist/types/src/index.d.ts",
   "exports": {
-    "./vite-plugin": "./dist/vite-plugin/plugin.js"
+    "./vite-plugin": "./dist/vite-plugin/plugin.js",
+    "./types": "./dist/types/types.js"
   },
   "engines": {
     "node": ">=17"
