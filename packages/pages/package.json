@@ -12,7 +12,8 @@
   "type": "module",
   "types": "dist/types/src/index.d.ts",
   "exports": {
-    "./vite-plugin": "./dist/vite-plugin/plugin.js"
+    "./vite-plugin": "./dist/vite-plugin/plugin.js",
+    "./util": "./dist/util/index.js"
   },
   "engines": {
     "node": ">=17"
@@ -59,7 +60,6 @@
     "picocolors": "^1.0.0",
     "pretty-ms": "^7.0.1",
     "rollup": "^2.72.1",
-    "rollup-plugin-external-globals": "^0.6.1",
     "shelljs": "^0.8.5",
     "typescript": "^4.7.4",
     "vite": "^3.0.0",
