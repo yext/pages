@@ -1,0 +1,33 @@
+{
+    "artifactStructure": {
+      "assets": [
+        {
+          "root": "packages/pages/docs/.vitepress/dist",
+          "pattern": "**/*.html"
+        },
+        {
+          "root": "packages/pages/docs/.vitepress/dist",
+          "pattern": "**/*.js"
+        },
+        {
+          "root": "packages/pages/docs/.vitepress/dist",
+          "pattern": "**/*.css"
+        }
+      ]
+    },
+    "dependencies": {
+      "installDepsCmd": "npm install -g pnpm && pnpm install",
+      "requiredFiles": [
+        "package.json",
+        "packages/pages/package.json",
+        "pnpm-lock.json"
+      ]
+    },
+    "buildArtifacts": {
+      "buildCmd": "(cd packages/pages && pnpm run docs:build)"
+    },
+    "livePreview": {
+      "serveSetupCmd": "(cd packages/pages && pnpm run docs:build)",
+      "serveCmd": "(cd packages/pages && pnpm run docs:serve)"
+    }
+  }
