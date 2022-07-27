@@ -14,6 +14,13 @@ PagesJS is a collection of tools that make it easy to develop on [Yext Pages](ht
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | [PagesJS](packages/pages) | [![pages version](https://img.shields.io/npm/v/@yext/pages.svg?label=%20&color=blue)](packages/pages/CHANGELOG.md) |
 
+## Utility Functions
+
+| Function                                                                                                 |
+| -------------------------------------------------------------------------------------------------------- |
+| [getRuntime()](<https://github.com/yext/pages/blob/main/pacakges/pages/src/util/README.md#getRuntime()>) |
+| [fetch()](<https://github.com/yext/pages/blob/main/pacakges/pages/src/util/README.md#fetch()>)           |
+
 ## Contribution
 
 See [Contributing Guide](https://github.com/yext/pages/blob/main/CONTRIBUTING.md).
