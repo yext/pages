@@ -21,6 +21,7 @@
       "package.json",
       "pnpm-lock.json",
       "pnpm-workspace.yaml",
+      ".npmrc",
       "packages/pages/package.json"
     ]
   },
