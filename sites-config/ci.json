@@ -19,8 +19,9 @@
     "installDepsCmd": "npm install -g pnpm && pnpm install",
     "requiredFiles": [
       "package.json",
-      "packages/pages/package.json",
-      "pnpm-lock.json"
+      "pnpm-lock.json",
+      "pnpm-workspace.yaml",
+      "packages/pages/package.json"
     ]
   },
   "buildArtifacts": {
