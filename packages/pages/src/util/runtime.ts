@@ -31,10 +31,10 @@ class Runtime {
  * - Node (during local dev)
  * - Deno (during production build/generation)
  * - the browser (any executed frontend code)
- * 
+ *
  * This can be useful when the function or library differs depending on
  * the runtime. `fetch` is one example as it's not native to Node < v18.
- * 
+ *
  * @public
  */
 export const getRuntime = (): Runtime => {
