@@ -27,3 +27,4 @@ jobs:
             dev
             plugin
             components
+            util
