@@ -15,4 +15,13 @@ const fetchInternal = async (
   return fetch(input, init);
 };
 
+/**
+ * A custom fetch implementation that determines which fetch library to use
+ * depending on the current runtime. When locally developing, Node is used.
+ * Since fetch is only native starting in v18 and the version on the user's
+ * machine is up to them, we need to polyfill fetch. Under the hood this
+ * uses cross-fetch. 
+ * 
+ * @public
+ */
 export { fetchInternal as fetch };
