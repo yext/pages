@@ -18,8 +18,8 @@ PagesJS is a collection of tools that make it easy to develop on [Yext Pages](ht
 
 | Function                                                                                                 |
 | -------------------------------------------------------------------------------------------------------- |
-| [getRuntime()](<https://github.com/yext/pages/blob/main/pacakges/pages/src/util/README.md#getRuntime()>) |
-| [fetch()](<https://github.com/yext/pages/blob/main/pacakges/pages/src/util/README.md#fetch()>)           |
+| [getRuntime()](<https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#getRuntime>) |
+| [fetch()](<https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#fetch>)           |
 
 ## Contribution
 

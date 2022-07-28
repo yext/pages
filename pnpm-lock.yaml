@@ -88,7 +88,7 @@ importers:
       ts-jest: ^28.0.7
       typescript: ^4.7.4
       vite: ^3.0.0
-      vitepress: 1.0.0-alpha.2
+      vitepress: 1.0.0-alpha.4
     dependencies:
       ansi-to-html: 0.7.2
       chalk: 5.0.1
@@ -111,7 +111,7 @@ importers:
       shelljs: 0.8.5
       typescript: 4.7.4
       vite: 3.0.2
-      vitepress: 1.0.0-alpha.2_henpesuzvgloshozc5t2lifpeq
+      vitepress: 1.0.0-alpha.4_henpesuzvgloshozc5t2lifpeq
     devDependencies:
       '@babel/preset-env': 7.18.9_@babel+core@7.18.9
       '@babel/preset-typescript': 7.18.6_@babel+core@7.18.9
@@ -7469,8 +7469,8 @@ packages:
       fsevents: 2.3.2
     dev: false
 
-  /vitepress/1.0.0-alpha.2_henpesuzvgloshozc5t2lifpeq:
-    resolution: {integrity: sha512-twSsmx2DI/3XgZZ8KLyRAH8RgK2Zj4kJx/kwhZhimwndYqQDrtcIaAcuV+P3FKukZ+cYtm9yt9qohz631jKx4A==}
+  /vitepress/1.0.0-alpha.4_henpesuzvgloshozc5t2lifpeq:
+    resolution: {integrity: sha512-bOAA4KW6vYGlkbcrPLZLTKWTgXVroObU+o9xj9EENyEl6yg26WWvfN7DGA4BftjdM5O8nR93Z5khPQ3W/tFE7Q==}
     engines: {node: '>=14.6.0'}
     hasBin: true
     dependencies:
