@@ -36,7 +36,7 @@ export const indexPage =
       // If there is any localData, display hyperlinks to each page that will be generated
       // from each data document.
       if (
-        localDataManifest.static.length + localDataManifest.entity.keys.length
+        localDataManifest.static.length + localDataManifest.entity.size
       ) {
         // If there are any data documents for static pages, render that section.
         if (localDataManifest.static.length) {
