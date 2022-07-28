@@ -21,6 +21,10 @@ PagesJS is a collection of tools that make it easy to develop on [Yext Pages](ht
 | [getRuntime()](https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#getRuntime) |
 | [fetch()](https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#fetch)           |
 
+## Development
+
+See [Development Reference](https://github.com/yext/pages/blob/main/packages/pages/README.md).
+
 ## Contribution
 
 See [Contributing Guide](https://github.com/yext/pages/blob/main/CONTRIBUTING.md).
