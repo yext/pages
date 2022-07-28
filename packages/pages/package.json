@@ -8,12 +8,18 @@
     "Yext",
     "React"
   ],
-  "main": "./dist/index.js",
   "type": "module",
-  "types": "dist/types/src/index.d.ts",
   "exports": {
+    ".": "./dist/index.js",
     "./vite-plugin": "./dist/vite-plugin/plugin.js",
     "./util": "./dist/util/index.js"
+  },
+  "typesVersions": {
+    "*": {
+      "*": ["dist/types/src/index.d.ts"],
+      "vite-plugin": ["dist/types/src/vite-plugin/index.d.ts"],
+      "util": ["dist/types/src/util/index.d.ts"]
+    }
   },
   "engines": {
     "node": ">=17"
