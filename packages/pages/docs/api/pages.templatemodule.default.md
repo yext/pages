@@ -4,10 +4,10 @@
 
 ## TemplateModule.default property
 
-The exported default function
+The exported default template function. This is expected to be a React Component. If undefined then will be used to generate the HTML instead.
 
 <b>Signature:</b>
 
 ```typescript
-default: Default<U>;
+default?: Template<U>;
 ```

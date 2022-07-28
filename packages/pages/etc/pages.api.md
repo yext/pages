@@ -9,9 +9,6 @@
 export type Attributes = Record<string, string>;
 
 // @public
-export type Default<T extends TemplateRenderProps> = (props: T) => JSX.Element;
-
-// @public
 export type GetHeadConfig<T extends TemplateRenderProps> = (
   props: T
 ) => HeadConfig;
@@ -27,6 +24,9 @@ export type GetPath<T extends TemplateProps> = (props: T) => string;
 
 // @public
 export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
+
+// @public
+export const getRelativePrefixToRootFromPath: (path: string) => string;
 
 // @public
 export interface HeadConfig {
@@ -94,7 +94,11 @@ export type TagType =
   | "template";
 
 // @public
+export type Template<T extends TemplateRenderProps> = (props: T) => JSX.Element;
+
+// @public
 export interface TemplateConfig {
+  alternateLanguageFields?: string[];
   name?: string;
   stream?: Stream;
   streamId?: string;
@@ -106,7 +110,8 @@ export interface TemplateModule<
   U extends TemplateRenderProps
 > {
   config?: TemplateConfig;
-  default: Default<U>;
+  // Warning: (ae-unresolved-link) The @link reference could not be resolved: The package "@yext/pages" does not have an export "render"
+  default?: Template<U>;
   getHeadConfig?: GetHeadConfig<U>;
   getPath: GetPath<T>;
   getRedirects?: GetRedirects<U>;

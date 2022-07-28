@@ -33,7 +33,7 @@ class Runtime {
  * - the browser (any executed frontend code)
  *
  * This can be useful when the function or library differs depending on
- * the runtime. `fetch` is one example as it's not native to Node < v18.
+ * the runtime. `fetch` is one example as it's not native to Node &lt; v18.
  *
  * @public
  */
