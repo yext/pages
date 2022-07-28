@@ -16,9 +16,15 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["dist/types/src/index.d.ts"],
-      "vite-plugin": ["dist/types/src/vite-plugin/index.d.ts"],
-      "util": ["dist/types/src/util/index.d.ts"]
+      "*": [
+        "dist/types/src/index.d.ts"
+      ],
+      "vite-plugin": [
+        "dist/types/src/vite-plugin/index.d.ts"
+      ],
+      "util": [
+        "dist/types/src/util/index.d.ts"
+      ]
     }
   },
   "engines": {
