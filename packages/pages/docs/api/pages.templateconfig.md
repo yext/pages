@@ -14,8 +14,9 @@ export interface TemplateConfig
 
 ## Properties
 
-| Property                                        | Modifiers | Type                        | Description                                                                                                       |
-| ----------------------------------------------- | --------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| [name?](./pages.templateconfig.name.md)         |           | string                      | <i>(Optional)</i> The name of the template feature. If not defined uses the template filename (without extension) |
-| [stream?](./pages.templateconfig.stream.md)     |           | [Stream](./pages.stream.md) | <i>(Optional)</i> The stream configuration used by the template                                                   |
-| [streamId?](./pages.templateconfig.streamid.md) |           | string                      | <i>(Optional)</i> The stream that this template uses. If a stream is defined the streamId is not required.        |
+| Property                                                                      | Modifiers | Type                        | Description                                                                                                       |
+| ----------------------------------------------------------------------------- | --------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| [alternateLanguageFields?](./pages.templateconfig.alternatelanguagefields.md) |           | string\[\]                  | <i>(Optional)</i> The specific fields to add additional language options to based on the stream's localization    |
+| [name?](./pages.templateconfig.name.md)                                       |           | string                      | <i>(Optional)</i> The name of the template feature. If not defined uses the template filename (without extension) |
+| [stream?](./pages.templateconfig.stream.md)                                   |           | [Stream](./pages.stream.md) | <i>(Optional)</i> The stream configuration used by the template                                                   |
+| [streamId?](./pages.templateconfig.streamid.md)                               |           | string                      | <i>(Optional)</i> The stream that this template uses. If a stream is defined the streamId is not required.        |

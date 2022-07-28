@@ -26,27 +26,6 @@ function getSidebar() {
   return [
     { text: "Guide", items: [{ text: "Home", link: "/index.html" }] },
     {
-      text: "Basics",
-      items: [
-        { text: "Global Data", link: "/basics/global-data.html" },
-        { text: "Pages", link: "/basics/pages.html" },
-        { text: "Redirects", link: "/basics/redirects.html" },
-        { text: "Repo Structure", link: "/basics/repo-structure.html" },
-        { text: "Styling", link: "/basics/styling.html" },
-        { text: "Templates", link: "/basics/templates.html" },
-      ],
-    },
-    {
-      text: "Advanced",
-      items: [
-        { text: "Entry Points", link: "/advanced/entry-points.html" },
-        {
-          text: "Vite Build Process",
-          link: "/advanced/vite-build-process.html",
-        },
-      ],
-    },
-    {
       text: "API",
       items: [{ text: "API Docs", link: "/api/index.html" }],
     },
