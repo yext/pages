@@ -100,6 +100,11 @@ export const pageLoader = async ({
   }
 
   const path = getPath(templateProps);
+  if (!path) {
+    throw new Error(
+      `getPath does not return a valid string in template '${TEMPLATE_PATH}/${templateFilename}'`
+    );
+  }
 
   const templateRenderProps: TemplateRenderProps = {
     ...templateProps,
