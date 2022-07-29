@@ -65,6 +65,7 @@ const getGenerateTestDataForPageRunner = () =>
     mockParentProcessStdout,
     FEATURE_CONFIG,
     "loc3",
+    "en",
     projectStructure
   );
 

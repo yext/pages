@@ -62,7 +62,10 @@ export const getLocalDataManifest = async (): Promise<LocalDataManifest> => {
   return localDataManifest;
 };
 
-export const getLocalDataForEntity = async (entityId: string) => {
+export const getLocalDataForEntity = async (
+  entityId: string,
+  locale: string
+) => {
   try {
     const dir = await readdir(LOCAL_DATA_PATH);
 
@@ -75,7 +78,7 @@ export const getLocalDataForEntity = async (entityId: string) => {
           .toString()
       );
 
-      if (data.id?.toString() === entityId) {
+      if (data.id?.toString() === entityId && data.locale === locale) {
         return data;
       }
     }
@@ -87,5 +90,7 @@ export const getLocalDataForEntity = async (entityId: string) => {
     }
   }
 
-  throw `No localData files match entityId ${entityId}`;
+  throw new Error(
+    `No localData files match entityId and locale: ${entityId} ${locale}`
+  );
 };

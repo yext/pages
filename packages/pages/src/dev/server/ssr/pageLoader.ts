@@ -19,6 +19,7 @@ type PageLoaderValues = {
   vite: ViteDevServer;
   templateFilename: string;
   entityId: string;
+  locale: string;
   featuresConfig: FeaturesConfig;
   dynamicGenerateData: boolean;
   projectStructure: ProjectStructure;
@@ -41,6 +42,7 @@ export const pageLoader = async ({
   vite,
   templateFilename,
   entityId,
+  locale,
   featuresConfig,
   dynamicGenerateData,
   projectStructure,
@@ -79,15 +81,18 @@ export const pageLoader = async ({
       process.stdout,
       featuresConfig,
       entityId,
+      locale,
       projectStructure
     );
   } else {
     // Get the document from localData
-    document = await getLocalDataForEntity(entityId);
+    document = await getLocalDataForEntity(entityId, locale);
   }
 
   if (entityId && !document) {
-    throw new Error(`Could not find document data for entityId: ${entityId}`);
+    throw new Error(
+      `Could not find document data for entityId and locale: ${entityId} ${locale}`
+    );
   }
 
   let templateProps: TemplateProps = {
