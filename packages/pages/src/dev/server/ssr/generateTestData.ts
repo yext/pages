@@ -40,6 +40,7 @@ export const generateTestDataForPage = async (
   stdout: NodeJS.WriteStream,
   featuresConfig: FeaturesConfig,
   entityId: string,
+  locale: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
   const siteStreamPath = path.resolve(
@@ -56,7 +57,7 @@ export const generateTestDataForPage = async (
     "--featuresConfig",
     `'${JSON.stringify(featuresConfig)}'`,
     "--locale",
-    "en",
+    locale,
     "--printDocuments",
   ];
 

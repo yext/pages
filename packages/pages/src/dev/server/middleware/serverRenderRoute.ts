@@ -23,9 +23,9 @@ export const serverRenderRoute =
   ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
   async (req, res, next) => {
     try {
-      const url = req.baseUrl;
+      const url = new URL("http://" + req.headers.host + req.originalUrl);
 
-      const { feature, entityId } = urlToFeature(url);
+      const { feature, entityId, locale } = urlToFeature(url);
 
       const templateModuleInternal = await featureNameToTemplateModuleInternal(
         vite,
@@ -49,10 +49,11 @@ export const serverRenderRoute =
 
       const { template, Component, props }: PageLoaderResult = await pageLoader(
         {
-          url,
+          url: url.pathname,
           vite,
           templateFilename: templateModuleInternal.filename,
           entityId,
+          locale,
           featuresConfig,
           dynamicGenerateData,
           projectStructure,
