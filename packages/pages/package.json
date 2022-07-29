@@ -12,7 +12,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./vite-plugin": "./dist/vite-plugin/plugin.js",
-    "./util": "./dist/util/index.js"
+    "./util": "./dist/util/index.js",
+    "./components": "./dist/components/index.js"
   },
   "typesVersions": {
     "*": {
@@ -24,6 +25,9 @@
       ],
       "util": [
         "dist/types/src/util/index.d.ts"
+      ],
+      "components": [
+        "dist/types/src/components/index.d.ts"
       ]
     }
   },
