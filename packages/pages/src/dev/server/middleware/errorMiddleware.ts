@@ -3,6 +3,7 @@ import { ErrorRequestHandler } from "express";
 import escapeHtml from "escape-html";
 import Convert from "ansi-to-html";
 import page500 from "../public/500";
+import colors from "picocolors";
 
 const STACK_HTML_TAG = "{stack}";
 const TITLE_HTML_TAG = "{title}";
@@ -19,7 +20,7 @@ export const errorMiddleware =
       // your actual source code.
       vite.ssrFixStacktrace(err);
 
-      console.error(err.toString());
+      console.error(colors.red(err.toString()));
 
       const errorString = err.stack ? String(err.stack) : err.toString();
       const canInspect = !err.stack && String(err) === toString.call(err);
