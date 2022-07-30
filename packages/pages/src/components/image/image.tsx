@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useRef, useState } from "react";
-import { Props } from "./types";
+import { useRef, useState, useEffect } from "react";
+import { ImageProps } from "./types";
 
 export const Image = ({
   image,
@@ -11,10 +11,16 @@ export const Image = ({
   layout = "intrinsic",
   placeholder,
   imgOverrides,
-  style,
-}: Props) => {
-  const ref = useRef<HTMLDivElement>(null);
+  style = {},
+}: ImageProps) => {
+  const imgRef = useRef<HTMLImageElement>(null);
   const [imgLoaded, setImgLoaded] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (imgRef.current?.complete) {
+      setImgLoaded(true);
+    }
+  }, []);
 
   if (layout != "fixed" && (width || height)) {
     console.warn(
@@ -22,31 +28,24 @@ export const Image = ({
     );
   }
 
-  const imgWidth: number = image.width;
-  const imgHeight: number = image.height;
-  const photoUUID: string = image.url.split("/")[4];
+  const imgWidth: number = image.image.width;
+  const imgHeight: number = image.image.height;
+  const imgUUID: string = image.image.url.split("/")[4];
 
-  if (style == null) {
-    style = {
-      objectFit: "cover",
-      objectPosition: "center",
-    };
-  }
+  style.objectFit = style.objectFit || "cover";
+  style.objectPosition = style.objectPosition || "center";
 
   let widths: number[] = [100, 320, 640, 960, 1280, 1920];
-  let src: string = getImageUrl(photoUUID, 500, 500);
+  let src: string = getImageUrl(imgUUID, 500, 500);
 
   switch (layout) {
     case "intrinsic":
       // Don't let image be wider than its intrinsic width
       style.maxWidth = imgWidth;
       style.width = "100%";
-
-      if (aspectRatio) {
-        style.aspectRatio = `${aspectRatio}`;
-      } else {
-        style.aspectRatio = `${imgWidth} / ${imgHeight}`;
-      }
+      style.aspectRatio = aspectRatio
+        ? `${aspectRatio}`
+        : `${imgWidth} / ${imgHeight}`;
 
       break;
     case "fixed":
@@ -71,7 +70,7 @@ export const Image = ({
       style.height = fixedHeight;
 
       if (fixedWidth && fixedHeight) {
-        src = getImageUrl(photoUUID, fixedWidth, fixedHeight);
+        src = getImageUrl(imgUUID, fixedWidth, fixedHeight);
       }
 
       widths = width
@@ -88,20 +87,16 @@ export const Image = ({
         );
       }
 
-      if (aspectRatio) {
-        style.aspectRatio = `${aspectRatio}`;
-      } else {
-        style.aspectRatio = `${imgWidth} / ${imgHeight}`;
-      }
+      style.aspectRatio = aspectRatio
+        ? `${aspectRatio}`
+        : `${imgWidth} / ${imgHeight}`;
 
       break;
     case "fill":
       style.width = "100%";
-      if (aspectRatio) {
-        style.aspectRatio = `${aspectRatio}`;
-      } else {
-        style.aspectRatio = `${imgWidth} / ${imgHeight}`;
-      }
+      style.aspectRatio = aspectRatio
+        ? `${aspectRatio}`
+        : `${imgWidth} / ${imgHeight}`;
 
       break;
     default:
@@ -109,19 +104,15 @@ export const Image = ({
 
   // Generate Image Sourceset
   const srcSet: string = widths
-    .map(
-      (w) => `${getImageUrl(photoUUID, w, (imgHeight / imgWidth) * w)} ${w}w`
-    )
+    .map((w) => `${getImageUrl(imgUUID, w, (imgHeight / imgWidth) * w)} ${w}w`)
     .join(", ");
 
   return (
-    <div ref={ref} className="bg-gray-200 relative" style={style}>
-      {/*<div className="absolute"></div>*/}
-      {!imgLoaded && placeholder != null && placeholder}
+    <>
+      {placeholder != null && !imgLoaded && placeholder}
       <img
-        style={
-          !imgLoaded && placeholder ? { ...style, display: "none" } : style
-        }
+        ref={imgRef}
+        style={style}
         src={src}
         className={className}
         width={width}
@@ -131,7 +122,7 @@ export const Image = ({
         onLoad={() => setImgLoaded(true)}
         {...imgOverrides}
       />
-    </div>
+    </>
   );
 };
 

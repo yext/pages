@@ -1,20 +1,22 @@
 import * as React from "react";
 
-export type Thumbnail = {
+export type ThumbnailType = {
   height: number;
   width: number;
   url: string;
 };
 
-export type Image = {
-  height: number;
-  width: number;
-  url: string;
-  thumbnails?: Thumbnail[];
+export type ImageType = {
+  image: {
+    height: number;
+    width: number;
+    url: string;
+    thumbnails?: ThumbnailType[];
+  };
 };
 
-export type Props = {
-  image: Image;
+export type ImageProps = {
+  image: ImageType;
   className?: string;
   width?: number;
   height?: number;
