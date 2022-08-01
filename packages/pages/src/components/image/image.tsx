@@ -1,6 +1,6 @@
 import * as React from "react";
-import {useEffect, useRef, useState} from "react";
-import {ImageProps, ImageLayout} from "./types";
+import { useEffect, useRef, useState } from "react";
+import { ImageProps, ImageLayout } from "./types";
 
 /**
  * A component that renders an image. Here is an example of using the component with simple and
@@ -56,7 +56,16 @@ export const Image = ({
   }
   const imgUUID: string = imgUrlValid ? image.url.split("/")[4] : "";
 
-  const {src, imgStyle, widths} = handleLayout(layout, imgWidth, imgHeight, imgUUID, style, width, height, aspectRatio);
+  const { src, imgStyle, widths } = handleLayout(
+    layout,
+    imgWidth,
+    imgHeight,
+    imgUUID,
+    style,
+    width,
+    height,
+    aspectRatio
+  );
 
   // Generate Image Sourceset
   const srcSet: string = widths
@@ -89,14 +98,14 @@ const getImageUrl = (uuid: string, width: number, height: number) => {
 };
 
 const handleLayout = (
-    layout: ImageLayout,
-    imgWidth: number,
-    imgHeight: number,
-    imgUUID: string,
-    style: React.CSSProperties,
-    width?: number,
-    height?: number,
-    aspectRatio?: number,
+  layout: ImageLayout,
+  imgWidth: number,
+  imgHeight: number,
+  imgUUID: string,
+  style: React.CSSProperties,
+  width?: number,
+  height?: number,
+  aspectRatio?: number
 ): { src: string; imgStyle: React.CSSProperties; widths: number[] } => {
   let widths: number[] = [100, 320, 640, 960, 1280, 1920];
   let src: string = getImageUrl(imgUUID, 500, 500);
@@ -109,27 +118,27 @@ const handleLayout = (
       style.maxWidth = imgWidth;
       style.width = "100%";
       style.aspectRatio = aspectRatio
-          ? `${aspectRatio}`
-          : `${imgWidth} / ${imgHeight}`;
+        ? `${aspectRatio}`
+        : `${imgWidth} / ${imgHeight}`;
 
       break;
     case ImageLayout.FIXED:
       if (!width && !height) {
         console.warn(
-            "Using fixed layout but width and height are not passed as props."
+          "Using fixed layout but width and height are not passed as props."
         );
       }
 
       const fixedWidth = width
-          ? width
-          : height
-              ? (height / imgHeight) * imgWidth
-              : undefined;
+        ? width
+        : height
+        ? (height / imgHeight) * imgWidth
+        : undefined;
       const fixedHeight = height
-          ? height
-          : width
-              ? (width * imgHeight) / imgWidth
-              : undefined;
+        ? height
+        : width
+        ? (width * imgHeight) / imgWidth
+        : undefined;
 
       style.width = fixedWidth;
       style.height = fixedHeight;
@@ -139,28 +148,28 @@ const handleLayout = (
       }
 
       widths = width
-          ? [width]
-          : height
-              ? [(height / imgHeight) * imgWidth]
-              : widths;
+        ? [width]
+        : height
+        ? [(height / imgHeight) * imgWidth]
+        : widths;
       break;
     case ImageLayout.ASPECT:
       if (!aspectRatio) {
         console.warn(
-            "Using aspect layout but aspectRatio is not passed as a prop."
+          "Using aspect layout but aspectRatio is not passed as a prop."
         );
       }
 
       style.aspectRatio = aspectRatio
-          ? `${aspectRatio}`
-          : `${imgWidth} / ${imgHeight}`;
+        ? `${aspectRatio}`
+        : `${imgWidth} / ${imgHeight}`;
 
       break;
     case ImageLayout.FILL:
       style.width = "100%";
       style.aspectRatio = aspectRatio
-          ? `${aspectRatio}`
-          : `${imgWidth} / ${imgHeight}`;
+        ? `${aspectRatio}`
+        : `${imgWidth} / ${imgHeight}`;
 
       break;
     default:
@@ -168,5 +177,5 @@ const handleLayout = (
       break;
   }
 
-  return {src, imgStyle: style, widths};
-}
+  return { src, imgStyle: style, widths };
+};
