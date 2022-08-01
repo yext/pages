@@ -100,6 +100,8 @@ export const Image = ({
 
       break;
     default:
+      console.warn(`Unrecognized layout: ${layout}.`);
+      break;
   }
 
   // Generate Image Sourceset
