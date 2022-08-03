@@ -27,10 +27,8 @@ export const featureNameToTemplateModuleInternal = async (
         templateModule,
         false
       );
-      
-    if (
-      featureName === templateModuleInternal.config.name
-    ) {
+
+    if (featureName === templateModuleInternal.config.name) {
       return templateModuleInternal;
     }
   }
