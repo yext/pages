@@ -7,6 +7,7 @@ import { viteDevServerPort } from "./middleware/constants.js";
 import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
+import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 
 export const createServer = async (dynamicGenerateData: boolean) => {
   // creates a standard express app
@@ -37,6 +38,9 @@ export const createServer = async (dynamicGenerateData: boolean) => {
     displayGenerateTestDataWarning = !(await generateTestData());
   }
 
+  // Redirect urls with a final slash to their canonical url without the slash
+  // app.use(finalSlashRedirect);
+  
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.
   app.use(
