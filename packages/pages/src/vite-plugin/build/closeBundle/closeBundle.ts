@@ -9,6 +9,7 @@ import {
 } from "./moduleLoader.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import colors from "picocolors";
+import { validateBundles } from "./bundleValidator.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -22,6 +23,7 @@ export default (projectStructure: ProjectStructure) => {
         )
       );
       templateModules = await loadTemplateModules(serverBundles);
+      validateBundles();
       finisher.succeed("Validated template modules");
     } catch (e: any) {
       finisher.fail("One or more template modules failed validation");
