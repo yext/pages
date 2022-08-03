@@ -48,7 +48,7 @@ export const indexPage =
               `<div class="list-title"> <span class="list-title-templateName">${templateName}</span> Pages (1):</div>
             <ul>
               <li>
-                <a href="http://localhost:${viteDevServerPort}/${templateName}/">
+                <a href="http://localhost:${viteDevServerPort}/${encodeURIComponent(templateName)}/">
                   ${templateName}
                 </a>
               </li>
@@ -79,7 +79,7 @@ export const indexPage =
                 (entityAccumulator, entityId) =>
                   entityAccumulator +
                   `<li>
-                    <a href="http://localhost:${viteDevServerPort}/${templateName}/${entityId}">
+                    <a href="http://localhost:${viteDevServerPort}/${encodeURIComponent(templateName)}/${entityId}">
                       ${entityId}
                     </a>
                   </li>`,

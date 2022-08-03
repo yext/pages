@@ -27,17 +27,13 @@ export const featureNameToTemplateModuleInternal = async (
         templateModule,
         false
       );
-
+      
     if (
-      featureName === normalizeTemplateName(templateModuleInternal.config.name)
+      featureName === templateModuleInternal.config.name
     ) {
       return templateModuleInternal;
     }
   }
 
   return null;
-};
-
-const normalizeTemplateName = (name: string) => {
-  return name.replace(/\s/g, "").toLowerCase();
 };
