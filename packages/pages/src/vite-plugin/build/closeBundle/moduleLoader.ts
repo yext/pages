@@ -67,11 +67,9 @@ const validateUniqueFeatureName = (
     });
 };
 
-const validateBundles = (
-  serverBundlePaths: string[]
-) => {
+const validateBundles = (serverBundlePaths: string[]) => {
   let sizeOfAllBundles = 0;
-  serverBundlePaths.forEach(serverBundlePath => {
+  serverBundlePaths.forEach((serverBundlePath) => {
     sizeOfAllBundles += validateFilesize(serverBundlePath);
   });
   validateTotalSourceSize(sizeOfAllBundles);
@@ -82,22 +80,26 @@ const validateBundles = (
  */
 const validateFilesize = (serverBundlePath: string): number => {
   const stats = statSync(serverBundlePath);
-  if (stats.size / (1024*1024) > PLUGIN_FILESIZE_LIMIT) {
-    throw new Error(`Bundled file ${serverBundlePath} exceeds max size of ${PLUGIN_FILESIZE_LIMIT} MB`);
+  if (stats.size / (1024 * 1024) > PLUGIN_FILESIZE_LIMIT) {
+    throw new Error(
+      `Bundled file ${serverBundlePath} exceeds max size of ${PLUGIN_FILESIZE_LIMIT} MB`
+    );
   }
 
   return stats.size;
-}
+};
 
 /**
  * Verifies that the total size across all bundled files does not exceed the total cap
  * of the Yext Plugins system.
  */
 const validateTotalSourceSize = (totalSizeInBytes: number) => {
-  if (totalSizeInBytes / (1024*1024) > PLUGIN_TOTAL_FILESIZE_LIMIT) {
-    throw new Error(`The total size of all bundles exceeds the max size of ${PLUGIN_TOTAL_FILESIZE_LIMIT} MB`)
+  if (totalSizeInBytes / (1024 * 1024) > PLUGIN_TOTAL_FILESIZE_LIMIT) {
+    throw new Error(
+      `The total size of all bundles exceeds the max size of ${PLUGIN_TOTAL_FILESIZE_LIMIT} MB`
+    );
   }
-}
+};
 
 // A TemplateModule which also exports a Page component used for hydration.
 export interface HydrationTemplateModule
