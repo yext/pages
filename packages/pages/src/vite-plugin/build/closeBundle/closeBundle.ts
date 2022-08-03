@@ -8,6 +8,7 @@ import {
   TemplateModuleCollection,
 } from "./moduleLoader.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import colors from "picocolors";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -22,9 +23,9 @@ export default (projectStructure: ProjectStructure) => {
       );
       templateModules = await loadTemplateModules(serverBundles);
       finisher.succeed("Validated template modules");
-    } catch (e) {
+    } catch (e: any) {
       finisher.fail("One or more template modules failed validation");
-      console.error(e);
+      console.error(colors.red(e.message));
       return;
     }
 
@@ -37,9 +38,9 @@ export default (projectStructure: ProjectStructure) => {
         path.join(sitesConfigRoot, projectStructure.featuresConfig)
       );
       finisher.succeed(`Successfully wrote ${sitesConfigRoot}`);
-    } catch (e) {
+    } catch (e: any) {
       finisher.fail(`Failed to write ${sitesConfigRoot}`);
-      console.error(e);
+      console.error(colors.red(e.message));
       return;
     }
 
@@ -47,9 +48,9 @@ export default (projectStructure: ProjectStructure) => {
     try {
       await generateManifestFile(featureNameToBundlePath, projectStructure);
       finisher.succeed("Successfully wrote manifest.json");
-    } catch (e) {
+    } catch (e: any) {
       finisher.fail("Failed to write manifest.json");
-      console.error(e);
+      console.error(colors.red(e.message));
     }
   };
 };
