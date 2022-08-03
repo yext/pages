@@ -7,10 +7,12 @@ export type ThumbnailType = {
 };
 
 export type ImageType = {
-  height: number;
-  width: number;
-  url: string;
-  thumbnails?: ThumbnailType[];
+  image: {
+    height: number;
+    width: number;
+    url: string;
+    thumbnails?: ThumbnailType[];
+  },
 };
 
 export enum ImageLayout {

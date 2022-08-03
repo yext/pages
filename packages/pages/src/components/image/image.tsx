@@ -3,22 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout } from "./types";
 
 /**
- * A component that renders an image. Here is an example of using the component with simple and
- * complex image fields from Knowledge Graph:
+ * Renders an image based from the Yext Knowledge Graph. Example of using the component to render
+ * simple and complex image fields from Yext Knowledge Graph:
  * ```
  * import { Image } from "@yext/pages/components";
  *
- * const template = ({ document }) => {
- *   return (
- *     <div>
- *       <Image image={document.logo.image} />
- *       <Image image={document.photoGallery[0].image} />
- *     </div>
- *   );
- * }
+ * const simpleImage = (<Image image={document.logo} />);
+ * const complexImage = (<Image image={document.photoGallery[0]} />);
  * ```
- *
- * `layout`, `imgOverrides` and `style` can be used to specify the style and behavior of the image.
  *
  * @public
  */
@@ -48,13 +40,9 @@ export const Image = ({
     );
   }
 
-  const imgWidth: number = image.width;
-  const imgHeight: number = image.height;
-  const imgUrlValid = !!image.url && image.url.split("/").length > 4;
-  if (!imgUrlValid) {
-    console.warn(`Invalid image url: ${image.url}.`);
-  }
-  const imgUUID: string = imgUrlValid ? image.url.split("/")[4] : "";
+  const imgWidth: number = image.image.width;
+  const imgHeight: number = image.image.height;
+  const imgUUID = getImageUUID(image.image.url);
 
   const { src, imgStyle, widths } = handleLayout(
     layout,
@@ -91,21 +79,43 @@ export const Image = ({
   );
 };
 
-const getImageUrl = (uuid: string, width: number, height: number) => {
+/**
+ * Returns the UUID of an image given its url. Logs a warning message if the image url is invalid.
+ */
+export const getImageUUID = (url: string) => {
+  const uuidRegex = /(?<=^https:\/\/a\.mktgcdn\.com\/p\/)[a-zA-Z0-9]+(?=\/(.*)$)/g;
+  const matches = url.match(uuidRegex)
+
+  if (matches == null || matches.length == 0) {
+    console.warn(`Invalid image url: ${url}.`);
+    return "";
+  }
+
+  return matches[0];
+};
+
+/**
+ * Returns the image url given its uuid, width and height.
+ */
+export const getImageUrl = (uuid: string, width: number, height: number) => {
   return `https://dynl.mktgcdn.com/p/${uuid}/${Math.round(width)}x${Math.round(
-    height
+      height
   )}`;
 };
 
-const handleLayout = (
-  layout: ImageLayout,
-  imgWidth: number,
-  imgHeight: number,
-  imgUUID: string,
-  style: React.CSSProperties,
-  width?: number,
-  height?: number,
-  aspectRatio?: number
+/**
+ * Returns the src, imgStyle and widths that will be set on the underlying img tag based on the
+ * layout.
+ */
+export const handleLayout = (
+    layout: ImageLayout,
+    imgWidth: number,
+    imgHeight: number,
+    imgUUID: string,
+    style: React.CSSProperties,
+    width?: number,
+    height?: number,
+    aspectRatio?: number,
 ): { src: string; imgStyle: React.CSSProperties; widths: number[] } => {
   let widths: number[] = [100, 320, 640, 960, 1280, 1920];
   let src: string = getImageUrl(imgUUID, 500, 500);
@@ -130,15 +140,15 @@ const handleLayout = (
       }
 
       const fixedWidth = width
-        ? width
-        : height
-        ? (height / imgHeight) * imgWidth
-        : undefined;
+          ? width
+          : height
+              ? (height / imgHeight) * imgWidth
+              : imgWidth;
       const fixedHeight = height
-        ? height
-        : width
-        ? (width * imgHeight) / imgWidth
-        : undefined;
+          ? height
+          : width
+              ? (width * imgHeight) / imgWidth
+              : imgHeight;
 
       style.width = fixedWidth;
       style.height = fixedHeight;

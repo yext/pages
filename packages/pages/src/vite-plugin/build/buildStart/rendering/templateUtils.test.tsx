@@ -16,12 +16,24 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
 
 const baseProps: TemplateProps = {
   document: {},
-  __meta: { mode: "development" },
+  __meta: {
+    mode: "development",
+    manifest: {
+      bundlePaths: {},
+      projectFilepaths: {
+        templatesRoot: "",
+        distRoot: "",
+        hydrationBundleOutputRoot: "",
+        serverBundleOutputRoot: "",
+      },
+      bundlerManifest: {},
+    },
+  },
 };
 
 describe("generateResponses", () => {
   it("calls transformProps when transformProps is defined", async () => {
-    const fn = jest.fn();
+    const fn = jest.fn(props => props);
     await generateResponses(
       { ...baseTemplateModule, transformProps: fn },
       baseProps
