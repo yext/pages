@@ -2,7 +2,8 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout } from "./types";
 
-const MKTGCDN_URL_REGEX = /((?<=^http:\/\/a\.mktgcdn\.com\/p\/)|(?<=^https:\/\/a\.mktgcdn\.com\/p\/)).+(?=\/(.*)$)/g;
+const MKTGCDN_URL_REGEX =
+  /((?<=^http:\/\/a\.mktgcdn\.com\/p\/)|(?<=^https:\/\/a\.mktgcdn\.com\/p\/)).+(?=\/(.*)$)/g;
 enum imgLoadingStatus {
   NONE = "none",
   LOADED = "loaded",
@@ -33,7 +34,9 @@ export const Image = ({
   style = {},
 }: ImageProps) => {
   const imgRef = useRef<HTMLImageElement>(null);
-  const [imgStatus, setImgStatus] = useState<imgLoadingStatus>(imgLoadingStatus.NONE);
+  const [imgStatus, setImgStatus] = useState<imgLoadingStatus>(
+    imgLoadingStatus.NONE
+  );
 
   useEffect(() => {
     if (imgRef.current?.complete) {
@@ -74,20 +77,24 @@ export const Image = ({
 
   return (
     <>
-      {placeholder != null && imgStatus != imgLoadingStatus.LOADED && placeholder}
-      {imgStatus != imgLoadingStatus.ERROR && <img
-        ref={imgRef}
-        style={imgStyle}
-        src={src}
-        className={className}
-        width={width}
-        height={height}
-        srcSet={srcSet}
-        loading={"lazy"}
-        onLoad={() => setImgStatus(imgLoadingStatus.LOADED)}
-        onError={() => onError()}
-        {...imgOverrides}
-      />}
+      {placeholder != null &&
+        imgStatus != imgLoadingStatus.LOADED &&
+        placeholder}
+      {imgStatus != imgLoadingStatus.ERROR && (
+        <img
+          ref={imgRef}
+          style={imgStyle}
+          src={src}
+          className={className}
+          width={width}
+          height={height}
+          srcSet={srcSet}
+          loading={"lazy"}
+          onLoad={() => setImgStatus(imgLoadingStatus.LOADED)}
+          onError={() => onError()}
+          {...imgOverrides}
+        />
+      )}
     </>
   );
 };
