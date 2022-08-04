@@ -67,10 +67,12 @@ describe("Image", () => {
     const placeholder = <div>{placeholderText}</div>;
 
     render(
-        <Image
-            image={{image: {...image.image, url: "https://a.mktgcdn.com/p/2x1.jpg"}}}
-            placeholder={placeholder}
-        />
+      <Image
+        image={{
+          image: { ...image.image, url: "https://a.mktgcdn.com/p/2x1.jpg" },
+        }}
+        placeholder={placeholder}
+      />
     );
 
     expect(screen.getByText(placeholderText)).toBeTruthy();
@@ -190,7 +192,14 @@ describe("validateRequiredProps", () => {
     const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
 
     expect(logMock.mock.calls.length).toBe(0);
-    validateRequiredProps(ImageLayout.INTRINSIC, imgWidth, imgHeight, width, undefined, undefined);
+    validateRequiredProps(
+      ImageLayout.INTRINSIC,
+      imgWidth,
+      imgHeight,
+      width,
+      undefined,
+      undefined
+    );
     expect(logMock.mock.calls.length).toBe(1);
 
     jest.clearAllMocks();
@@ -201,7 +210,14 @@ describe("validateRequiredProps", () => {
 
     expect(logMock.mock.calls.length).toBe(0);
 
-    validateRequiredProps(ImageLayout.FIXED, imgWidth, imgHeight, undefined, undefined, undefined);
+    validateRequiredProps(
+      ImageLayout.FIXED,
+      imgWidth,
+      imgHeight,
+      undefined,
+      undefined,
+      undefined
+    );
 
     expect(logMock.mock.calls.length).toBe(1);
     jest.clearAllMocks();
@@ -212,7 +228,14 @@ describe("validateRequiredProps", () => {
 
     expect(logMock.mock.calls.length).toBe(0);
 
-    validateRequiredProps(ImageLayout.FIXED, imgWidth, imgHeight, -100, undefined, undefined);
+    validateRequiredProps(
+      ImageLayout.FIXED,
+      imgWidth,
+      imgHeight,
+      -100,
+      undefined,
+      undefined
+    );
 
     expect(logMock.mock.calls.length).toBe(1);
     jest.clearAllMocks();
@@ -223,7 +246,14 @@ describe("validateRequiredProps", () => {
 
     expect(logMock.mock.calls.length).toBe(0);
 
-    validateRequiredProps(ImageLayout.ASPECT, imgWidth, imgHeight, undefined, undefined, undefined);
+    validateRequiredProps(
+      ImageLayout.ASPECT,
+      imgWidth,
+      imgHeight,
+      undefined,
+      undefined,
+      undefined
+    );
 
     expect(logMock.mock.calls.length).toBe(1);
     jest.clearAllMocks();
@@ -234,7 +264,14 @@ describe("validateRequiredProps", () => {
 
     expect(logMock.mock.calls.length).toBe(0);
 
-    validateRequiredProps(ImageLayout.FILL, -100, imgHeight, undefined, undefined, undefined);
+    validateRequiredProps(
+      ImageLayout.FILL,
+      -100,
+      imgHeight,
+      undefined,
+      undefined,
+      undefined
+    );
 
     expect(logMock.mock.calls.length).toBe(1);
     jest.clearAllMocks();
@@ -243,13 +280,27 @@ describe("validateRequiredProps", () => {
 
 describe("getImageSizeForFixedLayout", () => {
   it("properly sets fixedWidth and fixedHeight", () => {
-    expect(getImageSizeForFixedLayout(imgWidth, imgHeight, widths, undefined, undefined))
-        .toEqual({fixedWidth: imgWidth, fixedHeight: imgHeight, fixedWidths: widths});
-    expect(getImageSizeForFixedLayout(imgWidth, imgHeight, widths, width, undefined))
-        .toEqual({fixedWidth: width, fixedHeight: height, fixedWidths: [width]});
-    expect(getImageSizeForFixedLayout(imgWidth, imgHeight, widths, undefined, height))
-        .toEqual({fixedWidth: width, fixedHeight: height, fixedWidths: [width]});
-    expect(getImageSizeForFixedLayout(imgWidth, imgHeight, widths, width, height))
-        .toEqual({fixedWidth: width, fixedHeight: height, fixedWidths: [width]});
+    expect(
+      getImageSizeForFixedLayout(
+        imgWidth,
+        imgHeight,
+        widths,
+        undefined,
+        undefined
+      )
+    ).toEqual({
+      fixedWidth: imgWidth,
+      fixedHeight: imgHeight,
+      fixedWidths: widths,
+    });
+    expect(
+      getImageSizeForFixedLayout(imgWidth, imgHeight, widths, width, undefined)
+    ).toEqual({ fixedWidth: width, fixedHeight: height, fixedWidths: [width] });
+    expect(
+      getImageSizeForFixedLayout(imgWidth, imgHeight, widths, undefined, height)
+    ).toEqual({ fixedWidth: width, fixedHeight: height, fixedWidths: [width] });
+    expect(
+      getImageSizeForFixedLayout(imgWidth, imgHeight, widths, width, height)
+    ).toEqual({ fixedWidth: width, fixedHeight: height, fixedWidths: [width] });
   });
 });

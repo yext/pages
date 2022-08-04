@@ -2,7 +2,8 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout } from "./types";
 
-const MKTGCDN_URL_REGEX = /((?<=^http:\/\/a\.mktgcdn\.com\/p\/)|(?<=^https:\/\/a\.mktgcdn\.com\/p\/)).+(?=\/(.*)$)/g;
+const MKTGCDN_URL_REGEX =
+  /((?<=^http:\/\/a\.mktgcdn\.com\/p\/)|(?<=^https:\/\/a\.mktgcdn\.com\/p\/)).+(?=\/(.*)$)/g;
 
 /**
  * Renders an image based from the Yext Knowledge Graph. Example of using the component to render
@@ -36,7 +37,14 @@ export const Image = ({
     }
   }, []);
 
-  validateRequiredProps(layout, image.image.width, image.image.height, width, height, aspectRatio);
+  validateRequiredProps(
+    layout,
+    image.image.width,
+    image.image.height,
+    width,
+    height,
+    aspectRatio
+  );
 
   const imgWidth: number = Math.abs(image.image.width);
   const imgHeight: number = Math.abs(image.image.height);
@@ -89,12 +97,12 @@ export const Image = ({
 
 // Checks if required props are passed in for the specified layout, if not, log a warning.
 export const validateRequiredProps = (
-    layout: ImageLayout,
-    imgWidth: number,
-    imgHeight: number,
-    width?: number,
-    height?: number,
-    aspectRatio?: number,
+  layout: ImageLayout,
+  imgWidth: number,
+  imgHeight: number,
+  width?: number,
+  height?: number,
+  aspectRatio?: number
 ) => {
   if (imgWidth < 0) {
     console.warn(`Invalid image width: ${imgWidth}.`);
@@ -107,22 +115,18 @@ export const validateRequiredProps = (
   if (layout == ImageLayout.FIXED) {
     if (!width && !height) {
       console.warn(
-          "Using fixed layout but width and height are not passed as props."
+        "Using fixed layout but width and height are not passed as props."
       );
 
       return;
     }
 
     if (width && width < 0) {
-      console.warn(
-          `Using fixed layout but width is invalid: ${width}.`
-      );
+      console.warn(`Using fixed layout but width is invalid: ${width}.`);
     }
 
     if (height && height < 0) {
-      console.warn(
-          `Using fixed layout but height is invalid: ${height}.`
-      );
+      console.warn(`Using fixed layout but height is invalid: ${height}.`);
     }
 
     return;
@@ -130,16 +134,16 @@ export const validateRequiredProps = (
 
   if (width || height) {
     console.warn(
-        "Width or height is passed in but layout is not fixed. These will have no impact. If you want to have a fixed height or width then set layout to fixed."
+      "Width or height is passed in but layout is not fixed. These will have no impact. If you want to have a fixed height or width then set layout to fixed."
     );
   }
 
   if (layout == ImageLayout.ASPECT && !aspectRatio) {
     console.warn(
-        "Using aspect layout but aspectRatio is not passed as a prop."
+      "Using aspect layout but aspectRatio is not passed as a prop."
     );
   }
-}
+};
 
 /**
  * Returns the UUID of an image given its url. Logs an error if the image url is invalid.
@@ -194,7 +198,14 @@ export const handleLayout = (
 
       break;
     case ImageLayout.FIXED:
-      const {fixedWidth, fixedHeight, fixedWidths} = getImageSizeForFixedLayout(imgWidth, imgHeight, widths, absWidth, absHeight);
+      const { fixedWidth, fixedHeight, fixedWidths } =
+        getImageSizeForFixedLayout(
+          imgWidth,
+          imgHeight,
+          widths,
+          absWidth,
+          absHeight
+        );
       style.width = fixedWidth;
       style.height = fixedHeight;
       widths = fixedWidths;
@@ -224,23 +235,39 @@ export const handleLayout = (
 
 // Returns the fixedWidth and fixedHeight for fixed layout
 export const getImageSizeForFixedLayout = (
-    imgWidth: number,
-    imgHeight: number,
-    defaultWidths: number[],
-    absWidth?: number,
-    absHeight?: number,
-): { fixedWidth: number; fixedHeight: number, fixedWidths: number[] } => {
+  imgWidth: number,
+  imgHeight: number,
+  defaultWidths: number[],
+  absWidth?: number,
+  absHeight?: number
+): { fixedWidth: number; fixedHeight: number; fixedWidths: number[] } => {
   if (absWidth && absHeight) {
-    return {fixedWidth: absWidth, fixedHeight: absHeight, fixedWidths: [absWidth]};
+    return {
+      fixedWidth: absWidth,
+      fixedHeight: absHeight,
+      fixedWidths: [absWidth],
+    };
   }
 
   if (absWidth) {
-    return {fixedWidth: absWidth, fixedHeight: (absWidth * imgHeight) / imgWidth, fixedWidths: [absWidth]};
+    return {
+      fixedWidth: absWidth,
+      fixedHeight: (absWidth * imgHeight) / imgWidth,
+      fixedWidths: [absWidth],
+    };
   }
 
   if (absHeight) {
-    return {fixedWidth: (absHeight / imgHeight) * imgWidth, fixedHeight: absHeight, fixedWidths: [(absHeight / imgHeight) * imgWidth]};
+    return {
+      fixedWidth: (absHeight / imgHeight) * imgWidth,
+      fixedHeight: absHeight,
+      fixedWidths: [(absHeight / imgHeight) * imgWidth],
+    };
   }
 
-  return {fixedWidth: imgWidth, fixedHeight: imgHeight, fixedWidths: defaultWidths};
-}
+  return {
+    fixedWidth: imgWidth,
+    fixedHeight: imgHeight,
+    fixedWidths: defaultWidths,
+  };
+};
