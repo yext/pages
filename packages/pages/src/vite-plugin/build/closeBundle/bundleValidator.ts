@@ -6,7 +6,7 @@ const PLUGIN_FILESIZE_LIMIT = 1.5; // MB
 const PLUGIN_TOTAL_FILESIZE_LIMIT = 10; // MB
 
 /**
- * Validates the bundled files.
+ * Validates the server-side bundled files.
  */
 export const validateBundles = () => {
   const bundlePaths = getBundlePaths();
