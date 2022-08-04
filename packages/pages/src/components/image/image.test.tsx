@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import React from "react";
 import {Image, getImageUUID, handleLayout} from "./image";
 import {ImageLayout} from "./types";
@@ -17,13 +20,8 @@ const image = {
   },
 };
 
-/**
- * @jest-environment node
- */
-
 describe("Image", () => {
   it(`properly logs warning when layout is not ${ImageLayout.FIXED} and width or height is provided`, async () => {
-    jest.clearAllMocks();
     const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
 
     expect(logMock.mock.calls.length).toBe(0);
@@ -38,7 +36,6 @@ describe("Image", () => {
   });
 
   it("properly renders the image with the pass through style and imgOverrides", () => {
-
     const overrideSrc = "https://overridesrc/";
     const overrideObjectFit = "none";
 
@@ -78,7 +75,6 @@ describe("getImageUUID", () => {
   it("properly logs warning when image url is invalid", () => {
     const invalidUrl = "random/url";
     const expectedLog = `Invalid image url: ${invalidUrl}.`;
-    jest.clearAllMocks();
     const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
 
     expect(logMock.mock.calls.length).toBe(0);
@@ -122,7 +118,6 @@ describe("handleLayout", () => {
   });
 
   it(`properly logs warning when layout is ${ImageLayout.FIXED} and neither width nor height is provided`, () => {
-    jest.clearAllMocks();
     const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
 
     expect(logMock.mock.calls.length).toBe(0);
@@ -165,7 +160,6 @@ describe("handleLayout", () => {
   });
 
   it(`properly logs warning when layout is ${ImageLayout.ASPECT} and aspectRatio is not provided`, () => {
-    jest.clearAllMocks();
     const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
 
     expect(logMock.mock.calls.length).toBe(0);

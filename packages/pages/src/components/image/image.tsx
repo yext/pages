@@ -2,6 +2,8 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout } from "./types";
 
+const MKTGCDN_URL_REGEX = /(?<=^https:\/\/a\.mktgcdn\.com\/p\/)[a-zA-Z0-9]+(?=\/(.*)$)/g;
+
 /**
  * Renders an image based from the Yext Knowledge Graph. Example of using the component to render
  * simple and complex image fields from Yext Knowledge Graph:
@@ -83,8 +85,7 @@ export const Image = ({
  * Returns the UUID of an image given its url. Logs a warning message if the image url is invalid.
  */
 export const getImageUUID = (url: string) => {
-  const uuidRegex = /(?<=^https:\/\/a\.mktgcdn\.com\/p\/)[a-zA-Z0-9]+(?=\/(.*)$)/g;
-  const matches = url.match(uuidRegex)
+  const matches = url.match(MKTGCDN_URL_REGEX)
 
   if (matches == null || matches.length == 0) {
     console.warn(`Invalid image url: ${url}.`);
