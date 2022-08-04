@@ -2,7 +2,13 @@
  * @jest-environment jsdom
  */
 import React from "react";
-import { Image, getImageUUID, handleLayout } from "./image";
+import {
+  Image,
+  validateRequiredProps,
+  getImageUUID,
+  handleLayout,
+  getImageSizeForFixedLayout,
+} from "./image";
 import { ImageLayout } from "./types";
 import { render, screen } from "@testing-library/react";
 
@@ -11,6 +17,7 @@ const imgHeight = 10;
 const imgUUID = "uuid";
 const width = 200;
 const height = 100;
+const widths = [100, 200, 300];
 const aspectRatio = 1;
 const image = {
   image: {
@@ -21,16 +28,6 @@ const image = {
 };
 
 describe("Image", () => {
-  it(`properly logs warning when layout is not ${ImageLayout.FIXED} and width or height is provided`, async () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
-
-    expect(logMock.mock.calls.length).toBe(0);
-    render(<Image image={image} layout={ImageLayout.INTRINSIC} width={100} />);
-    expect(logMock.mock.calls.length).toBe(1);
-
-    jest.clearAllMocks();
-  });
-
   it("properly renders the image with the pass through style and imgOverrides", () => {
     const overrideSrc = "https://overridesrc/";
     const overrideObjectFit = "none";
@@ -64,6 +61,20 @@ describe("Image", () => {
 
     expect(screen.getByText(placeholderText)).toBeTruthy();
   });
+
+  it("properly renders the placeholder if image's UUID is invalid and a placeholder is provided", async () => {
+    const placeholderText = "Placeholder";
+    const placeholder = <div>{placeholderText}</div>;
+
+    render(
+        <Image
+            image={{image: {...image.image, url: "https://a.mktgcdn.com/p/2x1.jpg"}}}
+            placeholder={placeholder}
+        />
+    );
+
+    expect(screen.getByText(placeholderText)).toBeTruthy();
+  });
 });
 
 describe("getImageUUID", () => {
@@ -80,15 +91,12 @@ describe("getImageUUID", () => {
     ).toBe("ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo");
   });
 
-  it("properly logs warning when image url is invalid", () => {
-    const invalidUrl = "random/url";
-    const expectedLog = `Invalid image url: ${invalidUrl}.`;
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+  it("properly logs error when image url is invalid", () => {
+    const logMock = jest.spyOn(console, "error").mockImplementation(() => {});
 
     expect(logMock.mock.calls.length).toBe(0);
-    expect(getImageUUID(invalidUrl)).toBe("");
+    expect(getImageUUID("https://a.mktgcdn.com/p/1300x872.jpg")).toBe("");
     expect(logMock.mock.calls.length).toBe(1);
-    expect(logMock.mock.calls[0][0]).toBe(expectedLog);
 
     jest.clearAllMocks();
   });
@@ -125,32 +133,6 @@ describe("handleLayout", () => {
     expect(imgStyle.aspectRatio).toEqual(`${imgWidth} / ${imgHeight}`);
   });
 
-  it(`properly logs warning when layout is ${ImageLayout.FIXED} and neither width nor height is provided`, () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
-
-    expect(logMock.mock.calls.length).toBe(0);
-
-    const { src, imgStyle } = handleLayout(
-      ImageLayout.FIXED,
-      imgWidth,
-      imgHeight,
-      imgUUID,
-      {},
-      undefined,
-      undefined,
-      undefined
-    );
-
-    expect(src).toEqual(
-      `https://dynl.mktgcdn.com/p/${imgUUID}/${imgWidth}x${imgHeight}`
-    );
-    expect(imgStyle.width).toEqual(imgWidth);
-    expect(imgStyle.height).toEqual(imgHeight);
-
-    expect(logMock.mock.calls.length).toBe(1);
-    jest.clearAllMocks();
-  });
-
   it(`properly sets src, imgStyle and widths when layout is ${ImageLayout.FIXED} and only width is provided`, () => {
     const { src, imgStyle, widths } = handleLayout(
       ImageLayout.FIXED,
@@ -169,27 +151,6 @@ describe("handleLayout", () => {
     expect(imgStyle.width).toEqual(width);
     expect(imgStyle.height).toEqual(height);
     expect(widths).toEqual([width]);
-  });
-
-  it(`properly logs warning when layout is ${ImageLayout.ASPECT} and aspectRatio is not provided`, () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
-
-    expect(logMock.mock.calls.length).toBe(0);
-
-    const { imgStyle } = handleLayout(
-      ImageLayout.ASPECT,
-      imgWidth,
-      imgHeight,
-      imgUUID,
-      {},
-      undefined,
-      undefined,
-      undefined
-    );
-
-    expect(imgStyle.aspectRatio).toEqual(`${imgWidth} / ${imgHeight}`);
-    expect(logMock.mock.calls.length).toBe(1);
-    jest.clearAllMocks();
   });
 
   it(`properly sets aspectRatio when layout is ${ImageLayout.ASPECT} and aspectRatio is provided`, () => {
@@ -221,5 +182,74 @@ describe("handleLayout", () => {
 
     expect(imgStyle.width).toEqual("100%");
     expect(imgStyle.aspectRatio).toEqual(aspectRatio.toString());
+  });
+});
+
+describe("validateRequiredProps", () => {
+  it(`properly logs warning when layout is not ${ImageLayout.FIXED} and width or height is provided`, async () => {
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    expect(logMock.mock.calls.length).toBe(0);
+    validateRequiredProps(ImageLayout.INTRINSIC, imgWidth, imgHeight, width, undefined, undefined);
+    expect(logMock.mock.calls.length).toBe(1);
+
+    jest.clearAllMocks();
+  });
+
+  it(`properly logs warning when layout is ${ImageLayout.FIXED} and neither width nor height is provided`, async () => {
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    expect(logMock.mock.calls.length).toBe(0);
+
+    validateRequiredProps(ImageLayout.FIXED, imgWidth, imgHeight, undefined, undefined, undefined);
+
+    expect(logMock.mock.calls.length).toBe(1);
+    jest.clearAllMocks();
+  });
+
+  it(`properly logs warning when layout is ${ImageLayout.FIXED} and width is a negative value`, async () => {
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    expect(logMock.mock.calls.length).toBe(0);
+
+    validateRequiredProps(ImageLayout.FIXED, imgWidth, imgHeight, -100, undefined, undefined);
+
+    expect(logMock.mock.calls.length).toBe(1);
+    jest.clearAllMocks();
+  });
+
+  it(`properly logs warning when layout is ${ImageLayout.ASPECT} and aspectRatio is not provided`, () => {
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    expect(logMock.mock.calls.length).toBe(0);
+
+    validateRequiredProps(ImageLayout.ASPECT, imgWidth, imgHeight, undefined, undefined, undefined);
+
+    expect(logMock.mock.calls.length).toBe(1);
+    jest.clearAllMocks();
+  });
+
+  it(`properly logs warning when image.width is a negative value`, () => {
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    expect(logMock.mock.calls.length).toBe(0);
+
+    validateRequiredProps(ImageLayout.FILL, -100, imgHeight, undefined, undefined, undefined);
+
+    expect(logMock.mock.calls.length).toBe(1);
+    jest.clearAllMocks();
+  });
+});
+
+describe("getImageSizeForFixedLayout", () => {
+  it("properly sets fixedWidth and fixedHeight", () => {
+    expect(getImageSizeForFixedLayout(imgWidth, imgHeight, widths, undefined, undefined))
+        .toEqual({fixedWidth: imgWidth, fixedHeight: imgHeight, fixedWidths: widths});
+    expect(getImageSizeForFixedLayout(imgWidth, imgHeight, widths, width, undefined))
+        .toEqual({fixedWidth: width, fixedHeight: height, fixedWidths: [width]});
+    expect(getImageSizeForFixedLayout(imgWidth, imgHeight, widths, undefined, height))
+        .toEqual({fixedWidth: width, fixedHeight: height, fixedWidths: [width]});
+    expect(getImageSizeForFixedLayout(imgWidth, imgHeight, widths, width, height))
+        .toEqual({fixedWidth: width, fixedHeight: height, fixedWidths: [width]});
   });
 });

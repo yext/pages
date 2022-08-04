@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout } from "./types";
 
-const MKTGCDN_URL_REGEX = /(https?:\/\/a.mktgcdn.com\/p\/)([^\/]+)(\/?.*)/;
+const MKTGCDN_URL_REGEX = /((?<=^http:\/\/a\.mktgcdn\.com\/p\/)|(?<=^https:\/\/a\.mktgcdn\.com\/p\/)).+(?=\/(.*)$)/g;
 
 /**
  * Renders an image based from the Yext Knowledge Graph. Example of using the component to render
@@ -36,20 +36,19 @@ export const Image = ({
     }
   }, []);
 
-  if (layout != ImageLayout.FIXED && (width || height)) {
-    console.warn(
-      "Width or height is passed in but layout is not fixed. These will have no impact. If you want to have a fixed height or width then set layout to fixed."
-    );
-  }
+  validateRequiredProps(layout, image.image.width, image.image.height, width, height, aspectRatio);
 
-  const imgWidth: number = image.image.width;
-  const imgHeight: number = image.image.height;
+  const imgWidth: number = Math.abs(image.image.width);
+  const imgHeight: number = Math.abs(image.image.height);
   const imgUUID = getImageUUID(image.image.url);
 
   // The image is invalid, only try to load the placeholder
   if (!imgUUID) {
-    return <>{!imgLoaded && placeholder != null && placeholder}</>;
+    return <>{placeholder != null && placeholder}</>;
   }
+
+  const absWidth = width ? Math.abs(width) : undefined;
+  const absHeight = height ? Math.abs(height) : undefined;
 
   const { src, imgStyle, widths } = handleLayout(
     layout,
@@ -57,8 +56,8 @@ export const Image = ({
     imgHeight,
     imgUUID,
     style,
-    width,
-    height,
+    absWidth,
+    absHeight,
     aspectRatio
   );
 
@@ -76,10 +75,11 @@ export const Image = ({
           style={imgStyle}
           src={src}
           className={className}
-          width={width}
-          height={height}
+          width={absWidth}
+          height={absHeight}
           srcSet={srcSet}
           loading={"lazy"}
+          onLoad={() => setImgLoaded(true)}
           {...imgOverrides}
         />
       )}
@@ -87,18 +87,72 @@ export const Image = ({
   );
 };
 
+// Checks if required props are passed in for the specified layout, if not, log a warning.
+export const validateRequiredProps = (
+    layout: ImageLayout,
+    imgWidth: number,
+    imgHeight: number,
+    width?: number,
+    height?: number,
+    aspectRatio?: number,
+) => {
+  if (imgWidth < 0) {
+    console.warn(`Invalid image width: ${imgWidth}.`);
+  }
+
+  if (imgHeight < 0) {
+    console.warn(`Invalid image height: ${imgHeight}.`);
+  }
+
+  if (layout == ImageLayout.FIXED) {
+    if (!width && !height) {
+      console.warn(
+          "Using fixed layout but width and height are not passed as props."
+      );
+
+      return;
+    }
+
+    if (width && width < 0) {
+      console.warn(
+          `Using fixed layout but width is invalid: ${width}.`
+      );
+    }
+
+    if (height && height < 0) {
+      console.warn(
+          `Using fixed layout but height is invalid: ${height}.`
+      );
+    }
+
+    return;
+  }
+
+  if (width || height) {
+    console.warn(
+        "Width or height is passed in but layout is not fixed. These will have no impact. If you want to have a fixed height or width then set layout to fixed."
+    );
+  }
+
+  if (layout == ImageLayout.ASPECT && !aspectRatio) {
+    console.warn(
+        "Using aspect layout but aspectRatio is not passed as a prop."
+    );
+  }
+}
+
 /**
- * Returns the UUID of an image given its url. Logs a warning message if the image url is invalid.
+ * Returns the UUID of an image given its url. Logs an error if the image url is invalid.
  */
 export const getImageUUID = (url: string) => {
   const matches = url.match(MKTGCDN_URL_REGEX);
 
-  if (matches == null || matches.length < 3) {
-    console.warn(`Invalid image url: ${url}.`);
+  if (matches == null || matches.length == 0) {
+    console.error(`Invalid image url: ${url}.`);
     return "";
   }
 
-  return matches[2];
+  return matches[0];
 };
 
 /**
@@ -120,8 +174,8 @@ export const handleLayout = (
   imgHeight: number,
   imgUUID: string,
   style: React.CSSProperties,
-  width?: number,
-  height?: number,
+  absWidth?: number,
+  absHeight?: number,
   aspectRatio?: number
 ): { src: string; imgStyle: React.CSSProperties; widths: number[] } => {
   let widths: number[] = [100, 320, 640, 960, 1280, 1920];
@@ -140,43 +194,14 @@ export const handleLayout = (
 
       break;
     case ImageLayout.FIXED:
-      if (!width && !height) {
-        console.warn(
-          "Using fixed layout but width and height are not passed as props."
-        );
-      }
-
-      const fixedWidth = width
-        ? width
-        : height
-        ? (height / imgHeight) * imgWidth
-        : imgWidth;
-      const fixedHeight = height
-        ? height
-        : width
-        ? (width * imgHeight) / imgWidth
-        : imgHeight;
-
+      const {fixedWidth, fixedHeight, fixedWidths} = getImageSizeForFixedLayout(imgWidth, imgHeight, widths, absWidth, absHeight);
       style.width = fixedWidth;
       style.height = fixedHeight;
+      widths = fixedWidths;
+      src = getImageUrl(imgUUID, fixedWidth, fixedHeight);
 
-      if (fixedWidth && fixedHeight) {
-        src = getImageUrl(imgUUID, fixedWidth, fixedHeight);
-      }
-
-      widths = width
-        ? [width]
-        : height
-        ? [(height / imgHeight) * imgWidth]
-        : widths;
       break;
     case ImageLayout.ASPECT:
-      if (!aspectRatio) {
-        console.warn(
-          "Using aspect layout but aspectRatio is not passed as a prop."
-        );
-      }
-
       style.aspectRatio = aspectRatio
         ? `${aspectRatio}`
         : `${imgWidth} / ${imgHeight}`;
@@ -196,3 +221,26 @@ export const handleLayout = (
 
   return { src, imgStyle: style, widths };
 };
+
+// Returns the fixedWidth and fixedHeight for fixed layout
+export const getImageSizeForFixedLayout = (
+    imgWidth: number,
+    imgHeight: number,
+    defaultWidths: number[],
+    absWidth?: number,
+    absHeight?: number,
+): { fixedWidth: number; fixedHeight: number, fixedWidths: number[] } => {
+  if (absWidth && absHeight) {
+    return {fixedWidth: absWidth, fixedHeight: absHeight, fixedWidths: [absWidth]};
+  }
+
+  if (absWidth) {
+    return {fixedWidth: absWidth, fixedHeight: (absWidth * imgHeight) / imgWidth, fixedWidths: [absWidth]};
+  }
+
+  if (absHeight) {
+    return {fixedWidth: (absHeight / imgHeight) * imgWidth, fixedHeight: absHeight, fixedWidths: [(absHeight / imgHeight) * imgWidth]};
+  }
+
+  return {fixedWidth: imgWidth, fixedHeight: imgHeight, fixedWidths: defaultWidths};
+}
