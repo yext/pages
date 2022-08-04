@@ -2,7 +2,8 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout } from "./types";
 
-const MKTGCDN_URL_REGEX = /(?<=^https:\/\/a\.mktgcdn\.com\/p\/)[a-zA-Z0-9]+(?=\/(.*)$)/g;
+const MKTGCDN_URL_REGEX =
+  /(?<=^https:\/\/a\.mktgcdn\.com\/p\/)[a-zA-Z0-9]+(?=\/(.*)$)/g;
 
 /**
  * Renders an image based from the Yext Knowledge Graph. Example of using the component to render
@@ -85,7 +86,7 @@ export const Image = ({
  * Returns the UUID of an image given its url. Logs a warning message if the image url is invalid.
  */
 export const getImageUUID = (url: string) => {
-  const matches = url.match(MKTGCDN_URL_REGEX)
+  const matches = url.match(MKTGCDN_URL_REGEX);
 
   if (matches == null || matches.length == 0) {
     console.warn(`Invalid image url: ${url}.`);
@@ -100,7 +101,7 @@ export const getImageUUID = (url: string) => {
  */
 export const getImageUrl = (uuid: string, width: number, height: number) => {
   return `https://dynl.mktgcdn.com/p/${uuid}/${Math.round(width)}x${Math.round(
-      height
+    height
   )}`;
 };
 
@@ -109,14 +110,14 @@ export const getImageUrl = (uuid: string, width: number, height: number) => {
  * layout.
  */
 export const handleLayout = (
-    layout: ImageLayout,
-    imgWidth: number,
-    imgHeight: number,
-    imgUUID: string,
-    style: React.CSSProperties,
-    width?: number,
-    height?: number,
-    aspectRatio?: number,
+  layout: ImageLayout,
+  imgWidth: number,
+  imgHeight: number,
+  imgUUID: string,
+  style: React.CSSProperties,
+  width?: number,
+  height?: number,
+  aspectRatio?: number
 ): { src: string; imgStyle: React.CSSProperties; widths: number[] } => {
   let widths: number[] = [100, 320, 640, 960, 1280, 1920];
   let src: string = getImageUrl(imgUUID, 500, 500);
@@ -141,15 +142,15 @@ export const handleLayout = (
       }
 
       const fixedWidth = width
-          ? width
-          : height
-              ? (height / imgHeight) * imgWidth
-              : imgWidth;
+        ? width
+        : height
+        ? (height / imgHeight) * imgWidth
+        : imgWidth;
       const fixedHeight = height
-          ? height
-          : width
-              ? (width * imgHeight) / imgWidth
-              : imgHeight;
+        ? height
+        : width
+        ? (width * imgHeight) / imgWidth
+        : imgHeight;
 
       style.width = fixedWidth;
       style.height = fixedHeight;

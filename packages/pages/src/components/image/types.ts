@@ -12,7 +12,7 @@ export type ImageType = {
     width: number;
     url: string;
     thumbnails?: ThumbnailType[];
-  },
+  };
 };
 
 export enum ImageLayout {

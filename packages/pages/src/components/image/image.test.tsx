@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 import React from "react";
-import {Image, getImageUUID, handleLayout} from "./image";
-import {ImageLayout} from "./types";
-import { render, screen } from '@testing-library/react';
+import { Image, getImageUUID, handleLayout } from "./image";
+import { ImageLayout } from "./types";
+import { render, screen } from "@testing-library/react";
 
 const imgWidth = 20;
 const imgHeight = 10;
@@ -25,11 +25,7 @@ describe("Image", () => {
     const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
 
     expect(logMock.mock.calls.length).toBe(0);
-    render(<Image
-      image={image}
-      layout={ImageLayout.INTRINSIC}
-      width={100}
-    />);
+    render(<Image image={image} layout={ImageLayout.INTRINSIC} width={100} />);
     expect(logMock.mock.calls.length).toBe(1);
 
     jest.clearAllMocks();
@@ -39,13 +35,15 @@ describe("Image", () => {
     const overrideSrc = "https://overridesrc/";
     const overrideObjectFit = "none";
 
-    render(<Image
-      image={image}
-      layout={ImageLayout.FIXED}
-      width={width}
-      style={{objectFit: overrideObjectFit}}
-      imgOverrides={{src: overrideSrc}}
-    />);
+    render(
+      <Image
+        image={image}
+        layout={ImageLayout.FIXED}
+        width={width}
+        style={{ objectFit: overrideObjectFit }}
+        imgOverrides={{ src: overrideSrc }}
+      />
+    );
 
     expect(screen.getByRole("img").style.objectFit).toEqual(overrideObjectFit);
     expect(screen.getByRole("img")).toHaveProperty("src", overrideSrc);
@@ -56,11 +54,13 @@ describe("Image", () => {
     const placeholder = <div>{placeholderText}</div>;
     const onLoad = jest.fn();
 
-    render(<Image
-      image={image}
-      placeholder={placeholder}
-      imgOverrides={{onLoad: () => onLoad()}}
-    />);
+    render(
+      <Image
+        image={image}
+        placeholder={placeholder}
+        imgOverrides={{ onLoad: () => onLoad() }}
+      />
+    );
 
     expect(screen.getByText(placeholderText)).toBeTruthy();
   });
@@ -68,8 +68,11 @@ describe("Image", () => {
 
 describe("getImageUUID", () => {
   it("properly extracts the image UUID when image url is valid", () => {
-    expect(getImageUUID("https://a.mktgcdn.com/p/MbV9F8oMM7960s8ZuZ97P0mI5a7iwkIjG5OSfQDzWgg/4032x3024.jpg"))
-        .toBe("MbV9F8oMM7960s8ZuZ97P0mI5a7iwkIjG5OSfQDzWgg");
+    expect(
+      getImageUUID(
+        "https://a.mktgcdn.com/p/MbV9F8oMM7960s8ZuZ97P0mI5a7iwkIjG5OSfQDzWgg/4032x3024.jpg"
+      )
+    ).toBe("MbV9F8oMM7960s8ZuZ97P0mI5a7iwkIjG5OSfQDzWgg");
   });
 
   it("properly logs warning when image url is invalid", () => {
@@ -88,30 +91,30 @@ describe("getImageUUID", () => {
 
 describe("handleLayout", () => {
   it(`properly sets aspectRatio when layout is ${ImageLayout.INTRINSIC} and aspectRatio is provided`, () => {
-    const {imgStyle} = handleLayout(
-        ImageLayout.INTRINSIC,
-        imgWidth,
-        imgHeight,
-        imgUUID,
-        {},
-        width,
-        height,
-        aspectRatio,
+    const { imgStyle } = handleLayout(
+      ImageLayout.INTRINSIC,
+      imgWidth,
+      imgHeight,
+      imgUUID,
+      {},
+      width,
+      height,
+      aspectRatio
     );
 
     expect(imgStyle.aspectRatio).toEqual(aspectRatio.toString());
   });
 
   it(`properly sets aspectRatio when layout is ${ImageLayout.INTRINSIC} and aspectRatio is not provided`, () => {
-    const {imgStyle} = handleLayout(
-        ImageLayout.INTRINSIC,
-        imgWidth,
-        imgHeight,
-        imgUUID,
-        {},
-        width,
-        height,
-        undefined,
+    const { imgStyle } = handleLayout(
+      ImageLayout.INTRINSIC,
+      imgWidth,
+      imgHeight,
+      imgUUID,
+      {},
+      width,
+      height,
+      undefined
     );
 
     expect(imgStyle.aspectRatio).toEqual(`${imgWidth} / ${imgHeight}`);
@@ -122,7 +125,7 @@ describe("handleLayout", () => {
 
     expect(logMock.mock.calls.length).toBe(0);
 
-    const {src, imgStyle} = handleLayout(
+    const { src, imgStyle } = handleLayout(
       ImageLayout.FIXED,
       imgWidth,
       imgHeight,
@@ -130,10 +133,12 @@ describe("handleLayout", () => {
       {},
       undefined,
       undefined,
-      undefined,
-    )
+      undefined
+    );
 
-    expect(src).toEqual(`https://dynl.mktgcdn.com/p/${imgUUID}/${imgWidth}x${imgHeight}`);
+    expect(src).toEqual(
+      `https://dynl.mktgcdn.com/p/${imgUUID}/${imgWidth}x${imgHeight}`
+    );
     expect(imgStyle.width).toEqual(imgWidth);
     expect(imgStyle.height).toEqual(imgHeight);
 
@@ -142,18 +147,20 @@ describe("handleLayout", () => {
   });
 
   it(`properly sets src, imgStyle and widths when layout is ${ImageLayout.FIXED} and only width is provided`, () => {
-    const {src, imgStyle, widths} = handleLayout(
-        ImageLayout.FIXED,
-        imgWidth,
-        imgHeight,
-        imgUUID,
-        {},
-        width,
-        undefined,
-        undefined,
+    const { src, imgStyle, widths } = handleLayout(
+      ImageLayout.FIXED,
+      imgWidth,
+      imgHeight,
+      imgUUID,
+      {},
+      width,
+      undefined,
+      undefined
     );
 
-    expect(src).toEqual(`https://dynl.mktgcdn.com/p/${imgUUID}/${width}x${height}`);
+    expect(src).toEqual(
+      `https://dynl.mktgcdn.com/p/${imgUUID}/${width}x${height}`
+    );
     expect(imgStyle.width).toEqual(width);
     expect(imgStyle.height).toEqual(height);
     expect(widths).toEqual([width]);
@@ -164,16 +171,16 @@ describe("handleLayout", () => {
 
     expect(logMock.mock.calls.length).toBe(0);
 
-    const {imgStyle} = handleLayout(
-        ImageLayout.ASPECT,
-        imgWidth,
-        imgHeight,
-        imgUUID,
-        {},
-        undefined,
-        undefined,
-        undefined,
-    )
+    const { imgStyle } = handleLayout(
+      ImageLayout.ASPECT,
+      imgWidth,
+      imgHeight,
+      imgUUID,
+      {},
+      undefined,
+      undefined,
+      undefined
+    );
 
     expect(imgStyle.aspectRatio).toEqual(`${imgWidth} / ${imgHeight}`);
     expect(logMock.mock.calls.length).toBe(1);
@@ -181,30 +188,30 @@ describe("handleLayout", () => {
   });
 
   it(`properly sets aspectRatio when layout is ${ImageLayout.ASPECT} and aspectRatio is provided`, () => {
-    const {imgStyle} = handleLayout(
-        ImageLayout.ASPECT,
-        imgWidth,
-        imgHeight,
-        imgUUID,
-        {},
-        undefined,
-        undefined,
-        aspectRatio,
+    const { imgStyle } = handleLayout(
+      ImageLayout.ASPECT,
+      imgWidth,
+      imgHeight,
+      imgUUID,
+      {},
+      undefined,
+      undefined,
+      aspectRatio
     );
 
     expect(imgStyle.aspectRatio).toEqual(aspectRatio.toString());
   });
 
   it(`properly sets width when layout is ${ImageLayout.FILL}`, () => {
-    const {imgStyle} = handleLayout(
-        ImageLayout.FILL,
-        imgWidth,
-        imgHeight,
-        imgUUID,
-        {},
-        undefined,
-        undefined,
-        aspectRatio,
+    const { imgStyle } = handleLayout(
+      ImageLayout.FILL,
+      imgWidth,
+      imgHeight,
+      imgUUID,
+      {},
+      undefined,
+      undefined,
+      aspectRatio
     );
 
     expect(imgStyle.width).toEqual("100%");

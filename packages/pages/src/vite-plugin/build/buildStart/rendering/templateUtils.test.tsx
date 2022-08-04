@@ -33,7 +33,7 @@ const baseProps: TemplateProps = {
 
 describe("generateResponses", () => {
   it("calls transformProps when transformProps is defined", async () => {
-    const fn = jest.fn(props => props);
+    const fn = jest.fn((props) => props);
     await generateResponses(
       { ...baseTemplateModule, transformProps: fn },
       baseProps
