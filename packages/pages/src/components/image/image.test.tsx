@@ -68,11 +68,10 @@ describe("Image", () => {
 
 describe("getImageUUID", () => {
   it("properly extracts the image UUID when image url is valid", () => {
-    expect(
-      getImageUUID(
-        "https://a.mktgcdn.com/p/MbV9F8oMM7960s8ZuZ97P0mI5a7iwkIjG5OSfQDzWgg/4032x3024.jpg"
-      )
-    ).toBe("MbV9F8oMM7960s8ZuZ97P0mI5a7iwkIjG5OSfQDzWgg");
+    expect(getImageUUID("http://a.mktgcdn.com/p/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"))
+        .toBe("EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54");
+    expect(getImageUUID("https://a.mktgcdn.com/p/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo/1300x872.jpg"))
+        .toBe("ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo");
   });
 
   it("properly logs warning when image url is invalid", () => {

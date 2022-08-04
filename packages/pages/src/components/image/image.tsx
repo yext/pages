@@ -2,8 +2,12 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout } from "./types";
 
-const MKTGCDN_URL_REGEX =
-  /(?<=^https:\/\/a\.mktgcdn\.com\/p\/)[a-zA-Z0-9]+(?=\/(.*)$)/g;
+const MKTGCDN_URL_REGEX = /((?<=^http:\/\/a\.mktgcdn\.com\/p\/)|(?<=^https:\/\/a\.mktgcdn\.com\/p\/)).+(?=\/(.*)$)/g;
+enum imgLoadingStatus {
+  NONE = "none",
+  LOADED = "loaded",
+  ERROR = "error",
+}
 
 /**
  * Renders an image based from the Yext Knowledge Graph. Example of using the component to render
@@ -29,11 +33,11 @@ export const Image = ({
   style = {},
 }: ImageProps) => {
   const imgRef = useRef<HTMLImageElement>(null);
-  const [imgLoaded, setImgLoaded] = useState<boolean>(false);
+  const [imgStatus, setImgStatus] = useState<imgLoadingStatus>(imgLoadingStatus.NONE);
 
   useEffect(() => {
     if (imgRef.current?.complete) {
-      setImgLoaded(true);
+      setImgStatus(imgLoadingStatus.LOADED);
     }
   }, []);
 
@@ -63,10 +67,15 @@ export const Image = ({
     .map((w) => `${getImageUrl(imgUUID, w, (imgHeight / imgWidth) * w)} ${w}w`)
     .join(", ");
 
+  const onError = () => {
+    setImgStatus(imgLoadingStatus.ERROR);
+    console.warn(`Invalid image src: ${src}.`);
+  };
+
   return (
     <>
-      {placeholder != null && !imgLoaded && placeholder}
-      <img
+      {placeholder != null && imgStatus != imgLoadingStatus.LOADED && placeholder}
+      {imgStatus != imgLoadingStatus.ERROR && <img
         ref={imgRef}
         style={imgStyle}
         src={src}
@@ -75,9 +84,10 @@ export const Image = ({
         height={height}
         srcSet={srcSet}
         loading={"lazy"}
-        onLoad={() => setImgLoaded(true)}
+        onLoad={() => setImgStatus(imgLoadingStatus.LOADED)}
+        onError={() => onError()}
         {...imgOverrides}
-      />
+      />}
     </>
   );
 };
