@@ -2,13 +2,7 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout } from "./types";
 
-const MKTGCDN_URL_REGEX =
-  /((?<=^http:\/\/a\.mktgcdn\.com\/p\/)|(?<=^https:\/\/a\.mktgcdn\.com\/p\/)).+(?=\/(.*)$)/g;
-enum imgLoadingStatus {
-  NONE = "none",
-  LOADED = "loaded",
-  ERROR = "error",
-}
+const MKTGCDN_URL_REGEX = /(https?:\/\/a.mktgcdn.com\/p\/)([^\/]+)(\/?.*)/;
 
 /**
  * Renders an image based from the Yext Knowledge Graph. Example of using the component to render
@@ -34,13 +28,11 @@ export const Image = ({
   style = {},
 }: ImageProps) => {
   const imgRef = useRef<HTMLImageElement>(null);
-  const [imgStatus, setImgStatus] = useState<imgLoadingStatus>(
-    imgLoadingStatus.NONE
-  );
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   useEffect(() => {
     if (imgRef.current?.complete) {
-      setImgStatus(imgLoadingStatus.LOADED);
+      setImgLoaded(true);
     }
   }, []);
 
@@ -53,6 +45,11 @@ export const Image = ({
   const imgWidth: number = image.image.width;
   const imgHeight: number = image.image.height;
   const imgUUID = getImageUUID(image.image.url);
+
+  // The image is invalid, only try to load the placeholder
+  if (!imgUUID) {
+    return <>{!imgLoaded && placeholder != null && placeholder}</>;
+  }
 
   const { src, imgStyle, widths } = handleLayout(
     layout,
@@ -70,17 +67,10 @@ export const Image = ({
     .map((w) => `${getImageUrl(imgUUID, w, (imgHeight / imgWidth) * w)} ${w}w`)
     .join(", ");
 
-  const onError = () => {
-    setImgStatus(imgLoadingStatus.ERROR);
-    console.warn(`Invalid image src: ${src}.`);
-  };
-
   return (
     <>
-      {placeholder != null &&
-        imgStatus != imgLoadingStatus.LOADED &&
-        placeholder}
-      {imgStatus != imgLoadingStatus.ERROR && (
+      {!imgLoaded && placeholder != null && placeholder}
+      {src && (
         <img
           ref={imgRef}
           style={imgStyle}
@@ -90,8 +80,6 @@ export const Image = ({
           height={height}
           srcSet={srcSet}
           loading={"lazy"}
-          onLoad={() => setImgStatus(imgLoadingStatus.LOADED)}
-          onError={() => onError()}
           {...imgOverrides}
         />
       )}
@@ -105,12 +93,12 @@ export const Image = ({
 export const getImageUUID = (url: string) => {
   const matches = url.match(MKTGCDN_URL_REGEX);
 
-  if (matches == null || matches.length == 0) {
+  if (matches == null || matches.length < 3) {
     console.warn(`Invalid image url: ${url}.`);
     return "";
   }
 
-  return matches[0];
+  return matches[2];
 };
 
 /**
