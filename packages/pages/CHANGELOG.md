@@ -1,3 +1,26 @@
+# 1.0.0-beta.1 (2022-08-05)
+
+
+### Bug Fixes
+
+* **dev:** honor feature name casing in local dev url (fixes [#121](https://github.com/yext/sites-scripts/issues/121)) ([#146](https://github.com/yext/sites-scripts/issues/146)) ([e6fb9f2](https://github.com/yext/sites-scripts/commit/e6fb9f2f759d9e93101512e2270053a0157beba8))
+* improve errors related to undefined getPath (fixes [#130](https://github.com/yext/sites-scripts/issues/130)) ([#138](https://github.com/yext/sites-scripts/issues/138)) ([37b33d0](https://github.com/yext/sites-scripts/commit/37b33d00f75b8acb7e232d2935c173f98347cb21))
+* index page incorrectly saying there is no localData (fix [#135](https://github.com/yext/sites-scripts/issues/135)) ([#136](https://github.com/yext/sites-scripts/issues/136)) ([dd272d2](https://github.com/yext/sites-scripts/commit/dd272d2977ac76bf416965382b44fcc199c2c869))
+* update bundler plugin copying ([#111](https://github.com/yext/sites-scripts/issues/111)) ([c602104](https://github.com/yext/sites-scripts/commit/c602104d8f921b47842c2a245fa4c89b571caf80)), closes [#109](https://github.com/yext/sites-scripts/issues/109) [#109](https://github.com/yext/sites-scripts/issues/109)
+
+
+### Features
+
+* add alternateLanguageFields to the template config ([#112](https://github.com/yext/sites-scripts/issues/112)) ([c53b08d](https://github.com/yext/sites-scripts/commit/c53b08d671ffbd086d5ea19d48855ef297462634))
+* **components:** add `Image` component ([#144](https://github.com/yext/sites-scripts/issues/144)) ([f6bad2c](https://github.com/yext/sites-scripts/commit/f6bad2c733a1aff69372babad48b4cc08c17d525))
+* **dev:** redirect if url ends in final slash (closes [#143](https://github.com/yext/sites-scripts/issues/143)) ([#148](https://github.com/yext/sites-scripts/issues/148)) ([61d38e9](https://github.com/yext/sites-scripts/commit/61d38e943915d55004e55d1ba4cd556ec7fc9947))
+* **dev:** support alternate languages via `locale` query param ([#141](https://github.com/yext/sites-scripts/issues/141)) ([3aa60c8](https://github.com/yext/sites-scripts/commit/3aa60c8d96b279eea5674af6ff0e43f852f00657))
+* **plugin:** validate file sizes (closes [#145](https://github.com/yext/sites-scripts/issues/145)) ([#147](https://github.com/yext/sites-scripts/issues/147)) ([6a16d2a](https://github.com/yext/sites-scripts/commit/6a16d2a7efe3a4f91f096e2b88bcbbddbc53b324))
+* **util:** add fetch and runtime functions ([#118](https://github.com/yext/sites-scripts/issues/118)) ([207fc63](https://github.com/yext/sites-scripts/commit/207fc63a2aa69e0d04dc72e32ded98a2a9231bee)), closes [#117](https://github.com/yext/sites-scripts/issues/117) [#119](https://github.com/yext/sites-scripts/issues/119) [#120](https://github.com/yext/sites-scripts/issues/120) [#124](https://github.com/yext/sites-scripts/issues/124) [#125](https://github.com/yext/sites-scripts/issues/125) [#126](https://github.com/yext/sites-scripts/issues/126)
+* **util:** add isProduction function ([#150](https://github.com/yext/sites-scripts/issues/150)) ([f89f45d](https://github.com/yext/sites-scripts/commit/f89f45da584ec196f519e30c95124fcf2e4ae11c))
+
+
+
 # 1.0.0-beta.0 (2022-07-22)
 
 ### Main Changes
