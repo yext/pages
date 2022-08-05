@@ -2,8 +2,7 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout } from "./types";
 
-const MKTGCDN_URL_REGEX =
-  /((?<=^http:\/\/a\.mktgcdn\.com\/p\/)|(?<=^https:\/\/a\.mktgcdn\.com\/p\/)).+(?=\/(.*)$)/g;
+const MKTGCDN_URL_REGEX = /(https?:\/\/a.mktgcdn.com\/p\/)(?<uuid>.+)\/(.*)/;
 
 /**
  * Renders an image based from the Yext Knowledge Graph. Example of using the component to render
@@ -151,12 +150,12 @@ export const validateRequiredProps = (
 export const getImageUUID = (url: string) => {
   const matches = url.match(MKTGCDN_URL_REGEX);
 
-  if (matches == null || matches.length == 0) {
+  if (!matches?.groups?.uuid) {
     console.error(`Invalid image url: ${url}.`);
     return "";
   }
 
-  return matches[0];
+  return matches.groups.uuid;
 };
 
 /**

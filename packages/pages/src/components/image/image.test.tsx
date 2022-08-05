@@ -80,7 +80,7 @@ describe("Image", () => {
 });
 
 describe("getImageUUID", () => {
-  it("properly extracts the image UUID when image url is valid", () => {
+  it("properly extracts the image UUID", () => {
     expect(
       getImageUUID(
         "http://a.mktgcdn.com/p/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
@@ -91,6 +91,19 @@ describe("getImageUUID", () => {
         "https://a.mktgcdn.com/p/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo/1300x872.jpg"
       )
     ).toBe("ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo");
+    expect(
+      getImageUUID(
+        "https://a.mktgcdn.com/p/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo/"
+      )
+    ).toBe("ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo");
+    expect(
+      getImageUUID(
+        "https://a.mktgcdn.com/p/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo"
+      )
+    ).toBe("");
+    expect(getImageUUID("https://a.mktgcdn.com/p//1300x872.jpg")).toBe("");
+    expect(getImageUUID("https://a.mktgcdn.com/p/1300x872.jpg")).toBe("");
+    expect(getImageUUID("")).toBe("");
   });
 
   it("properly logs error when image url is invalid", () => {
