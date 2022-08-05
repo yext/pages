@@ -181,15 +181,16 @@ export const handleLayout = (
 ): { src: string; imgStyle: React.CSSProperties; widths: number[] } => {
   let widths: number[] = [100, 320, 640, 960, 1280, 1920];
   let src: string = getImageUrl(imgUUID, 500, 500);
-  style.objectFit = style.objectFit || "cover";
-  style.objectPosition = style.objectPosition || "center";
+  let imgStyle = {...style};
+  imgStyle.objectFit = imgStyle.objectFit || "cover";
+  imgStyle.objectPosition = imgStyle.objectPosition || "center";
 
   switch (layout) {
     case ImageLayout.INTRINSIC:
       // Don't let image be wider than its intrinsic width
-      style.maxWidth = imgWidth;
-      style.width = "100%";
-      style.aspectRatio = aspectRatio
+      imgStyle.maxWidth = imgWidth;
+      imgStyle.width = "100%";
+      imgStyle.aspectRatio = aspectRatio
         ? `${aspectRatio}`
         : `${imgWidth} / ${imgHeight}`;
 
@@ -203,21 +204,21 @@ export const handleLayout = (
           absWidth,
           absHeight
         );
-      style.width = fixedWidth;
-      style.height = fixedHeight;
+      imgStyle.width = fixedWidth;
+      imgStyle.height = fixedHeight;
       widths = fixedWidths;
       src = getImageUrl(imgUUID, fixedWidth, fixedHeight);
 
       break;
     case ImageLayout.ASPECT:
-      style.aspectRatio = aspectRatio
+      imgStyle.aspectRatio = aspectRatio
         ? `${aspectRatio}`
         : `${imgWidth} / ${imgHeight}`;
 
       break;
     case ImageLayout.FILL:
-      style.width = "100%";
-      style.aspectRatio = aspectRatio
+      imgStyle.width = "100%";
+      imgStyle.aspectRatio = aspectRatio
         ? `${aspectRatio}`
         : `${imgWidth} / ${imgHeight}`;
 
@@ -227,7 +228,7 @@ export const handleLayout = (
       break;
   }
 
-  return { src, imgStyle: style, widths };
+  return { src, imgStyle, widths };
 };
 
 // Returns the fixedWidth and fixedHeight for fixed layout

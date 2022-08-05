@@ -81,7 +81,6 @@ describe("Image", () => {
     );
 
     expect(screen.getByText(placeholderText)).toBeTruthy();
-
     expect(logMock.mock.calls.length).toBe(1);
     expect(logMock.mock.calls[0][0]).toBe(`Invalid image url: ${invalidUrl}.`);
 
