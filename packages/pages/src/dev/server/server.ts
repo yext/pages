@@ -32,15 +32,15 @@ export const createServer = async (dynamicGenerateData: boolean) => {
   // Ignore favicon requests if it doesn't exist
   app.use(ignoreFavicon);
 
+  // Redirect urls with a final slash to their canonical url without the slash
+  app.use(finalSlashRedirect);
+
   let displayGenerateTestDataWarning = false;
   if (dynamicGenerateData) {
     // display the warning if the call to generateTestData fails.
     displayGenerateTestDataWarning = !(await generateTestData());
   }
 
-  // Redirect urls with a final slash to their canonical url without the slash
-  // app.use(finalSlashRedirect);
-  
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.
   app.use(
