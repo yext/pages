@@ -57,6 +57,9 @@ export const ImageLayoutOption = {
 export type ImageLayout =
   typeof ImageLayoutOption[keyof typeof ImageLayoutOption];
 
+/**
+ * The shape of the data passed to {@link Image}.
+ */
 interface BaseImageProps {
   /** The image field from Knowledge Graph. */
   image: ImageType;
@@ -78,11 +81,19 @@ interface BaseImageProps {
   style?: React.CSSProperties;
 }
 
+/**
+ * The shape of the data passed to {@link Image} when layout is {@link ImageLayoutOption.INTRINSIC},
+ * {@link ImageLayoutOption.FILL} or not provided.
+ */
 interface OtherImageProps extends BaseImageProps {
   /** Specifies how the image is rendered. */
   layout?: "intrinsic" | "fill";
 }
 
+/**
+ * The shape of the data passed to {@link Image} when layout is {@link ImageLayoutOption.FIXED}.
+ * Extends the {@link BaseImageProps} interface and has the additions of required width and height.
+ */
 interface FixedImageProps extends BaseImageProps {
   /** Specifies how the image is rendered. */
   layout: "fixed";
@@ -92,6 +103,10 @@ interface FixedImageProps extends BaseImageProps {
   height: number;
 }
 
+/**
+ * The shape of the data passed to {@link Image} when layout is {@link ImageLayoutOption.ASPECT}.
+ * Extends the {@link BaseImageProps} interface and has the additions of a required aspectRatio.
+ */
 interface AspectImageProps extends BaseImageProps {
   /** Specifies how the image is rendered. */
   layout: "aspect";
@@ -100,7 +115,8 @@ interface AspectImageProps extends BaseImageProps {
 }
 
 /**
- * The shape of the data passed directly to the different template functions with the
- * exception of the render function (getPath, getHeadConfig, etc).
+ * The shape of the data passed to {@link Image}.
+ *
+ * @public
  */
 export type ImageProps = OtherImageProps | FixedImageProps | AspectImageProps;
