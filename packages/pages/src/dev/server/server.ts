@@ -7,6 +7,7 @@ import { viteDevServerPort } from "./middleware/constants.js";
 import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
+import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 
 export const createServer = async (dynamicGenerateData: boolean) => {
   // creates a standard express app
@@ -30,6 +31,9 @@ export const createServer = async (dynamicGenerateData: boolean) => {
 
   // Ignore favicon requests if it doesn't exist
   app.use(ignoreFavicon);
+
+  // Redirect urls with a final slash to their canonical url without the slash
+  app.use(finalSlashRedirect);
 
   let displayGenerateTestDataWarning = false;
   if (dynamicGenerateData) {
