@@ -10,7 +10,9 @@ export async function runGenerate(destinationFolder?: string) {
   });
 }
 
-const Generator: FC = ({ destinationFolder }) => {
+const Generator: FC<{ destinationFolder?: string }> = ({
+  destinationFolder,
+}) => {
   interface Step {
     title: string;
     output: {
