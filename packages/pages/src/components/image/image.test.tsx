@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import React from "react";
+import * as React from "react";
 import {
   Image,
   validateRequiredProps,
