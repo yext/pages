@@ -162,8 +162,10 @@ const Generator: FC = () => {
       {done && (
         <Text color="white">
           {"\n"}
-          <Text color="greenBright">Done!</Text> Try following commands to
-          start:{"\n"}
+          <Text color="greenBright">Done!</Text> Try the following commands to
+          get started:{"\n"}
+          <Text bold>{"cd <my-site-name>"}</Text>
+          {"\n"}
           <Text bold>npm run dev</Text>
           {"   "}
           <Text color="white"># Start a development server</Text>
