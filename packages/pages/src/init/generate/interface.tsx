@@ -4,13 +4,15 @@ import { spawn } from "child_process";
 import { generate } from "./generate.js";
 import Spinner from "./spinner.js";
 
-export async function runGenerate() {
+export async function runGenerate(destinationFolder?: string) {
   return new Promise<void>(() => {
-    render(<Generator />);
+    render(<Generator destinationFolder={destinationFolder} />);
   });
 }
 
-const Generator: FC = () => {
+const Generator: FC<{ destinationFolder?: string }> = ({
+  destinationFolder,
+}) => {
   interface Step {
     title: string;
     output: {
@@ -162,8 +164,10 @@ const Generator: FC = () => {
       {done && (
         <Text color="white">
           {"\n"}
-          <Text color="greenBright">Done!</Text> Try following commands to
-          start:{"\n"}
+          <Text color="greenBright">Done!</Text> Try the following commands to
+          get started:{"\n"}
+          {destinationFolder && <Text bold>{`cd ${destinationFolder}`}</Text>}
+          {"\n"}
           <Text bold>npm run dev</Text>
           {"   "}
           <Text color="white"># Start a development server</Text>
