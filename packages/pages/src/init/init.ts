@@ -5,6 +5,7 @@ export default async (folderToCreate: string | null) => {
   if (folderToCreate) {
     await fs.promises.mkdir(folderToCreate);
     process.chdir(folderToCreate);
+    runGenerate(folderToCreate);
   } else {
     const files = await fs.promises.readdir(".");
     if (files.length) {
@@ -13,7 +14,6 @@ export default async (folderToCreate: string | null) => {
       );
       process.exit(1);
     }
+    runGenerate();
   }
-
-  runGenerate();
 };
