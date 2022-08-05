@@ -181,7 +181,7 @@ export const handleLayout = (
 ): { src: string; imgStyle: React.CSSProperties; widths: number[] } => {
   let widths: number[] = [100, 320, 640, 960, 1280, 1920];
   let src: string = getImageUrl(imgUUID, 500, 500);
-  let imgStyle = {...style};
+  let imgStyle = { ...style };
   imgStyle.objectFit = imgStyle.objectFit || "cover";
   imgStyle.objectPosition = imgStyle.objectPosition || "center";
 
