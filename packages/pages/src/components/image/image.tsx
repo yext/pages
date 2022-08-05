@@ -45,8 +45,8 @@ export const Image = ({
     aspectRatio
   );
 
-  const imgWidth: number = Math.abs(image.image.width);
-  const imgHeight: number = Math.abs(image.image.height);
+  const imgWidth = Math.abs(image.image.width);
+  const imgHeight = Math.abs(image.image.height);
   const imgUUID = getImageUUID(image.image.url);
 
   // The image is invalid, only try to load the placeholder
@@ -54,8 +54,8 @@ export const Image = ({
     return <>{placeholder != null && placeholder}</>;
   }
 
-  const absWidth = width ? Math.abs(width) : undefined;
-  const absHeight = height ? Math.abs(height) : undefined;
+  const absWidth = width && width > 0 ? width : undefined;
+  const absHeight = height && height > 0 ? height : undefined;
 
   const { src, imgStyle, widths } = handleLayout(
     layout,
@@ -76,20 +76,18 @@ export const Image = ({
   return (
     <>
       {!imgLoaded && placeholder != null && placeholder}
-      {src && (
-        <img
-          ref={imgRef}
-          style={imgStyle}
-          src={src}
-          className={className}
-          width={absWidth}
-          height={absHeight}
-          srcSet={srcSet}
-          loading={"lazy"}
-          onLoad={() => setImgLoaded(true)}
-          {...imgOverrides}
-        />
-      )}
+      <img
+        ref={imgRef}
+        style={imgStyle}
+        src={src}
+        className={className}
+        width={absWidth}
+        height={absHeight}
+        srcSet={srcSet}
+        loading={"lazy"}
+        onLoad={() => setImgLoaded(true)}
+        {...imgOverrides}
+      />
     </>
   );
 };
