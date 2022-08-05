@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import {ImageProps, ImageLayout, ImageLayoutOption} from "./types";
+import { ImageProps, ImageLayout, ImageLayoutOption } from "./types";
 
 const MKTGCDN_URL_REGEX = /(https?:\/\/a.mktgcdn.com\/p\/)(?<uuid>.+)\/(.*)/;
 

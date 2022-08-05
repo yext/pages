@@ -54,7 +54,8 @@ export const ImageLayoutOption = {
  *
  * @public
  */
-export type ImageLayout = typeof ImageLayoutOption[keyof typeof ImageLayoutOption];
+export type ImageLayout =
+  typeof ImageLayoutOption[keyof typeof ImageLayoutOption];
 
 interface BaseImageProps {
   /** The image field from Knowledge Graph. */
