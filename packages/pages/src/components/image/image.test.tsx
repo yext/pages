@@ -9,7 +9,7 @@ import {
   handleLayout,
   getImageSizeForFixedLayout,
 } from "./image";
-import { ImageLayout } from "./types";
+import { ImageLayoutOption } from "./types";
 import { render, screen } from "@testing-library/react";
 
 const imgWidth = 20;
@@ -35,8 +35,9 @@ describe("Image", () => {
     render(
       <Image
         image={image}
-        layout={ImageLayout.FIXED}
+        layout={ImageLayoutOption.FIXED}
         width={width}
+        height={height}
         style={{ objectFit: overrideObjectFit }}
         imgOverrides={{ src: overrideSrc }}
       />
@@ -151,9 +152,9 @@ describe("getImageUUID", () => {
 });
 
 describe("handleLayout", () => {
-  it(`properly sets aspectRatio when layout is ${ImageLayout.INTRINSIC} and aspectRatio is provided`, () => {
+  it(`properly sets aspectRatio when layout is ${ImageLayoutOption.INTRINSIC} and aspectRatio is provided`, () => {
     const { imgStyle } = handleLayout(
-      ImageLayout.INTRINSIC,
+      ImageLayoutOption.INTRINSIC,
       imgWidth,
       imgHeight,
       imgUUID,
@@ -166,9 +167,9 @@ describe("handleLayout", () => {
     expect(imgStyle.aspectRatio).toEqual(aspectRatio.toString());
   });
 
-  it(`properly sets aspectRatio when layout is ${ImageLayout.INTRINSIC} and aspectRatio is not provided`, () => {
+  it(`properly sets aspectRatio when layout is ${ImageLayoutOption.INTRINSIC} and aspectRatio is not provided`, () => {
     const { imgStyle } = handleLayout(
-      ImageLayout.INTRINSIC,
+      ImageLayoutOption.INTRINSIC,
       imgWidth,
       imgHeight,
       imgUUID,
@@ -181,9 +182,9 @@ describe("handleLayout", () => {
     expect(imgStyle.aspectRatio).toEqual(`${imgWidth} / ${imgHeight}`);
   });
 
-  it(`properly sets src, imgStyle and widths when layout is ${ImageLayout.FIXED} and only width is provided`, () => {
+  it(`properly sets src, imgStyle and widths when layout is ${ImageLayoutOption.FIXED} and only width is provided`, () => {
     const { src, imgStyle, widths } = handleLayout(
-      ImageLayout.FIXED,
+      ImageLayoutOption.FIXED,
       imgWidth,
       imgHeight,
       imgUUID,
@@ -201,9 +202,9 @@ describe("handleLayout", () => {
     expect(widths).toEqual([width]);
   });
 
-  it(`properly sets aspectRatio when layout is ${ImageLayout.ASPECT} and aspectRatio is provided`, () => {
+  it(`properly sets aspectRatio when layout is ${ImageLayoutOption.ASPECT} and aspectRatio is provided`, () => {
     const { imgStyle } = handleLayout(
-      ImageLayout.ASPECT,
+      ImageLayoutOption.ASPECT,
       imgWidth,
       imgHeight,
       imgUUID,
@@ -216,9 +217,9 @@ describe("handleLayout", () => {
     expect(imgStyle.aspectRatio).toEqual(aspectRatio.toString());
   });
 
-  it(`properly sets width when layout is ${ImageLayout.FILL}`, () => {
+  it(`properly sets width when layout is ${ImageLayoutOption.FILL}`, () => {
     const { imgStyle } = handleLayout(
-      ImageLayout.FILL,
+      ImageLayoutOption.FILL,
       imgWidth,
       imgHeight,
       imgUUID,
@@ -234,12 +235,12 @@ describe("handleLayout", () => {
 });
 
 describe("validateRequiredProps", () => {
-  it(`properly logs warning when layout is not ${ImageLayout.FIXED} and width or height is provided`, async () => {
+  it(`properly logs warning when layout is not ${ImageLayoutOption.FIXED} and width or height is provided`, async () => {
     const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
 
     expect(logMock.mock.calls.length).toBe(0);
     validateRequiredProps(
-      ImageLayout.INTRINSIC,
+      ImageLayoutOption.INTRINSIC,
       imgWidth,
       imgHeight,
       width,
@@ -253,13 +254,13 @@ describe("validateRequiredProps", () => {
     jest.clearAllMocks();
   });
 
-  it(`properly logs warning when layout is ${ImageLayout.FIXED} and neither width nor height is provided`, async () => {
+  it(`properly logs warning when layout is ${ImageLayoutOption.FIXED} and neither width nor height is provided`, async () => {
     const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
 
     expect(logMock.mock.calls.length).toBe(0);
 
     validateRequiredProps(
-      ImageLayout.FIXED,
+      ImageLayoutOption.FIXED,
       imgWidth,
       imgHeight,
       undefined,
@@ -274,14 +275,14 @@ describe("validateRequiredProps", () => {
     jest.clearAllMocks();
   });
 
-  it(`properly logs warning when layout is ${ImageLayout.FIXED} and width is a negative value`, async () => {
+  it(`properly logs warning when layout is ${ImageLayoutOption.FIXED} and width is a negative value`, async () => {
     const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
     const invalidWidth = -100;
 
     expect(logMock.mock.calls.length).toBe(0);
 
     validateRequiredProps(
-      ImageLayout.FIXED,
+      ImageLayoutOption.FIXED,
       imgWidth,
       imgHeight,
       invalidWidth,
@@ -296,13 +297,13 @@ describe("validateRequiredProps", () => {
     jest.clearAllMocks();
   });
 
-  it(`properly logs warning when layout is ${ImageLayout.ASPECT} and aspectRatio is not provided`, () => {
+  it(`properly logs warning when layout is ${ImageLayoutOption.ASPECT} and aspectRatio is not provided`, () => {
     const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
 
     expect(logMock.mock.calls.length).toBe(0);
 
     validateRequiredProps(
-      ImageLayout.ASPECT,
+      ImageLayoutOption.ASPECT,
       imgWidth,
       imgHeight,
       undefined,
@@ -324,7 +325,7 @@ describe("validateRequiredProps", () => {
     expect(logMock.mock.calls.length).toBe(0);
 
     validateRequiredProps(
-      ImageLayout.FILL,
+      ImageLayoutOption.FILL,
       invalidImgWidth,
       imgHeight,
       undefined,

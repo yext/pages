@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import { ImageProps, ImageLayout } from "./types";
+import {ImageProps, ImageLayout, ImageLayoutOption} from "./types";
 
 const MKTGCDN_URL_REGEX = /(https?:\/\/a.mktgcdn.com\/p\/)(?<uuid>.+)\/(.*)/;
 
@@ -22,17 +22,17 @@ export const Image = ({
   width,
   height,
   aspectRatio,
-  layout = ImageLayout.INTRINSIC,
+  layout = ImageLayoutOption.INTRINSIC,
   placeholder,
   imgOverrides,
   style = {},
 }: ImageProps) => {
   const imgRef = useRef<HTMLImageElement>(null);
-  const [imgLoaded, setImgLoaded] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
     if (imgRef.current?.complete) {
-      setImgLoaded(true);
+      setIsImageLoaded(true);
     }
   }, []);
 
@@ -75,7 +75,7 @@ export const Image = ({
 
   return (
     <>
-      {!imgLoaded && placeholder != null && placeholder}
+      {!isImageLoaded && placeholder != null && placeholder}
       <img
         ref={imgRef}
         style={imgStyle}
@@ -85,7 +85,6 @@ export const Image = ({
         height={absHeight}
         srcSet={srcSet}
         loading={"lazy"}
-        onLoad={() => setImgLoaded(true)}
         {...imgOverrides}
       />
     </>
@@ -109,7 +108,7 @@ export const validateRequiredProps = (
     console.warn(`Invalid image height: ${imgHeight}.`);
   }
 
-  if (layout == ImageLayout.FIXED) {
+  if (layout == ImageLayoutOption.FIXED) {
     if (!width && !height) {
       console.warn(
         "Using fixed layout but width and height are not passed as props."
@@ -135,7 +134,7 @@ export const validateRequiredProps = (
     );
   }
 
-  if (layout == ImageLayout.ASPECT && !aspectRatio) {
+  if (layout == ImageLayoutOption.ASPECT && !aspectRatio) {
     console.warn(
       "Using aspect layout but aspectRatio is not passed as a prop."
     );
@@ -186,7 +185,7 @@ export const handleLayout = (
   imgStyle.objectPosition = imgStyle.objectPosition || "center";
 
   switch (layout) {
-    case ImageLayout.INTRINSIC:
+    case ImageLayoutOption.INTRINSIC:
       // Don't let image be wider than its intrinsic width
       imgStyle.maxWidth = imgWidth;
       imgStyle.width = "100%";
@@ -195,7 +194,7 @@ export const handleLayout = (
         : `${imgWidth} / ${imgHeight}`;
 
       break;
-    case ImageLayout.FIXED:
+    case ImageLayoutOption.FIXED:
       const { fixedWidth, fixedHeight, fixedWidths } =
         getImageSizeForFixedLayout(
           imgWidth,
@@ -210,13 +209,13 @@ export const handleLayout = (
       src = getImageUrl(imgUUID, fixedWidth, fixedHeight);
 
       break;
-    case ImageLayout.ASPECT:
+    case ImageLayoutOption.ASPECT:
       imgStyle.aspectRatio = aspectRatio
         ? `${aspectRatio}`
         : `${imgWidth} / ${imgHeight}`;
 
       break;
-    case ImageLayout.FILL:
+    case ImageLayoutOption.FILL:
       imgStyle.width = "100%";
       imgStyle.aspectRatio = aspectRatio
         ? `${aspectRatio}`
