@@ -94,11 +94,11 @@ describe("Image", () => {
 
     expect(logMock.mock.calls.length).toBe(0);
     render(
-        <Image
-            image={{
-              image: { ...image.image, url: invalidUrl },
-            }}
-        />
+      <Image
+        image={{
+          image: { ...image.image, url: invalidUrl },
+        }}
+      />
     );
 
     expect(screen.queryByRole("img")).toBeNull();
@@ -248,7 +248,9 @@ describe("validateRequiredProps", () => {
       undefined
     );
     expect(logMock.mock.calls.length).toBe(1);
-    expect(logMock.mock.calls[0][0]).toBe("Width or height is passed in but layout is not fixed. These will have no impact. If you want to have a fixed height or width then set layout to fixed.");
+    expect(logMock.mock.calls[0][0]).toBe(
+      "Width or height is passed in but layout is not fixed. These will have no impact. If you want to have a fixed height or width then set layout to fixed."
+    );
     jest.clearAllMocks();
   });
 
@@ -267,7 +269,9 @@ describe("validateRequiredProps", () => {
     );
 
     expect(logMock.mock.calls.length).toBe(1);
-    expect(logMock.mock.calls[0][0]).toBe("Using fixed layout but width and height are not passed as props.");
+    expect(logMock.mock.calls[0][0]).toBe(
+      "Using fixed layout but width and height are not passed as props."
+    );
     jest.clearAllMocks();
   });
 
@@ -287,7 +291,9 @@ describe("validateRequiredProps", () => {
     );
 
     expect(logMock.mock.calls.length).toBe(1);
-    expect(logMock.mock.calls[0][0]).toBe(`Using fixed layout but width is invalid: ${invalidWidth}.`);
+    expect(logMock.mock.calls[0][0]).toBe(
+      `Using fixed layout but width is invalid: ${invalidWidth}.`
+    );
     jest.clearAllMocks();
   });
 
@@ -306,7 +312,9 @@ describe("validateRequiredProps", () => {
     );
 
     expect(logMock.mock.calls.length).toBe(1);
-    expect(logMock.mock.calls[0][0]).toBe("Using aspect layout but aspectRatio is not passed as a prop.");
+    expect(logMock.mock.calls[0][0]).toBe(
+      "Using aspect layout but aspectRatio is not passed as a prop."
+    );
     jest.clearAllMocks();
   });
 
@@ -326,7 +334,9 @@ describe("validateRequiredProps", () => {
     );
 
     expect(logMock.mock.calls.length).toBe(1);
-    expect(logMock.mock.calls[0][0]).toBe(`Invalid image width: ${invalidImgWidth}.`);
+    expect(logMock.mock.calls[0][0]).toBe(
+      `Invalid image width: ${invalidImgWidth}.`
+    );
     jest.clearAllMocks();
   });
 });
