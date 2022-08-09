@@ -2,9 +2,9 @@
  * Constants for available link types.
  */
 export const LinkType = {
-  URL: 'URL',
-  Email: 'Email',
-  Phone: 'Phone',
+  URL: "URL",
+  Email: "Email",
+  Phone: "Phone",
 } as const;
 
 /**
@@ -18,7 +18,7 @@ export type LinkType = typeof LinkType[keyof typeof LinkType];
  * but ReactNode allows for more general usage.
  */
 export interface CTA {
-  link: string
-  label?: React.ReactNode
-  linkType?: LinkType
+  link: string;
+  label?: React.ReactNode;
+  linkType?: LinkType;
 }
