@@ -1,6 +1,6 @@
 import * as React from "react";
-import { AddressProps, AddressLineProps } from './types';
-import { localeAddressFormat } from './i18n';
+import { AddressProps, AddressLineProps } from "./types";
+import { localeAddressFormat } from "./i18n";
 import { getUnabbreviated } from "./methods";
 
 /**
@@ -19,37 +19,35 @@ import { getUnabbreviated } from "./methods";
  *
  * @public
  */
-export const Address = ({
-  address,
-  lines,
-  separator
-}: AddressProps) => {
-  const renderedLines = (lines || localeAddressFormat(address.countryCode))
-    .map(line => <AddressLine address={address} line={line} separator={separator} key={line.toString()} />);
-
-  return (
-    <>
-      {renderedLines}
-    </>
+export const Address = ({ address, lines, separator }: AddressProps) => {
+  const renderedLines = (lines || localeAddressFormat(address.countryCode)).map(
+    (line) => (
+      <AddressLine
+        address={address}
+        line={line}
+        separator={separator}
+        key={line.toString()}
+      />
+    )
   );
+
+  return <>{renderedLines}</>;
 };
 
 Address.defaultProps = {
-  separator: ',',
+  separator: ",",
 };
 
 const AddressLine = ({
   address,
   line,
-  separator
+  separator,
 }: AddressLineProps): JSX.Element => {
   let addressDOM: JSX.Element[] = [];
 
   for (const field of line) {
-    if (field === ',') {
-      addressDOM.push(
-        <span key={field}>{separator}</span>
-      );
+    if (field === ",") {
+      addressDOM.push(<span key={field}>{separator}</span>);
       continue;
     }
 
@@ -61,22 +59,15 @@ const AddressLine = ({
     if (unabbreviated) {
       addressDOM.push(
         <abbr key={field} title={unabbreviated}>
-          {' '}{value}
+          {" "}
+          {value}
         </abbr>
       );
       continue;
     }
-    
-    addressDOM.push(
-      <span key={field}>
-        {' '}{value}
-      </span>
-    );
+
+    addressDOM.push(<span key={field}> {value}</span>);
   }
 
-  return (
-    <div>
-      {addressDOM}
-    </div>
-  );
-}
+  return <div>{addressDOM}</div>;
+};

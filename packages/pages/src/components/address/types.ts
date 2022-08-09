@@ -1,4 +1,3 @@
-
 /**
  * The type definition for an address.
  *
@@ -16,7 +15,7 @@ export interface AddressType {
   extraDescription?: string;
   localizedRegionName?: string; // previously in derived data
   localizedCountryName?: string; // previously in derived data
-  ','?: string
+  ","?: string;
 }
 
 export type AddressLine = (keyof AddressType)[];
