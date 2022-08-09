@@ -180,7 +180,7 @@ export const handleLayout = (
 ): { src: string; imgStyle: React.CSSProperties; widths: number[] } => {
   let widths: number[] = [100, 320, 640, 960, 1280, 1920];
   let src: string = getImageUrl(imgUUID, 500, 500);
-  let imgStyle = { ...style };
+  const imgStyle = { ...style };
   imgStyle.objectFit = imgStyle.objectFit || "cover";
   imgStyle.objectPosition = imgStyle.objectPosition || "center";
 
@@ -194,7 +194,7 @@ export const handleLayout = (
         : `${imgWidth} / ${imgHeight}`;
 
       break;
-    case ImageLayoutOption.FIXED:
+    case ImageLayoutOption.FIXED: {
       const { fixedWidth, fixedHeight, fixedWidths } =
         getImageSizeForFixedLayout(
           imgWidth,
@@ -209,6 +209,7 @@ export const handleLayout = (
       src = getImageUrl(imgUUID, fixedWidth, fixedHeight);
 
       break;
+    }
     case ImageLayoutOption.ASPECT:
       imgStyle.aspectRatio = aspectRatio
         ? `${aspectRatio}`
