@@ -1,3 +1,4 @@
+import { MouseEvent } from "react";
 import { ConversionDetails, Visitor } from "@yext/analytics";
 import { TemplateProps } from "../../common/src/template/types";
 
@@ -35,7 +36,7 @@ export interface AnalyticsMethods {
   trackClick(
     eventName: string,
     conversionData?: ConversionDetails
-  ): (e: MouseEvent) => Promise<void>;
+  ): (e: MouseEvent<HTMLAnchorElement>) => Promise<void>;
 
   /**
    * The optIn method should be called when a user opts into analytics tracking,

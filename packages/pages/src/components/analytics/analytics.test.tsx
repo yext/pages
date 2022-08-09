@@ -5,17 +5,51 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TemplateProps } from "../../common/src/template/types";
+import { Link } from "../link";
 import { AnalyticsProvider } from "./provider";
-import { useAnalytics, useTrack } from "./hooks";
+import { useAnalytics } from "./hooks";
 import { AnalyticsScopeProvider } from "./scope";
 
-global.fetch = jest.fn().mockImplementation(
-  jest.fn(() => {
-    return Promise.resolve({ status: 200 });
-  }) as jest.Mock
-);
 
-jest.spyOn(global, "fetch");
+// The following section of mocks just exists to supress an error that occurs
+// because jest does not implement a window.location.navigate.  See:
+// https://www.benmvp.com/blog/mocking-window-location-methods-jest-jsdom/
+// for details.
+const oldWindowLocation = global.location;
+
+beforeAll(() => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  delete global.location;
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  global.location = Object.defineProperties(
+    {},
+    {
+      ...Object.getOwnPropertyDescriptors(oldWindowLocation),
+      assign: {
+        configurable: true,
+        value: jest.fn(),
+      }
+    }
+  );
+
+  // this mock allows us to inspect the fetch requests sent by the analytics
+  // package and ensure they are generated correctly.
+  global.fetch = jest.fn().mockImplementation(
+    jest.fn(() => {
+      return Promise.resolve({ status: 200 });
+    }) as jest.Mock
+  );
+
+  jest.spyOn(global, "fetch");
+});
+
+afterAll(() => {
+  // restore window location so we don't side effect other tests.
+  window.location = oldWindowLocation;
+});
 
 const baseProps: TemplateProps = {
   document: {
@@ -69,47 +103,34 @@ describe("Analytics", () => {
   });
 
   it("should track a click", () => {
-    const MyButton = () => {
-      const track = useTrack();
-      return <button onClick={async () => await track("foo click")} />;
-    };
-
     render(
       <AnalyticsProvider templateData={baseProps} requireOptIn={false}>
-        <MyButton />
+        <Link href="https://yext.com" onClick={e => e.preventDefault()} >Click Me</Link>
       </AnalyticsProvider>
     );
 
-    fireEvent.click(screen.getByRole("button"));
+    fireEvent.click(screen.getByRole("link"));
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const generatedUrlStr = global.fetch.mock.calls[1][0];
+    const callstack = global.fetch.mock.calls;
+    const generatedUrlStr = callstack[callstack.length-1][0];
     const generatedUrl = new URL(generatedUrlStr);
-    expect(generatedUrl.searchParams.get("eventType")).toBe("fooclick");
+    expect(generatedUrl.searchParams.get("eventType")).toBe("link");
   });
 
   it("should track a click with scoping", async () => {
-    const MyButton: React.FC<{ id?: string }> = (props) => {
-      const track = useTrack();
-      return (
-        <button onClick={async () => await track("foo click")}>
-          {props.children}
-        </button>
-      );
-    };
-
     const App = () => {
       return (
         <AnalyticsProvider templateData={baseProps} requireOptIn={false}>
           <AnalyticsScopeProvider name={"header"}>
             <AnalyticsScopeProvider name={"menu"}>
-              <MyButton>one</MyButton>
+              <Link href="https://yext.com">one</Link>
             </AnalyticsScopeProvider>
             <AnalyticsScopeProvider name={"drop down"}>
-              <MyButton>two</MyButton>
+              <Link cta={{ link: "https://yext.com" }}>two</Link>
             </AnalyticsScopeProvider>
           </AnalyticsScopeProvider>
-          <MyButton>three</MyButton>
+          <Link href="https://yext.com" eventName={"fooclick"}>three</Link>
         </AnalyticsProvider>
       );
     };
@@ -122,11 +143,11 @@ describe("Analytics", () => {
       matcher: RegExp;
     }[] = [
       {
-        expectedTag: "header_menu_fooclick",
+        expectedTag: "header_menu_link",
         matcher: /one/,
       },
       {
-        expectedTag: "header_dropdown_fooclick",
+        expectedTag: "header_dropdown_cta",
         matcher: /two/,
       },
       {
@@ -156,11 +177,11 @@ describe("Analytics", () => {
     const expectedConversionData = { cid: "123456", cv: "10" };
 
     const MyButton = () => {
-      const { track, enableTrackingCookie } = useAnalytics();
-      enableTrackingCookie();
+      const analytics = useAnalytics()
+      analytics?.enableTrackingCookie();
       return (
         <button
-          onClick={async () => await track("foo click", expectedConversionData)}
+          onClick={async () => await analytics?.track("foo click", expectedConversionData)}
         />
       );
     };
