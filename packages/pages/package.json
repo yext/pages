@@ -140,6 +140,7 @@
     },
     "moduleNameMapper": {
       "^(.+)\\.js$": "$1"
-    }
+    },
+    "testEnvironment": "jsdom"
   }
 }
