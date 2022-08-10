@@ -1,6 +1,5 @@
 # 1.0.0-beta.2 (2022-08-23)
 
-
 ### Bug Fixes
 
 * **components:** add environment compatibility to mktgcdn urls ([#167](https://github.com/yext/sites-scripts/issues/167)) ([5565bc7](https://github.com/yext/sites-scripts/commit/5565bc73e9cd153317da9a7dff47b49d28b99733))
