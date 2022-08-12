@@ -59,6 +59,7 @@ importers:
       '@typescript-eslint/parser': ^5.32.0
       ansi-to-html: ^0.7.2
       chalk: ^5.0.1
+      classnames: ^2.3.1
       cli-spinners: ^2.7.0
       commander: ^9.4.0
       cross-fetch: ^3.1.5
@@ -73,6 +74,7 @@ importers:
       generate-license-file: ^1.3.0
       glob: ^7.2.3
       handlebars: ^4.7.7
+      identity-obj-proxy: ^3.0.0
       ink: ^3.2.0
       jest: ^28.1.3
       jest-environment-jsdom: ^28.1.3
@@ -130,11 +132,17 @@ importers:
       '@types/ws': 8.5.3
       '@typescript-eslint/eslint-plugin': 5.32.0_iosr3hrei2tubxveewluhu5lhy
       '@typescript-eslint/parser': 5.32.0_qugx7qdu5zevzvxaiqyxfiwquq
+<<<<<<< Updated upstream
+=======
+      babel-loader: 8.2.5_5ouqwanl7jnotevpn4w6qovjqm
+      classnames: 2.3.1
+>>>>>>> Stashed changes
       esbuild: 0.14.53
       eslint: 8.21.0
       eslint-config-prettier: 8.5.0_eslint@8.21.0
       eslint-plugin-react: 7.30.1_eslint@8.21.0
       generate-license-file: 1.3.0_eslint@8.21.0
+      identity-obj-proxy: 3.0.0
       jest: 28.1.3_@types+node@17.0.45
       jest-environment-jsdom: 28.1.3
       react: 17.0.2
@@ -2098,6 +2106,35 @@ packages:
     resolution: {integrity: sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA==}
     dev: true
 
+<<<<<<< Updated upstream
+=======
+  /class-utils/0.3.6:
+    resolution: {integrity: sha512-qOhPa/Fj7s6TY8H8esGu5QNpMMQxz79h+urzrNYN6mn+9BnxlDGf5QZ+XeCDsxSjPqsSR56XOZOJmpeurnLMeg==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      arr-union: 3.1.0
+      define-property: 0.2.5
+      isobject: 3.0.1
+      static-extend: 0.1.2
+    dev: true
+
+  /classnames/2.3.1:
+    resolution: {integrity: sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==}
+    dev: true
+
+  /clean-css/4.2.4:
+    resolution: {integrity: sha512-EJUDT7nDVFDvaQgAo2G/PJvxmp1o/c6iXLbswsBbUFXi1Nr+AjA2cKmfbKDMjMvzEe75g3P6JkaDDAKk96A85A==}
+    engines: {node: '>= 4.0'}
+    dependencies:
+      source-map: 0.6.1
+    dev: true
+
+  /clean-stack/2.2.0:
+    resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
+    engines: {node: '>=6'}
+    dev: true
+
+>>>>>>> Stashed changes
   /cli-boxes/2.2.1:
     resolution: {integrity: sha512-y4coMcylgSCdVinjiDBuR8PCC2bLjyGTwEmPb9NHR/QaNU6EUOXcTY/s6VjGMD6ENSEaeQYHCY0GNGS5jfMwPw==}
     engines: {node: '>=6'}
@@ -3554,6 +3591,10 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /harmony-reflect/1.6.2:
+    resolution: {integrity: sha512-HIp/n38R9kQjDEziXyDTuW3vvoxxyxjxFzXLrBr18uB47GnSt+G9D29fqrpM5ZkspMcPICud3XsBJQ4Y2URg8g==}
+    dev: true
+
   /has-bigints/1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
     dev: true
@@ -3667,6 +3708,23 @@ packages:
       safer-buffer: 2.1.2
     dev: true
 
+<<<<<<< Updated upstream
+=======
+  /icss-utils/4.1.1:
+    resolution: {integrity: sha512-4aFq7wvWyMHKgxsH8QQtGpvbASCf+eM3wPRLI6R+MgAnTCZ6STYsRvttLvRWK0Nfif5piF394St3HeJDaljGPA==}
+    engines: {node: '>= 6'}
+    dependencies:
+      postcss: 7.0.39
+    dev: true
+
+  /identity-obj-proxy/3.0.0:
+    resolution: {integrity: sha512-00n6YnVHKrinT9t0d9+5yZC6UBNJANpYEQvL2LlX6Ab9lnmxzIRcEmTPuyGScvl1+jKuCICX1Z0Ab1pPKKdikA==}
+    engines: {node: '>=4'}
+    dependencies:
+      harmony-reflect: 1.6.2
+    dev: true
+
+>>>>>>> Stashed changes
   /ieee754/1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
     dev: false

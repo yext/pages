@@ -1,3 +1,5 @@
+import { HoursInterval } from "./hours";
+
 export interface WeekType {
   monday?: DayType;
   tuesday?: DayType;
@@ -28,3 +30,28 @@ export interface HoursType extends WeekType {
   holidayHours?: HolidayType[];
   reopenDate?: string;
 }
+
+// HoursTable
+
+export type DayOfWeekNames = {
+  [Property in keyof WeekType]?: string;
+};
+
+export interface HoursTableProps {
+  hours: HoursType,
+  dayOfWeekNames?: DayOfWeekNames,
+  startOfWeek?: keyof DayOfWeekNames | 'today',
+  timeOptions?: Intl.DateTimeFormatOptions,
+  collapseDays?: boolean, // Combine adjacent day rows with the same intervals.
+  intervalStringsBuilderFn?: (h: HoursTableDayData, t?: Intl.DateTimeFormatOptions) => string[],
+  className?: string,
+};
+
+export interface HoursTableDayData {
+  dayOfWeek: string,
+  intervals: HoursInterval[],
+  sortIdx: number,
+  isToday: boolean,
+  startDay?: string, // used for 'collapseDays' logic
+  endDay?: string, // used for 'collapseDays' logic
+};

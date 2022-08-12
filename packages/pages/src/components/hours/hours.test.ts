@@ -1,61 +1,8 @@
 import { Hours, HoursInterval } from './hours';
-import { HoursType } from './types';
-
-const HOURS_DATA: HoursType = {
-  monday: {
-    isClosed: false,
-    openIntervals: [
-      { start: '9:01', end: '18:01' }
-    ],
-  },
-  tuesday: {
-    isClosed: false,
-    openIntervals: [
-      { start: '9:02', end: '18:02' }
-    ],
-  },
-  wednesday: {
-    isClosed: false,
-    openIntervals: [
-      { start: '9:03', end: '18:03' }
-    ],
-  },
-  thursday: {
-    isClosed: false,
-    openIntervals: [
-      { start: '9:04', end: '18:04' }
-    ],
-  },
-  friday: {
-    isClosed: false,
-    openIntervals: [
-      { start: '9:05', end: '18:05' }
-    ],
-  },
-  saturday: {
-    isClosed: false,
-    openIntervals: [
-      { start: '9:06', end: '18:06' }
-    ],
-  },
-  sunday: {
-    isClosed: false,
-    openIntervals: [
-      { start: '9:07', end: '18:07' }
-    ],
-  },
-  holidayHours: [
-    {
-      date: '2022-08-11',
-      openIntervals: [
-        { start: '9:00', end: '18:00' }
-      ]
-    }
-  ]
-};
+import { HOURS_WITH_HOLIDAY, HOURS_WITH_REOPEN_DATE } from './sampleData';
 
 describe("Hours", () => {
-  const hours = new Hours(HOURS_DATA);
+  const hours = new Hours(HOURS_WITH_HOLIDAY);
   const dateOpen = new Date(2022, 6, 11, 13, 14);
   const dateClosed = new Date(2022, 6, 11, 22, 10);
   const dateEndOfWeek = new Date(2022, 6, 17, 13, 14);
@@ -100,10 +47,14 @@ describe("Hours", () => {
   });
 
   it("return all intervals for several days across weeks", () => {
-    const date = dateEndOfWeek;
+    const date = dateEndOfWeek; // during second interval of the first day
     expect(hours.getIntervalsForNDays(3, date)).toEqual([
       {
         start: new Date(2022, 6, 17, 9, 7),
+        end: new Date(2022, 6, 17, 11, 7),
+      },
+      {
+        start: new Date(2022, 6, 17, 12, 7),
         end: new Date(2022, 6, 17, 18, 7),
       },
       {
@@ -124,6 +75,10 @@ describe("Hours", () => {
       openIntervals: [
         {
           start: "9:07",
+          end: "11:07",
+        },
+        {
+          start: "12:07",
           end: "18:07",
         },
       ]
@@ -137,17 +92,14 @@ describe("Hours", () => {
       openIntervals: [
         {
           start: "9:00",
-          end: "18:00",
+          end: "12:00",
         },
       ]
     });
   });
 
   it("return if temporarily closed", () => {
-    const tempClosedHours = new Hours({
-      ...HOURS_DATA,
-      reopenDate: '2022-08-11',
-    });
+    const tempClosedHours = new Hours(HOURS_WITH_REOPEN_DATE);
 
     const date = new Date(2022, 6, 11, 13, 14);
 
