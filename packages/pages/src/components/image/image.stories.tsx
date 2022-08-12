@@ -16,12 +16,12 @@ const image = {
       {
         height: 375,
         url: "https://a.mktgcdn.com/p/kl4giA5KlVKbqfRIv9OsgtYEUIXR1SHTZISGNT_TrKw/300x375.jpg",
-        width: 300
-      }
+        width: 300,
+      },
     ],
     url: "https://a.mktgcdn.com/p/kl4giA5KlVKbqfRIv9OsgtYEUIXR1SHTZISGNT_TrKw/300x375.jpg",
-    width: 300
-  }
+    width: 300,
+  },
 };
 
 export default {
