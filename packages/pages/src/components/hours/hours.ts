@@ -4,9 +4,16 @@ import {
   HolidayType,
   IntervalType,
   HoursType,
-} from './types';
+} from "./types";
 
-const dayKeys: (keyof WeekType)[] = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+const dayKeys: (keyof WeekType)[] = [
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+];
 
 export class HoursInterval {
   end: Date;
@@ -16,19 +23,21 @@ export class HoursInterval {
    * @param {Date} date the Date for the day on which the interval starts
    * @param {interval} interval the Yext Streams interval data
    */
-   constructor(date: Date, interval: IntervalType) {
+  constructor(date: Date, interval: IntervalType) {
     this.end = new Date(date);
     this.start = new Date(date);
 
-    [interval.start, interval.end].forEach(time => {
-      if (time.split(':').length != 2) {
-        throw new Error(`expected interval start and end data to be in the format "HH:MM"`);
+    [interval.start, interval.end].forEach((time) => {
+      if (time.split(":").length != 2) {
+        throw new Error(
+          `expected interval start and end data to be in the format "HH:MM"`
+        );
       }
     });
 
-    const [startHour, startMinute] = interval.start.split(':');
-    const [endHour, endMinute] = interval.end.split(':');
-    this.end.setHours(Number(endHour), Number(endMinute))
+    const [startHour, startMinute] = interval.start.split(":");
+    const [endHour, endMinute] = interval.end.split(":");
+    this.end.setHours(Number(endHour), Number(endMinute));
     this.start.setHours(Number(startHour), Number(startMinute));
 
     // If interval crosses midnight increment day
@@ -56,12 +65,12 @@ export class HoursInterval {
    */
   getStartTime(locale?: string, opts?: Intl.DateTimeFormatOptions): string {
     const timeOptions: Intl.DateTimeFormatOptions = {
-      hour: 'numeric',
-      minute: 'numeric',
+      hour: "numeric",
+      minute: "numeric",
       ...opts,
     };
 
-    return this.start.toLocaleString(locale || 'en-US', timeOptions);
+    return this.start.toLocaleString(locale || "en-US", timeOptions);
   }
 
   /**
@@ -71,19 +80,19 @@ export class HoursInterval {
    */
   getEndTime(locale?: string, opts?: Intl.DateTimeFormatOptions): string {
     const timeOptions: Intl.DateTimeFormatOptions = {
-      hour: 'numeric',
-      minute: 'numeric',
+      hour: "numeric",
+      minute: "numeric",
       ...opts,
     };
 
-    return this.end.toLocaleString(locale || 'en-US', timeOptions);
+    return this.end.toLocaleString(locale || "en-US", timeOptions);
   }
 
   /**
-   * @param {HoursInterval} other 
+   * @param {HoursInterval} other
    * @returns {boolean} if this interval and 'other' have the same start/end
    */
-   timeIsEqualTo(other: HoursInterval): boolean {
+  timeIsEqualTo(other: HoursInterval): boolean {
     const startEqual = this.getStartTime() === other.getStartTime();
     const endEqual = this.getEndTime() === other.getEndTime();
     return startEqual && endEqual;
@@ -97,8 +106,10 @@ export class Hours {
   /**
    * @param {Object} hours Hours object in the format returned by Yext Streams
    */
-   constructor(hours: HoursType) {
-    this.holidayHoursByDate = Object.fromEntries((hours.holidayHours || []).map(hours => [hours.date, hours]));
+  constructor(hours: HoursType) {
+    this.holidayHoursByDate = Object.fromEntries(
+      (hours.holidayHours || []).map((hours) => [hours.date, hours])
+    );
     this.hours = hours;
   }
 
@@ -106,7 +117,7 @@ export class Hours {
    * @param {Date} date A moment in time
    * @returns {HoursInterval?} The first interval that contains the given moment, null if none
    */
-   getInterval(date: Date): HoursInterval | null {
+  getInterval(date: Date): HoursInterval | null {
     if (this.isTemporarilyClosedAt(date)) {
       return null;
     }
@@ -136,7 +147,7 @@ export class Hours {
   /**
    * @returns {HoursInterval?} The first interval that contains the current time, null if none
    */
-   getCurrentInterval(): HoursInterval | null {
+  getCurrentInterval(): HoursInterval | null {
     return this.getInterval(new Date());
   }
 
@@ -159,8 +170,8 @@ export class Hours {
     for (const [idx, hoursInterval] of sortedIntervals.entries()) {
       if (hoursInterval.contains(date)) {
         // If this is the last interval, can't return the next one
-        if (sortedIntervals.length > (idx+1)) {
-          return sortedIntervals[idx+1];
+        if (sortedIntervals.length > idx + 1) {
+          return sortedIntervals[idx + 1];
         }
       }
     }
@@ -196,7 +207,11 @@ export class Hours {
 
       const hours = this.getHours(theDate);
       if (hours && !hours.isClosed) {
-        intervalsList.push(...(hours.openIntervals.map(interval => new HoursInterval(theDate, interval))));
+        intervalsList.push(
+          ...hours.openIntervals.map(
+            (interval) => new HoursInterval(theDate, interval)
+          )
+        );
       }
     }
 
@@ -221,7 +236,7 @@ export class Hours {
    * @returns {Object?} The daily normal hours object from the original Streams response for the
    *   given date, null if none
    */
-   getNormalHours(date: Date): DayType | null {
+  getNormalHours(date: Date): DayType | null {
     if (this.isTemporarilyClosedAt(date)) {
       return null;
     }
@@ -290,11 +305,10 @@ export class Hours {
    * @returns a Yext date string
    */
   transformDateToYext(date: Date): string {
-    let [year, month, day] = date.toISOString().split('T')[0].split('-');
+    let [year, month, day] = date.toISOString().split("T")[0].split("-");
     const zeroBasedMonth = Number(month) - 1;
-    month = zeroBasedMonth < 10
-      ? '0' + zeroBasedMonth
-      : zeroBasedMonth.toString();
+    month =
+      zeroBasedMonth < 10 ? "0" + zeroBasedMonth : zeroBasedMonth.toString();
 
     return `${year}-${month}-${day}`;
   }
@@ -305,7 +319,7 @@ export class Hours {
  * @param {number} n amount to shift
  * @returns {Array<any>} a new array shifted 'n' elements to the right, looping from the end back to the start
  */
- export function arrayShift(arr: Array<any>, n: number): Array<any> {
+export function arrayShift(arr: Array<any>, n: number): Array<any> {
   // Make a local copy of the array to mutate
   let myArr = [...arr];
   // Handle the (invalid) case where n > arr.length
@@ -314,15 +328,22 @@ export class Hours {
 }
 
 /**
- * @param {HoursInterval[]} il1 
- * @param {HoursInterval[]} il2 
+ * @param {HoursInterval[]} il1
+ * @param {HoursInterval[]} il2
  * @returns {boolean} whether the two intervals lists are equal
  */
-export function intervalsListsAreEqual(il1: HoursInterval[], il2: HoursInterval[]): boolean {
-  if (il1.length != il2.length) { return false; }
+export function intervalsListsAreEqual(
+  il1: HoursInterval[],
+  il2: HoursInterval[]
+): boolean {
+  if (il1.length != il2.length) {
+    return false;
+  }
 
   for (const [idx, interval] of il1.entries()) {
-    if (!interval.timeIsEqualTo(il2[idx])) { return false; }
+    if (!interval.timeIsEqualTo(il2[idx])) {
+      return false;
+    }
   }
 
   return true;

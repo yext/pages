@@ -11,20 +11,20 @@ export interface WeekType {
 }
 
 export interface DayType {
-  isClosed: boolean
-  openIntervals: IntervalType[]
+  isClosed: boolean;
+  openIntervals: IntervalType[];
 }
 
 export interface HolidayType {
-  date: string
-  isClosed?: boolean
-  openIntervals: IntervalType[]
+  date: string;
+  isClosed?: boolean;
+  openIntervals: IntervalType[];
 }
 
 export interface IntervalType {
-  start: string
-  end: string
-};
+  start: string;
+  end: string;
+}
 
 export interface HoursType extends WeekType {
   holidayHours?: HolidayType[];
@@ -38,20 +38,23 @@ export type DayOfWeekNames = {
 };
 
 export interface HoursTableProps {
-  hours: HoursType,
-  dayOfWeekNames?: DayOfWeekNames,
-  startOfWeek?: keyof DayOfWeekNames | 'today',
-  timeOptions?: Intl.DateTimeFormatOptions,
-  collapseDays?: boolean, // Combine adjacent day rows with the same intervals.
-  intervalStringsBuilderFn?: (h: HoursTableDayData, t?: Intl.DateTimeFormatOptions) => string[],
-  className?: string,
-};
+  hours: HoursType;
+  dayOfWeekNames?: DayOfWeekNames;
+  startOfWeek?: keyof DayOfWeekNames | "today";
+  timeOptions?: Intl.DateTimeFormatOptions;
+  collapseDays?: boolean; // Combine adjacent day rows with the same intervals.
+  intervalStringsBuilderFn?: (
+    h: HoursTableDayData,
+    t?: Intl.DateTimeFormatOptions
+  ) => string[];
+  className?: string;
+}
 
 export interface HoursTableDayData {
-  dayOfWeek: string,
-  intervals: HoursInterval[],
-  sortIdx: number,
-  isToday: boolean,
-  startDay?: string, // used for 'collapseDays' logic
-  endDay?: string, // used for 'collapseDays' logic
-};
+  dayOfWeek: string;
+  intervals: HoursInterval[];
+  sortIdx: number;
+  isToday: boolean;
+  startDay?: string; // used for 'collapseDays' logic
+  endDay?: string; // used for 'collapseDays' logic
+}

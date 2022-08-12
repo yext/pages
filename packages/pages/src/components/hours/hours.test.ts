@@ -1,5 +1,5 @@
-import { Hours, HoursInterval } from './hours';
-import { HOURS_WITH_HOLIDAY, HOURS_WITH_REOPEN_DATE } from './sampleData';
+import { Hours, HoursInterval } from "./hours";
+import { HOURS_WITH_HOLIDAY, HOURS_WITH_REOPEN_DATE } from "./sampleData";
 
 describe("Hours", () => {
   const hours = new Hours(HOURS_WITH_HOLIDAY);
@@ -81,20 +81,20 @@ describe("Hours", () => {
           start: "12:07",
           end: "18:07",
         },
-      ]
+      ],
     });
   });
 
   it("return day data for a holiday", () => {
     const date = new Date(2022, 8, 11, 13, 14);
     expect(hours.getHours(date)).toEqual({
-      date: '2022-08-11',
+      date: "2022-08-11",
       openIntervals: [
         {
           start: "9:00",
           end: "12:00",
         },
-      ]
+      ],
     });
   });
 

@@ -21,16 +21,16 @@ describe("HoursTable", () => {
   });
 
   it("properly renders with custom day labels", () => {
-    const label = 'ice cream sundae';
-    render(<HoursTable hours={HOURS} dayOfWeekNames={{ 'sunday': label}} />);
+    const label = "ice cream sundae";
+    render(<HoursTable hours={HOURS} dayOfWeekNames={{ sunday: label }} />);
 
     expect(screen.queryByText(label)).toBeTruthy();
-    expect(screen.queryByText('sunday')).toBeFalsy();
+    expect(screen.queryByText("sunday")).toBeFalsy();
   });
 
   it("properly renders with custom day labels", () => {
     render(<HoursTable hours={HOURS_WITH_REOPEN_DATE} collapseDays={true} />);
 
-    expect(screen.queryByText('sunday - saturday')).toBeTruthy();
+    expect(screen.queryByText("sunday - saturday")).toBeTruthy();
   });
 });

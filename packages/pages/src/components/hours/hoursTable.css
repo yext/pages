@@ -3,15 +3,15 @@
     --yxt-hoursTable-col1-width: 128px;
     --yxt-hoursTable-col2-width: 256px;
   }
-  
+
   .HoursTable-row {
     display: flex;
   }
-  
+
   .HoursTable-day {
     flex: 0 0 var(--yxt-hoursTable-col1-width);
   }
-  
+
   .HoursTable-intervals {
     display: flex;
     flex-direction: column;
