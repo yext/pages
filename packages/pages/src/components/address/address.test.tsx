@@ -18,15 +18,11 @@ const address: AddressType = {
 
 describe("Address", () => {
   it("renders a default US Address", () => {
-    render(
-      <Address address={address} />
-    );
+    render(<Address address={address} />);
   });
 
   it("includes a cooresponding localized title for all abbreviated values", () => {
-    render(
-      <Address address={address} />
-    );
+    render(<Address address={address} />);
 
     const abbreviatedCountryEl = screen.getByTitle("United States");
     const abbreviatedRegionEl = screen.getByTitle("Alabama");
