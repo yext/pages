@@ -4,8 +4,8 @@ import { Hours, arrayShift, intervalsListsAreEqual } from "./hours";
 import { HoursTableProps, HoursTableDayData, DayOfWeekNames } from "./types";
 import "./hoursTable.css";
 
-// Order of these arrays corresponds to js Date.getDay() function output
-// Display name for each day of week
+// Order of these arrays corresponds to js Date.getDay() function output.
+// Display name for each day of week.
 const defaultDayOfWeekNames = [
   "sunday",
   "monday",
@@ -15,7 +15,7 @@ const defaultDayOfWeekNames = [
   "friday",
   "saturday",
 ];
-// Order to display days of week
+// Order to display days of week.
 const defaultDayOfWeekSortIdx = [0, 1, 2, 3, 4, 5, 6];
 
 /**
@@ -25,17 +25,17 @@ const defaultDayOfWeekSortIdx = [0, 1, 2, 3, 4, 5, 6];
  */
 function getSortIdx(props: HoursTableProps, todayDate: Date): number[] {
   let startIdx = 0;
-  // 1. Start the table on today's day of week
+  // 1. Start the table on today's day of week.
   if (props.startOfWeek === "today") {
     startIdx = todayDate.getDay();
     return arrayShift(defaultDayOfWeekSortIdx, startIdx);
 
-    // 2. Start the table on a specific day of week
+    // 2. Start the table on a specific day of week.
   } else if (props.startOfWeek) {
     startIdx = defaultDayOfWeekNames.indexOf(props.startOfWeek);
     return arrayShift(defaultDayOfWeekSortIdx, startIdx);
 
-    // 3. Fall back to the default sort order (starts on Sunday)
+    // 3. Fall back to the default sort order (starts on Sunday).
   } else {
     return defaultDayOfWeekSortIdx;
   }
@@ -44,7 +44,7 @@ function getSortIdx(props: HoursTableProps, todayDate: Date): number[] {
 /**
  *
  * @param {HoursTableDayData[]} hoursDays
- * @returns {HoursTableDayData[]} where adjacent days with the same intervals are combined
+ * @returns {HoursTableDayData[]} where adjacent days with the same intervals are combined.
  */
 function collapseDays(hoursDays: HoursTableDayData[]): HoursTableDayData[] {
   let collapsedDays: HoursTableDayData[] = [];
@@ -52,7 +52,7 @@ function collapseDays(hoursDays: HoursTableDayData[]): HoursTableDayData[] {
     const latestGroup = collapsedDays[collapsedDays.length - 1];
 
     // latestGroup = undefined indicates that this is the first group of days
-    //  add a new 'collapsedDay'
+    // add a new 'collapsedDay'.
     if (!latestGroup) {
       collapsedDays.push({
         startDay: hoursDay.dayOfWeek,
@@ -60,13 +60,13 @@ function collapseDays(hoursDays: HoursTableDayData[]): HoursTableDayData[] {
         ...hoursDay,
       });
     } else {
-      // Check if this `hoursDay`s intervals matches latestGroup's intervals
+      // Check if this `hoursDay`s intervals matches latestGroup's intervals.
       if (intervalsListsAreEqual(latestGroup.intervals, hoursDay.intervals)) {
-        // If it is a match, update the latestGroup to include this 'hoursDay'
+        // If it is a match, update the latestGroup to include this 'hoursDay'.
         latestGroup.endDay = hoursDay.dayOfWeek;
         latestGroup.isToday = latestGroup.isToday || hoursDay.isToday;
       } else {
-        // Otherwise, add a new 'collapsedDay'
+        // Otherwise, add a new 'collapsedDay'.
         collapsedDays.push({
           startDay: hoursDay.dayOfWeek,
           endDay: hoursDay.dayOfWeek,
@@ -105,7 +105,7 @@ function defaultIntervalStringsBuilder(
 /**
  * @param {DayOfWeekNames} nameMap
  * @returns correctly ordered list of day of week names, using param values and
- *  falling back to default values if empty
+ * falling back to default values if empty.
  */
 function dayOfWeekNamesToArray(nameMap: DayOfWeekNames): string[] {
   return [
@@ -121,7 +121,7 @@ function dayOfWeekNamesToArray(nameMap: DayOfWeekNames): string[] {
 
 /*
  * The HoursTable component uses Hours data to generate a table
- *  listing the business hours of the entity.
+ * listing the business hours of the entity.
  *
  * @param {HoursType} hours data from Yext Streams
  * @param {Intl.DateTimeFormatOptions} timeOptions
@@ -131,9 +131,9 @@ function dayOfWeekNamesToArray(nameMap: DayOfWeekNames): string[] {
  * @param {Function} intervalStringsBuilderFn override rendering for the interval on each table row
  */
 const HoursTable: React.FC<HoursTableProps> = (props) => {
-  // Use two rendering passes to avoid SSR issues where server & client rendered content is different
-  //  On the first pass, don't render any content in this component, only set `state.isClient`
-  //  On the second pass (After the page has been loaded), render the content
+  // Use two rendering passes to avoid SSR issues where server & client rendered content is different.
+  // On the first pass, don't render any content in this component, only set `state.isClient`.
+  // On the second pass (after the page has been loaded), render the content.
   // https://reactjs.org/docs/react-dom.html#hydrate
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
@@ -148,10 +148,10 @@ const HoursTable: React.FC<HoursTableProps> = (props) => {
     : defaultDayOfWeekNames;
   const dayOfWeekSortIdx = getSortIdx(props, new Date());
 
-  // Fetch intervals for the next 7 days
+  // Fetch intervals for the next 7 days.
   const allIntervals = h.getIntervalsForNDays(7, now);
 
-  // Split intervals into buckets by day of week
+  // Split intervals into buckets by day of week.
   let hoursDays: HoursTableDayData[] = [];
   for (let i = 0; i < 7; i++) {
     hoursDays.push({
