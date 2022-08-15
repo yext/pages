@@ -15,10 +15,9 @@ export interface AddressType {
   extraDescription?: string;
   localizedRegionName?: string; // previously in derived data
   localizedCountryName?: string; // previously in derived data
-  ","?: string;
 }
 
-export type AddressLine = (keyof AddressType)[];
+export type AddressLine = ((keyof AddressType) | ",")[];
 
 /**
  * The shape of the data passed to {@link Address}.
