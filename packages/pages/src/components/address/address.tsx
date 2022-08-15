@@ -5,7 +5,7 @@ import { getUnabbreviated } from "./methods";
 
 /**
  * Renders an HTML address based from the Yext Knowledge Graph. Example of using the component to render
- * a location entities address from Yext Knowledge Graph:
+ * a location entity's address from Yext Knowledge Graph:
  * ```
  * import { Address } from "@yext/pages/components";
  *
@@ -14,7 +14,7 @@ import { getUnabbreviated } from "./methods";
  *       Arlington, VA, 22201,
  *       US
  * const customAddress = (<Address address={document.address} lines={[['line1', 'city', 'region']]} />);
- *   --> 1101 Wilson Blvd., Arlington, Virginia
+ *   --> 1101 Wilson Blvd., Arlington, VA
  * ```
  *
  * @public
@@ -52,7 +52,9 @@ const AddressLine = ({
     }
 
     const value = address[field];
-    if (!value) continue;
+    if (!value) {
+      continue;
+    }
 
     // Include unabbreviated tooltip if available
     const unabbreviated = getUnabbreviated(field, address);

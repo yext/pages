@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import * as React from "react";
 import { Address } from "./address";
 import { AddressType } from "./types";
@@ -14,12 +17,16 @@ const address: AddressType = {
 };
 
 describe("Address", () => {
-  it("properly render the Address component", () => {
-    render(<Address address={address} />);
+  it("renders a default US Address", () => {
+    render(
+      <Address address={address} />
+    );
   });
 
-  it("properly include unabbreviated alternative text as title text", () => {
-    render(<Address address={address} />);
+  it("includes a cooresponding localized title for all abbreviated values", () => {
+    render(
+      <Address address={address} />
+    );
 
     const abbreviatedCountryEl = screen.getByTitle("United States");
     const abbreviatedRegionEl = screen.getByTitle("Alabama");
@@ -27,16 +34,7 @@ describe("Address", () => {
     expect(abbreviatedCountryEl && abbreviatedRegionEl).toBeTruthy();
   });
 
-  it("properly include unabbreviated alternative text as title text", () => {
-    render(<Address address={address} />);
-
-    const abbreviatedCountryEl = screen.getByTitle("United States");
-    const abbreviatedRegionEl = screen.getByTitle("Alabama");
-
-    expect(abbreviatedCountryEl && abbreviatedRegionEl).toBeTruthy();
-  });
-
-  it("properly use custom separator string", () => {
+  it("renders with a custom separator", () => {
     const separator = "mySeparator";
 
     render(<Address address={address} separator={separator} />);
@@ -46,7 +44,7 @@ describe("Address", () => {
     expect(separatorEl).toBeTruthy();
   });
 
-  it("properly customize address format with lines", () => {
+  it("renders a custom address format", () => {
     const separator = "mySeparator";
 
     render(<Address address={address} lines={[["line1"]]} />);
