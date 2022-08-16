@@ -132,7 +132,10 @@ export class HoursManipulator {
 
       if (hours && !hours.isClosed) {
         for (const interval of hours.openIntervals || []) {
-          const hoursInterval = new HoursIntervalManipulator(hoursDate, interval);
+          const hoursInterval = new HoursIntervalManipulator(
+            hoursDate,
+            interval
+          );
 
           if (hoursInterval.contains(date)) {
             return hoursInterval;
@@ -160,7 +163,10 @@ export class HoursManipulator {
     const intervalsList = this.getIntervalsForNDays(7, date);
 
     // Ensure the intervals are sorted by start time
-    const sortFn = (interval1: HoursIntervalManipulator, interval2: HoursIntervalManipulator) => {
+    const sortFn = (
+      interval1: HoursIntervalManipulator,
+      interval2: HoursIntervalManipulator
+    ) => {
       if (interval1.start === interval2.start) return 0;
       return interval1.start > interval2.start ? 1 : -1;
     };

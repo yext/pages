@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import c from "classnames";
-import { HoursManipulator, arrayShift, intervalsListsAreEqual } from "./hoursManipulator";
+import {
+  HoursManipulator,
+  arrayShift,
+  intervalsListsAreEqual,
+} from "./hoursManipulator";
 import { HoursTableProps, HoursTableDayData, DayOfWeekNames } from "./types";
 import "./hoursTable.css";
 

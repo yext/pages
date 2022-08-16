@@ -12,9 +12,7 @@ export default {
   component: Hours,
 } as ComponentMeta<typeof Hours>;
 
-const Template: ComponentStory<typeof Hours> = (args) => (
-  <Hours {...args} />
-);
+const Template: ComponentStory<typeof Hours> = (args) => <Hours {...args} />;
 
 // Hours table with normal hours
 
