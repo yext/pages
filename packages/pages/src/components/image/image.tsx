@@ -2,7 +2,8 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout, ImageLayoutOption } from "./types";
 
-const MKTGCDN_URL_REGEX = /(https?:\/\/a.mktgcdn.com\/p(-sandbox|-qa|-dev)?\/)(?<uuid>.+)\/(.*)/;
+const MKTGCDN_URL_REGEX =
+  /(https?:\/\/a.mktgcdn.com\/p(-sandbox|-qa|-dev)?\/)(?<uuid>.+)\/(.*)/;
 
 /**
  * Renders an image based from the Yext Knowledge Graph. Example of using the component to render

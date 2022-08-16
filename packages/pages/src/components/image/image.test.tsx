@@ -162,7 +162,8 @@ describe("getImageUUID", () => {
     expect(logMock.mock.calls.length).toBe(1);
     expect(logMock.mock.calls[0][0]).toBe(`Invalid image url: ${invalidUrl}.`);
 
-    invalidUrl = "http://a.mktgcdn.com/p-badinput/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg";
+    invalidUrl =
+      "http://a.mktgcdn.com/p-badinput/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg";
     expect(getImageUUID(invalidUrl)).toBe("");
     expect(logMock.mock.calls.length).toBe(2);
     expect(logMock.mock.calls[1][0]).toBe(`Invalid image url: ${invalidUrl}.`);
