@@ -15,7 +15,7 @@ const dayKeys: (keyof WeekType)[] = [
   "friday",
 ];
 
-export class HoursInterval {
+export class HoursIntervalManipulator {
   end: Date;
   start: Date;
 
@@ -89,17 +89,17 @@ export class HoursInterval {
   }
 
   /**
-   * @param {HoursInterval} other
+   * @param {HoursIntervalManipulator} other
    * @returns {boolean} if this interval and 'other' have the same start/end
    */
-  timeIsEqualTo(other: HoursInterval): boolean {
+  timeIsEqualTo(other: HoursIntervalManipulator): boolean {
     const startEqual = this.getStartTime() === other.getStartTime();
     const endEqual = this.getEndTime() === other.getEndTime();
     return startEqual && endEqual;
   }
 }
 
-export class Hours {
+export class HoursManipulator {
   holidayHoursByDate: Record<string, HolidayType>;
   hours: HoursType;
 
@@ -115,9 +115,9 @@ export class Hours {
 
   /**
    * @param {Date} date A moment in time
-   * @returns {HoursInterval?} The first interval that contains the given moment, null if none
+   * @returns {HoursIntervalManipulator?} The first interval that contains the given moment, null if none
    */
-  getInterval(date: Date): HoursInterval | null {
+  getInterval(date: Date): HoursIntervalManipulator | null {
     if (this.isTemporarilyClosedAt(date)) {
       return null;
     }
@@ -132,7 +132,7 @@ export class Hours {
 
       if (hours && !hours.isClosed) {
         for (const interval of hours.openIntervals || []) {
-          const hoursInterval = new HoursInterval(hoursDate, interval);
+          const hoursInterval = new HoursIntervalManipulator(hoursDate, interval);
 
           if (hoursInterval.contains(date)) {
             return hoursInterval;
@@ -145,22 +145,22 @@ export class Hours {
   }
 
   /**
-   * @returns {HoursInterval?} The first interval that contains the current time, null if none
+   * @returns {HoursIntervalManipulator?} The first interval that contains the current time, null if none
    */
-  getCurrentInterval(): HoursInterval | null {
+  getCurrentInterval(): HoursIntervalManipulator | null {
     return this.getInterval(new Date());
   }
 
   /**
    * @param {Date} date A moment in time
-   * @returns {HoursInterval?} The next interval that hasn't started as of the given moment
+   * @returns {HoursIntervalManipulator?} The next interval that hasn't started as of the given moment
    */
-  getIntervalAfter(date: Date): HoursInterval | null {
+  getIntervalAfter(date: Date): HoursIntervalManipulator | null {
     // Look ahead up to 7 days for the next interval
     const intervalsList = this.getIntervalsForNDays(7, date);
 
     // Ensure the intervals are sorted by start time
-    const sortFn = (interval1: HoursInterval, interval2: HoursInterval) => {
+    const sortFn = (interval1: HoursIntervalManipulator, interval2: HoursIntervalManipulator) => {
       if (interval1.start === interval2.start) return 0;
       return interval1.start > interval2.start ? 1 : -1;
     };
@@ -188,19 +188,19 @@ export class Hours {
   }
 
   /**
-   * @returns {HoursInterval?} The next interval that hasn't started as of the current time
+   * @returns {HoursIntervalManipulator?} The next interval that hasn't started as of the current time
    */
-  getNextInterval(): HoursInterval | null {
+  getNextInterval(): HoursIntervalManipulator | null {
     return this.getIntervalAfter(new Date());
   }
 
   /**
    * @param {number} n number of days to check
    * @param {Date} startDate first day to check
-   * @returns {HoursInterval[]} list of intervals in range [startDate, startDate+7]
+   * @returns {HoursIntervalManipulator[]} list of intervals in range [startDate, startDate+7]
    */
-  getIntervalsForNDays(n: number, startDate: Date): HoursInterval[] {
-    const intervalsList: HoursInterval[] = [];
+  getIntervalsForNDays(n: number, startDate: Date): HoursIntervalManipulator[] {
+    const intervalsList: HoursIntervalManipulator[] = [];
     for (let i = 0; i < n; i++) {
       const theDate = new Date(startDate);
       theDate.setDate(theDate.getDate() + i);
@@ -209,7 +209,7 @@ export class Hours {
       if (hours && !hours.isClosed) {
         intervalsList.push(
           ...hours.openIntervals.map(
-            (interval) => new HoursInterval(theDate, interval)
+            (interval) => new HoursIntervalManipulator(theDate, interval)
           )
         );
       }
@@ -328,13 +328,13 @@ export function arrayShift(arr: Array<any>, n: number): Array<any> {
 }
 
 /**
- * @param {HoursInterval[]} il1
- * @param {HoursInterval[]} il2
+ * @param {HoursIntervalManipulator[]} il1
+ * @param {HoursIntervalManipulator[]} il2
  * @returns {boolean} whether the two intervals lists are equal
  */
 export function intervalsListsAreEqual(
-  il1: HoursInterval[],
-  il2: HoursInterval[]
+  il1: HoursIntervalManipulator[],
+  il2: HoursIntervalManipulator[]
 ): boolean {
   if (il1.length != il2.length) {
     return false;

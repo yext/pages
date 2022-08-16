@@ -1,15 +1,14 @@
 /**
  * @jest-environment jsdom
  */
-
 import * as React from "react";
 import { render, screen } from "@testing-library/react";
-import { HoursTable } from "./";
+import { Hours } from ".";
 import { HOURS, HOURS_WITH_REOPEN_DATE } from "./sampleData";
 
-describe("HoursTable", () => {
+describe("Hours", () => {
   it("properly renders a full week", () => {
-    render(<HoursTable hours={HOURS} />);
+    render(<Hours hours={HOURS} />);
 
     expect(screen.queryByText("sunday")).toBeTruthy();
     expect(screen.queryByText("monday")).toBeTruthy();
@@ -22,14 +21,14 @@ describe("HoursTable", () => {
 
   it("properly renders with a custom day label", () => {
     const label = "ice cream sundae";
-    render(<HoursTable hours={HOURS} dayOfWeekNames={{ sunday: label }} />);
+    render(<Hours hours={HOURS} dayOfWeekNames={{ sunday: label }} />);
 
     expect(screen.queryByText(label)).toBeTruthy();
     expect(screen.queryByText("sunday")).toBeFalsy();
   });
 
   it("properly renders with a custom day label", () => {
-    render(<HoursTable hours={HOURS_WITH_REOPEN_DATE} collapseDays={true} />);
+    render(<Hours hours={HOURS_WITH_REOPEN_DATE} collapseDays={true} />);
 
     expect(screen.queryByText("sunday - saturday")).toBeTruthy();
   });

@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { HoursTable } from ".";
+import { Hours } from ".";
 import {
   HOURS,
   HOURS_WITH_HOLIDAY,
@@ -8,12 +8,12 @@ import {
 } from "./sampleData";
 
 export default {
-  title: "components/HoursTable",
-  component: HoursTable,
-} as ComponentMeta<typeof HoursTable>;
+  title: "components/Hours",
+  component: Hours,
+} as ComponentMeta<typeof Hours>;
 
-const Template: ComponentStory<typeof HoursTable> = (args) => (
-  <HoursTable {...args} />
+const Template: ComponentStory<typeof Hours> = (args) => (
+  <Hours {...args} />
 );
 
 // Hours table with normal hours

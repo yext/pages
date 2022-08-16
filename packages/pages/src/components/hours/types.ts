@@ -1,4 +1,4 @@
-import { HoursInterval } from "./hours";
+import { HoursIntervalManipulator } from "./hoursManipulator";
 
 export interface WeekType {
   monday?: DayType;
@@ -52,7 +52,7 @@ export interface HoursTableProps {
 
 export interface HoursTableDayData {
   dayOfWeek: string;
-  intervals: HoursInterval[];
+  intervals: HoursIntervalManipulator[];
   sortIdx: number;
   isToday: boolean;
   startDay?: string; // used for 'collapseDays' logic

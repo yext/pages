@@ -1,8 +1,8 @@
-import { Hours, HoursInterval } from "./hours";
+import { HoursManipulator } from "./hoursManipulator";
 import { HOURS_WITH_HOLIDAY, HOURS_WITH_REOPEN_DATE } from "./sampleData";
 
-describe("Hours", () => {
-  const hours = new Hours(HOURS_WITH_HOLIDAY);
+describe("HoursManipulator", () => {
+  const hours = new HoursManipulator(HOURS_WITH_HOLIDAY);
   const dateOpen = new Date(2022, 6, 11, 13, 14);
   const dateClosed = new Date(2022, 6, 11, 22, 10);
   const dateEndOfWeek = new Date(2022, 6, 17, 13, 14);
@@ -99,7 +99,7 @@ describe("Hours", () => {
   });
 
   it("returns boolean if temporarily closed", () => {
-    const tempClosedHours = new Hours(HOURS_WITH_REOPEN_DATE);
+    const tempClosedHours = new HoursManipulator(HOURS_WITH_REOPEN_DATE);
 
     const date = new Date(2022, 6, 11, 13, 14);
 

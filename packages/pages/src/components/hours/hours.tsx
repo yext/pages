@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import c from "classnames";
-import { Hours, arrayShift, intervalsListsAreEqual } from "./hours";
+import { HoursManipulator, arrayShift, intervalsListsAreEqual } from "./hoursManipulator";
 import { HoursTableProps, HoursTableDayData, DayOfWeekNames } from "./types";
 import "./hoursTable.css";
 
@@ -120,7 +120,7 @@ function dayOfWeekNamesToArray(nameMap: DayOfWeekNames): string[] {
 }
 
 /*
- * The HoursTable component uses Hours data to generate a table
+ * The HoursTable component uses HoursManipulator data to generate a table
  * listing the business hours of the entity.
  *
  * @param {HoursType} hours data from Yext Streams
@@ -130,7 +130,7 @@ function dayOfWeekNamesToArray(nameMap: DayOfWeekNames): string[] {
  * @param {Boolean} collapseDays combine adjacent rows (days) with the same intervals
  * @param {Function} intervalStringsBuilderFn override rendering for the interval on each table row
  */
-const HoursTable: React.FC<HoursTableProps> = (props) => {
+const Hours: React.FC<HoursTableProps> = (props) => {
   // Use two rendering passes to avoid SSR issues where server & client rendered content is different.
   // On the first pass, don't render any content in this component, only set `state.isClient`.
   // On the second pass (after the page has been loaded), render the content.
@@ -140,7 +140,7 @@ const HoursTable: React.FC<HoursTableProps> = (props) => {
     setIsClient(true);
   }, []);
 
-  const h = new Hours(props.hours);
+  const h = new HoursManipulator(props.hours);
   const now = new Date();
 
   const dayOfWeekNames = props.dayOfWeekNames
@@ -212,4 +212,4 @@ const HoursTable: React.FC<HoursTableProps> = (props) => {
   );
 };
 
-export { HoursTable };
+export { Hours };
