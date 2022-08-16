@@ -131,6 +131,21 @@ describe("getImageUUID", () => {
         "https://a.mktgcdn.com/p/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo"
       )
     ).toBe("");
+    expect(
+      getImageUUID(
+        "http://a.mktgcdn.com/p-sandbox/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
+      )
+    ).toBe("EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54");
+    expect(
+      getImageUUID(
+        "http://a.mktgcdn.com/p-qa/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
+      )
+    ).toBe("EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54");
+    expect(
+      getImageUUID(
+        "http://a.mktgcdn.com/p-dev/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
+      )
+    ).toBe("EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54");
     expect(getImageUUID("https://a.mktgcdn.com/p//1300x872.jpg")).toBe("");
     expect(getImageUUID("https://a.mktgcdn.com/p/1300x872.jpg")).toBe("");
     expect(getImageUUID("")).toBe("");
@@ -140,12 +155,17 @@ describe("getImageUUID", () => {
 
   it("properly logs error when image url is invalid", () => {
     const logMock = jest.spyOn(console, "error").mockImplementation(() => {});
-    const invalidUrl = "https://a.mktgcdn.com/p/1300x872.jpg";
+    let invalidUrl = "https://a.mktgcdn.com/p/1300x872.jpg";
 
     expect(logMock.mock.calls.length).toBe(0);
     expect(getImageUUID(invalidUrl)).toBe("");
     expect(logMock.mock.calls.length).toBe(1);
     expect(logMock.mock.calls[0][0]).toBe(`Invalid image url: ${invalidUrl}.`);
+
+    invalidUrl = "http://a.mktgcdn.com/p-badinput/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg";
+    expect(getImageUUID(invalidUrl)).toBe("");
+    expect(logMock.mock.calls.length).toBe(2);
+    expect(logMock.mock.calls[1][0]).toBe(`Invalid image url: ${invalidUrl}.`);
 
     jest.clearAllMocks();
   });
