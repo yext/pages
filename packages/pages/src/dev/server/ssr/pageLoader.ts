@@ -84,10 +84,6 @@ export const pageLoader = async ({
       locale,
       projectStructure
     );
-    if (document === null) {
-      // Fall back to localData
-      document = await getLocalDataForEntity(entityId, locale);
-    }
   } else {
     // Get the document from localData
     document = await getLocalDataForEntity(entityId, locale);
