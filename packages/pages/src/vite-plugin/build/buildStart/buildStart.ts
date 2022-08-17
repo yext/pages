@@ -71,7 +71,7 @@ const copyPluginFiles = (fileEmitter: EmitFile) => {
   pluginFiles.forEach((filepath) => {
     fileEmitter({
       type: "asset",
-      fileName: `plugin/${path.basename(filepath)}`,
+      fileName: path.join('plugin', path.basename(filepath)),
       source: fs.readFileSync(filepath).toString(),
     });
   });
@@ -88,8 +88,8 @@ const injectRenderer = async (fileEmitter: EmitFile) => {
   const currentDir = new URL(".", import.meta.url).pathname;
   fileEmitter({
     type: "chunk",
-    id: `${currentDir}/rendering/renderer.js`,
-    fileName: "assets/renderer/templateRenderer.js",
+    id: path.join(currentDir, 'rendering/renderer.js'),
+    fileName: path.join('assets/renderer/templateRenderer.js'),
   });
 
   finisher.succeed("Injected template renderer.");

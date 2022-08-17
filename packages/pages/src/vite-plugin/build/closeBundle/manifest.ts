@@ -1,4 +1,5 @@
 import fs from "fs-extra";
+import path from "path";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { Manifest } from "../../../common/src/template/types.js";
 
@@ -17,8 +18,8 @@ export const generateManifestFile = (
   );
 
   let bundlerManifest = Buffer.from("{}");
-  if (fs.existsSync(`${distRoot}/manifest.json`)) {
-    bundlerManifest = fs.readFileSync(`${distRoot}/manifest.json`);
+  if (fs.existsSync(path.join(distRoot, 'manifest.json'))) {
+    bundlerManifest = fs.readFileSync(path.join(distRoot, 'manifest.json'));
   }
   const manifest: Manifest = {
     bundlePaths: Object.fromEntries(relativeBundlePaths),
@@ -33,9 +34,9 @@ export const generateManifestFile = (
   };
 
   fs.writeFileSync(
-    `${distRoot}/plugin/manifest.json`,
+    path.join(distRoot, 'plugin/manifest.json'),
     JSON.stringify(manifest, null, "  ")
   );
 
-  fs.remove(`${distRoot}/manifest.json`);
+  fs.remove(path.join(distRoot, 'manifest.json'));
 };
