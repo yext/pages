@@ -20,8 +20,8 @@ export async function generate(info: GenerationInfo) {
     throw new Error("npm install returned a non-zero exit code " + npmExitCode);
   }
 
-  info.startStep("Running first build");
-  const buildExitCode = await info.runCommand("npm run build");
+  info.startStep("Generating features.json");
+  const buildExitCode = await info.runCommand("pages generate features");
   if (buildExitCode) {
     throw new Error("failed to build " + buildExitCode);
   }
