@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import classnames from "classnames";
 import { GoogleMaps, Map as MapType, MapOptions } from "@yext/components-tsx-maps";
 import { Coordinate, GeoBounds } from "@yext/components-tsx-geo";
 import { MapProps, MapContextType } from "./types";
+import "./map.css";
 
 export const MapContext = createContext<MapContextType | null>(null);
 
@@ -19,6 +21,7 @@ export const Map = ({
   apiKey,
   bounds,
   children,
+  className,
   clientKey,
   controls,
   getMapOptions,
@@ -97,7 +100,14 @@ export const Map = ({
   }, []);
 
   return (
-    <div className="dir-map" id="map" ref={wrapper}>
+    // TODO: remove dir-map
+    <div
+      className={classnames({
+        'is-loaded': loaded,
+      }, 'dir-map', className)}
+      id="map"
+      ref={wrapper}
+    >
       {map && (
         <MapContext.Provider value={{ map, provider }}>
           {children}
