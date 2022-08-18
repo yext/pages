@@ -1,15 +1,14 @@
 import glob from "glob";
 import * as path from "path";
-import { createFeatureJson } from "./feature.js";
 import logger from "../../log.js";
 import { generateManifestFile } from "./manifest.js";
-import {
-  loadTemplateModules,
-  TemplateModuleCollection,
-} from "./moduleLoader.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import colors from "picocolors";
 import { validateBundles } from "./bundleValidator.js";
+import {
+  loadTemplateModules,
+  TemplateModuleCollection,
+} from "../../../common/src/template/internal/loader.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -22,7 +21,7 @@ export default (projectStructure: ProjectStructure) => {
           "**/*.js"
         )
       );
-      templateModules = await loadTemplateModules(serverBundles);
+      templateModules = await loadTemplateModules(serverBundles, false, true);
       validateBundles();
       finisher.succeed("Validated template modules");
     } catch (e: any) {
@@ -31,24 +30,9 @@ export default (projectStructure: ProjectStructure) => {
       return;
     }
 
-    const sitesConfigRoot = projectStructure.sitesConfigRoot.getAbsolutePath();
-    finisher = logger.timedLog({ startLog: `Writing ${sitesConfigRoot}` });
-    let featureNameToBundlePath: Map<string, string>;
-    try {
-      featureNameToBundlePath = await createFeatureJson(
-        templateModules,
-        path.join(sitesConfigRoot, projectStructure.featuresConfig)
-      );
-      finisher.succeed(`Successfully wrote ${sitesConfigRoot}`);
-    } catch (e: any) {
-      finisher.fail(`Failed to write ${sitesConfigRoot}`);
-      console.error(colors.red(e.message));
-      return;
-    }
-
     finisher = logger.timedLog({ startLog: "Writing manifest.json" });
     try {
-      await generateManifestFile(featureNameToBundlePath, projectStructure);
+      await generateManifestFile(templateModules, projectStructure);
       finisher.succeed("Successfully wrote manifest.json");
     } catch (e: any) {
       finisher.fail("Failed to write manifest.json");

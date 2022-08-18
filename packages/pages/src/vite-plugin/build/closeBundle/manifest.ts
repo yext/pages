@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { TemplateModuleCollection } from "../../../common/src/template/internal/loader.js";
 import { Manifest } from "../../../common/src/template/types.js";
 
 /**
@@ -8,9 +9,14 @@ import { Manifest } from "../../../common/src/template/types.js";
  * feature.
  */
 export const generateManifestFile = (
-  featureNameToBundlePath: Map<string, string>,
+  templateModules: TemplateModuleCollection,
   projectStructure: ProjectStructure
 ): void => {
+  const featureNameToBundlePath = new Map();
+  for (const [featureName, module] of templateModules.entries()) {
+    featureNameToBundlePath.set(featureName, module.path);
+  }
+
   const distRoot = projectStructure.distRoot.getAbsolutePath();
   const relativeBundlePaths = Array.from(featureNameToBundlePath.entries()).map(
     ([name, path]) => [name, projectStructure.distRoot.getRelativePath(path)]

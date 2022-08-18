@@ -1,26 +1,39 @@
 import fs from "fs-extra";
+import glob from "glob";
 import path from "path";
-import { TemplateModuleCollection } from "./moduleLoader.js";
 import {
   FeaturesConfig,
   FeatureConfig,
   convertTemplateConfigToFeatureConfig,
-} from "../../../common/src/feature/features.js";
+} from "../common/src/feature/features.js";
+import {
+  loadTemplateModules,
+  TemplateModuleCollection,
+} from "../common/src/template/internal/loader.js";
+
+const TEMPLATES_ROOT = "/src/templates";
+
+export const features = async (): Promise<void> => {
+  const templateModules = await loadTemplateModules(
+    glob.sync(path.join(process.cwd(), TEMPLATES_ROOT, "/**/*.{tsx,jsx}")),
+    true,
+    false
+  );
+  await createFeaturesJson(templateModules, "./sites-config/features.json");
+};
 
 /**
- * Run feature.json Generation. Returns a mapping of feature name to bundle path.
+ * Generates a features.json from the templates.
  */
-export const createFeatureJson = async (
+export const createFeaturesJson = async (
   templateModules: TemplateModuleCollection,
   featurePath: string
-): Promise<Map<string, string>> => {
+): Promise<void> => {
   const features: FeatureConfig[] = [];
   const streams = [];
-  const featureNameToBundlePath = new Map();
-  for (const [featureName, module] of templateModules.entries()) {
+  for (const [_, module] of templateModules.entries()) {
     const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
     features.push(featureConfig);
-    featureNameToBundlePath.set(featureName, module.path);
     module.config.stream && streams.push({ ...module.config.stream });
   }
 
@@ -31,7 +44,6 @@ export const createFeatureJson = async (
 
   const featuresJson = mergeFeatureJson(featurePath, features, streams);
   fs.writeFileSync(featurePath, JSON.stringify(featuresJson, null, "  "));
-  return featureNameToBundlePath;
 };
 
 /**
