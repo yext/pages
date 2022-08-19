@@ -28,7 +28,7 @@ describe("runtime", () => {
     global.process = originalProcess;
   });
 
-  it("correctly identifies deno", async () => {
+  it("correctly identifies deno via Deno object", async () => {
     const originalProcess = process;
     // @ts-ignore
     global.process = undefined;
@@ -49,6 +49,24 @@ describe("runtime", () => {
 
     expect(runtime.name).toEqual("deno");
     expect(runtime.version).toEqual("1.24.0");
+
+    global.process = originalProcess;
+    windowSpy.mockRestore();
+  });
+
+  it("correctly identifies deno via lack of window object", async () => {
+    const originalProcess = process;
+    // @ts-ignore
+    global.process = undefined;
+
+    const windowSpy = jest.spyOn(global, "window", "get");
+    // @ts-ignore
+    windowSpy.mockImplementation(() => {});
+
+    const runtime = getRuntime();
+
+    expect(runtime.name).toEqual("deno");
+    expect(runtime.version).toEqual("");
 
     global.process = originalProcess;
     windowSpy.mockRestore();
