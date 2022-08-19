@@ -2,7 +2,8 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout, ImageLayoutOption } from "./types";
 
-const MKTGCDN_URL_REGEX = /(https?:\/\/a.mktgcdn.com\/p\/)(?<uuid>.+)\/(.*)/;
+const MKTGCDN_URL_REGEX =
+  /(https?:\/\/a.mktgcdn.com\/p(-sandbox|-qa|-dev)?\/)(?<uuid>.+)\/(.*)/;
 
 /**
  * Renders an image based from the Yext Knowledge Graph. Example of using the component to render
@@ -180,7 +181,7 @@ export const handleLayout = (
 ): { src: string; imgStyle: React.CSSProperties; widths: number[] } => {
   let widths: number[] = [100, 320, 640, 960, 1280, 1920];
   let src: string = getImageUrl(imgUUID, 500, 500);
-  let imgStyle = { ...style };
+  const imgStyle = { ...style };
   imgStyle.objectFit = imgStyle.objectFit || "cover";
   imgStyle.objectPosition = imgStyle.objectPosition || "center";
 
@@ -194,7 +195,7 @@ export const handleLayout = (
         : `${imgWidth} / ${imgHeight}`;
 
       break;
-    case ImageLayoutOption.FIXED:
+    case ImageLayoutOption.FIXED: {
       const { fixedWidth, fixedHeight, fixedWidths } =
         getImageSizeForFixedLayout(
           imgWidth,
@@ -209,6 +210,7 @@ export const handleLayout = (
       src = getImageUrl(imgUUID, fixedWidth, fixedHeight);
 
       break;
+    }
     case ImageLayoutOption.ASPECT:
       imgStyle.aspectRatio = aspectRatio
         ? `${aspectRatio}`
