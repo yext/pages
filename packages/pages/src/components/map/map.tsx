@@ -107,6 +107,7 @@ export const Map = ({
       }, 'dir-map', className)}
       id="map"
       ref={wrapper}
+      data-testid="map"
     >
       {map && (
         <MapContext.Provider value={{ map, provider }}>
