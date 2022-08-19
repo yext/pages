@@ -6,13 +6,13 @@ class Runtime {
     if (typeof process !== "undefined") {
       this.name = "node";
       this.version = process.versions.node;
-    } else if ("Deno" in window) {
-      this.name = "deno";
-      // @ts-ignore
-      this.version = window.Deno.version.deno;
-    } else {
+    } else if (typeof window !== "undefined" && !("Deno" in window)) {
       this.name = "browser";
       this.version = navigator.userAgent;
+    } else {
+      this.name = "deno";
+      // @ts-ignore
+      this.version = window?.Deno?.version.deno || "";
     }
   }
 
