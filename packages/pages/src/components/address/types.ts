@@ -45,7 +45,7 @@ export type AddressLineProps = {
  * The available listing publishers
  */
 export enum ListingPublisher {
-  googlemybusiness = 'googlemybusiness',
+  googlemybusiness = "googlemybusiness",
 }
 
 /**
@@ -57,7 +57,7 @@ export interface ListingType {
 }
 
 export enum MapProvider {
-  Google = 'GOOGLE',
-  Apple = 'APPLE',
-  Bing = 'BING',
+  Google = "GOOGLE",
+  Apple = "APPLE",
+  Bing = "BING",
 }

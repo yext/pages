@@ -1,5 +1,10 @@
 import { getDirections, getUnabbreviated } from "./methods";
-import { AddressType, ListingPublisher, ListingType, MapProvider } from "./types";
+import {
+  AddressType,
+  ListingPublisher,
+  ListingType,
+  MapProvider,
+} from "./types";
 
 const sampleAddress: AddressType = {
   city: "New York",
@@ -21,49 +26,85 @@ const sampleAddress2: AddressType = {
 
 const sampleListings: ListingType[] = [
   {
-    listingUrl: 'https://maps.google.com/maps?cid=3287244376840534043',
+    listingUrl: "https://maps.google.com/maps?cid=3287244376840534043",
     publisher: ListingPublisher.googlemybusiness,
   },
 ];
 
 describe("getDirections()", () => {
-  it('returns URL to Apple Maps address query', () => {
-    expect(getDirections({
-      ref_listings: sampleListings,
-      address: sampleAddress,
-    }, MapProvider.Apple)).toEqual('https://maps.apple.com/?address=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US');
+  it("returns URL to Apple Maps address query", () => {
+    expect(
+      getDirections(
+        {
+          ref_listings: sampleListings,
+          address: sampleAddress,
+        },
+        MapProvider.Apple
+      )
+    ).toEqual(
+      "https://maps.apple.com/?address=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US"
+    );
   });
-  
-  it('returns URL to Bing Maps address query', () => {
-    expect(getDirections({
-      ref_listings: sampleListings,
-      address: sampleAddress,
-    }, MapProvider.Bing)).toEqual('https://bing.com/maps/default.aspx?where1=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010');
+
+  it("returns URL to Bing Maps address query", () => {
+    expect(
+      getDirections(
+        {
+          ref_listings: sampleListings,
+          address: sampleAddress,
+        },
+        MapProvider.Bing
+      )
+    ).toEqual(
+      "https://bing.com/maps/default.aspx?where1=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010"
+    );
   });
-  
-  it('returns URL to Bing Maps address query with route from current location', () => {
-    expect(getDirections({
-      ref_listings: sampleListings,
-      address: sampleAddress,
-    }, MapProvider.Bing, true)).toEqual('https://bing.com/maps/default.aspx?rtp=adr.60%20W%2023rd%20St,%20New%20York,%20NY,%2010010');
+
+  it("returns URL to Bing Maps address query with route from current location", () => {
+    expect(
+      getDirections(
+        {
+          ref_listings: sampleListings,
+          address: sampleAddress,
+        },
+        MapProvider.Bing,
+        true
+      )
+    ).toEqual(
+      "https://bing.com/maps/default.aspx?rtp=adr.60%20W%2023rd%20St,%20New%20York,%20NY,%2010010"
+    );
   });
-  
-  it('returns URL to Google Maps address query', () => {
-    expect(getDirections({
-      address: sampleAddress,
-    })).toEqual('https://maps.google.com/maps/search/?api=1&query=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US');
+
+  it("returns URL to Google Maps address query", () => {
+    expect(
+      getDirections({
+        address: sampleAddress,
+      })
+    ).toEqual(
+      "https://maps.google.com/maps/search/?api=1&query=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US"
+    );
   });
-  
-  it('returns URL to Google Maps address query with route from current location', () => {
-    expect(getDirections({
-      address: sampleAddress,
-    }, undefined, true)).toEqual('https://maps.google.com/maps/dir/?api=1&destination=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US');
+
+  it("returns URL to Google Maps address query with route from current location", () => {
+    expect(
+      getDirections(
+        {
+          address: sampleAddress,
+        },
+        undefined,
+        true
+      )
+    ).toEqual(
+      "https://maps.google.com/maps/dir/?api=1&destination=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US"
+    );
   });
-  
-  it('returns URL to Google Maps GMB listing', () => {
-    expect(getDirections({
-      ref_listings: sampleListings,
-    })).toEqual('https://maps.google.com/maps?cid=3287244376840534043');
+
+  it("returns URL to Google Maps GMB listing", () => {
+    expect(
+      getDirections({
+        ref_listings: sampleListings,
+      })
+    ).toEqual("https://maps.google.com/maps?cid=3287244376840534043");
   });
 });
 
