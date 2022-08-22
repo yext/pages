@@ -63,11 +63,15 @@ const discoverInputs = async (
       const parsedPath = parse(template);
 
       if (parsedPath.ext === ".tsx" || parsedPath.ext === ".jsx") {
-        input[path.join(`hydrate`, parsedPath.name)] =
-          path.join(hydrationOutputDir,template).replace("jsx", "tsx");
+        input[path.join(`hydrate`, parsedPath.name)] = path
+          .join(hydrationOutputDir, template)
+          .replace("jsx", "tsx");
       }
 
-      input[path.join(`server`,parsedPath.name)] = path.join(templateDir,template);
+      input[path.join(`server`, parsedPath.name)] = path.join(
+        templateDir,
+        template
+      );
       return input;
     },
     {}

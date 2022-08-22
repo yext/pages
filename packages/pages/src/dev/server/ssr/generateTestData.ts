@@ -50,7 +50,7 @@ export const generateTestDataForPage = async (
 
   const featureName = featuresConfig.features[0]?.name;
   const command = "yext";
-  const args = addCommonArgs(featuresConfig, featureName, locale)
+  const args = addCommonArgs(featuresConfig, featureName, locale);
 
   if (entityId) {
     args.push("--entityIds", entityId);
@@ -133,15 +133,18 @@ export const generateTestDataForPage = async (
   });
 };
 
-const addCommonArgs = (featuresConfig: FeaturesConfig, featureName: string, locale: string) => {
-
-  // We need to specially handle the JSON when running on windows due to an existing bug/behavior in Powershell where inner quotes are 
+const addCommonArgs = (
+  featuresConfig: FeaturesConfig,
+  featureName: string,
+  locale: string
+) => {
+  // We need to specially handle the JSON when running on windows due to an existing bug/behavior in Powershell where inner quotes are
   // stripped from strings when passed to a third-party program. Read more: https://stackoverflow.com/questions/52822984/powershell-best-way-to-escape-double-quotes-in-string-passed-to-an-external-pro.
   let jsonConfig;
   if (process.platform == "win32") {
     jsonConfig = `"${JSON.stringify(featuresConfig).replaceAll(`"`, `\\"`)}"`;
   } else {
-    jsonConfig = `'${JSON.stringify(featuresConfig)}'`
+    jsonConfig = `'${JSON.stringify(featuresConfig)}'`;
   }
 
   const args = [
@@ -156,4 +159,4 @@ const addCommonArgs = (featuresConfig: FeaturesConfig, featureName: string, loca
     "--printDocuments",
   ];
   return args;
-}
+};

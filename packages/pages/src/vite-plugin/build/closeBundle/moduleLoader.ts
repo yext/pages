@@ -19,9 +19,7 @@ export const loadTemplateModules = async (
   for (const p of serverBundlePaths) {
     let templateModule = {} as TemplateModule<any, any>;
     try {
-      templateModule = await import(
-      pathToFileURL(p).toString()
-);
+      templateModule = await import(pathToFileURL(p).toString());
     } catch (e) {
       throw new Error(`Could not import ${p} ${e}`);
     }

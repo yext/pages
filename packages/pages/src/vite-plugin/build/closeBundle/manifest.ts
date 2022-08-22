@@ -18,8 +18,8 @@ export const generateManifestFile = (
   );
 
   let bundlerManifest = Buffer.from("{}");
-  if (fs.existsSync(path.join(distRoot, 'manifest.json'))) {
-    bundlerManifest = fs.readFileSync(path.join(distRoot, 'manifest.json'));
+  if (fs.existsSync(path.join(distRoot, "manifest.json"))) {
+    bundlerManifest = fs.readFileSync(path.join(distRoot, "manifest.json"));
   }
   const manifest: Manifest = {
     bundlePaths: Object.fromEntries(relativeBundlePaths),
@@ -34,15 +34,15 @@ export const generateManifestFile = (
   };
 
   writeFile(
-    path.join(distRoot, 'plugin', 'manifest.json'),
+    path.join(distRoot, "plugin", "manifest.json"),
     JSON.stringify(manifest, null, "  ")
   );
 
-  fs.remove(path.join(distRoot, 'manifest.json'));
+  fs.remove(path.join(distRoot, "manifest.json"));
 };
 
 // writeFile ensures that the directory of the filepath exists before writing the file.
 const writeFile = (filepath: string, contents: string) => {
-  fs.mkdirSync(path.dirname(filepath), {recursive: true});
+  fs.mkdirSync(path.dirname(filepath), { recursive: true });
   fs.writeFileSync(filepath, contents);
-}
+};
