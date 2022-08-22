@@ -112,7 +112,7 @@ export const generateTestDataForPage = async (
         // This will act as a catch-all to write back any prompts to the the parent process
         // so the user can see it. Its main usage is to allow the user to go through the
         // authentication flow from the parent process.
-        const out = lines.join("\n").trim() + "\n";
+        const out = lines.join("\n").trim();
         out && stdout.write(out);
       }
     });
