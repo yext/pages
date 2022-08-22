@@ -109,7 +109,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       <a
         className={classNames("Link", className)}
         href={humanInteraction || !obfuscate ? getHref(link) : "obfuscate"}
-        onClick={(e) => handleClick(e)}
+        onClick={handleClick}
         rel={props.target && !props.rel ? "noopener" : undefined}
         ref={ref}
         style={obfuscatedStyle}
