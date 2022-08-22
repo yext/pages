@@ -5,6 +5,7 @@ import { readdir } from "fs/promises";
 import { parse } from "path";
 import { InputOption } from "rollup";
 import { ProjectStructure } from "../../common/src/project/structure.js";
+import path from "path";
 
 const intro = `var global = globalThis;`;
 
@@ -62,11 +63,11 @@ const discoverInputs = async (
       const parsedPath = parse(template);
 
       if (parsedPath.ext === ".tsx" || parsedPath.ext === ".jsx") {
-        input[`hydrate/${parsedPath.name}`] =
-          `${hydrationOutputDir}/${template}`.replace("jsx", "tsx");
+        input[path.join(`hydrate`, parsedPath.name)] =
+          path.join(hydrationOutputDir,template).replace("jsx", "tsx");
       }
 
-      input[`server/${parsedPath.name}`] = `${templateDir}/${template}`;
+      input[path.join(`server`,parsedPath.name)] = path.join(templateDir,template);
       return input;
     },
     {}

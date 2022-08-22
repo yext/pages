@@ -33,10 +33,16 @@ export const generateManifestFile = (
     bundlerManifest: JSON.parse(bundlerManifest.toString()),
   };
 
-  fs.writeFileSync(
-    path.join(distRoot, 'plugin/manifest.json'),
+  writeFile(
+    path.join(distRoot, 'plugin', 'manifest.json'),
     JSON.stringify(manifest, null, "  ")
   );
 
   fs.remove(path.join(distRoot, 'manifest.json'));
 };
+
+// writeFile ensures that the directory of the filepath exists before writing the file.
+const writeFile = (filepath: string, contents: string) => {
+  fs.mkdirSync(path.dirname(filepath), {recursive: true});
+  fs.writeFileSync(filepath, contents);
+}

@@ -2,6 +2,7 @@ import * as path from "path";
 import glob from "glob";
 import logger from "../../log.js";
 import fs from "fs";
+import { fileURLToPath } from 'url';
 import { PluginContext, NormalizedInputOptions, EmitFile } from "rollup";
 import { generateHydrationEntryPoints } from "./hydration.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
@@ -60,20 +61,23 @@ const copyPluginFiles = (fileEmitter: EmitFile) => {
     startLog: "Copying Yext plugin files",
   });
 
-  const currentPath = new URL(import.meta.url).pathname;
-  const pathToPluginsDir = path.resolve(currentPath, "../../../../plugin");
-  const pluginFiles = glob.sync(`${pathToPluginsDir}/*.ts`);
+  const currentPath = fileURLToPath(import.meta.url);
+  const pathToPluginsDir = path.resolve(currentPath, path.join("..", "..", "..","..", "plugin"));
+  // We must use path.resolve to reconcile filepaths on Windows as glob returns filepaths with forward slashes by default.
+  const pluginFiles = glob.sync(`${pathToPluginsDir}/*.ts`).map(f => path.resolve(f));
 
   if (pluginFiles.length == 0) {
     finisher.fail("Failed to copy Yext plugin files");
+    return;
   }
 
   pluginFiles.forEach((filepath) => {
+    const filename = path.join('plugin', path.basename(filepath));
     fileEmitter({
       type: "asset",
-      fileName: path.join('plugin', path.basename(filepath)),
+      fileName: filename,
       source: fs.readFileSync(filepath).toString(),
-    });
+  });
   });
 
   finisher.succeed("Successfully copied Yext plugin files");
@@ -85,11 +89,11 @@ const injectRenderer = async (fileEmitter: EmitFile) => {
     startLog: "Injecting template renderer.",
   });
 
-  const currentDir = new URL(".", import.meta.url).pathname;
+  const currentDir = fileURLToPath(new URL(".", import.meta.url));
   fileEmitter({
     type: "chunk",
-    id: path.join(currentDir, 'rendering/renderer.js'),
-    fileName: path.join('assets/renderer/templateRenderer.js'),
+    id: path.join(currentDir, 'rendering', 'renderer.js'),
+    fileName: path.join('assets', 'renderer', 'templateRenderer.js'),
   });
 
   finisher.succeed("Injected template renderer.");

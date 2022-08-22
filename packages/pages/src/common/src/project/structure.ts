@@ -1,5 +1,6 @@
 import pathLib from "path";
 import _ from "lodash";
+import path from "path";
 
 /**
  * Defines the folder paths where certain files live, relative to the root of the project.
@@ -66,11 +67,11 @@ export interface ProjectStructureConfig {
 
 const defaultConfig: ProjectStructureConfig = {
   filepathsConfig: {
-    templatesRoot: "src/templates",
+    templatesRoot: path.join("src","templates"),
     sitesConfigRoot: "sites-config",
     distRoot: "dist",
     hydrationBundleOutputRoot: "hydration_templates",
-    serverBundleOutputRoot: "assets/server",
+    serverBundleOutputRoot: path.join("assets","server"),
   },
   filenamesConfig: {
     ciConfig: "ci.json",

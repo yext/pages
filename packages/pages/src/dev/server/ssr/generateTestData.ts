@@ -48,18 +48,9 @@ export const generateTestDataForPage = async (
     projectStructure.sitesConfigRoot + "/" + projectStructure.siteStreamConfig
   );
 
+  const featureName = featuresConfig.features[0]?.name;
   const command = "yext";
-  const args = [
-    "sites",
-    "generate-test-data",
-    "--featureName",
-    `'${featuresConfig.features[0]?.name}'`,
-    "--featuresConfig",
-    `'${JSON.stringify(featuresConfig)}'`,
-    "--locale",
-    locale,
-    "--printDocuments",
-  ];
+  const args = addCommonArgs(featuresConfig, featureName, locale)
 
   if (entityId) {
     args.push("--entityIds", entityId);
@@ -121,7 +112,7 @@ export const generateTestDataForPage = async (
         // This will act as a catch-all to write back any prompts to the the parent process
         // so the user can see it. Its main usage is to allow the user to go through the
         // authentication flow from the parent process.
-        const out = lines.join("\n").trim();
+        const out = lines.join("\n").trim() + "\n";
         out && stdout.write(out);
       }
     });
@@ -131,7 +122,7 @@ export const generateTestDataForPage = async (
         testData = JSON.parse(testData.trim());
       } else {
         stdout.write(
-          `Unable to generate test data from command: \`${command}${args.join(
+          `Unable to generate test data from command: \`${command} ${args.join(
             " "
           )}\``
         );
@@ -141,3 +132,28 @@ export const generateTestDataForPage = async (
     });
   });
 };
+
+const addCommonArgs = (featuresConfig: FeaturesConfig, featureName: string, locale: string) => {
+
+  // We need to specially handle the JSON when running on windows due to an existing bug/behavior in Powershell where inner quotes are 
+  // stripped from strings when passed to a third-party program. Read more: https://stackoverflow.com/questions/52822984/powershell-best-way-to-escape-double-quotes-in-string-passed-to-an-external-pro.
+  let jsonConfig;
+  if (process.platform == "win32") {
+    jsonConfig = `"${JSON.stringify(featuresConfig).replaceAll(`"`, `\\"`)}"`;
+  } else {
+    jsonConfig = `'${JSON.stringify(featuresConfig)}'`
+  }
+
+  const args = [
+    "sites",
+    "generate-test-data",
+    "--featureName",
+    `"${featureName}"`,
+    "--featuresConfig",
+    jsonConfig,
+    "--locale",
+    locale,
+    "--printDocuments",
+  ];
+  return args;
+}

@@ -38,8 +38,11 @@ const generateEntryPoint = (
   const basename = path.basename(templatePath);
   const extension = path.extname(templatePath);
   const absoluteTemplatePath = path.resolve(templatePath);
-  const relPath = path.relative(hydrationOutputDir, absoluteTemplatePath);
-
+  
+  // Ensure that the import uses proper node file separators. On windows, absolute template path and hydration output dir will use "\"
+  // which doesn't work as an import in NodeJS.
+  const relPath = path.relative(hydrationOutputDir, absoluteTemplatePath).replaceAll("\\", "/");
+  
   const templateBytes = genHydrationTemplates(
     relPath.substring(0, relPath.length - extension.length)
   );
