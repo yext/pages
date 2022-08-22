@@ -28,3 +28,4 @@ jobs:
             plugin
             components
             util
+            dev/plugin
