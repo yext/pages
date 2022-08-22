@@ -5,6 +5,8 @@ import type { CTA } from "./types";
 
 /**
  * Configuration options available for any usages of the Link component.
+ * 
+ * @public
  */
 interface LinkConfig
   extends React.DetailedHTMLProps<
@@ -33,6 +35,8 @@ interface CTAWithChildrenLinkProps extends LinkConfig {
 
 /**
  * The shape of the data passed to {@link Link} when using a CTA field, and overriding children.
+ * 
+ * @public
  */
 interface CTAWithoutChildrenLinkProps extends LinkConfig {
   href?: never;
@@ -42,11 +46,15 @@ interface CTAWithoutChildrenLinkProps extends LinkConfig {
 
 /**
  * The shape of the data passed to {@link Link} when using a CTA field.
+ * 
+ * @public
  */
 type CTALinkProps = CTAWithChildrenLinkProps | CTAWithoutChildrenLinkProps;
 
 /**
  * The shape of the data passed to {@link Link}.
+ * 
+ * @public
  */
 export type LinkProps = CTALinkProps | HREFLinkProps;
 
@@ -84,7 +92,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
 
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
       setHumanInteraction(true);
-      if (onClick) onClick(e);
+      if (onClick) { onClick(e) }
     };
 
     const useLinkAsLabel = !children && !link.label;
