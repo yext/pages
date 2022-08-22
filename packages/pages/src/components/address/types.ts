@@ -40,3 +40,24 @@ export type AddressLineProps = {
   line: AddressLine;
   separator?: string;
 };
+
+/**
+ * The available listing publishers
+ */
+export enum ListingPublisher {
+  googlemybusiness = 'googlemybusiness',
+}
+
+/**
+ * The type definition for a Listing
+ */
+export interface ListingType {
+  listingUrl: string;
+  publisher: ListingPublisher;
+}
+
+export enum MapProvider {
+  Google = 'GOOGLE',
+  Apple = 'APPLE',
+  Bing = 'BING',
+}

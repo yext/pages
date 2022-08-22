@@ -1,7 +1,15 @@
-import { getUnabbreviated } from "./methods";
-import { AddressType } from "./types";
+import { getDirections, getUnabbreviated } from "./methods";
+import { AddressType, ListingPublisher, ListingType, MapProvider } from "./types";
 
-const address: AddressType = {
+const sampleAddress: AddressType = {
+  city: "New York",
+  countryCode: "US",
+  line1: "60 W 23rd St",
+  postalCode: "10010",
+  region: "NY",
+};
+
+const sampleAddress2: AddressType = {
   city: "Birmingham",
   countryCode: "US",
   line1: "1716 University Boulevard",
@@ -11,12 +19,60 @@ const address: AddressType = {
   region: "AL",
 };
 
+const sampleListings: ListingType[] = [
+  {
+    listingUrl: 'https://maps.google.com/maps?cid=3287244376840534043',
+    publisher: ListingPublisher.googlemybusiness,
+  },
+];
+
+describe("getDirections()", () => {
+  it('returns URL to Apple Maps address query', () => {
+    expect(getDirections({
+      ref_listings: sampleListings,
+      address: sampleAddress,
+    }, MapProvider.Apple)).toEqual('https://maps.apple.com/?address=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US');
+  });
+  
+  it('returns URL to Bing Maps address query', () => {
+    expect(getDirections({
+      ref_listings: sampleListings,
+      address: sampleAddress,
+    }, MapProvider.Bing)).toEqual('https://bing.com/maps/default.aspx?where1=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010');
+  });
+  
+  it('returns URL to Bing Maps address query with route from current location', () => {
+    expect(getDirections({
+      ref_listings: sampleListings,
+      address: sampleAddress,
+    }, MapProvider.Bing, true)).toEqual('https://bing.com/maps/default.aspx?rtp=adr.60%20W%2023rd%20St,%20New%20York,%20NY,%2010010');
+  });
+  
+  it('returns URL to Google Maps address query', () => {
+    expect(getDirections({
+      address: sampleAddress,
+    })).toEqual('https://maps.google.com/maps/search/?api=1&query=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US');
+  });
+  
+  it('returns URL to Google Maps address query with route from current location', () => {
+    expect(getDirections({
+      address: sampleAddress,
+    }, undefined, true)).toEqual('https://maps.google.com/maps/dir/?api=1&destination=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US');
+  });
+  
+  it('returns URL to Google Maps GMB listing', () => {
+    expect(getDirections({
+      ref_listings: sampleListings,
+    })).toEqual('https://maps.google.com/maps?cid=3287244376840534043');
+  });
+});
+
 describe("getUnabbreviated()", () => {
-  it("properly return the unabbreviated value of a field if it exists", () => {
-    expect(getUnabbreviated("region", address)).toBe("Alabama");
+  it("properly returns the unabbreviated value of a field if it exists", () => {
+    expect(getUnabbreviated("region", sampleAddress2)).toBe("Alabama");
   });
 
-  it("return undefined if an unabbreviated value does not exist", () => {
-    expect(getUnabbreviated("postalCode", address)).toBe(undefined);
+  it("returns undefined if an unabbreviated value does not exist", () => {
+    expect(getUnabbreviated("postalCode", sampleAddress2)).toBe(undefined);
   });
 });
