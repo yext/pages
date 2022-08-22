@@ -15,7 +15,10 @@ export const generateManifestFile = (
 ): void => {
   const distRoot = projectStructure.distRoot.getAbsolutePath();
   const relativeBundlePaths = Array.from(featureNameToBundlePath.entries()).map(
-    ([name, path]) => [name,  convertToPosixPath(projectStructure.distRoot.getRelativePath(path))]
+    ([name, path]) => [
+      name,
+      convertToPosixPath(projectStructure.distRoot.getRelativePath(path)),
+    ]
   );
 
   let bundlerManifest = Buffer.from("{}");

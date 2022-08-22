@@ -68,10 +68,7 @@ const discoverInputs = async (
           .replace("jsx", "tsx");
       }
 
-      input[`server/${parsedPath.name}`] = path.join(
-        templateDir,
-        template
-      );
+      input[`server/${parsedPath.name}`] = path.join(templateDir, template);
       return input;
     },
     {}

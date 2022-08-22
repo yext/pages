@@ -22,4 +22,4 @@ export const getRelativePrefixToRootFromPath = (path: string): string => {
  */
 export const convertToPosixPath = (p: string) => {
   return p.split(path.sep).join(path.posix.sep);
-}
+};
