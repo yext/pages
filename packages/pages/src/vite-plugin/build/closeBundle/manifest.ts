@@ -1,6 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { convertToPosixPath } from "../../../common/src/template/paths.js";
 import { Manifest } from "../../../common/src/template/types.js";
 
 /**
@@ -14,7 +15,7 @@ export const generateManifestFile = (
 ): void => {
   const distRoot = projectStructure.distRoot.getAbsolutePath();
   const relativeBundlePaths = Array.from(featureNameToBundlePath.entries()).map(
-    ([name, path]) => [name, projectStructure.distRoot.getRelativePath(path)]
+    ([name, path]) => [name,  convertToPosixPath(projectStructure.distRoot.getRelativePath(path))]
   );
 
   let bundlerManifest = Buffer.from("{}");

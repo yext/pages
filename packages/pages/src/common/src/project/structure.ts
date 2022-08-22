@@ -67,11 +67,11 @@ export interface ProjectStructureConfig {
 
 const defaultConfig: ProjectStructureConfig = {
   filepathsConfig: {
-    templatesRoot: path.join("src", "templates"),
+    templatesRoot: "src/templates",
     sitesConfigRoot: "sites-config",
     distRoot: "dist",
     hydrationBundleOutputRoot: "hydration_templates",
-    serverBundleOutputRoot: path.join("assets", "server"),
+    serverBundleOutputRoot: "assets/server",
   },
   filenamesConfig: {
     ciConfig: "ci.json",
@@ -146,7 +146,7 @@ export class Path {
   path: string;
 
   constructor(path: string) {
-    this.path = pathLib.join(path);
+    this.path = path;
   }
 
   getRelativePath = (to: string): string => {

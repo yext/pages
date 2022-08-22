@@ -98,7 +98,7 @@ const injectRenderer = async (fileEmitter: EmitFile) => {
   fileEmitter({
     type: "chunk",
     id: path.join(currentDir, "rendering", "renderer.js"),
-    fileName: path.join("assets", "renderer", "templateRenderer.js"),
+    fileName: "assets/renderer/templateRenderer.js",
   });
 
   finisher.succeed("Injected template renderer.");

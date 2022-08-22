@@ -1,3 +1,5 @@
+import path from "path";
+
 /**
  * Function that takes a path to a generated template and returns the
  * relative path to the root of the site. Will return the empty string
@@ -13,3 +15,11 @@ export const getRelativePrefixToRootFromPath = (path: string): string => {
     .map((_) => "../")
     .reduce((previousValue, currentValue) => previousValue + currentValue, "");
 };
+
+/**
+ * Converts any path to a posix path delimted by "/". Useful for ensuring that a path will be dynamically importable as only posix-style
+ * paths are supported with import.
+ */
+export const convertToPosixPath = (p: string) => {
+  return p.split(path.sep).join(path.posix.sep);
+}
