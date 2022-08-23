@@ -75,6 +75,7 @@
     "handlebars": "^4.7.7",
     "ink": "^3.2.0",
     "lodash": "^4.17.21",
+    "module-from-string": "^3.2.1",
     "open": "^8.4.0",
     "ora": "^6.1.2",
     "picocolors": "^1.0.0",

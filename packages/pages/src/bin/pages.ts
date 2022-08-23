@@ -2,6 +2,7 @@
 import init from "../init/init.js";
 import dev from "../dev/dev.js";
 import preview from "../preview/preview.js";
+import { features } from "../generate/features.js";
 
 const [, , ...args] = process.argv;
 
@@ -20,14 +21,9 @@ const [, , ...args] = process.argv;
 
 const [command] = args;
 
-if (!args.some((arg) => ["dev", "preview", "init"].includes(arg))) {
-  process.stdout.write("Command not found\n");
-  process.exit(1);
-}
-
 switch (command) {
   case "dev":
-    dev();
+    await dev();
     break;
   case "preview":
     preview();
@@ -38,7 +34,41 @@ switch (command) {
     if (args.length == 2) {
       folderToCreate = args[1];
     }
-    init(folderToCreate || null);
+    await init(folderToCreate || null);
     break;
+  }
+  case "generate": {
+    const generateTargets = ["features"];
+
+    if (args.length != 2) {
+      process.stdout.write(
+        `Missing a target to generate. Valid values are: ${generateTargets.join(
+          ", "
+        )}\n`
+      );
+      process.exit(1);
+    }
+
+    const target = args[1];
+
+    switch (target) {
+      case "features": {
+        await features();
+        break;
+      }
+      default: {
+        process.stdout.write(
+          `Target for 'generate' command is invalid: ${target}. Valid values are: ${generateTargets.join(
+            ", "
+          )}\n`
+        );
+        process.exit(1);
+      }
+    }
+    break;
+  }
+  default: {
+    process.stdout.write(`Command not found: ${command}\n`);
+    process.exit(1);
   }
 }
