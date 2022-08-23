@@ -2,10 +2,9 @@ import { Plugin, UserConfig } from "vite";
 import buildStart from "./buildStart/buildStart.js";
 import closeBundle from "./closeBundle/closeBundle.js";
 import { readdir } from "fs/promises";
-import { parse } from "path";
+import path, { parse } from "path";
 import { InputOption } from "rollup";
 import { ProjectStructure } from "../../common/src/project/structure.js";
-import path from "path";
 
 const intro = `var global = globalThis;`;
 
