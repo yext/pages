@@ -122,7 +122,7 @@ export const generateTestDataForPage = async (
         // so the user can see it. Its main usage is to allow the user to go through the
         // authentication flow from the parent process.
         const out = lines.join("\n").trim();
-        out && stdout.write(out);
+        out && stdout.write(out + "\n");
       }
     });
 
@@ -133,7 +133,7 @@ export const generateTestDataForPage = async (
           parsedData = JSON.parse(testData.trim());
         } catch (e) {
           stdout.write(
-            `\nUnable to parse test data from command: \`${command}${args.join(
+            `\nUnable to parse test data from command: \`${command} ${args.join(
               " "
             )}\``
           );
@@ -141,7 +141,7 @@ export const generateTestDataForPage = async (
         }
       } else {
         stdout.write(
-          `\nUnable to generate test data from command: \`${command}${args.join(
+          `\nUnable to generate test data from command: \`${command} ${args.join(
             " "
           )}\``
         );
