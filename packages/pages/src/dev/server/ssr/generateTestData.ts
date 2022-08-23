@@ -45,31 +45,24 @@ export const generateTestDataForPage = async (
 ): Promise<any> => {
   const siteStreamPath = path.resolve(
     process.cwd(),
-    projectStructure.sitesConfigRoot + "/" + projectStructure.siteStreamConfig
+    projectStructure.sitesConfigRoot.getAbsolutePath() +
+      "/" +
+      projectStructure.siteStreamConfig
   );
 
+  const featureName = featuresConfig.features[0]?.name;
   const command = "yext";
-  const args = [
-    "pages",
-    "generate-test-data",
-    "--featureName",
-    `'${featuresConfig.features[0]?.name}'`,
-    "--featuresConfig",
-    `'${JSON.stringify(featuresConfig)}'`,
-    "--locale",
-    locale,
-    "--printDocuments",
-  ];
+  let args = addCommonArgs(featuresConfig, featureName, locale);
 
   if (entityId) {
-    args.push("--entityIds", entityId);
+    args = args.concat("--entityIds", entityId);
   }
 
   if (fs.existsSync(siteStreamPath)) {
-    const siteStream = `'${JSON.stringify(
+    const siteStream = prepareJsonForCmd(
       JSON.parse(fs.readFileSync(siteStreamPath).toString())
-    )}'`;
-    args.push("--siteStreamConfig", siteStream);
+    );
+    args = args.concat("--siteStreamConfig", siteStream);
   }
 
   return new Promise((resolve) => {
@@ -141,7 +134,7 @@ export const generateTestDataForPage = async (
         }
       } else {
         stdout.write(
-          `\nUnable to generate test data from command: \`${command}${args.join(
+          `\nUnable to generate test data from command: \`${command} ${args.join(
             " "
           )}\``
         );
@@ -150,4 +143,35 @@ export const generateTestDataForPage = async (
       resolve(parsedData);
     });
   });
+};
+
+const addCommonArgs = (
+  featuresConfig: FeaturesConfig,
+  featureName: string,
+  locale: string
+) => {
+  const args = [
+    "pages",
+    "generate-test-data",
+    "--featureName",
+    `"${featureName}"`,
+    "--featuresConfig",
+    prepareJsonForCmd(featuresConfig),
+    "--locale",
+    locale,
+    "--printDocuments",
+  ];
+  return args;
+};
+
+// We need to specially handle JSON arguemnts when running on windows due to an existing bug/behavior in Powershell where inner quotes are
+// stripped from strings when passed to a third-party program. Read more: https://stackoverflow.com/questions/52822984/powershell-best-way-to-escape-double-quotes-in-string-passed-to-an-external-pro.
+const prepareJsonForCmd = (json: any) => {
+  let jsonString;
+  if (process.platform == "win32") {
+    jsonString = `${JSON.stringify(json).replace(/([\\]*)"/g, `$1$1\\"`)}`;
+  } else {
+    jsonString = `'${JSON.stringify(json)}'`;
+  }
+  return jsonString;
 };
