@@ -116,17 +116,27 @@ export const generateTestDataForPage = async (
     });
 
     childProcess.on("close", () => {
+      let parsedData: any;
       if (testData) {
-        testData = JSON.parse(testData.trim());
+        try {
+          parsedData = JSON.parse(testData.trim());
+        } catch (e) {
+          stdout.write(
+            `\nUnable to parse test data from command: \`${command}${args.join(
+              " "
+            )}\``
+          );
+          resolve(null);
+        }
       } else {
         stdout.write(
-          `Unable to generate test data from command: \`${command} ${args.join(
+          `\nUnable to generate test data from command: \`${command} ${args.join(
             " "
           )}\``
         );
       }
 
-      resolve(testData);
+      resolve(parsedData);
     });
   });
 };
@@ -138,7 +148,7 @@ const addCommonArgs = (
 ) => {
 
   const args = [
-    "sites",
+    "pages",
     "generate-test-data",
     "--featureName",
     `"${featureName}"`,
