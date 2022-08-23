@@ -149,7 +149,7 @@ export class Path {
   }
 
   getRelativePath = (to: string): string => {
-    return `./${pathLib.relative(this.path, to)}`;
+    return pathLib.join(".", pathLib.relative(this.path, to));
   };
 
   getAbsolutePath = (): string => {

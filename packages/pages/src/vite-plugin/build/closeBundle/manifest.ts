@@ -1,5 +1,7 @@
 import fs from "fs-extra";
+import path from "path";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { convertToPosixPath } from "../../../common/src/template/paths.js";
 import { Manifest } from "../../../common/src/template/types.js";
 
 /**
@@ -13,12 +15,15 @@ export const generateManifestFile = (
 ): void => {
   const distRoot = projectStructure.distRoot.getAbsolutePath();
   const relativeBundlePaths = Array.from(featureNameToBundlePath.entries()).map(
-    ([name, path]) => [name, projectStructure.distRoot.getRelativePath(path)]
+    ([name, path]) => [
+      name,
+      convertToPosixPath(projectStructure.distRoot.getRelativePath(path)),
+    ]
   );
 
   let bundlerManifest = Buffer.from("{}");
-  if (fs.existsSync(`${distRoot}/manifest.json`)) {
-    bundlerManifest = fs.readFileSync(`${distRoot}/manifest.json`);
+  if (fs.existsSync(path.join(distRoot, "manifest.json"))) {
+    bundlerManifest = fs.readFileSync(path.join(distRoot, "manifest.json"));
   }
   const manifest: Manifest = {
     bundlePaths: Object.fromEntries(relativeBundlePaths),
@@ -32,10 +37,16 @@ export const generateManifestFile = (
     bundlerManifest: JSON.parse(bundlerManifest.toString()),
   };
 
-  fs.writeFileSync(
-    `${distRoot}/plugin/manifest.json`,
+  writeFile(
+    path.join(distRoot, "plugin", "manifest.json"),
     JSON.stringify(manifest, null, "  ")
   );
 
-  fs.remove(`${distRoot}/manifest.json`);
+  fs.remove(path.join(distRoot, "manifest.json"));
+};
+
+// writeFile ensures that the directory of the filepath exists before writing the file.
+const writeFile = (filepath: string, contents: string) => {
+  fs.mkdirSync(path.dirname(filepath), { recursive: true });
+  fs.writeFileSync(filepath, contents);
 };
