@@ -2,7 +2,7 @@ import { Plugin, UserConfig } from "vite";
 import buildStart from "./buildStart/buildStart.js";
 import closeBundle from "./closeBundle/closeBundle.js";
 import { readdir } from "fs/promises";
-import { parse } from "path";
+import path, { parse } from "path";
 import { InputOption } from "rollup";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 
@@ -62,11 +62,12 @@ const discoverInputs = async (
       const parsedPath = parse(template);
 
       if (parsedPath.ext === ".tsx" || parsedPath.ext === ".jsx") {
-        input[`hydrate/${parsedPath.name}`] =
-          `${hydrationOutputDir}/${template}`.replace("jsx", "tsx");
+        input[`hydrate/${parsedPath.name}`] = path
+          .join(hydrationOutputDir, template)
+          .replace("jsx", "tsx");
       }
 
-      input[`server/${parsedPath.name}`] = `${templateDir}/${template}`;
+      input[`server/${parsedPath.name}`] = path.join(templateDir, template);
       return input;
     },
     {}
