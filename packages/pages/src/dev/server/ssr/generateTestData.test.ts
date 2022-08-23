@@ -135,7 +135,7 @@ describe("generateTestDataForPage", () => {
     // Make sure we write back the expected messages to the parent process.
     expect(mockParentProcessStdout.write).toHaveBeenCalledTimes(1);
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
-      unrecognizedData
+      unrecognizedData + "\n"
     );
   });
 
@@ -164,7 +164,7 @@ describe("generateTestDataForPage", () => {
       UPGRADE_LINES_OF_CLI_BOILERPLATE
     );
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
-      unrecognizedData
+      unrecognizedData + "\n"
     );
   });
 
@@ -219,7 +219,7 @@ describe("generateTestDataForPage", () => {
     // Make sure we write back the expected messages to the parent process.
     expect(mockParentProcessStdout.write).toHaveBeenCalledTimes(2);
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
-      `Generated 2 files for stream "my-stream-id-1"`
+      `Generated 2 files for stream "my-stream-id-1"\n`
     );
   });
 });
