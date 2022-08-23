@@ -45,7 +45,9 @@ export const generateTestDataForPage = async (
 ): Promise<any> => {
   const siteStreamPath = path.resolve(
     process.cwd(),
-    projectStructure.sitesConfigRoot.getAbsolutePath() + "/" + projectStructure.siteStreamConfig
+    projectStructure.sitesConfigRoot.getAbsolutePath() +
+      "/" +
+      projectStructure.siteStreamConfig
   );
 
   const featureName = featuresConfig.features[0]?.name;
@@ -57,7 +59,9 @@ export const generateTestDataForPage = async (
   }
 
   if (fs.existsSync(siteStreamPath)) {
-    const siteStream = prepareJsonForCmd(JSON.parse(fs.readFileSync(siteStreamPath).toString()))
+    const siteStream = prepareJsonForCmd(
+      JSON.parse(fs.readFileSync(siteStreamPath).toString())
+    );
     args = args.concat("--siteStreamConfig", siteStream);
   }
 
@@ -146,7 +150,6 @@ const addCommonArgs = (
   featureName: string,
   locale: string
 ) => {
-
   const args = [
     "pages",
     "generate-test-data",
@@ -166,9 +169,9 @@ const addCommonArgs = (
 const prepareJsonForCmd = (json: any) => {
   let jsonString;
   if (process.platform == "win32") {
-    jsonString = `${JSON.stringify(json).replace(/([\\]*)"/g, `$1$1\\"`)}`
+    jsonString = `${JSON.stringify(json).replace(/([\\]*)"/g, `$1$1\\"`)}`;
   } else {
     jsonString = `'${JSON.stringify(json)}'`;
   }
-  return jsonString
-}
+  return jsonString;
+};
