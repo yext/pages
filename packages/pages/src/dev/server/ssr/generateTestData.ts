@@ -45,22 +45,20 @@ export const generateTestDataForPage = async (
 ): Promise<any> => {
   const siteStreamPath = path.resolve(
     process.cwd(),
-    projectStructure.sitesConfigRoot + "/" + projectStructure.siteStreamConfig
+    projectStructure.sitesConfigRoot.getAbsolutePath() + "/" + projectStructure.siteStreamConfig
   );
 
   const featureName = featuresConfig.features[0]?.name;
   const command = "yext";
-  const args = addCommonArgs(featuresConfig, featureName, locale);
+  let args = addCommonArgs(featuresConfig, featureName, locale);
 
   if (entityId) {
-    args.push("--entityIds", entityId);
+    args = args.concat("--entityIds", entityId);
   }
 
   if (fs.existsSync(siteStreamPath)) {
-    const siteStream = `'${JSON.stringify(
-      JSON.parse(fs.readFileSync(siteStreamPath).toString())
-    )}'`;
-    args.push("--siteStreamConfig", siteStream);
+    const siteStream = prepareJsonForCmd(JSON.parse(fs.readFileSync(siteStreamPath).toString()))
+    args = args.concat("--siteStreamConfig", siteStream);
   }
 
   return new Promise((resolve) => {
@@ -138,14 +136,6 @@ const addCommonArgs = (
   featureName: string,
   locale: string
 ) => {
-  // We need to specially handle the JSON when running on windows due to an existing bug/behavior in Powershell where inner quotes are
-  // stripped from strings when passed to a third-party program. Read more: https://stackoverflow.com/questions/52822984/powershell-best-way-to-escape-double-quotes-in-string-passed-to-an-external-pro.
-  let jsonConfig;
-  if (process.platform == "win32") {
-    jsonConfig = `"${JSON.stringify(featuresConfig).replaceAll(`"`, `\\"`)}"`;
-  } else {
-    jsonConfig = `'${JSON.stringify(featuresConfig)}'`;
-  }
 
   const args = [
     "sites",
@@ -153,10 +143,22 @@ const addCommonArgs = (
     "--featureName",
     `"${featureName}"`,
     "--featuresConfig",
-    jsonConfig,
+    prepareJsonForCmd(featuresConfig),
     "--locale",
     locale,
     "--printDocuments",
   ];
   return args;
 };
+
+// We need to specially handle JSON arguemnts when running on windows due to an existing bug/behavior in Powershell where inner quotes are
+// stripped from strings when passed to a third-party program. Read more: https://stackoverflow.com/questions/52822984/powershell-best-way-to-escape-double-quotes-in-string-passed-to-an-external-pro.
+const prepareJsonForCmd = (json: any) => {
+  let jsonString;
+  if (process.platform == "win32") {
+    jsonString = `${JSON.stringify(json).replace(/([\\]*)"/g, `$1$1\\"`)}`
+  } else {
+    jsonString = `'${JSON.stringify(json)}'`;
+  }
+  return jsonString
+}
