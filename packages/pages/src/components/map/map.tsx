@@ -3,7 +3,7 @@ import classnames from "classnames";
 import { GoogleMaps, Map as MapType, MapOptions } from "@yext/components-tsx-maps";
 import { Coordinate, GeoBounds } from "@yext/components-tsx-geo";
 import { MapProps, MapContextType } from "./types";
-import "./map.css";
+import css from "./map.module.css";
 
 export const MapContext = createContext<MapContextType | null>(null);
 
@@ -100,11 +100,10 @@ export const Map = ({
   }, []);
 
   return (
-    // TODO: remove dir-map
     <div
       className={classnames({
         'is-loaded': loaded,
-      }, 'dir-map', className)}
+      }, css.Map, className)}
       id="map"
       ref={wrapper}
       data-testid="map"

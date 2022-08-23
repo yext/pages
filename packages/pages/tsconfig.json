@@ -15,6 +15,6 @@
     "target": "ESNext",
     "types": ["vite/client", "jest", "node"]
   },
-  "include": ["src"],
+  "include": ["src", "index.d.ts"],
   "exclude": ["src/bundler.js", "src/bin/pages.sh", "node_modules"]
 }

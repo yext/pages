@@ -1,14 +1,10 @@
 /* TODO: replace with tailwind once setup */
-.dir-map {
+.Map {
   width: 675px;
   height: 375px;
 }
 
-.sr-only {
-  visibility: hidden;
-}
-
-button {
+.Map button {
   border: 0;
   border-radius: 0;
   color: inherit;
