@@ -15,7 +15,11 @@ describe("Link", () => {
   });
 
   it("renders component when given full cta prop and no children", () => {
-    render(<Link cta={{ link: "https://yext.com", label: "Click Me", linkType: "URL" }} />);
+    render(
+      <Link
+        cta={{ link: "https://yext.com", label: "Click Me", linkType: "URL" }}
+      />
+    );
   });
 
   it("renders component when given full cta prop and no children", () => {
