@@ -24,7 +24,7 @@ const simpleImage = {
   width: imgWidth,
   height: imgHeight,
   url: `https://a.mktgcdn.com/p/${imgUUID}/2x1.jpg`,
-}
+};
 const image = {
   image: simpleImage,
 };
@@ -47,7 +47,10 @@ describe("Image", () => {
 
     expect(screen.getByRole("img").style.objectFit).toEqual(overrideObjectFit);
     expect(screen.getByRole("img")).toHaveProperty("src", overrideSrc);
-    expect(screen.getByRole("img")).toHaveProperty("alt", image.image.alternateText);
+    expect(screen.getByRole("img")).toHaveProperty(
+      "alt",
+      image.image.alternateText
+    );
   });
 
   it("properly renders non-complex image field", () => {
@@ -67,7 +70,10 @@ describe("Image", () => {
 
     expect(screen.getByRole("img").style.objectFit).toEqual(overrideObjectFit);
     expect(screen.getByRole("img")).toHaveProperty("src", overrideSrc);
-    expect(screen.getByRole("img")).toHaveProperty("alt", simpleImage.alternateText);
+    expect(screen.getByRole("img")).toHaveProperty(
+      "alt",
+      simpleImage.alternateText
+    );
   });
 
   it("properly renders the placeholder before the image is loaded", () => {
@@ -90,7 +96,9 @@ describe("Image", () => {
     const placeholderText = "Placeholder";
     const placeholder = <div>{placeholderText}</div>;
 
-  const logMock = jest.spyOn(console, "error").mockImplementation(() => {/* do nothing */});
+    const logMock = jest.spyOn(console, "error").mockImplementation(() => {
+      /* do nothing */
+    });
     const invalidUrl = "https://a.mktgcdn.com/p/2x1.jpg";
 
     expect(logMock.mock.calls.length).toBe(0);
@@ -112,7 +120,9 @@ describe("Image", () => {
   });
 
   it("renders nothing if image's UUID is invalid and a placeholder is not provided", () => {
-  const logMock = jest.spyOn(console, "error").mockImplementation(() => {/* do nothing */});
+    const logMock = jest.spyOn(console, "error").mockImplementation(() => {
+      /* do nothing */
+    });
     const invalidUrl = "https://a.mktgcdn.com/p/2x1.jpg";
 
     expect(logMock.mock.calls.length).toBe(0);
@@ -177,7 +187,9 @@ describe("getImageUUID", () => {
   });
 
   it("properly logs error when image url is invalid", () => {
-    const logMock = jest.spyOn(console, "error").mockImplementation(() => {/* do nothing */});
+    const logMock = jest.spyOn(console, "error").mockImplementation(() => {
+      /* do nothing */
+    });
     let invalidUrl = "https://a.mktgcdn.com/p/1300x872.jpg";
 
     expect(logMock.mock.calls.length).toBe(0);
@@ -280,7 +292,9 @@ describe("handleLayout", () => {
 
 describe("validateRequiredProps", () => {
   it(`properly logs warning when layout is not ${ImageLayoutOption.FIXED} and width or height is provided`, () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {/* do nothing */});
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {
+      /* do nothing */
+    });
 
     expect(logMock.mock.calls.length).toBe(0);
     validateRequiredProps(
@@ -299,7 +313,9 @@ describe("validateRequiredProps", () => {
   });
 
   it(`properly logs warning when layout is ${ImageLayoutOption.FIXED} and neither width nor height is provided`, () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {/* do nothing */});
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {
+      /* do nothing */
+    });
 
     expect(logMock.mock.calls.length).toBe(0);
 
@@ -320,7 +336,9 @@ describe("validateRequiredProps", () => {
   });
 
   it(`properly logs warning when layout is ${ImageLayoutOption.FIXED} and width is a negative value`, () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {/* do nothing */});
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {
+      /* do nothing */
+    });
     const invalidWidth = -100;
 
     expect(logMock.mock.calls.length).toBe(0);
@@ -342,7 +360,9 @@ describe("validateRequiredProps", () => {
   });
 
   it(`properly logs warning when layout is ${ImageLayoutOption.ASPECT} and aspectRatio is not provided`, () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {/* do nothing */});
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {
+      /* do nothing */
+    });
 
     expect(logMock.mock.calls.length).toBe(0);
 
@@ -363,7 +383,9 @@ describe("validateRequiredProps", () => {
   });
 
   it(`properly logs warning when image.width is a negative value`, () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {/* do nothing */});
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {
+      /* do nothing */
+    });
     const invalidImgWidth = -100;
 
     expect(logMock.mock.calls.length).toBe(0);

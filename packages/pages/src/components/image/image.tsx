@@ -88,7 +88,7 @@ export const Image = ({
         height={absHeight}
         srcSet={srcSet}
         loading={"lazy"}
-        alt={imageData.alternateText || ''}
+        alt={imageData.alternateText || ""}
         {...imgOverrides}
       />
     </>
