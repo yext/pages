@@ -1,3 +1,4 @@
+import { MouseEvent } from "react";
 import { TemplateProps } from "../../common/src/template/types";
 import { getRuntime, isProduction } from "../../util";
 import { AnalyticsMethods } from "./interfaces";
@@ -179,7 +180,7 @@ export class Analytics implements AnalyticsMethods {
   trackClick(
     eventName: string,
     conversionData?: ConversionDetails
-  ): (e: MouseEvent) => Promise<void> {
+  ): (e: MouseEvent<HTMLAnchorElement>) => Promise<void> {
     return (e: MouseEvent) => {
       if (!this.canTrack()) {
         return Promise.resolve();

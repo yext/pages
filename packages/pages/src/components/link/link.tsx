@@ -1,5 +1,8 @@
+import { ConversionDetails } from "@yext/analytics";
 import React, { useState } from "react";
 import classNames from "classnames";
+import { AnalyticsContext, useAnalytics } from "../analytics";
+import { AnalyticsMethods } from "../analytics/interfaces";
 import { getHref, isEmail, reverse } from "./methods";
 import type { CTA } from "./types";
 
@@ -14,6 +17,8 @@ interface LinkConfig
     HTMLAnchorElement
   > {
   obfuscate?: boolean;
+  eventName?: string;
+  conversionDetails?: ConversionDetails|undefined;
 }
 
 /**
@@ -86,19 +91,31 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     const { children, onClick, className, ...rest } = props;
     const link: CTA = isHREFProps(props) ? { link: props.href } : props.cta;
 
+    let trackEvent: string|null;
+    let analytics: AnalyticsMethods|null;
+
+    if (AnalyticsContext !== null) {
+      trackEvent = props.eventName || props.cta ? "cta" : "link";
+      analytics = useAnalytics();
+    }
+
     const obfuscate =
       props.obfuscate || (props.obfuscate !== false && isEmail(link.link));
     const [humanInteraction, setHumanInteraction] = useState<boolean>(false);
 
-    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
       setHumanInteraction(true);
+      if (trackEvent) {
+        await analytics?.trackClick(trackEvent, props.conversionDetails)(e);
+      }
+
       if (onClick) {
         onClick(e);
       }
     };
 
     const useLinkAsLabel = !children && !link.label;
-    const isObfuscate = !humanInteraction && obfuscate !== false;
+    const isObfuscate = !humanInteraction && obfuscate;
     const obfuscatedStyle: React.CSSProperties = {
       ...props.style,
       unicodeBidi: "bidi-override",
