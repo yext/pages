@@ -5,6 +5,7 @@ import {
 } from "./types.js";
 import esbuild from "esbuild";
 import { importFromString } from "module-from-string";
+import { pathToFileURL } from "url";
 
 const TEMP_DIR = ".temp";
 
@@ -37,7 +38,9 @@ export const loadTemplateModules = async (
           buildResult.outputFiles[0].text
         );
       } else {
-        templateModule = await import(templateModulePath);
+        templateModule = await import(
+          pathToFileURL(templateModulePath).toString()
+        );
       }
     } catch (e) {
       throw new Error(`Could not import ${templateModulePath} ${e}`);
