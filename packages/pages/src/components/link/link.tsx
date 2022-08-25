@@ -88,16 +88,11 @@ function isHREFProps(props: LinkProps): props is HREFLinkProps {
  */
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
   function Link(props, ref) {
-    const { children, onClick, className, ...rest } = props;
+    const { children, onClick, className, eventName, ...rest } = props;
     const link: CTA = isHREFProps(props) ? { link: props.href } : props.cta;
 
-    let trackEvent: string|null;
-    let analytics: AnalyticsMethods|null;
-
-    if (AnalyticsContext !== null) {
-      trackEvent = props.eventName || props.cta ? "cta" : "link";
-      analytics = useAnalytics();
-    }
+    const trackEvent = eventName ? eventName : (props.cta ? "cta" : "link");
+    const analytics = useAnalytics();
 
     const obfuscate =
       props.obfuscate || (props.obfuscate !== false && isEmail(link.link));
@@ -105,8 +100,8 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
 
     const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
       setHumanInteraction(true);
-      if (trackEvent) {
-        await analytics?.trackClick(trackEvent, props.conversionDetails)(e);
+      if (analytics !== null) {
+        await analytics.trackClick(trackEvent, props.conversionDetails)(e);
       }
 
       if (onClick) {

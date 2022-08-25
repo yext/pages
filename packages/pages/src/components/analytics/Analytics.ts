@@ -221,7 +221,7 @@ export class Analytics implements AnalyticsMethods {
       e.preventDefault();
 
       const navigate = () => {
-        window.location.href = linkUrl.toString();
+        window.location.assign(linkUrl);
       };
 
       const awaitTimeout = new Promise<void>((resolve) => {
