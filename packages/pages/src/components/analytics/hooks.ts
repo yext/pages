@@ -19,7 +19,7 @@ declare global {
  *
  * @public
  */
-export function useAnalytics(): AnalyticsMethods|null {
+export function useAnalytics(): AnalyticsMethods | null {
   const ctx = useContext(AnalyticsContext);
 
   if (!ctx) {

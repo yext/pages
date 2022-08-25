@@ -18,7 +18,7 @@ interface LinkConfig
   > {
   obfuscate?: boolean;
   eventName?: string;
-  conversionDetails?: ConversionDetails|undefined;
+  conversionDetails?: ConversionDetails | undefined;
 }
 
 /**
@@ -91,7 +91,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     const { children, onClick, className, eventName, ...rest } = props;
     const link: CTA = isHREFProps(props) ? { link: props.href } : props.cta;
 
-    const trackEvent = eventName ? eventName : (props.cta ? "cta" : "link");
+    const trackEvent = eventName ? eventName : props.cta ? "cta" : "link";
     const analytics = useAnalytics();
 
     const obfuscate =

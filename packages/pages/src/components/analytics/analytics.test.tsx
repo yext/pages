@@ -10,7 +10,6 @@ import { AnalyticsProvider } from "./provider";
 import { useAnalytics } from "./hooks";
 import { AnalyticsScopeProvider } from "./scope";
 
-
 // The following section of mocks just exists to supress an error that occurs
 // because jest does not implement a window.location.navigate.  See:
 // https://www.benmvp.com/blog/mocking-window-location-methods-jest-jsdom/
@@ -31,7 +30,7 @@ beforeAll(() => {
       assign: {
         configurable: true,
         value: jest.fn(),
-      }
+      },
     }
   );
 
@@ -105,7 +104,9 @@ describe("Analytics", () => {
   it("should track a click", () => {
     render(
       <AnalyticsProvider templateData={baseProps} requireOptIn={false}>
-        <Link href="https://yext.com" onClick={e => e.preventDefault()} >Click Me</Link>
+        <Link href="https://yext.com" onClick={(e) => e.preventDefault()}>
+          Click Me
+        </Link>
       </AnalyticsProvider>
     );
 
@@ -113,7 +114,7 @@ describe("Analytics", () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const callstack = global.fetch.mock.calls;
-    const generatedUrlStr = callstack[callstack.length-1][0];
+    const generatedUrlStr = callstack[callstack.length - 1][0];
     const generatedUrl = new URL(generatedUrlStr);
     expect(generatedUrl.searchParams.get("eventType")).toBe("link");
   });
@@ -130,7 +131,9 @@ describe("Analytics", () => {
               <Link cta={{ link: "https://yext.com" }}>two</Link>
             </AnalyticsScopeProvider>
           </AnalyticsScopeProvider>
-          <Link href="https://yext.com" eventName={"fooclick"}>three</Link>
+          <Link href="https://yext.com" eventName={"fooclick"}>
+            three
+          </Link>
         </AnalyticsProvider>
       );
     };
@@ -177,11 +180,13 @@ describe("Analytics", () => {
     const expectedConversionData = { cid: "123456", cv: "10" };
 
     const MyButton = () => {
-      const analytics = useAnalytics()
+      const analytics = useAnalytics();
       analytics?.enableTrackingCookie();
       return (
         <button
-          onClick={async () => await analytics?.track("foo click", expectedConversionData)}
+          onClick={async () =>
+            await analytics?.track("foo click", expectedConversionData)
+          }
         />
       );
     };
