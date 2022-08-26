@@ -11,8 +11,11 @@ class Runtime {
       this.version = navigator.userAgent;
     } else {
       this.name = "deno";
-      // @ts-ignore
-      this.version = window?.Deno?.version.deno || "";
+      this.version = "";
+      if (typeof window !== "undefined") {
+        // @ts-ignore
+        this.version = window?.Deno?.version.deno || "";
+      }
     }
   }
 
