@@ -1,13 +1,7 @@
 import { getHref, isEmail, reverse } from "./methods";
-
-enum LinkType {
-  URL = "URL",
-  Email = "Email",
-  Phone = "Phone",
-}
+import { LinkType } from "./types";
 
 // getHref
-
 test("getHref: Url type", () => {
   expect(
     getHref({
