@@ -9,6 +9,7 @@ import {
   loadTemplateModules,
   TemplateModuleCollection,
 } from "../../../common/src/template/internal/loader.js";
+import { createFeaturesJson } from "../../../generate/features.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -30,6 +31,16 @@ export default (projectStructure: ProjectStructure) => {
       return;
     }
 
+    finisher = logger.timedLog({ startLog: "Writing features.json" });
+    try {
+      createFeaturesJson(templateModules, path.join("./sites-config/features.json"));
+      finisher.succeed("Successfully wrote features.json");
+    } catch (e: any) {
+      finisher.fail("Failed to write features.json");
+      console.error(colors.red(e.message));
+      return;
+    }
+
     finisher = logger.timedLog({ startLog: "Writing manifest.json" });
     try {
       await generateManifestFile(templateModules, projectStructure);
@@ -37,6 +48,7 @@ export default (projectStructure: ProjectStructure) => {
     } catch (e: any) {
       finisher.fail("Failed to write manifest.json");
       console.error(colors.red(e.message));
+      return;
     }
   };
 };
