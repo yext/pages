@@ -33,7 +33,10 @@ export default (projectStructure: ProjectStructure) => {
 
     finisher = logger.timedLog({ startLog: "Writing features.json" });
     try {
-      createFeaturesJson(templateModules, path.join("./sites-config/features.json"));
+      createFeaturesJson(
+        templateModules,
+        path.join("./sites-config/features.json")
+      );
       finisher.succeed("Successfully wrote features.json");
     } catch (e: any) {
       finisher.fail("Failed to write features.json");
