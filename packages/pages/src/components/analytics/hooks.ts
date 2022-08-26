@@ -1,5 +1,6 @@
 import { ConversionDetails, Visitor } from "@yext/analytics";
 import { useContext } from "react";
+import { getRuntime } from "../../util";
 import { AnalyticsContext } from "./context";
 import { concatScopes } from "./helpers";
 import { AnalyticsMethods } from "./interfaces";
@@ -28,7 +29,7 @@ export function useAnalytics(): AnalyticsMethods {
   }
 
   // TODO: is this the right way / place to expose a callback for use by a Cookie Management banner?
-  if (!window.setAnalyticsOptIn) {
+  if (getRuntime().name === "browser" && !window.setAnalyticsOptIn) {
     window.setAnalyticsOptIn = async () => {
       await ctx.optIn();
     };
