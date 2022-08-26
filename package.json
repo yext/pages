@@ -31,12 +31,12 @@
   "homepage": "https://github.com/yext/pages#readme",
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
-    "@types/lodash": "^4.14.182",
+    "@types/lodash": "^4.14.184",
     "@types/minimist": "^1.2.2",
     "@types/prompts": "^2.4.0",
-    "@types/semver": "^7.3.10",
+    "@types/semver": "^7.3.12",
     "conventional-changelog-cli": "^2.2.2",
-    "eslint": "^8.21.0",
+    "eslint": "^8.22.0",
     "execa": "^6.1.0",
     "fs-extra": "^10.1.0",
     "generate-license-file": "^1.3.0",
@@ -45,7 +45,7 @@
     "prettier": "^2.7.1",
     "prompts": "^2.4.2",
     "semver": "^7.3.7",
-    "tsx": "^3.8.0"
+    "tsx": "^3.8.2"
   },
   "packageManager": "pnpm@7.5.0"
 }
