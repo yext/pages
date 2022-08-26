@@ -1,5 +1,5 @@
 import { ConversionDetails, Visitor } from "@yext/analytics";
-import { useContext } from "react";
+import { MouseEvent, useContext } from "react";
 import { getRuntime } from "../../util";
 import { AnalyticsContext } from "./context";
 import { concatScopes } from "./helpers";
@@ -20,12 +20,11 @@ declare global {
  *
  * @public
  */
-export function useAnalytics(): AnalyticsMethods {
+export function useAnalytics(): AnalyticsMethods | null {
   const ctx = useContext(AnalyticsContext);
+
   if (!ctx) {
-    throw new Error(
-      "Attempted to call useAnalytics outside of an AnalyticsProvider"
-    );
+    return ctx;
   }
 
   // TODO: is this the right way / place to expose a callback for use by a Cookie Management banner?
@@ -42,7 +41,7 @@ export function useAnalytics(): AnalyticsMethods {
     trackClick(
       eventName: string,
       conversionData?: ConversionDetails
-    ): (e: MouseEvent) => Promise<void> {
+    ): (e: MouseEvent<HTMLAnchorElement>) => Promise<void> {
       return ctx.trackClick(concatScopes(scope, eventName), conversionData);
     },
     setDebugEnabled(enabled: boolean): void {
@@ -75,7 +74,7 @@ export function useAnalytics(): AnalyticsMethods {
  * @public
  */
 export const useTrack = () => {
-  return useAnalytics().track;
+  return useAnalytics()?.track;
 };
 
 /**
@@ -84,7 +83,7 @@ export const useTrack = () => {
  * @public
  */
 export const usePageView = () => {
-  return useAnalytics().pageView;
+  return useAnalytics()?.pageView;
 };
 
 /**
@@ -93,5 +92,5 @@ export const usePageView = () => {
  * @public
  */
 export const useIdentify = () => {
-  return useAnalytics().identify;
+  return useAnalytics()?.identify;
 };
