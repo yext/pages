@@ -12,17 +12,30 @@ export type ThumbnailType = {
 };
 
 /**
- * The type definition for an image.
+ * The type definition for a complex image.
  *
  * @public
  */
-export type ImageType = {
+export type ComplexImageType = {
   image: {
+    alternateText?: string;
     height: number;
     width: number;
     url: string;
     thumbnails?: ThumbnailType[];
   };
+};
+
+/**
+ * The type definition for an image.
+ *
+ * @public
+ */
+export type ImageType = {
+  alternateText?: string;
+  height: number;
+  width: number;
+  url: string;
 };
 
 /**
@@ -62,7 +75,7 @@ export type ImageLayout =
  */
 interface BaseImageProps {
   /** The image field from Knowledge Graph. */
-  image: ImageType;
+  image: ComplexImageType | ImageType;
   /** Overrides the className on the underlying img tag. */
   className?: string;
   /** Specifies how the image is rendered. */
@@ -76,7 +89,7 @@ interface BaseImageProps {
   /** A pass through react component that is displayed when the image is loading. */
   placeholder?: React.ReactNode;
   /** Pass through props that are on the native HTML img tag. The Image component may not work if src and/or srcsets are included. */
-  imgOverrides?: Object;
+  imgOverrides?: Record<string, unknown>;
   /** The pass through style of the underlying img tag. */
   style?: React.CSSProperties;
 }

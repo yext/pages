@@ -19,12 +19,14 @@ const width = 200;
 const height = 100;
 const widths = [100, 200, 300];
 const aspectRatio = 1;
+const simpleImage = {
+  alternateText: "alt text",
+  width: imgWidth,
+  height: imgHeight,
+  url: `https://a.mktgcdn.com/p/${imgUUID}/2x1.jpg`,
+};
 const image = {
-  image: {
-    width: imgWidth,
-    height: imgHeight,
-    url: `https://a.mktgcdn.com/p/${imgUUID}/2x1.jpg`,
-  },
+  image: simpleImage,
 };
 
 describe("Image", () => {
@@ -45,9 +47,36 @@ describe("Image", () => {
 
     expect(screen.getByRole("img").style.objectFit).toEqual(overrideObjectFit);
     expect(screen.getByRole("img")).toHaveProperty("src", overrideSrc);
+    expect(screen.getByRole("img")).toHaveProperty(
+      "alt",
+      image.image.alternateText
+    );
   });
 
-  it("properly renders the placeholder before the image is loaded", async () => {
+  it("properly renders non-complex image field", () => {
+    const overrideSrc = "https://overridesrc/";
+    const overrideObjectFit = "none";
+
+    render(
+      <Image
+        image={simpleImage}
+        layout={ImageLayoutOption.FIXED}
+        width={width}
+        height={height}
+        style={{ objectFit: overrideObjectFit }}
+        imgOverrides={{ src: overrideSrc }}
+      />
+    );
+
+    expect(screen.getByRole("img").style.objectFit).toEqual(overrideObjectFit);
+    expect(screen.getByRole("img")).toHaveProperty("src", overrideSrc);
+    expect(screen.getByRole("img")).toHaveProperty(
+      "alt",
+      simpleImage.alternateText
+    );
+  });
+
+  it("properly renders the placeholder before the image is loaded", () => {
     const placeholderText = "Placeholder";
     const placeholder = <div>{placeholderText}</div>;
     const onLoad = jest.fn();
@@ -63,11 +92,13 @@ describe("Image", () => {
     expect(screen.getByText(placeholderText)).toBeTruthy();
   });
 
-  it("properly renders the placeholder if image's UUID is invalid and a placeholder is provided", async () => {
+  it("properly renders the placeholder if image's UUID is invalid and a placeholder is provided", () => {
     const placeholderText = "Placeholder";
     const placeholder = <div>{placeholderText}</div>;
 
-    const logMock = jest.spyOn(console, "error").mockImplementation(() => {});
+    const logMock = jest.spyOn(console, "error").mockImplementation(() => {
+      /* do nothing */
+    });
     const invalidUrl = "https://a.mktgcdn.com/p/2x1.jpg";
 
     expect(logMock.mock.calls.length).toBe(0);
@@ -88,8 +119,10 @@ describe("Image", () => {
     jest.clearAllMocks();
   });
 
-  it("renders nothing if image's UUID is invalid and a placeholder is not provided", async () => {
-    const logMock = jest.spyOn(console, "error").mockImplementation(() => {});
+  it("renders nothing if image's UUID is invalid and a placeholder is not provided", () => {
+    const logMock = jest.spyOn(console, "error").mockImplementation(() => {
+      /* do nothing */
+    });
     const invalidUrl = "https://a.mktgcdn.com/p/2x1.jpg";
 
     expect(logMock.mock.calls.length).toBe(0);
@@ -154,7 +187,9 @@ describe("getImageUUID", () => {
   });
 
   it("properly logs error when image url is invalid", () => {
-    const logMock = jest.spyOn(console, "error").mockImplementation(() => {});
+    const logMock = jest.spyOn(console, "error").mockImplementation(() => {
+      /* do nothing */
+    });
     let invalidUrl = "https://a.mktgcdn.com/p/1300x872.jpg";
 
     expect(logMock.mock.calls.length).toBe(0);
@@ -256,8 +291,10 @@ describe("handleLayout", () => {
 });
 
 describe("validateRequiredProps", () => {
-  it(`properly logs warning when layout is not ${ImageLayoutOption.FIXED} and width or height is provided`, async () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+  it(`properly logs warning when layout is not ${ImageLayoutOption.FIXED} and width or height is provided`, () => {
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {
+      /* do nothing */
+    });
 
     expect(logMock.mock.calls.length).toBe(0);
     validateRequiredProps(
@@ -275,8 +312,10 @@ describe("validateRequiredProps", () => {
     jest.clearAllMocks();
   });
 
-  it(`properly logs warning when layout is ${ImageLayoutOption.FIXED} and neither width nor height is provided`, async () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+  it(`properly logs warning when layout is ${ImageLayoutOption.FIXED} and neither width nor height is provided`, () => {
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {
+      /* do nothing */
+    });
 
     expect(logMock.mock.calls.length).toBe(0);
 
@@ -296,8 +335,10 @@ describe("validateRequiredProps", () => {
     jest.clearAllMocks();
   });
 
-  it(`properly logs warning when layout is ${ImageLayoutOption.FIXED} and width is a negative value`, async () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+  it(`properly logs warning when layout is ${ImageLayoutOption.FIXED} and width is a negative value`, () => {
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {
+      /* do nothing */
+    });
     const invalidWidth = -100;
 
     expect(logMock.mock.calls.length).toBe(0);
@@ -319,7 +360,9 @@ describe("validateRequiredProps", () => {
   });
 
   it(`properly logs warning when layout is ${ImageLayoutOption.ASPECT} and aspectRatio is not provided`, () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {
+      /* do nothing */
+    });
 
     expect(logMock.mock.calls.length).toBe(0);
 
@@ -340,7 +383,9 @@ describe("validateRequiredProps", () => {
   });
 
   it(`properly logs warning when image.width is a negative value`, () => {
-    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {});
+    const logMock = jest.spyOn(console, "warn").mockImplementation(() => {
+      /* do nothing */
+    });
     const invalidImgWidth = -100;
 
     expect(logMock.mock.calls.length).toBe(0);

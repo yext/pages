@@ -31,6 +31,8 @@ export const Image = ({
   const imgRef = useRef<HTMLImageElement>(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
+  const imageData = "image" in image ? image.image : image;
+
   useEffect(() => {
     if (imgRef.current?.complete) {
       setIsImageLoaded(true);
@@ -39,16 +41,16 @@ export const Image = ({
 
   validateRequiredProps(
     layout,
-    image.image.width,
-    image.image.height,
+    imageData.width,
+    imageData.height,
     width,
     height,
     aspectRatio
   );
 
-  const imgWidth = Math.abs(image.image.width);
-  const imgHeight = Math.abs(image.image.height);
-  const imgUUID = getImageUUID(image.image.url);
+  const imgWidth = Math.abs(imageData.width);
+  const imgHeight = Math.abs(imageData.height);
+  const imgUUID = getImageUUID(imageData.url);
 
   // The image is invalid, only try to load the placeholder
   if (!imgUUID) {
@@ -86,6 +88,7 @@ export const Image = ({
         height={absHeight}
         srcSet={srcSet}
         loading={"lazy"}
+        alt={imageData.alternateText || ""}
         {...imgOverrides}
       />
     </>
