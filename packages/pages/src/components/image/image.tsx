@@ -74,7 +74,10 @@ export const Image = ({
 
   // Generate Image Sourceset
   const srcSet: string = widths
-    .map((w) => `${getImageUrl(imgUUID, w, (imgHeight / imgWidth) * w, imgEnv)} ${w}w`)
+    .map(
+      (w) =>
+        `${getImageUrl(imgUUID, w, (imgHeight / imgWidth) * w, imgEnv)} ${w}w`
+    )
     .join(", ");
 
   return (
