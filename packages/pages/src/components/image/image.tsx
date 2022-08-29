@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { ImageProps, ImageLayout, ImageLayoutOption } from "./types";
 
 const MKTGCDN_URL_REGEX =
-  /(https?:\/\/a.mktgcdn.com\/p(-sandbox|-qa|-dev)?\/)(?<uuid>.+)\/(.*)/;
+  /(https?:\/\/a.mktgcdn.com\/p(?<env>-sandbox|-qa|-dev)?\/)(?<uuid>.+)\/(.*)/;
 
 /**
  * Renders an image based from the Yext Knowledge Graph. Example of using the component to render
@@ -51,6 +51,7 @@ export const Image = ({
   const imgWidth = Math.abs(imageData.width);
   const imgHeight = Math.abs(imageData.height);
   const imgUUID = getImageUUID(imageData.url);
+  const imgEnv = getImageEnv(imageData.url);
 
   // The image is invalid, only try to load the placeholder
   if (!imgUUID) {
@@ -73,7 +74,7 @@ export const Image = ({
 
   // Generate Image Sourceset
   const srcSet: string = widths
-    .map((w) => `${getImageUrl(imgUUID, w, (imgHeight / imgWidth) * w)} ${w}w`)
+    .map((w) => `${getImageUrl(imgUUID, w, (imgHeight / imgWidth) * w, imgEnv)} ${w}w`)
     .join(", ");
 
   return (
@@ -160,12 +161,27 @@ export const getImageUUID = (url: string) => {
 };
 
 /**
+ * Returns the environment suffix for a url's bucket, if present.
+ */
+export const getImageEnv = (url: string): string | undefined => {
+  const matches = url.match(MKTGCDN_URL_REGEX);
+
+  return matches?.groups?.env;
+};
+
+/**
  * Returns the image url given its uuid, width and height.
  */
-export const getImageUrl = (uuid: string, width: number, height: number) => {
-  return `https://dynl.mktgcdn.com/p/${uuid}/${Math.round(width)}x${Math.round(
-    height
-  )}`;
+export const getImageUrl = (
+  uuid: string,
+  width: number,
+  height: number,
+  env?: string
+) => {
+  const bucket = env ? `p${env}` : "p";
+  return `https://dynl.mktgcdn.com/${bucket}/${uuid}/${Math.round(
+    width
+  )}x${Math.round(height)}`;
 };
 
 /**

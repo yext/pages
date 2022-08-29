@@ -11,6 +11,7 @@ import {
 } from "./image";
 import { ImageLayoutOption } from "./types";
 import { render, screen } from "@testing-library/react";
+import { getImageEnv } from "./image";
 
 const imgWidth = 20;
 const imgHeight = 10;
@@ -184,6 +185,33 @@ describe("getImageUUID", () => {
     expect(getImageUUID("")).toBe("");
 
     jest.clearAllMocks();
+  });
+
+  describe("getImageEnv", () => {
+    it("properly extracts the image env", () => {
+      expect(
+        getImageEnv(
+          "http://a.mktgcdn.com/p/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
+        )
+      ).toBe(undefined);
+      expect(
+        getImageEnv(
+          "https://a.mktgcdn.com/p-sandbox/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo/"
+        )
+      ).toBe("-sandbox");
+      expect(
+        getImageEnv(
+          "http://a.mktgcdn.com/p-qa/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
+        )
+      ).toBe("-qa");
+      expect(
+        getImageEnv(
+          "http://a.mktgcdn.com/p-dev/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
+        )
+      ).toBe("-dev");
+
+      jest.clearAllMocks();
+    });
   });
 
   it("properly logs error when image url is invalid", () => {
