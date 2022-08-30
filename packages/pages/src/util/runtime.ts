@@ -1,14 +1,22 @@
 class Runtime {
   name: "node" | "deno" | "browser";
+  /**
+   * Whether or not the current runtime is being executed server-side or client-side. If the runtime
+   * is node or deno then isServerSide will be true. When the runtime is browser isServerSide is
+   * false.
+   */
+  isServerSide: boolean;
   version: string;
 
   constructor() {
     if (typeof process !== "undefined") {
       this.name = "node";
       this.version = process.versions.node;
+      this.isServerSide = true;
     } else if (typeof window !== "undefined" && !("Deno" in window)) {
       this.name = "browser";
       this.version = navigator.userAgent;
+      this.isServerSide = false;
     } else {
       this.name = "deno";
       this.version = "";
@@ -16,6 +24,7 @@ class Runtime {
         // @ts-ignore
         this.version = window?.Deno?.version.deno || "";
       }
+      this.isServerSide = true;
     }
   }
 
