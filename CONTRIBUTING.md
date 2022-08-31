@@ -60,6 +60,7 @@ In most circumstance all changes should be associate with a unit test that lives
 ## Git Hooks
 
 This repo has the following pre-commit hooks set up:
+
 - pnpm fmt
   - Runs Prettier to automatically format all of your code, keeping a consistent and clean code format
 
