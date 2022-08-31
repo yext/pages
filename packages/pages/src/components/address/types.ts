@@ -43,7 +43,7 @@ export type AddressLineProps = {
 
 /**
  * The available listing publishers
- * 
+ *
  * @public
  */
 export const ListingPublisherOption = {
@@ -52,7 +52,7 @@ export const ListingPublisherOption = {
 
 /**
  * The type definition for the listing publisher
- * 
+ *
  * @public
  */
 export type ListingPublisher =
@@ -60,7 +60,7 @@ export type ListingPublisher =
 
 /**
  * The type definition for a Listing
- * 
+ *
  * @public
  */
 export interface ListingType {
@@ -70,7 +70,7 @@ export interface ListingType {
 
 /**
  * The available map providers
- * 
+ *
  * @public
  */
 export const MapProviderOption = {
@@ -81,11 +81,11 @@ export const MapProviderOption = {
 
 /**
  * The type definition for the map provider
- * 
+ *
  * @public
  */
- export type MapProvider =
- typeof MapProviderOption[keyof typeof MapProviderOption];
+export type MapProvider =
+  typeof MapProviderOption[keyof typeof MapProviderOption];
 
 /**
  * The Yext profile fields used to create a getDirections URL

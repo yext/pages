@@ -47,18 +47,19 @@ export const getDirections = (
   googlePlaceId?: string,
   config: GetDirectionsConfig = {
     route: false,
-  },
+  }
 ): string | undefined => {
-
   // Default query for all providers
-  let query = address && encodeArray([
-    address.line1,
-    address.line2,
-    address.city,
-    address.region,
-    address.postalCode,
-    address.countryCode,
-  ]);
+  let query =
+    address &&
+    encodeArray([
+      address.line1,
+      address.line2,
+      address.city,
+      address.region,
+      address.postalCode,
+      address.countryCode,
+    ]);
 
   switch (config.provider) {
     case MapProviderOption.APPLE:
@@ -68,12 +69,14 @@ export const getDirections = (
       return getDirectionsApple(query, config.route);
 
     case MapProviderOption.BING:
-      query = address && encodeArray([
-        address.line1,
-        address.city,
-        address.region,
-        address.postalCode,
-      ]);
+      query =
+        address &&
+        encodeArray([
+          address.line1,
+          address.city,
+          address.region,
+          address.postalCode,
+        ]);
 
       // Bing Maps requires a query
       if (!query) break;
@@ -81,17 +84,16 @@ export const getDirections = (
       return getDirectionsBing(query, config.route);
 
     default:
-      const gmb = getListingByProvider(listings, ListingPublisherOption.GOOGLEMYBUSINESS);
+      const gmb = getListingByProvider(
+        listings,
+        ListingPublisherOption.GOOGLEMYBUSINESS
+      );
       if (gmb) {
         return gmb.listingUrl;
       }
 
       if (googlePlaceId) {
-        return getDirectionsGooglePlaceID(
-          googlePlaceId,
-          query,
-          config.route
-        );
+        return getDirectionsGooglePlaceID(googlePlaceId, query, config.route);
       }
 
       // Google Maps without Listings data requires a query
@@ -146,9 +148,9 @@ const getDirectionsGooglePlaceID = (
 ): string => {
   const queryParam = query ? `&query=${query}` : ``;
   if (route) {
-    return `https://maps.google.com/maps/dir/?api=1${queryParam}&destination_place_id=${placeId}&destination=direct`
+    return `https://maps.google.com/maps/dir/?api=1${queryParam}&destination_place_id=${placeId}&destination=direct`;
   }
-  
+
   if (queryParam) {
     `https://maps.google.com/maps/search/?api=1${queryParam}&query_place_id=${placeId}`;
   }

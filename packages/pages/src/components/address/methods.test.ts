@@ -64,9 +64,7 @@ describe("getDirections()", () => {
   });
 
   it("returns URL to Google Maps address query", () => {
-    expect(
-      getDirections(sampleAddress)
-    ).toEqual(
+    expect(getDirections(sampleAddress)).toEqual(
       "https://maps.google.com/maps/search/?api=1&query=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US"
     );
   });
@@ -82,21 +80,23 @@ describe("getDirections()", () => {
   });
 
   it("returns URL to Google Maps GMB listing", () => {
-    expect(
-      getDirections(undefined, sampleListings)
-    ).toEqual("https://maps.google.com/maps?cid=3287244376840534043");
+    expect(getDirections(undefined, sampleListings)).toEqual(
+      "https://maps.google.com/maps?cid=3287244376840534043"
+    );
   });
 
   it("returns URL to Google Maps Place ID with route", () => {
     expect(
-      getDirections(undefined, undefined, 'someID', { route: true })
-    ).toEqual("https://maps.google.com/maps/dir/?api=1&destination_place_id=someID&destination=direct");
+      getDirections(undefined, undefined, "someID", { route: true })
+    ).toEqual(
+      "https://maps.google.com/maps/dir/?api=1&destination_place_id=someID&destination=direct"
+    );
   });
 
   it("returns URL to Google Maps Place ID, by forcing route", () => {
-    expect(
-      getDirections(undefined, undefined, 'someID')
-    ).toEqual("https://maps.google.com/maps/dir/?api=1&destination_place_id=someID&destination=direct");
+    expect(getDirections(undefined, undefined, "someID")).toEqual(
+      "https://maps.google.com/maps/dir/?api=1&destination_place_id=someID&destination=direct"
+    );
   });
 });
 
