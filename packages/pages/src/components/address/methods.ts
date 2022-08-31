@@ -1,8 +1,11 @@
 import {
   AddressType,
+  GetDirectionsConfig,
   ListingPublisher,
+  ListingPublisherOption,
   ListingType,
   MapProvider,
+  MapProviderOption,
 } from "./types";
 
 /**
@@ -31,61 +34,70 @@ export const getUnabbreviated = (
 /**
  * Get a third-party maps url for a Yext location
  *
- * @param {any} profile - Partial of Yext Location entity profile
- * @param {Provider} provider - Google, Apple, Bing
- * @param {boolean} directions - Enable driving directions
+ * @param {AddressType} address - Yext address
+ * @param {ListingType[]} listings - List of available Yext Listings
+ * @param {string} googlePlaceId - Google Place ID
+ * @param {GetDirectionsConfig} config - Options for determining URL
  *
  * @returns {string} - Maps service url
  */
 export const getDirections = (
-  profile: any,
-  provider?: MapProvider,
-  directions?: boolean
+  address?: AddressType,
+  listings?: ListingType[],
+  googlePlaceId?: string,
+  config: GetDirectionsConfig = {
+    route: false,
+  },
 ): string | undefined => {
-  // TODO: replace profile type any with partial type declaration for profile
-  if (!profile.ref_listings && !profile.address) return undefined;
-  const { address } = profile;
 
-  let query = encodeArray([
-    address?.line1,
-    address?.line2,
-    address?.city,
-    address?.region,
-    address?.postalCode,
-    address?.countryCode,
+  // Default query for all providers
+  let query = address && encodeArray([
+    address.line1,
+    address.line2,
+    address.city,
+    address.region,
+    address.postalCode,
+    address.countryCode,
   ]);
 
-  switch (provider) {
-    case "APPLE":
-      return getDirectionsApple(query, directions);
-      break;
-    case "BING":
-      query = encodeArray([
-        address?.line1,
-        address?.city,
-        address?.region,
-        address?.postalCode,
+  switch (config.provider) {
+    case MapProviderOption.APPLE:
+      // Apple Maps requires a query string
+      if (!query) break;
+
+      return getDirectionsApple(query, config.route);
+
+    case MapProviderOption.BING:
+      query = address && encodeArray([
+        address.line1,
+        address.city,
+        address.region,
+        address.postalCode,
       ]);
-      return getDirectionsBing(query, directions);
-      break;
+
+      // Bing Maps requires a query
+      if (!query) break;
+
+      return getDirectionsBing(query, config.route);
+
     default:
-      const gmbURL = getlistingUrl(
-        profile.ref_listings,
-        ListingPublisher.googlemybusiness
-      );
-      if (gmbURL) {
-        return gmbURL;
+      const gmb = getListingByProvider(listings, ListingPublisherOption.GOOGLEMYBUSINESS);
+      if (gmb) {
+        return gmb.listingUrl;
       }
 
-      if (profile.googlePlaceId) {
+      if (googlePlaceId) {
         return getDirectionsGooglePlaceID(
-          profile.googlePlaceId,
+          googlePlaceId,
           query,
-          directions
+          config.route
         );
       }
 
-      return getDirectionsGoogle(query, directions);
+      // Google Maps without Listings data requires a query
+      if (!query) break;
+
+      return getDirectionsGoogle(query, config.route);
   }
 };
 
@@ -93,12 +105,12 @@ export const getDirections = (
  * Get Apple Maps location query
  *
  * @param {string} query - Stringified address query
- * @param {boolean} directions
+ * @param {boolean} route
  *
  * @returns {string} - Apple maps url
  */
-const getDirectionsApple = (query: string, directions?: boolean): string => {
-  return directions
+const getDirectionsApple = (query: string, route?: boolean): string => {
+  return route
     ? `https://maps.apple.com/?daddr=${query}`
     : `https://maps.apple.com/?address=${query}`;
 };
@@ -107,43 +119,53 @@ const getDirectionsApple = (query: string, directions?: boolean): string => {
  * Get Bing Maps location query
  *
  * @param {string} query - Stringified address query
- * @param {string} directions
+ * @param {string} route
  *
  * @returns {string} - Bing maps url
  */
-const getDirectionsBing = (query: string, directions?: boolean): string => {
-  return directions
+const getDirectionsBing = (query: string, route?: boolean): string => {
+  return route
     ? `https://bing.com/maps/default.aspx?rtp=adr.${query}`
     : `https://bing.com/maps/default.aspx?where1=${query}`;
 };
 
 /**
- * Get a Google Maps Place ID page
+ * Get a Google Maps Place ID page.
+ * Note (3/20/22): Google Place IDs must be refreshed
+ * https://developers.google.com/maps/documentation/places/web-service/place-id#save-id
  *
  * @param {string} placeId - Stringified address query
  * @param {string} query - Stringified address query
- * @param {boolean} directions - Enable driving directions
+ * @param {boolean} route - Enable driving directions
  * @returns {string} - Google maps url
  */
 const getDirectionsGooglePlaceID = (
   placeId: string,
-  query: string,
-  directions?: boolean
+  query?: string,
+  route?: boolean
 ): string => {
-  return directions
-    ? `https://maps.google.com/maps/dir/?api=1&destination_place_id=${placeId}&destination=direct`
-    : `https://maps.google.com/maps/search/?api=1&query=${query}&query_place_id=${placeId}`;
+  const queryParam = query ? `&query=${query}` : ``;
+  if (route) {
+    return `https://maps.google.com/maps/dir/?api=1${queryParam}&destination_place_id=${placeId}&destination=direct`
+  }
+  
+  if (queryParam) {
+    `https://maps.google.com/maps/search/?api=1${queryParam}&query_place_id=${placeId}`;
+  }
+
+  // Fallback to URL with route, as query is not required.
+  return `https://maps.google.com/maps/dir/?api=1&destination_place_id=${placeId}&destination=direct`;
 };
 
 /**
  * Get a Google Maps search query
  *
  * @param {string} query - Stringified address query
- * @param {boolean} directions - Enable driving directions
+ * @param {boolean} route - Enable driving directions
  * @returns {string} - Google maps url
  */
-const getDirectionsGoogle = (query: string, directions?: boolean): string => {
-  return directions
+const getDirectionsGoogle = (query: string, route?: boolean): string => {
+  return route
     ? `https://maps.google.com/maps/dir/?api=1&destination=${query}`
     : `https://maps.google.com/maps/search/?api=1&query=${query}`;
 };
@@ -151,17 +173,17 @@ const getDirectionsGoogle = (query: string, directions?: boolean): string => {
 /**
  * Get a maps url from listings
  *
- * @param {Yext.ListingType[]} listings - Yext listings
+ * @param {ListingType[]} listings - Yext listings
  * @param {ListingPublisher} publisher - provider to get listing for
  * @returns {string} - url
  */
-const getlistingUrl = (
+const getListingByProvider = (
   listings: ListingType[] = [],
   publisher: ListingPublisher
-): string | undefined => {
+): ListingType | undefined => {
   // TODO: Extract cid from URL to use in directions search
   const gmb = listings.find((l) => l.publisher === publisher);
-  return gmb?.listingUrl;
+  return gmb;
 };
 
 /**
@@ -170,7 +192,7 @@ const getlistingUrl = (
  * @param {string} substrings - ordered list to encode as csv
  * @returns {string} - url friendly string
  */
-const encodeArray = (substrings: string[] = []): string => {
+const encodeArray = (substrings: (string | undefined)[] = []): string => {
   if (!substrings.length) return "";
 
   const str = substrings.filter(Boolean).join(", ");
