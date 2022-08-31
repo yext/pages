@@ -21,6 +21,7 @@ class Runtime {
       this.name = "deno";
       this.version = "";
       if (typeof window !== "undefined") {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.version = window?.Deno?.version.deno || "";
       }

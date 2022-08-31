@@ -40,7 +40,7 @@
     "build:release": "pnpm run build && pnpm run types",
     "types": "tsc",
     "fmt": "prettier -w .",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "api-extractor": "api-extractor run --local --verbose",
     "generate-docs": "api-documenter markdown --input-folder temp --output-folder docs/api && rm -rf temp",
     "docs:dev": "vitepress dev docs",

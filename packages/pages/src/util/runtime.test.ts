@@ -51,11 +51,13 @@ describe("runtime", () => {
 
   it("correctly identifies deno via Deno object", async () => {
     const originalProcess = process;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     global.process = undefined;
 
     const originalWindow = { ...window };
     const windowSpy = jest.spyOn(global, "window", "get");
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     windowSpy.mockImplementation(() => ({
       ...originalWindow,
@@ -77,12 +79,14 @@ describe("runtime", () => {
 
   it("correctly identifies deno via lack of window object", async () => {
     const originalProcess = process;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     global.process = undefined;
 
     const windowSpy = jest.spyOn(global, "window", "get");
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    windowSpy.mockImplementation(() => {});
+    windowSpy.mockImplementation(() => undefined);
 
     const runtime = getRuntime();
 
@@ -95,11 +99,13 @@ describe("runtime", () => {
 
   it("returns true for isServerSide when runtime is deno", async () => {
     const originalProcess = process;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     global.process = undefined;
 
     const originalWindow = { ...window };
     const windowSpy = jest.spyOn(global, "window", "get");
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     windowSpy.mockImplementation(() => ({
       ...originalWindow,
@@ -119,11 +125,13 @@ describe("runtime", () => {
 
   it("getNodeMajorVersion() throws when not node", async () => {
     const originalProcess = process;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     global.process = undefined;
 
     const originalWindow = { ...window };
     const windowSpy = jest.spyOn(global, "window", "get");
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     windowSpy.mockImplementation(() => ({
       ...originalWindow,
@@ -144,6 +152,7 @@ describe("runtime", () => {
 
   it("correctly identifies browser", async () => {
     const originalProcess = process;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     global.process = undefined;
 
@@ -156,6 +165,7 @@ describe("runtime", () => {
 
   it("returns false for isServerSide when runtime is browser", async () => {
     const originalProcess = process;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     global.process = undefined;
 

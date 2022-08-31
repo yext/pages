@@ -311,12 +311,12 @@ export class HoursManipulator {
    * @returns a Yext date string
    */
   transformDateToYext(date: Date): string {
-    let [year, month, day] = date.toISOString().split("T")[0].split("-");
+    const [year, month, day] = date.toISOString().split("T")[0].split("-");
     const zeroBasedMonth = Number(month) - 1;
-    month =
+    const monthZeroBased =
       zeroBasedMonth < 10 ? "0" + zeroBasedMonth : zeroBasedMonth.toString();
 
-    return `${year}-${month}-${day}`;
+    return `${year}-${monthZeroBased}-${day}`;
   }
 }
 
@@ -327,7 +327,7 @@ export class HoursManipulator {
  */
 export function arrayShift(arr: Array<any>, n: number): Array<any> {
   // Make a local copy of the array to mutate
-  let myArr = [...arr];
+  const myArr = [...arr];
   // Handle the (invalid) case where n > arr.length
   n = n % myArr.length;
   return myArr.concat(myArr.splice(0, myArr.length - n));

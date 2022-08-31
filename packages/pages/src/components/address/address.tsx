@@ -43,7 +43,7 @@ const AddressLine = ({
   line,
   separator,
 }: AddressLineProps): JSX.Element => {
-  let addressDOM: JSX.Element[] = [];
+  const addressDOM: JSX.Element[] = [];
 
   for (const field of line) {
     if (field === ",") {
