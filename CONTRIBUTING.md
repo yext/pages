@@ -56,3 +56,11 @@ In most circumstance all changes should be associate with a unit test that lives
   - Valid scopes can be found in the [action](https://github.com/yext/pages/blob/main/.github/workflows/semantic-pull-request.yml).
 
 - No need to worry about code style as there's a Github action to automatically run `pnpm fmt` for you, but you may also run it before commit.
+
+## Git Hooks
+
+This repo has the following pre-commit hooks set up:
+- pnpm fmt
+  - Runs Prettier to automatically format all of your code, keeping a consistent and clean code format
+
+Note: For those that use an IDE for committing (such as Sublime Merge), follow [these steps](https://typicode.github.io/husky/#/?id=command-not-found).
