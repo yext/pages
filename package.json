@@ -16,7 +16,8 @@
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
     "lint": "pnpm -r run lint",
     "docs": "pnpm -r run api-extractor && pnpm -r run generate-docs && pnpm run fmt",
-    "ci-publish": "tsx scripts/publishCI.ts"
+    "ci-publish": "tsx scripts/publishCI.ts",
+    "prepare": "husky install"
   },
   "engines": {
     "node": ">=17"
@@ -45,7 +46,8 @@
     "prettier": "^2.7.1",
     "prompts": "^2.4.2",
     "semver": "^7.3.7",
-    "tsx": "^3.8.2"
+    "tsx": "^3.8.2",
+    "husky": "^8.0.0"
   },
   "packageManager": "pnpm@7.5.0"
 }
