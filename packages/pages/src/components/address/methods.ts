@@ -85,7 +85,13 @@ export const getDirections = (
 
     default:
       const listingsMap: { [key in ListingPublisher]?: string } | undefined =
-        listings?.reduce((obj, listing) => ({...obj, [listing.publisher]: listing.listingUrl}), {});
+        listings?.reduce(
+          (obj, listing) => ({
+            ...obj,
+            [listing.publisher]: listing.listingUrl,
+          }),
+          {}
+        );
       if (listingsMap[ListingPublisherOption.GOOGLEMYBUSINESS]) {
         return listingsMap[ListingPublisherOption.GOOGLEMYBUSINESS];
       }
