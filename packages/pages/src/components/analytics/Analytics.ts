@@ -11,7 +11,7 @@ import {
   StaticPage,
   Visitor,
 } from "@yext/analytics";
-import { concatScopes, slugify } from "./helpers";
+import { slugify } from "./helpers";
 
 /**
  * The Analytics class creates a stateful facade in front of the \@yext/analytics

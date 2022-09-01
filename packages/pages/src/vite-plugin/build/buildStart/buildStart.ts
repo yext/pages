@@ -3,17 +3,14 @@ import glob from "glob";
 import logger from "../../log.js";
 import fs from "fs";
 import { fileURLToPath } from "url";
-import { PluginContext, NormalizedInputOptions, EmitFile } from "rollup";
+import { PluginContext, EmitFile } from "rollup";
 import { generateHydrationEntryPoints } from "./hydration.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 
 const REACT_EXTENSIONS = new Set([".tsx", ".jsx"]);
 
 export default (projectStructure: ProjectStructure) => {
-  return async function (
-    this: PluginContext,
-    options: NormalizedInputOptions
-  ): Promise<void> {
+  return async function (this: PluginContext): Promise<void> {
     console.log(yextBanner);
     clean(projectStructure.distRoot.getAbsolutePath());
 

@@ -26,5 +26,5 @@
       "version": "detect"
     }
   },
-  "ignorePatterns": ["temp.js", "tests/fixtures/**/*"]
+  "ignorePatterns": ["tests/fixtures/**/*"]
 }

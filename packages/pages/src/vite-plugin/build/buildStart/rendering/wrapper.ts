@@ -15,7 +15,10 @@ export const reactWrapper = <T extends TemplateRenderProps>(
   hydrate: boolean,
   getHeadConfig?: GetHeadConfig<any>
 ): string => {
-  const projectFilepaths = props.__meta.manifest!.projectFilepaths;
+  const projectFilepaths = props.__meta.manifest?.projectFilepaths || {
+    templatesRoot: "src/templates",
+    hydrationBundleOutputRoot: "hydration_templates",
+  };
   const headConfig = getHeadConfig ? getHeadConfig(props) : undefined;
   const lang = getLang(headConfig, props);
 
@@ -25,7 +28,7 @@ export const reactWrapper = <T extends TemplateRenderProps>(
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(props)}</script>
         ${getCssTags(
           `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`,
-          props.__meta.manifest!.bundlerManifest,
+          props.__meta.manifest?.bundlerManifest || {},
           new Set()
         )
           .map((f) => `<link rel="stylesheet" href="/${f}"/>`)
