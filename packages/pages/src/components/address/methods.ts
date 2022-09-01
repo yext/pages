@@ -43,7 +43,7 @@ export const getUnabbreviated = (
  */
 export const getDirections = (
   address?: AddressType,
-  listings?: ListingType[],
+  listings: ListingType[] = [],
   googlePlaceId?: string,
   config: GetDirectionsConfig = {
     route: false,
@@ -84,12 +84,10 @@ export const getDirections = (
       return getDirectionsBing(query, config.route);
 
     default:
-      const gmb = getListingByProvider(
-        listings,
-        ListingPublisherOption.GOOGLEMYBUSINESS
-      );
-      if (gmb) {
-        return gmb.listingUrl;
+      const listingsMap: { [key in ListingPublisher]?: string } | undefined =
+        listings?.reduce((obj, listing) => ({...obj, [listing.publisher]: listing.listingUrl}), {});
+      if (listingsMap[ListingPublisherOption.GOOGLEMYBUSINESS]) {
+        return listingsMap[ListingPublisherOption.GOOGLEMYBUSINESS];
       }
 
       if (googlePlaceId) {
@@ -170,22 +168,6 @@ const getDirectionsGoogle = (query: string, route?: boolean): string => {
   return route
     ? `https://maps.google.com/maps/dir/?api=1&destination=${query}`
     : `https://maps.google.com/maps/search/?api=1&query=${query}`;
-};
-
-/**
- * Get a maps url from listings
- *
- * @param {ListingType[]} listings - Yext listings
- * @param {ListingPublisher} publisher - provider to get listing for
- * @returns {string} - url
- */
-const getListingByProvider = (
-  listings: ListingType[] = [],
-  publisher: ListingPublisher
-): ListingType | undefined => {
-  // TODO: Extract cid from URL to use in directions search
-  const gmb = listings.find((l) => l.publisher === publisher);
-  return gmb;
 };
 
 /**
