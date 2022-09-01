@@ -20,8 +20,8 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*": "prettier --write --ignore-unknown",
-    "*.ts": "eslint --fix"
+    "*": "prettier --write --cache --ignore-unknown",
+    "*.ts": "eslint --cache --fix"
   },
   "engines": {
     "node": ">=17"
