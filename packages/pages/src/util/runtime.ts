@@ -21,8 +21,7 @@ class Runtime {
       this.name = "deno";
       this.version = "";
       if (typeof window !== "undefined") {
-        // @ts-ignore
-        this.version = window?.Deno?.version.deno || "";
+        this.version = (window as any).Deno?.version.deno || "";
       }
       this.isServerSide = true;
     }

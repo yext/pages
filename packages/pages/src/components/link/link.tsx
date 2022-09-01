@@ -1,8 +1,7 @@
 import { ConversionDetails } from "@yext/analytics";
 import React, { useState } from "react";
 import classNames from "classnames";
-import { AnalyticsContext, useAnalytics } from "../analytics";
-import { AnalyticsMethods } from "../analytics/interfaces";
+import { useAnalytics } from "../analytics";
 import { getHref, isEmail, reverse } from "./methods";
 import type { CTA } from "./types";
 

@@ -68,8 +68,6 @@ describe("isProduction", () => {
       name: "browser",
     }));
 
-    const domain = "prod.com";
-
     const windowSpy = jest.spyOn(window, "window", "get") as jest.MockInstance<
       any,
       any

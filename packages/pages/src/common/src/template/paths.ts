@@ -12,7 +12,7 @@ export const getRelativePrefixToRootFromPath = (path: string): string => {
   pathComponents.pop();
 
   return pathComponents
-    .map((_) => "../")
+    .map(() => "../")
     .reduce((previousValue, currentValue) => previousValue + currentValue, "");
 };
 

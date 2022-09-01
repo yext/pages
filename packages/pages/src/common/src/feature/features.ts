@@ -35,12 +35,12 @@ interface FeatureConfigBase {
 
 interface EntityPageSetConfig extends FeatureConfigBase {
   entityPageSet: {
-    plugin: {};
+    plugin: Record<string, unknown>;
   };
 }
 interface StaticPageConfig extends FeatureConfigBase {
   staticPage: {
-    plugin: {};
+    plugin: Record<string, unknown>;
   };
 }
 
@@ -57,7 +57,7 @@ export const convertTemplateConfigToFeatureConfig = (
 ): FeatureConfig => {
   const streamConfig = config.stream || null;
 
-  let featureConfigBase: FeatureConfigBase = {
+  const featureConfigBase: FeatureConfigBase = {
     name: config.name,
     streamId: streamConfig
       ? streamConfig.$id

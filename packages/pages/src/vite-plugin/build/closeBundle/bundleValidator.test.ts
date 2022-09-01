@@ -4,8 +4,6 @@ import { validateBundles } from "./bundleValidator";
 
 describe("bundleValidator", () => {
   it("throws an error when a single file is over the max filesize limit", async () => {
-    const stats = getStats(1);
-
     jest.spyOn(glob, "sync").mockImplementation(() => ["file1.js", "file2.js"]);
     jest.spyOn(fs, "statSync").mockImplementation((input) => {
       if (input == "file1.js") {
@@ -22,8 +20,6 @@ describe("bundleValidator", () => {
   });
 
   it("throws an error when the total sizes exceed the max limit", async () => {
-    const stats = getStats(1);
-
     jest
       .spyOn(glob, "sync")
       .mockImplementation(() => [
@@ -47,8 +43,6 @@ describe("bundleValidator", () => {
   });
 
   it("does not throw an error when all individual file sizes and total are under the limits", async () => {
-    const stats = getStats(1);
-
     jest
       .spyOn(glob, "sync")
       .mockImplementation(() => [
