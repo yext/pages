@@ -64,4 +64,4 @@ This repo has the following pre-commit hooks set up:
 - pnpm fmt
   - Runs Prettier to automatically format all of your code, keeping a consistent and clean code format
 
-Note: For those that use an IDE for committing (such as Sublime Merge), follow [these steps](https://typicode.github.io/husky/#/?id=command-not-found).
+Note: For those that use a git client for committing (such as Sublime Merge), follow [these steps](https://typicode.github.io/husky/#/?id=command-not-found).
