@@ -53,7 +53,7 @@
     "build-storybook": "build-storybook"
   },
   "bin": {
-    "pages": "dist/bin/pages.js"
+    "pages": "dist/bin/pages.sh"
   },
   "files": [
     "dist/**/*",

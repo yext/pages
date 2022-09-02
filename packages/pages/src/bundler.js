@@ -1,7 +1,7 @@
 import esbuild from "esbuild";
 import glob from "glob";
 import path from "path";
-import { rmSync, mkdirSync, copyFile } from "fs";
+import { rmSync, mkdirSync, copyFileSync } from "fs";
 
 let watch = false;
 const args = process.argv.slice(2);
@@ -21,7 +21,7 @@ const testFilter = (f) =>
   !f.endsWith(".test.ts") &&
   !f.endsWith(".test.tsx") &&
   !f.endsWith(".test.js");
-const filters = new Set(["./src/bundler.js"]);
+const filters = new Set(["./src/bundler.js", "./src/bin/pages.sh"]);
 
 const files = glob
   .sync("./src/**/*\\.*")
@@ -63,11 +63,7 @@ if (pluginFiles.length == 0) {
 }
 mkdirSync(pluginOutputPath, { recursive: true });
 pluginFiles.map((filepath) =>
-  copyFile(
-    filepath,
-    `${pluginOutputPath}${path.basename(filepath)}`,
-    () => undefined
-  )
+  copyFileSync(filepath, `${pluginOutputPath}${path.basename(filepath)}`)
 );
 
 try {
@@ -79,3 +75,11 @@ try {
 } catch (e) {
   console.error(e);
 }
+
+/**
+ * Copy the sh binary.
+ */
+copyFileSync(
+  path.resolve("./src/bin/pages.sh"),
+  path.resolve("./dist/bin/pages.sh")
+);

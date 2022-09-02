@@ -1,4 +1,3 @@
-#!/usr/bin/env node --experimental-specifier-resolution=node
 import init from "../init/init.js";
 import dev from "../dev/dev.js";
 import preview from "../preview/preview.js";
