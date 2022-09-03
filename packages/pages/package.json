@@ -80,7 +80,7 @@
     "ora": "^6.1.2",
     "picocolors": "^1.0.0",
     "pretty-ms": "^7.0.1",
-    "rollup": "2.77.2",
+    "rollup": "2.77.3",
     "shelljs": "^0.8.5",
     "typescript": "^4.8.2",
     "vite": "^3.0.9",
