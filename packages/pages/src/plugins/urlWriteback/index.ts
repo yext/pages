@@ -10,6 +10,7 @@ interface UrlWritebackConfig {
 export interface WritebackPayload {
   url: string;
   entityId: string;
+  feature: string;
   locale: string;
 }
 
@@ -21,7 +22,7 @@ export default function urlWritebackPlugin(config: UrlWritebackConfig) {
       [config.field]: event.url,
     }
 
-    return updateEntity(event.entityId, update, config.apiKey, {
+    return updateEntity(event.entityId, event.locale, update, config.apiKey, {
       v: config.v,
       env: config.environment
     })
