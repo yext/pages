@@ -13,7 +13,8 @@
     ".": "./dist/index.js",
     "./vite-plugin": "./dist/vite-plugin/plugin.js",
     "./util": "./dist/util/index.js",
-    "./components": "./dist/components/index.js"
+    "./components": "./dist/components/index.js",
+    "./plugins": "./dist/plugins/index.js"
   },
   "typesVersions": {
     "*": {
@@ -28,6 +29,9 @@
       ],
       "components": [
         "dist/types/src/components/index.d.ts"
+      ],
+      "plugins": [
+        "dist/types/src/plugins/index.d.ts"
       ]
     }
   },
