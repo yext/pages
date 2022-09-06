@@ -1,1 +1,2 @@
-export { urlWritebackPlugin } from "./urlWriteback/index.ts";
+import urlWritebackPlugin from "./urlWriteback/index.ts";
+export { urlWritebackPlugin }
