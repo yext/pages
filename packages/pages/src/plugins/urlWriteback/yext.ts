@@ -63,10 +63,12 @@ export async function updateEntity<T extends EntityProfile>(
     ? API_BASE_SBX
     : API_BASE_PROD;
 
-  const req = new Request(buildApiUrl(URL_BASE, `entityprofiles/${id}/${locale}`, {
+  const url = buildApiUrl(URL_BASE, `entityprofiles/${id}/${locale}`, {
     api_key: apiKey,
     v: options?.v || "20220903",
-  }), {
+  })
+  console.log("Request url: ", url)
+  const req = new Request(url, {
     method: "PUT",
     body: JSON.stringify(body),
     headers: { "Content-Type": "application/json; charset=utf-8" },
