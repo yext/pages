@@ -13,7 +13,7 @@ export interface WritebackPayload {
   locale: string;
 }
 
-export function urlWritebackPlugin(config: UrlWritebackConfig) {
+export default function urlWritebackPlugin(config: UrlWritebackConfig) {
   function onUrlChange(event: WritebackPayload) {
     if (!(event.entityId && event.locale)) { return null }
 
