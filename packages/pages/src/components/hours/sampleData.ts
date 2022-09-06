@@ -1,4 +1,4 @@
-import { HoursType } from "./";
+import { HoursType } from "./index.js";
 
 export const HOURS: HoursType = {
   monday: {

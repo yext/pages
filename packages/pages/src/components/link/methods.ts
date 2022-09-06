@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
-import { LinkType } from "./types";
-import type { CTA } from "./types";
+import { LinkType, CTA } from "./types.js";
 
 /**
  * Get the link from a CTA

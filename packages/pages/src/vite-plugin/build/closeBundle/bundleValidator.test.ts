@@ -1,6 +1,6 @@
 import { glob } from "glob";
 import fs, { Stats } from "fs";
-import { validateBundles } from "./bundleValidator";
+import { validateBundles } from "./bundleValidator.js";
 
 describe("bundleValidator", () => {
   it("throws an error when a single file is over the max filesize limit", async () => {

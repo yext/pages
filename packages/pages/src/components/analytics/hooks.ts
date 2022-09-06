@@ -1,10 +1,10 @@
 import { ConversionDetails, Visitor } from "@yext/analytics";
 import { MouseEvent, useContext } from "react";
-import { getRuntime } from "../../util";
-import { AnalyticsContext } from "./context";
-import { concatScopes } from "./helpers";
-import { AnalyticsMethods } from "./interfaces";
-import { useScope } from "./scope";
+import { getRuntime } from "../../util/index.js";
+import { AnalyticsContext } from "./context.js";
+import { concatScopes } from "./helpers.js";
+import { AnalyticsMethods } from "./interfaces.js";
+import { useScope } from "./scope.js";
 
 declare global {
   interface Window {

@@ -4,7 +4,7 @@
 import * as React from "react";
 import { render, screen } from "@testing-library/react";
 import { Hours } from ".";
-import { HOURS, HOURS_WITH_REOPEN_DATE } from "./sampleData";
+import { HOURS, HOURS_WITH_REOPEN_DATE } from "./sampleData.js";
 
 describe("Hours", () => {
   it("properly renders a full week", () => {

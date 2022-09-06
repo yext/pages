@@ -4,11 +4,11 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { TemplateProps } from "../../common/src/template/types";
-import { Link } from "../link";
-import { AnalyticsProvider } from "./provider";
-import { useAnalytics } from "./hooks";
-import { AnalyticsScopeProvider } from "./scope";
+import { TemplateProps } from "../../common/src/template/types.js";
+import { Link } from "../link/index.js";
+import { AnalyticsProvider } from "./provider.js";
+import { useAnalytics } from "./hooks.js";
+import { AnalyticsScopeProvider } from "./scope.js";
 
 // The following section of mocks just exists to supress an error that occurs
 // because jest does not implement a window.location.navigate.  See:

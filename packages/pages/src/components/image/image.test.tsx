@@ -8,10 +8,10 @@ import {
   getImageUUID,
   handleLayout,
   getImageSizeForFixedLayout,
-} from "./image";
-import { ImageLayoutOption } from "./types";
+  getImageEnv,
+} from "./image.js";
+import { ImageLayoutOption } from "./types.js";
 import { render, screen } from "@testing-library/react";
-import { getImageEnv } from "./image";
 
 const imgWidth = 20;
 const imgHeight = 10;

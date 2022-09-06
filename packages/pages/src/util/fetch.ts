@@ -1,4 +1,4 @@
-import { getRuntime } from "./runtime";
+import { getRuntime } from "./runtime.js";
 
 /**
  * A custom fetch implementation that determines which fetch library to use

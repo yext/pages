@@ -1,7 +1,6 @@
-import React from "react";
-import { PropsWithChildren } from "react";
-import { concatScopes } from "./helpers";
-import { AnalyticsScopeProps } from "./interfaces";
+import React, { PropsWithChildren } from "react";
+import { concatScopes } from "./helpers.js";
+import { AnalyticsScopeProps } from "./interfaces.js";
 
 const ScopeContext = React.createContext({ name: "" });
 

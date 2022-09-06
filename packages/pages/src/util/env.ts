@@ -1,4 +1,4 @@
-import { getRuntime } from "./runtime";
+import { getRuntime } from "./runtime.js";
 
 /**
  * Determines if the code is being executed on the production site on

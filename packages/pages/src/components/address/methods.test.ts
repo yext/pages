@@ -1,5 +1,5 @@
-import { getUnabbreviated } from "./methods";
-import { AddressType } from "./types";
+import { getUnabbreviated } from "./methods.js";
+import { AddressType } from "./types.js";
 
 const address: AddressType = {
   city: "Birmingham",

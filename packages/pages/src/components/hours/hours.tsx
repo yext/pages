@@ -4,9 +4,9 @@ import {
   HoursManipulator,
   arrayShift,
   intervalsListsAreEqual,
-} from "./hoursManipulator";
-import { HoursTableProps, HoursTableDayData, DayOfWeekNames } from "./types";
-import "./hoursTable.css";
+} from "./hoursManipulator.js";
+import { HoursTableProps, HoursTableDayData, DayOfWeekNames } from "./types.js";
+import "./hours.css";
 
 // Order of these arrays corresponds to js Date.getDay() function output.
 // Display name for each day of week.

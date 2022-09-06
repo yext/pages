@@ -6,7 +6,7 @@ import {
   generateResponses,
   readTemplateModules,
   GeneratedPage,
-} from "./templateUtils";
+} from "./templateUtils.js";
 
 /**
  * This function is the main rendering function which is imported and executed in the Deno runtime

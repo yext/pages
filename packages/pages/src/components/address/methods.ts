@@ -1,4 +1,4 @@
-import { AddressType } from "./types";
+import { AddressType } from "./types.js";
 
 /**
  * Get the unabbreviated version of a field if available

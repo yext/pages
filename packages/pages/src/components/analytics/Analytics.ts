@@ -1,7 +1,7 @@
 import { MouseEvent } from "react";
-import { TemplateProps } from "../../common/src/template/types";
-import { getRuntime, isProduction } from "../../util";
-import { AnalyticsMethods } from "./interfaces";
+import { TemplateProps } from "../../common/src/template/types.js";
+import { getRuntime, isProduction } from "../../util/index.js";
+import { AnalyticsMethods } from "./interfaces.js";
 import {
   ConversionDetails,
   CookieManager,
@@ -11,7 +11,7 @@ import {
   StaticPage,
   Visitor,
 } from "@yext/analytics";
-import { slugify } from "./helpers";
+import { slugify } from "./helpers.js";
 
 /**
  * The Analytics class creates a stateful facade in front of the \@yext/analytics

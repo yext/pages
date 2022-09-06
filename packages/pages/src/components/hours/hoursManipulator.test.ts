@@ -1,5 +1,5 @@
-import { HoursManipulator } from "./hoursManipulator";
-import { HOURS_WITH_HOLIDAY, HOURS_WITH_REOPEN_DATE } from "./sampleData";
+import { HoursManipulator } from "./hoursManipulator.js";
+import { HOURS_WITH_HOLIDAY, HOURS_WITH_REOPEN_DATE } from "./sampleData.js";
 
 describe("HoursManipulator", () => {
   const hours = new HoursManipulator(HOURS_WITH_HOLIDAY);

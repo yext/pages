@@ -1,7 +1,7 @@
 import * as React from "react";
-import { AddressProps, AddressLineProps } from "./types";
-import { localeAddressFormat } from "./i18n";
-import { getUnabbreviated } from "./methods";
+import { AddressProps, AddressLineProps } from "./types.js";
+import { localeAddressFormat } from "./i18n.js";
+import { getUnabbreviated } from "./methods.js";
 
 /**
  * Renders an HTML address based from the Yext Knowledge Graph. Example of using the component to render
