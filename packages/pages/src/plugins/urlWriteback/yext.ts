@@ -51,6 +51,7 @@ export function buildApiUrl(base: string, path: string, params?: Record<string, 
 // functionality, switch to using that: https://github.com/yext/yext-api-ts
 export async function updateEntity<T extends EntityProfile>(
   id: string,
+  locale: string,
   body: EntityProfile,
   apiKey: string,
   options?: {
@@ -62,7 +63,7 @@ export async function updateEntity<T extends EntityProfile>(
     ? API_BASE_SBX
     : API_BASE_PROD;
 
-  const req = new Request(buildApiUrl(URL_BASE, `entities/${id}`, {
+  const req = new Request(buildApiUrl(URL_BASE, `entityprofiles/${id}/${locale}`, {
     api_key: apiKey,
     v: options?.v || "20220903",
   }), {

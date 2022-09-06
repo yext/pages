@@ -15,7 +15,7 @@ export interface WritebackPayload {
 
 export default function urlWritebackPlugin(config: UrlWritebackConfig) {
   function onUrlChange(event: WritebackPayload) {
-    if (!(event.entityId && event.locale)) { return null }
+    if (!(event.entityId && event.locale && event.url)) { return null }
 
     const update = {
       [config.field]: event.url,
