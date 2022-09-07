@@ -67,7 +67,6 @@ export async function updateEntity<T extends EntityProfile>(
     api_key: apiKey,
     v: options?.v || "20220903",
   })
-  console.log("Request url: ", url)
   const req = new Request(url, {
     method: "PUT",
     body: JSON.stringify(body),
