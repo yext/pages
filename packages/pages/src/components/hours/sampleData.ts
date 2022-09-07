@@ -65,7 +65,7 @@ export const HOURS_WITH_HOLIDAY: HoursType = {
   },
   holidayHours: [
     {
-      date: offsetDate(3),
+      date: "2022-08-11",
       openIntervals: [{ start: "9:00", end: "12:00" }],
     },
   ],
@@ -103,7 +103,7 @@ export const HOURS_WITH_REOPEN_DATE = {
   reopenDate: offsetDate(3),
 };
 
-function offsetDate(daysForward: number) {
+export function offsetDate(daysForward: number) {
   const d = new Date();
 
   d.setDate(d.getDate() + daysForward);
