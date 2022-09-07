@@ -51,7 +51,7 @@ function getSortIdx(props: HoursTableProps, todayDate: Date): number[] {
  * @returns {HoursTableDayData[]} where adjacent days with the same intervals are combined.
  */
 function collapseDays(hoursDays: HoursTableDayData[]): HoursTableDayData[] {
-  let collapsedDays: HoursTableDayData[] = [];
+  const collapsedDays: HoursTableDayData[] = [];
   hoursDays.forEach((hoursDay) => {
     const latestGroup = collapsedDays[collapsedDays.length - 1];
 
@@ -93,13 +93,13 @@ function defaultIntervalStringsBuilder(
   dayData: HoursTableDayData,
   timeOptions?: Intl.DateTimeFormatOptions
 ): string[] {
-  let intervalStrings: string[] = [];
+  const intervalStrings: string[] = [];
   if (dayData.intervals.length === 0) {
     intervalStrings.push("Closed");
   } else {
     dayData.intervals.forEach((interval) => {
-      let startTime = interval.getStartTime("en-US", timeOptions);
-      let endTime = interval.getEndTime("en-US", timeOptions);
+      const startTime = interval.getStartTime("en-US", timeOptions);
+      const endTime = interval.getEndTime("en-US", timeOptions);
       intervalStrings.push(`${startTime} - ${endTime}`);
     });
   }

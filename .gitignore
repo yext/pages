@@ -3,6 +3,7 @@
 node_modules/
 .DS_Store
 .npm/
+.eslintcache
 
 # Logs
 logs

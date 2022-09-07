@@ -151,7 +151,9 @@ describe("renderHeadConfigToString", () => {
     );
 
     jest.clearAllMocks();
-    const logMock = jest.spyOn(console, "log").mockImplementation(() => {});
+    const logMock = jest
+      .spyOn(console, "log")
+      .mockImplementation(() => undefined);
 
     expect(logMock.mock.calls.length).toBe(0);
     renderHeadConfigToString(headConfig as HeadConfig);

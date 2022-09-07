@@ -131,11 +131,11 @@ export const getLang = <T extends TemplateRenderProps>(
   headConfig: HeadConfig | undefined,
   props: T
 ): string => {
-  if (!!headConfig?.lang) {
+  if (headConfig?.lang) {
     return headConfig.lang;
   }
 
-  if (!!props?.document?.locale) {
+  if (props?.document?.locale) {
     return props?.document?.locale;
   }
 

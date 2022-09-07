@@ -31,7 +31,7 @@ export const createFeaturesJson = async (
 ): Promise<void> => {
   const features: FeatureConfig[] = [];
   const streams = [];
-  for (const [_, module] of templateModules.entries()) {
+  for (const [, module] of templateModules.entries()) {
     const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
     features.push(featureConfig);
     module.config.stream && streams.push({ ...module.config.stream });

@@ -41,8 +41,6 @@ describe("Address", () => {
   });
 
   it("renders a custom address format", () => {
-    const separator = "mySeparator";
-
     render(<Address address={address} lines={[["line1"]]} />);
 
     const cityEl = screen.queryByText("Birmingham");
