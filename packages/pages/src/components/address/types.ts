@@ -40,3 +40,57 @@ export type AddressLineProps = {
   line: AddressLine;
   separator?: string;
 };
+
+/**
+ * The available listing publishers
+ *
+ * @public
+ */
+export const ListingPublisherOption = {
+  GOOGLEMYBUSINESS: "googlemybusiness",
+} as const;
+
+/**
+ * The type definition for the listing publisher
+ *
+ * @public
+ */
+export type ListingPublisher =
+  typeof ListingPublisherOption[keyof typeof ListingPublisherOption];
+
+/**
+ * The type definition for a Listing
+ *
+ * @public
+ */
+export interface ListingType {
+  listingUrl: string;
+  publisher: ListingPublisher;
+}
+
+/**
+ * The available map providers
+ *
+ * @public
+ */
+export const MapProviderOption = {
+  GOOGLE: "google",
+  APPLE: "apple",
+  BING: "bing",
+} as const;
+
+/**
+ * The type definition for the map provider
+ *
+ * @public
+ */
+export type MapProvider =
+  typeof MapProviderOption[keyof typeof MapProviderOption];
+
+/**
+ * The Yext profile fields used to create a getDirections URL
+ */
+export interface GetDirectionsConfig {
+  provider?: MapProvider;
+  route?: boolean;
+}
