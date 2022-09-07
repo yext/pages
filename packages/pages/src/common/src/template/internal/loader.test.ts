@@ -1,6 +1,6 @@
 import glob from "glob";
 import path from "path";
-import { loadTemplateModules } from "./loader";
+import { loadTemplateModules } from "./loader.js";
 
 // our jest configuration doesn't support file urls so update pathToFileURL to do nothing during
 // this test.

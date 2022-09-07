@@ -1,9 +1,9 @@
 import { ConversionDetails } from "@yext/analytics";
 import React, { useState } from "react";
 import classNames from "classnames";
-import { useAnalytics } from "../analytics";
-import { getHref, isEmail, reverse } from "./methods";
-import type { CTA } from "./types";
+import { useAnalytics } from "../analytics/index.js";
+import { getHref, isEmail, reverse } from "./methods.js";
+import type { CTA } from "./types.js";
 
 /**
  * Configuration options available for any usages of the Link component.

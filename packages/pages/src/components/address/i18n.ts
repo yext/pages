@@ -1,4 +1,4 @@
-import { AddressLine } from "./types";
+import { AddressLine } from "./types.js";
 
 export function localeAddressFormat(locale: string): AddressLine[] {
   switch (locale) {

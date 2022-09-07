@@ -5,7 +5,7 @@ import {
   HOURS,
   HOURS_WITH_HOLIDAY,
   HOURS_WITH_REOPEN_DATE,
-} from "./sampleData";
+} from "./sampleData.js";
 
 export default {
   title: "components/Hours",

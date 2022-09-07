@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { Image } from "./image";
+import { Image } from "./image.js";
 
 const image = {
   image: {

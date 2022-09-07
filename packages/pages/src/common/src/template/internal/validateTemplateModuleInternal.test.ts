@@ -1,12 +1,12 @@
 import {
   TemplateConfigInternal,
   TemplateModuleInternal,
-} from "../../../src/template/internal/types";
+} from "../../../src/template/internal/types.js";
 import {
   validateConfig,
   validateTemplateModuleInternal,
-} from "../../../src/template/internal/validateTemplateModuleInternal";
-import { Template } from "../../../src/template/types";
+} from "../../../src/template/internal/validateTemplateModuleInternal.js";
+import { Template } from "../../../src/template/types.js";
 
 describe("validateTemplateModuleInternal - validateConfig", () => {
   it("validates that a config name is defined", async () => {

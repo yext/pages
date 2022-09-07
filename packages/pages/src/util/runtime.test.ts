@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { getRuntime } from "./runtime";
+import { getRuntime } from "./runtime.js";
 
 describe("runtime", () => {
   it("correctly identifies node and it's major version", async () => {

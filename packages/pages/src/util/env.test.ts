@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import { isProduction } from "./env";
-import * as runTime from "./runtime";
+import { isProduction } from "./env.js";
+import * as runTime from "./runtime.js";
 
 describe("isProduction", () => {
   it("returns true when browser and prod domain", async () => {

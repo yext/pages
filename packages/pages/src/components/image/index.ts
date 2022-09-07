@@ -1,2 +1,2 @@
-export { Image } from "./image";
-export * from "./types";
+export { Image } from "./image.js";
+export * from "./types.js";

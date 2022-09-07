@@ -1,6 +1,6 @@
 import { RequestHandler } from "express-serve-static-core";
 import { getLocalDataManifest } from "../ssr/getLocalData.js";
-import index from "../public/index";
+import index from "../public/index.js";
 import {
   dynamicModeInfoText,
   generateTestDataWarningText,

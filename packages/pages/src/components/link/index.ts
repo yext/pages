@@ -1,2 +1,2 @@
-export { Link } from "./link";
-export * from "./types";
+export { Link } from "./link.js";
+export * from "./types.js";

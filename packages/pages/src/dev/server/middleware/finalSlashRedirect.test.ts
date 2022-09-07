@@ -1,4 +1,4 @@
-import { finalSlashRedirect } from "./finalSlashRedirect";
+import { finalSlashRedirect } from "./finalSlashRedirect.js";
 
 describe("finalSlashRedirect", () => {
   it("redirects when request path ends in slash", async () => {

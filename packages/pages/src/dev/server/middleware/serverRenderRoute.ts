@@ -3,7 +3,7 @@ import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
 import { pageLoader } from "../ssr/pageLoader.js";
 import { urlToFeature } from "../ssr/urlToFeature.js";
-import page404 from "../public/404";
+import page404 from "../public/404.js";
 import { convertTemplateConfigInternalToFeaturesConfig } from "../../../common/src/feature/features.js";
 import { validateTemplateModuleInternal } from "../../../common/src/template/internal/validateTemplateModuleInternal.js";
 import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplateModuleInternal.js";

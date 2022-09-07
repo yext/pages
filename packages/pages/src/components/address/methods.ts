@@ -5,7 +5,7 @@ import {
   ListingPublisherOption,
   ListingType,
   MapProviderOption,
-} from "./types";
+} from "./types.js";
 
 /**
  * Get the unabbreviated version of a field if available
@@ -48,7 +48,7 @@ export const getDirections = (
     route: false,
   }
 ): string | undefined => {
-  const NO_QUERY_WARNING = 'Failed to construct query for maps service.';
+  const NO_QUERY_WARNING = "Failed to construct query for maps service.";
   // Default query for all providers
   let query =
     address &&
@@ -62,16 +62,18 @@ export const getDirections = (
     ]);
 
   switch (config.provider) {
-    case MapProviderOption.APPLE:
+    case MapProviderOption.APPLE: {
       // Apple Maps requires a query string
       if (!query) {
-        console.warn(`${NO_QUERY_WARNING} Check that you've provided a valid Yext Address.`);
+        console.warn(
+          `${NO_QUERY_WARNING} Check that you've provided a valid Yext Address.`
+        );
         break;
       }
 
       return getDirectionsApple(query, config.route);
-
-    case MapProviderOption.BING:
+    }
+    case MapProviderOption.BING: {
       query =
         address &&
         encodeArray([
@@ -83,13 +85,15 @@ export const getDirections = (
 
       // Bing Maps requires a query
       if (!query) {
-        console.warn(`${NO_QUERY_WARNING} Check that you've provided a valid Yext Address.`);
+        console.warn(
+          `${NO_QUERY_WARNING} Check that you've provided a valid Yext Address.`
+        );
         break;
       }
 
       return getDirectionsBing(query, config.route);
-
-    default:
+    }
+    default: {
       const listingsMap: { [key in ListingPublisher]?: string } | undefined =
         listings?.reduce(
           (obj, listing) => ({
@@ -108,11 +112,14 @@ export const getDirections = (
 
       // Google Maps without Listings data requires a query
       if (!query) {
-        console.warn(`${NO_QUERY_WARNING} Check that you've provided a valid Yext Address, Yext ListingType, or Google Place ID.`);
+        console.warn(
+          `${NO_QUERY_WARNING} Check that you've provided a valid Yext Address, Yext ListingType, or Google Place ID.`
+        );
         break;
       }
 
       return getDirectionsGoogle(query, config.route);
+    }
   }
 };
 

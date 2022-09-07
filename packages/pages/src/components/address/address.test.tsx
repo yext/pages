@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 import * as React from "react";
-import { Address } from "./address";
-import { AddressType } from "./types";
+import { Address } from "./address.js";
+import { AddressType } from "./types.js";
 import { render, screen } from "@testing-library/react";
 
 const address: AddressType = {

@@ -1,8 +1,8 @@
 import {
   convertTemplateConfigToStreamConfig,
   StreamConfig,
-} from "../../src/feature/stream";
-import { TemplateConfig } from "../../src/template/types";
+} from "../../src/feature/stream.js";
+import { TemplateConfig } from "../../src/template/types.js";
 
 describe("stream", () => {
   it("returns void if no stream", async () => {

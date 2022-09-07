@@ -1,1 +1,1 @@
-export { yextSSG } from "./plugin";
+export { yextSSG } from "./plugin.js";

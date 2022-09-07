@@ -2,7 +2,7 @@ import { getLocalDataForEntity } from "./getLocalData.js";
 import { TEMPLATE_PATH } from "./constants.js";
 import { ViteDevServer } from "vite";
 import { generateTestDataForPage } from "./generateTestData.js";
-import templateBase from "../public/templateBase";
+import templateBase from "../public/templateBase.js";
 import { FeaturesConfig } from "../../../common/src/feature/features.js";
 import {
   TemplateProps,

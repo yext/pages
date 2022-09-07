@@ -4,7 +4,7 @@ import {
   HolidayType,
   IntervalType,
   HoursType,
-} from "./types";
+} from "./types.js";
 
 const dayKeys: (keyof WeekType)[] = [
   "sunday",

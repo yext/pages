@@ -1,10 +1,10 @@
-import { getDirections, getUnabbreviated } from "./methods";
+import { getDirections, getUnabbreviated } from "./methods.js";
 import {
   AddressType,
   ListingPublisherOption,
   ListingType,
   MapProviderOption,
-} from "./types";
+} from "./types.js";
 
 const sampleAddress: AddressType = {
   city: "New York",
