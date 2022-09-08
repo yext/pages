@@ -243,6 +243,7 @@ describe("handleLayout", () => {
       imgHeight,
       imgUUID,
       {},
+      "",
       width,
       height,
       aspectRatio
@@ -258,6 +259,7 @@ describe("handleLayout", () => {
       imgHeight,
       imgUUID,
       {},
+      "",
       width,
       height,
       undefined
@@ -273,6 +275,7 @@ describe("handleLayout", () => {
       imgHeight,
       imgUUID,
       {},
+      "",
       width,
       undefined,
       undefined
@@ -293,6 +296,7 @@ describe("handleLayout", () => {
       imgHeight,
       imgUUID,
       {},
+      "",
       undefined,
       undefined,
       aspectRatio
@@ -308,6 +312,7 @@ describe("handleLayout", () => {
       imgHeight,
       imgUUID,
       {},
+      "",
       undefined,
       undefined,
       aspectRatio

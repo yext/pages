@@ -67,6 +67,7 @@ export const Image = ({
     imgHeight,
     imgUUID,
     style,
+    imageData.url,
     absWidth,
     absHeight,
     aspectRatio
@@ -76,7 +77,12 @@ export const Image = ({
   const srcSet: string = widths
     .map(
       (w) =>
-        `${getImageUrl(imgUUID, w, (imgHeight / imgWidth) * w, imgEnv)} ${w}w`
+        `${getImageUrl(
+          imgUUID,
+          w,
+          (imgHeight / imgWidth) * w,
+          imageData.url
+        )} ${w}w`
     )
     .join(", ");
 
@@ -179,8 +185,9 @@ export const getImageUrl = (
   uuid: string,
   width: number,
   height: number,
-  env?: string
+  imgUrl: string
 ) => {
+  const env = getImageEnv(imgUrl);
   const bucket = env ? `p${env}` : "p";
   return `https://dynl.mktgcdn.com/${bucket}/${uuid}/${Math.round(
     width
@@ -197,12 +204,13 @@ export const handleLayout = (
   imgHeight: number,
   imgUUID: string,
   style: React.CSSProperties,
+  imgUrl: string,
   absWidth?: number,
   absHeight?: number,
   aspectRatio?: number
 ): { src: string; imgStyle: React.CSSProperties; widths: number[] } => {
   let widths: number[] = [100, 320, 640, 960, 1280, 1920];
-  let src: string = getImageUrl(imgUUID, 500, 500);
+  let src: string = getImageUrl(imgUUID, 500, 500, imgUrl);
   const imgStyle = { ...style };
   imgStyle.objectFit = imgStyle.objectFit || "cover";
   imgStyle.objectPosition = imgStyle.objectPosition || "center";
@@ -229,7 +237,7 @@ export const handleLayout = (
       imgStyle.width = fixedWidth;
       imgStyle.height = fixedHeight;
       widths = fixedWidths;
-      src = getImageUrl(imgUUID, fixedWidth, fixedHeight);
+      src = getImageUrl(imgUUID, fixedWidth, fixedHeight, imgUrl);
 
       break;
     }
