@@ -6,6 +6,7 @@ import semver from "semver";
 import colors from "picocolors";
 import {
   args,
+  getLatestTag,
   getPackageInfo,
   getVersionChoices,
   isDryRun,
@@ -15,7 +16,7 @@ import {
   runIfNotDry,
   step,
   updateVersion,
-} from "./releaseUtils";
+} from "./releaseUtils.js";
 
 let targetVersion: string | undefined;
 
@@ -81,16 +82,17 @@ step("\nUpdating package version...");
 updateVersion(pkgPath, targetVersion);
 
 step("\nGenerating changelog...");
-const changelogArgs = [
-  "conventional-changelog",
-  "-p",
-  "angular",
-  "-i",
-  "CHANGELOG.md",
-  "-s",
-  "--commit-path",
-  ".",
-];
+const latestTag = await getLatestTag(pkgName);
+if (!latestTag) {
+  process.exit();
+}
+const sha = (
+  await run("git", ["rev-list", "-n", "1", latestTag], {
+    stdio: "pipe",
+  })
+).stdout.trim();
+
+const changelogArgs = ["generate-changelog", `${sha}..HEAD`];
 
 await run("npx", changelogArgs, { cwd: pkgDir });
 

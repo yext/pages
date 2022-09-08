@@ -1,2 +1,10 @@
 .github/
+.husky/
+
+packages/*/CHANGELOG.md
+LICENSE
+THIRD-PARTY-NOTICES
+
+dist/
 pnpm-lock.yaml
+pnpm-workspace.yaml
