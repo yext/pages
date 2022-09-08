@@ -1,3 +1,29 @@
+#### 1.0.0-beta.6 (2022-09-08)
+
+##### Chores
+
+*  swap changelog generation to generate-changelog (#204) (31812d2d)
+*  upgrade all non-major dependencies (#203) (4e085034)
+*  auto-format and lint as pre-commit hook (#198) (b6c72c77)
+
+##### New Features
+
+* **components:**  add getDirections function (#172) (88166d02)
+* **util:**  add isServerSide to getRuntime (#193) (769c9288)
+
+##### Bug Fixes
+
+* **components:**
+  *  image url not using correct env in all cases (#205) (fd5924a0)
+  *  export Hours (#190) (3493c272)
+* **dev:**
+  *  local dev not working on linux distros (#199) (123ed619)
+  *  remove spaces causing client/server console error (#196) (b1f7f40c)
+
+##### Reverts
+
+* **components:**  remove hours until css issue is fixed (#202) (c54573e2)
+
 # 1.0.0-beta.5 (2022-08-30)
 
 ### Bug Fixes
