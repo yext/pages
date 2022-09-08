@@ -83,7 +83,9 @@ updateVersion(pkgPath, targetVersion);
 
 step("\nGenerating changelog...");
 const latestTag = await getLatestTag(pkgName);
-if (!latestTag) process.exit();
+if (!latestTag) {
+  process.exit();
+}
 const sha = await run("git", ["rev-list", "-n", "1", latestTag], {
   stdio: "pipe",
 }).then((res) => res.stdout.trim());
