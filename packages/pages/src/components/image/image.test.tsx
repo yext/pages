@@ -141,6 +141,30 @@ describe("Image", () => {
 
     jest.clearAllMocks();
   });
+
+  it("properly renders the srcset based on the correct prod env", () => {
+    render(<Image image={image} />);
+
+    const img = screen.getByRole("img", {
+      name: /alt text/i,
+    });
+
+    expect(img.getAttribute("srcset")).toContain("dynl.mktgcdn.com/p/");
+  });
+
+  it("properly renders the srcset based on the correct sandbox env", () => {
+    const sbxImage = Object.assign(image.image, {
+      url: "https://a.mktgcdn.com/p-sandbox/${imgUUID}/2x1.jpg",
+    });
+
+    render(<Image image={sbxImage} />);
+
+    const img = screen.getByRole("img", {
+      name: /alt text/i,
+    });
+
+    expect(img.getAttribute("srcset")).toContain("dynl.mktgcdn.com/p-sandbox/");
+  });
 });
 
 describe("getImageUUID", () => {
