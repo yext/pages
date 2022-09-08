@@ -16,7 +16,7 @@ import {
   runIfNotDry,
   step,
   updateVersion,
-} from "./releaseUtils";
+} from "./releaseUtils.js";
 
 let targetVersion: string | undefined;
 
@@ -86,9 +86,11 @@ const latestTag = await getLatestTag(pkgName);
 if (!latestTag) {
   process.exit();
 }
-const sha = await run("git", ["rev-list", "-n", "1", latestTag], {
-  stdio: "pipe",
-}).then((res) => res.stdout.trim());
+const sha = (
+  await run("git", ["rev-list", "-n", "1", latestTag], {
+    stdio: "pipe",
+  })
+).stdout.trim();
 
 const changelogArgs = ["generate-changelog", `${sha}..HEAD`];
 

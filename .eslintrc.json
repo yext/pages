@@ -29,6 +29,5 @@
     "import/resolver": {
       "node": true
     }
-  },
-  "ignorePatterns": ["tests/fixtures/**/*"]
+  }
 }
