@@ -1,4 +1,4 @@
-import { HoursIntervalManipulator } from "./hoursManipulator";
+import { HoursIntervalManipulator } from "./hoursManipulator.js";
 
 export interface WeekType {
   monday?: DayType;

@@ -1,2 +1,3 @@
-export { Address } from "./address";
-export * from "./types";
+export { Address } from "./address.js";
+export { getDirections } from "./methods.js";
+export * from "./types.js";

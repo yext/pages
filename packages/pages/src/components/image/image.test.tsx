@@ -8,10 +8,10 @@ import {
   getImageUUID,
   handleLayout,
   getImageSizeForFixedLayout,
-} from "./image";
-import { ImageLayoutOption } from "./types";
+  getImageEnv,
+} from "./image.js";
+import { ImageLayoutOption } from "./types.js";
 import { render, screen } from "@testing-library/react";
-import { getImageEnv } from "./image";
 
 const imgWidth = 20;
 const imgHeight = 10;
@@ -141,6 +141,30 @@ describe("Image", () => {
 
     jest.clearAllMocks();
   });
+
+  it("properly renders the srcset based on the correct prod env", () => {
+    render(<Image image={image} />);
+
+    const img = screen.getByRole("img", {
+      name: /alt text/i,
+    });
+
+    expect(img.getAttribute("srcset")).toContain("dynl.mktgcdn.com/p/");
+  });
+
+  it("properly renders the srcset based on the correct sandbox env", () => {
+    const sbxImage = Object.assign(image.image, {
+      url: "https://a.mktgcdn.com/p-sandbox/${imgUUID}/2x1.jpg",
+    });
+
+    render(<Image image={sbxImage} />);
+
+    const img = screen.getByRole("img", {
+      name: /alt text/i,
+    });
+
+    expect(img.getAttribute("srcset")).toContain("dynl.mktgcdn.com/p-sandbox/");
+  });
 });
 
 describe("getImageUUID", () => {
@@ -243,6 +267,7 @@ describe("handleLayout", () => {
       imgHeight,
       imgUUID,
       {},
+      "",
       width,
       height,
       aspectRatio
@@ -258,6 +283,7 @@ describe("handleLayout", () => {
       imgHeight,
       imgUUID,
       {},
+      "",
       width,
       height,
       undefined
@@ -273,6 +299,7 @@ describe("handleLayout", () => {
       imgHeight,
       imgUUID,
       {},
+      "",
       width,
       undefined,
       undefined
@@ -293,6 +320,7 @@ describe("handleLayout", () => {
       imgHeight,
       imgUUID,
       {},
+      "",
       undefined,
       undefined,
       aspectRatio
@@ -308,6 +336,7 @@ describe("handleLayout", () => {
       imgHeight,
       imgUUID,
       {},
+      "",
       undefined,
       undefined,
       aspectRatio

@@ -1,4 +1,4 @@
-import { HoursType } from "./";
+import { HoursType } from "./index.js";
 
 export const HOURS: HoursType = {
   monday: {
@@ -100,5 +100,24 @@ export const HOURS_WITH_REOPEN_DATE = {
     isClosed: false,
     openIntervals: [{ start: "9:07", end: "18:07" }],
   },
-  reopenDate: "2022-08-11",
+  reopenDate: offsetDate(3),
 };
+
+export function offsetDate(daysForward: number) {
+  const d = new Date();
+
+  d.setDate(d.getDate() + daysForward);
+
+  const yyyy = "" + d.getFullYear();
+  let mm = "" + (d.getMonth() + 1);
+  let dd = "" + d.getDate();
+
+  if (mm.length < 2) {
+    mm = "0" + mm;
+  }
+  if (dd.length < 2) {
+    dd = "0" + dd;
+  }
+
+  return [yyyy, mm, dd].join("-");
+}

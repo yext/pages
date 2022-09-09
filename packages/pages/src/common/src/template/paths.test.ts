@@ -1,4 +1,4 @@
-import { getRelativePrefixToRootFromPath } from "../../src/template/paths";
+import { getRelativePrefixToRootFromPath } from "../../src/template/paths.js";
 
 describe("getRelativePrefixToRootFromPath", () => {
   it("properly returns the empty string when on root level", async () => {

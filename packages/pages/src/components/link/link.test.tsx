@@ -3,7 +3,7 @@
  */
 import React from "react";
 import { render } from "@testing-library/react";
-import { Link } from "./link";
+import { Link } from "./link.js";
 
 describe("Link", () => {
   it("renders component when given href + children", () => {

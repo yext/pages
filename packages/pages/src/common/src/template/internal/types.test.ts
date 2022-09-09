@@ -1,8 +1,8 @@
 import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
-} from "./types";
-import { Template, TemplateModule } from "../types";
+} from "./types.js";
+import { Template, TemplateModule } from "../types.js";
 
 describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () => {
   it("uses the filename as the config name when not set", async () => {

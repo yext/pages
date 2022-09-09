@@ -100,7 +100,12 @@ export function getVersionChoices(currentVersion: string): VersionChoice[] {
   const isStable = !currentBeta && !currentAlpha;
 
   function inc(i: ReleaseType, tag = currentAlpha ? "alpha" : "beta") {
-    return semver.inc(currentVersion, i, tag)!;
+    const incVersion = semver.inc(currentVersion, i, tag);
+    if (incVersion) {
+      return incVersion;
+    }
+
+    throw new Error("Invalid version");
   }
 
   let versionChoices: VersionChoice[] = [

@@ -1,3 +1,3 @@
-export { Hours } from "./hours";
-export { HoursManipulator } from "./hoursManipulator";
-export * from "./types";
+export { Hours } from "./hours.js";
+export { HoursManipulator } from "./hoursManipulator.js";
+export * from "./types.js";

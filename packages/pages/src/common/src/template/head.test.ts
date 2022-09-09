@@ -1,5 +1,5 @@
-import { HeadConfig, renderHeadConfigToString, getLang } from "./head";
-import { TemplateRenderProps } from "./types";
+import { HeadConfig, renderHeadConfigToString, getLang } from "./head.js";
+import { TemplateRenderProps } from "./types.js";
 import pc from "picocolors";
 
 describe("renderHeadConfigToString", () => {

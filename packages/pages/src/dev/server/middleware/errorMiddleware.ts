@@ -2,7 +2,7 @@ import { ViteDevServer } from "vite";
 import { ErrorRequestHandler } from "express";
 import escapeHtml from "escape-html";
 import Convert from "ansi-to-html";
-import page500 from "../public/500";
+import page500 from "../public/500.js";
 import colors from "picocolors";
 
 const STACK_HTML_TAG = "{stack}";

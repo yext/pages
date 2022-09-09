@@ -1,6 +1,6 @@
 import { MouseEvent } from "react";
 import { ConversionDetails, Visitor } from "@yext/analytics";
-import { TemplateProps } from "../../common/src/template/types";
+import { TemplateProps } from "../../common/src/template/types.js";
 
 /**
  * The AnalyticsMethod interface specifies the methods that can be used with

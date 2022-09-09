@@ -1,4 +1,4 @@
-import { args, getPackageInfo, publishPackage, step } from "./releaseUtils";
+import { args, getPackageInfo, publishPackage, step } from "./releaseUtils.js";
 
 const tag = args._[0];
 

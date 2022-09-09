@@ -1,5 +1,5 @@
-import { getHref, isEmail, reverse } from "./methods";
-import { LinkType } from "./types";
+import { getHref, isEmail, reverse } from "./methods.js";
+import { LinkType } from "./types.js";
 
 // getHref
 test("getHref: Url type", () => {

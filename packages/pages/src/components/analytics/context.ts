@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { AnalyticsMethods } from "./interfaces";
+import { AnalyticsMethods } from "./interfaces.js";
 
 /**
  * Default react context for use with Yext Analytics.

@@ -1,9 +1,9 @@
 import * as React from "react";
 import { PropsWithChildren, useRef } from "react";
-import { getRuntime } from "../../util";
-import { Analytics } from "./Analytics";
-import { AnalyticsMethods, AnalyticsProviderProps } from "./interfaces";
-import { AnalyticsContext } from "./context";
+import { getRuntime } from "../../util/index.js";
+import { Analytics } from "./Analytics.js";
+import { AnalyticsMethods, AnalyticsProviderProps } from "./interfaces.js";
+import { AnalyticsContext } from "./context.js";
 
 /**
  * The main Analytics component for you to use. Sets up the proper react context
