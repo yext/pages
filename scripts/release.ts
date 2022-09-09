@@ -84,17 +84,17 @@ updateVersion(pkgPath, targetVersion);
 step("\nGenerating changelog...");
 const latestTag = await getLatestTag(pkgName);
 if (!latestTag) {
-  process.exit();
+  step("\nNo previous tag, skipping changelog generation.");
+} else {
+  const sha = (
+    await run("git", ["rev-list", "-n", "1", latestTag], {
+      stdio: "pipe",
+    })
+  ).stdout.trim();
+
+  const changelogArgs = ["generate-changelog", `${sha}..HEAD`];
+  await run("npx", changelogArgs, { cwd: pkgDir });
 }
-const sha = (
-  await run("git", ["rev-list", "-n", "1", latestTag], {
-    stdio: "pipe",
-  })
-).stdout.trim();
-
-const changelogArgs = ["generate-changelog", `${sha}..HEAD`];
-
-await run("npx", changelogArgs, { cwd: pkgDir });
 
 const { stdout } = await run("git", ["diff"], { stdio: "pipe" });
 if (stdout) {
