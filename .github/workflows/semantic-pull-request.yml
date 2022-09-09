@@ -29,4 +29,4 @@ jobs:
             components
             util
             dev/plugin
-            plugins
+            pages-plugins
