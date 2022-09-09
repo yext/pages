@@ -34,7 +34,7 @@ export default function urlWriteback(config: UrlWritebackConfig) {
     }
 
     const update = {
-      [config.field]: event.url,
+      [config.field]: `https://${event.url}`,
     };
 
     return updateEntity(event.entityId, event.locale, update, config.apiKey, {
