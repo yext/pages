@@ -11,7 +11,13 @@ export interface InternalSlugManagerConfig {
   entityTypes?: string[];
   slugField?: string;
   slugFormatLocaleOverrides?: Record<string, string>;
-  api: Pick<IAPI, "savedSearchesIncludeEntity" | "updateField" | "listLanguageProfiles" | "listEntities">
+  api: Pick<
+    IAPI,
+    | "savedSearchesIncludeEntity"
+    | "updateField"
+    | "listLanguageProfiles"
+    | "listEntities"
+  >;
 }
 
 export function createManager(config: InternalSlugManagerConfig) {
@@ -21,13 +27,11 @@ export function createManager(config: InternalSlugManagerConfig) {
     slugField = "slug",
     entityTypes = [],
     slugFormat,
-		api,
+    api,
   } = config;
 
-  async function connector(
-    inputString: string | undefined
-  ) {
-    const pageToken = inputString || '';
+  async function connector(inputString: string | undefined) {
+    const pageToken = inputString || "";
 
     const params = new URLSearchParams({
       fields: "meta",
@@ -41,16 +45,28 @@ export function createManager(config: InternalSlugManagerConfig) {
     if (entityTypes.length) {
       params.set("entityTypes", entityTypes.join(","));
     }
-    const entitiesResponse = await api.listEntities(params)
+    const entitiesResponse = await api.listEntities(params);
 
     const profileParams = new URLSearchParams({
       fields: ["meta", slugField].join(","),
-      filter: JSON.stringify({ "meta.id": { $in: entitiesResponse.entities.map(entity => entity.meta.id) } }),
+      filter: JSON.stringify({
+        "meta.id": {
+          $in: entitiesResponse.entities.map((entity) => entity.meta.id),
+        },
+      }),
     });
-    const response = await api.listLanguageProfiles(profileParams)
+    const response = await api.listLanguageProfiles(profileParams);
 
-    const idToPrimaryLanguage = getEntityIdToPrimaryLanguageMap(entitiesResponse.entities);
-    const updates = getUpdates(response.profileLists.flatMap(profile => profile.profiles), idToPrimaryLanguage, slugField, slugFormat, slugFormatLocaleOverrides);
+    const idToPrimaryLanguage = getEntityIdToPrimaryLanguageMap(
+      entitiesResponse.entities
+    );
+    const updates = getUpdates(
+      response.profileLists.flatMap((profile) => profile.profiles),
+      idToPrimaryLanguage,
+      slugField,
+      slugFormat,
+      slugFormatLocaleOverrides
+    );
 
     const outputString = JSON.stringify({
       data: updates,
@@ -69,7 +85,7 @@ export function createManager(config: InternalSlugManagerConfig) {
 
     if (searchIds.length) {
       if (!(await api.savedSearchesIncludeEntity(searchIds, event.entityId))) {
-        return null
+        return null;
       }
     }
 
@@ -79,13 +95,19 @@ export function createManager(config: InternalSlugManagerConfig) {
         ? slugFormatLocaleOverrides[lang]
         : slugFormat;
 
-    return api.updateField(event.entityId, lang, slugField, slug)
+    return api.updateField(event.entityId, lang, slugField, slug);
   }
 
   return { connector, webhook };
 }
 
-export function getUpdates(profiles: BaseEntity[], idToPrimaryLanguage: Record<string, string>, slugField: string, slugFormat: string, slugFormatLocaleOverrides: Record<string, string>) {
+export function getUpdates(
+  profiles: BaseEntity[],
+  idToPrimaryLanguage: Record<string, string>,
+  slugField: string,
+  slugFormat: string,
+  slugFormatLocaleOverrides: Record<string, string>
+) {
   const updates: ProfileUpdate[] = [];
   for (const profile of profiles) {
     const lang = profile.meta.language;
@@ -109,12 +131,10 @@ export function getUpdates(profiles: BaseEntity[], idToPrimaryLanguage: Record<s
 }
 
 function getEntityIdToPrimaryLanguageMap(entities: BaseEntity[]) {
-  return entities.reduce(
-    (map: Record<string, string>, entity) => {
-      map[entity.meta.id] = entity.meta.language;
-      return map;
-    }, {}
-  );
+  return entities.reduce((map: Record<string, string>, entity) => {
+    map[entity.meta.id] = entity.meta.language;
+    return map;
+  }, {});
 }
 
 function isEntityCreate(event: WebhookEvent) {

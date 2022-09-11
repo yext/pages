@@ -8,7 +8,7 @@ export type SlugManagerConfig = Omit<InternalSlugManagerConfig, "api"> & {
   apiKey: string;
   v?: string;
   env?: "production" | "sandbox";
-}
+};
 
 /**
  * The createSlugManager function returns a configured object that contains
@@ -25,5 +25,5 @@ export default function createSlugManager(config: SlugManagerConfig) {
     env: config.env,
   });
 
-  return createManager(Object.assign(config, {api}))
+  return createManager(Object.assign(config, { api }));
 }
