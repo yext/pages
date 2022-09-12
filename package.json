@@ -9,7 +9,6 @@
   "main": "index.js",
   "scripts": {
     "build": "pnpm -r run build",
-    "build:release": "pnpm -r run build:release",
     "test": "pnpm -r run test",
     "release": "tsx scripts/release.ts",
     "fmt": "prettier --write --cache .",

@@ -36,9 +36,9 @@
   },
   "scripts": {
     "watch": "node src/bundler --watch",
-    "build": "node src/bundler.js",
-    "build:release": "pnpm run build && pnpm run types",
-    "types": "tsc",
+    "build:js": "node src/bundler.js",
+    "build:types": "tsc",
+    "build": "pnpm build:js && pnpm build:types",
     "fmt": "prettier --write --cache \"src/**/**.{ts,tsx,js,jsx}\"",
     "lint": "eslint --cache --fix src/**",
     "api-extractor": "api-extractor run --local --verbose",
@@ -48,9 +48,9 @@
     "docs:serve": "vitepress serve docs --port 8080",
     "test": "jest",
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
-    "prepublishOnly": "pnpm run build:release",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "prepare": "pnpm build"
   },
   "bin": {
     "pages": "dist/bin/pages.sh"
