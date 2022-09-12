@@ -1,2 +1,4 @@
 import urlWritebackPlugin from "./urlWriteback/index.ts";
-export { urlWritebackPlugin };
+import createSlugManager from "./slugManager/mod.ts";
+
+export { urlWritebackPlugin, createSlugManager };
