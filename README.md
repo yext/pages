@@ -10,9 +10,10 @@ PagesJS is a collection of tools that make it easy to develop on [Yext Pages](ht
 
 ## Packages
 
-| Package                   | Version (click for changelogs)                                                                                     |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| [PagesJS](packages/pages) | [![pages version](https://img.shields.io/npm/v/@yext/pages.svg?label=%20&color=blue)](packages/pages/CHANGELOG.md) |
+| Package                           | Version (click for changelog)                                                                            | Release                                          |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| [PagesJS](packages/pages)         | [![pages version](https://img.shields.io/npm/v/@yext/pages.svg?color=blue)](packages/pages/CHANGELOG.md) | [NPM](https://www.npmjs.com/package/@yext/pages) |
+| [Pages Plugins](packages/plugins) | [![plugins version](https://shield.deno.dev/x/yextpages/@plugins)](packages/plugins/CHANGELOG.md)        | [Deno](https://deno.land/x/yextpages)            |
 
 ## Components
 
