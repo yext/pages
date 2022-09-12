@@ -38,7 +38,7 @@
     "watch": "node src/bundler --watch",
     "build:js": "node src/bundler.js",
     "build:types": "tsc",
-    "build": "pnpm run build:js && pnpm run build:types",
+    "build": "pnpm build:js && pnpm build:types",
     "fmt": "prettier --write --cache \"src/**/**.{ts,tsx,js,jsx}\"",
     "lint": "eslint --cache --fix src/**",
     "api-extractor": "api-extractor run --local --verbose",
@@ -50,7 +50,7 @@
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "prepare": "pnpm run build"
+    "prepare": "pnpm build"
   },
   "bin": {
     "pages": "dist/bin/pages.sh"
