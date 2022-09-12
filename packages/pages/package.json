@@ -50,7 +50,8 @@
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
     "prepublishOnly": "pnpm run build:release",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "prepare": "pnpm run build:release"
   },
   "bin": {
     "pages": "dist/bin/pages.sh"
