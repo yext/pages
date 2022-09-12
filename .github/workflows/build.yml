@@ -31,10 +31,10 @@ jobs:
         run: pnpm i
 
       - name: Build
-        run: pnpm run build
+        run: pnpm run build:js
 
       - name: Generate types
-        run: pnpm run types
+        run: pnpm run build:types
 
       - name: Create build-output artifact
         uses: actions/upload-artifact@v3
