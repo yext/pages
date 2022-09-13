@@ -102,6 +102,7 @@ importers:
       generate-license-file: ^1.3.0
       glob: ^7.2.3
       handlebars: ^4.7.7
+      identity-obj-proxy: ^3.0.0
       ink: ^3.2.0
       jest: ^28.1.3
       jest-environment-jsdom: ^28.1.3
@@ -177,11 +178,15 @@ importers:
       '@types/ws': 8.5.3
       esbuild: 0.15.7
       generate-license-file: 1.3.0_eslint@8.23.0
+      identity-obj-proxy: 3.0.0
       jest: 28.1.3_@types+node@17.0.45
       jest-environment-jsdom: 28.1.3
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       ts-jest: 28.0.8_4svdy5dawtfkkp7pvpex4k3xb4
+
+  packages/plugins:
+    specifiers: {}
 
 packages:
 
@@ -8491,6 +8496,10 @@ packages:
     optionalDependencies:
       uglify-js: 3.16.3
 
+  /harmony-reflect/1.6.2:
+    resolution: {integrity: sha512-HIp/n38R9kQjDEziXyDTuW3vvoxxyxjxFzXLrBr18uB47GnSt+G9D29fqrpM5ZkspMcPICud3XsBJQ4Y2URg8g==}
+    dev: true
+
   /has-bigints/1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
     dev: true
@@ -8807,6 +8816,13 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       postcss: 7.0.39
+    dev: true
+
+  /identity-obj-proxy/3.0.0:
+    resolution: {integrity: sha512-00n6YnVHKrinT9t0d9+5yZC6UBNJANpYEQvL2LlX6Ab9lnmxzIRcEmTPuyGScvl1+jKuCICX1Z0Ab1pPKKdikA==}
+    engines: {node: '>=4'}
+    dependencies:
+      harmony-reflect: 1.6.2
     dev: true
 
   /ieee754/1.2.1:

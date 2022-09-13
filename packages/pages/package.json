@@ -119,6 +119,7 @@
     "esbuild": "^0.15.7",
     "generate-license-file": "^1.3.0",
     "glob": "^7.2.3",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^28.1.3",
     "jest-environment-jsdom": "^28.1.3",
     "react": "^17.0.2",
