@@ -48,7 +48,7 @@
     "docs:serve": "vitepress serve docs --port 8080",
     "test": "jest",
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006 -h localhost",
     "build-storybook": "build-storybook",
     "prepare": "pnpm build"
   },
@@ -90,14 +90,13 @@
     "@babel/core": "^7.19.0",
     "@microsoft/api-documenter": "^7.19.10",
     "@microsoft/api-extractor": "^7.30.0",
-    "@storybook/addon-actions": "^6.5.10",
-    "@storybook/addon-essentials": "^6.5.10",
-    "@storybook/addon-interactions": "^6.5.10",
-    "@storybook/addon-links": "^6.5.10",
-    "@storybook/builder-webpack4": "^6.5.10",
-    "@storybook/manager-webpack4": "^6.5.10",
-    "@storybook/react": "^6.5.10",
-    "@storybook/testing-library": "^0.0.13",
+    "@storybook/addon-essentials": "^6.5.11",
+    "@storybook/addon-interactions": "^6.5.11",
+    "@storybook/addon-links": "^6.5.11",
+    "@storybook/builder-vite": "^0.2.2",
+    "@storybook/client-api": "^6.5.11",
+    "@storybook/client-logger": "^6.5.11",
+    "@storybook/react": "^6.5.11",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.4.3",
     "@types/escape-html": "^1.0.2",
@@ -112,11 +111,9 @@
     "@types/react-dom": "^17.0.17",
     "@types/shelljs": "^0.8.11",
     "@types/ws": "^8.5.3",
-    "babel-loader": "^8.2.5",
     "esbuild": "^0.15.7",
     "generate-license-file": "^1.3.0",
     "glob": "^7.2.3",
-    "identity-obj-proxy": "^3.0.0",
     "jest": "^28.1.3",
     "jest-environment-jsdom": "^28.1.3",
     "react": "^17.0.2",
@@ -155,5 +152,8 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css)$": "identity-obj-proxy"
     }
+  },
+  "overrides": {
+    "webpack": "^5.52.0"
   }
 }
