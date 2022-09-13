@@ -61,9 +61,14 @@ importers:
       '@babel/core': ^7.19.0
       '@microsoft/api-documenter': ^7.19.10
       '@microsoft/api-extractor': ^7.30.0
+      '@storybook/addon-actions': ^6.5.11
+      '@storybook/addon-backgrounds': ^6.5.11
+      '@storybook/addon-docs': ^6.5.11
       '@storybook/addon-essentials': ^6.5.11
       '@storybook/addon-interactions': ^6.5.11
       '@storybook/addon-links': ^6.5.11
+      '@storybook/addon-measure': ^6.5.11
+      '@storybook/addon-outline': ^6.5.11
       '@storybook/builder-vite': ^0.2.2
       '@storybook/client-api': ^6.5.11
       '@storybook/client-logger': ^6.5.11
@@ -144,9 +149,14 @@ importers:
       '@babel/core': 7.19.0
       '@microsoft/api-documenter': 7.19.10
       '@microsoft/api-extractor': 7.30.0
+      '@storybook/addon-actions': 6.5.11_sfoxds7t5ydpegc3knd667wn6m
+      '@storybook/addon-backgrounds': 6.5.11_sfoxds7t5ydpegc3knd667wn6m
+      '@storybook/addon-docs': 6.5.11_nfjldf5qicmbffg2a2gqt6zumm
       '@storybook/addon-essentials': 6.5.11_43p24wgrninluajpl66646pi5e
       '@storybook/addon-interactions': 6.5.11_mehstdqx5nxd7vpggxal3dftta
       '@storybook/addon-links': 6.5.11_sfoxds7t5ydpegc3knd667wn6m
+      '@storybook/addon-measure': 6.5.11_sfoxds7t5ydpegc3knd667wn6m
+      '@storybook/addon-outline': 6.5.11_sfoxds7t5ydpegc3knd667wn6m
       '@storybook/builder-vite': 0.2.2_vhpalza2pxacqssohdivvkho6m
       '@storybook/client-api': 6.5.11_sfoxds7t5ydpegc3knd667wn6m
       '@storybook/client-logger': 6.5.11
