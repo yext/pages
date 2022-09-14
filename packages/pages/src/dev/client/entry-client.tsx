@@ -46,9 +46,13 @@ const hydrate = async () => {
     return;
   }
 
+  if (render) {
+    return;
+  }
+
   ReactDOM.hydrate(
-    render ? render() : <Component {...(window as any)._RSS_PROPS_} />,
-    document.getElementById("root")
+    <Component {...(window as any)._RSS_PROPS_} />,
+    document.getElementById("reactele")
   );
 };
 

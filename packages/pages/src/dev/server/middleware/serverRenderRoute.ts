@@ -59,12 +59,15 @@ export const serverRenderRoute =
           projectStructure,
         });
 
+      if (render) {
+        res.status(200).set({ "Content-Type": "text/html" }).end(render(props));
+        return;
+      }
+
       // render the component to its html
       // Since we are on the server using plain TS, and outside
       // of Vite, we are not using JSX here
-      const appHtml = render
-        ? render(props)
-        : Component
+      const appHtml = Component
         ? ReactDOMServer.renderToString(React.createElement(Component, props))
         : "";
 

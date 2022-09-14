@@ -2,7 +2,7 @@
 <html>
   <!--app-head-->
   <body>
-    <div id="root"><!--app-html--></div>
+    <div id="reactele"><!--app-html--></div>
     <script type="module">
       import ReactDOM from "react-dom";
       import React from "react";
@@ -34,13 +34,14 @@
           );
           return;
         }
+        if (render) {
+          return;
+        }
         ReactDOM.hydrate(
-          render
-            ? render()
-            : /* @__PURE__ */ React.createElement(Component, {
-                ...window._RSS_PROPS_,
-              }),
-          document.getElementById("root")
+          /* @__PURE__ */ React.createElement(Component, {
+            ...window._RSS_PROPS_,
+          }),
+          document.getElementById("reactele")
         );
       };
       hydrate();
