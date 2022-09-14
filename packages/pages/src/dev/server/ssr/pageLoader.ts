@@ -6,13 +6,13 @@ import templateBase from "../public/templateBase.js";
 import { FeaturesConfig } from "../../../common/src/feature/features.js";
 import {
   TemplateProps,
-  TransformProps,
-  GetPath,
   TemplateRenderProps,
+  Render,
 } from "../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../common/src/template/paths.js";
 import React from "react";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 
 type PageLoaderValues = {
   url: string;
@@ -27,14 +27,9 @@ type PageLoaderValues = {
 
 export type PageLoaderResult = {
   template: string;
-  Component: React.FC;
+  Component: React.FC | undefined;
+  render: Render<any> | undefined;
   props: any;
-};
-
-type SsrLoadedModule = {
-  default: React.FC;
-  getPath: GetPath<any>;
-  transformProps?: TransformProps<any>;
 };
 
 export const pageLoader = async ({
@@ -58,22 +53,18 @@ export const pageLoader = async ({
   // 3. Load the server entry. vite.ssrLoadModule automatically transforms
   //    your ESM source code to be usable in Node.js! There is no bundling
   //    required, and provides efficient invalidation similar to HMR.
-  const module = await vite.ssrLoadModule(
+  const module = (await vite.ssrLoadModule(
     `/${TEMPLATE_PATH}/${templateFilename}`
-  );
+  )) as TemplateModuleInternal<any, any>;
 
-  if (!module.default) {
+  if (!module.default && !module.render) {
     throw Error(
-      "Default export missing in template: " +
+      "Either a default export or render function is required in template: " +
         `/${TEMPLATE_PATH}/${templateFilename}`
     );
   }
 
-  const {
-    default: Component,
-    transformProps,
-    getPath,
-  } = module as SsrLoadedModule;
+  const { default: Component, render, transformProps, getPath } = module;
 
   let document;
   if (dynamicGenerateData) {
@@ -117,5 +108,5 @@ export const pageLoader = async ({
     relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
   };
 
-  return { template, Component, props: templateRenderProps };
+  return { template, Component, render, props: templateRenderProps };
 };

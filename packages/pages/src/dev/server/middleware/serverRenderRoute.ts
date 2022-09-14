@@ -47,8 +47,8 @@ export const serverRenderRoute =
       const React = await import("react");
       const ReactDOMServer = await import("react-dom/server");
 
-      const { template, Component, props }: PageLoaderResult = await pageLoader(
-        {
+      const { template, Component, render, props }: PageLoaderResult =
+        await pageLoader({
           url: url.pathname,
           vite,
           templateFilename: templateModuleInternal.filename,
@@ -57,15 +57,16 @@ export const serverRenderRoute =
           featuresConfig,
           dynamicGenerateData,
           projectStructure,
-        }
-      );
+        });
 
       // render the component to its html
       // Since we are on the server using plain TS, and outside
       // of Vite, we are not using JSX here
-      const appHtml = await ReactDOMServer.renderToString(
-        React.createElement(Component, props)
-      );
+      const appHtml = render
+        ? render(props)
+        : Component
+        ? ReactDOMServer.renderToString(React.createElement(Component, props))
+        : "";
 
       const headConfig = templateModuleInternal.getHeadConfig
         ? templateModuleInternal.getHeadConfig(props)
