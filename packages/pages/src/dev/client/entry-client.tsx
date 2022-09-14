@@ -42,6 +42,14 @@ const hydrate = async () => {
     return;
   }
 
+  if (!Component) {
+    console.error(
+      "Either a default export or render function is required in template: " +
+        template.path
+    );
+    return;
+  }
+
   ReactDOM.hydrate(
     <Component {...(window as any)._RSS_PROPS_} />,
     document.getElementById("reactele")
