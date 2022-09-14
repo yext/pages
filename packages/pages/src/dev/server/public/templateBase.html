@@ -7,7 +7,7 @@
       import ReactDOM from "react-dom";
       import React from "react";
       const hydrate = async () => {
-        const templates = import.meta.glob("/src/templates/*.(jsx|tsx)");
+        const templates = import.meta.glob("/src/templates/*.(jsx|tsx|ts|js)");
         const routes = Object.keys(templates).map((path) => {
           return {
             name: path.split("/").pop()?.split(".")[0] || "index",
@@ -26,15 +26,20 @@
             throw new Error("Function not implemented.");
           },
         };
-        const { default: Component } = await template.getComponent();
-        if (!Component) {
-          console.error("Default export missing in template: " + template.path);
+        const { default: Component, render } = await template.getComponent();
+        if (!Component && !render) {
+          console.error(
+            "Either a default export or render function is required in template: " +
+              template.path
+          );
           return;
         }
         ReactDOM.hydrate(
-          /* @__PURE__ */ React.createElement(Component, {
-            ...window._RSS_PROPS_,
-          }),
+          render
+            ? render()
+            : /* @__PURE__ */ React.createElement(Component, {
+                ...window._RSS_PROPS_,
+              }),
           document.getElementById("root")
         );
       };

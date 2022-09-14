@@ -36,15 +36,18 @@ const hydrate = async () => {
     },
   };
 
-  const { default: Component } = await template.getComponent();
+  const { default: Component, render } = await template.getComponent();
 
-  if (!Component) {
-    console.error("Default export missing in template: " + template.path);
+  if (!Component && !render) {
+    console.error(
+      "Either a default export or render function is required in template: " +
+        template.path
+    );
     return;
   }
 
   ReactDOM.hydrate(
-    <Component {...(window as any)._RSS_PROPS_} />,
+    render ? render() : <Component {...(window as any)._RSS_PROPS_} />,
     document.getElementById("root")
   );
 };
