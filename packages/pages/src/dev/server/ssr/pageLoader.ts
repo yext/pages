@@ -7,10 +7,8 @@ import { FeaturesConfig } from "../../../common/src/feature/features.js";
 import {
   TemplateProps,
   TemplateRenderProps,
-  Render,
 } from "../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../common/src/template/paths.js";
-import React from "react";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 
@@ -27,8 +25,6 @@ type PageLoaderValues = {
 
 export type PageLoaderResult = {
   template: string;
-  Component: React.FC | undefined;
-  render: Render<any> | undefined;
   props: any;
 };
 
@@ -64,7 +60,7 @@ export const pageLoader = async ({
     );
   }
 
-  const { default: Component, render, transformProps, getPath } = module;
+  const { transformProps, getPath } = module;
 
   let document;
   if (dynamicGenerateData) {
@@ -108,5 +104,5 @@ export const pageLoader = async ({
     relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
   };
 
-  return { template, Component, render, props: templateRenderProps };
+  return { template, props: templateRenderProps };
 };

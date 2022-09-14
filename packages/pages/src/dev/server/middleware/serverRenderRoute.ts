@@ -12,6 +12,7 @@ import {
   getLang,
 } from "../../../common/src/template/head.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { TEMPLATE_PATH } from "../ssr/constants.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -47,29 +48,37 @@ export const serverRenderRoute =
       const React = await import("react");
       const ReactDOMServer = await import("react-dom/server");
 
-      const { template, Component, render, props }: PageLoaderResult =
-        await pageLoader({
-          url: url.pathname,
-          vite,
-          templateFilename: templateModuleInternal.filename,
-          entityId,
-          locale,
-          featuresConfig,
-          dynamicGenerateData,
-          projectStructure,
-        });
+      const { template, props }: PageLoaderResult = await pageLoader({
+        url: url.pathname,
+        vite,
+        templateFilename: templateModuleInternal.filename,
+        entityId,
+        locale,
+        featuresConfig,
+        dynamicGenerateData,
+        projectStructure,
+      });
 
-      if (render) {
-        res.status(200).set({ "Content-Type": "text/html" }).end(render(props));
+      if (templateModuleInternal.render) {
+        res
+          .status(200)
+          .set({ "Content-Type": "text/html" })
+          .end(templateModuleInternal.render(props));
         return;
       }
 
+      if (!templateModuleInternal.default) {
+        throw Error(
+          "Either a default export or render function is required in template: " +
+            `/${TEMPLATE_PATH}/${templateModuleInternal.filename}`
+        );
+      }
       // render the component to its html
       // Since we are on the server using plain TS, and outside
       // of Vite, we are not using JSX here
-      const appHtml = Component
-        ? ReactDOMServer.renderToString(React.createElement(Component, props))
-        : "";
+      const appHtml = ReactDOMServer.renderToString(
+        React.createElement(templateModuleInternal.default, props)
+      );
 
       const headConfig = templateModuleInternal.getHeadConfig
         ? templateModuleInternal.getHeadConfig(props)

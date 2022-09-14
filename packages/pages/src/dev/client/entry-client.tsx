@@ -38,14 +38,6 @@ const hydrate = async () => {
 
   const { default: Component, render } = await template.getComponent();
 
-  if (!Component && !render) {
-    console.error(
-      "Either a default export or render function is required in template: " +
-        template.path
-    );
-    return;
-  }
-
   if (render) {
     return;
   }
