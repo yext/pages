@@ -39,6 +39,7 @@ const hydrate = async () => {
   const { default: Component } = await template.getComponent();
 
   if (!Component) {
+    console.error("Default export missing in template: " + template.path);
     return;
   }
 
