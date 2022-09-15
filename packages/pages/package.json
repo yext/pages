@@ -43,13 +43,10 @@
     "lint": "eslint --cache --fix src/**",
     "api-extractor": "api-extractor run --local --verbose",
     "generate-docs": "api-documenter markdown --input-folder temp --output-folder docs/api && rm -rf temp",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs --port 8080",
     "test": "jest",
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
     "storybook": "NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006 -h localhost",
-    "build-storybook": "build-storybook",
+    "build-storybook": "NODE_OPTIONS=--openssl-legacy-provider build-storybook",
     "prepare": "pnpm build"
   },
   "bin": {
@@ -83,8 +80,7 @@
     "rollup": "^2.79.0",
     "shelljs": "^0.8.5",
     "typescript": "^4.8.2",
-    "vite": "^3.1.0",
-    "vitepress": "1.0.0-draft.8"
+    "vite": "^3.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.0",
