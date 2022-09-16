@@ -50,7 +50,7 @@ export const indexPage =
               <li>
                 <a href="http://localhost:${viteDevServerPort}/${encodeURIComponent(
                 templateName
-              )}/">
+              )}">
                   ${templateName}
                 </a>
               </li>
