@@ -1,10 +1,10 @@
-import type { Map as MapType, MapProvider, PinProperties, MapPinOptions } from "@yext/components-tsx-maps";
+import type { Map as MapType, MapProvider } from "@yext/components-tsx-maps";
 import type { GeoBounds } from "@yext/components-tsx-geo";
 import React from "react";
 
 export interface Coordinate {
-  latitude: number
-  longitude: number
+  latitude: number;
+  longitude: number;
 }
 
 export interface MapContextType {
@@ -19,47 +19,35 @@ export interface MapProps {
   clientKey?: string;
   children?: any;
   controls: boolean;
-  center?: Coordinate;
-  zoom?: number;
-  getMapOptions?: React.Dispatch<React.SetStateAction<MapType | null>>;
-  padding?: number | {
-    bottom: number | (() => number);
-    left: number | (() => number);
-    right: number | (() => number);
-    top: number | (() => number);
-  },
+  defaultCenter?: Coordinate;
+  defaultZoom?: number;
+  mapRef?: React.MutableRefObject<MapType | null>;
+  padding?:
+    | number
+    | {
+        bottom: number | (() => number);
+        left: number | (() => number);
+        right: number | (() => number);
+        top: number | (() => number);
+      };
   panHandler: (previousBounds: GeoBounds, currentBounds: GeoBounds) => void;
   panStartHandler?: (currentBounds: GeoBounds) => void;
   provider: MapProvider;
-  providerOptions?: {};
+  providerOptions?: { [key: string]: any };
   singleZoom: number;
 }
 
 // Marker
 
-export interface BaseMarker {
+export interface MarkerProps {
+  children?: React.ReactChild;
+  coordinate: Coordinate;
   hideOffscreen?: boolean;
-  icon: JSX.Element;
+  icon?: JSX.Element;
   id: string;
   onClick: (id: string) => void;
   onHover: (hovered: boolean, id: string) => void;
   onFocus: (focused: boolean, id: string) => void;
-  payload: { [key: string]: boolean };
-  pinProperties: (status: string) => PinProperties;
-}
-
-export interface DefaultMarker extends BaseMarker {
-  children?: never;
-  coordinate?: never;
-  mapPinOptions: MapPinOptions;
-  zIndex?: never;
-}
-
-export interface CustomMarker extends BaseMarker {
-  children: React.ReactChild;
-  coordinate: Coordinate;
-  mapPinOptions?: never;
+  statusOptions?: { [key: string]: boolean };
   zIndex?: number;
 }
-
-export type MarkerProps = CustomMarker | DefaultMarker;

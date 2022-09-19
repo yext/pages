@@ -1,9 +1,18 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import classnames from "classnames";
-import { GoogleMaps, Map as MapType, MapOptions } from "@yext/components-tsx-maps";
+import {
+  GoogleMaps,
+  Map as MapType,
+  MapOptions,
+} from "@yext/components-tsx-maps";
 import { Coordinate, GeoBounds } from "@yext/components-tsx-geo";
-import { MapProps, MapContextType } from "./types";
-import css from "./map.module.css";
+import type { MapProps, MapContextType } from "./types";
 
 export const MapContext = createContext<MapContextType | null>(null);
 
@@ -11,7 +20,7 @@ export function useMapContext() {
   const ctx = useContext(MapContext);
 
   if (!ctx || ctx.map === undefined) {
-    throw new Error('Attempted to call useMapContext() outside of <Map>.');
+    throw new Error("Attempted to call useMapContext() outside of <Map>.");
   }
 
   return ctx.map;
@@ -24,23 +33,26 @@ export const Map = ({
   className,
   clientKey,
   controls,
-  getMapOptions,
+  defaultCenter,
+  defaultZoom,
+  mapRef,
   padding,
   panStartHandler,
+  panHandler,
   provider,
   providerOptions,
   singleZoom,
-  ...rest
 }: MapProps) => {
   const wrapper = useRef(null);
 
-  const [center, setCenter] = useState(rest.center);
+  const [center, setCenter] = useState(defaultCenter);
   const [loaded, setLoaded] = useState(false);
   const [map, setMap] = useState<MapType>();
-  const [zoom, setZoom] = useState(rest.zoom);
+  const [zoom, setZoom] = useState(defaultZoom);
 
-  const panHandler = (previous: GeoBounds, current: GeoBounds) => {
-    rest.panHandler(previous, current);
+  // Update center on map move
+  const _panHandler = (previous: GeoBounds, current: GeoBounds) => {
+    panHandler(previous, current);
     setCenter(current.getCenter());
   };
 
@@ -59,7 +71,7 @@ export const Map = ({
       return;
     }
 
-    const coordinates = bounds.map(bound => new Coordinate(bound));
+    const coordinates = bounds.map((bound) => new Coordinate(bound));
     map.fitCoordinates(coordinates);
   }, [JSON.stringify(bounds), map]);
 
@@ -74,7 +86,8 @@ export const Map = ({
       .withDefaultCenter(center)
       .withDefaultZoom(zoom)
       .withPadding(padding)
-      .withPanHandler(panHandler)
+      .withPanHandler(_panHandler)
+      .withPanStartHandler(panStartHandler)
       .withProvider(provider)
       .withProviderOptions(providerOptions)
       .withSinglePinZoom(singleZoom)
@@ -83,27 +96,31 @@ export const Map = ({
 
     setMap(mapOptions);
 
-    if (getMapOptions) {
-      getMapOptions(mapOptions);
+    if (mapRef) {
+      mapRef.current = mapOptions;
     }
   }, [loaded]);
 
-  // On any change
+  // On mount
   useEffect(() => {
     if (loaded || map || !wrapper.current) {
       return;
     }
 
-    const useClientKey = provider.getProviderName() === 'Google' && clientKey;
-    provider.load(apiKey, useClientKey ? { client: clientKey } : {})
+    const useClientKey = provider.getProviderName() === "Google" && clientKey;
+    provider
+      .load(apiKey, useClientKey ? { client: clientKey } : {})
       .then(() => setLoaded(true));
   }, []);
 
   return (
     <div
-      className={classnames({
-        'is-loaded': loaded,
-      }, css.Map, className)}
+      className={classnames(
+        {
+          "is-loaded": loaded,
+        },
+        className
+      )}
       id="map"
       ref={wrapper}
       data-testid="map"
@@ -119,10 +136,11 @@ export const Map = ({
 
 Map.defaultProps = {
   controls: true,
-  center: { latitude: 39.83, longitude: -98.58 },
+  defaultCenter: { latitude: 39.83, longitude: -98.58 },
+  defaultZoom: 4,
   padding: { bottom: 50, left: 50, right: 50, top: 50 },
-  panHandler: () => {},
+  panHandler: () => null,
+  panStartHandler: () => null,
   provider: GoogleMaps,
   singleZoom: 14,
-  zoom: 4,
 };

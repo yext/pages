@@ -1,7 +1,5 @@
-/* TODO: replace with tailwind once setup */
 .Map {
-  width: 675px;
-  height: 375px;
+  height: var(--yxt-map-height);
 }
 
 .Map button {
@@ -17,4 +15,8 @@
   appearance: none;
   background: none;
   cursor: pointer;
+}
+
+.sr-only {
+  display: none;
 }
