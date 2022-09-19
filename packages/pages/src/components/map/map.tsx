@@ -12,7 +12,7 @@ import {
   MapOptions,
 } from "@yext/components-tsx-maps";
 import { Coordinate, GeoBounds } from "@yext/components-tsx-geo";
-import type { MapProps, MapContextType } from "./types";
+import type { MapProps, MapContextType } from "./types.js";
 
 export const MapContext = createContext<MapContextType | null>(null);
 
