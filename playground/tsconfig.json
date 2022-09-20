@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "jsx": "react",
+    "strict": true,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "outDir": "./dist/types/",
+    "target": "ESNext"
+  },
+  "include": ["."]
+}

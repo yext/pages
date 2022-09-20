@@ -1,0 +1,12 @@
+node_modules/
+sites-rendered-output/
+dist/
+.yext
+.artifact-output
+*.local
+
+.DS_Store
+
+/test-results/
+/playwright-report/
+/playwright/.cache/

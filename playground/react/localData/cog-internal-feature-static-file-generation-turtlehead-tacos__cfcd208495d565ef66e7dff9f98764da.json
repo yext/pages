@@ -1,0 +1,18 @@
+{
+  "__": {
+    "name": "turtlehead-tacos",
+    "staticPage": {
+      "plugin": {}
+    },
+    "templateType": "JS"
+  },
+  "businessId": 0,
+  "key": "0:turtlehead-tacos:knowledgeGraph:0:en",
+  "locale": "en",
+  "meta": {
+    "locale": "en"
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": ""
+}

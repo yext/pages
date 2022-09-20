@@ -56,7 +56,7 @@ export const createServer = async (dynamicGenerateData: boolean) => {
 
   app.use(errorMiddleware(vite));
 
-  // start the server on port 3000
+  // start the server on the default viteDevServerPort
   app.listen(viteDevServerPort, () =>
     process.stdout.write(`listening on :${viteDevServerPort}\n`)
   );

@@ -11,5 +11,9 @@ export default async () => {
     await createServer(true);
   }
 
+  if (args.some((arg) => ["noopen"].includes(arg))) {
+    return;
+  }
+
   await open(`http://localhost:${viteDevServerPort}/`);
 };

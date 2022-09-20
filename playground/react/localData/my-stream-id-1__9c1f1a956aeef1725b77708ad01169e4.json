@@ -1,0 +1,96 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "location",
+    "streamId": "my-stream-id-1",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "Mount Pleasant",
+    "countryCode": "US",
+    "line1": "1136 McVaney Road",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "North Carolina",
+    "postalCode": "28043",
+    "region": "NC"
+  },
+  "businessId": 0,
+  "description": "Let's see if it works11",
+  "hours": {
+    "friday": {
+      "openIntervals": [
+        {
+          "end": "17:00",
+          "start": "09:00"
+        }
+      ]
+    },
+    "monday": {
+      "openIntervals": [
+        {
+          "end": "17:00",
+          "start": "09:00"
+        }
+      ]
+    },
+    "saturday": {
+      "openIntervals": [
+        {
+          "end": "17:00",
+          "start": "09:00"
+        }
+      ]
+    },
+    "sunday": {
+      "openIntervals": [
+        {
+          "end": "17:00",
+          "start": "09:00"
+        }
+      ]
+    },
+    "thursday": {
+      "openIntervals": [
+        {
+          "end": "17:00",
+          "start": "09:00"
+        }
+      ]
+    },
+    "tuesday": {
+      "openIntervals": [
+        {
+          "end": "17:00",
+          "start": "09:00"
+        }
+      ]
+    },
+    "wednesday": {
+      "openIntervals": [
+        {
+          "end": "17:00",
+          "start": "09:00"
+        }
+      ]
+    }
+  },
+  "id": "3",
+  "key": "0:location:knowledgeGraph:3339858:en",
+  "locale": "en",
+  "mainPhone": "+18282234914",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en",
+    "updateTimestamp": "2021-11-19T21:19:23Z"
+  },
+  "name": "Business 3",
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "uid": 3339858
+}

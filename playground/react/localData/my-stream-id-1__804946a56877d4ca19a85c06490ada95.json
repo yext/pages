@@ -1,0 +1,42 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "location",
+    "streamId": "my-stream-id-1",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "Saint Charles",
+    "countryCode": "US",
+    "line1": "925 N Garfield St",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "Virginia",
+    "postalCode": "22201",
+    "region": "VA"
+  },
+  "businessId": 0,
+  "description": "english desc",
+  "geocodedCoordinate": {
+    "latitude": 38.88379,
+    "longitude": -77.09325
+  },
+  "id": "cat_test",
+  "key": "0:location:knowledgeGraph:4187969:en",
+  "locale": "en",
+  "mainPhone": "+18282234914",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en",
+    "updateTimestamp": "2022-07-22T16:13:05Z"
+  },
+  "name": "Business 3",
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "uid": 4187969
+}

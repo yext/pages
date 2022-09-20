@@ -1,0 +1,100 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "location",
+    "streamId": "my-stream-id-1",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "Jennings",
+    "countryCode": "US",
+    "line1": "6025 Richmond Avenue",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "Texas",
+    "postalCode": "77057",
+    "region": "TX"
+  },
+  "businessId": 0,
+  "description": "Diablo Loco is Houston's hottest sports bar, serving up exceptional food including wings, tacos, burgers \u0026 more! Also featuring Houston's Best Margarita (First Place - 2015 Houston Margarita Festival), multiple HD screens, and an outdoor patio. All ages welcome until 9pm, 21+ only from 9pm to close.",
+  "geocodedCoordinate": {
+    "latitude": 29.73115,
+    "longitude": -95.4861
+  },
+  "hours": {
+    "friday": {
+      "openIntervals": [
+        {
+          "end": "02:00",
+          "start": "11:00"
+        }
+      ]
+    },
+    "monday": {
+      "openIntervals": [
+        {
+          "end": "00:00",
+          "start": "11:00"
+        }
+      ]
+    },
+    "saturday": {
+      "openIntervals": [
+        {
+          "end": "02:00",
+          "start": "11:00"
+        }
+      ]
+    },
+    "sunday": {
+      "openIntervals": [
+        {
+          "end": "00:00",
+          "start": "11:00"
+        }
+      ]
+    },
+    "thursday": {
+      "openIntervals": [
+        {
+          "end": "02:00",
+          "start": "11:00"
+        }
+      ]
+    },
+    "tuesday": {
+      "openIntervals": [
+        {
+          "end": "00:00",
+          "start": "11:00"
+        }
+      ]
+    },
+    "wednesday": {
+      "openIntervals": [
+        {
+          "end": "00:00",
+          "start": "11:00"
+        }
+      ]
+    }
+  },
+  "id": "15612",
+  "key": "0:location:knowledgeGraph:4188047:en",
+  "locale": "en",
+  "mainPhone": "+17132664244",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en",
+    "updateTimestamp": "2021-11-19T21:19:16Z"
+  },
+  "name": "Diablo Loco Sports Bar",
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "uid": 4188047
+}
