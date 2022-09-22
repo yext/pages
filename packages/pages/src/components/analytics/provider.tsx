@@ -37,7 +37,7 @@ export function AnalyticsProvider(
   }
 
   const enableDebuggingDefault =
-    debuggingParamDetected() || process.env.NODE_ENV === "development"
+    debuggingParamDetected() || process?.env?.NODE_ENV === "development"
   analytics.setDebugEnabled(enableDebugging ?? enableDebuggingDefault)
 
   return (
