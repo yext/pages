@@ -1,9 +1,9 @@
-import * as React from "react"
-import { PropsWithChildren, useRef } from "react"
-import { getRuntime } from "../../util/index.js"
-import { Analytics } from "./Analytics.js"
-import { AnalyticsMethods, AnalyticsProviderProps } from "./interfaces.js"
-import { AnalyticsContext } from "./context.js"
+import * as React from "react";
+import { PropsWithChildren, useRef } from "react";
+import { getRuntime } from "../../util/index.js";
+import { Analytics } from "./Analytics.js";
+import { AnalyticsMethods, AnalyticsProviderProps } from "./interfaces.js";
+import { AnalyticsContext } from "./context.js";
 
 /**
  * The main Analytics component for you to use. Sets up the proper react context
@@ -22,29 +22,29 @@ export function AnalyticsProvider(
     enableTrackingCookie,
     enableDebugging,
     templateData,
-  } = props
+  } = props;
 
-  const analyticsRef = useRef<AnalyticsMethods | null>(null)
+  const analyticsRef = useRef<AnalyticsMethods | null>(null);
 
   if (analyticsRef.current === null) {
-    analyticsRef.current = new Analytics(templateData, requireOptIn)
+    analyticsRef.current = new Analytics(templateData, requireOptIn);
   }
 
-  const analytics = analyticsRef.current
+  const analytics = analyticsRef.current;
 
   if (enableTrackingCookie) {
-    analytics.enableTrackingCookie()
+    analytics.enableTrackingCookie();
   }
 
   const enableDebuggingDefault =
-    debuggingParamDetected() || process?.env?.NODE_ENV === "development"
-  analytics.setDebugEnabled(enableDebugging ?? enableDebuggingDefault)
+    debuggingParamDetected() || process?.env?.NODE_ENV === "development";
+  analytics.setDebugEnabled(enableDebugging ?? enableDebuggingDefault);
 
   return (
     <AnalyticsContext.Provider value={analytics}>
       {children}
     </AnalyticsContext.Provider>
-  )
+  );
 }
 
 /**
@@ -53,11 +53,11 @@ export function AnalyticsProvider(
  */
 function debuggingParamDetected(): boolean {
   if (getRuntime().name !== "browser") {
-    return false
+    return false;
   }
   if (typeof window === undefined) {
-    return false
+    return false;
   }
-  const currentUrl = new URL(window.location.href)
-  return !!currentUrl.searchParams.get("xYextDebug")
+  const currentUrl = new URL(window.location.href);
+  return !!currentUrl.searchParams.get("xYextDebug");
 }
