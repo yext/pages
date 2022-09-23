@@ -1,5 +1,9 @@
 # Provided components
 
+## Address
+
+Render a localized address from a Knowledge Graph field.
+
 ## Image
 
 Render an image from a Knowledge Graph field.
