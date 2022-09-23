@@ -24,11 +24,11 @@ export type AddressLine = (keyof AddressType | ",")[];
  *
  * @public
  */
-export type AddressProps = {
+export interface AddressProps extends React.HTMLProps<HTMLDivElement> {
   address: AddressType;
   lines?: AddressLine[];
   separator?: string;
-};
+}
 
 /**
  * The shape of the data passed to {@link AddressLine}.
