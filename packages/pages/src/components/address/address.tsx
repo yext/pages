@@ -19,7 +19,12 @@ import { getUnabbreviated } from "./methods.js";
  *
  * @public
  */
-export const Address = ({ address, lines, separator }: AddressProps) => {
+export const Address = ({
+  address,
+  lines,
+  separator,
+  ...props
+}: AddressProps) => {
   const renderedLines = (lines || localeAddressFormat(address.countryCode)).map(
     (line) => (
       <AddressLine
@@ -31,7 +36,7 @@ export const Address = ({ address, lines, separator }: AddressProps) => {
     )
   );
 
-  return <>{renderedLines}</>;
+  return <div {...props}>{renderedLines}</div>;
 };
 
 Address.defaultProps = {
