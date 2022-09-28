@@ -86,6 +86,16 @@ export const Image = ({
     )
     .join(", ");
 
+  // Generate Image Sizes
+  const maxWidthBreakpoints = [640, 768, 1024, 1280, 1536];
+  const sizes: string = widths
+    .map((w, i) =>
+      i === widths.length - 1
+        ? `${w}px`
+        : `(max-width: ${maxWidthBreakpoints[i]}px) ${w}px`
+    )
+    .join(", ");
+
   return (
     <>
       {!isImageLoaded && placeholder != null && placeholder}
@@ -97,6 +107,7 @@ export const Image = ({
         width={absWidth}
         height={absHeight}
         srcSet={srcSet}
+        sizes={sizes}
         loading={"lazy"}
         alt={imageData.alternateText || ""}
         {...imgOverrides}
