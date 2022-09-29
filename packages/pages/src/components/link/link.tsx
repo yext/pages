@@ -23,7 +23,7 @@ interface LinkConfig
 /**
  * The shape of the data passed to {@link Link} when directly passing an HREF to the Link component.
  */
-interface HREFLinkProps extends LinkConfig {
+export interface HREFLinkProps extends LinkConfig {
   href: string;
   cta?: never;
 }
@@ -31,7 +31,7 @@ interface HREFLinkProps extends LinkConfig {
 /**
  * The shape of the data passed to {@link Link} when using a CTA field, and not overriding children.
  */
-interface CTAWithChildrenLinkProps extends LinkConfig {
+export interface CTAWithChildrenLinkProps extends LinkConfig {
   href?: never;
   cta: CTA;
   children?: never;
@@ -42,7 +42,7 @@ interface CTAWithChildrenLinkProps extends LinkConfig {
  *
  * @public
  */
-interface CTAWithoutChildrenLinkProps extends LinkConfig {
+export interface CTAWithoutChildrenLinkProps extends LinkConfig {
   href?: never;
   cta: Omit<CTA, "label">;
   children: React.ReactNode;
@@ -87,7 +87,7 @@ function isHREFProps(props: LinkProps): props is HREFLinkProps {
  */
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
   function Link(props, ref) {
-    const { children, onClick, className, eventName, ...rest } = props;
+    const { children, onClick, className, eventName, cta, ...rest } = props;
     const link: CTA = isHREFProps(props) ? { link: props.href } : props.cta;
 
     const trackEvent = eventName ? eventName : props.cta ? "cta" : "link";
