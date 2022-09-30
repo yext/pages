@@ -87,7 +87,7 @@ importers:
       '@types/react-dom': ^17.0.17
       '@types/shelljs': ^0.8.11
       '@types/ws': ^8.5.3
-      '@yext/analytics': ^0.2.1
+      '@yext/analytics': ^0.2.2
       '@yext/components-tsx-geo': ^1.0.3
       '@yext/components-tsx-maps': ^1.0.9
       ansi-to-html: ^0.7.2
@@ -123,7 +123,7 @@ importers:
       typescript: ^4.8.2
       vite: ^3.1.0
     dependencies:
-      '@yext/analytics': 0.2.1
+      '@yext/analytics': 0.2.2
       '@yext/components-tsx-geo': 1.0.3
       '@yext/components-tsx-maps': 1.0.9
       ansi-to-html: 0.7.2
@@ -4588,8 +4588,8 @@ packages:
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
     dev: true
 
-  /@yext/analytics/0.2.1:
-    resolution: {integrity: sha512-bWocWn1eb7si7tJ0fvcZ8l37wLWx/BkgEKsM+Olf5EhbeyZ6Ud3MVUoeMoc0+xUank63R5cLEW+b5TAWqJTtJA==}
+  /@yext/analytics/0.2.2:
+    resolution: {integrity: sha512-XWo03wn1hjxAKe0gxoVC94LLFy/c+IF+4XlvDvf7qLC5NtFXzTFKQMxZo7PItYMqRiUFgBHhlXWlAEXE5YBJKg==}
     dependencies:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
