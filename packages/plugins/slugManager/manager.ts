@@ -36,8 +36,8 @@ export function createManager(config: InternalSlugManagerConfig) {
     const params = new URLSearchParams({
       fields: "meta",
     });
-    if (pageToken != null) {
-      params.set("pagination_token", pageToken);
+    if (pageToken) {
+      params.set("pageToken", pageToken);
     }
     if (searchIds.length) {
       params.set("searchIds", searchIds.join(","));
