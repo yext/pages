@@ -1,3 +1,32 @@
+#### 1.0.0-beta.7 (2022-09-30)
+
+##### Chores
+
+* **components:**
+  *  bump yext/analytics version (#231) (373ac02b)
+  *  upgrade storybook to use vite (#217) (16fd089c)
+*  remove vitepress and use storybook (#221) (5d757d06)
+*  add prepare script for @yext/pages (#214) (0e2d0f67)
+*  update READMEs for Pages Plugins (#216) (43bc00e6)
+
+##### Documentation Changes
+
+* **components:**  add address stories (#227) (82fa43f0)
+
+##### New Features
+
+* **components:**
+  *  add Map component (#171) (c41d3239)
+  *  enable debugging for Analytics in dev mode (#226) (02327faf)
+* **dev:**  allow render-only templates to work (#219) (ac1eab96)
+
+##### Bug Fixes
+
+* **plugin:**  fix slug connector pagination (#233) (e6e1da97)
+* **components:**  set sizes attribute for images (#232) (3c843b3e)
+*  features command when using top-level await (#230) (9f32e197)
+* **dev:**  remove final slash from static page urls on index (#220) (6aac7bc9)
+
 #### 1.0.0-beta.6 (2022-09-08)
 
 ##### Chores
