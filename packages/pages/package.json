@@ -57,7 +57,7 @@
     "THIRD-PARTY-NOTICES"
   ],
   "dependencies": {
-    "@yext/analytics": "^0.2.0",
+    "@yext/analytics": "^0.2.2",
     "@yext/components-tsx-geo": "^1.0.3",
     "@yext/components-tsx-maps": "^1.0.9",
     "ansi-to-html": "^0.7.2",
