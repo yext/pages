@@ -58,7 +58,9 @@ const getCssTags = (
   manifest: bundlerManifest,
   seen: Set<string>
 ): Set<string> => {
-  const entry = Object.entries(manifest).find(([file]) => file === filepath);
+  const entry = structuredClone(
+    Object.entries(manifest).find(([file]) => file === filepath)
+  );
   if (!entry) {
     return new Set();
   }
