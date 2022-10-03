@@ -148,6 +148,7 @@ export class API implements IAPI {
     additionalParams?: URLSearchParams
   ) {
     const url = this.constructRequestUrl("entityprofiles", additionalParams);
+    console.log("Making request to: ", url);
     const req = new Request(url, { headers });
 
     return await wrappedFetch<ListLanguageProfilesResponse<T>>(req);
