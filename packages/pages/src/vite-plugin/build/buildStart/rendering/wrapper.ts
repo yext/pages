@@ -69,8 +69,8 @@ const getCssTags = (
   seen.add(file);
   const cssFiles = new Set(info.css);
   (info.imports || [])
-    .flatMap((f) => getCssTags(f, manifest, seen))
-    .map((f) => f.forEach((file) => cssFiles.add(file)));
+    .flatMap((f) => Array.from(getCssTags(f, manifest, seen)))
+    .forEach((f) => cssFiles.add(f));
 
   return cssFiles;
 };
