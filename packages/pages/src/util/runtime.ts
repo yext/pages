@@ -11,7 +11,7 @@ class Runtime {
   constructor() {
     if (typeof process !== "undefined") {
       this.name = "node";
-      this.version = process.versions.node;
+      this.version = process.versions?.node;
       this.isServerSide = true;
     } else if (typeof window !== "undefined" && !("Deno" in window)) {
       this.name = "browser";
