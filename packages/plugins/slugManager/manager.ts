@@ -31,8 +31,9 @@ export function createManager(config: InternalSlugManagerConfig) {
   } = config;
 
   async function connector(inputString: string | undefined) {
+    const input = JSON.parse(inputString || "{}");
     console.log("Function input: ", inputString);
-    const pageToken = inputString || "";
+    const pageToken = input.pageToken || "";
     console.log("Page Token", inputString);
 
     const params = new URLSearchParams({
