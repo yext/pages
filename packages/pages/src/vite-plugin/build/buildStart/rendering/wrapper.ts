@@ -32,7 +32,6 @@ export const reactWrapper = <T extends TemplateRenderProps>(
           new Set()
         )
           .map((f) => `<link rel="stylesheet" href="/${f}"/>`)
-          .filter((v, i, a) => a.indexOf(v) == i)
           .join("\n")}
         ${headConfig ? renderHeadConfigToString(headConfig) : ""}
     </head>
@@ -64,12 +63,12 @@ const getCssTags = (
   const [file, info] = entry;
 
   seen.add(file);
-  const cssFiles = info.css || [];
+  const cssFiles = new Set(info.css) || [];
   (info.imports || [])
     .flatMap((f) => getCssTags(f, manifest, seen))
-    .forEach((f) => cssFiles.push(f));
+    .forEach((f) => cssFiles.add(f));
 
-  return cssFiles;
+  return Array.from(cssFiles);
 };
 
 const findHydrationFilename = (hydrationFile: string, data: any) => {
