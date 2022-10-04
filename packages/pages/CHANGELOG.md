@@ -7,7 +7,6 @@
   *  upgrade storybook to use vite (#217) (16fd089c)
 *  remove vitepress and use storybook (#221) (5d757d06)
 *  add prepare script for @yext/pages (#214) (0e2d0f67)
-*  update READMEs for Pages Plugins (#216) (43bc00e6)
 
 ##### Documentation Changes
 
@@ -22,7 +21,6 @@
 
 ##### Bug Fixes
 
-* **plugin:**  fix slug connector pagination (#233) (e6e1da97)
 * **components:**  set sizes attribute for images (#232) (3c843b3e)
 *  features command when using top-level await (#230) (9f32e197)
 * **dev:**  remove final slash from static page urls on index (#220) (6aac7bc9)
