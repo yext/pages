@@ -36,9 +36,9 @@ export function AnalyticsProvider(
     analytics.enableTrackingCookie();
   }
 
-  const enableDebuggingDefault =
-    debuggingParamDetected() || process?.env?.NODE_ENV === "development";
-  analytics.setDebugEnabled(enableDebugging ?? enableDebuggingDefault);
+  if (enableDebugging || debuggingParamDetected()) {
+    analytics.setDebugEnabled(true);
+  }
 
   return (
     <AnalyticsContext.Provider value={analytics}>
