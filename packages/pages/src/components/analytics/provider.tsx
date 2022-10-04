@@ -36,8 +36,10 @@ export function AnalyticsProvider(
     analytics.enableTrackingCookie();
   }
 
-  const enableDebuggingDefault =
-    debuggingParamDetected() || process?.env?.NODE_ENV === "development";
+  let enableDebuggingDefault = debuggingParamDetected();
+  if (typeof process !== "undefined") {
+    enableDebuggingDefault = enableDebuggingDefault || process.env?.NODE_ENV === "development";
+  }
   analytics.setDebugEnabled(enableDebugging ?? enableDebuggingDefault);
 
   return (
