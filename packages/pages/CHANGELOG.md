@@ -1,3 +1,9 @@
+#### 1.0.0-beta.8 (2022-10-04)
+
+##### Performance Improvements
+
+* **plugin:**  dedupe the css file list to avoid unnecessary imports (#235) (8d96efc9)
+
 #### 1.0.0-beta.7 (2022-09-30)
 
 ##### Chores
