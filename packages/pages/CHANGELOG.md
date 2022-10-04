@@ -1,3 +1,9 @@
+#### 1.0.0-beta.9 (2022-10-04)
+
+##### Bug Fixes
+
+* **components:**  remove `process?` optional chaining (#237) (b48875ba)
+
 #### 1.0.0-beta.8 (2022-10-04)
 
 ##### Performance Improvements
