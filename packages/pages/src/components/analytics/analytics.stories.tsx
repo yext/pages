@@ -4,7 +4,8 @@ import { action } from "@storybook/addon-actions";
 import {
   AnalyticsProvider,
   AnalyticsScopeProvider,
-  useAnalytics,
+  AnalyticsContext,
+  ScopeContext,
 } from "./index.js";
 
 export default {
@@ -15,7 +16,9 @@ export default {
     (Story) => (
       <AnalyticsProvider
         templateData={{
-          document: {},
+          document: {
+            name: "sample entity",
+          },
           __meta: {
             mode: "development",
           },
@@ -28,26 +31,43 @@ export default {
   ],
 } as ComponentMeta<typeof AnalyticsProvider>;
 
-export const Basic: ComponentStory<typeof AnalyticsProvider> = (args) => {
-  const analytics = useAnalytics();
-
-  const handleClick = async (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    if (!analytics) return;
-
-    const ya = await analytics.trackClick("basic", {
-      cid: "123",
-      cv: "test",
-    })(e);
-    // TODO: export a response from trackClick
-    action("trackClick")("Payload TODO");
-  };
-
+/**
+ * See the context object on the analytics wrapper component
+ * @returns
+ */
+export const Analytics: ComponentStory<typeof AnalyticsProvider> = () => {
   return (
-    <AnalyticsScopeProvider name="section1">
+    <AnalyticsScopeProvider name="analytics">
       <section>
-        <a onClick={(e) => handleClick(e)}>Click me</a>
+        <h1>Analytics Parent</h1>
+        <AnalyticsContext.Consumer>
+          {(ctx) => (
+            <button onClick={() => action("AnalyticsContext")(ctx)}>
+              Log context
+            </button>
+          )}
+        </AnalyticsContext.Consumer>
+      </section>
+    </AnalyticsScopeProvider>
+  );
+};
+
+/**
+ * See the context object on the analytics scope component
+ * @returns
+ */
+export const Scope: ComponentStory<typeof AnalyticsProvider> = () => {
+  return (
+    <AnalyticsScopeProvider name="scopecontext">
+      <section>
+        <h1>Scope Parent</h1>
+        <ScopeContext.Consumer>
+          {(ctx) => (
+            <button onClick={() => action("ScopeContext")(ctx)}>
+              Log context
+            </button>
+          )}
+        </ScopeContext.Consumer>
       </section>
     </AnalyticsScopeProvider>
   );
