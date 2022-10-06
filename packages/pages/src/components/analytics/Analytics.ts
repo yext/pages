@@ -43,7 +43,8 @@ export class Analytics implements AnalyticsMethods {
    */
   constructor(
     private templateData: TemplateProps,
-    requireOptIn?: boolean | undefined
+    requireOptIn?: boolean | undefined,
+    private pageDomain?: string
   ) {
     this._optedIn = !requireOptIn;
     this.makeReporter();
@@ -93,6 +94,7 @@ export class Analytics implements AnalyticsMethods {
       production: inProduction,
       referrer: document.referrer,
       siteId: this.templateData.document.siteId as number,
+      pageDomain: this.pageDomain,
     });
 
     this.setDebugEnabled(this._enableDebugging);
