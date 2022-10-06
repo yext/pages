@@ -90,6 +90,13 @@ export interface AnalyticsProviderProps {
    * in the developer console.
    */
   enableDebugging?: boolean | undefined;
+
+  /**
+   * The domain of the page to send with API requests. If none is specified,
+   * the hostname for the site ID is used. The domain string must include the
+   * scheme (e.g. https://foo.com).
+   */
+  pageDomain?: string;
 }
 
 /**

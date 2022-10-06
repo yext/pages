@@ -22,12 +22,17 @@ export function AnalyticsProvider(
     enableTrackingCookie,
     enableDebugging,
     templateData,
+    pageDomain,
   } = props;
 
   const analyticsRef = useRef<AnalyticsMethods | null>(null);
 
   if (analyticsRef.current === null) {
-    analyticsRef.current = new Analytics(templateData, requireOptIn);
+    analyticsRef.current = new Analytics(
+      templateData,
+      requireOptIn,
+      pageDomain
+    );
   }
 
   const analytics = analyticsRef.current;
@@ -38,7 +43,8 @@ export function AnalyticsProvider(
 
   let enableDebuggingDefault = debuggingParamDetected();
   if (typeof process !== "undefined") {
-    enableDebuggingDefault = enableDebuggingDefault || process.env?.NODE_ENV === "development";
+    enableDebuggingDefault =
+      enableDebuggingDefault || process.env?.NODE_ENV === "development";
   }
   analytics.setDebugEnabled(enableDebugging ?? enableDebuggingDefault);
 
