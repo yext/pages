@@ -11,6 +11,7 @@ import {
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import templateBase from "../public/templateBase.js";
+import { lookup } from "mime-types";
 
 type Props = {
   vite: ViteDevServer;
@@ -105,6 +106,6 @@ const getContentType = (
   // TODO: once custom headers are supported at the template level use that instead,
   // with a fallback to the current logic.
   const path = templateModuleInternal.getPath(props);
-  const ext = path.includes(".") ? path.split(".").pop() : "";
-  return ext || "text/html";
+
+  return lookup(path) || "text/html";
 };
