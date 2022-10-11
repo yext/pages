@@ -9,7 +9,6 @@ export default {
 
 const Template: ComponentStory<typeof Link> = (args) => <Link {...args} />;
 
-// HREF
 export const HREF = Template.bind({});
 
 HREF.args = {
@@ -17,7 +16,6 @@ HREF.args = {
   children: "Learn More",
 };
 
-// CTA
 export const CTA = Template.bind({});
 
 CTA.args = {
@@ -28,7 +26,6 @@ CTA.args = {
   },
 };
 
-// Phone
 export const Phone = Template.bind({});
 
 Phone.args = {
@@ -39,7 +36,6 @@ Phone.args = {
   },
 };
 
-// Email
 export const Email = Template.bind({});
 
 Email.args = {
@@ -50,7 +46,6 @@ Email.args = {
   },
 };
 
-// Detect Email
 export const Detect_Email = Template.bind({});
 
 Detect_Email.args = {
@@ -59,7 +54,6 @@ Detect_Email.args = {
   },
 };
 
-// CTA with children
 export const CTA_With_Children = Template.bind({});
 
 CTA_With_Children.args = {

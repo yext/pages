@@ -21,27 +21,6 @@ const getHref = (cta: CTA): string => {
 };
 
 /**
- * CTA constructor
- *
- * @param {string} link
- * @param {LinkType} linkType
- * @param {string} label
- *
- * @returns {boolean}
- */
-export function cta(
-  link: string,
-  linkType: LinkType = LinkType.URL,
-  label?: ReactNode
-): CTA {
-  return {
-    link,
-    linkType: linkType,
-    label: typeof label === "string" ? label : "",
-  };
-}
-
-/**
  * Checks if is a valid email address
  *
  * Regex defined in HTML Spec for <input type="email"> validation.

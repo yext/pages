@@ -87,10 +87,13 @@ function isHREFProps(props: LinkProps): props is HREFLinkProps {
  */
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
   function Link(props, ref) {
-    const { children, onClick, className, eventName, cta, ...rest } = props;
-    const link: CTA = isHREFProps(props) ? { link: props.href } : props.cta;
+    const makeCTA = (props: LinkProps): CTA =>
+      isHREFProps(props) ? { link: props.href } : props.cta;
 
-    const trackEvent = eventName ? eventName : props.cta ? "cta" : "link";
+    const { children, onClick, className, eventName, cta, ...rest } = props;
+    const link: CTA = makeCTA(props);
+
+    const trackEvent = eventName ? eventName : cta ? "cta" : "link";
     const analytics = useAnalytics();
 
     const obfuscate =
