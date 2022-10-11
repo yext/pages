@@ -87,11 +87,8 @@ function isHREFProps(props: LinkProps): props is HREFLinkProps {
  */
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
   function Link(props, ref) {
-    const makeCTA = (props: LinkProps): CTA =>
-      isHREFProps(props) ? { link: props.href } : props.cta;
-
+    const link = isHREFProps(props) ? { link: props.href } : (props.cta as CTA);
     const { children, onClick, className, eventName, cta, ...rest } = props;
-    const link: CTA = makeCTA(props);
 
     const trackEvent = eventName ? eventName : cta ? "cta" : "link";
     const analytics = useAnalytics();
