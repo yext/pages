@@ -22,4 +22,4 @@ Render a marker in a Map component at a given coorindate.
 
 ## LocationMap
 
-Render a Map component with a single marker that links to a `href`.
+Render a Map component with a single marker that links to an `href`.
