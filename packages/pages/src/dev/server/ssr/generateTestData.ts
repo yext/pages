@@ -17,7 +17,6 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
 export const generateTestData = async (): Promise<boolean> => {
   const command = "yext";
   const args = ["sites", "generate-test-data"];
-
   async function generate() {
     const childProcess = spawn(command, args);
     const exitCode = await new Promise((resolve) => {
@@ -52,10 +51,16 @@ export const generateTestDataForPage = async (
 
   const featureName = featuresConfig.features[0]?.name;
   const command = "yext";
-  let args = addCommonArgs(featuresConfig, featureName, locale);
+  let args = addCommonArgs(featuresConfig, featureName);
 
   if (entityId) {
     args = args.concat("--entityIds", entityId);
+  }
+
+  const isAlternateLanguageFields =
+    !!featuresConfig.features[0]?.alternateLanguageFields;
+  if (!isAlternateLanguageFields) {
+    args = args.concat("--locale", locale);
   }
 
   if (fs.existsSync(siteStreamPath)) {
@@ -123,7 +128,12 @@ export const generateTestDataForPage = async (
       let parsedData: any;
       if (testData) {
         try {
-          parsedData = JSON.parse(testData.trim());
+          const documents = splitUnsafeDocuments(testData.trim());
+          if (documents.length === 1) {
+            parsedData = documents[0];
+          } else {
+            parsedData = getDocumentByLocale(parsedData, locale);
+          }
         } catch (e) {
           stdout.write(
             `\nUnable to parse test data from command: \`${command} ${args.join(
@@ -145,11 +155,7 @@ export const generateTestDataForPage = async (
   });
 };
 
-const addCommonArgs = (
-  featuresConfig: FeaturesConfig,
-  featureName: string,
-  locale: string
-) => {
+const addCommonArgs = (featuresConfig: FeaturesConfig, featureName: string) => {
   const args = [
     "pages",
     "generate-test-data",
@@ -157,8 +163,6 @@ const addCommonArgs = (
     `"${featureName}"`,
     "--featuresConfig",
     prepareJsonForCmd(featuresConfig),
-    "--locale",
-    locale,
     "--printDocuments",
   ];
   return args;
@@ -174,4 +178,18 @@ const prepareJsonForCmd = (json: any) => {
     jsonString = `'${JSON.stringify(json)}'`;
   }
   return jsonString;
+};
+
+// There is a chance multiple documents will be returned consecutively, without proper containment. Look for them and parse as an array
+const splitUnsafeDocuments = (documentResponse: string): any[] => {
+  const DOCUMENT_SEPARATOR = "}\n{";
+  const DOCUMENT_JOINER = "},\n{";
+  const objects = documentResponse
+    .split(DOCUMENT_SEPARATOR)
+    .join(DOCUMENT_JOINER);
+  return JSON.parse(`[${objects}]`);
+};
+
+const getDocumentByLocale = (documents: any[], locale: string): any => {
+  return documents.find((document) => document.locale === locale);
 };

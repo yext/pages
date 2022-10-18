@@ -18,7 +18,7 @@ export const REAL_FULL_OUTPUT = `This is a beta version of the Yext Command Line
 
 Some arbitrary text
 
-Generated 2 files for stream "my-stream-id-1"
+Generated 1 files for stream "my-stream-id-1"
 {
 	"__": {
 		"entityPageSet": {

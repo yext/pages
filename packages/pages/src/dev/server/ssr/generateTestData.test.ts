@@ -7,8 +7,14 @@ import {
   UPGRADE_LINES_OF_CLI_BOILERPLATE,
   REAL_FULL_OUTPUT,
 } from "../../../../tests/fixtures/cli_boilerplate.js";
-import { CLI_STREAM_DATA } from "../../../../tests/fixtures/cli_stream_data.js";
-import { FEATURE_CONFIG } from "../../../../tests/fixtures/feature_config.js";
+import {
+  CLI_STREAM_DATA,
+  CLI_STREAM_DATA_MULTIPLE_DOCS,
+} from "../../../../tests/fixtures/cli_stream_data.js";
+import {
+  FEATURE_CONFIG,
+  FEATURE_CONFIG_ALTERNATE_LANGUAGE_FIELDS,
+} from "../../../../tests/fixtures/feature_config.js";
 import { Socket } from "net";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 
@@ -69,6 +75,15 @@ const getGenerateTestDataForPageRunner = () =>
     projectStructure
   );
 
+const getGenerateTestDataForPageWithAlternateLanguageFieldsRunner = () =>
+  generateTestDataForPage(
+    mockParentProcessStdout,
+    FEATURE_CONFIG_ALTERNATE_LANGUAGE_FIELDS,
+    "4092",
+    "en",
+    projectStructure
+  );
+
 describe("generateTestDataForPage", () => {
   it("properly reads stream data from stdout and returns it as parsed JSON", async () => {
     const testRunnerPromise = getGenerateTestDataForPageRunner();
@@ -82,6 +97,28 @@ describe("generateTestDataForPage", () => {
     const datadoc = await testRunnerPromise;
 
     expect(datadoc).toEqual(CLI_STREAM_DATA);
+    // There is no output from the CLI other than the stream data, so nothing should be
+    // written back to the parent process.
+    expect(mockParentProcessStdout.write).toBeCalledTimes(0);
+  });
+
+  it("properly reads stream data with multiple documents from stdout and returns it as parsed JSON", async () => {
+    const testRunnerPromise =
+      getGenerateTestDataForPageWithAlternateLanguageFieldsRunner();
+
+    mockChildProcess.stdout.emit(
+      "data",
+      `${
+        JSON.stringify(CLI_STREAM_DATA_MULTIPLE_DOCS[0], null, "  ") +
+        "\n" +
+        JSON.stringify(CLI_STREAM_DATA_MULTIPLE_DOCS[1], null, "  ")
+      }`
+    );
+    mockChildProcess.emit("close");
+
+    const datadoc = await testRunnerPromise;
+
+    expect(datadoc).toEqual(CLI_STREAM_DATA_MULTIPLE_DOCS[0]);
     // There is no output from the CLI other than the stream data, so nothing should be
     // written back to the parent process.
     expect(mockParentProcessStdout.write).toBeCalledTimes(0);
@@ -219,7 +256,7 @@ describe("generateTestDataForPage", () => {
     // Make sure we write back the expected messages to the parent process.
     expect(mockParentProcessStdout.write).toHaveBeenCalledTimes(2);
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
-      `Generated 2 files for stream "my-stream-id-1"\n`
+      `Generated 1 files for stream "my-stream-id-1"\n`
     );
   });
 });
