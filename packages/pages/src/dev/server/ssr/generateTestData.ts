@@ -128,11 +128,11 @@ export const generateTestDataForPage = async (
       let parsedData: any;
       if (testData) {
         try {
-          const documents = splitUnsafeDocuments(testData.trim());
+          const documents = parseConcatenatedDocuments(testData.trim());
           if (documents.length === 1) {
             parsedData = documents[0];
           } else {
-            parsedData = getDocumentByLocale(parsedData, locale);
+            parsedData = getDocumentByLocale(documents, locale);
           }
         } catch (e) {
           stdout.write(
@@ -181,9 +181,9 @@ const prepareJsonForCmd = (json: any) => {
 };
 
 // There is a chance multiple documents will be returned consecutively, without proper containment. Look for them and parse as an array
-const splitUnsafeDocuments = (documentResponse: string): any[] => {
-  const DOCUMENT_SEPARATOR = "}\n{";
-  const DOCUMENT_JOINER = "},\n{";
+const parseConcatenatedDocuments = (documentResponse: string): any[] => {
+  const DOCUMENT_SEPARATOR = `}\n{\n  "__`;
+  const DOCUMENT_JOINER = `},\n{\n  "__`;
   const objects = documentResponse
     .split(DOCUMENT_SEPARATOR)
     .join(DOCUMENT_JOINER);

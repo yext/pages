@@ -80,7 +80,7 @@ const getGenerateTestDataForPageWithAlternateLanguageFieldsRunner = () =>
     mockParentProcessStdout,
     FEATURE_CONFIG_ALTERNATE_LANGUAGE_FIELDS,
     "4092",
-    "en",
+    "es-US",
     projectStructure
   );
 
@@ -118,7 +118,7 @@ describe("generateTestDataForPage", () => {
 
     const datadoc = await testRunnerPromise;
 
-    expect(datadoc).toEqual(CLI_STREAM_DATA_MULTIPLE_DOCS[0]);
+    expect(datadoc).toEqual(CLI_STREAM_DATA_MULTIPLE_DOCS[1]);
     // There is no output from the CLI other than the stream data, so nothing should be
     // written back to the parent process.
     expect(mockParentProcessStdout.write).toBeCalledTimes(0);
