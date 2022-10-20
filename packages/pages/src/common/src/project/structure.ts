@@ -17,6 +17,12 @@ export interface ProjectFilepaths {
   hydrationBundleOutputRoot: string;
   /** The folder path where the compiled server bundles should go */
   serverBundleOutputRoot: string;
+  /**
+   * The domain of the site, which also serve as the subfolder name
+   * inside {@link templatesRoot} and {@link sitesConfigRoot}.
+   * This is use for the case of multibrand setup within a single repo.
+   */
+  domain?: string;
 }
 
 /**
@@ -102,6 +108,10 @@ export class ProjectStructure {
 
   sitesConfigRoot: Path;
   templatesRoot: Path;
+  domain?: string;
+  sitesConfigDomain?: Path;
+  templatesDomain?: Path;
+
   distRoot: Path;
   hydrationBundleOutputRoot: Path;
   serverBundleOutputRoot: Path;
@@ -117,6 +127,18 @@ export class ProjectStructure {
       this.#config.filepathsConfig.sitesConfigRoot
     );
     this.templatesRoot = new Path(this.#config.filepathsConfig.templatesRoot);
+
+    const domain = this.#config.filepathsConfig.domain;
+    if (domain) {
+      this.domain = domain;
+      this.sitesConfigDomain = new Path(
+        pathLib.join(this.sitesConfigRoot.path, domain)
+      );
+      this.templatesDomain = new Path(
+        pathLib.join(this.templatesRoot.path, domain)
+      );
+    }
+
     this.distRoot = new Path(this.#config.filepathsConfig.distRoot);
     this.hydrationBundleOutputRoot = new Path(
       this.#config.filepathsConfig.distRoot +

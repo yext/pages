@@ -22,13 +22,23 @@ export const reactWrapper = <T extends TemplateRenderProps>(
   const headConfig = getHeadConfig ? getHeadConfig(props) : undefined;
   const lang = getLang(headConfig, props);
 
+  const bundlerManifest = props.__meta.manifest.bundlerManifest;
+  const templateRootFilepath = `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`;
+  const templateDomainFilepath = `${projectFilepaths.templatesDomain}/${templateModuleInternal.templateName}.tsx`;
+
+  const templateFilepath: string =
+    !!projectFilepaths.templatesDomain &&
+    bundlerManifest[templateDomainFilepath]
+      ? templateDomainFilepath
+      : templateRootFilepath;
+
   return `<!DOCTYPE html>
     <html lang=${lang}>
     <head>
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(props)}</script>
         ${Array.from(
           getCssTags(
-            `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`,
+            templateFilepath,
             props.__meta.manifest.bundlerManifest,
             new Set()
           )

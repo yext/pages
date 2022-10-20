@@ -1,4 +1,3 @@
-export const TEMPLATE_PATH = "src/templates";
 export const STREAM_DATA_CHUNK_BEGIN = "{";
 export const STREAM_DATA_CHUNK_END = "}";
 export const CLI_BOILERPLATE_BETA_MESSAGE =

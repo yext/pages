@@ -9,7 +9,7 @@ const hydrate = async () => {
   };
 
   // Can't use string interpolation here so src/templates is hardcoded
-  const templates = import.meta.glob("/src/templates/*.(jsx|tsx)");
+  const templates = import.meta.glob("/src/templates/**/*.(jsx|tsx)");
 
   const routes: Route[] = Object.keys(templates).map((path) => {
     return {
@@ -21,16 +21,14 @@ const hydrate = async () => {
   });
 
   /**
-   * Get the templateFilename from the template. See {@link ./ssr/serverRenderRoute.ts}.
+   * Get the templatePath from the template. See {@link ./ssr/serverRenderRoute.ts}.
    */
-  const templateFilename = (window as any)._RSS_TEMPLATE_;
-  const templateFilenameWithoutSuffix = templateFilename?.split(".")[0];
-
-  const template = routes.find(
-    (route) => route.name === templateFilenameWithoutSuffix
+  const templatePath = (window as any)._RSS_TEMPLATE_PATH_;
+  const template = routes.find((route) =>
+    templatePath.endsWith(route.path)
   ) || {
-    name: templateFilename?.split(".")[0],
-    path: `/src/templates/${templateFilename}`,
+    name: templatePath.split("/").at(-1).split(".")[0],
+    path: templatePath,
     getComponent: function (): Promise<any> {
       throw new Error("Function not implemented.");
     },

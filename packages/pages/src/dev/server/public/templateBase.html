@@ -4,10 +4,10 @@
   <body>
     <div id="reactele"><!--app-html--></div>
     <script type="module">
-      import ReactDOM from "react-dom";
-      import React from "react";
+      import * as ReactDOM from "react-dom";
+      import * as React from "react";
       const hydrate = async () => {
-        const templates = import.meta.glob("/src/templates/*.(jsx|tsx)");
+        const templates = import.meta.glob("/src/templates/**/*.(jsx|tsx)");
         const routes = Object.keys(templates).map((path) => {
           return {
             name: path.split("/").pop()?.split(".")[0] || "index",
@@ -15,13 +15,12 @@
             getComponent: templates[path],
           };
         });
-        const templateFilename = window._RSS_TEMPLATE_;
-        const templateFilenameWithoutSuffix = templateFilename?.split(".")[0];
-        const template = routes.find(
-          (route) => route.name === templateFilenameWithoutSuffix
+        const templatePath = window._RSS_TEMPLATE_PATH_;
+        const template = routes.find((route) =>
+          templatePath.endsWith(route.path)
         ) || {
-          name: templateFilename?.split(".")[0],
-          path: `/src/templates/${templateFilename}`,
+          name: templatePath.split("/").at(-1).split(".")[0],
+          path: templatePath,
           getComponent: function () {
             throw new Error("Function not implemented.");
           },

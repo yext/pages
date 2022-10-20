@@ -1,10 +1,10 @@
 import { Plugin, UserConfig } from "vite";
 import buildStart from "./buildStart/buildStart.js";
 import closeBundle from "./closeBundle/closeBundle.js";
-import { readdir } from "fs/promises";
 import path, { parse } from "path";
 import { InputOption } from "rollup";
 import { ProjectStructure } from "../../common/src/project/structure.js";
+import { readdir } from "fs/promises";
 
 const intro = `var global = globalThis;`;
 
@@ -28,6 +28,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
             preserveEntrySignatures: "strict",
             input: await discoverInputs(
               projectStructure.templatesRoot.getAbsolutePath(),
+              projectStructure.templatesDomain?.getAbsolutePath(),
               projectStructure.hydrationBundleOutputRoot.getAbsolutePath()
             ),
             output: {
@@ -45,31 +46,46 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
 };
 
 /**
- * Produces a {@link InputOption} by first adding all templates at {@link templateDir} to be output
- * at {@code server/}. Also adds an additional entry-point for all templates ending in tsx to be
- * used to hydrate the bundle.
+ * Produces a {@link InputOption} by adding all templates at {@link templateDir} and
+ * {@link templatedomainDir} to be output at {@code server/}. If there are two files
+ * that share the same name between the two provided template folders, only the file
+ * in domain template folder path is included. Also adds an additional entry-point
+ * for all templates ending in tsx to be used to hydrate the bundle.
  *
- * @param templateDir the directory where templates are stored.
+ * @param templateDir the directory where all templates are stored.
+ * @param templatedomainDir the directory where templates of a specific domain are stored.
  * @param hydrationOutputDir the directory where hydration inputs will be generated at.
  * @returns
  */
 const discoverInputs = async (
-  templateDir: string,
+  templateRootDir: string,
+  templatedomainDir: string | undefined,
   hydrationOutputDir: string
 ): Promise<InputOption> => {
-  return (await readdir(templateDir)).reduce(
-    (input: Record<any, any>, template) => {
-      const parsedPath = parse(template);
+  const entryPoints: Record<string, string> = {};
+  const updateInput = async (dir: string) =>
+    (await readdir(dir, { withFileTypes: true }))
+      .filter((dirent) => !dirent.isDirectory())
+      .map((file) => file.name)
+      .reduce((input, template) => {
+        const parsedPath = parse(template);
+        const outputPath = `server/${parsedPath.name}`;
+        if (input[outputPath]) {
+          return input;
+        }
+        input[outputPath] = path.join(dir, template);
 
-      if (parsedPath.ext === ".tsx" || parsedPath.ext === ".jsx") {
-        input[`hydrate/${parsedPath.name}`] = path
-          .join(hydrationOutputDir, template)
-          .replace("jsx", "tsx");
-      }
+        if (parsedPath.ext === ".tsx" || parsedPath.ext === ".jsx") {
+          input[`hydrate/${parsedPath.name}`] = path
+            .join(hydrationOutputDir, template)
+            .replace("jsx", "tsx");
+        }
+        return input;
+      }, entryPoints);
 
-      input[`server/${parsedPath.name}`] = path.join(templateDir, template);
-      return input;
-    },
-    {}
-  );
+  if (templatedomainDir) {
+    await updateInput(templatedomainDir);
+  }
+  await updateInput(templateRootDir);
+  return entryPoints;
 };

@@ -38,7 +38,9 @@ export const createServer = async (dynamicGenerateData: boolean) => {
   let displayGenerateTestDataWarning = false;
   if (dynamicGenerateData) {
     // display the warning if the call to generateTestData fails.
-    displayGenerateTestDataWarning = !(await generateTestData());
+    displayGenerateTestDataWarning = !(await generateTestData(
+      projectStructure.domain
+    ));
   }
 
   // When a page is requested that is anything except the root, call our

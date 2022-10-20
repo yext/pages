@@ -29,7 +29,9 @@ export const serverRenderRoute =
 
       const templateModuleInternal = await featureNameToTemplateModuleInternal(
         vite,
-        feature
+        feature,
+        projectStructure.templatesRoot,
+        projectStructure.templatesDomain
       );
       if (!templateModuleInternal) {
         console.error(
@@ -77,7 +79,7 @@ export const serverRenderRoute =
         `<head>
             <script type="text/javascript">
               window._RSS_PROPS_ = ${JSON.stringify(props)};
-              window._RSS_TEMPLATE_ = '${templateModuleInternal.filename}';
+              window._RSS_TEMPLATE_PATH_ = '${templateModuleInternal.path}';
               window._RSS_LANG_ = '${getLang(headConfig, props)}';
             </script>
             ${headConfig ? renderHeadConfigToString(headConfig) : ""}

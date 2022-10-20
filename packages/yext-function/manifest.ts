@@ -15,6 +15,8 @@ export type Manifest = {
     hydrationBundleOutputRoot: string;
     /** The folder path where the compiled server bundles live */
     serverBundleOutputRoot: string;
+    /** The folder path where the template files of a specific domain live */
+    templatesDomain?: string;
   };
   /** If the bundler used generates a manifest.json then this field will contain that json object */
   bundlerManifest?: any;
