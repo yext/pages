@@ -1,7 +1,7 @@
 import path from "path";
-import { Path } from "../../project/structure.js";
 import { getTemplatesFilepath } from "./getTemplatesFilepath.js";
 import minimatch from "minimatch";
+import { Path } from "../../project/path.js";
 
 const rootPath = "src/templates";
 const domain1Path = "src/templates/some.domain1.com";
@@ -21,7 +21,6 @@ jest.mock("glob", () => {
     },
   };
 });
-afterAll(() => jest.unmock("glob"));
 
 describe("getTemplatesFilepath", () => {
   it("collects all template files from root folder path", () => {

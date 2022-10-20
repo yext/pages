@@ -1,5 +1,6 @@
 import pathLib from "path";
 import _ from "lodash";
+import { Path } from "./path.js";
 
 /**
  * Defines the folder paths where certain files live, relative to the root of the project.
@@ -156,25 +157,4 @@ export class ProjectStructure {
     this.envVarPrefix = this.#config.envVarConfig.envVarPrefix;
     this.siteStreamConfig = this.#config.filenamesConfig.siteStreamConfig;
   }
-}
-
-/**
- * Provides useful methods to operate on a specific property of {@link ProjectFilepathsConfig}.
- *
- * @public
- */
-export class Path {
-  path: string;
-
-  constructor(path: string) {
-    this.path = path;
-  }
-
-  getRelativePath = (to: string): string => {
-    return pathLib.join(".", pathLib.relative(this.path, to));
-  };
-
-  getAbsolutePath = (): string => {
-    return pathLib.resolve(this.path);
-  };
 }

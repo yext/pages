@@ -1,6 +1,6 @@
 import glob from "glob";
 import path from "path";
-import { Path } from "../../project/structure.js";
+import { Path } from "../../project/path.js";
 
 /**
  * Get all the template files in the provided template folder path(s).

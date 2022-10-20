@@ -26,17 +26,10 @@ export const generateTestData = async (domain?: string): Promise<boolean> => {
     const exitCode = await new Promise((resolve) => {
       childProcess.on("close", resolve);
     });
-
-    if (exitCode) {
-      return false;
-    }
-
-    return true;
+    return !!exitCode;
   }
 
-  return new Promise((resolve) => {
-    resolve(generate());
-  });
+  return generate();
 };
 
 export const generateTestDataForPage = async (
@@ -51,7 +44,7 @@ export const generateTestDataForPage = async (
     projectStructure.sitesConfigRoot.getAbsolutePath();
   const siteStreamPath = path.resolve(
     process.cwd(),
-    siteConfigPath + "/" + projectStructure.siteStreamConfig
+    path.join(siteConfigPath, projectStructure.siteStreamConfig)
   );
 
   const featureName = featuresConfig.features[0]?.name;

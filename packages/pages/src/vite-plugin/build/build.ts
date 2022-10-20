@@ -63,29 +63,27 @@ const discoverInputs = async (
   hydrationOutputDir: string
 ): Promise<InputOption> => {
   const entryPoints: Record<string, string> = {};
-  const updateInput = async (dir: string) =>
+  const updateEntryPoints = async (dir: string) =>
     (await readdir(dir, { withFileTypes: true }))
       .filter((dirent) => !dirent.isDirectory())
       .map((file) => file.name)
-      .reduce((input, template) => {
+      .forEach((template) => {
         const parsedPath = parse(template);
         const outputPath = `server/${parsedPath.name}`;
-        if (input[outputPath]) {
-          return input;
+        if (entryPoints[outputPath]) {
+          return;
         }
-        input[outputPath] = path.join(dir, template);
-
+        entryPoints[outputPath] = path.join(dir, template);
         if (parsedPath.ext === ".tsx" || parsedPath.ext === ".jsx") {
-          input[`hydrate/${parsedPath.name}`] = path
+          entryPoints[`hydrate/${parsedPath.name}`] = path
             .join(hydrationOutputDir, template)
             .replace("jsx", "tsx");
         }
-        return input;
-      }, entryPoints);
+      });
 
   if (templatedomainDir) {
-    await updateInput(templatedomainDir);
+    await updateEntryPoints(templatedomainDir);
   }
-  await updateInput(templateRootDir);
+  await updateEntryPoints(templateRootDir);
   return entryPoints;
 };

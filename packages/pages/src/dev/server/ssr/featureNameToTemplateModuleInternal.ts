@@ -4,8 +4,8 @@ import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../../../common/src/template/internal/types.js";
-import { Path } from "../../../common/src/project/structure.js";
 import { getTemplatesFilepath } from "../../../common/src/template/internal/getTemplatesFilepath.js";
+import { Path } from "../../../common/src/project/path.js";
 
 // Determines the template module to load from a given feature name (from the exported config)
 export const featureNameToTemplateModuleInternal = async (
