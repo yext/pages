@@ -1,5 +1,5 @@
 import path from "path";
-import { getTemplatesFilepath } from "./getTemplatesFilepath.js";
+import { getTemplateFilepaths } from "./getTemplateFilepaths.js";
 import minimatch from "minimatch";
 import { Path } from "../../project/path.js";
 
@@ -22,9 +22,9 @@ jest.mock("glob", () => {
   };
 });
 
-describe("getTemplatesFilepath", () => {
+describe("getTemplateFilepaths", () => {
   it("collects all template files from root folder path", () => {
-    const templatesFilepath = getTemplatesFilepath(
+    const templatesFilepath = getTemplateFilepaths(
       new Path(path.join(process.cwd(), rootPath))
     );
     expect(templatesFilepath.sort()).toEqual(
@@ -33,7 +33,7 @@ describe("getTemplatesFilepath", () => {
   });
 
   it("collects template files from domain and root folder paths", () => {
-    const templatesFilepath = getTemplatesFilepath(
+    const templatesFilepath = getTemplateFilepaths(
       new Path(path.join(process.cwd(), rootPath)),
       new Path(path.join(process.cwd(), domain1Path))
     );

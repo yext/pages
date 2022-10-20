@@ -4,7 +4,7 @@ import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../../../common/src/template/internal/types.js";
-import { getTemplatesFilepath } from "../../../common/src/template/internal/getTemplatesFilepath.js";
+import { getTemplateFilepaths } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { Path } from "../../../common/src/project/path.js";
 
 // Determines the template module to load from a given feature name (from the exported config)
@@ -14,11 +14,11 @@ export const featureNameToTemplateModuleInternal = async (
   templatesRoot: Path,
   templatesDomain?: Path
 ): Promise<TemplateModuleInternal<any, any> | null> => {
-  const templatesFilepath = getTemplatesFilepath(
+  const templateFilepaths = getTemplateFilepaths(
     templatesRoot,
     templatesDomain
   );
-  for (const templateFilepath of templatesFilepath) {
+  for (const templateFilepath of templateFilepaths) {
     const templateModule = await loadTemplateModule(
       devserver,
       templateFilepath

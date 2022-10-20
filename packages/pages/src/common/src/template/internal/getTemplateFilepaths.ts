@@ -12,26 +12,26 @@ import { Path } from "../../project/path.js";
  * @param templatesDomain The folder path where the template files of a specific domain live
  * @returns a list of template filepaths
  */
-export const getTemplatesFilepath = (
+export const getTemplateFilepaths = (
   templatesRoot: Path,
   templatesDomain?: Path
 ): string[] => {
-  const templatesRootFilepath: string[] = glob.sync(
+  const templatesRootFilepaths: string[] = glob.sync(
     `${templatesRoot.getAbsolutePath()}/*.{tsx,jsx,js,ts}`
   );
   if (!templatesDomain) {
-    return templatesRootFilepath;
+    return templatesRootFilepaths;
   }
-  const templatesDomainFilepath: string[] = glob.sync(
+  const templatesDomainFilepaths: string[] = glob.sync(
     `${templatesDomain.getAbsolutePath()}/*.{tsx,jsx,js,ts}`
   );
-  const templatesDomainFilename = templatesDomainFilepath.map((t) =>
+  const templatesDomainFilenames = templatesDomainFilepaths.map((t) =>
     path.basename(t)
   );
   return [
-    ...templatesDomainFilepath,
-    ...templatesRootFilepath.filter(
-      (t) => !templatesDomainFilename.includes(path.basename(t))
+    ...templatesDomainFilepaths,
+    ...templatesRootFilepaths.filter(
+      (t) => !templatesDomainFilenames.includes(path.basename(t))
     ),
   ];
 };
