@@ -17,13 +17,13 @@ export const getTemplatesFilepath = (
   templatesDomain?: Path
 ): string[] => {
   const templatesRootFilepath: string[] = glob.sync(
-    `${templatesRoot.getAbsolutePath()}/**/*.{tsx,jsx,js,ts}`
+    `${templatesRoot.getAbsolutePath()}/*.{tsx,jsx,js,ts}`
   );
   if (!templatesDomain) {
     return templatesRootFilepath;
   }
   const templatesDomainFilepath: string[] = glob.sync(
-    `${templatesDomain.getAbsolutePath()}/**/*.{tsx,jsx,js,ts}`
+    `${templatesDomain.getAbsolutePath()}/*.{tsx,jsx,js,ts}`
   );
   const templatesDomainFilename = templatesDomainFilepath.map((t) =>
     path.basename(t)

@@ -20,7 +20,7 @@ export interface ProjectFilepaths {
   /**
    * The domain of the site, which also serve as the subfolder name
    * inside {@link templatesRoot} and {@link sitesConfigRoot}.
-   * This is use for the case of multibrand setup within a single repo.
+   * This is used for the case of multibrand setup within a single repo.
    */
   domain?: string;
 }
