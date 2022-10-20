@@ -12,6 +12,7 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import templateBase from "../public/templateBase.js";
 import { lookup } from "mime-types";
+import { getTemplateFilepaths } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -27,11 +28,14 @@ export const serverRenderRoute =
 
       const { feature, entityId, locale } = urlToFeature(url);
 
+      const templateFilepaths = getTemplateFilepaths(
+        projectStructure.templatesRoot,
+        projectStructure.templatesDomain
+      );
       const templateModuleInternal = await featureNameToTemplateModuleInternal(
         vite,
         feature,
-        projectStructure.templatesRoot,
-        projectStructure.templatesDomain
+        templateFilepaths
       );
       if (!templateModuleInternal) {
         console.error(
