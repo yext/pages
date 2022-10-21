@@ -202,3 +202,90 @@ export const CLI_STREAM_DATA = {
   slug: "loc3-upper-west-side",
   uid: 26771072,
 };
+
+export const CLI_STREAM_DATA_MULTIPLE_DOCS = [
+  {
+    __: {
+      alternateLanguageFields: ["name"],
+      entityPageSet: {
+        plugin: {},
+      },
+      name: "index",
+      streamId: "my-stream-id-1",
+      templateType: "JS",
+    },
+    address: {
+      city: "Manchester",
+      countryCode: "US",
+      line1: "786 New Bushy Branch Road",
+      postalCode: "37355",
+      region: "TN",
+    },
+    alternateLanguageFields: {
+      "es-US": {
+        name: "Granja de Manchester",
+      },
+    },
+    businessId: 0,
+    geocodedCoordinate: {
+      latitude: 35.480399,
+      longitude: -86.060931,
+    },
+    id: "4092",
+    key: "0:index:knowledgeGraph:45138271:en",
+    locale: "en",
+    meta: {
+      entityType: {
+        id: "location",
+        uid: 0,
+      },
+      locale: "en",
+      updateTimestamp: "2022-06-21T01:50:05Z",
+    },
+    name: "Manchester Farm",
+    siteId: 0,
+    uid: 45138271,
+  },
+  {
+    __: {
+      alternateLanguageFields: ["name"],
+      entityPageSet: {
+        plugin: {},
+      },
+      name: "index",
+      streamId: "my-stream-id-1",
+      templateType: "JS",
+    },
+    address: {
+      city: "Manchester",
+      countryCode: "US",
+      line1: "786 New Bushy Branch Road",
+      postalCode: "37355",
+      region: "TN",
+    },
+    alternateLanguageFields: {
+      en: {
+        name: "Manchester Farm",
+      },
+    },
+    businessId: 0,
+    geocodedCoordinate: {
+      latitude: 35.480399,
+      longitude: -86.060931,
+    },
+    id: "4092",
+    key: "0:index:knowledgeGraph:45138271:en",
+    locale: "es-US",
+    meta: {
+      entityType: {
+        id: "location",
+        uid: 0,
+      },
+      locale: "es-US",
+      updateTimestamp: "2022-06-21T01:50:05Z",
+    },
+    name: "Granja de Manchester",
+    siteId: 0,
+    uid: 45138271,
+  },
+];

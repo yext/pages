@@ -24,3 +24,29 @@ export const FEATURE_CONFIG: FeaturesConfig = {
     },
   ],
 };
+
+export const FEATURE_CONFIG_ALTERNATE_LANGUAGE_FIELDS: FeaturesConfig = {
+  features: [
+    {
+      name: "index",
+      streamId: "products",
+      templateType: "JS",
+      entityPageSet: {
+        plugin: {},
+      },
+      alternateLanguageFields: ["name"],
+    },
+  ],
+  streams: [
+    {
+      $id: "products",
+      source: "knowledgeGraph",
+      destination: "pages",
+      fields: [],
+      filter: {},
+      localization: {
+        primary: false,
+      },
+    },
+  ],
+};
