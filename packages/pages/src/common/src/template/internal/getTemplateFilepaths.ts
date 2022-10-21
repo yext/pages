@@ -5,7 +5,7 @@ import { Path } from "../../project/path.js";
 /**
  * Get all the template files in the provided template folder path(s).
  *
- * If there are two files that share the same name between the provided
+ * If there are files that share the same name between the provided
  * template folder paths, only the file found in the first visited path
  * from the list is included.
  *

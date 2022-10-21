@@ -33,12 +33,12 @@ export default (projectStructure: ProjectStructure) => {
 
     finisher = logger.timedLog({ startLog: "Writing features.json" });
     try {
-      const siteConfigPath =
+      const sitesConfigPath =
         projectStructure.scopedsitesConfigPath?.getAbsolutePath() ??
         projectStructure.sitesConfigRoot.getAbsolutePath();
       createFeaturesJson(
         templateModules,
-        path.join(`${siteConfigPath}/features.json`)
+        path.join(`${sitesConfigPath}/features.json`)
       );
       finisher.succeed("Successfully wrote features.json");
     } catch (e: any) {

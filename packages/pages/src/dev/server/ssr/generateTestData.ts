@@ -42,12 +42,12 @@ export const generateTestDataForPage = async (
   locale: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
-  const siteConfigPath =
+  const sitesConfigPath =
     projectStructure.scopedsitesConfigPath?.getAbsolutePath() ??
     projectStructure.sitesConfigRoot.getAbsolutePath();
   const siteStreamPath = path.resolve(
     process.cwd(),
-    path.join(siteConfigPath, projectStructure.siteStreamConfig)
+    path.join(sitesConfigPath, projectStructure.siteStreamConfig)
   );
 
   const featureName = featuresConfig.features[0]?.name;
