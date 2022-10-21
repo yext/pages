@@ -39,7 +39,7 @@ export const createServer = async (dynamicGenerateData: boolean) => {
   if (dynamicGenerateData) {
     // display the warning if the call to generateTestData fails.
     displayGenerateTestDataWarning = !(await generateTestData(
-      projectStructure.domain
+      projectStructure.scope
     ));
   }
 

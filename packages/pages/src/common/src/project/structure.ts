@@ -8,7 +8,7 @@ import { Path } from "./path.js";
  * @public
  */
 export interface ProjectFilepaths {
-  /** The folder path where the template files live */
+  /** The folder path where all template files live */
   templatesRoot: string;
   /** The folder path where the sites-config files live */
   sitesConfigRoot: string;
@@ -21,10 +21,10 @@ export interface ProjectFilepaths {
   /**
    * This is used for the case of multibrand setup within a single repo.
    *
-   * The domain of the site, which also serve as the subfolder name
-   * inside {@link templatesRoot} and {@link sitesConfigRoot}.
+   * The subfolder path inside {@link templatesRoot} and {@link sitesConfigRoot}
+   * to scope a build to a subset of templates using specific sites-config folder.
    */
-  domain?: string;
+  scope?: string;
 }
 
 /**
@@ -110,9 +110,9 @@ export class ProjectStructure {
 
   sitesConfigRoot: Path;
   templatesRoot: Path;
-  domain?: string;
-  sitesConfigDomain?: Path;
-  templatesDomain?: Path;
+  scope?: string;
+  scopedTemplatesPath?: Path;
+  scopedsitesConfigPath?: Path;
 
   distRoot: Path;
   hydrationBundleOutputRoot: Path;
@@ -130,14 +130,14 @@ export class ProjectStructure {
     );
     this.templatesRoot = new Path(this.#config.filepathsConfig.templatesRoot);
 
-    const domain = this.#config.filepathsConfig.domain;
-    if (domain) {
-      this.domain = domain;
-      this.sitesConfigDomain = new Path(
-        pathLib.join(this.sitesConfigRoot.path, domain)
+    const scope = this.#config.filepathsConfig.scope;
+    if (scope) {
+      this.scope = scope;
+      this.scopedsitesConfigPath = new Path(
+        pathLib.join(this.sitesConfigRoot.path, scope)
       );
-      this.templatesDomain = new Path(
-        pathLib.join(this.templatesRoot.path, domain)
+      this.scopedTemplatesPath = new Path(
+        pathLib.join(this.templatesRoot.path, scope)
       );
     }
 

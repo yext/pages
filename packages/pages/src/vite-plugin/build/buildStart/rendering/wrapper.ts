@@ -23,14 +23,14 @@ export const reactWrapper = <T extends TemplateRenderProps>(
   const lang = getLang(headConfig, props);
 
   const bundlerManifest = props.__meta.manifest.bundlerManifest;
-  const templateRootFilepath = `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`;
-  const templateDomainFilepath = `${projectFilepaths.templatesDomain}/${templateModuleInternal.templateName}.tsx`;
+  const rootTemplateFilepath = `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`;
+  const scopedTemplateFilepath = `${projectFilepaths.scopedTemplatesPath}/${templateModuleInternal.templateName}.tsx`;
 
   const templateFilepath: string =
-    !!projectFilepaths.templatesDomain &&
-    bundlerManifest[templateDomainFilepath]
-      ? templateDomainFilepath
-      : templateRootFilepath;
+    !!projectFilepaths.scopedTemplatesPath &&
+    bundlerManifest[scopedTemplateFilepath]
+      ? scopedTemplateFilepath
+      : rootTemplateFilepath;
 
   return `<!DOCTYPE html>
     <html lang=${lang}>

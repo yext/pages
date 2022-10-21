@@ -16,8 +16,9 @@ export default (projectStructure: ProjectStructure) => {
     clean(projectStructure.distRoot.getAbsolutePath());
 
     const templates = getTemplateFilepaths(
-      projectStructure.templatesRoot,
-      projectStructure.templatesDomain
+      projectStructure.scopedTemplatesPath
+        ? [projectStructure.scopedTemplatesPath, projectStructure.templatesRoot]
+        : [projectStructure.templatesRoot]
     );
     const reactTemplates = templates.filter((templatePath) =>
       REACT_EXTENSIONS.has(path.parse(templatePath).ext)

@@ -24,19 +24,19 @@ jest.mock("glob", () => {
 
 describe("getTemplateFilepaths", () => {
   it("collects all template files from root folder path", () => {
-    const templatesFilepath = getTemplateFilepaths(
-      new Path(path.join(process.cwd(), rootPath))
-    );
+    const templatesFilepath = getTemplateFilepaths([
+      new Path(path.join(process.cwd(), rootPath)),
+    ]);
     expect(templatesFilepath.sort()).toEqual(
       [`${rootPath}/share.tsx`, `${rootPath}/test.tsx`].sort()
     );
   });
 
   it("collects template files from domain and root folder paths", () => {
-    const templatesFilepath = getTemplateFilepaths(
+    const templatesFilepath = getTemplateFilepaths([
+      new Path(path.join(process.cwd(), domain1Path)),
       new Path(path.join(process.cwd(), rootPath)),
-      new Path(path.join(process.cwd(), domain1Path))
-    );
+    ]);
     expect(templatesFilepath.sort()).toEqual(
       [
         `${rootPath}/share.tsx`,

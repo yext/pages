@@ -14,14 +14,14 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
  * generateTestData will run yext sites generate-test-data and return true in
  * the event of a successful run and false in the event of a failure.
  *
- * @param domain The domain of the site
+ * @param hostname The hostname of the site
  * @returns a boolean on whether test data generation was successful
  */
-export const generateTestData = async (domain?: string): Promise<boolean> => {
+export const generateTestData = async (hostname?: string): Promise<boolean> => {
   const command = "yext";
   let args = ["sites", "generate-test-data"];
-  if (domain) {
-    args = args.concat("--hostname", domain);
+  if (hostname) {
+    args = args.concat("--hostname", hostname);
   }
 
   async function generate() {
@@ -43,7 +43,7 @@ export const generateTestDataForPage = async (
   projectStructure: ProjectStructure
 ): Promise<any> => {
   const siteConfigPath =
-    projectStructure.sitesConfigDomain?.getAbsolutePath() ??
+    projectStructure.scopedsitesConfigPath?.getAbsolutePath() ??
     projectStructure.sitesConfigRoot.getAbsolutePath();
   const siteStreamPath = path.resolve(
     process.cwd(),

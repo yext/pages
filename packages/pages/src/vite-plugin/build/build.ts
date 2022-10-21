@@ -28,7 +28,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
             preserveEntrySignatures: "strict",
             input: await discoverInputs(
               projectStructure.templatesRoot.getAbsolutePath(),
-              projectStructure.templatesDomain?.getAbsolutePath(),
+              projectStructure.scopedTemplatesPath?.getAbsolutePath(),
               projectStructure.hydrationBundleOutputRoot.getAbsolutePath()
             ),
             output: {
@@ -46,20 +46,20 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
 };
 
 /**
- * Produces a {@link InputOption} by adding all templates at {@link templateDir} and
- * {@link templatedomainDir} to be output at {@code server/}. If there are two files
+ * Produces a {@link InputOption} by adding all templates at {@link rootTemplateDir} and
+ * {@link scopedTemplateDir} to be output at {@code server/}. If there are two files
  * that share the same name between the two provided template folders, only the file
- * in domain template folder path is included. Also adds an additional entry-point
+ * in scoped template folder path is included. Also adds an additional entry-point
  * for all templates ending in tsx to be used to hydrate the bundle.
  *
- * @param templateDir the directory where all templates are stored.
- * @param templatedomainDir the directory where templates of a specific domain are stored.
+ * @param rootTemplateDir the directory where all templates are stored.
+ * @param scopedTemplateDir the directory where a subset of templates use for the build are stored.
  * @param hydrationOutputDir the directory where hydration inputs will be generated at.
  * @returns
  */
 const discoverInputs = async (
-  templateRootDir: string,
-  templatedomainDir: string | undefined,
+  rootTemplateDir: string,
+  scopedTemplateDir: string | undefined,
   hydrationOutputDir: string
 ): Promise<InputOption> => {
   const entryPoints: Record<string, string> = {};
@@ -81,9 +81,9 @@ const discoverInputs = async (
         }
       });
 
-  if (templatedomainDir) {
-    await updateEntryPoints(templatedomainDir);
+  if (scopedTemplateDir) {
+    await updateEntryPoints(scopedTemplateDir);
   }
-  await updateEntryPoints(templateRootDir);
+  await updateEntryPoints(rootTemplateDir);
   return entryPoints;
 };

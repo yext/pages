@@ -29,8 +29,12 @@ export const serverRenderRoute =
       const { feature, entityId, locale } = urlToFeature(url);
 
       const templateFilepaths = getTemplateFilepaths(
-        projectStructure.templatesRoot,
-        projectStructure.templatesDomain
+        projectStructure.scopedTemplatesPath
+          ? [
+              projectStructure.scopedTemplatesPath,
+              projectStructure.templatesRoot,
+            ]
+          : [projectStructure.templatesRoot]
       );
       const templateModuleInternal = await featureNameToTemplateModuleInternal(
         vite,
