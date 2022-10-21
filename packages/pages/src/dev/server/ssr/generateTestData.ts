@@ -3,6 +3,7 @@ import { FeaturesConfig } from "../../../common/src/feature/features.js";
 import {
   CLI_BOILERPLATE_BETA_MESSAGE,
   STREAM_DATA_CHUNK_BEGIN,
+  STREAM_DATA_CHUNK_BEGIN_MULTIPLE,
   UPGRADE_MESSAGE_LINE_BEGIN,
   UPGRADE_INSTRUCTIONS_LINE_BEGIN,
 } from "./constants.js";
@@ -17,7 +18,6 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
 export const generateTestData = async (): Promise<boolean> => {
   const command = "yext";
   const args = ["sites", "generate-test-data"];
-
   async function generate() {
     const childProcess = spawn(command, args);
     const exitCode = await new Promise((resolve) => {
@@ -52,10 +52,16 @@ export const generateTestDataForPage = async (
 
   const featureName = featuresConfig.features[0]?.name;
   const command = "yext";
-  let args = addCommonArgs(featuresConfig, featureName, locale);
+  let args = addCommonArgs(featuresConfig, featureName);
 
   if (entityId) {
     args = args.concat("--entityIds", entityId);
+  }
+
+  const isAlternateLanguageFields =
+    !!featuresConfig.features[0]?.alternateLanguageFields;
+  if (!isAlternateLanguageFields) {
+    args = args.concat("--locale", locale);
   }
 
   if (fs.existsSync(siteStreamPath)) {
@@ -90,7 +96,10 @@ export const generateTestDataForPage = async (
         .filter((l) => !l.startsWith(CLI_BOILERPLATE_BETA_MESSAGE));
 
       // Check to see if the test data has begun to be printed in this chunk.
-      const dataStartIndex = lines.indexOf(STREAM_DATA_CHUNK_BEGIN);
+      const dataStartIndex = Math.max(
+        lines.indexOf(STREAM_DATA_CHUNK_BEGIN),
+        lines.indexOf(STREAM_DATA_CHUNK_BEGIN_MULTIPLE)
+      );
       if (dataStartIndex !== -1) {
         foundTestData = true;
         testData = lines.slice(dataStartIndex).join("\n");
@@ -123,7 +132,13 @@ export const generateTestDataForPage = async (
       let parsedData: any;
       if (testData) {
         try {
-          parsedData = JSON.parse(testData.trim());
+          // Yext CLI v0.299^ will return multiple documents as an array
+          const documentResponse = JSON.parse(testData.trim());
+          if (documentResponse.length) {
+            parsedData = getDocumentByLocale(documentResponse, locale);
+          } else {
+            parsedData = documentResponse;
+          }
         } catch (e) {
           stdout.write(
             `\nUnable to parse test data from command: \`${command} ${args.join(
@@ -145,11 +160,7 @@ export const generateTestDataForPage = async (
   });
 };
 
-const addCommonArgs = (
-  featuresConfig: FeaturesConfig,
-  featureName: string,
-  locale: string
-) => {
+const addCommonArgs = (featuresConfig: FeaturesConfig, featureName: string) => {
   const args = [
     "pages",
     "generate-test-data",
@@ -157,8 +168,6 @@ const addCommonArgs = (
     `"${featureName}"`,
     "--featuresConfig",
     prepareJsonForCmd(featuresConfig),
-    "--locale",
-    locale,
     "--printDocuments",
   ];
   return args;
@@ -174,4 +183,8 @@ const prepareJsonForCmd = (json: any) => {
     jsonString = `'${JSON.stringify(json)}'`;
   }
   return jsonString;
+};
+
+const getDocumentByLocale = (documents: any[], locale: string): any => {
+  return documents.find((document) => document.locale === locale);
 };
