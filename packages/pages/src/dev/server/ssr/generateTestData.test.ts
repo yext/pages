@@ -108,11 +108,7 @@ describe("generateTestDataForPage", () => {
 
     mockChildProcess.stdout.emit(
       "data",
-      `${
-        JSON.stringify(CLI_STREAM_DATA_MULTIPLE_DOCS[0], null, "  ") +
-        "\n" +
-        JSON.stringify(CLI_STREAM_DATA_MULTIPLE_DOCS[1], null, "  ")
-      }`
+      `${JSON.stringify(CLI_STREAM_DATA_MULTIPLE_DOCS, null, "  ")}`
     );
     mockChildProcess.emit("close");
 

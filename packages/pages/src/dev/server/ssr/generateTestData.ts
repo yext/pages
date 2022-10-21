@@ -3,6 +3,7 @@ import { FeaturesConfig } from "../../../common/src/feature/features.js";
 import {
   CLI_BOILERPLATE_BETA_MESSAGE,
   STREAM_DATA_CHUNK_BEGIN,
+  STREAM_DATA_CHUNK_BEGIN_MULTIPLE,
   UPGRADE_MESSAGE_LINE_BEGIN,
   UPGRADE_INSTRUCTIONS_LINE_BEGIN,
 } from "./constants.js";
@@ -95,7 +96,10 @@ export const generateTestDataForPage = async (
         .filter((l) => !l.startsWith(CLI_BOILERPLATE_BETA_MESSAGE));
 
       // Check to see if the test data has begun to be printed in this chunk.
-      const dataStartIndex = lines.indexOf(STREAM_DATA_CHUNK_BEGIN);
+      const dataStartIndex = Math.max(
+        lines.indexOf(STREAM_DATA_CHUNK_BEGIN),
+        lines.indexOf(STREAM_DATA_CHUNK_BEGIN_MULTIPLE)
+      );
       if (dataStartIndex !== -1) {
         foundTestData = true;
         testData = lines.slice(dataStartIndex).join("\n");
@@ -128,11 +132,12 @@ export const generateTestDataForPage = async (
       let parsedData: any;
       if (testData) {
         try {
-          const documents = parseConcatenatedDocuments(testData.trim());
-          if (documents.length === 1) {
-            parsedData = documents[0];
+          // Yext CLI v0.299^ will return multiple documents as an array
+          const documentResponse = JSON.parse(testData.trim());
+          if (documentResponse.length) {
+            parsedData = getDocumentByLocale(documentResponse, locale);
           } else {
-            parsedData = getDocumentByLocale(documents, locale);
+            parsedData = documentResponse;
           }
         } catch (e) {
           stdout.write(
@@ -178,17 +183,6 @@ const prepareJsonForCmd = (json: any) => {
     jsonString = `'${JSON.stringify(json)}'`;
   }
   return jsonString;
-};
-
-// When using a CLI version <= 0.1_299 there is a chance multiple documents will be returned consecutively, without proper containment.
-// Look for them and parse as an array. This can be removed once the CLI handles multiple documents as an array https://yexttest.atlassian.net/browse/SPR-4712
-const parseConcatenatedDocuments = (documentResponse: string): any[] => {
-  const DOCUMENT_SEPARATOR = `}\n{\n  "__`;
-  const DOCUMENT_JOINER = `},\n{\n  "__`;
-  const objects = documentResponse
-    .split(DOCUMENT_SEPARATOR)
-    .join(DOCUMENT_JOINER);
-  return JSON.parse(`[${objects}]`);
 };
 
 const getDocumentByLocale = (documents: any[], locale: string): any => {
