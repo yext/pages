@@ -7,27 +7,10 @@
       import * as ReactDOM from "react-dom";
       import * as React from "react";
       const hydrate = async () => {
-        const templates = import.meta.glob("/src/templates/**/*.(jsx|tsx)");
-        const routes = Object.keys(templates).map((path) => {
-          return {
-            name: path.split("/").pop()?.split(".")[0] || "index",
-            path,
-            getComponent: templates[path],
-          };
-        });
         const templatePath = window._RSS_TEMPLATE_PATH_;
-        const template = routes.find((route) =>
-          templatePath.endsWith(route.path)
-        ) || {
-          name: templatePath.split("/").at(-1).split(".")[0],
-          path: templatePath,
-          getComponent: function () {
-            throw new Error("Function not implemented.");
-          },
-        };
-        const { default: Component } = await template.getComponent();
+        const { default: Component } = await import(templatePath);
         if (!Component) {
-          console.error("Default export missing in template: " + template.path);
+          console.error("Default export missing in template: " + templatePath);
           return;
         }
         ReactDOM.hydrate(

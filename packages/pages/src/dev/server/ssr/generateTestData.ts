@@ -13,6 +13,9 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
 /**
  * generateTestData will run yext sites generate-test-data and return true in
  * the event of a successful run and false in the event of a failure.
+ *
+ * @param domain The domain of the site
+ * @returns a boolean on whether test data generation was successful
  */
 export const generateTestData = async (domain?: string): Promise<boolean> => {
   const command = "yext";
