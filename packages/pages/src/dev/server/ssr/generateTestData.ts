@@ -180,7 +180,8 @@ const prepareJsonForCmd = (json: any) => {
   return jsonString;
 };
 
-// There is a chance multiple documents will be returned consecutively, without proper containment. Look for them and parse as an array
+// When using a CLI version <= 0.1_299 there is a chance multiple documents will be returned consecutively, without proper containment.
+// Look for them and parse as an array. This can be removed once the CLI handles multiple documents as an array https://yexttest.atlassian.net/browse/SPR-4712
 const parseConcatenatedDocuments = (documentResponse: string): any[] => {
   const DOCUMENT_SEPARATOR = `}\n{\n  "__`;
   const DOCUMENT_JOINER = `},\n{\n  "__`;
