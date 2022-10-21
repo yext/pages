@@ -43,7 +43,7 @@ export const generateTestDataForPage = async (
   projectStructure: ProjectStructure
 ): Promise<any> => {
   const sitesConfigPath =
-    projectStructure.scopedsitesConfigPath?.getAbsolutePath() ??
+    projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
     projectStructure.sitesConfigRoot.getAbsolutePath();
   const siteStreamPath = path.resolve(
     process.cwd(),

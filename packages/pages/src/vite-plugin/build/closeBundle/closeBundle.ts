@@ -34,7 +34,7 @@ export default (projectStructure: ProjectStructure) => {
     finisher = logger.timedLog({ startLog: "Writing features.json" });
     try {
       const sitesConfigPath =
-        projectStructure.scopedsitesConfigPath?.getAbsolutePath() ??
+        projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
         projectStructure.sitesConfigRoot.getAbsolutePath();
       createFeaturesJson(
         templateModules,

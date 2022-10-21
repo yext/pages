@@ -112,7 +112,7 @@ export class ProjectStructure {
   templatesRoot: Path;
   scope?: string;
   scopedTemplatesPath?: Path;
-  scopedsitesConfigPath?: Path;
+  scopedSitesConfigPath?: Path;
 
   distRoot: Path;
   hydrationBundleOutputRoot: Path;
@@ -133,7 +133,7 @@ export class ProjectStructure {
     const scope = this.#config.filepathsConfig.scope;
     if (scope) {
       this.scope = scope;
-      this.scopedsitesConfigPath = new Path(
+      this.scopedSitesConfigPath = new Path(
         pathLib.join(this.sitesConfigRoot.path, scope)
       );
       this.scopedTemplatesPath = new Path(
