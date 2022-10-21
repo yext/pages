@@ -1,7 +1,7 @@
 import pathLib from "path";
 
 /**
- * Provides useful methods to operate on a specific property of {@link ProjectFilepathsConfig}.
+ * Provides useful methods to operate on a specific property of {@link ProjectFilepaths}.
  *
  * @public
  */

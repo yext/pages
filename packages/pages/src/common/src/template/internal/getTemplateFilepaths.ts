@@ -8,22 +8,19 @@ import { Path } from "../../project/path.js";
  * provided template folder paths, only the file in domain template
  * folder path is collected.
  *
- * @param templatesRoot  The folder path where all template files live
- * @param templatesDomain The folder path where the template files of a specific domain live
+ * @param root  The folder path where all template files live
+ * @param domain The folder path where the template files of a specific domain live
  * @returns a list of template filepaths
  */
-export const getTemplateFilepaths = (
-  templatesRoot: Path,
-  templatesDomain?: Path
-): string[] => {
+export const getTemplateFilepaths = (root: Path, domain?: Path): string[] => {
   const templatesRootFilepaths: string[] = glob.sync(
-    `${templatesRoot.getAbsolutePath()}/*.{tsx,jsx,js,ts}`
+    `${root.getAbsolutePath()}/*.{tsx,jsx,js,ts}`
   );
-  if (!templatesDomain) {
+  if (!domain) {
     return templatesRootFilepaths;
   }
   const templatesDomainFilepaths: string[] = glob.sync(
-    `${templatesDomain.getAbsolutePath()}/*.{tsx,jsx,js,ts}`
+    `${domain.getAbsolutePath()}/*.{tsx,jsx,js,ts}`
   );
   const templatesDomainFilenames = templatesDomainFilepaths.map((t) =>
     path.basename(t)

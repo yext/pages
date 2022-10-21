@@ -19,9 +19,10 @@ export interface ProjectFilepaths {
   /** The folder path where the compiled server bundles should go */
   serverBundleOutputRoot: string;
   /**
+   * This is used for the case of multibrand setup within a single repo.
+   *
    * The domain of the site, which also serve as the subfolder name
    * inside {@link templatesRoot} and {@link sitesConfigRoot}.
-   * This is used for the case of multibrand setup within a single repo.
    */
   domain?: string;
 }
