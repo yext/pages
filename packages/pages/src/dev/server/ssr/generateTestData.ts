@@ -14,26 +14,26 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
 /**
  * generateTestData will run yext sites generate-test-data and return true in
  * the event of a successful run and false in the event of a failure.
+ *
+ * @param hostname The hostname of the site
+ * @returns a boolean on whether test data generation was successful
  */
-export const generateTestData = async (): Promise<boolean> => {
+export const generateTestData = async (hostname?: string): Promise<boolean> => {
   const command = "yext";
-  const args = ["sites", "generate-test-data"];
+  let args = ["sites", "generate-test-data"];
+  if (hostname) {
+    args = args.concat("--hostname", hostname);
+  }
+
   async function generate() {
     const childProcess = spawn(command, args);
     const exitCode = await new Promise((resolve) => {
       childProcess.on("close", resolve);
     });
-
-    if (exitCode) {
-      return false;
-    }
-
-    return true;
+    return !!exitCode;
   }
 
-  return new Promise((resolve) => {
-    resolve(generate());
-  });
+  return generate();
 };
 
 export const generateTestDataForPage = async (
@@ -43,11 +43,12 @@ export const generateTestDataForPage = async (
   locale: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
+  const sitesConfigPath =
+    projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
+    projectStructure.sitesConfigRoot.getAbsolutePath();
   const siteStreamPath = path.resolve(
     process.cwd(),
-    projectStructure.sitesConfigRoot.getAbsolutePath() +
-      "/" +
-      projectStructure.siteStreamConfig
+    path.join(sitesConfigPath, projectStructure.siteStreamConfig)
   );
 
   const featureName = featuresConfig.features[0]?.name;

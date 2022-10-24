@@ -39,6 +39,7 @@ export const generateManifestFile = (
       hydrationBundleOutputRoot:
         projectStructure.hydrationBundleOutputRoot.path,
       serverBundleOutputRoot: projectStructure.serverBundleOutputRoot.path,
+      scopedTemplatesPath: projectStructure.scopedTemplatesPath?.path,
     },
     bundlerManifest: JSON.parse(bundlerManifest.toString()),
   };

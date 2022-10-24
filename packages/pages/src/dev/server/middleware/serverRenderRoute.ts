@@ -12,6 +12,7 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import templateBase from "../public/templateBase.js";
 import { lookup } from "mime-types";
+import { getTemplateFilepaths } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -27,9 +28,18 @@ export const serverRenderRoute =
 
       const { feature, entityId, locale } = urlToFeature(url);
 
+      const templateFilepaths = getTemplateFilepaths(
+        projectStructure.scopedTemplatesPath
+          ? [
+              projectStructure.scopedTemplatesPath,
+              projectStructure.templatesRoot,
+            ]
+          : [projectStructure.templatesRoot]
+      );
       const templateModuleInternal = await featureNameToTemplateModuleInternal(
         vite,
-        feature
+        feature,
+        templateFilepaths
       );
       if (!templateModuleInternal) {
         console.error(
@@ -77,7 +87,7 @@ export const serverRenderRoute =
         `<head>
             <script type="text/javascript">
               window._RSS_PROPS_ = ${JSON.stringify(props)};
-              window._RSS_TEMPLATE_ = '${templateModuleInternal.filename}';
+              window._RSS_TEMPLATE_PATH_ = '${templateModuleInternal.path}';
               window._RSS_LANG_ = '${getLang(headConfig, props)}';
             </script>
             ${headConfig ? renderHeadConfigToString(headConfig) : ""}

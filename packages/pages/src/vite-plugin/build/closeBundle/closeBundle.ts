@@ -33,9 +33,12 @@ export default (projectStructure: ProjectStructure) => {
 
     finisher = logger.timedLog({ startLog: "Writing features.json" });
     try {
+      const sitesConfigPath =
+        projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
+        projectStructure.sitesConfigRoot.getAbsolutePath();
       createFeaturesJson(
         templateModules,
-        path.join("./sites-config/features.json")
+        path.join(`${sitesConfigPath}/features.json`)
       );
       finisher.succeed("Successfully wrote features.json");
     } catch (e: any) {
@@ -46,7 +49,7 @@ export default (projectStructure: ProjectStructure) => {
 
     finisher = logger.timedLog({ startLog: "Writing manifest.json" });
     try {
-      await generateManifestFile(templateModules, projectStructure);
+      generateManifestFile(templateModules, projectStructure);
       finisher.succeed("Successfully wrote manifest.json");
     } catch (e: any) {
       finisher.fail("Failed to write manifest.json");

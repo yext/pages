@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { PluginContext, EmitFile } from "rollup";
 import { generateHydrationEntryPoints } from "./hydration.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { getTemplateFilepaths } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 
 const REACT_EXTENSIONS = new Set([".tsx", ".jsx"]);
 
@@ -14,10 +15,11 @@ export default (projectStructure: ProjectStructure) => {
     console.log(yextBanner);
     clean(projectStructure.distRoot.getAbsolutePath());
 
-    const templates: string[] = glob.sync(
-      `${projectStructure.templatesRoot.getAbsolutePath()}/**/*.{tsx,jsx,js,ts}`
+    const templates = getTemplateFilepaths(
+      projectStructure.scopedTemplatesPath
+        ? [projectStructure.scopedTemplatesPath, projectStructure.templatesRoot]
+        : [projectStructure.templatesRoot]
     );
-
     const reactTemplates = templates.filter((templatePath) =>
       REACT_EXTENSIONS.has(path.parse(templatePath).ext)
     );
