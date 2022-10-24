@@ -19,13 +19,12 @@ export const devCommandModule: CommandModule<unknown, DevArgs> = {
   builder: (yargs) => {
     return yargs
       .option("local", {
-        describe: "Disable dynamically generated test data",
+        describe: "Disables dynamically generated test data",
         type: "boolean",
         demandOption: false,
       })
       .option("scope", {
-        describe:
-          "The subfolder to scope the dev build to a subset of templates.",
+        describe: "The subfolder to scope the served templates from",
         type: "string",
         demandOption: false,
       });
