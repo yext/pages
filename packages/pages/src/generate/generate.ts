@@ -11,7 +11,7 @@ const featureCommandModule: CommandModule = {
 
 export const generateCommandModule: CommandModule = {
   command: "generate",
-  describe: "Generates specified data type",
+  describe: "Generates a specific file",
   builder: (yargs) => {
     return yargs.command(featureCommandModule).demandCommand();
   },
