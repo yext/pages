@@ -1,6 +1,5 @@
 import { initCommandModule } from "../init/init.js";
 import { devCommandModule } from "../dev/dev.js";
-import { previewCommandModule } from "../preview/preview.js";
 import { generateCommandModule } from "../generate/generate.js";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
@@ -21,7 +20,6 @@ import { hideBin } from "yargs/helpers";
 yargs(hideBin(process.argv))
   .scriptName("pages")
   .command(devCommandModule)
-  .command(previewCommandModule)
   .command(initCommandModule)
   .command(generateCommandModule)
   .demandCommand()
