@@ -26,7 +26,7 @@ const handler = async ({ folderToCreate }: InitArgs) => {
 export const initCommandModule: CommandModule<unknown, InitArgs> = {
   command: "init",
   describe:
-    "Clones a pages starter repo, runs `npm install`, and performs the first build, all in one simple command.",
+    "Clones a pages starter repo, runs `npm install`, and performs the first build.",
   builder: (yargs) => {
     return yargs.option("folderToCreate", {
       describe: "Destination folder path to create the repo",
