@@ -9,7 +9,7 @@ import {
   loadTemplateModules,
   TemplateModuleCollection,
 } from "../../../common/src/template/internal/loader.js";
-import { createFeaturesJson } from "../../../generate/features.js";
+import { createFeaturesJson } from "../../../generate/features/createFeaturesJson.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
