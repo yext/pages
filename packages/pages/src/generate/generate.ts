@@ -1,13 +1,5 @@
 import { CommandModule } from "yargs";
-import { features } from "./features.js";
-
-const featureCommandModule: CommandModule = {
-  command: "features",
-  describe: "Generates features.json file",
-  handler: () => {
-    features();
-  },
-};
+import { featureCommandModule } from "./features/features.js";
 
 export const generateCommandModule: CommandModule = {
   command: "generate",
