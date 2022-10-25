@@ -72,7 +72,7 @@ export interface ProjectStructureConfig {
   envVarConfig: EnvVar;
 }
 
-const defaultConfig: ProjectStructureConfig = {
+export const defaultConfig: ProjectStructureConfig = {
   filepathsConfig: {
     templatesRoot: "src/templates",
     sitesConfigRoot: "sites-config",
