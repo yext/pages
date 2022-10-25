@@ -72,7 +72,7 @@ export interface ProjectStructureConfig {
   envVarConfig: EnvVar;
 }
 
-export const defaultConfig: ProjectStructureConfig = {
+export const defaultProjectStructureConfig: ProjectStructureConfig = {
   filepathsConfig: {
     templatesRoot: "src/templates",
     sitesConfigRoot: "sites-config",
@@ -124,7 +124,7 @@ export class ProjectStructure {
   siteStreamConfig: string;
 
   constructor(config?: Optional<ProjectStructureConfig>) {
-    this.#config = _.merge(defaultConfig, config);
+    this.#config = _.merge(defaultProjectStructureConfig, config);
     this.sitesConfigRoot = new Path(
       this.#config.filepathsConfig.sitesConfigRoot
     );
