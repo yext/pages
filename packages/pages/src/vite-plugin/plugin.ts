@@ -5,6 +5,7 @@ import {
   ProjectStructureConfig,
 } from "../common/src/project/structure.js";
 import { build } from "./build/build.js";
+import _ from "lodash";
 
 /**
  * Options to configure functionality of the plugin.
@@ -16,7 +17,16 @@ export type Options = {
 };
 
 const plugin = (opts: Options = {}): PluginOption[] => {
-  const projectStructure = new ProjectStructure(opts.projectStructureConfig);
+  const projectConfigFromBuildArgs: Optional<ProjectStructureConfig> = {
+    filepathsConfig: {
+      scope: process.env.YEXT_PAGES_SCOPE,
+    },
+  };
+  const userProjectStructureConfig = _.merge(
+    opts.projectStructureConfig,
+    projectConfigFromBuildArgs
+  );
+  const projectStructure = new ProjectStructure(userProjectStructureConfig);
 
   return [build(projectStructure)];
 };
