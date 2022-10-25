@@ -4,18 +4,13 @@ import { Path } from "../../common/src/project/path.js";
 import { ProjectFilepaths } from "../../common/src/project/structure.js";
 import { getTemplateFilepaths } from "../../common/src/template/internal/getTemplateFilepaths.js";
 import { loadTemplateModules } from "../../common/src/template/internal/loader.js";
-import { createFeaturesJson } from "./createfeaturesjson.js";
+import { createFeaturesJson } from "./createFeaturesJson.js";
 
-type FeaturesArgs = Pick<
-  ProjectFilepaths,
-  "templatesRoot" | "sitesConfigRoot" | "scope"
->;
+type FeaturesArgs = Pick<ProjectFilepaths, "scope">;
 
-const handler = async ({
-  templatesRoot,
-  sitesConfigRoot,
-  scope,
-}: FeaturesArgs): Promise<void> => {
+const handler = async ({ scope }: FeaturesArgs): Promise<void> => {
+  const templatesRoot = "src/templates";
+  const sitesConfigRoot = "sites-config";
   const templateRootAbsolutePath = path.join(process.cwd(), templatesRoot);
   const templateFilepaths = getTemplateFilepaths(
     scope
@@ -43,24 +38,11 @@ export const featureCommandModule: CommandModule<unknown, FeaturesArgs> = {
   command: "features",
   describe: "Generates features.json file",
   builder: (yargs) => {
-    return yargs
-      .option("templatesRoot", {
-        describe: "The folder path where all template files live",
-        type: "string",
-        default: "src/templates",
-        demandOption: false,
-      })
-      .option("sitesConfigRoot", {
-        describe: "The folder path where the sites-config files live",
-        type: "string",
-        default: "sites-config",
-        demandOption: false,
-      })
-      .option("scope", {
-        describe: "The subfolder to scope the served templates from",
-        type: "string",
-        demandOption: false,
-      });
+    return yargs.option("scope", {
+      describe: "The subfolder to scope the served templates from",
+      type: "string",
+      demandOption: false,
+    });
   },
   handler,
 };
