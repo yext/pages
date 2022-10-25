@@ -1,26 +1,11 @@
 import fs from "fs-extra";
-import glob from "glob";
 import path from "path";
 import {
   FeaturesConfig,
   FeatureConfig,
   convertTemplateConfigToFeatureConfig,
-} from "../common/src/feature/features.js";
-import {
-  loadTemplateModules,
-  TemplateModuleCollection,
-} from "../common/src/template/internal/loader.js";
-
-const TEMPLATES_ROOT = "/src/templates";
-
-export const features = async (): Promise<void> => {
-  const templateModules = await loadTemplateModules(
-    glob.sync(path.join(process.cwd(), TEMPLATES_ROOT, "/**/*.{tsx,jsx}")),
-    true,
-    false
-  );
-  await createFeaturesJson(templateModules, "./sites-config/features.json");
-};
+} from "../../common/src/feature/features.js";
+import { TemplateModuleCollection } from "../../common/src/template/internal/loader.js";
 
 /**
  * Generates a features.json from the templates.

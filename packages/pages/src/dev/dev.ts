@@ -2,9 +2,9 @@ import { createServer } from "./server/server.js";
 import { viteDevServerPort } from "./server/middleware/constants.js";
 import { CommandModule } from "yargs";
 import open from "open";
+import { ProjectFilepaths } from "../common/src/project/structure.js";
 
-interface DevArgs {
-  scope?: string;
+interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
   local?: boolean;
 }
 
