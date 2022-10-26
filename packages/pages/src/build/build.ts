@@ -6,10 +6,12 @@ type BuildArgs = Pick<ProjectFilepaths, "scope">;
 
 const handler = async ({ scope }: BuildArgs) => {
   // Pass CLI arguments as env variables to use in vite-plugin
-  if (scope) {
-    process.env.YEXT_PAGES_SCOPE = scope;
-  }
-  shell.exec("vite build");
+  shell.exec("vite build", {
+    env: {
+      ...process.env,
+      YEXT_PAGES_SCOPE: scope,
+    },
+  });
 };
 
 export const buildCommandModule: CommandModule<unknown, BuildArgs> = {
