@@ -1,6 +1,7 @@
 import { initCommandModule } from "../init/init.js";
 import { devCommandModule } from "../dev/dev.js";
 import { generateCommandModule } from "../generate/generate.js";
+import { buildCommandModule } from "../build/build.js";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
@@ -22,6 +23,7 @@ yargs(hideBin(process.argv))
   .command(devCommandModule)
   .command(initCommandModule)
   .command(generateCommandModule)
+  .command(buildCommandModule)
   .demandCommand()
   .version(false)
   .strict()

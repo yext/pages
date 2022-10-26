@@ -1,5 +1,5 @@
 import pathLib from "path";
-import _ from "lodash";
+import merge from "lodash/merge.js";
 import { Path } from "./path.js";
 
 /**
@@ -124,7 +124,7 @@ export class ProjectStructure {
   siteStreamConfig: string;
 
   constructor(config?: Optional<ProjectStructureConfig>) {
-    this.#config = _.merge(defaultProjectStructureConfig, config);
+    this.#config = merge(defaultProjectStructureConfig, config);
     this.sitesConfigRoot = new Path(
       this.#config.filepathsConfig.sitesConfigRoot
     );
