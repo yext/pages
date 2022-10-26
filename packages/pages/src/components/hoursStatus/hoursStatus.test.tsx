@@ -19,9 +19,36 @@ describe("HoursStatus", () => {
     expect(screen.findByText("am") || screen.findByText("pm")).toBeTruthy();
   });
 
+  const isOpenNowInterval = new HoursManipulator(
+    HoursWithMultipleIntervalsData
+  ).isOpenNow();
+  it("properly renders a status message for default component call with multiple open intervals", () => {
+    render(<HoursStatus hours={HoursWithMultipleIntervalsData} />);
+    if (isOpenNowInterval) {
+      expect(screen.findByText("open now - closes at 10:00 am")).toBeTruthy();
+    } else {
+      expect(screen.findByText("closed - opens at 5:00 pm")).toBeTruthy();
+    }
+  });
+
   it("properly renders a status message for 24 hour component call", () => {
     render(<HoursStatus hours={HoursData} timeOptions={{ hour12: false }} />);
+    expect(screen.queryByText("am")).toBeFalsy();
+    expect(screen.queryByText("pm")).toBeFalsy();
+  });
 
+  it("properly renders a status message for 24 hour component call with multiple open intervals", () => {
+    render(
+      <HoursStatus
+        hours={HoursWithMultipleIntervalsData}
+        timeOptions={{ hour12: false }}
+      />
+    );
+    if (isOpenNowInterval) {
+      expect(screen.findByText("open now - closes at 10:00")).toBeTruthy();
+    } else {
+      expect(screen.findByText("closed - opens at 5:00")).toBeTruthy();
+    }
     expect(screen.queryByText("am")).toBeFalsy();
     expect(screen.queryByText("pm")).toBeFalsy();
   });
@@ -36,6 +63,43 @@ describe("HoursStatus", () => {
     render(
       <HoursStatus
         hours={HoursData}
+        currentTemplate={() => currentTemplateString}
+        separatorTemplate={() => separatorTemplateString}
+        futureTemplate={() => {
+          return (
+            <span className="HoursStatus-future">
+              {isOpenNow
+                ? futureTemplateOpenNowString
+                : futureTemplateClosedNowString}
+            </span>
+          );
+        }}
+        timeTemplate={() => timeTemplateString}
+        dayOfWeekTemplate={() => dayOfWeekTemplateString}
+      />
+    );
+
+    expect(screen.findByText(currentTemplateString)).toBeTruthy();
+    expect(screen.findByText(separatorTemplateString)).toBeTruthy();
+    expect(screen.findByText(timeTemplateString)).toBeTruthy();
+    expect(screen.findByText(dayOfWeekTemplateString)).toBeTruthy();
+    if (isOpenNow) {
+      expect(screen.findByText(futureTemplateOpenNowString)).toBeTruthy();
+    } else {
+      expect(screen.findByText(futureTemplateClosedNowString)).toBeTruthy();
+    }
+  });
+
+  it("properly takes on custom parameters for component call with intervals", () => {
+    const currentTemplateString = "Open Currently";
+    const separatorTemplateString = " • ";
+    const futureTemplateOpenNowString = "Will be closing at";
+    const futureTemplateClosedNowString = "Will be opening at";
+    const timeTemplateString = " HH:MM ";
+    const dayOfWeekTemplateString = "Gameday";
+    render(
+      <HoursStatus
+        hours={HoursWithMultipleIntervalsData}
         currentTemplate={() => currentTemplateString}
         separatorTemplate={() => separatorTemplateString}
         futureTemplate={() => {

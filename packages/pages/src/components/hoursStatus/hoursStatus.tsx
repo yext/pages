@@ -123,10 +123,10 @@ const HoursStatus: React.FC<HoursStatusProps> = (props) => {
 
   // Use two rendering passes to avoid SSR issues where server & client rendered content are different
   // https://reactjs.org/docs/react-dom.html#hydrate
-  const [isClient, setIsClient] = useState(false);
+  const [postHydrate, setPostHydrate] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    setPostHydrate(true);
   }, []);
 
   const statusTemplateFn = props.statusTemplate || defaultStatusTemplate;
@@ -150,7 +150,7 @@ const HoursStatus: React.FC<HoursStatusProps> = (props) => {
     ...props,
   };
 
-  return <>{isClient && statusTemplateFn(statusParams, props)}</>;
+  return <>{postHydrate && statusTemplateFn(statusParams, props)}</>;
 };
 
 export { defaultStatusTemplate, HoursStatus };
