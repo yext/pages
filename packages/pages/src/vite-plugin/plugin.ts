@@ -5,7 +5,7 @@ import {
   ProjectStructureConfig,
 } from "../common/src/project/structure.js";
 import { build } from "./build/build.js";
-import _ from "lodash";
+import merge from "lodash/merge.js";
 
 /**
  * Options to configure functionality of the plugin.
@@ -22,7 +22,7 @@ const plugin = (opts: Options = {}): PluginOption[] => {
       scope: process.env.YEXT_PAGES_SCOPE,
     },
   };
-  const userProjectStructureConfig = _.merge(
+  const userProjectStructureConfig = merge(
     opts.projectStructureConfig,
     projectConfigFromBuildArgs
   );
