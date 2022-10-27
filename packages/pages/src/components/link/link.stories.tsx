@@ -2,10 +2,12 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { Link } from "./link.js";
 
-export default {
+const meta: ComponentMeta<typeof Link> = {
   title: "components/Link",
   component: Link,
-} as ComponentMeta<typeof Link>;
+};
+
+export default meta;
 
 const Template: ComponentStory<typeof Link> = (args) => <Link {...args} />;
 

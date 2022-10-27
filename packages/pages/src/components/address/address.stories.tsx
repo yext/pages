@@ -13,10 +13,12 @@ import {
   SanFrancisco,
 } from "./sampleData.js";
 
-export default {
+const meta: ComponentMeta<typeof AddressComponent> = {
   title: "components/Address",
   component: AddressComponent,
-} as ComponentMeta<typeof AddressComponent>;
+};
+
+export default meta;
 
 const Template: ComponentStory<typeof AddressComponent> = (args) => (
   <AddressComponent {...args} />
