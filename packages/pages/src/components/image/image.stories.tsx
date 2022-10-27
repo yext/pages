@@ -17,10 +17,12 @@ const image = {
   },
 };
 
-export default {
+const meta: ComponentMeta<typeof Image> = {
   title: "components/Image",
   component: Image,
-} as ComponentMeta<typeof Image>;
+};
+
+export default meta;
 
 const Template: ComponentStory<typeof Image> = (args) => <Image {...args} />;
 

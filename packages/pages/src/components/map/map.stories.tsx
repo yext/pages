@@ -4,10 +4,12 @@ import { Map, Marker, Coordinate as CoordinateType } from ".";
 import { MAP_MULTIPLE_LOCATIONS } from "./sampleData.js";
 import { Map as MapType } from "@yext/components-tsx-maps";
 
-export default {
+const meta: ComponentMeta<typeof Map> = {
   title: "components/Map",
   component: Map,
-} as ComponentMeta<typeof Map>;
+};
+
+export default meta;
 
 const Template: ComponentStory<typeof Map> = (args) => <Map {...args} />;
 
