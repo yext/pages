@@ -1,5 +1,4 @@
-import { ReactNode } from "react";
-import { LinkType, CTA } from "./types.js";
+import { LinkProps, HREFLinkProps, CTA } from "./types.js";
 
 /**
  * Get the link from a CTA
@@ -45,4 +44,11 @@ const reverse = (string: string): string => {
   return o;
 };
 
-export { getHref, isEmail, reverse };
+/**
+ * Type predicate for distinguishing between data cases.
+ */
+const isHREFProps = (props: LinkProps): props is HREFLinkProps => {
+  return "href" in props;
+};
+
+export { getHref, isEmail, isHREFProps, reverse };
