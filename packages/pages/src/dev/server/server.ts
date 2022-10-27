@@ -9,13 +9,20 @@ import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 
-export const createServer = async (dynamicGenerateData: boolean) => {
+export const createServer = async (
+  dynamicGenerateData: boolean,
+  scope?: string
+) => {
   // creates a standard express app
   const app = express();
 
   // initialize the default project structure and use to help configure the
   // dev server
-  const projectStructure = new ProjectStructure();
+  const projectStructure = new ProjectStructure({
+    filepathsConfig: {
+      scope,
+    },
+  });
 
   // create vite using ssr mode
   const vite = await createViteServer({
@@ -38,7 +45,9 @@ export const createServer = async (dynamicGenerateData: boolean) => {
   let displayGenerateTestDataWarning = false;
   if (dynamicGenerateData) {
     // display the warning if the call to generateTestData fails.
-    displayGenerateTestDataWarning = !(await generateTestData());
+    displayGenerateTestDataWarning = !(await generateTestData(
+      projectStructure.scope
+    ));
   }
 
   // When a page is requested that is anything except the root, call our

@@ -1,5 +1,4 @@
 import { getLocalDataForEntity } from "./getLocalData.js";
-import { TEMPLATE_PATH } from "./constants.js";
 import { generateTestDataForPage } from "./generateTestData.js";
 import { convertTemplateConfigInternalToFeaturesConfig } from "../../../common/src/feature/features.js";
 import {
@@ -63,7 +62,7 @@ export const propsLoader = async ({
   const path = getPath(templateProps);
   if (!path) {
     throw new Error(
-      `getPath does not return a valid string in template '${TEMPLATE_PATH}/${templateModuleInternal.filename}'`
+      `getPath does not return a valid string in template '${templateModuleInternal.path}'`
     );
   }
 

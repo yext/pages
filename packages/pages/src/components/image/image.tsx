@@ -136,7 +136,7 @@ export const validateRequiredProps = (
   if (layout == ImageLayoutOption.FIXED) {
     if (!width && !height) {
       console.warn(
-        "Using fixed layout but width and height are not passed as props."
+        "Using fixed layout but neither width nor height is passed as props."
       );
 
       return;

@@ -22,17 +22,28 @@ export const reactWrapper = <T extends TemplateRenderProps>(
   const headConfig = getHeadConfig ? getHeadConfig(props) : undefined;
   const lang = getLang(headConfig, props);
 
+  const bundlerManifest = props.__meta.manifest.bundlerManifest;
+  const rootTemplateFilepath = `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`;
+  const scopedTemplateFilepath = `${projectFilepaths.scopedTemplatesPath}/${templateModuleInternal.templateName}.tsx`;
+
+  const templateFilepath: string =
+    !!projectFilepaths.scopedTemplatesPath &&
+    bundlerManifest[scopedTemplateFilepath]
+      ? scopedTemplateFilepath
+      : rootTemplateFilepath;
+
   return `<!DOCTYPE html>
     <html lang=${lang}>
     <head>
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(props)}</script>
-        ${getCssTags(
-          `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`,
-          props.__meta.manifest.bundlerManifest,
-          new Set()
+        ${Array.from(
+          getCssTags(
+            templateFilepath,
+            props.__meta.manifest.bundlerManifest,
+            new Set()
+          )
         )
           .map((f) => `<link rel="stylesheet" href="/${f}"/>`)
-          .filter((v, i, a) => a.indexOf(v) == i)
           .join("\n")}
         ${headConfig ? renderHeadConfigToString(headConfig) : ""}
     </head>
@@ -56,18 +67,20 @@ const getCssTags = (
   filepath: string,
   manifest: bundlerManifest,
   seen: Set<string>
-) => {
-  const entry = Object.entries(manifest).find(([file]) => file === filepath);
+): Set<string> => {
+  const entry = structuredClone(
+    Object.entries(manifest).find(([file]) => file === filepath)
+  );
   if (!entry) {
-    return [];
+    return new Set();
   }
   const [file, info] = entry;
 
   seen.add(file);
-  const cssFiles = info.css || [];
+  const cssFiles = new Set(info.css);
   (info.imports || [])
-    .flatMap((f) => getCssTags(f, manifest, seen))
-    .forEach((f) => cssFiles.push(f));
+    .flatMap((f) => Array.from(getCssTags(f, manifest, seen)))
+    .forEach((f) => cssFiles.add(f));
 
   return cssFiles;
 };

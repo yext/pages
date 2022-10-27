@@ -416,7 +416,7 @@ describe("validateRequiredProps", () => {
 
     expect(logMock.mock.calls.length).toBe(1);
     expect(logMock.mock.calls[0][0]).toBe(
-      "Using fixed layout but width and height are not passed as props."
+      "Using fixed layout but neither width nor height is passed as props."
     );
     jest.clearAllMocks();
   });

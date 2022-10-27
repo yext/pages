@@ -1,5 +1,3 @@
-import { TEMPLATE_PATH } from "./constants.js";
-import { readdir } from "fs/promises";
 import { ViteDevServer } from "vite";
 import { loadTemplateModule } from "./loadTemplateModule.js";
 import {
@@ -10,12 +8,10 @@ import {
 // Determines the template module to load from a given feature name (from the exported config)
 export const featureNameToTemplateModuleInternal = async (
   devserver: ViteDevServer,
-  featureName: string
+  featureName: string,
+  templateFilepaths: string[]
 ): Promise<TemplateModuleInternal<any, any> | null> => {
-  const directoryFilenames = await readdir(`./${TEMPLATE_PATH}`);
-
-  for (const filename of directoryFilenames) {
-    const templateFilepath = `${TEMPLATE_PATH}/${filename}`;
+  for (const templateFilepath of templateFilepaths) {
     const templateModule = await loadTemplateModule(
       devserver,
       templateFilepath

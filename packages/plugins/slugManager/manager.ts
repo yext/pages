@@ -31,13 +31,14 @@ export function createManager(config: InternalSlugManagerConfig) {
   } = config;
 
   async function connector(inputString: string | undefined) {
-    const pageToken = inputString || "";
+    const input = JSON.parse(inputString || "{}");
+    const pageToken = input.pageToken || "";
 
     const params = new URLSearchParams({
       fields: "meta",
     });
-    if (pageToken != null) {
-      params.set("pagination_token", pageToken);
+    if (pageToken) {
+      params.set("pageToken", pageToken);
     }
     if (searchIds.length) {
       params.set("searchIds", searchIds.join(","));
