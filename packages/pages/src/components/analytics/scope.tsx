@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from "react";
 import { concatScopes } from "./helpers.js";
 import { AnalyticsScopeProps } from "./interfaces.js";
 
-export const ScopeContext = React.createContext({ name: "" });
+const ScopeContext = React.createContext({ name: "" });
 
 /**
  * The useScope hook will return the current scope from the Analytics Scope. For
