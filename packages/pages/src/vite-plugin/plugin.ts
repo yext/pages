@@ -5,28 +5,14 @@ import {
   ProjectStructureConfig,
 } from "../common/src/project/structure.js";
 import { build } from "./build/build.js";
-import merge from "lodash/merge.js";
 
-/**
- * Options to configure functionality of the plugin.
- *
- * @public
- */
-export type Options = {
-  projectStructureConfig?: Optional<ProjectStructureConfig>;
-};
-
-const plugin = (opts: Options = {}): PluginOption[] => {
+const plugin = (): PluginOption[] => {
   const projectConfigFromBuildArgs: Optional<ProjectStructureConfig> = {
     filepathsConfig: {
       scope: process.env.YEXT_PAGES_SCOPE,
     },
   };
-  const userProjectStructureConfig = merge(
-    opts.projectStructureConfig,
-    projectConfigFromBuildArgs
-  );
-  const projectStructure = new ProjectStructure(userProjectStructureConfig);
+  const projectStructure = new ProjectStructure(projectConfigFromBuildArgs);
 
   return [build(projectStructure)];
 };
