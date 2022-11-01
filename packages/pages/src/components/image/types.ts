@@ -92,6 +92,8 @@ interface BaseImageProps {
   imgOverrides?: Record<string, unknown>;
   /** The pass through style of the underlying img tag. */
   style?: React.CSSProperties;
+  /** Set the loading state of the image. */
+  loading?: "lazy" | "eager";
 }
 
 /**
