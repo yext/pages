@@ -71,6 +71,25 @@ export type ImageLayout =
   typeof ImageLayoutOption[keyof typeof ImageLayoutOption];
 
 /**
+ * Loading option on the Image component
+ *
+ * @public
+ */
+export const LoadingOption = {
+  /** The default loading state, will wait for image to enter viewport before loading */
+  LAZY: "lazy",
+  /** Force image to load immediately */
+  EAGER: "eager",
+} as const;
+
+/**
+ * The type definition for image loading.
+ *
+ * @public
+ */
+export type Loading = typeof LoadingOption[keyof typeof LoadingOption];
+
+/**
  * The shape of the data passed to {@link Image}.
  */
 interface BaseImageProps {
@@ -93,7 +112,7 @@ interface BaseImageProps {
   /** The pass through style of the underlying img tag. */
   style?: React.CSSProperties;
   /** Set the loading state of the image. */
-  loading?: "lazy" | "eager";
+  loading?: Loading;
 }
 
 /**
