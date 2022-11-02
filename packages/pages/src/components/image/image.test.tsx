@@ -194,6 +194,16 @@ describe("Image", () => {
       "(max-width: 640px) 100px, (max-width: 768px) 320px, (max-width: 1024px) 640px, (max-width: 1280px) 960px, (max-width: 1536px) 1280px, 1920px"
     );
   });
+
+  it(`properly renders the image with 'loading' set to 'eager'.`, () => {
+    render(<Image image={image} loading="eager" />);
+
+    const img = screen.getByRole("img", {
+      name: /alt text/i,
+    });
+
+    expect(img.getAttribute("loading")).toEqual("eager");
+  });
 });
 
 describe("getImageUUID", () => {

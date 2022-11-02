@@ -27,6 +27,7 @@ export const Image = ({
   placeholder,
   imgOverrides,
   style = {},
+  loading = "lazy",
 }: ImageProps) => {
   const imgRef = useRef<HTMLImageElement>(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -108,7 +109,7 @@ export const Image = ({
         height={absHeight}
         srcSet={srcSet}
         sizes={sizes}
-        loading={"lazy"}
+        loading={loading}
         alt={imageData.alternateText || ""}
         {...imgOverrides}
       />
