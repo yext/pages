@@ -10,7 +10,7 @@ import {
   getImageSizeForFixedLayout,
   getImageEnv,
 } from "./image.js";
-import { ImageLayoutOption, LoadingOption } from "./types.js";
+import { ImageLayoutOption } from "./types.js";
 import { render, screen } from "@testing-library/react";
 
 const imgWidth = 20;
@@ -195,14 +195,14 @@ describe("Image", () => {
     );
   });
 
-  it(`properly renders the image with 'loading' set to ${LoadingOption.EAGER}.`, () => {
-    render(<Image image={image} loading={LoadingOption.EAGER} />);
+  it(`properly renders the image with 'loading' set to 'eager'.`, () => {
+    render(<Image image={image} loading="eager" />);
 
     const img = screen.getByRole("img", {
       name: /alt text/i,
     });
 
-    expect(img.getAttribute("loading")).toEqual(LoadingOption.EAGER);
+    expect(img.getAttribute("loading")).toEqual("eager");
   });
 });
 
