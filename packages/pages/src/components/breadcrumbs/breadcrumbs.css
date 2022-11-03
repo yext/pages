@@ -1,0 +1,15 @@
+@layer components {
+  html {
+    --yxt-breadcrumbs-spacing: 1rem;
+  }
+
+  .Breadcrumbs {
+    &-list {
+      display: flex;
+    }
+
+    &-separator {
+      margin: 0 var(--yxt-breadcrumbs-spacing);
+    }
+  }
+}
