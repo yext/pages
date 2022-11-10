@@ -31,12 +31,15 @@ const sampleListings: ListingType[] = [
   },
 ];
 
-const sampleListingsCaseInsensitive: ListingType[] = [
+const sampleListingsLowerCase: ListingType[] = [
   {
     listingUrl: "https://maps.google.com/maps?cid=3287244376840534043",
     publisher:
       ListingPublisherOption.GOOGLEMYBUSINESS.toLowerCase() as "GOOGLEMYBUSINESS",
   },
+];
+
+const sampleListingsUpperCase: ListingType[] = [
   {
     listingUrl: "https://maps.google.com/maps?cid=3287244376840534043",
     publisher:
@@ -98,8 +101,14 @@ describe("getDirections()", () => {
     );
   });
 
-  it("returns URL to Google Maps GMB listing without being case sensitive", () => {
-    expect(getDirections(undefined, sampleListingsCaseInsensitive)).toEqual(
+  it("returns URL to Google Maps GMB listing with lower case publisher", () => {
+    expect(getDirections(undefined, sampleListingsLowerCase)).toEqual(
+      "https://maps.google.com/maps?cid=3287244376840534043"
+    );
+  });
+
+  it("returns URL to Google Maps GMB listing with upper case publisher", () => {
+    expect(getDirections(undefined, sampleListingsUpperCase)).toEqual(
       "https://maps.google.com/maps?cid=3287244376840534043"
     );
   });
