@@ -47,7 +47,7 @@ export type AddressLineProps = {
  * @public
  */
 export const ListingPublisherOption = {
-  GOOGLEMYBUSINESS: "googlemybusiness",
+  GOOGLEMYBUSINESS: "GOOGLEMYBUSINESS",
 } as const;
 
 /**

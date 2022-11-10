@@ -98,7 +98,7 @@ export const getDirections = (
         listings?.reduce(
           (obj, listing) => ({
             ...obj,
-            [listing.publisher]: listing.listingUrl,
+            [listing.publisher.toUpperCase()]: listing.listingUrl,
           }),
           {}
         );
