@@ -1,3 +1,32 @@
+#### 1.0.0-beta.10 (2022-11-10)
+
+##### Documentation Changes
+
+* **components:**  add link stories (#238) (1e52a761)
+
+##### New Features
+
+* **components:**
+  *  make check for publisher in getDirections be case-insensitive (#255) (e20e1af8)
+  *  add `LocationMap` component (#242) (261a960a)
+  *  support pageDomain param (#239) (2591572d)
+* **dev/plugin:**
+  *  add build command with scope flag (#249) (55dddec3)
+  *  multibrand setup support in dev and vite-plugin build (#246) (0dce72a0)
+* **dev:**
+  *  add flags to features command for multibrand setup (#248) (6de548c5)
+  *  add Scope Flag to Dev Command (#247) (f4f7607c)
+
+##### Bug Fixes
+
+* **components:**
+  *  add loading eager to image (#252) (06f5ecc8)
+  *  make fixed Image width and height optional (#241) (36d87cc8)
+* **plugin:**  remove configuration parameter for vite-plugin (#250) (f94d5beb)
+* **dev:**
+  *  parse multiple stream documents (#245) (17718ce2)
+  *  interpreting contentType when serving templates (4c25b93a)
+
 #### 1.0.0-beta.9 (2022-10-04)
 
 ##### Bug Fixes
