@@ -15,12 +15,14 @@ import {
 type Props = {
   dynamicGenerateData: boolean;
   displayGenerateTestDataWarning: boolean;
+  noProdURL: boolean;
 };
 
 export const indexPage =
   ({
     dynamicGenerateData,
     displayGenerateTestDataWarning,
+    noProdURL,
   }: Props): RequestHandler =>
   async (req, res, next) => {
     try {
@@ -80,7 +82,11 @@ export const indexPage =
                       (localDataManifest.entity.get(templateName) || []).length
                     }):
                   </div>
-                  <ul>${createPageLinks(localDataManifest, templateName)}</ul>`,
+                  <ul>${createPageLinks(
+                    localDataManifest,
+                    templateName,
+                    noProdURL
+                  )}</ul>`,
             ""
           )}
           </div>`
@@ -121,12 +127,15 @@ export const indexPage =
 
 const createPageLinks = (
   localDataManifest: LocalDataManifest,
-  templateName: string
+  templateName: string,
+  noProdURL: boolean
 ) => {
   const formatLink = (entityId: string, slug: string) => {
-    // return `http://localhost:${viteDevServerPort}/${encodeURIComponent(
-    //   templateName
-    // )}/${entityId}`
+    if (noProdURL) {
+      return `http://localhost:${viteDevServerPort}/${encodeURIComponent(
+        templateName
+      )}/${entityId}`;
+    }
 
     return `http://localhost:${viteDevServerPort}/${slug}`;
   };

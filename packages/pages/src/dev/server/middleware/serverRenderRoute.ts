@@ -5,11 +5,7 @@ import { urlToFeature } from "../ssr/urlToFeature.js";
 import page404 from "../public/404.js";
 import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
-import {
-  getTemplateFilepaths,
-  getTemplateFilePathsFromProjectStructure,
-} from "../../../common/src/template/internal/getTemplateFilepaths.js";
-import { getContentType } from "./getContentType.js";
+import { getTemplateFilePathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import sendAppHTML from "./sendAppHTML.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { convertTemplateConfigInternalToFeaturesConfig } from "../../../common/src/feature/features.js";

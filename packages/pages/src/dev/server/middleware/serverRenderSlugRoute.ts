@@ -3,21 +3,12 @@ import { ViteDevServer } from "vite";
 import { propsLoader } from "../ssr/propsLoader.js";
 import page404 from "../public/404.js";
 import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplateModuleInternal.js";
-import {
-  renderHeadConfigToString,
-  getLang,
-} from "../../../common/src/template/head.js";
+
 import { ProjectStructure } from "../../../common/src/project/structure.js";
-import templateBase from "../public/templateBase.js";
-import {
-  getTemplateFilepaths,
-  getTemplateFilePathsFromProjectStructure,
-} from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { getTemplateFilePathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { TemplateRenderProps } from "../../../common/src/template/types.js";
-import { getContentType } from "./getContentType.js";
 import sendAppHTML from "./sendAppHTML.js";
 import { generateTestDataForSlug } from "../ssr/generateTestData.js";
-import { FeaturesConfig } from "../../../common/src/feature/features.js";
 import { getLocalDataForSlug } from "../ssr/getLocalData.js";
 
 type Props = {

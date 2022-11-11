@@ -9,17 +9,10 @@ import {
 } from "./constants.js";
 import path from "path";
 import fs from "fs";
-import {
-  defaultProjectStructureConfig,
-  ProjectStructure,
-} from "../../../common/src/project/structure.js";
+import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getFeaturesConfig } from "../../../generate/features/createFeaturesJson.js";
 import { loadTemplateModules } from "../../../common/src/template/internal/loader.js";
-import {
-  getTemplateFilepaths,
-  getTemplateFilePathsFromProjectStructure,
-} from "../../../common/src/template/internal/getTemplateFilepaths.js";
-import { Path } from "../../../common/src/project/path.js";
+import { getTemplateFilePathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
