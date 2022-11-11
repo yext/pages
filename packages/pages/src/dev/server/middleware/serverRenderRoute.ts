@@ -23,13 +23,10 @@ export const serverRenderRoute =
   async (req, res, next) => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
-      console.log("server rendering~!", url.pathname);
-
       const { feature, entityId, locale } = urlToFeature(url);
 
       const templateFilepaths =
         getTemplateFilePathsFromProjectStructure(projectStructure);
-      console.log("template file paths", templateFilepaths);
       const templateModuleInternal = await featureNameToTemplateModuleInternal(
         vite,
         feature,
@@ -48,7 +45,6 @@ export const serverRenderRoute =
         locale,
         projectStructure
       );
-      console.log("got document!", document);
       const props = await propsLoader({
         templateModuleInternal,
         entityId,
@@ -75,7 +71,6 @@ const getDocument = async (
     const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(
       templateModuleInternal.config
     );
-    console.log("dynamically generating");
 
     return generateTestDataForPage(
       process.stdout,
@@ -84,8 +79,6 @@ const getDocument = async (
       locale,
       projectStructure
     );
-  } else {
-    // Get the document from localData
-    return getLocalDataForEntity(entityId, locale);
   }
+  return getLocalDataForEntity(entityId, locale);
 };

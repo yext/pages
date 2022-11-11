@@ -6,11 +6,11 @@ import { ProjectFilepaths } from "../common/src/project/structure.js";
 
 interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
   local?: boolean;
-  "no-prod-url"?: boolean;
+  "prod-url"?: boolean;
 }
 
-const handler = async ({ scope, local, "no-prod-url": noProdURL }: DevArgs) => {
-  await createServer(!local, !!noProdURL, scope);
+const handler = async ({ scope, local, "prod-url": useProdURLs }: DevArgs) => {
+  await createServer(!local, !!useProdURLs, scope);
   await openBrowser(`http://localhost:${viteDevServerPort}/`);
 };
 
@@ -29,11 +29,12 @@ export const devCommandModule: CommandModule<unknown, DevArgs> = {
         type: "string",
         demandOption: false,
       })
-      .option("no-prod-url", {
+      .option("prod-url", {
         describe:
           "Disables using production URLs, and will use /[template-name]/[external-id] instead",
         type: "boolean",
         demandOption: false,
+        default: true,
       });
   },
   handler,

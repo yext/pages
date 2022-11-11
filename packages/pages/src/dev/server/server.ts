@@ -12,7 +12,7 @@ import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 
 export const createServer = async (
   dynamicGenerateData: boolean,
-  noProdURL: boolean,
+  useProdURLs: boolean,
   scope?: string
 ) => {
   // creates a standard express app
@@ -56,9 +56,9 @@ export const createServer = async (
   // serverRenderRoute middleware.
   app.use(
     /^\/(.+)/,
-    noProdURL
-      ? serverRenderRoute({ vite, dynamicGenerateData, projectStructure })
-      : serverRenderSlugRoute({ vite, dynamicGenerateData, projectStructure })
+    useProdURLs
+      ? serverRenderSlugRoute({ vite, dynamicGenerateData, projectStructure })
+      : serverRenderRoute({ vite, dynamicGenerateData, projectStructure })
   );
 
   // Serve the index page at the root of the dev server.
@@ -67,7 +67,7 @@ export const createServer = async (
     indexPage({
       dynamicGenerateData,
       displayGenerateTestDataWarning,
-      noProdURL,
+      useProdURLs,
     })
   );
 

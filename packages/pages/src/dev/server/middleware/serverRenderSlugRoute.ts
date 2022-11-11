@@ -32,7 +32,6 @@ export const serverRenderSlugRoute =
         locale,
         projectStructure
       );
-      console.log("loaded document! :)", document);
       const feature = document.__.name;
       const entityId = document.id;
       const templateModuleInternal = await featureNameToTemplateModuleInternal(
@@ -40,7 +39,6 @@ export const serverRenderSlugRoute =
         feature,
         templateFilepaths
       );
-      console.log("template module internal!", templateModuleInternal);
       if (!templateModuleInternal) {
         console.error(
           `Cannot find template corresponding to feature: ${feature}`
@@ -76,9 +74,6 @@ const getDocument = async (
       locale,
       projectStructure
     );
-  } else {
-    // Get the document from localData
-    console.log("getting local data for slug");
-    return getLocalDataForSlug(slug, locale);
   }
+  return getLocalDataForSlug(slug, locale);
 };
