@@ -1,7 +1,7 @@
 import { createServer } from "./server/server.js";
 import { viteDevServerPort } from "./server/middleware/constants.js";
 import { CommandModule } from "yargs";
-import open from "open";
+import openBrowser from "react-dev-utils/openBrowser";
 import { ProjectFilepaths } from "../common/src/project/structure.js";
 
 interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
@@ -10,7 +10,7 @@ interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
 
 const handler = async ({ scope, local }: DevArgs) => {
   await createServer(!local, scope);
-  await open(`http://localhost:${viteDevServerPort}/`);
+  await openBrowser(`http://localhost:${viteDevServerPort}/`);
 };
 
 export const devCommandModule: CommandModule<unknown, DevArgs> = {

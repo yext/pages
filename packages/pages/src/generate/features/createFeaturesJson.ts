@@ -7,6 +7,20 @@ import {
 } from "../../common/src/feature/features.js";
 import { TemplateModuleCollection } from "../../common/src/template/internal/loader.js";
 
+export const getFeaturesConfig = async (
+  templateModules: TemplateModuleCollection
+): Promise<FeaturesConfig> => {
+  const features: FeatureConfig[] = [];
+  const streams: any[] = [];
+  for (const [, module] of templateModules.entries()) {
+    const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
+    features.push(featureConfig);
+    module.config.stream && streams.push({ ...module.config.stream });
+  }
+
+  return { features, streams };
+};
+
 /**
  * Generates a features.json from the templates.
  */
@@ -14,19 +28,11 @@ export const createFeaturesJson = async (
   templateModules: TemplateModuleCollection,
   featurePath: string
 ): Promise<void> => {
-  const features: FeatureConfig[] = [];
-  const streams = [];
-  for (const [, module] of templateModules.entries()) {
-    const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
-    features.push(featureConfig);
-    module.config.stream && streams.push({ ...module.config.stream });
-  }
-
+  const { features, streams } = await getFeaturesConfig(templateModules);
   const featureDir = path.dirname(featurePath);
   if (!fs.existsSync(featureDir)) {
     fs.mkdirSync(featureDir);
   }
-
   const featuresJson = mergeFeatureJson(featurePath, features, streams);
   fs.writeFileSync(featurePath, JSON.stringify(featuresJson, null, "  "));
 };

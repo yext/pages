@@ -8,6 +8,7 @@ import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
+import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 
 export const createServer = async (
   dynamicGenerateData: boolean,
@@ -49,12 +50,18 @@ export const createServer = async (
       projectStructure.scope
     ));
   }
+  // When a page is requested that is anything except the root, call our
+  // serverRenderRoute middleware.
+  // app.use(
+  //   /^\/(.+)/,
+  //   serverRenderRoute({ vite, dynamicGenerateData, projectStructure })
+  // );
 
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.
   app.use(
     /^\/(.+)/,
-    serverRenderRoute({ vite, dynamicGenerateData, projectStructure })
+    serverRenderSlugRoute({ vite, dynamicGenerateData, projectStructure })
   );
 
   // Serve the index page at the root of the dev server.

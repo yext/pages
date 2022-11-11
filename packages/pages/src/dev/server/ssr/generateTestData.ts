@@ -9,10 +9,20 @@ import {
 } from "./constants.js";
 import path from "path";
 import fs from "fs";
-import { ProjectStructure } from "../../../common/src/project/structure.js";
+import {
+  defaultProjectStructureConfig,
+  ProjectStructure,
+} from "../../../common/src/project/structure.js";
+import { getFeaturesConfig } from "../../../generate/features/createFeaturesJson.js";
+import { loadTemplateModules } from "../../../common/src/template/internal/loader.js";
+import {
+  getTemplateFilepaths,
+  getTemplateFilePathsFromProjectStructure,
+} from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { Path } from "../../../common/src/project/path.js";
 
 /**
- * generateTestData will run yext sites generate-test-data and return true in
+ * generateTestData will run yext pages generate-test-data and return true in
  * the event of a successful run and false in the event of a failure.
  *
  * @param hostname The hostname of the site
@@ -20,7 +30,7 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
  */
 export const generateTestData = async (hostname?: string): Promise<boolean> => {
   const command = "yext";
-  let args = ["sites", "generate-test-data"];
+  let args = ["pages", "generate-test-data"];
   if (hostname) {
     args = args.concat("--hostname", hostname);
   }
@@ -36,6 +46,25 @@ export const generateTestData = async (hostname?: string): Promise<boolean> => {
   return generate();
 };
 
+export const generateTestDataForSlug = async (
+  stdout: NodeJS.WriteStream,
+  slug: string,
+  locale: string,
+  projectStructure: ProjectStructure
+): Promise<any> => {
+  const templateModules = await loadTemplateModules(
+    getTemplateFilePathsFromProjectStructure(projectStructure),
+    true,
+    false
+  );
+  const featuresConfig = await getFeaturesConfig(templateModules);
+  const args = getCommonArgs(featuresConfig, projectStructure);
+  args.push("--slug", slug);
+  args.push("--locale", locale);
+
+  return spawnTestDataCommand(stdout, "yext", args, locale);
+};
+
 export const generateTestDataForPage = async (
   stdout: NodeJS.WriteStream,
   featuresConfig: FeaturesConfig,
@@ -43,35 +72,30 @@ export const generateTestDataForPage = async (
   locale: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
-  const sitesConfigPath =
-    projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
-    projectStructure.sitesConfigRoot.getAbsolutePath();
-  const siteStreamPath = path.resolve(
-    process.cwd(),
-    path.join(sitesConfigPath, projectStructure.siteStreamConfig)
-  );
-
   const featureName = featuresConfig.features[0]?.name;
-  const command = "yext";
-  let args = addCommonArgs(featuresConfig, featureName);
+  const args = getCommonArgs(featuresConfig, projectStructure);
 
   if (entityId) {
-    args = args.concat("--entityIds", entityId);
+    args.push("--entityIds", entityId);
   }
 
   const isAlternateLanguageFields =
     !!featuresConfig.features[0]?.alternateLanguageFields;
   if (!isAlternateLanguageFields) {
-    args = args.concat("--locale", locale);
+    args.push("--locale", locale);
   }
 
-  if (fs.existsSync(siteStreamPath)) {
-    const siteStream = prepareJsonForCmd(
-      JSON.parse(fs.readFileSync(siteStreamPath).toString())
-    );
-    args = args.concat("--siteStreamConfig", siteStream);
-  }
+  args.push("--featureName", `"${featureName}"`);
 
+  return spawnTestDataCommand(stdout, "yext", args, locale);
+};
+
+async function spawnTestDataCommand(
+  stdout: NodeJS.WriteStream,
+  command: string,
+  args: string[],
+  locale: string
+) {
   return new Promise((resolve) => {
     const childProcess = spawn(command, args, {
       stdio: ["inherit", "pipe", "inherit"],
@@ -159,18 +183,30 @@ export const generateTestDataForPage = async (
       resolve(parsedData);
     });
   });
-};
+}
 
-const addCommonArgs = (featuresConfig: FeaturesConfig, featureName: string) => {
-  const args = [
-    "pages",
-    "generate-test-data",
-    "--featureName",
-    `"${featureName}"`,
-    "--featuresConfig",
-    prepareJsonForCmd(featuresConfig),
-    "--printDocuments",
-  ];
+const getCommonArgs = (
+  featuresConfig: FeaturesConfig,
+  projectStructure: ProjectStructure
+) => {
+  const args = ["pages", "generate-test-data", "--printDocuments"];
+
+  args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
+
+  const sitesConfigPath =
+    projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
+    projectStructure.sitesConfigRoot.getAbsolutePath();
+  const siteStreamPath = path.resolve(
+    process.cwd(),
+    path.join(sitesConfigPath, projectStructure.siteStreamConfig)
+  );
+  if (fs.existsSync(siteStreamPath)) {
+    const siteStream = prepareJsonForCmd(
+      JSON.parse(fs.readFileSync(siteStreamPath).toString())
+    );
+    args.push("--siteStreamConfig", siteStream);
+  }
+
   return args;
 };
 

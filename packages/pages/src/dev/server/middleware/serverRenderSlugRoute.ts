@@ -1,20 +1,24 @@
 import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
 import { propsLoader } from "../ssr/propsLoader.js";
-import { urlToFeature } from "../ssr/urlToFeature.js";
 import page404 from "../public/404.js";
 import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplateModuleInternal.js";
+import {
+  renderHeadConfigToString,
+  getLang,
+} from "../../../common/src/template/head.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import templateBase from "../public/templateBase.js";
 import {
   getTemplateFilepaths,
   getTemplateFilePathsFromProjectStructure,
 } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { TemplateRenderProps } from "../../../common/src/template/types.js";
 import { getContentType } from "./getContentType.js";
 import sendAppHTML from "./sendAppHTML.js";
-import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
-import { convertTemplateConfigInternalToFeaturesConfig } from "../../../common/src/feature/features.js";
-import { generateTestDataForPage } from "../ssr/generateTestData.js";
-import { getLocalDataForEntity } from "../ssr/getLocalData.js";
+import { generateTestDataForSlug } from "../ssr/generateTestData.js";
+import { FeaturesConfig } from "../../../common/src/feature/features.js";
+import { getLocalDataForSlug } from "../ssr/getLocalData.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -22,38 +26,38 @@ type Props = {
   projectStructure: ProjectStructure;
 };
 
-export const serverRenderRoute =
+export const serverRenderSlugRoute =
   ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
   async (req, res, next) => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
-      console.log("server rendering~!", url.pathname);
-
-      const { feature, entityId, locale } = urlToFeature(url);
-
+      const potentialSlug = url.pathname.substring(1);
+      const locale = req.query.locale?.toString() ?? "en";
       const templateFilepaths =
         getTemplateFilePathsFromProjectStructure(projectStructure);
-      console.log("template file paths", templateFilepaths);
+      const document = await getDocument(
+        dynamicGenerateData,
+        potentialSlug,
+        locale,
+        projectStructure
+      );
+      console.log("loaded document! :)", document);
+      const feature = document.__.name;
+      const entityId = document.id;
       const templateModuleInternal = await featureNameToTemplateModuleInternal(
         vite,
         feature,
         templateFilepaths
       );
+      console.log("template module internal!", templateModuleInternal);
       if (!templateModuleInternal) {
         console.error(
           `Cannot find template corresponding to feature: ${feature}`
         );
         return res.status(404).end(page404);
       }
-      const document = await getDocument(
-        dynamicGenerateData,
-        templateModuleInternal,
-        entityId,
-        locale,
-        projectStructure
-      );
-      console.log("got document!", document);
-      const props = await propsLoader({
+
+      const props: TemplateRenderProps = await propsLoader({
         templateModuleInternal,
         entityId,
         locale,
@@ -70,26 +74,20 @@ export const serverRenderRoute =
 
 const getDocument = async (
   dynamicGenerateData: boolean,
-  templateModuleInternal: TemplateModuleInternal<any, any>,
-  entityId: string,
+  slug: string,
   locale: string,
   projectStructure: ProjectStructure
-) => {
+): Promise<any> => {
   if (dynamicGenerateData) {
-    const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(
-      templateModuleInternal.config
-    );
-    console.log("dynamically generating");
-
-    return generateTestDataForPage(
+    return generateTestDataForSlug(
       process.stdout,
-      featuresConfig,
-      entityId,
+      slug,
       locale,
       projectStructure
     );
   } else {
     // Get the document from localData
-    return getLocalDataForEntity(entityId, locale);
+    console.log("getting local data for slug");
+    return getLocalDataForSlug(slug, locale);
   }
 };

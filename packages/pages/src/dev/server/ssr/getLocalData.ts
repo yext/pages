@@ -4,21 +4,19 @@ import { readdir } from "fs/promises";
 
 const LOCAL_DATA_PATH = "localData";
 
-class LocalDataManifest {
-  static: Array<string>;
-  entity: Map<string, Array<string>>;
-
-  constructor() {
-    this.static = [];
-    this.entity = new Map<string, Array<string>>();
-  }
+export interface LocalDataManifest {
+  static: string[];
+  entity: Map<string, { entityId: string; slug: string }[]>;
 }
 
 // getLocalDataManifest will read through the files in the /localData folder and
 // create a LocalDataManifest from it. This will allow us to generate hyperlinks
 // to each page on the dev server's index page.
 export const getLocalDataManifest = async (): Promise<LocalDataManifest> => {
-  const localDataManifest = new LocalDataManifest();
+  const localDataManifest: LocalDataManifest = {
+    static: [],
+    entity: new Map(),
+  };
 
   let dir;
   try {
@@ -42,30 +40,28 @@ export const getLocalDataManifest = async (): Promise<LocalDataManifest> => {
     );
 
     const featureName = data.__?.name?.toString();
-    const entityId = data.id?.toString();
-
     // Check for a feature name because the localData folder will have a mapping.json
     // file which should not be included in the manifest.
-    if (featureName) {
-      if (entityId) {
-        localDataManifest.entity.set(featureName, [
-          ...(localDataManifest.entity.get(featureName) || []),
-          entityId,
-        ]);
-      } else {
-        // The lack of an entityId signifies that this is a static template.
-        localDataManifest.static.push(featureName);
-      }
+    if (!featureName) {
+      continue;
+    }
+    const entityId = data.id?.toString();
+    const slug = data.slug?.toString();
+    if (entityId) {
+      localDataManifest.entity.set(featureName, [
+        ...(localDataManifest.entity.get(featureName) || []),
+        { entityId, slug },
+      ]);
+    } else {
+      // The lack of an entityId signifies that this is a static template.
+      localDataManifest.static.push(featureName);
     }
   }
 
   return localDataManifest;
 };
 
-export const getLocalDataForEntity = async (
-  entityId: string,
-  locale: string
-) => {
+const getLocalData = async (criterion: (data: any) => boolean) => {
   try {
     const dir = await readdir(LOCAL_DATA_PATH);
 
@@ -77,8 +73,7 @@ export const getLocalDataForEntity = async (
           )
           .toString()
       );
-
-      if (data.id?.toString() === entityId && data.locale === locale) {
+      if (criterion(data)) {
         return data;
       }
     }
@@ -89,8 +84,31 @@ export const getLocalDataForEntity = async (
       throw err;
     }
   }
+};
 
-  throw new Error(
-    `No localData files match entityId and locale: ${entityId} ${locale}`
-  );
+export const getLocalDataForEntity = async (
+  entityId: string,
+  locale: string
+) => {
+  const localData = getLocalData((data) => {
+    return data.id?.toString() === entityId && data.locale === locale;
+  });
+  if (!localData) {
+    throw new Error(
+      `No localData files match entityId and locale: ${entityId} ${locale}`
+    );
+  }
+  return localData;
+};
+
+export const getLocalDataForSlug = async (slug: string, locale: string) => {
+  const localData = getLocalData((data) => {
+    return data.slug?.toString() === slug && data.locale === locale;
+  });
+  if (!localData) {
+    throw new Error(
+      `No localData files match slug and locale: ${slug} ${locale}`
+    );
+  }
+  return localData;
 };

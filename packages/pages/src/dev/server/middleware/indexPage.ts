@@ -1,5 +1,8 @@
 import { RequestHandler } from "express-serve-static-core";
-import { getLocalDataManifest } from "../ssr/getLocalData.js";
+import {
+  getLocalDataManifest,
+  LocalDataManifest,
+} from "../ssr/getLocalData.js";
 import index from "../public/index.js";
 import {
   dynamicModeInfoText,
@@ -71,25 +74,13 @@ export const indexPage =
           ${Array.from(localDataManifest.entity.keys()).reduce(
             (templateAccumulator, templateName) =>
               templateAccumulator +
-              `<div class="list-title"> <span class="list-title-templateName">${templateName}</span> Pages (${
-                (localDataManifest.entity.get(templateName) || []).length
-              }):</div>
-            <ul>
-              ${Array.from(
-                localDataManifest.entity.get(templateName) || []
-              ).reduce(
-                (entityAccumulator, entityId) =>
-                  entityAccumulator +
-                  `<li>
-                    <a href="http://localhost:${viteDevServerPort}/${encodeURIComponent(
-                    templateName
-                  )}/${entityId}">
-                      ${entityId}
-                    </a>
-                  </li>`,
-                ""
-              )}
-            </ul>`,
+              `<div class="list-title">
+                    <span class="list-title-templateName">${templateName}</span>
+                    Pages (${
+                      (localDataManifest.entity.get(templateName) || []).length
+                    }):
+                  </div>
+                  <ul>${createPageLinks(localDataManifest, templateName)}</ul>`,
             ""
           )}
           </div>`
@@ -127,3 +118,28 @@ export const indexPage =
       next(e);
     }
   };
+
+const createPageLinks = (
+  localDataManifest: LocalDataManifest,
+  templateName: string
+) => {
+  const formatLink = (entityId: string, slug: string) => {
+    // return `http://localhost:${viteDevServerPort}/${encodeURIComponent(
+    //   templateName
+    // )}/${entityId}`
+
+    return `http://localhost:${viteDevServerPort}/${slug}`;
+  };
+
+  const entities = localDataManifest.entity.get(templateName) || [];
+  return entities.reduce((entityAccumulator, { entityId, slug }) => {
+    return (
+      entityAccumulator +
+      `<li>
+      <a href="${formatLink(entityId, slug)}">
+        ${entityId}
+      </a>
+    </li>`
+    );
+  }, "");
+};

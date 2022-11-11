@@ -1,6 +1,7 @@
 import glob from "glob";
 import path from "path";
 import { Path } from "../../project/path.js";
+import { ProjectStructure } from "../../project/structure.js";
 
 /**
  * Get all the template files in the provided template folder path(s).
@@ -26,4 +27,14 @@ export const getTemplateFilepaths = (paths: Path[]): string[] => {
     });
   });
   return templateFilepaths;
+};
+
+export const getTemplateFilePathsFromProjectStructure = (
+  projectStructure: ProjectStructure
+): string[] => {
+  return getTemplateFilepaths(
+    projectStructure.scopedTemplatesPath
+      ? [projectStructure.scopedTemplatesPath, projectStructure.templatesRoot]
+      : [projectStructure.templatesRoot]
+  );
 };
