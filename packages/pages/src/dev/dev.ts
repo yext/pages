@@ -31,7 +31,7 @@ export const devCommandModule: CommandModule<unknown, DevArgs> = {
       })
       .option("prod-url", {
         describe:
-          "Disables using production URLs, and will use /[template-name]/[external-id] instead",
+          "Use production URLs, instead of /[template-name]/[external-id]",
         type: "boolean",
         demandOption: false,
         default: true,

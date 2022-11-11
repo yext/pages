@@ -22,13 +22,14 @@ export const serverRenderSlugRoute =
   async (req, res, next) => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
-      const potentialSlug = url.pathname.substring(1);
+      // Right now we're assuming this is the slug and not a static URL
+      const slug = url.pathname.substring(1);
       const locale = req.query.locale?.toString() ?? "en";
       const templateFilepaths =
         getTemplateFilePathsFromProjectStructure(projectStructure);
       const document = await getDocument(
         dynamicGenerateData,
-        potentialSlug,
+        slug,
         locale,
         projectStructure
       );

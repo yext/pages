@@ -51,7 +51,11 @@ export const generateTestDataForSlug = async (
     false
   );
   const featuresConfig = await getFeaturesConfig(templateModules);
-  const args = getCommonArgs(featuresConfig, projectStructure);
+  const featuresConfigForEntityPages: FeaturesConfig = {
+    features: featuresConfig.features.filter((f) => "entityPageSet" in f),
+    streams: featuresConfig.streams,
+  };
+  const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
   args.push("--slug", slug);
   args.push("--locale", locale);
 

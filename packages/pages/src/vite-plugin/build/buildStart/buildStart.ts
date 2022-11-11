@@ -12,7 +12,7 @@ const REACT_EXTENSIONS = new Set([".tsx", ".jsx"]);
 
 export default (projectStructure: ProjectStructure) => {
   return async function (this: PluginContext): Promise<void> {
-    // console.log(yextBanner);
+    console.log(yextBanner);
     clean(projectStructure.distRoot.getAbsolutePath());
 
     const templates = getTemplateFilepaths(
