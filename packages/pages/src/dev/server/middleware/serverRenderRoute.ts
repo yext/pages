@@ -10,7 +10,7 @@ import sendAppHTML from "./sendAppHTML.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { convertTemplateConfigInternalToFeaturesConfig } from "../../../common/src/feature/features.js";
 import { generateTestDataForPage } from "../ssr/generateTestData.js";
-import { getLocalDataForEntity } from "../ssr/getLocalData.js";
+import { getLocalDataForEntityOrStaticPage } from "../ssr/getLocalData.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -80,5 +80,9 @@ const getDocument = async (
       projectStructure
     );
   }
-  return getLocalDataForEntity(entityId, locale);
+  return getLocalDataForEntityOrStaticPage({
+    entityId,
+    locale,
+    featureName: templateModuleInternal.config.name,
+  });
 };

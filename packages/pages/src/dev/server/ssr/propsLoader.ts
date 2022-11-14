@@ -7,7 +7,7 @@ import { TemplateModuleInternal } from "../../../common/src/template/internal/ty
 
 type PageLoaderValues = {
   templateModuleInternal: TemplateModuleInternal<any, any>;
-  entityId: string;
+  entityId?: string;
   locale: string;
   document: any;
 };

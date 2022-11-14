@@ -86,23 +86,37 @@ const getLocalData = async (criterion: (data: any) => boolean) => {
   }
 };
 
-export const getLocalDataForEntity = async (
-  entityId: string,
-  locale: string
-) => {
-  const localData = getLocalData((data) => {
-    return data.id?.toString() === entityId && data.locale === locale;
+export const getLocalDataForEntityOrStaticPage = async ({
+  locale,
+  featureName,
+  entityId,
+}: {
+  locale: string;
+  featureName: string;
+  entityId: string;
+}) => {
+  const localData = await getLocalData((data) => {
+    if (entityId !== "" && data.id !== entityId) {
+      return false;
+    }
+    return data.locale === locale && data.__.name === featureName;
   });
   if (!localData) {
     throw new Error(
-      `No localData files match entityId and locale: ${entityId} ${locale}`
+      `No localData files match entityId, featureName, and locale: ${entityId}, ${featureName}, ${locale}`
     );
   }
   return localData;
 };
 
-export const getLocalDataForSlug = async (slug: string, locale: string) => {
-  const localData = getLocalData((data) => {
+export const getLocalDataForSlug = async ({
+  locale,
+  slug,
+}: {
+  locale: string;
+  slug: string;
+}) => {
+  const localData = await getLocalData((data) => {
     return data.slug?.toString() === slug && data.locale === locale;
   });
   if (!localData) {

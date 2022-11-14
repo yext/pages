@@ -8,7 +8,7 @@ import {
 // Determines the template module to load from a given feature name (from the exported config)
 export const findTemplateModuleInternal = async (
   devserver: ViteDevServer,
-  criterion: (t: TemplateModuleInternal<any, any>) => boolean,
+  criterion: (t: TemplateModuleInternal<any, any>) => boolean | undefined,
   templateFilepaths: string[]
 ): Promise<TemplateModuleInternal<any, any> | null> => {
   for (const templateFilepath of templateFilepaths) {

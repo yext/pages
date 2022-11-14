@@ -8,7 +8,11 @@ import { getTemplateFilePathsFromProjectStructure } from "../../../common/src/te
 import { TemplateRenderProps } from "../../../common/src/template/types.js";
 import sendAppHTML from "./sendAppHTML.js";
 import { generateTestDataForSlug } from "../ssr/generateTestData.js";
-import { getLocalDataForSlug } from "../ssr/getLocalData.js";
+import {
+  getLocalDataForEntityOrStaticPage,
+  getLocalDataForSlug,
+} from "../ssr/getLocalData.js";
+import { isStaticTemplateConfig } from "../../../common/src/feature/features.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -21,11 +25,31 @@ export const serverRenderSlugRoute =
   async (req, res, next) => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
-      // Right now we're assuming this is the slug and not a static URL
-      const slug = url.pathname.substring(1);
       const locale = req.query.locale?.toString() ?? "en";
+      const slug = url.pathname.substring(1);
+
       const templateFilepaths =
         getTemplateFilePathsFromProjectStructure(projectStructure);
+      const matchingStaticTemplate = await findMatchingStaticTemplate(
+        vite,
+        slug,
+        templateFilepaths
+      );
+      if (matchingStaticTemplate) {
+        const document = await getLocalDataForEntityOrStaticPage({
+          entityId: "",
+          featureName: matchingStaticTemplate.config.name,
+          locale,
+        });
+        const props: TemplateRenderProps = await propsLoader({
+          templateModuleInternal: matchingStaticTemplate,
+          locale,
+          document,
+        });
+        sendAppHTML(res, matchingStaticTemplate, props, vite, url.pathname);
+        return;
+      }
+
       const document = await getDocument(
         dynamicGenerateData,
         slug,
@@ -61,6 +85,29 @@ export const serverRenderSlugRoute =
     }
   };
 
+const findMatchingStaticTemplate = async (
+  vite: ViteDevServer,
+  slug: string,
+  templateFilePaths: string[]
+) => {
+  return findTemplateModuleInternal(
+    vite,
+    (t) => {
+      if (!isStaticTemplateConfig(t.config)) {
+        return false;
+      }
+      try {
+        return slug === t.getPath({});
+      } catch {
+        console.error(
+          `Error executing getPath() for slug: "${slug}", skipping.`
+        );
+      }
+    },
+    templateFilePaths
+  );
+};
+
 const getDocument = async (
   dynamicGenerateData: boolean,
   slug: string,
@@ -75,5 +122,5 @@ const getDocument = async (
       projectStructure
     );
   }
-  return getLocalDataForSlug(slug, locale);
+  return getLocalDataForSlug({ slug, locale });
 };
