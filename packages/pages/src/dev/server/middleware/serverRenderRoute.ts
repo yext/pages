@@ -3,7 +3,7 @@ import { ViteDevServer } from "vite";
 import { propsLoader } from "../ssr/propsLoader.js";
 import { urlToFeature } from "../ssr/urlToFeature.js";
 import page404 from "../public/404.js";
-import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplateModuleInternal.js";
+import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilePathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import sendAppHTML from "./sendAppHTML.js";
@@ -27,9 +27,9 @@ export const serverRenderRoute =
 
       const templateFilepaths =
         getTemplateFilePathsFromProjectStructure(projectStructure);
-      const templateModuleInternal = await featureNameToTemplateModuleInternal(
+      const templateModuleInternal = await findTemplateModuleInternal(
         vite,
-        feature,
+        (t) => feature === t.config.name,
         templateFilepaths
       );
       if (!templateModuleInternal) {
