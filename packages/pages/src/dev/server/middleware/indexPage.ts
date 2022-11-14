@@ -82,7 +82,7 @@ export const indexPage =
                       (localDataManifest.entity.get(templateName) || []).length
                     }):
                   </div>
-                  <ul>${createPageLinks(
+                  <ul>${createPageListItems(
                     localDataManifest,
                     templateName,
                     useProdURLs
@@ -125,7 +125,7 @@ export const indexPage =
     }
   };
 
-const createPageLinks = (
+const createPageListItems = (
   localDataManifest: LocalDataManifest,
   templateName: string,
   useProdURLs: boolean
@@ -140,13 +140,20 @@ const createPageLinks = (
     )}/${entityId}`;
   };
 
+  const formatDisplayValue = (entityId: string, slug: string) => {
+    if (!slug) {
+      return entityId;
+    }
+    return `${slug} (${entityId})`;
+  };
+
   const entities = localDataManifest.entity.get(templateName) || [];
   return entities.reduce((entityAccumulator, { entityId, slug }) => {
     return (
       entityAccumulator +
       `<li>
       <a href="${formatLink(entityId, slug)}">
-        ${entityId}
+        ${formatDisplayValue(entityId, slug)}
       </a>
     </li>`
     );
