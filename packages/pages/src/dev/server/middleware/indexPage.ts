@@ -77,7 +77,11 @@ export const indexPage =
               `<div class="list-title">
                     <span class="list-title-templateName">${templateName}</span>
                     Pages (${
-                      (localDataManifest.entity.get(templateName) || []).length
+                      (
+                        localDataManifest.entity
+                          .get(templateName)
+                          ?.filter((d) => d.slug) || []
+                      ).length
                     }):
                   </div>
                   <ul>${createPageListItems(
