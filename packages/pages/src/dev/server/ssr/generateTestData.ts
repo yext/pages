@@ -57,7 +57,6 @@ export const generateTestDataForSlug = async (
   };
   const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
   args.push("--slug", slug);
-  args.push("--locale", locale);
 
   return spawnTestDataCommand(stdout, "yext", args, locale);
 };

@@ -150,7 +150,7 @@ const createPageListItems = (
   templateName: string,
   useProdURLs: boolean
 ) => {
-  const formatLink = (entityId: string, slug: string) => {
+  const formatLink = (entityId: string, slug: string | undefined) => {
     if (useProdURLs) {
       return `http://localhost:${viteDevServerPort}/${slug}`;
     }
@@ -160,7 +160,7 @@ const createPageListItems = (
     )}/${entityId}`;
   };
 
-  const formatDisplayValue = (entityId: string, slug: string) => {
+  const formatDisplayValue = (entityId: string, slug: string | undefined) => {
     if (!slug) {
       return entityId;
     }
