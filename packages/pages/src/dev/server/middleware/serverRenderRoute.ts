@@ -5,12 +5,14 @@ import { urlToFeature } from "../ssr/urlToFeature.js";
 import page404 from "../public/404.js";
 import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
-import { getTemplateFilePathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import sendAppHTML from "./sendAppHTML.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { convertTemplateConfigInternalToFeaturesConfig } from "../../../common/src/feature/features.js";
 import { generateTestDataForPage } from "../ssr/generateTestData.js";
 import { getLocalDataForEntityOrStaticPage } from "../ssr/getLocalData.js";
+import sendStaticPage from "./sendStaticPage.js";
+import findMatchingStaticTemplate from "../ssr/findMatchingStaticTemplate.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -23,10 +25,22 @@ export const serverRenderRoute =
   async (req, res, next) => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
-      const { feature, entityId, locale } = urlToFeature(url);
+      const { feature, entityId, locale, staticURL } = urlToFeature(url);
 
       const templateFilepaths =
-        getTemplateFilePathsFromProjectStructure(projectStructure);
+        getTemplateFilepathsFromProjectStructure(projectStructure);
+      const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
+        await findMatchingStaticTemplate(vite, staticURL, templateFilepaths);
+      if (matchingStaticTemplate) {
+        sendStaticPage(res, vite, matchingStaticTemplate, locale, url.pathname);
+        return;
+      } else if (!entityId) {
+        console.error(
+          `Cannot find static template with getPath() equal to "${staticURL}"`
+        );
+        return res.status(404).end(page404);
+      }
+
       const templateModuleInternal = await findTemplateModuleInternal(
         vite,
         (t) => feature === t.config.name,

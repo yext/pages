@@ -11,22 +11,34 @@ import {
   noLocalDataErrorText,
   viteDevServerPort,
 } from "./constants.js";
+import { ViteDevServer } from "vite";
+import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 
 type Props = {
+  vite: ViteDevServer;
   dynamicGenerateData: boolean;
   displayGenerateTestDataWarning: boolean;
   useProdURLs: boolean;
+  projectStructure: ProjectStructure;
 };
 
 export const indexPage =
   ({
+    vite,
     dynamicGenerateData,
     displayGenerateTestDataWarning,
     useProdURLs,
+    projectStructure,
   }: Props): RequestHandler =>
-  async (req, res, next) => {
+  async (_req, res, next) => {
     try {
-      const localDataManifest = await getLocalDataManifest();
+      const templateFilepaths =
+        getTemplateFilepathsFromProjectStructure(projectStructure);
+      const localDataManifest = await getLocalDataManifest(
+        vite,
+        templateFilepaths
+      );
 
       let indexPageHtml = index
         // Inject an informative message depending on if the user is in dynamic mode or not.
@@ -47,21 +59,7 @@ export const indexPage =
             `<!--static-pages-html-->`,
             `<div class="section-title">Static Pages</div>
           <div class="list">
-          ${Array.from(localDataManifest.static).reduce(
-            (templateAccumulator, templateName) =>
-              templateAccumulator +
-              `<div class="list-title"> <span class="list-title-templateName">${templateName}</span> Pages (1):</div>
-            <ul>
-              <li>
-                <a href="http://localhost:${viteDevServerPort}/${encodeURIComponent(
-                templateName
-              )}">
-                  ${templateName}
-                </a>
-              </li>
-            </ul>`,
-            ""
-          )}
+          ${createStaticPageListItems(localDataManifest)}
           </div>
           `
           );
@@ -124,6 +122,24 @@ export const indexPage =
       next(e);
     }
   };
+
+const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
+  return Array.from(localDataManifest.static).reduce(
+    (templateAccumulator, { featureName, staticURL }) =>
+      templateAccumulator +
+      `<div class="list-title"> <span class="list-title-templateName">${featureName}</span> Pages (1):</div>
+    <ul>
+      <li>
+        <a href="http://localhost:${viteDevServerPort}/${encodeURIComponent(
+        staticURL
+      )}">
+          ${staticURL}
+        </a>
+      </li>
+    </ul>`,
+    ""
+  );
+};
 
 const createPageListItems = (
   localDataManifest: LocalDataManifest,

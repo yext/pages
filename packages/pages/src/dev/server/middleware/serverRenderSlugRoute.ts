@@ -4,15 +4,14 @@ import { propsLoader } from "../ssr/propsLoader.js";
 import page404 from "../public/404.js";
 import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
-import { getTemplateFilePathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { TemplateRenderProps } from "../../../common/src/template/types.js";
 import sendAppHTML from "./sendAppHTML.js";
 import { generateTestDataForSlug } from "../ssr/generateTestData.js";
-import {
-  getLocalDataForEntityOrStaticPage,
-  getLocalDataForSlug,
-} from "../ssr/getLocalData.js";
-import { isStaticTemplateConfig } from "../../../common/src/feature/features.js";
+import { getLocalDataForSlug } from "../ssr/getLocalData.js";
+import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
+import sendStaticPage from "./sendStaticPage.js";
+import findMatchingStaticTemplate from "../ssr/findMatchingStaticTemplate.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -29,24 +28,11 @@ export const serverRenderSlugRoute =
       const slug = url.pathname.substring(1);
 
       const templateFilepaths =
-        getTemplateFilePathsFromProjectStructure(projectStructure);
-      const matchingStaticTemplate = await findMatchingStaticTemplate(
-        vite,
-        slug,
-        templateFilepaths
-      );
+        getTemplateFilepathsFromProjectStructure(projectStructure);
+      const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
+        await findMatchingStaticTemplate(vite, slug, templateFilepaths);
       if (matchingStaticTemplate) {
-        const document = await getLocalDataForEntityOrStaticPage({
-          entityId: "",
-          featureName: matchingStaticTemplate.config.name,
-          locale,
-        });
-        const props: TemplateRenderProps = await propsLoader({
-          templateModuleInternal: matchingStaticTemplate,
-          locale,
-          document,
-        });
-        sendAppHTML(res, matchingStaticTemplate, props, vite, url.pathname);
+        sendStaticPage(res, vite, matchingStaticTemplate, locale, url.pathname);
         return;
       }
 
@@ -84,30 +70,6 @@ export const serverRenderSlugRoute =
       next(e);
     }
   };
-
-const findMatchingStaticTemplate = async (
-  vite: ViteDevServer,
-  slug: string,
-  templateFilePaths: string[]
-) => {
-  return findTemplateModuleInternal(
-    vite,
-    (t) => {
-      if (!isStaticTemplateConfig(t.config)) {
-        return false;
-      }
-      try {
-        return slug === t.getPath({});
-      } catch {
-        console.error(
-          `Error executing getPath() for slug: "${slug}", skipping.`
-        );
-      }
-    },
-    templateFilePaths
-  );
-};
-
 const getDocument = async (
   dynamicGenerateData: boolean,
   slug: string,

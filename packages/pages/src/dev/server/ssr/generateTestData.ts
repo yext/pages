@@ -12,7 +12,7 @@ import fs from "fs";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getFeaturesConfig } from "../../../generate/features/createFeaturesJson.js";
 import { loadTemplateModules } from "../../../common/src/template/internal/loader.js";
-import { getTemplateFilePathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
@@ -46,7 +46,7 @@ export const generateTestDataForSlug = async (
   projectStructure: ProjectStructure
 ): Promise<any> => {
   const templateModules = await loadTemplateModules(
-    getTemplateFilePathsFromProjectStructure(projectStructure),
+    getTemplateFilepathsFromProjectStructure(projectStructure),
     true,
     false
   );

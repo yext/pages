@@ -65,9 +65,11 @@ export const createServer = async (
   app.use(
     "/",
     indexPage({
+      vite,
       dynamicGenerateData,
       displayGenerateTestDataWarning,
       useProdURLs,
+      projectStructure,
     })
   );
 

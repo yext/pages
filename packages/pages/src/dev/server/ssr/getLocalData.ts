@@ -1,18 +1,26 @@
 import path from "path";
 import fs from "fs";
 import { readdir } from "fs/promises";
+import { findTemplateModuleInternal } from "./findTemplateModuleInternal.js";
+import { ViteDevServer } from "vite";
 
 const LOCAL_DATA_PATH = "localData";
 
 export interface LocalDataManifest {
-  static: string[];
+  static: {
+    featureName: string;
+    staticURL: string;
+  }[];
   entity: Map<string, { entityId: string; slug: string }[]>;
 }
 
 // getLocalDataManifest will read through the files in the /localData folder and
 // create a LocalDataManifest from it. This will allow us to generate hyperlinks
 // to each page on the dev server's index page.
-export const getLocalDataManifest = async (): Promise<LocalDataManifest> => {
+export const getLocalDataManifest = async (
+  vite: ViteDevServer,
+  templateFilepaths: string[]
+): Promise<LocalDataManifest> => {
   const localDataManifest: LocalDataManifest = {
     static: [],
     entity: new Map(),
@@ -54,7 +62,21 @@ export const getLocalDataManifest = async (): Promise<LocalDataManifest> => {
       ]);
     } else {
       // The lack of an entityId signifies that this is a static template.
-      localDataManifest.static.push(featureName);
+      const templateModuleInternal = await findTemplateModuleInternal(
+        vite,
+        (t) => featureName === t.config.name,
+        templateFilepaths
+      );
+      if (!templateModuleInternal) {
+        console.error(
+          `Could not find a static template for feature "${featureName}", skipping.`
+        );
+        continue;
+      }
+      localDataManifest.static.push({
+        featureName,
+        staticURL: templateModuleInternal.getPath({}),
+      });
     }
   }
 

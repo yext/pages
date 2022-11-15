@@ -29,7 +29,7 @@ export const getTemplateFilepaths = (paths: Path[]): string[] => {
   return templateFilepaths;
 };
 
-export const getTemplateFilePathsFromProjectStructure = (
+export const getTemplateFilepathsFromProjectStructure = (
   projectStructure: ProjectStructure
 ): string[] => {
   return getTemplateFilepaths(
