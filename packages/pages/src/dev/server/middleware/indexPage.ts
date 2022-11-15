@@ -167,7 +167,7 @@ const createPageListItems = (
   return entities.reduce((entityAccumulator, { entityId, slug }) => {
     if (!slug) {
       console.error(
-        `No document.slug found for entityId "${entityId}", skipping.`
+        `No document.slug found for entityId "${entityId}", no link will be rendered in the index page.`
       );
       return entityAccumulator;
     }
