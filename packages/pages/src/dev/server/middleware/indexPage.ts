@@ -80,7 +80,7 @@ export const indexPage =
                       (
                         localDataManifest.entity
                           .get(templateName)
-                          ?.filter((d) => d.slug) || []
+                          ?.filter((d) => !useProdURLs || d.slug) || []
                       ).length
                     }):
                   </div>
@@ -169,7 +169,7 @@ const createPageListItems = (
 
   const entities = localDataManifest.entity.get(templateName) || [];
   return entities.reduce((entityAccumulator, { entityId, slug }) => {
-    if (!slug) {
+    if (useProdURLs && !slug) {
       console.error(
         `No document.slug found for entityId "${entityId}", no link will be rendered in the index page.`
       );

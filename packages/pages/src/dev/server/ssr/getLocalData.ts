@@ -154,18 +154,8 @@ export const getLocalDataForSlug = async ({
   locale: string;
   slug: string;
 }) => {
-  let localData: Record<string, any> | null = null;
-  await getLocalData((data) => {
-    if (data.slug && data.slug === slug && data.locale === locale) {
-      if (!localData) {
-        localData = data;
-      } else {
-        throw new Error(
-          `Multiple localData files match slug and locale: ${slug} ${locale}`
-        );
-      }
-    }
-    return false;
+  const localData = await getLocalData((data) => {
+    return data.slug?.toString() === slug && data.locale === locale;
   });
   if (!localData) {
     throw new Error(
