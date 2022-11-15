@@ -22,7 +22,7 @@ type Props = {
 
 export const serverRenderRoute =
   ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
-  async (req, res, next) => {
+  async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
       const { feature, entityId, locale, staticURL } = urlToFeature(url);
@@ -38,7 +38,8 @@ export const serverRenderRoute =
         console.error(
           `Cannot find static template with getPath() equal to "${staticURL}"`
         );
-        return res.status(404).end(page404);
+        res.status(404).end(page404);
+        return;
       }
 
       const templateModuleInternal = await findTemplateModuleInternal(
@@ -50,7 +51,8 @@ export const serverRenderRoute =
         console.error(
           `Cannot find template corresponding to feature: ${feature}`
         );
-        return res.status(404).end(page404);
+        res.status(404).end(page404);
+        return;
       }
       const document = await getDocument(
         dynamicGenerateData,
@@ -65,7 +67,6 @@ export const serverRenderRoute =
         locale,
         document,
       });
-
       sendAppHTML(res, templateModuleInternal, props, vite, url.pathname);
     } catch (e: any) {
       // If an error is caught, calling next with the error will invoke

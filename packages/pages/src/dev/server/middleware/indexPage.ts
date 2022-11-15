@@ -165,6 +165,12 @@ const createPageListItems = (
 
   const entities = localDataManifest.entity.get(templateName) || [];
   return entities.reduce((entityAccumulator, { entityId, slug }) => {
+    if (!slug) {
+      console.error(
+        `No document.slug found for entityId "${entityId}", skipping.`
+      );
+      return entityAccumulator;
+    }
     return (
       entityAccumulator +
       `<li>

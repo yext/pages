@@ -21,7 +21,7 @@ type Props = {
 
 export const serverRenderSlugRoute =
   ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
-  async (req, res, next) => {
+  async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
       const locale = req.query.locale?.toString() ?? "en";
@@ -53,16 +53,15 @@ export const serverRenderSlugRoute =
         console.error(
           `Cannot find template corresponding to feature: ${feature}`
         );
-        return res.status(404).end(page404);
+        res.status(404).end(page404);
+        return;
       }
-
       const props: TemplateRenderProps = await propsLoader({
         templateModuleInternal,
         entityId,
         locale,
         document,
       });
-
       sendAppHTML(res, templateModuleInternal, props, vite, url.pathname);
     } catch (e: any) {
       // If an error is caught, calling next with the error will invoke

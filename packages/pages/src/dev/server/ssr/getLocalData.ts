@@ -6,12 +6,26 @@ import { ViteDevServer } from "vite";
 
 const LOCAL_DATA_PATH = "localData";
 
+/**
+ * LocalDataManifest contains data parsed out from the filesystem that is then used
+ * to generate in the indexPage.
+ */
 export interface LocalDataManifest {
   static: {
+    // The featureName for a specific static template
     featureName: string;
+    // The return value of the template's getPath()
     staticURL: string;
   }[];
-  entity: Map<string, { entityId: string; slug: string }[]>;
+  entity: Map<
+    string,
+    {
+      // The entity's document.id
+      entityId: string;
+      // The entity's document.slug
+      slug: string | undefined;
+    }[]
+  >;
 }
 
 // getLocalDataManifest will read through the files in the /localData folder and
@@ -83,7 +97,9 @@ export const getLocalDataManifest = async (
   return localDataManifest;
 };
 
-const getLocalData = async (criterion: (data: any) => boolean) => {
+const getLocalData = async (
+  criterion: (data: any) => boolean
+): Promise<Record<string, any> | undefined> => {
   try {
     const dir = await readdir(LOCAL_DATA_PATH);
 
@@ -138,8 +154,18 @@ export const getLocalDataForSlug = async ({
   locale: string;
   slug: string;
 }) => {
-  const localData = await getLocalData((data) => {
-    return data.slug?.toString() === slug && data.locale === locale;
+  let localData: Record<string, any> | null = null;
+  await getLocalData((data) => {
+    if (data.slug && data.slug === slug && data.locale === locale) {
+      if (!localData) {
+        localData = data;
+      } else {
+        throw new Error(
+          `Multiple localData files match slug and locale: ${slug} ${locale}`
+        );
+      }
+    }
+    return false;
   });
   if (!localData) {
     throw new Error(
