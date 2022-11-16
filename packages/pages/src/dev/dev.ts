@@ -6,10 +6,11 @@ import { ProjectFilepaths } from "../common/src/project/structure.js";
 
 interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
   local?: boolean;
+  "prod-url"?: boolean;
 }
 
-const handler = async ({ scope, local }: DevArgs) => {
-  await createServer(!local, scope);
+const handler = async ({ scope, local, "prod-url": useProdURLs }: DevArgs) => {
+  await createServer(!local, !!useProdURLs, scope);
   await open(`http://localhost:${viteDevServerPort}/`);
 };
 
@@ -27,6 +28,13 @@ export const devCommandModule: CommandModule<unknown, DevArgs> = {
         describe: "The subfolder to scope the served templates from",
         type: "string",
         demandOption: false,
+      })
+      .option("prod-url", {
+        describe:
+          "Use production URLs, instead of /[template-name]/[external-id]",
+        type: "boolean",
+        demandOption: false,
+        default: true,
       });
   },
   handler,

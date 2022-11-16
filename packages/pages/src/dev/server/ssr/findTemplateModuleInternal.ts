@@ -6,9 +6,9 @@ import {
 } from "../../../common/src/template/internal/types.js";
 
 // Determines the template module to load from a given feature name (from the exported config)
-export const featureNameToTemplateModuleInternal = async (
+export const findTemplateModuleInternal = async (
   devserver: ViteDevServer,
-  featureName: string,
+  criterion: (t: TemplateModuleInternal<any, any>) => boolean | undefined,
   templateFilepaths: string[]
 ): Promise<TemplateModuleInternal<any, any> | null> => {
   for (const templateFilepath of templateFilepaths) {
@@ -24,7 +24,7 @@ export const featureNameToTemplateModuleInternal = async (
         false
       );
 
-    if (featureName === templateModuleInternal.config.name) {
+    if (criterion(templateModuleInternal)) {
       return templateModuleInternal;
     }
   }

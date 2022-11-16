@@ -8,9 +8,11 @@ import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
+import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 
 export const createServer = async (
   dynamicGenerateData: boolean,
+  useProdURLs: boolean,
   scope?: string
 ) => {
   // creates a standard express app
@@ -43,6 +45,8 @@ export const createServer = async (
   app.use(finalSlashRedirect);
 
   let displayGenerateTestDataWarning = false;
+  // Call generateTestData to ensure we have data to populate the index page.
+  // If the user specifies dynamicGenerateData = false we assume they have localData already.
   if (dynamicGenerateData) {
     // display the warning if the call to generateTestData fails.
     displayGenerateTestDataWarning = !(await generateTestData(
@@ -54,13 +58,21 @@ export const createServer = async (
   // serverRenderRoute middleware.
   app.use(
     /^\/(.+)/,
-    serverRenderRoute({ vite, dynamicGenerateData, projectStructure })
+    useProdURLs
+      ? serverRenderSlugRoute({ vite, dynamicGenerateData, projectStructure })
+      : serverRenderRoute({ vite, dynamicGenerateData, projectStructure })
   );
 
   // Serve the index page at the root of the dev server.
   app.use(
     "/",
-    indexPage({ dynamicGenerateData, displayGenerateTestDataWarning })
+    indexPage({
+      vite,
+      dynamicGenerateData,
+      displayGenerateTestDataWarning,
+      useProdURLs,
+      projectStructure,
+    })
   );
 
   app.use(errorMiddleware(vite));

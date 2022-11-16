@@ -10,9 +10,12 @@ import {
 import path from "path";
 import fs from "fs";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { getFeaturesConfig } from "../../../generate/features/createFeaturesJson.js";
+import { loadTemplateModules } from "../../../common/src/template/internal/loader.js";
+import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 
 /**
- * generateTestData will run yext sites generate-test-data and return true in
+ * generateTestData will run yext pages generate-test-data and return true in
  * the event of a successful run and false in the event of a failure.
  *
  * @param hostname The hostname of the site
@@ -20,7 +23,7 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
  */
 export const generateTestData = async (hostname?: string): Promise<boolean> => {
   const command = "yext";
-  let args = ["sites", "generate-test-data"];
+  let args = ["pages", "generate-test-data"];
   if (hostname) {
     args = args.concat("--hostname", hostname);
   }
@@ -36,6 +39,29 @@ export const generateTestData = async (hostname?: string): Promise<boolean> => {
   return generate();
 };
 
+export const generateTestDataForSlug = async (
+  stdout: NodeJS.WriteStream,
+  slug: string,
+  locale: string,
+  projectStructure: ProjectStructure
+): Promise<any> => {
+  const templateModules = await loadTemplateModules(
+    getTemplateFilepathsFromProjectStructure(projectStructure),
+    true,
+    false
+  );
+  const featuresConfig = await getFeaturesConfig(templateModules);
+  const featuresConfigForEntityPages: FeaturesConfig = {
+    features: featuresConfig.features.filter((f) => "entityPageSet" in f),
+    streams: featuresConfig.streams,
+  };
+  const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
+  args.push("--slug", slug);
+
+  const parsedData = await spawnTestDataCommand(stdout, "yext", args);
+  return getDocumentByLocale(parsedData, locale);
+};
+
 export const generateTestDataForPage = async (
   stdout: NodeJS.WriteStream,
   featuresConfig: FeaturesConfig,
@@ -43,35 +69,30 @@ export const generateTestDataForPage = async (
   locale: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
-  const sitesConfigPath =
-    projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
-    projectStructure.sitesConfigRoot.getAbsolutePath();
-  const siteStreamPath = path.resolve(
-    process.cwd(),
-    path.join(sitesConfigPath, projectStructure.siteStreamConfig)
-  );
-
   const featureName = featuresConfig.features[0]?.name;
-  const command = "yext";
-  let args = addCommonArgs(featuresConfig, featureName);
+  const args = getCommonArgs(featuresConfig, projectStructure);
 
   if (entityId) {
-    args = args.concat("--entityIds", entityId);
+    args.push("--entityIds", entityId);
   }
 
   const isAlternateLanguageFields =
     !!featuresConfig.features[0]?.alternateLanguageFields;
   if (!isAlternateLanguageFields) {
-    args = args.concat("--locale", locale);
+    args.push("--locale", locale);
   }
 
-  if (fs.existsSync(siteStreamPath)) {
-    const siteStream = prepareJsonForCmd(
-      JSON.parse(fs.readFileSync(siteStreamPath).toString())
-    );
-    args = args.concat("--siteStreamConfig", siteStream);
-  }
+  args.push("--featureName", `"${featureName}"`);
 
+  const parsedData = await spawnTestDataCommand(stdout, "yext", args);
+  return getDocumentByLocale(parsedData, locale);
+};
+
+async function spawnTestDataCommand(
+  stdout: NodeJS.WriteStream,
+  command: string,
+  args: string[]
+): Promise<undefined | any> {
   return new Promise((resolve) => {
     const childProcess = spawn(command, args, {
       stdio: ["inherit", "pipe", "inherit"],
@@ -133,13 +154,7 @@ export const generateTestDataForPage = async (
       let parsedData: any;
       if (testData) {
         try {
-          // Yext CLI v0.299^ will return multiple documents as an array
-          const documentResponse = JSON.parse(testData.trim());
-          if (documentResponse.length) {
-            parsedData = getDocumentByLocale(documentResponse, locale);
-          } else {
-            parsedData = documentResponse;
-          }
+          parsedData = JSON.parse(testData.trim());
         } catch (e) {
           stdout.write(
             `\nUnable to parse test data from command: \`${command} ${args.join(
@@ -156,21 +171,34 @@ export const generateTestDataForPage = async (
         );
       }
 
+      // note: Yext CLI v0.299^ can return multiple documents as an array
       resolve(parsedData);
     });
   });
-};
+}
 
-const addCommonArgs = (featuresConfig: FeaturesConfig, featureName: string) => {
-  const args = [
-    "pages",
-    "generate-test-data",
-    "--featureName",
-    `"${featureName}"`,
-    "--featuresConfig",
-    prepareJsonForCmd(featuresConfig),
-    "--printDocuments",
-  ];
+const getCommonArgs = (
+  featuresConfig: FeaturesConfig,
+  projectStructure: ProjectStructure
+) => {
+  const args = ["pages", "generate-test-data", "--printDocuments"];
+
+  args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
+
+  const sitesConfigPath =
+    projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
+    projectStructure.sitesConfigRoot.getAbsolutePath();
+  const siteStreamPath = path.resolve(
+    process.cwd(),
+    path.join(sitesConfigPath, projectStructure.siteStreamConfig)
+  );
+  if (fs.existsSync(siteStreamPath)) {
+    const siteStream = prepareJsonForCmd(
+      JSON.parse(fs.readFileSync(siteStreamPath).toString())
+    );
+    args.push("--siteStreamConfig", siteStream);
+  }
+
   return args;
 };
 
@@ -186,6 +214,15 @@ const prepareJsonForCmd = (json: any) => {
   return jsonString;
 };
 
-const getDocumentByLocale = (documents: any[], locale: string): any => {
-  return documents.find((document) => document.locale === locale);
+const getDocumentByLocale = (parsedData: any, locale: string): any => {
+  if (Array.isArray(parsedData)) {
+    const documentsForLocale = parsedData.filter((d) => d.locale === locale);
+    if (documentsForLocale.length === 0) {
+      throw new Error(`Could not find document for locale: "${locale}"`);
+    } else if (documentsForLocale.length > 1) {
+      throw new Error(`Multiple documents found for locale: "${locale}"`);
+    }
+    return documentsForLocale[0];
+  }
+  return parsedData;
 };
