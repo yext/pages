@@ -1,3 +1,9 @@
+#### 1.0.0-beta.11 (2022-11-16)
+
+##### New Features
+
+* **dev:**  document.slug URLs in dev mode (#256) (9cc7e357)
+
 #### 1.0.0-beta.10 (2022-11-10)
 
 ##### Documentation Changes
