@@ -1,7 +1,6 @@
 import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
 import { propsLoader } from "../ssr/propsLoader.js";
-import page404 from "../public/404.js";
 import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
@@ -12,6 +11,7 @@ import { getLocalDataForSlug } from "../ssr/getLocalData.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import sendStaticPage from "./sendStaticPage.js";
 import findMatchingStaticTemplate from "../ssr/findMatchingStaticTemplate.js";
+import send404 from "./send404.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -42,6 +42,11 @@ export const serverRenderSlugRoute =
         locale,
         projectStructure
       );
+      if (!document) {
+        send404(res, `Cannot find template corresponding to slug: ${slug}`);
+        return;
+      }
+
       const feature = document.__.name;
       const entityId = document.id;
       const templateModuleInternal = await findTemplateModuleInternal(
@@ -50,12 +55,13 @@ export const serverRenderSlugRoute =
         templateFilepaths
       );
       if (!templateModuleInternal) {
-        console.error(
+        send404(
+          res,
           `Cannot find template corresponding to feature: ${feature}`
         );
-        res.status(404).end(page404);
         return;
       }
+
       const props: TemplateRenderProps = await propsLoader({
         templateModuleInternal,
         entityId,
@@ -69,6 +75,7 @@ export const serverRenderSlugRoute =
       next(e);
     }
   };
+
 const getDocument = async (
   dynamicGenerateData: boolean,
   slug: string,

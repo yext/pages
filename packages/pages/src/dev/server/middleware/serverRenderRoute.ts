@@ -2,7 +2,6 @@ import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
 import { propsLoader } from "../ssr/propsLoader.js";
 import { urlToFeature } from "../ssr/urlToFeature.js";
-import page404 from "../public/404.js";
 import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
@@ -13,6 +12,7 @@ import { generateTestDataForPage } from "../ssr/generateTestData.js";
 import { getLocalDataForEntityOrStaticPage } from "../ssr/getLocalData.js";
 import sendStaticPage from "./sendStaticPage.js";
 import findMatchingStaticTemplate from "../ssr/findMatchingStaticTemplate.js";
+import send404 from "./send404.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -35,10 +35,10 @@ export const serverRenderRoute =
         sendStaticPage(res, vite, matchingStaticTemplate, locale, url.pathname);
         return;
       } else if (!entityId) {
-        console.error(
+        send404(
+          res,
           `Cannot find static template with getPath() equal to "${staticURL}"`
         );
-        res.status(404).end(page404);
         return;
       }
 
@@ -48,10 +48,10 @@ export const serverRenderRoute =
         templateFilepaths
       );
       if (!templateModuleInternal) {
-        console.error(
+        send404(
+          res,
           `Cannot find template corresponding to feature: ${feature}`
         );
-        res.status(404).end(page404);
         return;
       }
       const document = await getDocument(
