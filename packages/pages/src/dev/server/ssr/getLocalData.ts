@@ -157,7 +157,6 @@ export const getLocalDataForSlug = async ({
   const localDataForSlug: Record<string, any>[] = (
     await getAllLocalData()
   ).filter((d) => d.slug === slug);
-  console.log("loc dat slug", localDataForSlug);
   if (localDataForSlug.length === 0) {
     throw new Error(
       `No localData files match slug and locale: ${slug} ${locale}`
