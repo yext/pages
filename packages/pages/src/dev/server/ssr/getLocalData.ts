@@ -154,13 +154,40 @@ export const getLocalDataForSlug = async ({
   locale: string;
   slug: string;
 }) => {
-  const localData = await getLocalData((data) => {
-    return data.slug?.toString() === slug && data.locale === locale;
-  });
-  if (!localData) {
+  const localDataForSlug: Record<string, any>[] = (
+    await getAllLocalData()
+  ).filter((d) => d.slug === slug);
+  console.log("loc dat slug", localDataForSlug);
+  if (localDataForSlug.length === 0) {
     throw new Error(
       `No localData files match slug and locale: ${slug} ${locale}`
     );
+  } else if (localDataForSlug.length > 1) {
+    throw new Error(
+      `Multiple localData files match slug and locale: ${slug} ${locale}, expected only a single file`
+    );
   }
-  return localData;
+  return localDataForSlug[0];
+};
+
+const getAllLocalData = async (): Promise<Record<string, any>[]> => {
+  try {
+    const dir = await readdir(LOCAL_DATA_PATH);
+    return dir.map((fileName) => {
+      const data = JSON.parse(
+        fs
+          .readFileSync(
+            path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${fileName}`)
+          )
+          .toString()
+      );
+      return data;
+    });
+  } catch (err: any) {
+    if (err.code === "ENOENT") {
+      throw "No localData exists. Please run `yext sites generate-test-data`";
+    } else {
+      throw err;
+    }
+  }
 };

@@ -43,7 +43,7 @@ export const serverRenderSlugRoute =
         projectStructure
       );
       if (!document) {
-        send404(res, `Cannot find template corresponding to slug: ${slug}`);
+        send404(res, `Cannot find document corresponding to slug: ${slug}`);
         return;
       }
 

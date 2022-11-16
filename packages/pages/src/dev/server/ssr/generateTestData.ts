@@ -58,7 +58,8 @@ export const generateTestDataForSlug = async (
   const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
   args.push("--slug", slug);
 
-  return spawnTestDataCommand(stdout, "yext", args, locale);
+  const parsedData = await spawnTestDataCommand(stdout, "yext", args);
+  return getDocumentByLocale(parsedData, locale);
 };
 
 export const generateTestDataForPage = async (
@@ -83,15 +84,15 @@ export const generateTestDataForPage = async (
 
   args.push("--featureName", `"${featureName}"`);
 
-  return spawnTestDataCommand(stdout, "yext", args, locale);
+  const parsedData = await spawnTestDataCommand(stdout, "yext", args);
+  return getDocumentByLocale(parsedData, locale);
 };
 
 async function spawnTestDataCommand(
   stdout: NodeJS.WriteStream,
   command: string,
-  args: string[],
-  locale: string
-) {
+  args: string[]
+): Promise<undefined | any> {
   return new Promise((resolve) => {
     const childProcess = spawn(command, args, {
       stdio: ["inherit", "pipe", "inherit"],
@@ -153,13 +154,7 @@ async function spawnTestDataCommand(
       let parsedData: any;
       if (testData) {
         try {
-          // Yext CLI v0.299^ will return multiple documents as an array
-          const documentResponse = JSON.parse(testData.trim());
-          if (documentResponse.length) {
-            parsedData = getDocumentByLocale(documentResponse, locale);
-          } else {
-            parsedData = documentResponse;
-          }
+          parsedData = JSON.parse(testData.trim());
         } catch (e) {
           stdout.write(
             `\nUnable to parse test data from command: \`${command} ${args.join(
@@ -176,6 +171,7 @@ async function spawnTestDataCommand(
         );
       }
 
+      // note: Yext CLI v0.299^ can return multiple documents as an array
       resolve(parsedData);
     });
   });
@@ -218,6 +214,15 @@ const prepareJsonForCmd = (json: any) => {
   return jsonString;
 };
 
-const getDocumentByLocale = (documents: any[], locale: string): any => {
-  return documents.find((document) => document.locale === locale);
+const getDocumentByLocale = (parsedData: any, locale: string): any => {
+  if (Array.isArray(parsedData)) {
+    const documentsForLocale = parsedData.filter((d) => d.locale === locale);
+    if (documentsForLocale.length === 0) {
+      throw new Error(`Could not find document for locale: "${locale}"`);
+    } else if (documentsForLocale.length > 1) {
+      throw new Error(`Multiple documents found for locale: "${locale}"`);
+    }
+    return documentsForLocale[0];
+  }
+  return parsedData;
 };
