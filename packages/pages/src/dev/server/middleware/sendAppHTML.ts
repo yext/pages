@@ -11,6 +11,10 @@ import {
 import { Response } from "express-serve-static-core";
 import { getContentType } from "./getContentType.js";
 
+/**
+ * Renders the HTML for a given {@link TemplateModuleInternal}
+ * and {@link TemplateRenderProps}, and sends it back to the Response.
+ */
 export default async function sendAppHTML(
   res: Response,
   templateModuleInternal: TemplateModuleInternal<any, any>,

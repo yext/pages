@@ -45,8 +45,8 @@ export const createServer = async (
   app.use(finalSlashRedirect);
 
   let displayGenerateTestDataWarning = false;
-  // call generateTestData to ensure we have data to populate the index page
-  // if the user specifies dynamicGenerateData = false we assume they have localData already
+  // Call generateTestData to ensure we have data to populate the index page.
+  // If the user specifies dynamicGenerateData = false we assume they have localData already.
   if (dynamicGenerateData) {
     // display the warning if the call to generateTestData fails.
     displayGenerateTestDataWarning = !(await generateTestData(

@@ -84,7 +84,7 @@ export const indexPage =
                       ).length
                     }):
                   </div>
-                  <ul>${createPageListItems(
+                  <ul>${createEntityPageListItems(
                     localDataManifest,
                     templateName,
                     useProdURLs
@@ -145,7 +145,7 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
   );
 };
 
-const createPageListItems = (
+const createEntityPageListItems = (
   localDataManifest: LocalDataManifest,
   templateName: string,
   useProdURLs: boolean

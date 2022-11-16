@@ -6,6 +6,10 @@ import sendAppHTML from "./sendAppHTML.js";
 import { Response } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
 
+/**
+ * Renders the HTML for a static {@link TemplateModuleInternal},
+ * and sends it back to the Response.
+ */
 export default async function sendStaticPage(
   res: Response,
   vite: ViteDevServer,
