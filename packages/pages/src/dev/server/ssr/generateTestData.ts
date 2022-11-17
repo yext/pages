@@ -70,10 +70,6 @@ export const generateTestDataForSlug = async (
   return getDocumentByLocale(parsedData, locale);
 };
 
-/**
- * In dev mode, we cannot use the loadTemplateModules that uses esbuild.
- * Instead we have to rely on vite to import templates.
- */
 const loadTemplateModuleCollectionUsingVite = async (
   vite: ViteDevServer,
   templateFilepaths: string[]
