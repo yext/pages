@@ -52,7 +52,6 @@ export const generateTestDataForSlug = async (
   locale: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
-  console.log("before loading template modules");
   const templateFilepaths =
     getTemplateFilepathsFromProjectStructure(projectStructure);
   const templateModuleCollection = await loadTemplateModuleCollectionUsingVite(
