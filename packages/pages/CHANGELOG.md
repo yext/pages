@@ -1,3 +1,9 @@
+#### 1.0.0-beta.12 (2022-11-17)
+
+##### Bug Fixes
+
+* **dev:**  add back favicon support in dev mode (#259) (fb6e18c7)
+
 #### 1.0.0-beta.11 (2022-11-16)
 
 ##### New Features
