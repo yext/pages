@@ -79,18 +79,16 @@ const loadTemplateModuleCollectionUsingVite = async (
   vite: ViteDevServer,
   templateFilepaths: string[]
 ): Promise<TemplateModuleCollection> => {
-  const templateModules: TemplateModuleInternal<any, any>[] = [];
-  for (const templateFilepath of templateFilepaths) {
-    const templateModule = await loadTemplateModule(vite, templateFilepath);
-
-    const templateModuleInternal =
-      convertTemplateModuleToTemplateModuleInternal(
+  const templateModules: TemplateModuleInternal<any, any>[] = await Promise.all(
+    templateFilepaths.map(async (templateFilepath) => {
+      const templateModule = await loadTemplateModule(vite, templateFilepath);
+      return convertTemplateModuleToTemplateModuleInternal(
         templateFilepath,
         templateModule,
         false
       );
-    templateModules.push(templateModuleInternal);
-  }
+    })
+  );
   return templateModules.reduce((prev, module) => {
     return prev.set(module.config.name, module);
   }, new Map());
