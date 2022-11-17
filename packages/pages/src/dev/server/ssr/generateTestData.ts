@@ -71,9 +71,10 @@ export const generateTestDataForSlug = async (
 };
 
 /**
- * We cannot use the loadTemplateModules that uses esbuild in dev mode,
- * instead we have to rely on vite to import templates.
- * Otherwise, we lose loader support for things like .ico files.
+ * In dev mode, we cannot use the loadTemplateModules that uses esbuild.
+ * Trying to do so results in losing loader support for .ico files and possibly
+ * other file types.
+ * Instead we have to rely on vite to import templates.
  */
 const loadTemplateModuleCollectionUsingVite = async (
   vite: ViteDevServer,
