@@ -38,6 +38,7 @@ export const serverRenderSlugRoute =
 
       const document = await getDocument(
         dynamicGenerateData,
+        vite,
         slug,
         locale,
         projectStructure
@@ -78,6 +79,7 @@ export const serverRenderSlugRoute =
 
 const getDocument = async (
   dynamicGenerateData: boolean,
+  vite: ViteDevServer,
   slug: string,
   locale: string,
   projectStructure: ProjectStructure
@@ -85,6 +87,7 @@ const getDocument = async (
   if (dynamicGenerateData) {
     return generateTestDataForSlug(
       process.stdout,
+      vite,
       slug,
       locale,
       projectStructure

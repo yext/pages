@@ -11,8 +11,14 @@ import path from "path";
 import fs from "fs";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getFeaturesConfig } from "../../../generate/features/createFeaturesJson.js";
-import { loadTemplateModules } from "../../../common/src/template/internal/loader.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import {
+  convertTemplateModuleToTemplateModuleInternal,
+  TemplateModuleInternal,
+} from "../../../common/src/template/internal/types.js";
+import { ViteDevServer } from "vite";
+import { loadTemplateModule } from "./loadTemplateModule.js";
+import { TemplateModuleCollection } from "../../../vite-plugin/build/closeBundle/moduleLoader.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
@@ -41,16 +47,19 @@ export const generateTestData = async (hostname?: string): Promise<boolean> => {
 
 export const generateTestDataForSlug = async (
   stdout: NodeJS.WriteStream,
+  vite: ViteDevServer,
   slug: string,
   locale: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
-  const templateModules = await loadTemplateModules(
-    getTemplateFilepathsFromProjectStructure(projectStructure),
-    true,
-    false
+  console.log("before loading template modules");
+  const templateFilepaths =
+    getTemplateFilepathsFromProjectStructure(projectStructure);
+  const templateModuleCollection = await loadTemplateModuleCollectionUsingVite(
+    vite,
+    templateFilepaths
   );
-  const featuresConfig = await getFeaturesConfig(templateModules);
+  const featuresConfig = await getFeaturesConfig(templateModuleCollection);
   const featuresConfigForEntityPages: FeaturesConfig = {
     features: featuresConfig.features.filter((f) => "entityPageSet" in f),
     streams: featuresConfig.streams,
@@ -60,6 +69,32 @@ export const generateTestDataForSlug = async (
 
   const parsedData = await spawnTestDataCommand(stdout, "yext", args);
   return getDocumentByLocale(parsedData, locale);
+};
+
+/**
+ * We cannot use the loadTemplateModules that uses esbuild in dev mode,
+ * instead we have to rely on vite to import templates.
+ * Otherwise, we lose loader support for things like .ico files.
+ */
+const loadTemplateModuleCollectionUsingVite = async (
+  vite: ViteDevServer,
+  templateFilepaths: string[]
+): Promise<TemplateModuleCollection> => {
+  const templateModules: TemplateModuleInternal<any, any>[] = [];
+  for (const templateFilepath of templateFilepaths) {
+    const templateModule = await loadTemplateModule(vite, templateFilepath);
+
+    const templateModuleInternal =
+      convertTemplateModuleToTemplateModuleInternal(
+        templateFilepath,
+        templateModule,
+        false
+      );
+    templateModules.push(templateModuleInternal);
+  }
+  return templateModules.reduce((prev, module) => {
+    return prev.set(module.config.name, module);
+  }, new Map());
 };
 
 export const generateTestDataForPage = async (
