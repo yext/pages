@@ -1,6 +1,6 @@
 name: Check and Update Third Party Notices
 
-on: pull_request
+on: workflow_call
 
 jobs:
   license-check-setup:

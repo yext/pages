@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - "main"
+      - dev/test-lint
 
 jobs:
   call_build:
