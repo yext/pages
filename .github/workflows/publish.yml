@@ -2,8 +2,8 @@ name: Publish Package
 
 on:
   push:
-    tags:
-      - "pages*" # Push events to matching pages*, i.e. pages@1.0.0
+    # tags:
+    #   - "pages*" # Push events to matching pages*, i.e. pages@1.0.0
 
 jobs:
   publish:
@@ -18,17 +18,17 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.2
 
-      - name: Set node version to 17.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 17.x
-          registry-url: https://registry.npmjs.org/
-          cache: "pnpm"
+      # - name: Set node version to 17.x
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 17.x
+      #     registry-url: https://registry.npmjs.org/
+      #     cache: "pnpm"
 
-      - name: Install deps
-        run: pnpm install
+      # - name: Install deps
+      #   run: pnpm install
 
-      - name: Publish package
-        run: pnpm run ci-publish ${{ github.ref_name }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - name: Publish package
+      #   run: pnpm run ci-publish ${{ github.ref_name }}
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

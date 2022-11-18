@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x
@@ -36,7 +38,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Update THIRD-PARTY-NOTICES
-        uses: EndBug/add-and-commit@v7
+        uses: EndBug/add-and-commit@v9
         with:
           message: "Automated update to THIRD-PARTY-NOTICES from github action's 3rd party notices check"
           push: true
