@@ -2,8 +2,8 @@ name: Publish Package
 
 on:
   push:
-    # tags:
-    #   - "pages*" # Push events to matching pages*, i.e. pages@1.0.0
+    tags:
+      - "pages*" # Push events to matching pages*, i.e. pages@1.0.0
 
 jobs:
   publish:
