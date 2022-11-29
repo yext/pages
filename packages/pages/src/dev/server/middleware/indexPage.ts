@@ -41,19 +41,17 @@ export const indexPage =
         templateFilepaths
       );
 
+      // Inject an informative message depending on if the user is in dynamic mode or not.
       const infoText = (
         dynamicGenerateData ? dynamicModeInfoText : localModeInfoText
-      ).replace(new RegExp(/{devServerPort}/g), devServerPort.toString());
-
-      let indexPageHtml = index
-        // Inject an informative message depending on if the user is in dynamic mode or not.
-        .replace(
-          `<!--info-html-->`,
-          `<div class="info">
+      ).replace(/{devServerPort}/g, devServerPort.toString());
+      let indexPageHtml = index.replace(
+        `<!--info-html-->`,
+        `<div class="info">
           <i class="fa fa-info-circle"></i>
           ${infoText}
         </div>`
-        );
+      );
 
       // If there is any localData, display hyperlinks to each page that will be generated
       // from each data document.
