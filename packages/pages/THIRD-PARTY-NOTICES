@@ -104,6 +104,7 @@ The following NPM packages may be included in this product:
 
  - chalk@5.0.1
  - cli-spinners@2.7.0
+ - get-port@6.1.2
  - open@8.4.0
  - ora@6.1.2
 
