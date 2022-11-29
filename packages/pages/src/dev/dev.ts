@@ -2,6 +2,7 @@ import { createServer } from "./server/server.js";
 import { CommandModule } from "yargs";
 import open from "open";
 import { ProjectFilepaths } from "../common/src/project/structure.js";
+import { devServerPort } from "./server/middleware/constants.js";
 
 interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
   local?: boolean;
@@ -9,7 +10,7 @@ interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
 }
 
 const handler = async ({ scope, local, "prod-url": useProdURLs }: DevArgs) => {
-  const devServerPort = await createServer(!local, !!useProdURLs, scope);
+  await createServer(!local, !!useProdURLs, scope);
   await open(`http://localhost:${devServerPort}/`);
 };
 

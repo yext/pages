@@ -5,6 +5,7 @@ import {
 } from "../ssr/getLocalData.js";
 import index from "../public/index.js";
 import {
+  devServerPort,
   dynamicModeInfoText,
   generateTestDataWarningText,
   localModeInfoText,
@@ -16,7 +17,6 @@ import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/te
 
 type Props = {
   vite: ViteDevServer;
-  devServerPort: number;
   dynamicGenerateData: boolean;
   displayGenerateTestDataWarning: boolean;
   useProdURLs: boolean;
@@ -26,7 +26,6 @@ type Props = {
 export const indexPage =
   ({
     vite,
-    devServerPort,
     dynamicGenerateData,
     displayGenerateTestDataWarning,
     useProdURLs,
@@ -41,17 +40,15 @@ export const indexPage =
         templateFilepaths
       );
 
-      // Inject an informative message depending on if the user is in dynamic mode or not.
-      const infoText = (
-        dynamicGenerateData ? dynamicModeInfoText : localModeInfoText
-      ).replace(/{devServerPort}/g, devServerPort.toString());
-      let indexPageHtml = index.replace(
-        `<!--info-html-->`,
-        `<div class="info">
+      let indexPageHtml = index
+        // Inject an informative message depending on if the user is in dynamic mode or not.
+        .replace(
+          `<!--info-html-->`,
+          `<div class="info">
           <i class="fa fa-info-circle"></i>
-          ${infoText}
+          ${dynamicGenerateData ? dynamicModeInfoText : localModeInfoText}
         </div>`
-      );
+        );
 
       // If there is any localData, display hyperlinks to each page that will be generated
       // from each data document.
@@ -62,7 +59,7 @@ export const indexPage =
             `<!--static-pages-html-->`,
             `<div class="section-title">Static Pages</div>
           <div class="list">
-          ${createStaticPageListItems(localDataManifest, devServerPort)}
+          ${createStaticPageListItems(localDataManifest)}
           </div>
           `
           );
@@ -90,8 +87,7 @@ export const indexPage =
                   <ul>${createEntityPageListItems(
                     localDataManifest,
                     templateName,
-                    useProdURLs,
-                    devServerPort
+                    useProdURLs
                   )}</ul>`,
             ""
           )}
@@ -131,10 +127,7 @@ export const indexPage =
     }
   };
 
-const createStaticPageListItems = (
-  localDataManifest: LocalDataManifest,
-  devServerPort: number
-) => {
+const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
   return Array.from(localDataManifest.static).reduce(
     (templateAccumulator, { featureName, staticURL }) =>
       templateAccumulator +
@@ -155,8 +148,7 @@ const createStaticPageListItems = (
 const createEntityPageListItems = (
   localDataManifest: LocalDataManifest,
   templateName: string,
-  useProdURLs: boolean,
-  devServerPort: number
+  useProdURLs: boolean
 ) => {
   const formatLink = (entityId: string, slug: string | undefined) => {
     if (useProdURLs) {

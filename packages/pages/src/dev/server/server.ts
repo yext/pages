@@ -3,13 +3,12 @@ import { createServer as createViteServer } from "vite";
 import { serverRenderRoute } from "./middleware/serverRenderRoute.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
-import { defaultDevServerPort } from "./middleware/constants.js";
+import { devServerPort } from "./middleware/constants.js";
 import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
-import getPort from "get-port";
 
 export const createServer = async (
   dynamicGenerateData: boolean,
@@ -55,11 +54,6 @@ export const createServer = async (
     ));
   }
 
-  // Will use defaultDevServerPort if available, otherwise fall back to a random available port
-  const devServerPort = await getPort({
-    port: defaultDevServerPort,
-  });
-
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.
   app.use(
@@ -74,7 +68,6 @@ export const createServer = async (
     "/",
     indexPage({
       vite,
-      devServerPort,
       dynamicGenerateData,
       displayGenerateTestDataWarning,
       useProdURLs,
