@@ -70,6 +70,7 @@
     "esm-module-paths": "^1.1.1",
     "express": "^4.18.1",
     "fs-extra": "^10.1.0",
+    "get-port": "^6.1.2",
     "glob": "^7.2.3",
     "handlebars": "^4.7.7",
     "ink": "^3.2.0",
