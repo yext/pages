@@ -65,7 +65,7 @@ export type ListingPublisher =
  */
 export interface ListingType {
   listingUrl: string;
-  publisher: ListingPublisher;
+  publisher?: ListingPublisher;
 }
 
 /**
