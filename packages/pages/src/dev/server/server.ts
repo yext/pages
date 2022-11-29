@@ -14,7 +14,7 @@ export const createServer = async (
   dynamicGenerateData: boolean,
   useProdURLs: boolean,
   scope?: string
-): Promise<number> => {
+) => {
   // creates a standard express app
   const app = express();
 
@@ -80,5 +80,4 @@ export const createServer = async (
   app.listen(devServerPort, () =>
     process.stdout.write(`listening on :${devServerPort}\n`)
   );
-  return devServerPort;
 };
