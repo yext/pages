@@ -7,7 +7,8 @@ import index from "../public/index.js";
 import {
   devServerPort,
   dynamicModeInfoText,
-  prodUrlInfoText,
+  localDevUrlInfoText,
+  localDevUrlHelpText,
   generateTestDataWarningText,
   localModeInfoText,
   noLocalDataErrorText,
@@ -189,7 +190,11 @@ const createEntityPageListItems = (
 
 const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
   if (isDynamic && isProdUrl) {
-    return `${dynamicModeInfoText} ${prodUrlInfoText}`;
+    return `<ul>
+        <li>${dynamicModeInfoText}</li>
+        <li>${localDevUrlInfoText}</li>
+        <li>${localDevUrlHelpText}</li>
+      <ul>`;
   }
 
   if (isDynamic) {
