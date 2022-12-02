@@ -6,9 +6,11 @@ export const devServerPort = await getPort({
 });
 
 export const dynamicModeInfoText = `Dynamic mode enabled. Below are sample URLs generated based on the contents 
-of the localData folder, but entity data will be re-fetched on each page load and reflect updates in real time. 
-Also, all entites specified by your stream config will be available at a url of the form: 
-localhost:${devServerPort}/[templateName]/[entityId]`;
+of the localData folder, but entity data will be re-fetched on each page load and reflect updates in real time.`;
+
+export const prodUrlInfoText = `Local development urls will match production urls for all entity pages IF a slug 
+is configured for each entity. You can learn more/how to disable this here: 
+https://hitchhikers.yext.com/docs/pages/super-quick-start/?target=npm-run-dev`;
 
 export const localModeInfoText = `Local mode enabled. Below are the URLs that are available based on 
 the contents of the localData folder. URLs are of the form: localhost:${devServerPort}/[templateName]/[entityId].  

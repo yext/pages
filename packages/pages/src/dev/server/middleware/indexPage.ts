@@ -7,6 +7,7 @@ import index from "../public/index.js";
 import {
   devServerPort,
   dynamicModeInfoText,
+  prodUrlInfoText,
   generateTestDataWarningText,
   localModeInfoText,
   noLocalDataErrorText,
@@ -46,7 +47,7 @@ export const indexPage =
           `<!--info-html-->`,
           `<div class="info">
           <i class="fa fa-info-circle"></i>
-          ${dynamicGenerateData ? dynamicModeInfoText : localModeInfoText}
+          ${getInfoMessage(dynamicGenerateData, useProdURLs)}
         </div>`
         );
 
@@ -184,4 +185,16 @@ const createEntityPageListItems = (
     </li>`
     );
   }, "");
+};
+
+const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
+  if (isDynamic && isProdUrl) {
+    return `${dynamicModeInfoText} ${prodUrlInfoText}`;
+  }
+
+  if (isDynamic) {
+    return dynamicModeInfoText;
+  }
+
+  return localModeInfoText;
 };
