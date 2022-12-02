@@ -16,10 +16,9 @@ const disableProdUrl =
 export const localDevUrlHelpText = `You can learn more/how to disable this <a href="${disableProdUrl}">here</a>.`;
 
 export const localModeInfoText = `Local mode enabled. Below are the URLs that are available based on 
-the contents of the localData folder. URLs are of the form: localhost:${devServerPort}/[templateName]/[entityId].  
-Entity Data will only be refreshed upon regenerating the test data, so updates to entities will not be 
-reflected in real time. To regenerate test data, enter the command yext sites generate-test-data. 
-Also, entities other than the ones listed below will not be available unless run in dynamic mode.`;
+the contents of the localData folder. Entity Data will only be refreshed upon regenerating the test data, so updates 
+to entities will not be reflected in real time. To regenerate test data, enter the command yext sites 
+generate-test-data. Also, entities other than the ones listed below will not be available unless run in dynamic mode.`;
 
 export const generateTestDataWarningText = `On server start-up, the call to regenerate test data failed. 
 Check your network connection and that the CLI is authorized to the correct account. Functionality may be limited.`;
