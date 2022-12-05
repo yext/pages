@@ -1,12 +1,12 @@
 class Runtime {
-  name: "node" | "deno" | "browser" | "unknown";
+  name?: "node" | "deno" | "browser";
   /**
    * Whether or not the current runtime is being executed server-side or client-side. If the runtime
    * is node or deno then isServerSide will be true. When the runtime is browser isServerSide is
    * false.
    */
-  isServerSide: boolean;
-  version: string;
+  isServerSide?: boolean;
+  version?: string;
 
   constructor() {
     if (this.isBrowser()) {
@@ -32,15 +32,15 @@ class Runtime {
       this.isServerSide = true;
       return;
     }
-
-    this.name = "unknown";
-    this.isServerSide = true;
-    this.version = "";
   }
 
   getNodeMajorVersion(): number {
     if (this.name != "node") {
       throw new Error("Not running in Node.");
+    }
+
+    if (!this.version) {
+      throw new Error("No version found.");
     }
 
     return +this.version.split(".")[0];
