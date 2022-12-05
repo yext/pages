@@ -55,8 +55,8 @@ class Runtime {
   }
 
   isDeno(): boolean {
-    // @ts-expect-error Deno may be undefined
     return (
+      // @ts-expect-error Deno may be undefined
       typeof Deno !== "undefined" &&
       // @ts-expect-error Deno may be undefined
       typeof Deno.version !== "undefined" &&
