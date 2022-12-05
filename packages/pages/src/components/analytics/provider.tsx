@@ -42,7 +42,7 @@ export function AnalyticsProvider(
   }
 
   let enableDebuggingDefault = debuggingParamDetected();
-  if (typeof process !== "undefined") {
+  if (getRuntime().name === "node") {
     enableDebuggingDefault =
       enableDebuggingDefault || process.env?.NODE_ENV === "development";
   }

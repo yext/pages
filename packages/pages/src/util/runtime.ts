@@ -9,7 +9,7 @@ class Runtime {
   version: string;
 
   constructor() {
-    if (typeof process !== "undefined") {
+    if (this.isNodeProcess()) {
       this.name = "node";
       this.version = process.versions.node;
       this.isServerSide = true;
@@ -25,6 +25,13 @@ class Runtime {
       }
       this.isServerSide = true;
     }
+  }
+
+  isNodeProcess(): boolean {
+    return (
+      typeof process !== "undefined" &&
+      process.release?.name?.search(/node|io.js/) !== -1
+    );
   }
 
   getNodeMajorVersion(): number {
