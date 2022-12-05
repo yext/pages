@@ -1,5 +1,5 @@
 class Runtime {
-  name: "node" | "deno" | "browser";
+  name: "node" | "deno" | "browser" | "unknown";
   /**
    * Whether or not the current runtime is being executed server-side or client-side. If the runtime
    * is node or deno then isServerSide will be true. When the runtime is browser isServerSide is
@@ -9,29 +9,33 @@ class Runtime {
   version: string;
 
   constructor() {
-    if (this.isNodeProcess()) {
-      this.name = "node";
-      this.version = process.versions.node;
-      this.isServerSide = true;
-    } else if (typeof window !== "undefined" && !("Deno" in window)) {
+    if (this.isBrowser()) {
       this.name = "browser";
       this.version = navigator.userAgent;
       this.isServerSide = false;
-    } else {
+      return;
+    }
+
+    if (this.isNode()) {
+      this.name = "node";
+      this.version = process.versions.node;
+      this.isServerSide = true;
+      return;
+    }
+
+    if (this.isDeno()) {
       this.name = "deno";
       this.version = "";
       if (typeof window !== "undefined") {
         this.version = (window as any).Deno?.version.deno || "";
       }
       this.isServerSide = true;
+      return;
     }
-  }
 
-  isNodeProcess(): boolean {
-    return (
-      typeof process !== "undefined" &&
-      process.release?.name?.search(/node|io.js/) !== -1
-    );
+    this.name = "unknown";
+    this.isServerSide = true;
+    this.version = "";
   }
 
   getNodeMajorVersion(): number {
@@ -40,6 +44,33 @@ class Runtime {
     }
 
     return +this.version.split(".")[0];
+  }
+
+  isBrowser(): boolean {
+    return (
+      typeof window != "undefined" &&
+      typeof window.document !== "undefined" &&
+      !("Deno" in window)
+    );
+  }
+
+  isDeno(): boolean {
+    // @ts-expect-error Deno may be undefined
+    return (
+      typeof Deno !== "undefined" &&
+      // @ts-expect-error Deno may be undefined
+      typeof Deno.version !== "undefined" &&
+      // @ts-expect-error Deno may be undefined
+      typeof Deno.version.deno !== "undefined"
+    );
+  }
+
+  isNode(): boolean {
+    return (
+      typeof process !== "undefined" &&
+      process.versions != null &&
+      process.versions.node != null
+    );
   }
 }
 
