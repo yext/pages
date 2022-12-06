@@ -29,7 +29,10 @@ jobs:
       - name: Build @yext/pages
         run: |
           cd ../../packages/pages && pnpm run build
-          ls ../../packages/pages/dist/bin
+          pwd
+          ls
+          ls ..
+          ls ../..
         shell: bash
       
       - name: Rerun install to link bin
