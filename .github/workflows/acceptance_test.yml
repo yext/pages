@@ -30,9 +30,10 @@ jobs:
         run: |
           cd ../../packages/pages && pnpm run build
           pwd
-          ls
-          ls ..
-          ls ../..
+          ls dist
+          echo ---
+          ls dist/bin
+          echo ---
         shell: bash
       
       - name: Rerun install to link bin
