@@ -35,4 +35,4 @@ jobs:
         run: pnpm i
 
       - name: Ensure dev mode works
-        run: pnpm run dev
+        run: pnpm run dev & npx wait-on http://localhost:5173
