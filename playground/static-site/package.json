@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pages dev --local"
+    "dev": "pnpm ls && pnpx pages dev --local"
   },
   "devDependencies": {
     "@yext/pages": "workspace:*",
