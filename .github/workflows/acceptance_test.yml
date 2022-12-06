@@ -17,10 +17,13 @@ jobs:
       run:
         working-directory: ./playground/static-site
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
       - uses: pnpm/action-setup@v2.2.4
 
-      - name: "test with node ${{ matrix.node-version }}"
+      - name: test with node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
