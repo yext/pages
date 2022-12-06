@@ -38,8 +38,8 @@ jobs:
         shell: pwsh
         run: |
           Start-Job -ScriptBlock { pnpm run dev }
-          npx wait-on -t 30000 http://localhost:5173
-          npx wait-on -t 30000 http://localhost:5173/index.html
+          npx wait-on -t 10000 http://localhost:5173
+          npx wait-on -t 10000 http://localhost:5173/index.html
           Receive-Job -Id 1
 
       - name: Ensure dev mode works (not Windows)
