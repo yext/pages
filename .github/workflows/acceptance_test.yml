@@ -10,7 +10,7 @@ jobs:
   static-site:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [windows-latest]
         node-version: [18.x]
     runs-on: ${{ matrix.os }}
     defaults:
@@ -31,9 +31,9 @@ jobs:
       
       - name: Install deps
         run: pnpm i
-      - run: ls ../../packages/pages/dist/bin
 
       - name: Build @yext/pages
+        shell: bash
         run: cd ../../packages/pages && pnpm build
       
       - name: Rerun install to link bin
