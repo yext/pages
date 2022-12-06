@@ -40,9 +40,10 @@ jobs:
 
       - name: Ensure dev mode works (Windows)
         if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
         run: |
           $PSVersionTable.PSVersion
-          Start-Job -Script-Block { pnpm run dev }
+          Start-ThreadJob -Script-Block { pnpm run dev }
           npx wait-on -t 10000 http://localhost:5173
           npx wait-on -t 10000 http://localhost:5173/index.html
 
