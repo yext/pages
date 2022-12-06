@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pages dev --local",
-    "build": "pages build"
+    "dev": "npx pages dev --local",
+    "build": "npx pages build"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^2.1.0",
