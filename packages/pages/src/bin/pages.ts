@@ -1,4 +1,4 @@
-#!/usr/bin/env node --experimental-specifier-resolution=node
+#!/usr/bin/env node --experimental-specifier-resolution=node --experimental-vm-modules
 
 import { initCommandModule } from "../init/init.js";
 import { devCommandModule } from "../dev/dev.js";
