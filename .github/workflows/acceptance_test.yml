@@ -39,7 +39,15 @@ jobs:
         run: pnpm i
 
       - name: Ensure dev mode works
-        run: pnpm run dev & npx wait-on -t 10000 http://localhost:5173/index.html
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            $PSVersionTable.PSVersion
+            Start-Job -Script-Block { npm run dev }
+          else 
+            pnpm run dev &
+          fi
+          npx wait-on -t 60000 http://localhost:5173 &&
+          npx wait-on -t 60000 http://localhost:5173/index.html
 
       - name: Ensure build doesn't error
         run: pnpm run build
