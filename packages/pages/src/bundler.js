@@ -21,7 +21,7 @@ const testFilter = (f) =>
   !f.endsWith(".test.ts") &&
   !f.endsWith(".test.tsx") &&
   !f.endsWith(".test.js");
-const filters = new Set(["./src/bundler.js", "./src/bin/pages.sh"]);
+const filters = new Set(["./src/bundler.js"]);
 
 const files = glob
   .sync("./src/**/*\\.*")
@@ -75,11 +75,3 @@ try {
 } catch (e) {
   console.error(e);
 }
-
-/**
- * Copy the sh binary.
- */
-copyFileSync(
-  path.resolve("./src/bin/pages.sh"),
-  path.resolve("./dist/bin/pages.sh")
-);
