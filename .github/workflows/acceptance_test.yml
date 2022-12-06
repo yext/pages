@@ -42,7 +42,7 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         shell: pwsh
         run: |
-          Start-ThreadJob -ScriptBlock { pnpm run dev }
+          Start-Job -ScriptBlock { pnpm run dev }
           npx wait-on -t 30000 http://localhost:5173
           npx wait-on -t 30000 http://localhost:5173/index.html
           Receive-Job -Id 1
