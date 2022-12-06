@@ -42,7 +42,7 @@ jobs:
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
             $PSVersionTable.PSVersion
-            Start-Job -Script-Block { npm run dev }
+            Start-Job -Script-Block { pnpm run dev }
           else 
             pnpm run dev &
           fi
