@@ -6,7 +6,7 @@ jobs:
   static-site:
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ubuntu-latest]
         node-version: [18.x]
     runs-on: ${{ matrix.os }}
     defaults:
