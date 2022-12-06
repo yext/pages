@@ -31,6 +31,7 @@ jobs:
       
       - name: Install deps
         run: pnpm i
+      - run: ls ../../packages/pages/dist/bin
 
       - name: Build @yext/pages
         run: cd ../../packages/pages && pnpm build
