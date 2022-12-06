@@ -1,0 +1,12 @@
+{
+  "features": [
+    {
+      "name": "static",
+      "templateType": "JS",
+      "staticPage": {
+        "plugin": {}
+      }
+    }
+  ],
+  "streams": []
+}

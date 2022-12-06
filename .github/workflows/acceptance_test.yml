@@ -36,3 +36,6 @@ jobs:
 
       - name: Ensure dev mode works
         run: pnpm run dev & npx wait-on -t 10000 http://localhost:5173
+
+      - name: Ensure build doesn't error
+        run: pnpm run build
