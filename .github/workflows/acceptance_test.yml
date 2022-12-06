@@ -19,16 +19,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2.2.4
-
       - name: test with node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
-
       - run: pnpm i
-      - run: pnpm -r build:js
-      - run: pnpm -r build:types
+
+      - name: Build @yext/pages
+      - run: cd ../../packages/pages && pnpm run build
+      - shell: bash
       
       - name: Rerun install to link bin
         run: pnpm i
