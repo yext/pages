@@ -17,10 +17,7 @@ jobs:
       run:
         working-directory: ./playground/static-site
     steps:
-      - name: "Checkout"
         uses: actions/checkout@v3
-      
-      - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
 
       - name: "test with node ${{ matrix.node-version }}"
@@ -28,12 +25,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
-      
-      - name: Install deps
-        run: pnpm i
 
-      - name: Build @yext/pages
-        run: pnpm -r build
+        run: pnpm i
+        run: pnpm -r build:js
+        run: pnpm -r build:types
       
       - name: Rerun install to link bin
         run: pnpm i
