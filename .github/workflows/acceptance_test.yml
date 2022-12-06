@@ -28,7 +28,7 @@ jobs:
       - name: Install deps
         run: pnpm i
 
-      - name: Run build
+      - name: Build @yext/pages
         run: cd ../../packages/pages && pnpm -r build
       
       - name: Rerun install to link bin
