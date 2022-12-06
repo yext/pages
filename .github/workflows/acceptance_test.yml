@@ -33,8 +33,7 @@ jobs:
         run: pnpm i
 
       - name: Build @yext/pages
-        shell: bash
-        run: cd ../../packages/pages && pnpm build
+        run: pnpm -r build
       
       - name: Rerun install to link bin
         run: pnpm i
@@ -56,4 +55,4 @@ jobs:
           npx wait-on -t 10000 http://localhost:5173/index.html
 
       - name: Ensure build doesn't error
-        run: pnpm run build
+        run: pnpm run build-test-site

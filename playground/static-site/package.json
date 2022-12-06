@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx pages dev --local",
-    "build": "npx pages build"
+    "build-test-site": "npx pages build"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^2.1.0",
