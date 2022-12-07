@@ -16,5 +16,5 @@
     "types": ["vite/client", "jest", "node"]
   },
   "include": ["src", "index.d.ts"],
-  "exclude": ["src/bundler.js", "src/bin/pages.sh", "node_modules"]
+  "exclude": ["src/bundler.js", "node_modules"]
 }
