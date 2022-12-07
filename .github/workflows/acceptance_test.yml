@@ -19,11 +19,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
-      - uses: actions/download-artifact@v3
-        with:
-          name: build-output
-          path: packages/pages/dist
-      - run: ls ../../packages/pages/dist
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: build-output
+      #     path: packages/pages/dist
+      # - run: ls ../../packages/pages/dist
       - run: pnpm i
 
       - name: Ensure dev mode works (Windows)
