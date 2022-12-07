@@ -2,7 +2,7 @@
 import { spawnSync } from "child_process";
 import process from "process";
 import path from "path";
-
+import fs from "fs";
 console.log("spawning!");
 
 const pathToPagesScript = path.resolve(
@@ -15,6 +15,10 @@ const pathToPagesScript = path.resolve(
   "pages.js"
 );
 console.log(process.cwd(), pathToPagesScript);
+
+console.log(fs.readFileSync(pathToPagesScript, "utf-8"));
+
+spawnSync("node", ["-e", "console.log('poop')"], { stdio: "inherit" });
 
 spawnSync(
   "node",
