@@ -11,8 +11,7 @@ of the localData folder, but entity data will be re-fetched on each page load an
 export const localDevUrlInfoText = `Local development urls will match production urls for all entity pages IF a slug 
 is configured for each entity.`;
 
-const disableProdUrl =
-  "https://hitchhikers.yext.com/docs/pages/super-quick-start/?target=npm-run-dev";
+const disableProdUrl = "https://hitchhikers.yext.com/docs/pages/local-dev-urls";
 export const localDevUrlHelpText = `You can learn more/how to disable this <a href="${disableProdUrl}">here</a>.`;
 
 export const localModeInfoText = `Local mode enabled. Below are the URLs that are available based on 
