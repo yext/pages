@@ -23,10 +23,12 @@ jobs:
         with:
           name: build-output
           path: packages/pages/dist
-      - run: ls ../../packages/pages/dist
+      - run: ls ../../packages/pages/dist/bin
       - run: pnpm i
-      - run: ls ./node_modules/@yext/pages
-      - run: ls ./node_modules/.bin/
+      - run: ls ./node_modules/@yext/pages/dist/bin
+      - run: cat ./node_modules/.bin/pages
+      - run: cat ./node_modules/.bin/pages.CMD
+      - run: cat ./node_modules/.bin/pages.ps1
 
       - name: Ensure dev mode works (Windows)
         if: ${{ runner.os == 'Windows' }}
