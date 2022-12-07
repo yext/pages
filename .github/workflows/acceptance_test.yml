@@ -30,11 +30,11 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         shell: pwsh
         run: |
-          Start-ThreadJob -ScriptBlock { pnpm run dev };
+          Start-Job -ScriptBlock { pnpm run dev };
           Start-Sleep -Seconds 10;
           Receive-Job -Id 1
-          npx wait-on -t 30000 http://localhost:5173;
-          npx wait-on -t 30000 http://localhost:5173/index.html;
+          npx wait-on -t 10000 http://localhost:5173;
+          npx wait-on -t 10000 http://localhost:5173/index.html;
           Receive-Job -Id 1
 
       - name: Ensure dev mode works (not Windows)
