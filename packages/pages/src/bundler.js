@@ -2,6 +2,8 @@ import esbuild from "esbuild";
 import glob from "glob";
 import path from "path";
 import { rmSync, mkdirSync, copyFileSync } from "fs";
+import { platform } from "os";
+import { exit } from "process";
 
 let watch = false;
 const args = process.argv.slice(2);
@@ -74,4 +76,10 @@ try {
   });
 } catch (e) {
   console.error(e);
+}
+
+if (platform() === "win32") {
+  console.error(
+    "Running pages/src/bunlder.js on Windows may not work as expected."
+  );
 }
