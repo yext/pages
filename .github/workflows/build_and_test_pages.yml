@@ -6,17 +6,17 @@ on:
       - "main"
 
 jobs:
-  call_build:
-    uses: ./.github/workflows/build.yml
-    with:
-      package: "pages"
+  # call_build:
+  #   uses: ./.github/workflows/build.yml
+  #   with:
+  #     package: "pages"
 
-  call_unit_test:
-    needs: call_build
-    uses: ./.github/workflows/unit_test.yml
-    with:
-      package: "pages"
+  # call_unit_test:
+  #   needs: call_build
+  #   uses: ./.github/workflows/unit_test.yml
+  #   with:
+  #     package: "pages"
 
   call_acceptance_test:
-    needs: call_build
+    # needs: call_build
     uses: ./.github/workflows/acceptance_test.yml
