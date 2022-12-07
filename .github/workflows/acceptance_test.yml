@@ -28,27 +28,23 @@ jobs:
       # Since currently the build does not work on Windows and will delete the
       # downloaded artifact without any warnings/errors.
       - run: pnpm i --filter static-site
-      
       - run: ls ./node_modules/@yext/pages/dist/bin
-      - run: cat ./node_modules/.bin/pages
-      - run: cat ./node_modules/.bin/pages.CMD
-      - run: cat ./node_modules/.bin/pages.ps1
 
       - name: Ensure dev mode works (Windows)
         if: ${{ runner.os == 'Windows' }}
         shell: pwsh
         run: |
           Start-ThreadJob -ScriptBlock { pnpm run dev };
-          npx wait-on -t 20000 http://localhost:5173;
-          npx wait-on -t 5000 http://localhost:5173/index.html;
+          npx wait-on -t 5000 http://localhost:5173;
+          npx wait-on -t 1000 http://localhost:5173/index.html;
           Receive-Job -Id 1 -Keep;
 
       - name: Ensure dev mode works (not Windows)
         if: ${{ runner.os != 'Windows' }}
         run: |
           pnpm run dev &
-          npx wait-on -t 10000 http://localhost:5173 &&
-          npx wait-on -t 10000 http://localhost:5173/index.html
+          npx wait-on -t 5000 http://localhost:5173 &&
+          npx wait-on -t 1000 http://localhost:5173/index.html
 
       - name: Ensure build doesn't error
         run: pnpm run build-test-site
