@@ -33,6 +33,8 @@ jobs:
           npx wait-on -t 20000 http://localhost:5173;
           npx wait-on -t 5000 http://localhost:5173/index.html;
           Invoke-RestMethod -Uri http://localhost:5173;
+          Receive-Job -Id 1;
+          Exit 0;
 
       - name: Ensure dev mode works (not Windows)
         if: ${{ runner.os != 'Windows' }}
