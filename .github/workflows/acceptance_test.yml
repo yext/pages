@@ -34,8 +34,6 @@ jobs:
       - run: cat ./node_modules/.bin/pages.CMD
       - run: cat ./node_modules/.bin/pages.ps1
 
-      - run: pnpm -r build
-
       - name: Ensure dev mode works (Windows)
         if: ${{ runner.os == 'Windows' }}
         shell: pwsh
