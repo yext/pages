@@ -31,7 +31,6 @@ jobs:
         shell: pwsh
         run: |
           echo start pnpm run dev;
-          Start-Job -ScriptBlock { pnpm run dev };
           echo first wait;
           npx wait-on -t 10000 http://localhost:5173;
           echo second wait;
