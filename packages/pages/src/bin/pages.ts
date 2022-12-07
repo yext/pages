@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { initCommandModule } from "../init/init.js";
 import { devCommandModule } from "../dev/dev.js";
 import { generateCommandModule } from "../generate/generate.js";
