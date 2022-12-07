@@ -1,5 +1,3 @@
-#!/usr/bin/env node --experimental-specifier-resolution=node --experimental-vm-modules
-
 import { initCommandModule } from "../init/init.js";
 import { devCommandModule } from "../dev/dev.js";
 import { generateCommandModule } from "../generate/generate.js";
@@ -7,7 +5,7 @@ import { buildCommandModule } from "../build/build.js";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
-console.log("start pages.js");
+console.log("running special version");
 
 // pages requires react and react-dom be installed to function appropriately. If
 // these are not installed in instruct the user to install them.
