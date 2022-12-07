@@ -1,5 +1,3 @@
-#!/usr/bin/env node --experimental-specifier-resolution=node --experimental-vm-modules
-
 import esbuild from "esbuild";
 import glob from "glob";
 import path from "path";
