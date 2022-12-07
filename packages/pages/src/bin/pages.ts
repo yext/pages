@@ -6,6 +6,8 @@ import { buildCommandModule } from "../build/build.js";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
+console.log("start pages.js", process.argv);
+
 // pages requires react and react-dom be installed to function appropriately. If
 // these are not installed in instruct the user to install them.
 ["react", "react-dom"].forEach((dep) => {
