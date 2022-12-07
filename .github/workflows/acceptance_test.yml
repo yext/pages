@@ -42,6 +42,7 @@ jobs:
           npx wait-on -t 10000 http://localhost:5173/index.html;
           echo $LASTEXITCODE;
           Receive-Job -Id 1;
+          echo $LASTEXITCODE;
 
       - name: Ensure dev mode works (not Windows)
         if: ${{ runner.os != 'Windows' }}
