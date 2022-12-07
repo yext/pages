@@ -31,16 +31,18 @@ jobs:
         shell: pwsh
         run: |
           Start-ThreadJob -ScriptBlock { pnpm run dev };
-          npx wait-on -t 10000 http://localhost:5173;
-          npx wait-on -t 10000 http://localhost:5173/index.html;
+          Start-Sleep -Seconds 10;
+          Receive-Job -Id 1
+          pnpx wait-on -t 10000 http://localhost:5173;
+          pnpx wait-on -t 10000 http://localhost:5173/index.html;
           Receive-Job -Id 1
 
       - name: Ensure dev mode works (not Windows)
         if: ${{ runner.os != 'Windows' }}
         run: |
           pnpm run dev &
-          npx wait-on -t 10000 http://localhost:5173 &&
-          npx wait-on -t 10000 http://localhost:5173/index.html
+          pnpx wait-on -t 10000 http://localhost:5173 &&
+          pnpx wait-on -t 10000 http://localhost:5173/index.html
 
       - name: Ensure build doesn't error
         run: pnpm run build-test-site
