@@ -37,7 +37,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-output
-          path: packages/pages/dist
+          path: dist/
 
       - name: Run tests
         run: pnpm run test
