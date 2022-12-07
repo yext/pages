@@ -6,7 +6,7 @@ jobs:
   static-site:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [windows-latest]
         node-version: [18.x]
     runs-on: ${{ matrix.os }}
     defaults:
@@ -30,8 +30,9 @@ jobs:
         shell: pwsh
         run: |
           Start-Job -ScriptBlock { pnpm run dev };
-          npx wait-on -t 10000 http://localhost:5173;
-          npx wait-on -t 10000 http://localhost:5173/index.html;
+          npx wait-on -t 20000 http://localhost:5173;
+          npx wait-on -t 5000 http://localhost:5173/index.html;
+          Invoke-RestMethod -Uri http://localhost:5173;
 
       - name: Ensure dev mode works (not Windows)
         if: ${{ runner.os != 'Windows' }}
