@@ -25,8 +25,8 @@ jobs:
           path: packages/pages/dist
       - run: ls ../../packages/pages/dist
       - run: pnpm i
-      - run: ls ./node_modules/@yext/
-      - run: cat ./node_modules/.bin/
+      - run: ls ./node_modules/@yext/pages
+      - run: ls ./node_modules/.bin/
 
       - name: Ensure dev mode works (Windows)
         if: ${{ runner.os == 'Windows' }}
