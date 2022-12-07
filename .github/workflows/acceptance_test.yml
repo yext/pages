@@ -23,13 +23,16 @@ jobs:
         with:
           name: build-output
           path: packages/pages/dist
+      - run: ls ../../packages/pages/dist
       - run: pnpm i
+      - run: ls ../node_modules/@yext/pages/bin
+      - run: cat ../node_modules/.bin/pages
 
       - name: Ensure dev mode works (Windows)
         if: ${{ runner.os == 'Windows' }}
         shell: pwsh
         run: |
-          Start-Job -ScriptBlock { pnpm run dev };
+          Start-ThreadJob -ScriptBlock { pnpm run dev };
           npx wait-on -t 20000 http://localhost:5173;
           npx wait-on -t 5000 http://localhost:5173/index.html;
           Receive-Job -Id 1 -Keep;
