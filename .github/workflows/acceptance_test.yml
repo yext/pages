@@ -24,7 +24,12 @@ jobs:
           name: build-output
           path: packages/pages/dist
       - run: ls ../../packages/pages/dist
-      - run: pnpm i
+
+      # It's important to not run `pnpm install` for @yext/pages on Windows,
+      # Since currently the build does not work on Windows and will delete the
+      # downloaded artifact without any warnings/errors.
+      - run: pnpm i --filter static-site
+
       - run: ls ./node_modules/@yext/pages/dist
       - run: cat ./node_modules/.bin/pages
       - run: cat ./node_modules/.bin/pages.CMD
