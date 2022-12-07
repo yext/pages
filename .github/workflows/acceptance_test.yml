@@ -6,7 +6,7 @@ jobs:
   static-site:
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest]
         node-version: [18.x]
     runs-on: ${{ matrix.os }}
     defaults:
@@ -19,11 +19,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: build-output
-      #     path: packages/pages/dist
-      # - run: ls ../../packages/pages/dist
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          path: packages/pages/dist
+      - run: ls ../../packages/pages/dist
       - run: pnpm i
 
       - name: Ensure dev mode works (Windows)
@@ -31,23 +31,15 @@ jobs:
         shell: pwsh
         run: |
           Start-Job -ScriptBlock { pnpm run dev };
-          echo $LASTEXITCODE;
-          Start-Sleep -Seconds 5;
-          echo $LASTEXITCODE;
-          Invoke-RestMethod -Uri http://localhost:5173;
-          echo "first wait";
           npx wait-on -t 10000 http://localhost:5173;
-          echo $LASTEXITCODE;
-          echo "second wait";
           npx wait-on -t 10000 http://localhost:5173/index.html;
-          echo $LASTEXITCODE;
 
       - name: Ensure dev mode works (not Windows)
         if: ${{ runner.os != 'Windows' }}
         run: |
           pnpm run dev &
-          pnpx wait-on -t 10000 http://localhost:5173 &&
-          pnpx wait-on -t 10000 http://localhost:5173/index.html
+          npx wait-on -t 10000 http://localhost:5173 &&
+          npx wait-on -t 10000 http://localhost:5173/index.html
 
       - name: Ensure build doesn't error
         run: pnpm run build-test-site
