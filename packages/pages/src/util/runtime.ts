@@ -1,3 +1,5 @@
+import { isNode, isDeno } from "browser-or-node";
+
 class Runtime {
   name: "node" | "deno" | "browser";
   /**
@@ -9,7 +11,7 @@ class Runtime {
   version: string;
 
   constructor() {
-    if (this.isDeno()) {
+    if (isDeno) {
       this.name = "deno";
       this.version = "";
       if (typeof window !== "undefined") {
@@ -19,7 +21,7 @@ class Runtime {
       return;
     }
 
-    if (this.isNode()) {
+    if (isNode) {
       this.name = "node";
       this.version = process.versions.node;
       this.isServerSide = true;
@@ -29,22 +31,6 @@ class Runtime {
     this.name = "browser";
     this.version = navigator.userAgent;
     this.isServerSide = false;
-  }
-
-  isDeno(): boolean {
-    return (
-      typeof Deno !== "undefined" &&
-      typeof Deno.version !== "undefined" &&
-      typeof Deno.version.deno !== "undefined"
-    );
-  }
-
-  isNode() {
-    return (
-      typeof process !== "undefined" &&
-      process.versions != null &&
-      process.versions.node != null
-    );
   }
 
   getNodeMajorVersion(): number {

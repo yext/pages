@@ -1,8 +1,14 @@
 /**
  * @jest-environment jsdom
  */
+import * as browserOrNode from "browser-or-node";
 import { getRuntime } from "./runtime.js";
 
+jest.mock("browser-or-node", () => ({
+  __esModule: true,
+  isNode: false,
+  isDeno: true,
+}));
 declare global {
   // eslint-disable-next-line no-var
   var Deno:
@@ -16,20 +22,8 @@ declare global {
 
 describe("runtime", () => {
   it("correctly identifies node and it's major version", async () => {
-    const originalProcess = process;
-    global.process = {
-      ...originalProcess,
-      versions: {
-        http_parser: "foo",
-        node: "16.16.0",
-        v8: "foo",
-        ares: "foo",
-        uv: "foo",
-        zlib: "foo",
-        modules: "foo",
-        openssl: "foo",
-      },
-    };
+    const originalProcess = setupMockEnvironment("node");
+
     const runtime = getRuntime();
 
     expect(runtime.name).toEqual("node");
@@ -40,20 +34,8 @@ describe("runtime", () => {
   });
 
   it("returns true for isServerSide when the runtime is node.", async () => {
-    const originalProcess = process;
-    global.process = {
-      ...originalProcess,
-      versions: {
-        http_parser: "foo",
-        node: "16.16.0",
-        v8: "foo",
-        ares: "foo",
-        uv: "foo",
-        zlib: "foo",
-        modules: "foo",
-        openssl: "foo",
-      },
-    };
+    const originalProcess = setupMockEnvironment("node");
+
     const runtime = getRuntime();
 
     expect(runtime.isServerSide).toBe(true);
@@ -62,13 +44,7 @@ describe("runtime", () => {
   });
 
   it("correctly identifies deno via Deno object", async () => {
-    const originalProcess = process;
-    (global.process as any) = undefined;
-    global.Deno = {
-      version: {
-        deno: "1.24.0",
-      },
-    };
+    const originalProcess = setupMockEnvironment("deno");
 
     const runtime = getRuntime();
 
@@ -80,13 +56,7 @@ describe("runtime", () => {
   });
 
   it("returns true for isServerSide when runtime is deno", async () => {
-    const originalProcess = process;
-    (global.process as any) = undefined;
-    global.Deno = {
-      version: {
-        deno: "1.24.0",
-      },
-    };
+    const originalProcess = setupMockEnvironment("deno");
 
     const runtime = getRuntime();
     expect(runtime.isServerSide).toBe(true);
@@ -96,8 +66,7 @@ describe("runtime", () => {
   });
 
   it("getNodeMajorVersion() throws when not node", async () => {
-    const originalProcess = process;
-    (global.process as any) = undefined;
+    const originalProcess = setupMockEnvironment("deno");
 
     const runtime = getRuntime();
 
@@ -107,8 +76,7 @@ describe("runtime", () => {
   });
 
   it("correctly identifies browser", async () => {
-    const originalProcess = process;
-    (global.process as any) = undefined;
+    const originalProcess = setupMockEnvironment();
 
     const runtime = getRuntime();
 
@@ -118,8 +86,7 @@ describe("runtime", () => {
   });
 
   it("returns false for isServerSide when runtime is browser", async () => {
-    const originalProcess = process;
-    (global.process as any) = undefined;
+    const originalProcess = setupMockEnvironment();
 
     const runtime = getRuntime();
 
@@ -128,3 +95,45 @@ describe("runtime", () => {
     global.process = originalProcess;
   });
 });
+
+const setupMockEnvironment = (
+  simulatedEnvironment?: "node" | "deno"
+): NodeJS.Process => {
+  const originalProcess = process;
+  (global.process as any) = undefined;
+
+  if (simulatedEnvironment === "deno") {
+    global.Deno = {
+      version: {
+        deno: "1.24.0",
+      },
+    };
+    (browserOrNode.isDeno as any) = true;
+    (browserOrNode.isNode as any) = false;
+  }
+
+  if (simulatedEnvironment === "node") {
+    global.process = {
+      ...originalProcess,
+      versions: {
+        http_parser: "foo",
+        node: "16.16.0",
+        v8: "foo",
+        ares: "foo",
+        uv: "foo",
+        zlib: "foo",
+        modules: "foo",
+        openssl: "foo",
+      },
+    };
+    (browserOrNode.isDeno as any) = false;
+    (browserOrNode.isNode as any) = true;
+  }
+
+  if (!simulatedEnvironment) {
+    (browserOrNode.isDeno as any) = false;
+    (browserOrNode.isNode as any) = false;
+  }
+
+  return originalProcess;
+};
