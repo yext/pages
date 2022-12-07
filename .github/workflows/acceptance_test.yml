@@ -1,10 +1,6 @@
 name: Run acceptance tests
 
-on: 
-  pull_request:
-  push:
-    branches:
-      main
+on: workflow_call
 
 jobs:
   static-site:
@@ -19,25 +15,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2.2.4
-      - name: test with node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          path: ../../packages/pages/dist/
       - run: pnpm i
-
-      - name: Build @yext/pages
-        run: |
-          cd ../../packages/pages && pnpm run build
-          pwd
-          ls dist
-          echo ---
-          ls dist/bin
-          echo ---
-        shell: bash
-      
-      - name: Rerun install to link bin
-        run: pnpm i
 
       - name: Ensure dev mode works (Windows)
         if: ${{ runner.os == 'Windows' }}
