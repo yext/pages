@@ -10,6 +10,7 @@ interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
 }
 
 const handler = async ({ scope, local, "prod-url": useProdURLs }: DevArgs) => {
+  console.log("starting server at", devServerPort);
   await createServer(!local, !!useProdURLs, scope);
   await open(`http://localhost:${devServerPort}/`);
 };

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import { spawnSync } from "child_process";
 
+console.log("spawning");
+
 spawnSync(
   "node",
   [
@@ -13,3 +15,5 @@ spawnSync(
     stdio: "inherit",
   }
 );
+
+console.log("done spawning");
