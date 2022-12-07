@@ -9,6 +9,7 @@ jest.mock("browser-or-node", () => ({
   isNode: false,
   isDeno: true,
 }));
+
 declare global {
   // eslint-disable-next-line no-var
   var Deno:
