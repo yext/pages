@@ -6,7 +6,7 @@ jobs:
   static-site:
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest]
         node-version: [18.x]
     runs-on: ${{ matrix.os }}
     defaults:
@@ -30,17 +30,7 @@ jobs:
       - run: pnpm i --ignore-scripts
       - run: ls ./node_modules/@yext/pages/dist/bin
 
-      # - name: Ensure dev mode works (Windows)
-      #   if: ${{ runner.os == 'Windows' }}
-      #   shell: pwsh
-      #   run: |
-      #     Start-ThreadJob -ScriptBlock { pnpm run dev };
-      #     npx wait-on -t 5000 http://localhost:5173;
-      #     npx wait-on -t 1000 http://localhost:5173/index.html;
-      #     Receive-Job -Id 1 -Keep;
-
-      - name: Ensure dev mode works (not Windows)
-        # if: ${{ runner.os != 'Windows' }}
+      - name: Ensure dev mode works
         run: |
           pnpm run dev &
           npx wait-on -t 5000 http://localhost:5173 &&
