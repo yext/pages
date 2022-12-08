@@ -18,19 +18,15 @@ class Runtime {
         this.version = (window as any).Deno?.version.deno || "";
       }
       this.isServerSide = true;
-      return;
-    }
-
-    if (isNode) {
+    } else if (isNode) {
       this.name = "node";
       this.version = process.versions.node;
       this.isServerSide = true;
-      return;
+    } else {
+      this.name = "browser";
+      this.version = navigator.userAgent;
+      this.isServerSide = false;
     }
-
-    this.name = "browser";
-    this.version = navigator.userAgent;
-    this.isServerSide = false;
   }
 
   getNodeMajorVersion(): number {
