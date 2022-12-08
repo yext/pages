@@ -7,18 +7,18 @@ import { hideBin } from "yargs/helpers";
 import process from "process";
 console.log("start pages.js", process.argv);
 
-// // pages requires react and react-dom be installed to function appropriately. If
-// // these are not installed in instruct the user to install them.
-// ["react", "react-dom"].forEach((dep) => {
-//   try {
-//     import(dep);
-//   } catch (e) {
-//     console.error(
-//       `Cannot find "${dep}" which is a necessary dependency for generation. Please install this module.`
-//     );
-//     process.exit(1);
-//   }
-// });
+// pages requires react and react-dom be installed to function appropriately. If
+// these are not installed in instruct the user to install them.
+["react", "react-dom"].forEach((dep) => {
+  try {
+    import(dep);
+  } catch (e) {
+    console.error(
+      `Cannot find "${dep}" which is a necessary dependency for generation. Please install this module.`
+    );
+    process.exit(1);
+  }
+});
 
 yargs(hideBin(process.argv))
   .scriptName("pages")
