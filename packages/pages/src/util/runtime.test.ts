@@ -8,6 +8,7 @@ jest.mock("browser-or-node", () => ({
   __esModule: true,
   isNode: false,
   isDeno: true,
+  isBrowser: true,
 }));
 
 declare global {

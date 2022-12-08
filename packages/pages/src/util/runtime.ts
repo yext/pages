@@ -1,4 +1,4 @@
-import { isNode, isDeno } from "browser-or-node";
+import { isNode, isDeno, isBrowser } from "browser-or-node";
 
 class Runtime {
   name: "node" | "deno" | "browser";
@@ -14,7 +14,7 @@ class Runtime {
     if (isDeno) {
       this.name = "deno";
       this.version = "";
-      if (typeof window !== "undefined") {
+      if (isBrowser) {
         this.version = (window as any).Deno?.version.deno || "";
       }
       this.isServerSide = true;
