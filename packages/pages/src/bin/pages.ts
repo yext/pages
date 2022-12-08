@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-import path from "path";
-
 import { initCommandModule } from "../init/init.js";
 import { devCommandModule } from "../dev/dev.js";
 import { generateCommandModule } from "../generate/generate.js";
@@ -9,7 +6,6 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import process from "process";
 console.log("start pages.js", process.argv);
-console.log("yargs", yargs);
 
 // // pages requires react and react-dom be installed to function appropriately. If
 // // these are not installed in instruct the user to install them.
@@ -24,14 +20,14 @@ console.log("yargs", yargs);
 //   }
 // });
 
-// yargs(hideBin(process.argv))
-//   .scriptName("pages")
-//   .command(devCommandModule)
-//   .command(initCommandModule)
-//   .command(generateCommandModule)
-//   .command(buildCommandModule)
-//   .demandCommand()
-//   .version(false)
-//   .strict()
-//   .help()
-//   .parse();
+yargs(hideBin(process.argv))
+  .scriptName("pages")
+  .command(devCommandModule)
+  .command(initCommandModule)
+  .command(generateCommandModule)
+  .command(buildCommandModule)
+  .demandCommand()
+  .version(false)
+  .strict()
+  .help()
+  .parse();
