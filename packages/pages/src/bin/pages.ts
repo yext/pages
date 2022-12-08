@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 import path from "path";
 
-console.log("pages.boop", path.resolve(__dirname));
-
 import { initCommandModule } from "../init/init.js";
 import { devCommandModule } from "../dev/dev.js";
 import { generateCommandModule } from "../generate/generate.js";
 import { buildCommandModule } from "../build/build.js";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-
+import process from "process";
 console.log("start pages.js", process.argv);
 
 // // pages requires react and react-dom be installed to function appropriately. If
