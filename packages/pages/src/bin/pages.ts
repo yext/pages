@@ -4,7 +4,6 @@ import { generateCommandModule } from "../generate/generate.js";
 import { buildCommandModule } from "../build/build.js";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import process from "process";
 
 // pages requires react and react-dom be installed to function appropriately. If
 // these are not installed in instruct the user to install them.
