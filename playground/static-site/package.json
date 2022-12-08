@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pages dev --local",
+    "dev": "pages",
     "build-test-site": "pages build"
   },
   "devDependencies": {

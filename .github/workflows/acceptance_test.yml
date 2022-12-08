@@ -42,9 +42,6 @@ jobs:
       - name: Ensure dev mode works (not Windows)
         # if: ${{ runner.os != 'Windows' }}
         run: |
-          pnpm run dev &
-          npx wait-on -t 5000 http://localhost:5173 &&
-          npx wait-on -t 1000 http://localhost:5173/index.html
-
+          pnpm run dev
       - name: Ensure build doesn't error
         run: pnpm run build-test-site
