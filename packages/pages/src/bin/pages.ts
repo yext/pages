@@ -9,6 +9,7 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import process from "process";
 console.log("start pages.js", process.argv);
+console.log("yargs", yargs);
 
 // // pages requires react and react-dom be installed to function appropriately. If
 // // these are not installed in instruct the user to install them.
