@@ -1,5 +1,7 @@
+import { isNode, isDeno, isBrowser } from "browser-or-node";
+
 class Runtime {
-  name: "node" | "deno" | "browser";
+  name: "node" | "deno" | "browser" | "unknown";
   /**
    * Whether or not the current runtime is being executed server-side or client-side. If the runtime
    * is node or deno then isServerSide will be true. When the runtime is browser isServerSide is
@@ -9,21 +11,25 @@ class Runtime {
   version: string;
 
   constructor() {
-    if (typeof process !== "undefined") {
+    if (isDeno) {
+      this.name = "deno";
+      this.version = "";
+      if (isBrowser) {
+        this.version = (window as any).Deno?.version.deno || "";
+      }
+      this.isServerSide = true;
+    } else if (isNode) {
       this.name = "node";
       this.version = process.versions.node;
       this.isServerSide = true;
-    } else if (typeof window !== "undefined" && !("Deno" in window)) {
+    } else if (isBrowser) {
       this.name = "browser";
       this.version = navigator.userAgent;
       this.isServerSide = false;
     } else {
-      this.name = "deno";
+      this.name = "unknown";
       this.version = "";
-      if (typeof window !== "undefined") {
-        this.version = (window as any).Deno?.version.deno || "";
-      }
-      this.isServerSide = true;
+      this.isServerSide = false;
     }
   }
 
