@@ -50,7 +50,7 @@
     "prepare": "pnpm build"
   },
   "bin": {
-    "pages": "dist/bin/pages.js"
+    "pages": "dist/bin/spawn.js"
   },
   "files": [
     "dist/**/*",

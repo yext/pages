@@ -1,0 +1,20 @@
+{
+  "name": "static-site",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pages dev --local",
+    "build-test-site": "pages build"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^2.1.0",
+    "@yext/pages": "workspace:*",
+    "vite": "^3.1.0",
+    "wait-on": "^6.0.1"
+  },
+  "dependencies": {
+    "react": "17",
+    "react-dom": "17"
+  }
+}
