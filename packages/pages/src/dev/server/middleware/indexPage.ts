@@ -5,11 +5,13 @@ import {
 } from "../ssr/getLocalData.js";
 import index from "../public/index.js";
 import {
+  devServerPort,
   dynamicModeInfoText,
+  localDevUrlInfoText,
+  localDevUrlHelpText,
   generateTestDataWarningText,
   localModeInfoText,
   noLocalDataErrorText,
-  viteDevServerPort,
 } from "./constants.js";
 import { ViteDevServer } from "vite";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
@@ -46,7 +48,7 @@ export const indexPage =
           `<!--info-html-->`,
           `<div class="info">
           <i class="fa fa-info-circle"></i>
-          ${dynamicGenerateData ? dynamicModeInfoText : localModeInfoText}
+          ${getInfoMessage(dynamicGenerateData, useProdURLs)}
         </div>`
         );
 
@@ -134,7 +136,7 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
       `<div class="list-title"> <span class="list-title-templateName">${featureName}</span> Pages (1):</div>
     <ul>
       <li>
-        <a href="http://localhost:${viteDevServerPort}/${encodeURIComponent(
+        <a href="http://localhost:${devServerPort}/${encodeURIComponent(
         staticURL
       )}">
           ${staticURL}
@@ -152,10 +154,10 @@ const createEntityPageListItems = (
 ) => {
   const formatLink = (entityId: string, slug: string | undefined) => {
     if (useProdURLs) {
-      return `http://localhost:${viteDevServerPort}/${slug}`;
+      return `http://localhost:${devServerPort}/${slug}`;
     }
 
-    return `http://localhost:${viteDevServerPort}/${encodeURIComponent(
+    return `http://localhost:${devServerPort}/${encodeURIComponent(
       templateName
     )}/${entityId}`;
   };
@@ -184,4 +186,20 @@ const createEntityPageListItems = (
     </li>`
     );
   }, "");
+};
+
+const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
+  if (isDynamic && isProdUrl) {
+    return `<ul>
+        <li>${dynamicModeInfoText}</li>
+        <li>${localDevUrlInfoText}</li>
+        <li>${localDevUrlHelpText}</li>
+      <ul>`;
+  }
+
+  if (isDynamic) {
+    return dynamicModeInfoText;
+  }
+
+  return localModeInfoText;
 };

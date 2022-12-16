@@ -3,7 +3,7 @@ import { createServer as createViteServer } from "vite";
 import { serverRenderRoute } from "./middleware/serverRenderRoute.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
-import { viteDevServerPort } from "./middleware/constants.js";
+import { devServerPort } from "./middleware/constants.js";
 import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
@@ -77,8 +77,7 @@ export const createServer = async (
 
   app.use(errorMiddleware(vite));
 
-  // start the server on port 3000
-  app.listen(viteDevServerPort, () =>
-    process.stdout.write(`listening on :${viteDevServerPort}\n`)
+  app.listen(devServerPort, () =>
+    process.stdout.write(`listening on :${devServerPort}\n`)
   );
 };

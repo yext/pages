@@ -1,3 +1,31 @@
+#### 1.0.0-beta.14 (2022-12-07)
+
+##### Chores
+
+*  add prod url message (#267) (bb18aa69)
+
+##### Documentation Changes
+
+* **util:**  update documentation url (#274) (1c2122ba)
+
+##### Bug Fixes
+
+* **dev:**  fix dev command on Windows (#276) (b359e352)
+
+#### 1.0.0-beta.13 (2022-11-30)
+
+##### Chores
+
+*  update GH workflows to remove deprecation warnings (#262) (5d61180d)
+
+##### New Features
+
+* **dev:**  use new available port if default dev server port is occupied (#264) (cfe504c4)
+
+##### Bug Fixes
+
+* **components:**  add empty string fallback for when publisher is null (#257) (7d309256)
+
 #### 1.0.0-beta.12 (2022-11-17)
 
 ##### Bug Fixes

@@ -35,7 +35,11 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
       setHumanInteraction(true);
       if (analytics !== null) {
-        await analytics.trackClick(trackEvent, props.conversionDetails)(e);
+        try {
+          await analytics.trackClick(trackEvent, props.conversionDetails)(e);
+        } catch (exception) {
+          console.error("Failed to report click Analytics Event");
+        }
       }
 
       if (onClick) {
