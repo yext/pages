@@ -1,3 +1,18 @@
+#### 1.0.0-beta.15 (2022-12-16)
+
+##### Chores
+
+*  add CODEOWNERS file (#277) (8233357f)
+
+##### New Features
+
+*  gracefully handle Analytics failures in the `Link` Component. (#280) (bef4685c)
+* **dev:**  fix linux support + static site acceptance across OS (#275) (968c97e1)
+
+##### Bug Fixes
+
+* **util:**  improve runtime environment checking (#272) (b54cec94)
+
 #### 1.0.0-beta.14 (2022-12-07)
 
 ##### Chores
