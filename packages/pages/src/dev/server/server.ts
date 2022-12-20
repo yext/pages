@@ -9,6 +9,7 @@ import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
+import { processEnvVariables } from "../../common/src/processEnvVariables.js";
 
 export const createServer = async (
   dynamicGenerateData: boolean,
@@ -34,6 +35,7 @@ export const createServer = async (
     appType: "custom",
     envDir: projectStructure.envVarDir,
     envPrefix: projectStructure.envVarPrefix,
+    define: processEnvVariables(projectStructure.envVarPrefix),
   });
   // register vite's middleware
   app.use(vite.middlewares);

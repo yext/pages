@@ -5,6 +5,7 @@ import path, { parse } from "path";
 import { InputOption } from "rollup";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { readdir } from "fs/promises";
+import { processEnvVariables } from "../../common/src/processEnvVariables.js";
 
 const intro = `var global = globalThis;`;
 
@@ -38,6 +39,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
             },
           },
         },
+        define: processEnvVariables(projectStructure.envVarPrefix),
       };
     },
     buildStart: buildStart(projectStructure),
