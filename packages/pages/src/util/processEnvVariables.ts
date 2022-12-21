@@ -6,12 +6,11 @@ import { loadEnv } from "vite";
  * without a runtime specific wrapping object.
  *
  * @param prefix string specifying the beginning of the keys to match
- * @returns
  */
 export const processEnvVariables = (
   prefix = "VITE"
 ): Record<string, string> => {
-  const mode = process.env.NODE_ENV || "";
+  const mode = process.env.NODE_ENV || "development";
   let processEnv = loadEnv(mode, process.cwd(), "");
   processEnv = Object.fromEntries(
     Object.entries(processEnv)

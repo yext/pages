@@ -9,7 +9,7 @@ import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
-import { processEnvVariables } from "../../common/src/processEnvVariables.js";
+import { processEnvVariables } from "../../util/processEnvVariables.js";
 
 export const createServer = async (
   dynamicGenerateData: boolean,

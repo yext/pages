@@ -5,7 +5,7 @@ import path, { parse } from "path";
 import { InputOption } from "rollup";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { readdir } from "fs/promises";
-import { processEnvVariables } from "../../common/src/processEnvVariables.js";
+import { processEnvVariables } from "../../util/processEnvVariables.js";
 
 const intro = `var global = globalThis;`;
 
