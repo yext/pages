@@ -1,5 +1,5 @@
 import { createElement } from "react";
-import { renderToString } from "react-dom/server";
+import { renderToString } from "react-dom/server.js";
 import {
   TemplateProps,
   TemplateRenderProps,
