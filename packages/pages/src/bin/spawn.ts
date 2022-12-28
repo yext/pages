@@ -15,12 +15,7 @@ const pathToPagesScript = path.resolve(
 
 spawnSync(
   "node",
-  [
-    "--experimental-specifier-resolution=node",
-    "--experimental-vm-modules",
-    pathToPagesScript,
-    ...process.argv.slice(2),
-  ],
+  ["--experimental-vm-modules", pathToPagesScript, ...process.argv.slice(2)],
   {
     stdio: "inherit",
   }
