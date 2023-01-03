@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOMServer from "react-dom/server";
+import ReactDOMServer from "react-dom/server.js";
 import { ViteDevServer } from "vite";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { TemplateRenderProps } from "../../../common/src/template/types.js";
