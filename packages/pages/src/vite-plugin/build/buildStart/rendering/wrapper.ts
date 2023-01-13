@@ -53,7 +53,9 @@ export const reactWrapper = <T extends TemplateRenderProps>(
     <body>
         <div id="reactele">${template}</div>${
     hydrate
-      ? `<script type="module" src="/${findHydrationFilename(
+      ? `<script type="module" src="${
+          props.relativePrefixToRoot
+        }${findHydrationFilename(
           `${projectFilepaths.hydrationBundleOutputRoot}/${templateModuleInternal.templateName}.tsx`,
           props
         )}" defer></script>`
