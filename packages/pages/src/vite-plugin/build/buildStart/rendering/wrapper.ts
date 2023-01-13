@@ -43,19 +43,14 @@ export const reactWrapper = <T extends TemplateRenderProps>(
             new Set()
           )
         )
-          .map(
-            (f) =>
-              `<link rel="stylesheet" href="${props.relativePrefixToRoot}${f}"/>`
-          )
+          .map((f) => `<link rel="stylesheet" href="/${f}"/>`)
           .join("\n")}
         ${headConfig ? renderHeadConfigToString(headConfig) : ""}
     </head>
     <body>
         <div id="reactele">${template}</div>${
     hydrate
-      ? `<script type="module" src="${
-          props.relativePrefixToRoot
-        }${findHydrationFilename(
+      ? `<script type="module" src="/${findHydrationFilename(
           `${projectFilepaths.hydrationBundleOutputRoot}/${templateModuleInternal.templateName}.tsx`,
           props
         )}" defer></script>`
