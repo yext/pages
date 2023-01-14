@@ -35,7 +35,6 @@ export const reactWrapper = <T extends TemplateRenderProps>(
   return `<!DOCTYPE html>
     <html lang=${lang}>
     <head>
-        <script>window.__INITIAL__DATA__ = ${JSON.stringify(props)}</script>
         ${Array.from(
           getCssTags(
             templateFilepath,
