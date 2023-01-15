@@ -26,7 +26,7 @@ const hydrate = async () => {
   /**
    * Get the templatePath from the template. See {@link ./ssr/serverRenderRoute.ts}.
    */
-  const templatePath = (window as any)._RSS_TEMPLATE_PATH_;
+  const templatePath = (window as any)?._RSS_TEMPLATE_PATH_ || "";
   const template = routes.find((route) =>
     templatePath.endsWith(route.path)
   ) || {
