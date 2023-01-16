@@ -64,7 +64,7 @@ export const generateResponses = async (
     templateProps = await templateModuleInternal.transformProps(templateProps);
   }
 
-  const path = templateModuleInternal.getPath(templateProps);
+  const path = "subdirectory/" + templateModuleInternal.getPath(templateProps);
   if (!path) {
     throw new Error(
       `getPath does not return a valid string in template '${templateModuleInternal.templateName}'`
@@ -81,7 +81,7 @@ export const generateResponses = async (
 
   return {
     content,
-    path: "subdirectory/" + path,
+    path: path,
     redirects: templateModuleInternal.getRedirects?.(templateRenderProps) ?? [],
   };
 };

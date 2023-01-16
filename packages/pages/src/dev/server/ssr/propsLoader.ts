@@ -35,7 +35,7 @@ export const propsLoader = async ({
     templateProps = await transformProps(templateProps);
   }
 
-  const path = getPath(templateProps);
+  const path = "subdirectory/" + getPath(templateProps);
   if (!path) {
     throw new Error(
       `getPath does not return a valid string in template '${templateModuleInternal.path}'`
@@ -44,7 +44,7 @@ export const propsLoader = async ({
 
   return {
     ...templateProps,
-    path: "subdirectory/" + path,
+    path: path,
     relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
   };
 };
