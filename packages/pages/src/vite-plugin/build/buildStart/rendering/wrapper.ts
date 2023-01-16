@@ -46,7 +46,7 @@ export const reactWrapper = <T extends TemplateRenderProps>(
           .map(
             (f) =>
               `<link rel="stylesheet" href="${
-                props.relativePrefixToRoot + f
+                import.meta.env.BASE_URL + props.relativePrefixToRoot + f
               }"/>`
           )
           .join("\n")}
@@ -56,6 +56,7 @@ export const reactWrapper = <T extends TemplateRenderProps>(
         <div id="reactele">${template}</div>${
     hydrate
       ? `<script type="module" src="${
+          import.meta.env.BASE_URL +
           props.relativePrefixToRoot +
           findHydrationFilename(
             `${projectFilepaths.hydrationBundleOutputRoot}/${templateModuleInternal.templateName}.tsx`,
