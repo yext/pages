@@ -47,27 +47,29 @@ export const reactWrapper = <T extends TemplateRenderProps>(
             new Set()
           )
         )
-          .map((f) => {
-            const cssUrl = new URL(
-              props.relativePrefixToRoot + f,
-              import.meta.env.BASE_URL
-            );
-            return `<link rel="stylesheet" href="${f}"/>`;
-          })
+          .map(
+            (f) =>
+              `<link rel="stylesheet" href="${
+                new URL(
+                  props.relativePrefixToRoot + f,
+                  import.meta.env.BASE_URL
+                ).pathname
+              }"/>`
+          )
           .join("\n")}
         ${headConfig ? renderHeadConfigToString(headConfig) : ""}
     </head>
     <body>
         <div id="reactele">${template}</div>${
     hydrate
-      ? `<script type="module" src="${
-          import.meta.env.BASE_URL +
+      ? `<script type="module" src="${new URL(
           props.relativePrefixToRoot +
-          findHydrationFilename(
-            `${projectFilepaths.hydrationBundleOutputRoot}/${templateModuleInternal.templateName}.tsx`,
-            props
-          )
-        }" defer></script>`
+            findHydrationFilename(
+              `${projectFilepaths.hydrationBundleOutputRoot}/${templateModuleInternal.templateName}.tsx`,
+              props
+            ),
+          import.meta.env.BASE_URL
+        )}" defer></script>`
       : ""
   }
     </body>
