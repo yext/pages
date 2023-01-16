@@ -103,7 +103,7 @@ const injectRenderer = async (fileEmitter: EmitFile) => {
   finisher.succeed("Injected template renderer.");
 };
 
-const yextBanner = `
+const yextBanner = `Tr
                   :=*#%@@@@@%#+-:
              :=#@@%*+==-----=+*#%@%*-.
           :*@%*-.                 :=*@%+.
