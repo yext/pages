@@ -81,7 +81,7 @@ export const generateResponses = async (
 
   return {
     content,
-    path: path,
+    path: "subdirectory/" + path,
     redirects: templateModuleInternal.getRedirects?.(templateRenderProps) ?? [],
   };
 };

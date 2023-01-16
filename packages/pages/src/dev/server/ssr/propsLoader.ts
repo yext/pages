@@ -44,7 +44,7 @@ export const propsLoader = async ({
 
   return {
     ...templateProps,
-    path: path,
+    path: "subdirectory/" + path,
     relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
   };
 };
