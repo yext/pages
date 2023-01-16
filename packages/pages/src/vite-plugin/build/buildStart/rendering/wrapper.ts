@@ -43,12 +43,10 @@ export const reactWrapper = <T extends TemplateRenderProps>(
             new Set()
           )
         )
-          .map(
-            (f) =>
-              `<link rel="stylesheet" href="${
-                import.meta.env.BASE_URL + props.relativePrefixToRoot + f
-              }"/>`
-          )
+          .map((f) => {
+            const cssUrl = new URL(f, import.meta.url);
+            return `<link rel="stylesheet" href="${cssUrl}"/>`;
+          })
           .join("\n")}
         ${headConfig ? renderHeadConfigToString(headConfig) : ""}
     </head>
