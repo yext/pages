@@ -23,9 +23,7 @@ export const readTemplateModules = async (
   feature: string,
   manifest: Manifest
 ): Promise<TemplateModuleInternal<any, any>> => {
-  const path =
-    import.meta.env.BASE_URL +
-    manifest.bundlePaths[feature].replace("assets", "..");
+  const path = manifest.bundlePaths[feature].replace("assets", "..");
   if (!path) {
     throw new Error(`Could not find path for feature ${feature}`);
   }
