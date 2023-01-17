@@ -64,8 +64,7 @@ export const generateResponses = async (
     templateProps = await templateModuleInternal.transformProps(templateProps);
   }
 
-  const path =
-    import.meta.env.BASE_URL + templateModuleInternal.getPath(templateProps);
+  const path = templateModuleInternal.getPath(templateProps);
   if (!path) {
     throw new Error(
       `getPath does not return a valid string in template '${templateModuleInternal.templateName}'`
