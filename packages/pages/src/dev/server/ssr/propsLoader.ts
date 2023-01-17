@@ -35,7 +35,7 @@ export const propsLoader = async ({
     templateProps = await transformProps(templateProps);
   }
 
-  const path = "subdirectory/" + getPath(templateProps);
+  const path = getPath(templateProps);
   if (!path) {
     throw new Error(
       `getPath does not return a valid string in template '${templateModuleInternal.path}'`

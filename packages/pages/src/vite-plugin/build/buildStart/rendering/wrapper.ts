@@ -35,10 +35,6 @@ export const reactWrapper = <T extends TemplateRenderProps>(
   return `<!DOCTYPE html>
     <html lang=${lang}>
     <head>
-        <meta name="relativePrefixToRoot" content="${
-          props.relativePrefixToRoot
-        }"/>
-        <meta name="BASE_URL" content="${import.meta.env.BASE_URL}"/>
         <script>window.__INITIAL__DATA__ = ${JSON.stringify(props)}</script>
         ${Array.from(
           getCssTags(
