@@ -1,3 +1,17 @@
+#### 1.0.0-beta.16 (2023-01-24)
+
+##### Chores
+
+* **dev/plugin:**  add file extension to node_module/file import (#282) (876f4868)
+
+##### New Features
+
+* **util:**  define Vite .env variables for use in application (#281) (a64eddf7)
+
+##### Bug Fixes
+
+* **plugin:**  use relative path for css/js imports (#285) (24bab120)
+
 #### 1.0.0-beta.15 (2022-12-16)
 
 ##### Chores
