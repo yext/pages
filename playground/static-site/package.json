@@ -8,10 +8,10 @@
     "build-test-site": "pages build"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^2.1.0",
+    "@vitejs/plugin-react": "^3.1.0",
     "@yext/pages": "workspace:*",
-    "vite": "^3.1.0",
-    "wait-on": "^6.0.1"
+    "vite": "^4.1.1",
+    "wait-on": "^7.0.1"
   },
   "dependencies": {
     "react": "17",

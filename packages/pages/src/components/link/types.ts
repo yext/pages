@@ -16,7 +16,7 @@ export const LinkType = {
  *
  * @public
  */
-export type LinkType = typeof LinkType[keyof typeof LinkType];
+export type LinkType = (typeof LinkType)[keyof typeof LinkType];
 
 /**
  * Type for CTA field

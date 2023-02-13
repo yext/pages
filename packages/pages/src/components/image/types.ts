@@ -68,7 +68,7 @@ export const ImageLayoutOption = {
  * @public
  */
 export type ImageLayout =
-  typeof ImageLayoutOption[keyof typeof ImageLayoutOption];
+  (typeof ImageLayoutOption)[keyof typeof ImageLayoutOption];
 
 /**
  * The shape of the data passed to {@link Image}.

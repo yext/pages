@@ -40,16 +40,6 @@ const commonBuildOpts = {
   tsconfig: "tsconfig.json",
   logLevel: "error",
   platform: "node",
-  watch: watch && {
-    onRebuild(error) {
-      if (error) {
-        console.error("watch build failed:", error);
-        return;
-      }
-
-      console.log("Watch build succeeded. Listening for changes...");
-    },
-  },
 };
 
 /**
@@ -67,11 +57,15 @@ pluginFiles.map((filepath) =>
 );
 
 try {
-  await esbuild.build({
+  const ctx = await esbuild.build({
     ...commonBuildOpts,
     outdir: "dist",
     format: "esm",
   });
+
+  if (watch) {
+    await ctx.watch();
+  }
 } catch (e) {
   console.error(e);
 }
