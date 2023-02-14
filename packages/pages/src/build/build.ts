@@ -1,17 +1,14 @@
-import shell from "shelljs";
 import { CommandModule } from "yargs";
 import { ProjectFilepaths } from "../common/src/project/structure.js";
+import { build } from "vite";
 
 type BuildArgs = Pick<ProjectFilepaths, "scope">;
 
 const handler = async ({ scope }: BuildArgs) => {
-  // Pass CLI arguments as env variables to use in vite-plugin
-  shell.exec("vite build", {
-    env: {
-      ...process.env,
-      YEXT_PAGES_SCOPE: scope,
-    },
-  });
+  if (scope) {
+    process.env.YEXT_PAGES_SCOPE = scope;
+  }
+  build();
 };
 
 export const buildCommandModule: CommandModule<unknown, BuildArgs> = {
