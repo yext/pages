@@ -87,7 +87,6 @@ importers:
       '@types/node': ^17.0.45
       '@types/react': ^17.0.49
       '@types/react-dom': ^17.0.17
-      '@types/shelljs': ^0.8.11
       '@types/ws': ^8.5.3
       '@types/yargs': ^17.0.13
       '@yext/analytics': ^0.3.0
@@ -125,7 +124,6 @@ importers:
       react: ^17.0.2
       react-dom: ^17.0.2
       rollup: ^2.79.0
-      shelljs: ^0.8.5
       ts-jest: ^28.0.8
       typescript: ^4.8.2
       vite: ^3.1.0
@@ -157,7 +155,6 @@ importers:
       picocolors: 1.0.0
       pretty-ms: 7.0.1
       rollup: 2.79.0
-      shelljs: 0.8.5
       typescript: 4.8.3
       vite: 3.1.3
       yargs: 17.6.0
@@ -191,7 +188,6 @@ importers:
       '@types/node': 17.0.45
       '@types/react': 17.0.50
       '@types/react-dom': 17.0.17
-      '@types/shelljs': 0.8.11
       '@types/ws': 8.5.3
       '@types/yargs': 17.0.13
       babel-loader: 8.2.5_rhsdbzevgb5tizdhlla5jsbgyu
@@ -4175,13 +4171,6 @@ packages:
       '@types/node': 17.0.45
     dev: true
 
-  /@types/shelljs/0.8.11:
-    resolution: {integrity: sha512-x9yaMvEh5BEaZKeVQC4vp3l+QoFj3BXcd4aYfuKSzIIyihjdVARAadYy3SMNIz0WCCdS2vB9JL/U6GQk5PaxQw==}
-    dependencies:
-      '@types/glob': 7.2.0
-      '@types/node': 17.0.45
-    dev: true
-
   /@types/source-list-map/0.1.2:
     resolution: {integrity: sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==}
     dev: true
@@ -5640,7 +5629,7 @@ packages:
       mississippi: 3.0.0
       mkdirp: 0.5.6
       move-concurrently: 1.0.1
-      promise-inflight: 1.0.1_bluebird@3.7.2
+      promise-inflight: 1.0.1
       rimraf: 2.7.1
       ssri: 6.0.2
       unique-filename: 1.1.1
@@ -9022,11 +9011,6 @@ packages:
       side-channel: 1.0.4
     dev: true
 
-  /interpret/1.4.0:
-    resolution: {integrity: sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==}
-    engines: {node: '>= 0.10'}
-    dev: false
-
   /interpret/2.2.0:
     resolution: {integrity: sha512-Ju0Bz/cEia55xDwUWEa8+olFpCiQoypjnQySseKtmjNrnps3P+xfpUmGr90T7yjlVJmOtybRvPXhKMbHr+fWnw==}
     engines: {node: '>= 0.10'}
@@ -11785,17 +11769,6 @@ packages:
         optional: true
     dev: true
 
-  /promise-inflight/1.0.1_bluebird@3.7.2:
-    resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
-    peerDependencies:
-      bluebird: '*'
-    peerDependenciesMeta:
-      bluebird:
-        optional: true
-    dependencies:
-      bluebird: 3.7.2
-    dev: true
-
   /promise.allsettled/1.0.5:
     resolution: {integrity: sha512-tVDqeZPoBC0SlzJHzWGZ2NKAguVq2oiYj7gbggbiTvH2itHohijTp7njOUA0aQ/nl+0lr/r6egmhoYu63UZ/pQ==}
     engines: {node: '>= 0.4'}
@@ -12204,13 +12177,6 @@ packages:
     dependencies:
       picomatch: 2.3.1
     dev: true
-
-  /rechoir/0.6.2:
-    resolution: {integrity: sha512-HFM8rkZ+i3zrV+4LQjwQ0W+ez98pApMGM3HUrN04j3CqzPOzl9nmP15Y8YXNm8QHGv/eacOVEjqhmWpkRV0NAw==}
-    engines: {node: '>= 0.10'}
-    dependencies:
-      resolve: 1.22.1
-    dev: false
 
   /redent/1.0.0:
     resolution: {integrity: sha512-qtW5hKzGQZqKoh6JNSD+4lfitfPKGz42e6QwiRmPM5mmKtR0N41AbJRYu0xJi7nhOJ4WDgRkKvAk6tw4WIwR4g==}
@@ -12787,16 +12753,6 @@ packages:
 
   /shell-quote/1.7.3:
     resolution: {integrity: sha512-Vpfqwm4EnqGdlsBFNmHhxhElJYrdfcxPThu+ryKS5J8L/fhAwLazFZtq+S+TWZ9ANj2piSQLGj6NQg+lKPmxrw==}
-    dev: false
-
-  /shelljs/0.8.5:
-    resolution: {integrity: sha512-TiwcRcrkhHvbrZbnRcFYMLl30Dfov3HKqzp5tO5b4pt6G/SezKcYhmDg15zXVBswHmctSAQKznqNW2LO5tTDow==}
-    engines: {node: '>=4'}
-    hasBin: true
-    dependencies:
-      glob: 7.2.3
-      interpret: 1.4.0
-      rechoir: 0.6.2
     dev: false
 
   /side-channel/1.0.4:
