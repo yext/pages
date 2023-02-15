@@ -1,3 +1,14 @@
+#### 1.0.0-beta.17 (2023-02-15)
+
+##### Bug Fixes
+
+* **dev:**  use Vite JS API for build command (#288) (70e08fc7)
+
+##### Other Changes
+
+*  pages@1.0.0-beta.17" (71b3474f)
+*  pages@1.0.0-beta.17 (5e37ab55)
+
 #### 1.0.0-beta.16 (2023-01-24)
 
 ##### Chores
