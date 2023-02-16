@@ -3,7 +3,12 @@
  * doesn't error when we import content from these modules.
  */
 
-declare module "*public/templateBase.js" {
+declare module "*public/templateBase17.js" {
+  const value: string;
+  export default value;
+}
+
+declare module "*public/templateBase18.js" {
   const value: string;
   export default value;
 }

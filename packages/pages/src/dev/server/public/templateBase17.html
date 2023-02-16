@@ -4,14 +4,15 @@
   <body>
     <div id="reactele"><!--app-html--></div>
     <script type="module">
-      import * as ReactDOM from "react-dom";
       import * as React from "react";
+      import * as ReactDOM from "react-dom";
       const hydrate = async () => {
         const templates = import.meta.glob("/src/templates/**/*.(jsx|tsx)");
         const getTemplateName = (path) =>
           path.split("/").pop()?.split(".")[0] || "index";
         const routes = Object.keys(templates).map((path) => {
           return {
+            // get the filename from the path and remove its extension, default to index
             name: getTemplateName(path),
             path,
             getComponent: templates[path],
@@ -32,11 +33,12 @@
           console.error("Default export missing in template: " + template.path);
           return;
         }
+        const container = document.getElementById("reactele");
         ReactDOM.hydrate(
           /* @__PURE__ */ React.createElement(Component, {
             ...window._RSS_PROPS_,
           }),
-          document.getElementById("reactele")
+          container
         );
       };
       hydrate();

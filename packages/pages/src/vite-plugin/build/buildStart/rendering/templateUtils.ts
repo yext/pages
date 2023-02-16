@@ -1,5 +1,5 @@
 import { createElement } from "react";
-import { renderToString } from "react-dom/server.js";
+import ReactDOMServer from "react-dom/server";
 import {
   TemplateProps,
   TemplateRenderProps,
@@ -117,7 +117,9 @@ const renderHtml = (
   return reactWrapper(
     props,
     templateModuleInternal,
-    renderToString(createElement(component as Template<any>, props)),
+    ReactDOMServer.renderToString(
+      createElement(component as Template<any>, props)
+    ),
     // TODO -- allow hydration be configurable.
     true,
     getHeadConfig

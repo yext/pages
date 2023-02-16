@@ -13,9 +13,33 @@ const pathToPagesScript = path.resolve(
   "pages.js"
 );
 
+const pathToLoader = path.resolve(
+  process.cwd(),
+  "node_modules",
+  "@yext",
+  "pages",
+  "dist",
+  "bin",
+  "loader.js"
+);
+
+const nodeVersion = Number(
+  spawnSync("node", ["-v"], { encoding: "utf-8" })
+    .stdout.substring(1)
+    .split(".")[0]
+);
+
+const experimentalFlags = ["--experimental-vm-modules"];
+if (nodeVersion === 17 || nodeVersion === 18) {
+  experimentalFlags.push("--experimental-specifier-resolution=node");
+} else {
+  experimentalFlags.push("--experimental-loader");
+  experimentalFlags.push(pathToLoader);
+}
+
 spawnSync(
   "node",
-  ["--experimental-vm-modules", pathToPagesScript, ...process.argv.slice(2)],
+  [...experimentalFlags, pathToPagesScript, ...process.argv.slice(2)],
   {
     stdio: "inherit",
   }

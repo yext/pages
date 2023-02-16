@@ -1,5 +1,5 @@
-import * as ReactDOM from "react-dom";
 import * as React from "react";
+import * as ReactDOM from "react-dom/client";
 
 const hydrate = async () => {
   type Route = {
@@ -44,10 +44,13 @@ const hydrate = async () => {
     return;
   }
 
-  ReactDOM.hydrate(
-    <Component {...(window as any)._RSS_PROPS_} />,
-    document.getElementById("reactele")
-  );
+  const container = document.getElementById("reactele");
+  if (container) {
+    ReactDOM.hydrateRoot(
+      container,
+      <Component {...(window as any)._RSS_PROPS_} />
+    );
+  }
 };
 
 hydrate();

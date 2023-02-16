@@ -1,9 +1,10 @@
 import React from "react";
-import ReactDOMServer from "react-dom/server.js";
+import ReactDOMServer from "react-dom/server";
 import { ViteDevServer } from "vite";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { TemplateRenderProps } from "../../../common/src/template/types.js";
-import templateBase from "../public/templateBase.js";
+import templateBase17 from "../public/templateBase17.js";
+import templateBase18 from "../public/templateBase18.js";
 import {
   renderHeadConfigToString,
   getLang,
@@ -38,6 +39,8 @@ export default async function sendAppHTML(
     ? templateModuleInternal.getHeadConfig(props)
     : undefined;
 
+  const shouldUseReactRoot = parseInt(React.version) >= 18;
+  const templateBase = shouldUseReactRoot ? templateBase18 : templateBase17;
   const template = await vite.transformIndexHtml(pathname, templateBase);
 
   // Inject the app-rendered HTML into the template. Only invoke the users headFunction

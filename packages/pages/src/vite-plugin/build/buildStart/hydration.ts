@@ -3,11 +3,20 @@ import fs from "fs-extra";
 import handlebars from "handlebars";
 
 const hydrationTemplate = `import * as React from "react";
-import * as ReactDOM from "react-dom";
+
+const shouldUseReactRoot = parseInt(React.version) >= 18;
+const ReactDOM = shouldUseReactRoot
+  ? require('react-dom/client')
+  : require('react-dom');
+
 import Page from "{{importPath}}";
 
 const data = (window as any).__INITIAL__DATA__;
-ReactDOM.hydrate(<Page {...data} />, document.getElementById("reactele"));`;
+if (shouldUseReactRoot) {
+  ReactDOM.hydrateRoot(document.getElementById("reactele"), <Page {...data} />);
+} else {
+  ReactDOM.hydrate(<Page {...data} />, document.getElementById("reactele"));
+}`;
 
 const genHydrationTemplates = (importPath: string) =>
   handlebars.compile(hydrationTemplate)({ importPath });
