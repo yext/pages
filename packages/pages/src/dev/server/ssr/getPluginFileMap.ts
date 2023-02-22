@@ -31,7 +31,6 @@ export type PluginSource = {
 
 /** Returns the pluginFileMap as a mapping of function name to source data. */
 export const getPluginFileMap = (): Record<string, PluginSource> => {
-  JSON.parse(fs.readFileSync(PLUGIN_FILE_MAP_PATH).toString());
   try {
     return JSON.parse(fs.readFileSync(PLUGIN_FILE_MAP_PATH).toString());
   } catch (err: any) {
