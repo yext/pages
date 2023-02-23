@@ -16,11 +16,7 @@ import {
 import { ViteDevServer } from "vite";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
-import {
-  EventType,
-  getPluginFileMap,
-  PluginSource,
-} from "../ssr/getPluginFileMap.js";
+import { EventType, getPluginFileMap } from "../ssr/getPluginFileMap.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -46,7 +42,6 @@ export const indexPage =
         vite,
         templateFilepaths
       );
-      const serverlessFuncs = Object.entries(getPluginFileMap());
 
       let indexPageHtml = index
         // Inject an informative message depending on if the user is in dynamic mode or not.
@@ -113,32 +108,7 @@ export const indexPage =
         );
       }
 
-      if (serverlessFuncs.length) {
-        const systemEventFuncs: Record<string, PluginSource> = {};
-        const apiFuncs: Record<string, PluginSource> = {};
-        serverlessFuncs.forEach(([funcName, source]) => {
-          switch (source.event) {
-            case EventType.ON_URL_CHANGE:
-            case EventType.ON_PAGE_GENERATE:
-              systemEventFuncs[funcName] = source;
-              break;
-            case EventType.API:
-              apiFuncs[funcName] = source;
-              break;
-            default:
-              console.error(
-                `Error in serverless function ${funcName}. It will not be listed on the index page.`
-              );
-              break;
-          }
-        });
-        indexPageHtml = indexPageHtml.replace(
-          `<!--serverless-functions-html-->`,
-          `<div class="section-title">Functions</div>
-          ${createSystemEventFuncList(systemEventFuncs)}
-          ${createApiFuncList(apiFuncs)}`
-        );
-      }
+      indexPageHtml = addHttpFuncs(indexPageHtml);
 
       if (displayGenerateTestDataWarning) {
         // If there was an issue regenerating the local test data on dev server start, then
@@ -162,52 +132,33 @@ export const indexPage =
     }
   };
 
-const createSystemEventFuncList = (
-  systemEventFuncs: Record<string, PluginSource>
-) => {
-  return Object.keys(systemEventFuncs).length
-    ? `<div class="list">
-      <div class="list-title">System Events</div>
-      <ul>${Object.values(systemEventFuncs).reduce(
-        (funcAccumulator, source) => {
-          return (
-            funcAccumulator +
-            `<li>
-            ${
-              source.event === EventType.ON_PAGE_GENERATE
-                ? "onPageGenerate"
-                : "onUrlChange"
-            }
-            <div><button>Test</button></div>
-          </li>`
-          );
-        },
-        ""
-      )}</ul>
-    </div>`
-    : "";
-};
+const addHttpFuncs = (indexPageHtml: string) => {
+  const pluginFileMap = getPluginFileMap();
+  const httpFuncs = Object.entries(pluginFileMap).filter(
+    ([funcName, source]) => {
+      if (source.event === EventType.HTTP) {
+        if (source.apiPath) {
+          return true;
+        }
+        console.error(
+          `Serverless HTTP function ${funcName} is missing a path. It will not be listed on the index page.`
+        );
+      }
+      return false;
+    }
+  );
 
-const createApiFuncList = (apiFuncs: Record<string, PluginSource>) => {
-  return Object.keys(apiFuncs).length
-    ? `<div class="list">
-      <div class="list-title">API</div>
-      <ul>${Object.entries(apiFuncs).reduce(
-        (funcAccumulator, [funcName, source]) => {
-          if (source.serverlessFunctionPath) {
-            return (
-              funcAccumulator + `<li>${source.serverlessFunctionPath}</li>`
-            );
-          }
-          console.error(
-            `Serverless API function ${funcName} is missing a path. It will not be listed on the index page.`
-          );
-          return funcAccumulator;
-        },
-        ""
-      )}</ul>
-    </div>`
-    : "";
+  return httpFuncs.length
+    ? indexPageHtml.replace(
+        `<!--serverless-functions-html-->`,
+        `<div class="section-title">HTTP Functions</div>
+        <ul>
+          ${httpFuncs
+            .map(([_, source]) => `<li>${source.apiPath}</li>`)
+            .join("")}
+        </ul>`
+      )
+    : indexPageHtml;
 };
 
 const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
