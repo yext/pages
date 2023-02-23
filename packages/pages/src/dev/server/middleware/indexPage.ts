@@ -16,6 +16,7 @@ import {
 import { ViteDevServer } from "vite";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { EventType, getPluginFileMap } from "../ssr/getPluginFileMap.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -107,6 +108,8 @@ export const indexPage =
         );
       }
 
+      indexPageHtml = addHttpFuncs(indexPageHtml);
+
       if (displayGenerateTestDataWarning) {
         // If there was an issue regenerating the local test data on dev server start, then
         // display a warning message that informs the user. This will only be displayed when
@@ -128,6 +131,35 @@ export const indexPage =
       next(e);
     }
   };
+
+const addHttpFuncs = (indexPageHtml: string) => {
+  const pluginFileMap = getPluginFileMap();
+  const httpFuncs = Object.entries(pluginFileMap).filter(
+    ([funcName, source]) => {
+      if (source.event === EventType.HTTP) {
+        if (source.apiPath) {
+          return true;
+        }
+        console.error(
+          `Serverless HTTP function ${funcName} is missing a path. It will not be listed on the index page.`
+        );
+      }
+      return false;
+    }
+  );
+
+  return httpFuncs.length
+    ? indexPageHtml.replace(
+        `<!--serverless-functions-html-->`,
+        `<div class="section-title">HTTP Functions</div>
+        <ul>
+          ${httpFuncs
+            .map(([_, source]) => `<li>${source.apiPath}</li>`)
+            .join("")}
+        </ul>`
+      )
+    : indexPageHtml;
+};
 
 const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
   return Array.from(localDataManifest.static).reduce(
