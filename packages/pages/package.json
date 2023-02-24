@@ -114,7 +114,7 @@
     "@types/lodash": "^4.14.184",
     "@types/mime-types": "^2.1.1",
     "@types/minimatch": "^5.1.2",
-    "@types/node": "",
+    "@types/node": "18.14.1",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.10",
     "@types/ws": "^8.5.3",
