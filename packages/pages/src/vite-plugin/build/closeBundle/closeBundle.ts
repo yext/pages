@@ -10,6 +10,10 @@ import {
   TemplateModuleCollection,
 } from "../../../common/src/template/internal/loader.js";
 import { createFeaturesJson } from "../../../generate/features/createFeaturesJson.js";
+import {
+  generateFunctionMetadataFile,
+  shouldGenerateFunctionMetadata,
+} from "./functionMetadata.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -55,6 +59,18 @@ export default (projectStructure: ProjectStructure) => {
       finisher.fail("Failed to write manifest.json");
       console.error(colors.red(e.message));
       return;
+    }
+
+    if (shouldGenerateFunctionMetadata()) {
+      finisher = logger.timedLog({ startLog: "Writing functionMetadata.json" });
+      try {
+        await generateFunctionMetadataFile();
+        finisher.succeed("Successfully wrote functionMetadata.json");
+      } catch (e: any) {
+        finisher.fail("Failed to write functionMetadata.json");
+        console.error(colors.red(e.message));
+        return;
+      }
     }
   };
 };
