@@ -25,7 +25,7 @@ const getFunctionMetadataMap = async (): Promise<
   Record<string, FunctionMetadata>
 > => {
   const filepaths = glob
-    .sync(path.join(FUNCTIONS_PATH, "**/*.{tsx,jsx,js,ts}"), { nodir: true })
+    .sync(path.join(FUNCTIONS_PATH, "**/*.{js,ts}"), { nodir: true })
     .map((f) => path.resolve(f));
   const functionMetadataArray: [string, FunctionMetadata][] = await Promise.all(
     filepaths.map(async (filepath) => {
@@ -53,7 +53,7 @@ export const generateFunctionMetadataFile = async () => {
   const functionMetadataMap = await getFunctionMetadataMap();
   fs.writeFileSync(
     FUNCTION_METADATA_PATH,
-    JSON.stringify(functionMetadataMap, null, "  ")
+    JSON.stringify(functionMetadataMap, null, 2)
   );
 };
 
