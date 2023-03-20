@@ -4,13 +4,14 @@ import esbuild from "esbuild";
 import { importFromString } from "module-from-string";
 import glob from "glob";
 import chalk from "chalk";
+import os from "os";
 
 const FUNCTIONS_PATH = path.resolve("functions");
 const FUNCTION_METADATA_PATH = path.join(
   FUNCTIONS_PATH,
   "functionMetadata.json"
 );
-const TEMP_DIR = ".temp";
+const TEMP_DIR = os.tmpdir();
 
 /** Metadata for a serverless function. */
 type FunctionMetadata = {
@@ -30,18 +31,23 @@ const getFunctionMetadataMap = async (): Promise<
   const filepaths = glob
     .sync(path.join(FUNCTIONS_PATH, "**/*.{js,ts}"), { nodir: true })
     .map((f) => path.resolve(f));
-  const functionMetadataArray: [string, FunctionMetadata][] = [];
 
-  await Promise.allSettled(filepaths.map(generateFunctionMetadata)).then(
-    (results) =>
-      results.forEach((result) => {
-        if (result.status === "fulfilled") {
-          functionMetadataArray.push(result.value);
-        } else {
-          console.error(chalk.red(result.reason));
-        }
-      })
+  const results = await Promise.allSettled(
+    filepaths.map(generateFunctionMetadata)
   );
+  const functionMetadataArray: [string, FunctionMetadata][] = results
+    .filter((result) => {
+      if (result.status === "fulfilled") {
+        return true;
+      } else {
+        console.error(chalk.red(result.reason));
+        return false;
+      }
+    })
+    .map((result) => {
+      return (result as PromiseFulfilledResult<[string, FunctionMetadata]>)
+        .value;
+    });
 
   return Object.fromEntries(functionMetadataArray);
 };
