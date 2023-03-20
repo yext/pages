@@ -64,7 +64,7 @@ async function generateFunctionMetadata(
   const relativePath = path.relative(process.cwd(), filepath);
 
   if (!importedFile.default) {
-    return Promise.reject(`${relativePath} does not contain a default export.`);
+    throw new Error(`${relativePath} does not contain a default export.`);
   }
 
   return [relativePath, { entrypoint: importedFile.default.name }];
