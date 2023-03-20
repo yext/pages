@@ -3,6 +3,7 @@ import path from "path"
 import esbuild from "esbuild"
 import { importFromString } from "module-from-string"
 import glob from "glob"
+import chalk from "chalk"
 
 const FUNCTIONS_PATH = path.resolve("functions")
 const FUNCTION_METADATA_PATH = path.join(
@@ -19,7 +20,9 @@ type FunctionMetadata = {
 
 /**
  * Returns a mapping of file path (relative to the repo root) to the metadata
- * for the function that is the default export of that file.
+ * for the function that is the default export of that file. If there is no default
+ * export in the file, it will be left out of the mapping and an error will be logged
+ * in the console.
  */
 const getFunctionMetadataMap = async (): Promise<
   Record<string, FunctionMetadata>
@@ -35,16 +38,18 @@ const getFunctionMetadataMap = async (): Promise<
         if (result.status === "fulfilled") {
           functionMetadataArray.push(result.value)
         } else {
-          console.error(result.reason)
+          console.error(chalk.red(result.reason))
         }
       })
   )
 
-  return Object.fromEntries(
-    functionMetadataArray.filter(([, metadata]) => metadata.entrypoint)
-  )
+  return Object.fromEntries(functionMetadataArray)
 }
 
+/**
+ * Generates a tuple containing the relative path of the file and its {@link FunctionMetadata}.
+ * If the file does not contain a default export, a rejected {@link Promise} will be returned.
+ */
 async function generateFunctionMetadata(
   filepath: string
 ): Promise<[string, FunctionMetadata]> {
@@ -56,13 +61,13 @@ async function generateFunctionMetadata(
     bundle: true,
   })
   const importedFile = await importFromString(buildResult.outputFiles[0].text)
+  const relativePath = path.relative(process.cwd(), filepath)
 
   if (!importedFile.default) {
-    return Promise.reject("Blah")
+    return Promise.reject(`${relativePath} does not contain a default export.`)
   }
 
-  const relativePath = path.relative(process.cwd(), filepath)
-  return [relativePath, { entrypoint: importedFile.default?.name }]
+  return [relativePath, { entrypoint: importedFile.default.name }]
 }
 
 /** Generates a functionMetadata.json file from the functions directory. */
