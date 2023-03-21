@@ -1,3 +1,9 @@
+#### 1.0.0-beta.20 (2023-03-21)
+
+##### Other Changes
+
+*  pages@1.0.0-beta.19" (a4fb349a)
+
 #### 1.0.0-beta.18 (2023-03-16)
 
 ##### New Features
