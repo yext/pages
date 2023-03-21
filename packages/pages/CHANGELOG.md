@@ -1,3 +1,9 @@
+#### 1.0.0-beta.19 (2023-03-21)
+
+##### New Features
+
+* **plugin:**  update `functionMetadata` generation logic (#295) (578ee949)
+
 #### 1.0.0-beta.18 (2023-03-16)
 
 ##### New Features

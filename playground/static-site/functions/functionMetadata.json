@@ -1,0 +1,8 @@
+{
+  "functions/http/test2.ts": {
+    "entrypoint": "func3"
+  },
+  "functions/http/test3.ts": {
+    "entrypoint": "func4"
+  }
+}
