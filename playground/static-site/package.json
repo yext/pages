@@ -10,7 +10,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^3.1.0",
     "@yext/pages": "workspace:*",
-    "vite": "^4.1.1",
+    "vite": "^4.2.1",
     "wait-on": "^7.0.1"
   },
   "dependencies": {
