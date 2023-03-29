@@ -1,3 +1,21 @@
+#### 1.0.0-beta.20 (2023-03-21)
+
+##### Other Changes
+
+*  pages@1.0.0-beta.19" (a4fb349a)
+
+#### 1.0.0-beta.18 (2023-03-16)
+
+##### New Features
+
+* **plugin:**  generate functionMetadata.json (#293) (0d452a19)
+* **dev:**  list serverless functions on index page (#291) (7a4277e4)
+
+##### Other Changes
+
+*  pages@1.0.0-beta.17 (9ded0694)
+*  pages@1.0.0-beta.17" (71b3474f)
+
 #### 1.0.0-beta.17 (2023-02-15)
 
 ##### Bug Fixes
