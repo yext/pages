@@ -232,10 +232,9 @@ export class Analytics implements AnalyticsMethods {
         }, 1000);
       });
 
-      return Promise.race([
-        this.track(eventName, conversionData),
-        awaitTimeout,
-      ]).then(navigate);
+      return Promise.race([this.track(eventName, conversionData), awaitTimeout])
+        .then(navigate)
+        .catch(navigate);
     };
   }
 }
