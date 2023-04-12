@@ -25,7 +25,7 @@ export const serverRenderSlugRoute =
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
       const locale = req.query.locale?.toString() ?? "en";
-      const slug = url.pathname.substring(1);
+      const slug = decodeURI(url.pathname.substring(1));
 
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
@@ -69,7 +69,7 @@ export const serverRenderSlugRoute =
         locale,
         document,
       });
-      sendAppHTML(res, templateModuleInternal, props, vite, url.pathname);
+      sendAppHTML(res, templateModuleInternal, props, vite, `/${slug}`);
     } catch (e: any) {
       // If an error is caught, calling next with the error will invoke
       // our error handling middleware which will then handle it.
