@@ -1,3 +1,9 @@
+#### 1.0.0-beta.21 (2023-04-19)
+
+##### Bug Fixes
+
+* **dev:**  properly support slugs with URL-encoded characters (#299) (759c500e)
+
 #### 1.0.0-beta.20 (2023-03-21)
 
 ##### Other Changes
