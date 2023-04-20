@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "pages dev --local --no-open-browser",
     "playwright": "playwright test",
-    "fmt": "prettier -w ."
+    "fmt": "prettier -w .",
+    "build-test-site": "pages build"
   },
   "engines": {
     "node": ">=17"
