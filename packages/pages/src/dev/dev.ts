@@ -46,7 +46,7 @@ export const devCommandModule: CommandModule<unknown, DevArgs> = {
         default: true,
       })
       .option("open-browser", {
-        describe: "Open the browser",
+        describe: "Automatically opens the browser on server start-up",
         type: "boolean",
         demandOption: false,
         default: true,
