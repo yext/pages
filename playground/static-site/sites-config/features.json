@@ -1,10 +1,9 @@
 {
   "features": [
     {
-      "name": "location",
-      "streamId": "my-stream-id-1",
+      "name": "robots",
       "templateType": "JS",
-      "entityPageSet": {
+      "staticPage": {
         "plugin": {}
       }
     },
@@ -16,29 +15,5 @@
       }
     }
   ],
-  "streams": [
-    {
-      "$id": "my-stream-id-1",
-      "fields": [
-        "id",
-        "uid",
-        "meta",
-        "name",
-        "address",
-        "mainPhone",
-        "description",
-        "hours",
-        "slug",
-        "geocodedCoordinate",
-        "services"
-      ],
-      "filter": {
-        "entityTypes": ["location"]
-      },
-      "localization": {
-        "locales": ["en"],
-        "primary": false
-      }
-    }
-  ]
+  "streams": []
 }
