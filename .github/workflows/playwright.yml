@@ -7,7 +7,7 @@ jobs:
   test:
     strategy:
       matrix:
-        node-version: [17.x]
+        node-version: [17.x, 18.x, 19.x]
     timeout-minutes: 60
     runs-on: macos-latest
     steps:
