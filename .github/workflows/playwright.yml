@@ -1,8 +1,7 @@
 name: Playwright Tests
-on:
-  push:
-    branches-ignore:
-      - "main"
+
+on: push
+
 jobs:
   test:
     strategy:
