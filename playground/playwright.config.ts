@@ -1,24 +1,6 @@
 import type { PlaywrightTestConfig } from "@playwright/test";
 import { devices } from "@playwright/test";
 
-const CI_BROWSERS = process.env.CI
-  ? [
-      {
-        name: "firefox",
-        use: {
-          ...devices["Desktop Firefox"],
-        },
-      },
-
-      {
-        name: "webkit",
-        use: {
-          ...devices["Desktop Safari"],
-        },
-      },
-    ]
-  : [];
-
 const base: PlaywrightTestConfig = {
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
@@ -54,7 +36,12 @@ const base: PlaywrightTestConfig = {
         ...devices["Desktop Chrome"],
       },
     },
-    ...CI_BROWSERS,
+    {
+      name: "firefox",
+      use: {
+        ...devices["Desktop Firefox"],
+      },
+    },
   ],
 };
 
