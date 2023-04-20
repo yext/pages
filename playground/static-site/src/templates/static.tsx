@@ -1,9 +1,17 @@
 import * as React from "react";
+import "../index.css";
+import { GetPath, TemplateConfig, TemplateProps } from "@yext/pages";
 
-export function getPath() {
-  return "index.html";
-}
+export const config: TemplateConfig = {
+  name: "turtlehead-tacos",
+};
 
-export default function Static() {
-  return <div>this is a test static site</div>;
-}
+export const getPath: GetPath<TemplateProps> = () => {
+  return `index.html`;
+};
+
+const Static = () => {
+  return <>Static Page</>;
+};
+
+export default Static;

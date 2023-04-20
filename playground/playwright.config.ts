@@ -1,6 +1,24 @@
 import type { PlaywrightTestConfig } from "@playwright/test";
 import { devices } from "@playwright/test";
 
+const CI_BROWSERS = process.env.CI
+  ? [
+      {
+        name: "firefox",
+        use: {
+          ...devices["Desktop Firefox"],
+        },
+      },
+
+      {
+        name: "webkit",
+        use: {
+          ...devices["Desktop Safari"],
+        },
+      },
+    ]
+  : [];
+
 const base: PlaywrightTestConfig = {
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
@@ -25,11 +43,10 @@ const base: PlaywrightTestConfig = {
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: "http://localhost:5173",
-
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
+    video: "retain-on-failure",
   },
-
   projects: [
     {
       name: "chromium",
@@ -37,19 +54,7 @@ const base: PlaywrightTestConfig = {
         ...devices["Desktop Chrome"],
       },
     },
-    {
-      name: "firefox",
-      use: {
-        ...devices["Desktop Firefox"],
-      },
-    },
-
-    {
-      name: "webkit",
-      use: {
-        ...devices["Desktop Safari"],
-      },
-    },
+    ...CI_BROWSERS,
   ],
 };
 
