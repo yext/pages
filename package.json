@@ -10,7 +10,6 @@
   "scripts": {
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
-    "playwright": "ts-node playground/scripts/test.ts",
     "release": "tsx scripts/release.ts",
     "fmt": "prettier --write --cache .",
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
@@ -35,9 +34,7 @@
   },
   "homepage": "https://github.com/yext/pages#readme",
   "devDependencies": {
-    "@yext/pages": "workspace:*",
     "@playwright/test": "^1.32.3",
-    "ts-node": "^10.9.1",
     "@types/fs-extra": "^9.0.13",
     "@types/lodash": "^4.14.184",
     "@types/minimist": "^1.2.2",

@@ -7,5 +7,5 @@ dist/
 
 .DS_Store
 
-/test-results/
+test-results
 playwright-report
