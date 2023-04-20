@@ -305,6 +305,9 @@ importers:
         specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
     devDependencies:
+      '@playwright/test':
+        specifier: ^1.25.2
+        version: 1.25.2
       '@types/react':
         specifier: ^17.0.49
         version: 17.0.50
@@ -2534,6 +2537,15 @@ packages:
       picocolors: 1.0.0
       tiny-glob: 0.2.9
       tslib: 2.4.0
+    dev: true
+
+  /@playwright/test@1.25.2:
+    resolution: {integrity: sha512-6qPznIR4Fw02OMbqXUPMG6bFFg1hDVNEdihKy0t9K0dmRbus1DyP5Q5XFQhGwEHQkLG5hrSfBuu9CW/foqhQHQ==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dependencies:
+      '@types/node': 17.0.45
+      playwright-core: 1.25.2
     dev: true
 
   /@pmmmwh/react-refresh-webpack-plugin@0.5.7(react-refresh@0.11.0)(webpack@5.74.0):
@@ -11778,6 +11790,12 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       find-up: 5.0.0
+    dev: true
+
+  /playwright-core@1.25.2:
+    resolution: {integrity: sha512-0yTbUE9lIddkEpLHL3u8PoCL+pWiZtj5A/j3U7YoNjcmKKDGBnCrgHJMzwd2J5vy6l28q4ki3JIuz7McLHhl1A==}
+    engines: {node: '>=14'}
+    hasBin: true
     dev: true
 
   /pnp-webpack-plugin@1.6.4(typescript@4.8.3):

@@ -10,6 +10,9 @@ jobs:
         node-version: [17.x, 18.x, 19.x]
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./playground
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
@@ -17,19 +20,17 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
 
-      - name: Build with NodeJS 17
+      - name: Build with NodeJS ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
 
-      - run: cd playground
-
       - name: Install deps
         run: pnpm i
 
       - name: Run Playwright tests
-        run: pnpm test
+        run: npm run test
 
       - name: Upload 'React' Playwright Report
         uses: actions/upload-artifact@v3
