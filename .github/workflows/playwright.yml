@@ -5,6 +5,9 @@ on:
       - "main"
 jobs:
   test:
+    strategy:
+      matrix:
+        node-version: [17.x, 18.x, 19.x]
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -12,12 +15,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.2
+        uses: pnpm/action-setup@v2.2.4
 
       - name: Build with NodeJS 17
         uses: actions/setup-node@v3
         with:
-          node-version: '17.x'
+          node-version: ${{ matrix.node-version }}
           cache: "pnpm"
 
       - run: cd playground
@@ -29,7 +32,7 @@ jobs:
         run: pnpm test
 
       - name: Upload 'React' Playwright Report
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: playwright-report
