@@ -77,7 +77,7 @@
     "ink": "^3.2.0",
     "lodash": "^4.17.21",
     "mime-types": "^2.1.35",
-    "module-from-string": "^3.2.1",
+    "module-from-string": "^3.3.0",
     "open": "^8.4.0",
     "ora": "^6.1.2",
     "picocolors": "^1.0.0",
