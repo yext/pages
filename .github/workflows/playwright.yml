@@ -28,7 +28,7 @@ jobs:
 
       - name: Install deps
         run: pnpm i
-        run: pnpm run build
+      - run: pnpm run build
 
       - name: Run Playwright tests
         run: pnpm run playwright
