@@ -27,8 +27,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install deps
-        run: pnpm i
-      - run: cd ../.. && pnpm run build
+        run: cd ../.. && pnpm i && pnpm run build
 
       - name: Run Playwright tests
         run: pnpm run playwright
