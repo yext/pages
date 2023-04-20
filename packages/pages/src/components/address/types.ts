@@ -24,11 +24,11 @@ export type AddressLine = (keyof AddressType | ",")[];
  *
  * @public
  */
-export type AddressProps = {
+export interface AddressProps extends React.HTMLProps<HTMLDivElement> {
   address: AddressType;
   lines?: AddressLine[];
   separator?: string;
-};
+}
 
 /**
  * The shape of the data passed to {@link AddressLine}.
@@ -47,7 +47,7 @@ export type AddressLineProps = {
  * @public
  */
 export const ListingPublisherOption = {
-  GOOGLEMYBUSINESS: "googlemybusiness",
+  GOOGLEMYBUSINESS: "GOOGLEMYBUSINESS",
 } as const;
 
 /**
@@ -65,7 +65,7 @@ export type ListingPublisher =
  */
 export interface ListingType {
   listingUrl: string;
-  publisher: ListingPublisher;
+  publisher?: ListingPublisher;
 }
 
 /**

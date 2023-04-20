@@ -31,6 +31,22 @@ const sampleListings: ListingType[] = [
   },
 ];
 
+const sampleListingsLowerCase: ListingType[] = [
+  {
+    listingUrl: "https://maps.google.com/maps?cid=3287244376840534043",
+    publisher:
+      ListingPublisherOption.GOOGLEMYBUSINESS.toLowerCase() as "GOOGLEMYBUSINESS",
+  },
+];
+
+const sampleListingsUpperCase: ListingType[] = [
+  {
+    listingUrl: "https://maps.google.com/maps?cid=3287244376840534043",
+    publisher:
+      ListingPublisherOption.GOOGLEMYBUSINESS.toUpperCase() as "GOOGLEMYBUSINESS",
+  },
+];
+
 describe("getDirections()", () => {
   it("returns URL to Apple Maps address query", () => {
     expect(
@@ -81,6 +97,18 @@ describe("getDirections()", () => {
 
   it("returns URL to Google Maps GMB listing", () => {
     expect(getDirections(undefined, sampleListings)).toEqual(
+      "https://maps.google.com/maps?cid=3287244376840534043"
+    );
+  });
+
+  it("returns URL to Google Maps GMB listing with lower case publisher", () => {
+    expect(getDirections(undefined, sampleListingsLowerCase)).toEqual(
+      "https://maps.google.com/maps?cid=3287244376840534043"
+    );
+  });
+
+  it("returns URL to Google Maps GMB listing with upper case publisher", () => {
+    expect(getDirections(undefined, sampleListingsUpperCase)).toEqual(
       "https://maps.google.com/maps?cid=3287244376840534043"
     );
   });

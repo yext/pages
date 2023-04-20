@@ -1,0 +1,22 @@
+.Map {
+  height: var(--yxt-map-height);
+}
+
+.Map button {
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+  text-decoration: none;
+  appearance: none;
+  background: none;
+  cursor: pointer;
+}
+
+.sr-only {
+  display: none;
+}

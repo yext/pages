@@ -1,3 +1,175 @@
+#### 1.0.0-beta.21 (2023-04-19)
+
+##### Bug Fixes
+
+* **dev:**  properly support slugs with URL-encoded characters (#299) (759c500e)
+
+#### 1.0.0-beta.20 (2023-03-21)
+
+##### Other Changes
+
+*  pages@1.0.0-beta.19" (a4fb349a)
+
+#### 1.0.0-beta.18 (2023-03-16)
+
+##### New Features
+
+* **plugin:**  generate functionMetadata.json (#293) (0d452a19)
+* **dev:**  list serverless functions on index page (#291) (7a4277e4)
+
+##### Other Changes
+
+*  pages@1.0.0-beta.17 (9ded0694)
+*  pages@1.0.0-beta.17" (71b3474f)
+
+#### 1.0.0-beta.17 (2023-02-15)
+
+##### Bug Fixes
+
+* **dev:**  use Vite JS API for build command (#288) (70e08fc7)
+
+##### Other Changes
+
+*  pages@1.0.0-beta.17" (71b3474f)
+*  pages@1.0.0-beta.17 (5e37ab55)
+
+#### 1.0.0-beta.16 (2023-01-24)
+
+##### Chores
+
+* **dev/plugin:**  add file extension to node_module/file import (#282) (876f4868)
+
+##### New Features
+
+* **util:**  define Vite .env variables for use in application (#281) (a64eddf7)
+
+##### Bug Fixes
+
+* **plugin:**  use relative path for css/js imports (#285) (24bab120)
+
+#### 1.0.0-beta.15 (2022-12-16)
+
+##### Chores
+
+*  add CODEOWNERS file (#277) (8233357f)
+
+##### New Features
+
+*  gracefully handle Analytics failures in the `Link` Component. (#280) (bef4685c)
+* **dev:**  fix linux support + static site acceptance across OS (#275) (968c97e1)
+
+##### Bug Fixes
+
+* **util:**  improve runtime environment checking (#272) (b54cec94)
+
+#### 1.0.0-beta.14 (2022-12-07)
+
+##### Chores
+
+*  add prod url message (#267) (bb18aa69)
+
+##### Documentation Changes
+
+* **util:**  update documentation url (#274) (1c2122ba)
+
+##### Bug Fixes
+
+* **dev:**  fix dev command on Windows (#276) (b359e352)
+
+#### 1.0.0-beta.13 (2022-11-30)
+
+##### Chores
+
+*  update GH workflows to remove deprecation warnings (#262) (5d61180d)
+
+##### New Features
+
+* **dev:**  use new available port if default dev server port is occupied (#264) (cfe504c4)
+
+##### Bug Fixes
+
+* **components:**  add empty string fallback for when publisher is null (#257) (7d309256)
+
+#### 1.0.0-beta.12 (2022-11-17)
+
+##### Bug Fixes
+
+* **dev:**  add back favicon support in dev mode (#259) (fb6e18c7)
+
+#### 1.0.0-beta.11 (2022-11-16)
+
+##### New Features
+
+* **dev:**  document.slug URLs in dev mode (#256) (9cc7e357)
+
+#### 1.0.0-beta.10 (2022-11-10)
+
+##### Documentation Changes
+
+* **components:**  add link stories (#238) (1e52a761)
+
+##### New Features
+
+* **components:**
+  *  make check for publisher in getDirections be case-insensitive (#255) (e20e1af8)
+  *  add `LocationMap` component (#242) (261a960a)
+  *  support pageDomain param (#239) (2591572d)
+* **dev/plugin:**
+  *  add build command with scope flag (#249) (55dddec3)
+  *  multibrand setup support in dev and vite-plugin build (#246) (0dce72a0)
+* **dev:**
+  *  add flags to features command for multibrand setup (#248) (6de548c5)
+  *  add Scope Flag to Dev Command (#247) (f4f7607c)
+
+##### Bug Fixes
+
+* **components:**
+  *  add loading eager to image (#252) (06f5ecc8)
+  *  make fixed Image width and height optional (#241) (36d87cc8)
+* **plugin:**  remove configuration parameter for vite-plugin (#250) (f94d5beb)
+* **dev:**
+  *  parse multiple stream documents (#245) (17718ce2)
+  *  interpreting contentType when serving templates (4c25b93a)
+
+#### 1.0.0-beta.9 (2022-10-04)
+
+##### Bug Fixes
+
+* **components:**  remove `process?` optional chaining (#237) (b48875ba)
+
+#### 1.0.0-beta.8 (2022-10-04)
+
+##### Performance Improvements
+
+* **plugin:**  dedupe the css file list to avoid unnecessary imports (#235) (8d96efc9)
+
+#### 1.0.0-beta.7 (2022-09-30)
+
+##### Chores
+
+* **components:**
+  *  bump yext/analytics version (#231) (373ac02b)
+  *  upgrade storybook to use vite (#217) (16fd089c)
+*  remove vitepress and use storybook (#221) (5d757d06)
+*  add prepare script for @yext/pages (#214) (0e2d0f67)
+
+##### Documentation Changes
+
+* **components:**  add address stories (#227) (82fa43f0)
+
+##### New Features
+
+* **components:**
+  *  add Map component (#171) (c41d3239)
+  *  enable debugging for Analytics in dev mode (#226) (02327faf)
+* **dev:**  allow render-only templates to work (#219) (ac1eab96)
+
+##### Bug Fixes
+
+* **components:**  set sizes attribute for images (#232) (3c843b3e)
+*  features command when using top-level await (#230) (9f32e197)
+* **dev:**  remove final slash from static page urls on index (#220) (6aac7bc9)
+
 #### 1.0.0-beta.6 (2022-09-08)
 
 ##### Chores

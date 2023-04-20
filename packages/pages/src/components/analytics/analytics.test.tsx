@@ -10,6 +10,18 @@ import { AnalyticsProvider } from "./provider.js";
 import { useAnalytics } from "./hooks.js";
 import { AnalyticsScopeProvider } from "./scope.js";
 
+jest.mock("../../util/runtime.js", () => {
+  const runtime = {
+    name: "browser",
+    isServerSide: false,
+    version:
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36",
+  };
+  return {
+    getRuntime: () => runtime,
+  };
+});
+
 // The following section of mocks just exists to supress an error that occurs
 // because jest does not implement a window.location.navigate.  See:
 // https://www.benmvp.com/blog/mocking-window-location-methods-jest-jsdom/
@@ -17,6 +29,12 @@ import { AnalyticsScopeProvider } from "./scope.js";
 const oldWindowLocation = global.location;
 
 beforeAll(() => {
+  global.process = {
+    ...global.process,
+    env: {
+      NODE_ENV: "development",
+    },
+  };
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   delete global.location;

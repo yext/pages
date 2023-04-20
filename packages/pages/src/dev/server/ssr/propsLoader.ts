@@ -1,49 +1,24 @@
-import { getLocalDataForEntity } from "./getLocalData.js";
-import { TEMPLATE_PATH } from "./constants.js";
-import { generateTestDataForPage } from "./generateTestData.js";
-import { convertTemplateConfigInternalToFeaturesConfig } from "../../../common/src/feature/features.js";
 import {
   TemplateProps,
   TemplateRenderProps,
 } from "../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../common/src/template/paths.js";
-import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 
 type PageLoaderValues = {
   templateModuleInternal: TemplateModuleInternal<any, any>;
-  entityId: string;
+  entityId?: string;
   locale: string;
-  dynamicGenerateData: boolean;
-  projectStructure: ProjectStructure;
+  document: any;
 };
 
 export const propsLoader = async ({
   templateModuleInternal,
   entityId,
   locale,
-  dynamicGenerateData,
-  projectStructure,
+  document,
 }: PageLoaderValues): Promise<TemplateRenderProps> => {
   const { transformProps, getPath } = templateModuleInternal;
-
-  let document;
-  if (dynamicGenerateData) {
-    const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(
-      templateModuleInternal.config
-    );
-
-    document = await generateTestDataForPage(
-      process.stdout,
-      featuresConfig,
-      entityId,
-      locale,
-      projectStructure
-    );
-  } else {
-    // Get the document from localData
-    document = await getLocalDataForEntity(entityId, locale);
-  }
 
   if (entityId && !document) {
     throw new Error(
@@ -63,7 +38,7 @@ export const propsLoader = async ({
   const path = getPath(templateProps);
   if (!path) {
     throw new Error(
-      `getPath does not return a valid string in template '${TEMPLATE_PATH}/${templateModuleInternal.filename}'`
+      `getPath does not return a valid string in template '${templateModuleInternal.path}'`
     );
   }
 

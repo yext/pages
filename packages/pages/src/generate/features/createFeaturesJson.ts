@@ -1,25 +1,24 @@
 import fs from "fs-extra";
-import glob from "glob";
 import path from "path";
 import {
   FeaturesConfig,
   FeatureConfig,
   convertTemplateConfigToFeatureConfig,
-} from "../common/src/feature/features.js";
-import {
-  loadTemplateModules,
-  TemplateModuleCollection,
-} from "../common/src/template/internal/loader.js";
+} from "../../common/src/feature/features.js";
+import { TemplateModuleCollection } from "../../common/src/template/internal/loader.js";
 
-const TEMPLATES_ROOT = "/src/templates";
+export const getFeaturesConfig = async (
+  templateModules: TemplateModuleCollection
+): Promise<FeaturesConfig> => {
+  const features: FeatureConfig[] = [];
+  const streams: any[] = [];
+  for (const [, module] of templateModules.entries()) {
+    const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
+    features.push(featureConfig);
+    module.config.stream && streams.push({ ...module.config.stream });
+  }
 
-export const features = async (): Promise<void> => {
-  const templateModules = await loadTemplateModules(
-    glob.sync(path.join(process.cwd(), TEMPLATES_ROOT, "/**/*.{tsx,jsx}")),
-    true,
-    false
-  );
-  await createFeaturesJson(templateModules, "./sites-config/features.json");
+  return { features, streams };
 };
 
 /**
@@ -29,19 +28,11 @@ export const createFeaturesJson = async (
   templateModules: TemplateModuleCollection,
   featurePath: string
 ): Promise<void> => {
-  const features: FeatureConfig[] = [];
-  const streams = [];
-  for (const [, module] of templateModules.entries()) {
-    const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
-    features.push(featureConfig);
-    module.config.stream && streams.push({ ...module.config.stream });
-  }
-
+  const { features, streams } = await getFeaturesConfig(templateModules);
   const featureDir = path.dirname(featurePath);
   if (!fs.existsSync(featureDir)) {
     fs.mkdirSync(featureDir);
   }
-
   const featuresJson = mergeFeatureJson(featurePath, features, streams);
   fs.writeFileSync(featurePath, JSON.stringify(featuresJson, null, "  "));
 };

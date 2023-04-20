@@ -27,6 +27,7 @@ export const Image = ({
   placeholder,
   imgOverrides,
   style = {},
+  loading = "lazy",
 }: ImageProps) => {
   const imgRef = useRef<HTMLImageElement>(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -86,6 +87,16 @@ export const Image = ({
     )
     .join(", ");
 
+  // Generate Image Sizes
+  const maxWidthBreakpoints = [640, 768, 1024, 1280, 1536];
+  const sizes: string = widths
+    .map((w, i) =>
+      i === widths.length - 1
+        ? `${w}px`
+        : `(max-width: ${maxWidthBreakpoints[i]}px) ${w}px`
+    )
+    .join(", ");
+
   return (
     <>
       {!isImageLoaded && placeholder != null && placeholder}
@@ -97,7 +108,8 @@ export const Image = ({
         width={absWidth}
         height={absHeight}
         srcSet={srcSet}
-        loading={"lazy"}
+        sizes={sizes}
+        loading={loading}
         alt={imageData.alternateText || ""}
         {...imgOverrides}
       />
@@ -125,7 +137,7 @@ export const validateRequiredProps = (
   if (layout == ImageLayoutOption.FIXED) {
     if (!width && !height) {
       console.warn(
-        "Using fixed layout but width and height are not passed as props."
+        "Using fixed layout but neither width nor height is passed as props."
       );
 
       return;

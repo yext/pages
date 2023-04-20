@@ -100,7 +100,7 @@ export const HOURS_WITH_REOPEN_DATE = {
     isClosed: false,
     openIntervals: [{ start: "9:07", end: "18:07" }],
   },
-  reopenDate: offsetDate(3),
+  reopenDate: "6-14-2022",
 };
 
 export function offsetDate(daysForward: number) {

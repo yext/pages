@@ -7,6 +7,12 @@ import { Hours } from ".";
 import { HOURS, HOURS_WITH_REOPEN_DATE } from "./sampleData.js";
 
 describe("Hours", () => {
+  beforeAll(() => {
+    jest
+      .spyOn(global.Date.prototype, "toISOString")
+      .mockReturnValue("6-11-2022 00:00:00");
+  });
+
   it("properly renders a full week", () => {
     render(<Hours hours={HOURS} />);
 

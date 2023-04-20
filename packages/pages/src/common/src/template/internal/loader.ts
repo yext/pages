@@ -11,6 +11,7 @@ const TEMP_DIR = ".temp";
 
 /**
  * Loads all templates in the project.
+ *
  * @param templateModulePaths the templates filepaths to load as modules
  * @param transpile set to true if the templates need to be transpiled (such as when they are in tsx format)
  * @param adjustForFingerprintedAsset removes the fingerprint portion (for server bundles)

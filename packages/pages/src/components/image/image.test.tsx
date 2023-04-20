@@ -165,6 +165,45 @@ describe("Image", () => {
 
     expect(img.getAttribute("srcset")).toContain("dynl.mktgcdn.com/p-sandbox/");
   });
+
+  it("properly renders the sizes for a fixed width", () => {
+    render(
+      <Image
+        image={image}
+        layout={ImageLayoutOption.FIXED}
+        width={width}
+        height={height}
+      />
+    );
+
+    const img = screen.getByRole("img", {
+      name: /alt text/i,
+    });
+
+    expect(img.getAttribute("sizes")).toEqual(`${width}px`);
+  });
+
+  it("properly renders the sizes for the default widths", () => {
+    render(<Image image={image} />);
+
+    const img = screen.getByRole("img", {
+      name: /alt text/i,
+    });
+
+    expect(img.getAttribute("sizes")).toEqual(
+      "(max-width: 640px) 100px, (max-width: 768px) 320px, (max-width: 1024px) 640px, (max-width: 1280px) 960px, (max-width: 1536px) 1280px, 1920px"
+    );
+  });
+
+  it(`properly renders the image with 'loading' set to 'eager'.`, () => {
+    render(<Image image={image} loading="eager" />);
+
+    const img = screen.getByRole("img", {
+      name: /alt text/i,
+    });
+
+    expect(img.getAttribute("loading")).toEqual("eager");
+  });
 });
 
 describe("getImageUUID", () => {
@@ -387,7 +426,7 @@ describe("validateRequiredProps", () => {
 
     expect(logMock.mock.calls.length).toBe(1);
     expect(logMock.mock.calls[0][0]).toBe(
-      "Using fixed layout but width and height are not passed as props."
+      "Using fixed layout but neither width nor height is passed as props."
     );
     jest.clearAllMocks();
   });

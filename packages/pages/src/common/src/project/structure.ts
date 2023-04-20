@@ -1,5 +1,6 @@
 import pathLib from "path";
-import _ from "lodash";
+import merge from "lodash/merge.js";
+import { Path } from "./path.js";
 
 /**
  * Defines the folder paths where certain files live, relative to the root of the project.
@@ -7,7 +8,7 @@ import _ from "lodash";
  * @public
  */
 export interface ProjectFilepaths {
-  /** The folder path where the template files live */
+  /** The folder path where all template files live */
   templatesRoot: string;
   /** The folder path where the sites-config files live */
   sitesConfigRoot: string;
@@ -17,6 +18,13 @@ export interface ProjectFilepaths {
   hydrationBundleOutputRoot: string;
   /** The folder path where the compiled server bundles should go */
   serverBundleOutputRoot: string;
+  /**
+   * This is used for the case of multibrand setup within a single repo.
+   *
+   * The subfolder path inside {@link templatesRoot} and {@link sitesConfigRoot}
+   * to scope a build to a subset of templates using specific sites-config folder.
+   */
+  scope?: string;
 }
 
 /**
@@ -64,7 +72,7 @@ export interface ProjectStructureConfig {
   envVarConfig: EnvVar;
 }
 
-const defaultConfig: ProjectStructureConfig = {
+export const defaultProjectStructureConfig: ProjectStructureConfig = {
   filepathsConfig: {
     templatesRoot: "src/templates",
     sitesConfigRoot: "sites-config",
@@ -102,6 +110,10 @@ export class ProjectStructure {
 
   sitesConfigRoot: Path;
   templatesRoot: Path;
+  scope?: string;
+  scopedTemplatesPath?: Path;
+  scopedSitesConfigPath?: Path;
+
   distRoot: Path;
   hydrationBundleOutputRoot: Path;
   serverBundleOutputRoot: Path;
@@ -112,11 +124,23 @@ export class ProjectStructure {
   siteStreamConfig: string;
 
   constructor(config?: Optional<ProjectStructureConfig>) {
-    this.#config = _.merge(defaultConfig, config);
+    this.#config = merge(defaultProjectStructureConfig, config);
     this.sitesConfigRoot = new Path(
       this.#config.filepathsConfig.sitesConfigRoot
     );
     this.templatesRoot = new Path(this.#config.filepathsConfig.templatesRoot);
+
+    const scope = this.#config.filepathsConfig.scope;
+    if (scope) {
+      this.scope = scope;
+      this.scopedSitesConfigPath = new Path(
+        pathLib.join(this.sitesConfigRoot.path, scope)
+      );
+      this.scopedTemplatesPath = new Path(
+        pathLib.join(this.templatesRoot.path, scope)
+      );
+    }
+
     this.distRoot = new Path(this.#config.filepathsConfig.distRoot);
     this.hydrationBundleOutputRoot = new Path(
       this.#config.filepathsConfig.distRoot +
@@ -134,25 +158,4 @@ export class ProjectStructure {
     this.envVarPrefix = this.#config.envVarConfig.envVarPrefix;
     this.siteStreamConfig = this.#config.filenamesConfig.siteStreamConfig;
   }
-}
-
-/**
- * Provides useful methods to operate on a specific property of {@link ProjectFilepathsConfig}.
- *
- * @public
- */
-export class Path {
-  path: string;
-
-  constructor(path: string) {
-    this.path = path;
-  }
-
-  getRelativePath = (to: string): string => {
-    return pathLib.join(".", pathLib.relative(this.path, to));
-  };
-
-  getAbsolutePath = (): string => {
-    return pathLib.resolve(this.path);
-  };
 }

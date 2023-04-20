@@ -92,6 +92,8 @@ interface BaseImageProps {
   imgOverrides?: Record<string, unknown>;
   /** The pass through style of the underlying img tag. */
   style?: React.CSSProperties;
+  /** Set the loading state of the image. */
+  loading?: "eager" | "lazy";
 }
 
 /**
@@ -105,15 +107,16 @@ interface OtherImageProps extends BaseImageProps {
 
 /**
  * The shape of the data passed to {@link Image} when layout is {@link ImageLayoutOption.FIXED}.
- * Extends the {@link BaseImageProps} interface and has the additions of required width and height.
+ * Extends the {@link BaseImageProps} interface and has the additions of a width and height,
+ * at least one of which must be specified.
  */
 interface FixedImageProps extends BaseImageProps {
   /** Specifies how the image is rendered. */
   layout: "fixed";
   /** The absolute width of the image. Only impacts if layout is set to "fixed". */
-  width: number;
+  width?: number;
   /** The absolute height of the image. Only impacts if layout is set to "fixed". */
-  height: number;
+  height?: number;
 }
 
 /**

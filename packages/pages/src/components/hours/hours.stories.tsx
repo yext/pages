@@ -7,10 +7,12 @@ import {
   HOURS_WITH_REOPEN_DATE,
 } from "./sampleData.js";
 
-export default {
+const meta: ComponentMeta<typeof Hours> = {
   title: "components/Hours",
   component: Hours,
-} as ComponentMeta<typeof Hours>;
+};
+
+export default meta;
 
 const Template: ComponentStory<typeof Hours> = (args) => <Hours {...args} />;
 

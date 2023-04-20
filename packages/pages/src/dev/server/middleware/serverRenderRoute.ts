@@ -2,15 +2,17 @@ import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
 import { propsLoader } from "../ssr/propsLoader.js";
 import { urlToFeature } from "../ssr/urlToFeature.js";
-import page404 from "../public/404.js";
-import { featureNameToTemplateModuleInternal } from "../ssr/featureNameToTemplateModuleInternal.js";
-import {
-  renderHeadConfigToString,
-  getLang,
-} from "../../../common/src/template/head.js";
+import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import sendAppHTML from "./sendAppHTML.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
-import templateBase from "../public/templateBase.js";
+import { convertTemplateConfigInternalToFeaturesConfig } from "../../../common/src/feature/features.js";
+import { generateTestDataForPage } from "../ssr/generateTestData.js";
+import { getLocalDataForEntityOrStaticPage } from "../ssr/getLocalData.js";
+import sendStaticPage from "./sendStaticPage.js";
+import findMatchingStaticTemplate from "../ssr/findMatchingStaticTemplate.js";
+import send404 from "./send404.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -20,74 +22,52 @@ type Props = {
 
 export const serverRenderRoute =
   ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
-  async (req, res, next) => {
+  async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
+      const { feature, entityId, locale, staticURL } = urlToFeature(url);
 
-      const { feature, entityId, locale } = urlToFeature(url);
-
-      const templateModuleInternal = await featureNameToTemplateModuleInternal(
-        vite,
-        feature
-      );
-      if (!templateModuleInternal) {
-        console.error(
-          `Cannot find template corresponding to feature: ${feature}`
+      const templateFilepaths =
+        getTemplateFilepathsFromProjectStructure(projectStructure);
+      const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
+        await findMatchingStaticTemplate(vite, staticURL, templateFilepaths);
+      if (matchingStaticTemplate) {
+        sendStaticPage(res, vite, matchingStaticTemplate, locale, url.pathname);
+        return;
+      } else if (!entityId) {
+        send404(
+          res,
+          `Cannot find static template with getPath() equal to "${staticURL}"`
         );
-        return res.status(404).end(page404);
+        return;
       }
 
+      const templateModuleInternal = await findTemplateModuleInternal(
+        vite,
+        (t) => feature === t.config.name,
+        templateFilepaths
+      );
+      if (!templateModuleInternal) {
+        send404(
+          res,
+          `Cannot find template corresponding to feature: ${feature}`
+        );
+        return;
+      }
+      const document = await getDocument(
+        dynamicGenerateData,
+        templateModuleInternal,
+        entityId,
+        locale,
+        projectStructure
+      );
       const props = await propsLoader({
         templateModuleInternal,
         entityId,
         locale,
-        dynamicGenerateData,
-        projectStructure,
+        document,
       });
-
-      if (templateModuleInternal.render) {
-        res
-          .status(200)
-          .type(getContentType(templateModuleInternal, props))
-          .end(templateModuleInternal.render(props));
-        return;
-      }
-
-      const React = await import("react");
-      const ReactDOMServer = await import("react-dom/server");
-
-      const appHtml = ReactDOMServer.renderToString(
-        React.createElement(templateModuleInternal.default || "", props)
-      );
-
-      const headConfig = templateModuleInternal.getHeadConfig
-        ? templateModuleInternal.getHeadConfig(props)
-        : undefined;
-
-      const template = await vite.transformIndexHtml(
-        url.pathname,
-        templateBase
-      );
-
-      // Inject the app-rendered HTML into the template. Only invoke the users headFunction
-      // if they are rendering by way of a default export and not a custom render function.
-      const html = template.replace(`<!--app-html-->`, appHtml).replace(
-        `<!--app-head-->`,
-        `<head>
-            <script type="text/javascript">
-              window._RSS_PROPS_ = ${JSON.stringify(props)};
-              window._RSS_TEMPLATE_ = '${templateModuleInternal.filename}';
-              window._RSS_LANG_ = '${getLang(headConfig, props)}';
-            </script>
-            ${headConfig ? renderHeadConfigToString(headConfig) : ""}
-          </head>`
-      );
-
-      // Send the rendered HTML back.
-      res
-        .status(200)
-        .type(getContentType(templateModuleInternal, props))
-        .end(html);
+      sendAppHTML(res, templateModuleInternal, props, vite, url.pathname);
     } catch (e: any) {
       // If an error is caught, calling next with the error will invoke
       // our error handling middleware which will then handle it.
@@ -95,16 +75,29 @@ export const serverRenderRoute =
     }
   };
 
-/**
- * Returns the content type based on the getPath's extension. Falls back to 'text/html'.
- */
-const getContentType = (
+const getDocument = async (
+  dynamicGenerateData: boolean,
   templateModuleInternal: TemplateModuleInternal<any, any>,
-  props: any
+  entityId: string,
+  locale: string,
+  projectStructure: ProjectStructure
 ) => {
-  // TODO: once custom headers are supported at the template level use that instead,
-  // with a fallback to the current logic.
-  const path = templateModuleInternal.getPath(props);
-  const ext = path.includes(".") ? path.split(".").pop() : "";
-  return ext || "text/html";
+  if (dynamicGenerateData) {
+    const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(
+      templateModuleInternal.config
+    );
+
+    return generateTestDataForPage(
+      process.stdout,
+      featuresConfig,
+      entityId,
+      locale,
+      projectStructure
+    );
+  }
+  return getLocalDataForEntityOrStaticPage({
+    entityId,
+    locale,
+    featureName: templateModuleInternal.config.name,
+  });
 };

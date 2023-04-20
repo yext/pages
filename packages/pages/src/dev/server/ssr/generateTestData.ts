@@ -3,37 +3,90 @@ import { FeaturesConfig } from "../../../common/src/feature/features.js";
 import {
   CLI_BOILERPLATE_BETA_MESSAGE,
   STREAM_DATA_CHUNK_BEGIN,
+  STREAM_DATA_CHUNK_BEGIN_MULTIPLE,
   UPGRADE_MESSAGE_LINE_BEGIN,
   UPGRADE_INSTRUCTIONS_LINE_BEGIN,
 } from "./constants.js";
 import path from "path";
 import fs from "fs";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { getFeaturesConfig } from "../../../generate/features/createFeaturesJson.js";
+import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import {
+  convertTemplateModuleToTemplateModuleInternal,
+  TemplateModuleInternal,
+} from "../../../common/src/template/internal/types.js";
+import { ViteDevServer } from "vite";
+import { loadTemplateModule } from "./loadTemplateModule.js";
+import { TemplateModuleCollection } from "../../../vite-plugin/build/closeBundle/moduleLoader.js";
 
 /**
- * generateTestData will run yext sites generate-test-data and return true in
+ * generateTestData will run yext pages generate-test-data and return true in
  * the event of a successful run and false in the event of a failure.
+ *
+ * @param hostname The hostname of the site
+ * @returns a boolean on whether test data generation was successful
  */
-export const generateTestData = async (): Promise<boolean> => {
+export const generateTestData = async (hostname?: string): Promise<boolean> => {
   const command = "yext";
-  const args = ["sites", "generate-test-data"];
+  let args = ["pages", "generate-test-data"];
+  if (hostname) {
+    args = args.concat("--hostname", hostname);
+  }
 
   async function generate() {
     const childProcess = spawn(command, args);
     const exitCode = await new Promise((resolve) => {
       childProcess.on("close", resolve);
     });
-
-    if (exitCode) {
-      return false;
-    }
-
-    return true;
+    return !!exitCode;
   }
 
-  return new Promise((resolve) => {
-    resolve(generate());
-  });
+  return generate();
+};
+
+export const generateTestDataForSlug = async (
+  stdout: NodeJS.WriteStream,
+  vite: ViteDevServer,
+  slug: string,
+  locale: string,
+  projectStructure: ProjectStructure
+): Promise<any> => {
+  const templateFilepaths =
+    getTemplateFilepathsFromProjectStructure(projectStructure);
+  const templateModuleCollection = await loadTemplateModuleCollectionUsingVite(
+    vite,
+    templateFilepaths
+  );
+  const featuresConfig = await getFeaturesConfig(templateModuleCollection);
+  const featuresConfigForEntityPages: FeaturesConfig = {
+    features: featuresConfig.features.filter((f) => "entityPageSet" in f),
+    streams: featuresConfig.streams,
+  };
+  const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
+  args.push("--slug", slug);
+
+  const parsedData = await spawnTestDataCommand(stdout, "yext", args);
+  return getDocumentByLocale(parsedData, locale);
+};
+
+const loadTemplateModuleCollectionUsingVite = async (
+  vite: ViteDevServer,
+  templateFilepaths: string[]
+): Promise<TemplateModuleCollection> => {
+  const templateModules: TemplateModuleInternal<any, any>[] = await Promise.all(
+    templateFilepaths.map(async (templateFilepath) => {
+      const templateModule = await loadTemplateModule(vite, templateFilepath);
+      return convertTemplateModuleToTemplateModuleInternal(
+        templateFilepath,
+        templateModule,
+        false
+      );
+    })
+  );
+  return templateModules.reduce((prev, module) => {
+    return prev.set(module.config.name, module);
+  }, new Map());
 };
 
 export const generateTestDataForPage = async (
@@ -43,28 +96,30 @@ export const generateTestDataForPage = async (
   locale: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
-  const siteStreamPath = path.resolve(
-    process.cwd(),
-    projectStructure.sitesConfigRoot.getAbsolutePath() +
-      "/" +
-      projectStructure.siteStreamConfig
-  );
-
   const featureName = featuresConfig.features[0]?.name;
-  const command = "yext";
-  let args = addCommonArgs(featuresConfig, featureName, locale);
+  const args = getCommonArgs(featuresConfig, projectStructure);
 
   if (entityId) {
-    args = args.concat("--entityIds", entityId);
+    args.push("--entityIds", entityId);
   }
 
-  if (fs.existsSync(siteStreamPath)) {
-    const siteStream = prepareJsonForCmd(
-      JSON.parse(fs.readFileSync(siteStreamPath).toString())
-    );
-    args = args.concat("--siteStreamConfig", siteStream);
+  const isAlternateLanguageFields =
+    !!featuresConfig.features[0]?.alternateLanguageFields;
+  if (!isAlternateLanguageFields) {
+    args.push("--locale", locale);
   }
 
+  args.push("--featureName", `"${featureName}"`);
+
+  const parsedData = await spawnTestDataCommand(stdout, "yext", args);
+  return getDocumentByLocale(parsedData, locale);
+};
+
+async function spawnTestDataCommand(
+  stdout: NodeJS.WriteStream,
+  command: string,
+  args: string[]
+): Promise<undefined | any> {
   return new Promise((resolve) => {
     const childProcess = spawn(command, args, {
       stdio: ["inherit", "pipe", "inherit"],
@@ -90,7 +145,10 @@ export const generateTestDataForPage = async (
         .filter((l) => !l.startsWith(CLI_BOILERPLATE_BETA_MESSAGE));
 
       // Check to see if the test data has begun to be printed in this chunk.
-      const dataStartIndex = lines.indexOf(STREAM_DATA_CHUNK_BEGIN);
+      const dataStartIndex = Math.max(
+        lines.indexOf(STREAM_DATA_CHUNK_BEGIN),
+        lines.indexOf(STREAM_DATA_CHUNK_BEGIN_MULTIPLE)
+      );
       if (dataStartIndex !== -1) {
         foundTestData = true;
         testData = lines.slice(dataStartIndex).join("\n");
@@ -140,27 +198,34 @@ export const generateTestDataForPage = async (
         );
       }
 
+      // note: Yext CLI v0.299^ can return multiple documents as an array
       resolve(parsedData);
     });
   });
-};
+}
 
-const addCommonArgs = (
+const getCommonArgs = (
   featuresConfig: FeaturesConfig,
-  featureName: string,
-  locale: string
+  projectStructure: ProjectStructure
 ) => {
-  const args = [
-    "pages",
-    "generate-test-data",
-    "--featureName",
-    `"${featureName}"`,
-    "--featuresConfig",
-    prepareJsonForCmd(featuresConfig),
-    "--locale",
-    locale,
-    "--printDocuments",
-  ];
+  const args = ["pages", "generate-test-data", "--printDocuments"];
+
+  args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
+
+  const sitesConfigPath =
+    projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
+    projectStructure.sitesConfigRoot.getAbsolutePath();
+  const siteStreamPath = path.resolve(
+    process.cwd(),
+    path.join(sitesConfigPath, projectStructure.siteStreamConfig)
+  );
+  if (fs.existsSync(siteStreamPath)) {
+    const siteStream = prepareJsonForCmd(
+      JSON.parse(fs.readFileSync(siteStreamPath).toString())
+    );
+    args.push("--siteStreamConfig", siteStream);
+  }
+
   return args;
 };
 
@@ -174,4 +239,17 @@ const prepareJsonForCmd = (json: any) => {
     jsonString = `'${JSON.stringify(json)}'`;
   }
   return jsonString;
+};
+
+const getDocumentByLocale = (parsedData: any, locale: string): any => {
+  if (Array.isArray(parsedData)) {
+    const documentsForLocale = parsedData.filter((d) => d.locale === locale);
+    if (documentsForLocale.length === 0) {
+      throw new Error(`Could not find document for locale: "${locale}"`);
+    } else if (documentsForLocale.length > 1) {
+      throw new Error(`Multiple documents found for locale: "${locale}"`);
+    }
+    return documentsForLocale[0];
+  }
+  return parsedData;
 };

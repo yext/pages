@@ -94,16 +94,16 @@ export const getDirections = (
       return getDirectionsBing(query, config.route);
     }
     default: {
-      const listingsMap: { [key in ListingPublisher]?: string } | undefined =
-        listings?.reduce(
-          (obj, listing) => ({
-            ...obj,
-            [listing.publisher]: listing.listingUrl,
-          }),
-          {}
-        );
-      if (listingsMap[ListingPublisherOption.GOOGLEMYBUSINESS]) {
-        return listingsMap[ListingPublisherOption.GOOGLEMYBUSINESS];
+      const gmbListing = listings.find(
+        (listing) =>
+          listing &&
+          listing.publisher &&
+          listing.publisher.toUpperCase() ===
+            ListingPublisherOption.GOOGLEMYBUSINESS
+      );
+
+      if (gmbListing && gmbListing.listingUrl) {
+        return gmbListing.listingUrl;
       }
 
       if (googlePlaceId) {

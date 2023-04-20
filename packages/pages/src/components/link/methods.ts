@@ -1,5 +1,4 @@
-import { ReactNode } from "react";
-import { LinkType, CTA } from "./types.js";
+import { LinkProps, HREFLinkProps, CTA } from "./types.js";
 
 /**
  * Get the link from a CTA
@@ -19,27 +18,6 @@ const getHref = (cta: CTA): string => {
 
   return cta.link;
 };
-
-/**
- * CTA constructor
- *
- * @param {string} link
- * @param {LinkType} linkType
- * @param {string} label
- *
- * @returns {boolean}
- */
-export function cta(
-  link: string,
-  linkType: LinkType = LinkType.URL,
-  label?: ReactNode
-): CTA {
-  return {
-    link,
-    linkType: linkType,
-    label: typeof label === "string" ? label : "",
-  };
-}
 
 /**
  * Checks if is a valid email address
@@ -66,4 +44,11 @@ const reverse = (string: string): string => {
   return o;
 };
 
-export { getHref, isEmail, reverse };
+/**
+ * Type predicate for distinguishing between data cases.
+ */
+const isHREFProps = (props: LinkProps): props is HREFLinkProps => {
+  return "href" in props;
+};
+
+export { getHref, isEmail, isHREFProps, reverse };
