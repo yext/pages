@@ -557,7 +557,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The following NPM package may be included in this product:
 
- - module-from-string@3.3.0
+ - module-from-string@3.2.1
 
 This package contains the following license and notice below:
 
@@ -1436,7 +1436,7 @@ END OF TERMS AND CONDITIONS
 
 The following NPM package may be included in this product:
 
- - vite@3.1.3
+ - vite@3.1.0
 
 This package contains the following license and notice below:
 
