@@ -47,7 +47,9 @@ export const getPath: GetPath<TemplateProps> = ({ document }) => {
 const Location: Template<TemplateRenderProps> = ({ document }) => {
   const { address } = document;
 
-  return <>{address.line1}</>;
+  return (
+    <div className="text-4xl font-bold bg-red-500 m-4 p-4">{address.line1}</div>
+  );
 };
 
 export default Location;
