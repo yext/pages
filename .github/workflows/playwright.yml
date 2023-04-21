@@ -9,7 +9,7 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
         node-version: [17.x, 18.x, 19.x]
-        site: ['locations-site', 'multibrand-site']
+        site: [locations-site, multibrand-site]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
