@@ -1,12 +1,12 @@
 {
-  "name": "static-site",
+  "name": "locations-site",
   "version": "0.0.0",
   "description": "An example repository to help users get started with React development on Yext Pages",
   "author": "sumo@yext.com",
   "license": "BSD-3-Clause",
   "type": "module",
   "scripts": {
-    "dev": "pages dev --local",
+    "dev": "pages dev --local --no-prod-url",
     "playwright": "playwright test",
     "fmt": "prettier -w .",
     "build-test-site": "pages build"

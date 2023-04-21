@@ -1,0 +1,20 @@
+{
+  "location": [
+    "location-stream__en__015e8f6f9527c055ccdc1c3cf47601fc.json",
+    "location-stream__en__d39e82fcfa7df87b63b6a71b0ed852b3.json",
+    "location-stream__en__e00feaa6ec42e26f69f4b10f796dcf78.json",
+    "location-stream__en__1e1ca06b82ebef3f766cb2e2b03b1438.json",
+    "location-stream__en__8c8bb1f019c55488908e05593b010800.json",
+    "location-stream__en__40930c16cecc06e2fa6401d25be06421.json",
+    "location-stream__en__08a108ae1919ed2a948505285df190a2.json",
+    "location-stream__en__515ce4964aa95b3b326b4e1182d81ebf.json",
+    "location-stream__en__95954fa84bca45990389067a7d5e3537.json",
+    "location-stream__en__1fac3d2b95bfe3729b6b7f06215f6e5c.json"
+  ],
+  "robots": [
+    "cog-internal-feature-static-file-generation-robots__en__cfcd208495d565ef66e7dff9f98764da.json"
+  ],
+  "turtlehead-tacos": [
+    "cog-internal-feature-static-file-generation-turtlehead-tacos__en__cfcd208495d565ef66e7dff9f98764da.json"
+  ]
+}
