@@ -1,9 +1,6 @@
 name: Build and Test (Pages)
 
-on:
-  push:
-    branches-ignore:
-      - "main"
+on: [push, pull_request]
 
 jobs:
   call_build:
