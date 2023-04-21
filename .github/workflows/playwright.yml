@@ -46,7 +46,7 @@ jobs:
           message: Commit new snapshots to ${{ github.head_ref }} for ${{ matrix.os }}
           add: playground/locations-site/__tests__/*
           push: true
-          pull: --rebase
+          pull: --rebase --autostash
           default_author: github_actions 
 
       - name: Upload Playwright Report
