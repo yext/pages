@@ -17,3 +17,9 @@ test("static page loads", async ({ page }) => {
   await expect(page.locator("body > div")).toHaveText("Static Page");
   await expect(page).toHaveScreenshot();
 });
+
+test("entity page loads", async ({ page }) => {
+  await page.goto("/location/location7");
+  await expect(page.locator("body > div")).toHaveText("622 Broadway");
+  await expect(page).toHaveScreenshot();
+});

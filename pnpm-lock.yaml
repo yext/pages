@@ -299,7 +299,7 @@ importers:
 
   packages/plugins: {}
 
-  playground/static-site:
+  playground/locations-site:
     dependencies:
       react:
         specifier: ^17.0.2
@@ -316,7 +316,7 @@ importers:
         version: 17.0.17
       '@vitejs/plugin-react':
         specifier: ^2.1.0
-        version: 2.1.0(vite@3.1.0)
+        version: 2.1.0(vite@3.1.3)
       '@yext/pages':
         specifier: workspace:*
         version: link:../../packages/pages
@@ -334,7 +334,7 @@ importers:
         version: 4.8.3
       vite:
         specifier: ^3.1.0
-        version: 3.1.0
+        version: 3.1.3
 
 packages:
 
@@ -849,7 +849,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.9
-      '@babel/helper-plugin-utils': 7.10.4
+      '@babel/helper-plugin-utils': 7.20.2
       '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@7.12.9)
       '@babel/plugin-transform-parameters': 7.21.3(@babel/core@7.12.9)
     dev: true
@@ -4901,24 +4901,6 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.36.2
       eslint-visitor-keys: 3.4.0
-    dev: true
-
-  /@vitejs/plugin-react@2.1.0(vite@3.1.0):
-    resolution: {integrity: sha512-am6rPyyU3LzUYne3Gd9oj9c4Rzbq5hQnuGXSMT6Gujq45Il/+bunwq3lrB7wghLkiF45ygMwft37vgJ/NE8IAA==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    peerDependencies:
-      vite: ^3.0.0
-    dependencies:
-      '@babel/core': 7.19.0
-      '@babel/plugin-transform-react-jsx': 7.21.0(@babel/core@7.19.0)
-      '@babel/plugin-transform-react-jsx-development': 7.18.6(@babel/core@7.19.0)
-      '@babel/plugin-transform-react-jsx-self': 7.21.0(@babel/core@7.19.0)
-      '@babel/plugin-transform-react-jsx-source': 7.19.6(@babel/core@7.19.0)
-      magic-string: 0.26.7
-      react-refresh: 0.14.0
-      vite: 3.1.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /@vitejs/plugin-react@2.1.0(vite@3.1.3):
@@ -14706,33 +14688,6 @@ packages:
       is-buffer: 2.0.5
       unist-util-stringify-position: 2.0.3
       vfile-message: 2.0.4
-    dev: true
-
-  /vite@3.1.0:
-    resolution: {integrity: sha512-YBg3dUicDpDWFCGttmvMbVyS9ydjntwEjwXRj2KBFwSB8SxmGcudo1yb8FW5+M/G86aS8x828ujnzUVdsLjs9g==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
-    peerDependencies:
-      less: '*'
-      sass: '*'
-      stylus: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      less:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      esbuild: 0.15.7
-      postcss: 8.4.23
-      resolve: 1.22.2
-      rollup: 2.78.1
-    optionalDependencies:
-      fsevents: 2.3.2
     dev: true
 
   /vite@3.1.3:
