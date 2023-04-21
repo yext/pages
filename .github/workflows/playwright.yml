@@ -9,6 +9,7 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
         node-version: [17.x, 18.x, 19.x]
+        site: ['locations-site', 'multibrand-site']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -31,9 +32,7 @@ jobs:
         run: pnpm exec playwright install
   
       - name: Run Playwright tests
-        run: |
-          pnpm --filter locations-site run playwright
-          pnpm --filter multibrand-site run playwright
+        run: pnpm --filter ${{ matrix.site }} run playwright
 
       # This step will commit any new snapshots that weren't taken locally.
       # i.e. snapshots for Windows and Linux machines
@@ -56,6 +55,4 @@ jobs:
           retention-days: 30   
 
       - name: Ensure build doesn't error
-        run: |
-          pnpm --filter locations-site run build-test-site
-          pnpm --filter multibrand-site run build-test-site
+        run: pnpm --filter ${{ site }} run build-test-site
