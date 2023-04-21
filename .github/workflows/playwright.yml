@@ -44,7 +44,7 @@ jobs:
         if: ${{ failure() && github.ref_name != 'main' }}
         with:
           message: Commit new snapshots for ${{ matrix.os }}
-          add: playground/locations-site/__tests__/*
+          add: playground/*/__tests__/*
           push: true
           pull: --rebase --autostash
           default_author: github_actions 
