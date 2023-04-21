@@ -55,4 +55,4 @@ jobs:
           retention-days: 30
 
       - name: Ensure build doesn't error
-        run: pnpm --filter ${{ site }} run build-test-site
+        run: pnpm --filter ${{ matrix.site }} run build-test-site
