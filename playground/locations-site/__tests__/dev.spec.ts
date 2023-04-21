@@ -27,7 +27,7 @@ test("static page loads", async ({ page }) => {
 
 test("entity page loads", async ({ page }) => {
   await page.goto("/location/location7");
-  await waitForVite();
+  await waitForStyling();
   await expect(page.locator("body > div")).toHaveText("622 Broadway");
   await expect(page).toHaveScreenshot();
 });
