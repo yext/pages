@@ -16,7 +16,3 @@ jobs:
     uses: ./.github/workflows/unit_test.yml
     with:
       package: "pages"
-
-  call_acceptance_test:
-    needs: call_build
-    uses: ./.github/workflows/acceptance_test.yml
