@@ -336,6 +336,43 @@ importers:
         specifier: ^3.1.0
         version: 3.1.3
 
+  playground/multibrand-site:
+    dependencies:
+      react:
+        specifier: ^17.0.2
+        version: 17.0.2
+      react-dom:
+        specifier: ^17.0.2
+        version: 17.0.2(react@17.0.2)
+    devDependencies:
+      '@types/react':
+        specifier: ^17.0.49
+        version: 17.0.49
+      '@types/react-dom':
+        specifier: ^17.0.17
+        version: 17.0.17
+      '@vitejs/plugin-react':
+        specifier: ^2.1.0
+        version: 2.1.0(vite@3.1.3)
+      '@yext/pages':
+        specifier: workspace:*
+        version: link:../../packages/pages
+      autoprefixer:
+        specifier: ^10.4.8
+        version: 10.4.8(postcss@8.4.23)
+      postcss:
+        specifier: ^8.4.23
+        version: 8.4.23
+      tailwindcss:
+        specifier: ^3.1.8
+        version: 3.1.8(postcss@8.4.23)
+      typescript:
+        specifier: ^4.8.3
+        version: 4.8.3
+      vite:
+        specifier: ^3.1.0
+        version: 3.1.3
+
 packages:
 
   /@ampproject/remapping@2.2.1:
