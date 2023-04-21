@@ -43,7 +43,7 @@ jobs:
         if: failure()
         with:
           message: "Commit new snapshots"
-          add: 'playground/static-site/__tests__/*'
+          add: 'playground/locations-site/__tests__/*'
           push: true
           default_author: github_actions 
 
