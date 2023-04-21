@@ -1,0 +1,26 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "sunglasses",
+    "streamId": "oakley-stream",
+    "templateType": "JS"
+  },
+  "businessId": 3350634,
+  "id": "7727330889957006582",
+  "key": "0:sunglasses:knowledgeGraph:61073911:en",
+  "locale": "en",
+  "meta": {
+    "entityType": {
+      "id": "ce_sunglasses",
+      "uid": 132047
+    },
+    "locale": "en"
+  },
+  "name": "Kato",
+  "siteDomain": "sunglasses.oakley.com",
+  "siteId": 0,
+  "siteInternalHostName": "sunglasses.oakley.com",
+  "uid": 61073911
+}
