@@ -41,7 +41,7 @@ jobs:
       # i.e. snapshots for Windows and Linux machines
       - name: Commit New Snapshots
         uses: EndBug/add-and-commit@v9
-        if: ${{ failure() && github.head_ref != 'main' }}
+        if: ${{ failure() && github.ref_name != 'main' }}
         with:
           message: Commit new snapshots for ${{ matrix.os }}
           add: playground/locations-site/__tests__/*
