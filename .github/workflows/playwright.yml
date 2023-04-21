@@ -5,6 +5,7 @@ on: workflow_call
 jobs:
   acceptance:
     strategy:
+      fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
         node-version: [17.x, 18.x, 19.x]

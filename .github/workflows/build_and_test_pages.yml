@@ -1,6 +1,10 @@
 name: Build and Test (Pages)
 
-on: push
+on: 
+  push:
+    branches:
+    - main
+  pull_request:
 
 jobs:
   call_build:
