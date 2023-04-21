@@ -56,4 +56,6 @@ jobs:
           retention-days: 30   
 
       - name: Ensure build doesn't error
-        run: pnpm run build-test-site
+        run: |
+          pnpm --filter locations-site run build-test-site
+          pnpm --filter multibrand-site run build-test-site
