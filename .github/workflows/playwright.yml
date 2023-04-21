@@ -47,6 +47,7 @@ jobs:
       # i.e. snapshots for Windows and Linux machines
       - name: Commit New Snapshots
         uses: EndBug/add-and-commit@v9
+        if: failure()
         with:
           message: "Commit new snapshots"
           add: 'playground/static-site/__tests__/*'
