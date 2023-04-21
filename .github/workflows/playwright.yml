@@ -30,7 +30,7 @@ jobs:
 
       - name: Install playwright browsers
         run: pnpm exec playwright install
-  
+
       - name: Run Playwright tests
         run: pnpm --filter ${{ matrix.site }} run playwright
 
@@ -44,7 +44,7 @@ jobs:
           add: playground/*
           push: true
           pull: --rebase --autostash
-          default_author: github_actions 
+          default_author: github_actions
 
       - name: Upload Playwright Reports
         uses: actions/upload-artifact@v3
@@ -52,7 +52,7 @@ jobs:
         with:
           name: playwright-reports
           path: playground/*/playwright-report/
-          retention-days: 30   
+          retention-days: 30
 
       - name: Ensure build doesn't error
         run: pnpm --filter ${{ site }} run build-test-site
