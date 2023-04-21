@@ -7,6 +7,7 @@ const waitForStyling = async () => {
 const LOCATION_ID = "location7";
 
 test("index page loads", async ({ page }) => {
+  throw new Error("intentional error");
   await page.goto("/");
   await waitForStyling();
   await expect(page).toHaveTitle(/Pages Development Page/);
