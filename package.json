@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/yext/pages#readme",
   "devDependencies": {
+    "@playwright/test": "^1.32.3",
     "@types/fs-extra": "^9.0.13",
     "@types/lodash": "^4.14.184",
     "@types/minimist": "^1.2.2",
@@ -60,5 +61,5 @@
     "eslint-plugin-react": "^7.31.7",
     "tsx": "^3.9.0"
   },
-  "packageManager": "pnpm@7.5.0"
+  "packageManager": "pnpm@8.3.1"
 }

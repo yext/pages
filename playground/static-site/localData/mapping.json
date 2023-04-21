@@ -1,5 +1,8 @@
 {
-  "static": [
-    "cog-internal-feature-static-file-generation-static__cfcd208495d565ef66e7dff9f98764da.json"
+  "robots": [
+    "cog-internal-feature-static-file-generation-robots__en__cfcd208495d565ef66e7dff9f98764da.json"
+  ],
+  "turtlehead-tacos": [
+    "cog-internal-feature-static-file-generation-turtlehead-tacos__en__cfcd208495d565ef66e7dff9f98764da.json"
   ]
 }

@@ -1,7 +1,14 @@
 {
   "features": [
     {
-      "name": "static",
+      "name": "robots",
+      "templateType": "JS",
+      "staticPage": {
+        "plugin": {}
+      }
+    },
+    {
+      "name": "turtlehead-tacos",
       "templateType": "JS",
       "staticPage": {
         "plugin": {}
