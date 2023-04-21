@@ -1,27 +1,26 @@
 import { test, expect } from "@playwright/test";
 
-// gives the page time to hydrate
-const waitForVite = async () => {
+const waitForStyling = async () => {
   await new Promise((r) => setTimeout(r, 500));
 };
 
 test("index page loads", async ({ page }) => {
   await page.goto("/");
-  await waitForVite();
+  await waitForStyling();
   await expect(page).toHaveTitle(/Pages Development Page/);
   await expect(page).toHaveScreenshot();
 });
 
 test("robots page loads", async ({ page }) => {
   await page.goto("/robots.txt");
-  await waitForVite();
+  await waitForStyling();
   expect(page.locator("pre")).toHaveText("robots");
   await expect(page).toHaveScreenshot();
 });
 
 test("static page loads", async ({ page }) => {
   await page.goto("/index.html");
-  await waitForVite();
+  await waitForStyling();
   await expect(page.locator("body > div")).toHaveText("Static Page");
   await expect(page).toHaveScreenshot();
 });
