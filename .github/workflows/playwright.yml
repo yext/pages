@@ -47,9 +47,6 @@ jobs:
           push: true
           default_author: github_actions 
 
-      - name: Ensure build doesn't error
-        run: pnpm run build-test-site
-
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v3
         if: always()
@@ -57,3 +54,6 @@ jobs:
           name: playwright-report
           path: playground/locations-site/playwright-report/
           retention-days: 30   
+
+      - name: Ensure build doesn't error
+        run: pnpm run build-test-site
