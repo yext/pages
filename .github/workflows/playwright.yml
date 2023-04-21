@@ -44,7 +44,7 @@ jobs:
         with:
           message: "Commit new snapshots to ${{ github.head_ref }}"
           add: 'playground/locations-site/__tests__/*'
-          push: origin/${{ github.head_ref }} 
+          push: true
           default_author: github_actions 
 
       - name: Upload Playwright Report
