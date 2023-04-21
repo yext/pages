@@ -29,7 +29,6 @@ jobs:
       # Currently the build does not work (on Windows) and will replace the
       # downloaded build artifact without any warnings/errors.
       - run: pnpm i --ignore-scripts
-      - run: ls ./node_modules/@yext/pages/dist/bin
 
       - name: Install playwright browsers
         run: pnpm exec playwright install
@@ -46,7 +45,7 @@ jobs:
         if: ${{ failure() && github.ref_name != 'main' }}
         with:
           message: Commit new snapshots for ${{ matrix.os }}
-          add: playground/*/__tests__/*
+          add: playground/*
           push: true
           pull: --rebase --autostash
           default_author: github_actions 
