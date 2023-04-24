@@ -1,9 +1,6 @@
 name: Build and Test (Pages)
 
-on:
-  push:
-    branches-ignore:
-      - "main"
+on: push
 
 jobs:
   call_build:
@@ -16,7 +13,7 @@ jobs:
     uses: ./.github/workflows/unit_test.yml
     with:
       package: "pages"
-
-  call_acceptance_test:
+  
+  call_playwright:
     needs: call_build
-    uses: ./.github/workflows/acceptance_test.yml
+    uses: ./.github/workflows/playwright.yml

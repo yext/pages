@@ -1,45 +1,61 @@
 name: Playwright Tests
 
-on: [push, pull_request]
+on: workflow_call
 
 jobs:
-  test:
+  acceptance:
     strategy:
+      fail-fast: false
       matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
         node-version: [17.x, 18.x, 19.x]
-    timeout-minutes: 60
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@v3
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
-
-      - name: Build with NodeJS ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2.2.4
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          path: packages/pages/dist
 
-      - name: Install deps and build
-        run: pnpm i && pnpm run build
-
-      - name: Install again to link deps
-        run: pnpm i
+      # It's important to not run the build for @yext/pages on Windows.
+      # Currently the build does not work (on Windows) and will replace the
+      # downloaded build artifact without any warnings/errors.
+      - run: pnpm i --ignore-scripts
 
       - name: Install playwright browsers
         run: pnpm exec playwright install
+  
+      - name: Locations Site Playwright
+        run: pnpm --filter locations-site run playwright
 
-      - name: Run Playwright tests
-        run: |
-          pnpm --filter locations-site run playwright
-          pnpm --filter multibrand-site run playwright
+      - name: Multibrand Playwright
+        if: success() || failure()
+        run: pnpm --filter multibrand-site run playwright
+
+      # This step will commit any new snapshots that weren't taken locally.
+      # i.e. snapshots for Windows and Linux machines
+      - name: Commit New Snapshots
+        uses: EndBug/add-and-commit@v9
+        if: ${{ failure() && github.ref_name != 'main' }}
+        with:
+          message: Commit new snapshots for ${{ matrix.os }}
+          add: playground/*
+          push: true
+          pull: --rebase --autostash
+          default_author: github_actions 
 
       - name: Upload Playwright Reports
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: playwright-reports
+          name: playwright-reports-${{ matrix.os }}-${{ matrix.node-version }}
           path: playground/*/playwright-report/
           retention-days: 30
+
+      - name: Ensure build doesn't error
+        run: pnpm --filter "./playground/*" run build-test-site

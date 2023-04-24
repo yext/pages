@@ -1,14 +1,6 @@
 {
   "features": [
     {
-      "name": "sunglasses",
-      "streamId": "ray-ban-stream",
-      "templateType": "JS",
-      "entityPageSet": {
-        "plugin": {}
-      }
-    },
-    {
       "name": "robots",
       "templateType": "JS",
       "staticPage": {
@@ -19,6 +11,14 @@
       "name": "turtlehead-tacos",
       "templateType": "JS",
       "staticPage": {
+        "plugin": {}
+      }
+    },
+    {
+      "name": "sunglasses",
+      "streamId": "ray-ban-stream",
+      "templateType": "JS",
+      "entityPageSet": {
         "plugin": {}
       }
     }
