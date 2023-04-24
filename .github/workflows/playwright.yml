@@ -34,7 +34,7 @@ jobs:
         run: pnpm --filter locations-site run playwright
 
       - name: Multibrand Playwright
-        if: failure()
+        if: success() || failure()
         run: pnpm --filter multibrand-site run playwright
 
       # This step will commit any new snapshots that weren't taken locally.
@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: playwright-reports
+          name: playwright-reports-${{ matrix.os }}-${{ matrix.node-version }}
           path: playground/*/playwright-report/
           retention-days: 30
 
