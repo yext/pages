@@ -40,7 +40,7 @@ jobs:
         uses: EndBug/add-and-commit@v9
         if: ${{ failure() && github.ref_name != 'main' }}
         with:
-          message: Commit new snapshots for ${{ matrix.os }} and site ${{ matrix.site }}
+          message: Commit snapshots for ${{ matrix.site }}, ${{ matrix.os }}, ${{ matrix.node-version }}
           add: playground/*
           push: true
           pull: --rebase --autostash
@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: playwright-report-${{ matrix.site }}
+          name: playwright-report-${{ matrix.site }}-${{ matrix.os }}-${{ matrix.node-version }}
           path: playground/${{ matrix.site }}/playwright-report/
           retention-days: 30
 
