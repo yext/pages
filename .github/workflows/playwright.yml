@@ -9,7 +9,6 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
         node-version: [17.x, 18.x, 19.x]
-        site: [locations-site, multibrand-site]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -30,9 +29,11 @@ jobs:
 
       - name: Install playwright browsers
         run: pnpm exec playwright install
-
+  
       - name: Run Playwright tests
-        run: pnpm --filter ${{ matrix.site }} run playwright
+        run: |
+          pnpm --filter locations-site run playwright
+          pnpm --filter multibrand-site run playwright
 
       # This step will commit any new snapshots that weren't taken locally.
       # i.e. snapshots for Windows and Linux machines
@@ -40,19 +41,21 @@ jobs:
         uses: EndBug/add-and-commit@v9
         if: ${{ failure() && github.ref_name != 'main' }}
         with:
-          message: Commit snapshots for ${{ matrix.site }}, ${{ matrix.os }}, ${{ matrix.node-version }}
+          message: Commit new snapshots for ${{ matrix.os }}
           add: playground/*
           push: true
           pull: --rebase --autostash
-          default_author: github_actions
+          default_author: github_actions 
 
       - name: Upload Playwright Reports
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: playwright-report-${{ matrix.site }}-${{ matrix.os }}-${{ matrix.node-version }}
-          path: playground/${{ matrix.site }}/playwright-report/
-          retention-days: 30
+          name: playwright-reports
+          path: playground/*/playwright-report/
+          retention-days: 30   
 
       - name: Ensure build doesn't error
-        run: pnpm --filter ${{ matrix.site }} run build-test-site
+        run: |
+          pnpm --filter locations-site run build-test-site
+          pnpm --filter multibrand-site run build-test-site
