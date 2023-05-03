@@ -1,0 +1,35 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "location",
+    "streamId": "location-stream",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "Chicago",
+    "countryCode": "US",
+    "line1": "555 W Roosevelt Rd",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "Illinois",
+    "postalCode": "60607",
+    "region": "IL"
+  },
+  "businessId": 3795112,
+  "id": "location11",
+  "key": "0:location:knowledgeGraph:49877193:en",
+  "locale": "en",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "slug": "il/chicago/location11",
+  "uid": 49877193
+}

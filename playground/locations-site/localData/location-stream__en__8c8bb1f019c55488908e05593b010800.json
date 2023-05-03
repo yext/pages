@@ -1,0 +1,35 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "location",
+    "streamId": "location-stream",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "San Francisco",
+    "countryCode": "US",
+    "line1": "1717 Harrison St",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "California",
+    "postalCode": "94103",
+    "region": "CA"
+  },
+  "businessId": 3795112,
+  "id": "location8",
+  "key": "0:location:knowledgeGraph:49877189:en",
+  "locale": "en",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "slug": "ca/san-francisco/location8",
+  "uid": 49877189
+}

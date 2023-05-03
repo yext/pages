@@ -1,0 +1,35 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "location",
+    "streamId": "location-stream",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "Miami",
+    "countryCode": "US",
+    "line1": "11905 S Dixie Hwy",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "Florida",
+    "postalCode": "33156",
+    "region": "FL"
+  },
+  "businessId": 3795112,
+  "id": "location13",
+  "key": "0:location:knowledgeGraph:49877191:en",
+  "locale": "en",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "slug": "fl/miami/location13",
+  "uid": 49877191
+}

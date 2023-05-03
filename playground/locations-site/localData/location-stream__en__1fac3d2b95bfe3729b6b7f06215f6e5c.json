@@ -1,0 +1,35 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "location",
+    "streamId": "location-stream",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "New York",
+    "countryCode": "US",
+    "line1": "1281 Lexington Avenue",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "New York",
+    "postalCode": "10028",
+    "region": "NY"
+  },
+  "businessId": 3795112,
+  "id": "location2",
+  "key": "0:location:knowledgeGraph:49877195:en",
+  "locale": "en",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "slug": "ny/new-york/location2",
+  "uid": 49877195
+}
