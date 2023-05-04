@@ -32,7 +32,14 @@ export const serverRenderRoute =
       const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
         await findMatchingStaticTemplate(vite, staticURL, templateFilepaths);
       if (matchingStaticTemplate) {
-        sendStaticPage(res, vite, matchingStaticTemplate, locale, url.pathname);
+        sendStaticPage(
+          res,
+          vite,
+          matchingStaticTemplate,
+          locale,
+          url.pathname,
+          projectStructure
+        );
         return;
       } else if (!entityId) {
         send404(
@@ -67,7 +74,14 @@ export const serverRenderRoute =
         locale,
         document,
       });
-      sendAppHTML(res, templateModuleInternal, props, vite, url.pathname);
+      sendAppHTML(
+        res,
+        templateModuleInternal,
+        props,
+        vite,
+        url.pathname,
+        projectStructure
+      );
     } catch (e: any) {
       // If an error is caught, calling next with the error will invoke
       // our error handling middleware which will then handle it.
