@@ -1,15 +1,19 @@
-import React from "react";
-import ReactDOMServer from "react-dom/server.js";
 import { ViteDevServer } from "vite";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
-import { TemplateRenderProps } from "../../../common/src/template/types.js";
-import templateBase from "../public/templateBase.js";
+import {
+  RenderTemplate,
+  TemplateRenderProps,
+} from "../../../common/src/template/types.js";
 import {
   renderHeadConfigToString,
   getLang,
 } from "../../../common/src/template/head.js";
 import { Response } from "express-serve-static-core";
 import { getContentType } from "./getContentType.js";
+import { getGlobalClientServerRenderTemplates } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { ProjectStructure } from "../../../common/src/project/structure.js";
+import fs from "node:fs";
+import send404 from "./send404.js";
 
 /**
  * Renders the HTML for a given {@link TemplateModuleInternal}
@@ -20,7 +24,8 @@ export default async function sendAppHTML(
   templateModuleInternal: TemplateModuleInternal<any, any>,
   props: TemplateRenderProps,
   vite: ViteDevServer,
-  pathname: string
+  pathname: string,
+  projectStructure: ProjectStructure
 ) {
   if (templateModuleInternal.render) {
     res
@@ -30,29 +35,70 @@ export default async function sendAppHTML(
     return;
   }
 
-  const appHtml = ReactDOMServer.renderToString(
-    React.createElement(templateModuleInternal.default || "", props)
+  const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
+    projectStructure.templatesRoot,
+    projectStructure.scopedTemplatesPath
   );
+
+  const serverRenderTemplateModule = (await vite.ssrLoadModule(
+    clientServerRenderTemplates.serverRenderTemplatePath
+  )) as RenderTemplate;
+
+  const serverHtml = await serverRenderTemplateModule.render({
+    Page: templateModuleInternal.default!,
+    pageProps: props,
+  });
 
   const headConfig = templateModuleInternal.getHeadConfig
     ? templateModuleInternal.getHeadConfig(props)
     : undefined;
 
-  const template = await vite.transformIndexHtml(pathname, templateBase);
+  if (clientServerRenderTemplates.usingBuiltInDefault) {
+    serverHtml.replace("<!--app-lang-->", getLang(headConfig, props));
+    serverHtml.replace(
+      "<!--app-head-->",
+      headConfig ? renderHeadConfigToString(headConfig) : ""
+    );
+  }
+  // If the user has defined a custom render template AND they've defined `getHeadConfig` in their template, error out.
+  else if (headConfig) {
+    return send404(
+      res,
+      "getHeadConfig cannot be defined when a custom render template (_client.tsx or _server.tsx) is used."
+    );
+  }
+  // If the user has defined a custom render template then they must define a <head> tag.
+  else if (serverHtml.indexOf("</head>") === -1) {
+    return send404(
+      res,
+      "No head tag is defined in your custom server render template."
+    );
+  }
 
-  // Inject the app-rendered HTML into the template. Only invoke the users headFunction
-  // if they are rendering by way of a default export and not a custom render function.
-  const html = template.replace(`<!--app-html-->`, appHtml).replace(
-    `<!--app-head-->`,
-    `<head>
-        <script type="text/javascript">
-          window._RSS_PROPS_ = ${JSON.stringify(props)};
-          window._RSS_TEMPLATE_PATH_ = '${templateModuleInternal.path}';
-          window._RSS_LANG_ = '${getLang(headConfig, props)}';
-        </script>
-        ${headConfig ? renderHeadConfigToString(headConfig) : ""}
-      </head>`
+  // Read the client render template. It requires adding an import of the component as well as calling
+  // the render function since it is injected as a script module and imported as a virtual module by Vite.
+  const clientHtml = fs.readFileSync(
+    clientServerRenderTemplates.clientRenderTemplatePath,
+    "utf-8"
   );
+  const preamble = `import {default as Component} from "${templateModuleInternal.path}";`;
+  const postamble = `
+  render(
+    {
+      Page: Component,
+      pageProps: ${JSON.stringify(props)},
+    }
+  );`;
+
+  const updatedClientHtml = preamble + clientHtml + postamble;
+
+  const closingHeadIndex = serverHtml.indexOf("</head>");
+  const injectedServerHtml =
+    serverHtml.slice(0, closingHeadIndex) +
+    `<script type="module">${updatedClientHtml}</script>` +
+    serverHtml.slice(closingHeadIndex);
+
+  const html = await vite.transformIndexHtml(pathname, injectedServerHtml);
 
   // Send the rendered HTML back.
   res.status(200).type(getContentType(templateModuleInternal, props)).end(html);

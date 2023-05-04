@@ -32,7 +32,14 @@ export const serverRenderSlugRoute =
       const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
         await findMatchingStaticTemplate(vite, slug, templateFilepaths);
       if (matchingStaticTemplate) {
-        sendStaticPage(res, vite, matchingStaticTemplate, locale, url.pathname);
+        sendStaticPage(
+          res,
+          vite,
+          matchingStaticTemplate,
+          locale,
+          url.pathname,
+          projectStructure
+        );
         return;
       }
 
@@ -69,7 +76,14 @@ export const serverRenderSlugRoute =
         locale,
         document,
       });
-      sendAppHTML(res, templateModuleInternal, props, vite, `/${slug}`);
+      sendAppHTML(
+        res,
+        templateModuleInternal,
+        props,
+        vite,
+        `/${slug}`,
+        projectStructure
+      );
     } catch (e: any) {
       // If an error is caught, calling next with the error will invoke
       // our error handling middleware which will then handle it.

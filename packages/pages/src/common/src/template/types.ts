@@ -195,3 +195,18 @@ export interface TemplateRenderProps extends TemplateProps {
    */
   relativePrefixToRoot: string;
 }
+
+export interface ClientServerRenderTemplates {
+  clientRenderTemplatePath: string;
+  serverRenderTemplatePath: string;
+  usingBuiltInDefault: boolean;
+}
+
+export interface RenderTemplate {
+  render(pageContext: PageContext<any>): Promise<string>;
+}
+
+export interface PageContext<T extends TemplateRenderProps> {
+  pageProps: T;
+  Page: Template<T>;
+}
