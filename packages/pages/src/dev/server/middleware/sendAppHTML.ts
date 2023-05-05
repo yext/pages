@@ -1,4 +1,4 @@
-import { ViteDevServer } from "vite";
+import { ViteDevServer, transformWithEsbuild } from "vite";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import {
   RenderTemplate,
@@ -77,10 +77,12 @@ export default async function sendAppHTML(
 
   // Read the client render template. It requires adding an import of the component as well as calling
   // the render function since it is injected as a script module and imported as a virtual module by Vite.
-  const clientHtml = fs.readFileSync(
+  let clientHtml = fs.readFileSync(
     clientServerRenderTemplates.clientRenderTemplatePath,
     "utf-8"
   );
+
+  // The component import and render call are necessary for HMR to work
   const preamble = `import {default as Component} from "${templateModuleInternal.path}";`;
   const postamble = `
   render(
@@ -88,10 +90,18 @@ export default async function sendAppHTML(
       Page: Component,
       pageProps: ${JSON.stringify(props)},
     }
-  );`;
+    );`;
 
+  // Compile the tsx for the browser since the code is shoved in as a module
+  clientHtml = (await transformWithEsbuild(clientHtml, "_client.tsx")).code;
   const updatedClientHtml = preamble + clientHtml + postamble;
 
+  // Inject a module script into the server render. The script itself is the client render that
+  // uses the appropriate template component. It's similar to a default Vite project where there is an index.html
+  // entrypoint (our _server.tsx) that has a module script with a src that points to a main.tsx (_client.tsx)
+  // which calls React.hydrate on a defined component. The difference for us is that we determine which
+  // template component to render dynamically, while also allowing the user to customize the client/server
+  // render functions.
   const closingHeadIndex = serverHtml.indexOf("</head>");
   const injectedServerHtml =
     serverHtml.slice(0, closingHeadIndex) +
