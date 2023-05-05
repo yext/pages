@@ -3,7 +3,7 @@ import path from "path";
 import { Path } from "../../project/path.js";
 import { ProjectStructure } from "../../project/structure.js";
 import { ClientServerRenderTemplates } from "../types.js";
-import fs from "fs";
+import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 /**
@@ -21,14 +21,22 @@ export const getTemplateFilepaths = (paths: Path[]): string[] => {
   const addedFilenames: Set<string> = new Set();
   paths.forEach((p) => {
     const filepaths = glob.sync(`${p.getAbsolutePath()}/*.{tsx,jsx,js,ts}`);
-    filepaths.forEach((f) => {
-      const fileName = path.basename(f);
-      if (!addedFilenames.has(fileName)) {
-        addedFilenames.add(fileName);
-        templateFilepaths.push(f);
-      }
-    });
+    filepaths
+      // Don't include the client/server rendering templates
+      .filter(
+        (f) =>
+          f.indexOf(globalClientRenderFilename) === -1 &&
+          f.indexOf(globalServerRenderFilename) === -1
+      )
+      .forEach((f) => {
+        const fileName = path.basename(f);
+        if (!addedFilenames.has(fileName)) {
+          addedFilenames.add(fileName);
+          templateFilepaths.push(f);
+        }
+      });
   });
+
   return templateFilepaths;
 };
 
