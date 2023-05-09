@@ -1,0 +1,35 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "location",
+    "streamId": "location-stream",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "Chicago",
+    "countryCode": "US",
+    "line1": "2100 N Elston Ave",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "Illinois",
+    "postalCode": "60614",
+    "region": "IL"
+  },
+  "businessId": 3795112,
+  "id": "location10",
+  "key": "0:location:knowledgeGraph:49877192:en",
+  "locale": "en",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "slug": "il/chicago/location10",
+  "uid": 49877192
+}

@@ -1,0 +1,36 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "location",
+    "streamId": "location-stream",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "Chicago",
+    "countryCode": "US",
+    "line1": "1000 W North Ave",
+    "line2": "APT 2",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "Illinois",
+    "postalCode": "60642",
+    "region": "IL"
+  },
+  "businessId": 3795112,
+  "id": "location9",
+  "key": "0:location:knowledgeGraph:49877187:en",
+  "locale": "en",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "slug": "il/chicago/location9",
+  "uid": 49877187
+}

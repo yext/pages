@@ -1,0 +1,18 @@
+{
+  "__": {
+    "name": "robots",
+    "staticPage": {
+      "plugin": {}
+    },
+    "templateType": "JS"
+  },
+  "businessId": 3350634,
+  "key": "0:robots:knowledgeGraph:0:en",
+  "locale": "en",
+  "meta": {
+    "locale": "en"
+  },
+  "siteDomain": "sunglasses.oakley.com",
+  "siteId": 0,
+  "siteInternalHostName": "sunglasses.oakley.com"
+}

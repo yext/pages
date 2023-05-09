@@ -1,6 +1,6 @@
 {
   "name": "@yext/pages",
-  "version": "1.0.0-beta.20",
+  "version": "1.0.0-beta.21",
   "description": "The default React development toolchain provided by Yext",
   "author": "sumo@yext.com",
   "license": "BSD-3-Clause",
@@ -77,14 +77,14 @@
     "ink": "^3.2.0",
     "lodash": "^4.17.21",
     "mime-types": "^2.1.35",
-    "module-from-string": "^3.2.1",
+    "module-from-string": "^3.3.0",
     "open": "^8.4.0",
     "ora": "^6.1.2",
     "picocolors": "^1.0.0",
     "pretty-ms": "^7.0.1",
     "rollup": "^2.79.0",
     "typescript": "^4.8.2",
-    "vite": "^3.1.0",
+    "vite": "^3.1.3",
     "yargs": "^17.6.0"
   },
   "devDependencies": {

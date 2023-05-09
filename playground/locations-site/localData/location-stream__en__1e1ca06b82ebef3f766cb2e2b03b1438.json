@@ -1,0 +1,35 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "location",
+    "streamId": "location-stream",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "New York",
+    "countryCode": "US",
+    "line1": "529 5th Ave",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "New York",
+    "postalCode": "10017",
+    "region": "NY"
+  },
+  "businessId": 3795112,
+  "id": "location5",
+  "key": "0:location:knowledgeGraph:49877188:en",
+  "locale": "en",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "slug": "ny/new-york/location5",
+  "uid": 49877188
+}
