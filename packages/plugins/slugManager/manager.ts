@@ -18,6 +18,8 @@ export interface InternalSlugManagerConfig {
     | "listLanguageProfiles"
     | "listEntities"
   >;
+  slugGeneratorFn?: Function;
+  slugGeneratorFnFields?: string[];
 }
 
 export function createManager(config: InternalSlugManagerConfig) {
@@ -28,6 +30,8 @@ export function createManager(config: InternalSlugManagerConfig) {
     entityTypes = [],
     slugFormat,
     api,
+    slugGeneratorFn,
+    slugGeneratorFnFields,
   } = config;
 
   async function connector(inputString: string | undefined) {
@@ -35,7 +39,10 @@ export function createManager(config: InternalSlugManagerConfig) {
     const pageToken = input.pageToken || "";
 
     const params = new URLSearchParams({
-      fields: "meta",
+      fields: [
+        'meta',
+        ...(slugGeneratorFnFields || []),
+      ].join(','),
     });
     if (pageToken) {
       params.set("pageToken", pageToken);
@@ -49,7 +56,11 @@ export function createManager(config: InternalSlugManagerConfig) {
     const entitiesResponse = await api.listEntities(params);
 
     const profileParams = new URLSearchParams({
-      fields: ["meta", slugField].join(","),
+      fields: [
+        "meta",
+        slugField,
+        ...(slugGeneratorFnFields || []),
+    ].join(","),
       filter: JSON.stringify({
         "meta.id": {
           $in: entitiesResponse.entities.map((entity) => entity.meta.id),
@@ -66,7 +77,8 @@ export function createManager(config: InternalSlugManagerConfig) {
       idToPrimaryLanguage,
       slugField,
       slugFormat,
-      slugFormatLocaleOverrides
+      slugFormatLocaleOverrides,
+      slugGeneratorFn,
     );
 
     const outputString = JSON.stringify({
@@ -92,9 +104,11 @@ export function createManager(config: InternalSlugManagerConfig) {
 
     const lang = event.changedFields.language;
     const slug =
-      lang in slugFormatLocaleOverrides
-        ? slugFormatLocaleOverrides[lang]
-        : slugFormat;
+      slugGeneratorFn ? 
+        slugGeneratorFn(lang, event.primaryProfile) : 
+        (lang in slugFormatLocaleOverrides
+          ? slugFormatLocaleOverrides[lang]
+          : slugFormat);
 
     return api.updateField(event.entityId, lang, slugField, slug);
   }
@@ -107,15 +121,18 @@ export function getUpdates(
   idToPrimaryLanguage: Record<string, string>,
   slugField: string,
   slugFormat: string,
-  slugFormatLocaleOverrides: Record<string, string>
+  slugFormatLocaleOverrides: Record<string, string>,
+  slugGeneratorFn?: Function
 ) {
   const updates: ProfileUpdate[] = [];
   for (const profile of profiles) {
     const lang = profile.meta.language;
     const desiredSlug =
-      lang in slugFormatLocaleOverrides
-        ? slugFormatLocaleOverrides[lang]
-        : slugFormat;
+      slugGeneratorFn ? 
+        slugGeneratorFn(lang, profile) : 
+        (lang in slugFormatLocaleOverrides
+          ? slugFormatLocaleOverrides[lang]
+          : slugFormat);
 
     updates.push({
       [slugField]: desiredSlug,
