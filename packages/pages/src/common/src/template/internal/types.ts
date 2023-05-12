@@ -1,4 +1,3 @@
-import { ProjectStructure } from "../../project/structure.js";
 import {
   Template,
   GetHeadConfig,
