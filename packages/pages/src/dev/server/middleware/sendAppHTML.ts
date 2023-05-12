@@ -1,4 +1,4 @@
-import { ViteDevServer, transformWithEsbuild } from "vite";
+import { ViteDevServer } from "vite";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import {
   RenderTemplate,
