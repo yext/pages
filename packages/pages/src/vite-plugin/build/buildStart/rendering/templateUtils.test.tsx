@@ -20,6 +20,7 @@ const baseProps: TemplateProps = {
     mode: "development",
     manifest: {
       bundlePaths: {},
+      renderPaths: {},
       projectFilepaths: {
         templatesRoot: "",
         distRoot: "",
@@ -36,7 +37,9 @@ describe("generateResponses", () => {
     const fn = jest.fn((props) => props);
     await generateResponses(
       { ...baseTemplateModule, transformProps: fn },
-      baseProps
+      baseProps,
+      "",
+      ""
     );
     expect(fn).toHaveBeenCalled();
   });
@@ -45,7 +48,9 @@ describe("generateResponses", () => {
     const fn = jest.fn();
     await generateResponses(
       { ...baseTemplateModule, getRedirects: fn },
-      baseProps
+      baseProps,
+      "",
+      ""
     );
     expect(fn).toHaveBeenCalled();
   });

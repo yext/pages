@@ -26,7 +26,12 @@ export default (projectStructure: ProjectStructure) => {
           "**/*.js"
         )
       );
-      templateModules = await loadTemplateModules(serverBundles, false, true);
+      templateModules = await loadTemplateModules(
+        serverBundles,
+        false,
+        true,
+        projectStructure
+      );
       validateBundles();
       finisher.succeed("Validated template modules");
     } catch (e: any) {
