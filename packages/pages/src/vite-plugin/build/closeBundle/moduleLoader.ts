@@ -25,7 +25,12 @@ export const loadTemplateModules = async (
     }
 
     const templateModuleInternal =
-      convertTemplateModuleToTemplateModuleInternal(p, templateModule, true);
+      convertTemplateModuleToTemplateModuleInternal(
+        p,
+        templateModule,
+        true,
+        false // doesn't matter here, it's already been validated at this point
+      );
 
     importedModules.push({ ...templateModuleInternal, path: p });
   }

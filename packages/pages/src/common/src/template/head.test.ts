@@ -197,6 +197,7 @@ const templateProps: TemplateRenderProps = {
     mode: "development",
     manifest: {
       bundlePaths: {},
+      renderPaths: {},
       projectFilepaths: {
         templatesRoot: "",
         distRoot: "",

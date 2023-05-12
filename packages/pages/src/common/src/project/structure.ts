@@ -18,6 +18,8 @@ export interface ProjectFilepaths {
   hydrationBundleOutputRoot: string;
   /** The folder path where the compiled server bundles should go */
   serverBundleOutputRoot: string;
+  /** The folder path where the compiled render (_client/_server) bundles should go */
+  renderBundleOutputRoot: string;
   /**
    * This is used for the case of multibrand setup within a single repo.
    *
@@ -79,6 +81,7 @@ export const defaultProjectStructureConfig: ProjectStructureConfig = {
     distRoot: "dist",
     hydrationBundleOutputRoot: "hydration_templates",
     serverBundleOutputRoot: "assets/server",
+    renderBundleOutputRoot: "assets/render",
   },
   filenamesConfig: {
     ciConfig: "ci.json",
@@ -117,6 +120,7 @@ export class ProjectStructure {
   distRoot: Path;
   hydrationBundleOutputRoot: Path;
   serverBundleOutputRoot: Path;
+  renderBundleOutputRoot: Path;
   ciConfig: string;
   featuresConfig: string;
   envVarDir: string;
@@ -151,6 +155,11 @@ export class ProjectStructure {
       this.#config.filepathsConfig.distRoot +
         "/" +
         this.#config.filepathsConfig.serverBundleOutputRoot
+    );
+    this.renderBundleOutputRoot = new Path(
+      this.#config.filepathsConfig.distRoot +
+        "/" +
+        this.#config.filepathsConfig.renderBundleOutputRoot
     );
     this.ciConfig = this.#config.filenamesConfig.ciConfig;
     this.featuresConfig = this.#config.filenamesConfig.featuresConfig;

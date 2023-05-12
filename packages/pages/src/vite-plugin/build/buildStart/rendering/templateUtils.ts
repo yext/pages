@@ -1,11 +1,8 @@
-import { createElement } from "react";
-import { renderToString } from "react-dom/server.js";
 import {
   TemplateProps,
   TemplateRenderProps,
   Manifest,
   TemplateModule,
-  Template,
 } from "../../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../../common/src/template/paths.js";
 import { reactWrapper } from "./wrapper.js";
@@ -35,7 +32,8 @@ export const readTemplateModules = async (
   const templateModuleInternal = convertTemplateModuleToTemplateModuleInternal(
     path,
     importedModule,
-    true
+    true,
+    false // doesn't matter here, it's already been validated at this point
   );
 
   pathToModule.set(path, templateModuleInternal);
@@ -58,7 +56,9 @@ export type GeneratedPage = {
  */
 export const generateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
-  templateProps: TemplateProps
+  templateProps: TemplateProps,
+  clientRenderPath: string,
+  serverRenderPath: string
 ): Promise<GeneratedPage> => {
   if (templateModuleInternal.transformProps) {
     templateProps = await templateModuleInternal.transformProps(templateProps);
@@ -77,7 +77,12 @@ export const generateResponses = async (
     relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
   };
 
-  const content = renderHtml(templateModuleInternal, templateRenderProps);
+  const content = await renderHtml(
+    templateModuleInternal,
+    templateRenderProps,
+    clientRenderPath,
+    serverRenderPath
+  );
 
   return {
     content,
@@ -93,9 +98,11 @@ export const generateResponses = async (
  * 2. If a module exports a default export or a render function, use whatever is exported
  * 3. If a module doesn't export either, throw an error.
  */
-const renderHtml = (
+const renderHtml = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
-  props: TemplateRenderProps
+  props: TemplateRenderProps,
+  clientRenderPath: string,
+  serverRenderPath: string
 ) => {
   const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {
@@ -114,12 +121,12 @@ const renderHtml = (
     return render(props);
   }
 
-  return reactWrapper(
+  return await reactWrapper(
     props,
     templateModuleInternal,
-    renderToString(createElement(component as Template<any>, props)),
     // TODO -- allow hydration be configurable.
     true,
-    getHeadConfig
+    clientRenderPath,
+    serverRenderPath
   );
 };
