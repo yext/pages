@@ -1,12 +1,12 @@
 // Environment: browser
 
-import ReactDOM from "react-dom";
-import React from "react";
-import { PageContext, TemplateRenderProps } from "../types.js";
+import * as ReactDOM from "react-dom";
+import * as React from "react";
+import { PageContext } from "../types.js";
 
 export { render };
 
-const render = async (pageContext: PageContext<TemplateRenderProps>) => {
+const render = async (pageContext: PageContext<any>) => {
   const { Page, pageProps } = pageContext;
   ReactDOM.hydrate(
     <Page {...pageProps} />,
