@@ -67,12 +67,12 @@ export const getGlobalClientServerRenderTemplates = (
   templatesRootPath: Path,
   scopedTemplatePath: Path | undefined
 ): ClientServerRenderTemplates => {
-  const [clientRenderTemplatePath, usingClientDefault] = findGlobalRenderFile(
+  const [clientRenderTemplatePath, usingCustomClient] = findGlobalRenderFile(
     templatesRootPath,
     scopedTemplatePath,
     globalClientRenderFilename
   );
-  const [serverRenderTemplatePath, usingServerDefault] = findGlobalRenderFile(
+  const [serverRenderTemplatePath, usingCustomServer] = findGlobalRenderFile(
     templatesRootPath,
     scopedTemplatePath,
     globalServerRenderFilename
@@ -81,7 +81,7 @@ export const getGlobalClientServerRenderTemplates = (
   return {
     clientRenderTemplatePath,
     serverRenderTemplatePath,
-    usingBuiltInDefault: usingClientDefault || usingServerDefault,
+    isCustomRenderTemplate: usingCustomClient || usingCustomServer,
   };
 };
 
@@ -89,7 +89,7 @@ export const getGlobalClientServerRenderTemplates = (
  * @param templatesRootPath the path where the templates live, typically src/templates
  * @param scopedTemplatePath the subfolder path inside templatesRoot to scope to - used in multibrand setups
  * @param globalFilename the file to find
- * @returns the path to the appropriate file along with a boolean denoting if the path returned is the built-in default render template
+ * @returns the path to the appropriate file along with a boolean denoting if the path returned is a custom render template
  */
 const findGlobalRenderFile = (
   templatesRootPath: Path,
@@ -102,7 +102,7 @@ const findGlobalRenderFile = (
       globalFilename
     );
     if (fs.existsSync(pathToGlobalFile)) {
-      return [pathToGlobalFile, false];
+      return [pathToGlobalFile, true];
     }
   }
 
@@ -110,8 +110,9 @@ const findGlobalRenderFile = (
     templatesRootPath.getAbsolutePath(),
     globalFilename
   );
+
   if (fs.existsSync(pathToGlobalFile)) {
-    return [pathToGlobalFile, false];
+    return [pathToGlobalFile, true];
   }
 
   // Use the built-in default rendering templates if none defined by the user
@@ -119,5 +120,5 @@ const findGlobalRenderFile = (
   const __dirname = path.dirname(__filename);
 
   // Need to replace .tsx with .js since the file is compiled to the node_modules dist folder
-  return [path.join(__dirname, globalFilename.split(".")[0] + ".js"), true];
+  return [path.join(__dirname, globalFilename.split(".")[0] + ".js"), false];
 };

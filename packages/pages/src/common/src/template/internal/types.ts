@@ -1,3 +1,4 @@
+import { ProjectStructure } from "../../project/structure.js";
 import {
   Template,
   GetHeadConfig,
@@ -86,7 +87,8 @@ const parse = (filepath: string, adjustForFingerprintedAsset: boolean) => {
 export const convertTemplateModuleToTemplateModuleInternal = (
   templateFilepath: string,
   templateModule: TemplateModule<any, any>,
-  adjustForFingerprintedAsset: boolean
+  adjustForFingerprintedAsset: boolean,
+  isCustomRenderTemplate: boolean
 ): TemplateModuleInternal<any, any> => {
   const templatePath = parse(templateFilepath, adjustForFingerprintedAsset);
 
@@ -101,7 +103,10 @@ export const convertTemplateModuleToTemplateModuleInternal = (
     templateName: templatePath.name,
   };
 
-  validateTemplateModuleInternal(templateModuleInternal);
+  validateTemplateModuleInternal(
+    templateModuleInternal,
+    isCustomRenderTemplate
+  );
 
   return templateModuleInternal;
 };

@@ -4,6 +4,7 @@ import { Path } from "../../common/src/project/path.js";
 import {
   defaultProjectStructureConfig,
   ProjectFilepaths,
+  ProjectStructure,
 } from "../../common/src/project/structure.js";
 import { getTemplateFilepaths } from "../../common/src/template/internal/getTemplateFilepaths.js";
 import { loadTemplateModules } from "../../common/src/template/internal/loader.js";
@@ -28,7 +29,8 @@ const handler = async ({ scope }: FeaturesArgs): Promise<void> => {
   const templateModules = await loadTemplateModules(
     templateFilepaths,
     true,
-    false
+    false,
+    {} as ProjectStructure // doesn't matter here
   );
   const featuresFilepath = path.join(
     process.cwd(),

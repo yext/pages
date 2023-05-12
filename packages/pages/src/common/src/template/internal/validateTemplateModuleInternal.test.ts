@@ -62,7 +62,8 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
 
     const validateTemplateModuleInternalFunc = () =>
       validateTemplateModuleInternal(
-        templateModuleInteral as TemplateModuleInternal<any, any>
+        templateModuleInteral as TemplateModuleInternal<any, any>,
+        false
       );
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
@@ -86,7 +87,8 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
 
     const validateTemplateModuleInternalFunc = () =>
       validateTemplateModuleInternal(
-        templateModuleInteral as TemplateModuleInternal<any, any>
+        templateModuleInteral as TemplateModuleInternal<any, any>,
+        false
       );
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
@@ -110,7 +112,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
     };
 
     const validateTemplateModuleInternalFunc = () =>
-      validateTemplateModuleInternal(templateModuleInteral);
+      validateTemplateModuleInternal(templateModuleInteral, false);
 
     expect(validateTemplateModuleInternalFunc).not.toThrow();
   });

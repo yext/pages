@@ -4,7 +4,8 @@ import {
 } from "../internal/types.js";
 
 export const validateTemplateModuleInternal = (
-  templateModule: TemplateModuleInternal<any, any>
+  templateModule: TemplateModuleInternal<any, any>,
+  isCustomRenderTemplate: boolean
 ) => {
   validateConfig(templateModule.filename, templateModule.config);
 
@@ -16,8 +17,15 @@ export const validateTemplateModuleInternal = (
 
   if (!templateModule.default && !templateModule.render) {
     throw new Error(
-      `Module ${templateModule.filename} does not have the necessary exports to produce page. ` +
+      `Template ${templateModule.filename} does not have the necessary exports to produce page. ` +
         "A module should either have a React component as a default export or a render function."
+    );
+  }
+
+  if (isCustomRenderTemplate && templateModule.getHeadConfig) {
+    throw new Error(
+      `Template ${templateModule.filename} cannot have getHeadConfig defined when a custom render
+      template (_client.tsx or _server.tsx) is used.`
     );
   }
 };

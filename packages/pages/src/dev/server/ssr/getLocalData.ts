@@ -79,7 +79,8 @@ export const getLocalDataManifest = async (
       const templateModuleInternal = await findTemplateModuleInternal(
         vite,
         (t) => featureName === t.config.name,
-        templateFilepaths
+        templateFilepaths,
+        false // doesn't matter here
       );
       if (!templateModuleInternal) {
         console.error(

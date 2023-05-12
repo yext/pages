@@ -1,6 +1,7 @@
 import glob from "glob";
 import path from "path";
 import { loadTemplateModules } from "./loader.js";
+import { ProjectStructure } from "../../project/structure.js";
 
 // our jest configuration doesn't support file urls so update pathToFileURL to do nothing during
 // this test.
@@ -22,7 +23,8 @@ describe("loadTemplateModules", () => {
     const templateModules = await loadTemplateModules(
       templateFile,
       true,
-      false
+      false,
+      {} as ProjectStructure
     );
 
     expect(templateModules.get("template")?.config.name).toEqual("template");
@@ -35,7 +37,8 @@ describe("loadTemplateModules", () => {
     const templateModules = await loadTemplateModules(
       templateFile,
       false,
-      false
+      false,
+      {} as ProjectStructure
     );
 
     expect(templateModules.get("template")?.config.name).toEqual("template");

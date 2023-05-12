@@ -140,6 +140,10 @@ export type Manifest = {
   bundlePaths: {
     [key: string]: string;
   };
+  /** A map of render template to its bundle path */
+  renderPaths: {
+    [key: string]: string;
+  };
   /** A map of project roots to their paths */
   projectFilepaths: {
     /** The folder path where all template files live */
@@ -199,7 +203,7 @@ export interface TemplateRenderProps extends TemplateProps {
 export interface ClientServerRenderTemplates {
   clientRenderTemplatePath: string;
   serverRenderTemplatePath: string;
-  usingBuiltInDefault: boolean;
+  isCustomRenderTemplate: boolean;
 }
 
 export interface RenderTemplate {

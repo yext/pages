@@ -80,7 +80,8 @@ const loadTemplateModuleCollectionUsingVite = async (
       return convertTemplateModuleToTemplateModuleInternal(
         templateFilepath,
         templateModule,
-        false
+        false,
+        false // doesn't matter here
       );
     })
   );
