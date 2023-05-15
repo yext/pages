@@ -24,7 +24,11 @@ describe("loadTemplateModules", () => {
       templateFile,
       true,
       false,
-      {} as ProjectStructure
+      new ProjectStructure({
+        filepathsConfig: {
+          templatesRoot: "tests/fixtures",
+        },
+      })
     );
 
     expect(templateModules.get("template")?.config.name).toEqual("template");
@@ -38,7 +42,11 @@ describe("loadTemplateModules", () => {
       templateFile,
       false,
       false,
-      {} as ProjectStructure
+      new ProjectStructure({
+        filepathsConfig: {
+          templatesRoot: "tests/fixtures",
+        },
+      })
     );
 
     expect(templateModules.get("template")?.config.name).toEqual("template");
