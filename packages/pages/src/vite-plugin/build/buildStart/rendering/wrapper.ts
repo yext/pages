@@ -46,7 +46,7 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
   });
 
   const clientHtml = getHydrationTemplate(
-    path.join("../" + clientRenderPath),
+    path.join("../", clientRenderPath),
     path.join("../assets", templateModuleInternal.path.replace("..", "")),
     props
   );
