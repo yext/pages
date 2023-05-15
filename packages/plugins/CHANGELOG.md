@@ -1,3 +1,19 @@
+#### 1.0.0-beta.4 (2023-05-10)
+
+##### New Features
+
+*  add Function input for Slug Manager (#296) (d5987406)
+*  catch Analytics failures in the Analytics Component. (#297) (5b1b1fec)
+*  add ability to map different CF's for each feature on urlWriteback (#307) (de55ed24)
+
+##### Tests
+
+* **playground:**
+  *  upload Windows/Linux screenshots via CI (#302) (24262841)
+  *  add multibrand playwright tests (#304) (ca2bd181)
+  *  add entity page playwright test (#301) (6c99f764)
+* **dev:**  playwright tests for static-site (#300) (f2859eb5)
+
 #### 1.0.0-beta.3 (2022-10-04)
 
 ##### Bug Fixes
