@@ -80,7 +80,6 @@ const discoverInputs = async (
       .map((file) => file.name)
       .filter((f) => f !== "_client.tsx" && f !== "_server.tsx")
       .forEach((template) => {
-        console.log(template);
         const parsedPath = parse(template);
         const outputPath = `server/${parsedPath.name}`;
         if (entryPoints[outputPath]) {

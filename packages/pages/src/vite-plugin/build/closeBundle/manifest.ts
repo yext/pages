@@ -28,7 +28,7 @@ export const generateManifestFile = (
     ]
   );
 
-  // Add the renderPaths to the manifest. This defines the _server entry.
+  // Add the renderPaths to the manifest. This defines the _client and _server entries.
   const renderPaths = glob.sync(
     path.join(
       projectStructure.renderBundleOutputRoot.getAbsolutePath(),
