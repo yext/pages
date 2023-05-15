@@ -17,7 +17,7 @@ export const getRelativePrefixToRootFromPath = (path: string): string => {
 };
 
 /**
- * Converts any path to a posix path delimted by "/". Useful for ensuring that a path will be dynamically importable as only posix-style
+ * Converts any path to a posix path delimited by "/". Useful for ensuring that a path will be dynamically importable as only posix-style
  * paths are supported with import.
  */
 export const convertToPosixPath = (p: string) => {

@@ -1,4 +1,5 @@
 import { HeadConfig, renderHeadConfigToString } from "./head.js";
+import { convertToPosixPath } from "./paths.js";
 import { TemplateRenderProps } from "./types.js";
 
 /**
@@ -16,8 +17,10 @@ export const getHydrationTemplate = (
   props: TemplateRenderProps
 ): string => {
   return `
-        import {default as Component} from "${templateModulePath}";
-        import {render} from "${clientRenderTemplatePath}";
+        import {default as Component} from "${convertToPosixPath(
+          templateModulePath
+        )}";
+        import {render} from "${convertToPosixPath(clientRenderTemplatePath)}";
         render(
         {
             Page: Component,
