@@ -2,6 +2,7 @@ import React from "react";
 import { TemplateModuleInternal } from "../../../../common/src/template/internal/types.js";
 import { TemplateProps } from "../../../../common/src/template/types.js";
 import { generateResponses } from "./templateUtils.js";
+import path from "node:path";
 
 const baseTemplateModule: TemplateModuleInternal<any, any> = {
   path: "path",
@@ -38,8 +39,8 @@ describe("generateResponses", () => {
     await generateResponses(
       { ...baseTemplateModule, transformProps: fn },
       baseProps,
-      "",
-      ""
+      path.join(process.cwd(), "src/common/src/template/internal/_client.tsx"),
+      path.join(process.cwd(), "src/common/src/template/internal/_server.tsx")
     );
     expect(fn).toHaveBeenCalled();
   });
@@ -49,8 +50,8 @@ describe("generateResponses", () => {
     await generateResponses(
       { ...baseTemplateModule, getRedirects: fn },
       baseProps,
-      "",
-      ""
+      path.join(process.cwd(), "src/common/src/template/internal/_client.tsx"),
+      path.join(process.cwd(), "src/common/src/template/internal/_server.tsx")
     );
     expect(fn).toHaveBeenCalled();
   });
