@@ -14,6 +14,7 @@ import {
   generateFunctionMetadataFile,
   shouldGenerateFunctionMetadata,
 } from "./functionMetadata.js";
+import { updateCiConfig } from "../../../generate/ci/ci.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -71,6 +72,22 @@ export default (projectStructure: ProjectStructure) => {
         console.error(colors.red(e.message));
         return;
       }
+    }
+
+    finisher = logger.timedLog({ startLog: "Updating ci.json" });
+    try {
+      updateCiConfig(
+        path.join(
+          projectStructure.sitesConfigRoot.getAbsolutePath(),
+          projectStructure.ciConfig
+        ),
+        false
+      );
+      finisher.succeed("Successfully updated ci.json");
+    } catch (e: any) {
+      finisher.fail("Failed to update ci.json");
+      console.error(colors.red(e.message));
+      return;
     }
   };
 };
