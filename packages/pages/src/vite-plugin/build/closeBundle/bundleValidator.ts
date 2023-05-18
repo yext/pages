@@ -20,7 +20,7 @@ export const validateBundles = () => {
 
 const getBundlePaths = (): string[] => {
   return glob.sync(
-    `${path.resolve("dist/assets")}/{renderer,server,static}/**/*.*`
+    `${path.resolve("dist/assets")}/{render,renderer,server,static}/**/*.*`
   );
 };
 
