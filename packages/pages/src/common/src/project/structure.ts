@@ -14,8 +14,6 @@ export interface ProjectFilepaths {
   sitesConfigRoot: string;
   /** The folder path where the compiled files should go */
   distRoot: string;
-  /** The folder path where the compiled hydration bundles should go */
-  hydrationBundleOutputRoot: string;
   /** The folder path where the compiled server bundles should go */
   serverBundleOutputRoot: string;
   /** The folder path where the compiled render (_client/_server) bundles should go */
@@ -79,7 +77,6 @@ export const defaultProjectStructureConfig: ProjectStructureConfig = {
     templatesRoot: "src/templates",
     sitesConfigRoot: "sites-config",
     distRoot: "dist",
-    hydrationBundleOutputRoot: "hydration_templates",
     serverBundleOutputRoot: "assets/server",
     renderBundleOutputRoot: "assets/render",
   },
@@ -118,7 +115,6 @@ export class ProjectStructure {
   scopedSitesConfigPath?: Path;
 
   distRoot: Path;
-  hydrationBundleOutputRoot: Path;
   serverBundleOutputRoot: Path;
   renderBundleOutputRoot: Path;
   ciConfig: string;
@@ -146,11 +142,6 @@ export class ProjectStructure {
     }
 
     this.distRoot = new Path(this.#config.filepathsConfig.distRoot);
-    this.hydrationBundleOutputRoot = new Path(
-      this.#config.filepathsConfig.distRoot +
-        "/" +
-        this.#config.filepathsConfig.hydrationBundleOutputRoot
-    );
     this.serverBundleOutputRoot = new Path(
       this.#config.filepathsConfig.distRoot +
         "/" +

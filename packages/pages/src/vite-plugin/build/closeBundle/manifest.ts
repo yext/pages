@@ -53,8 +53,6 @@ export const generateManifestFile = (
     projectFilepaths: {
       templatesRoot: projectStructure.templatesRoot.path,
       distRoot: projectStructure.distRoot.path,
-      hydrationBundleOutputRoot:
-        projectStructure.hydrationBundleOutputRoot.path,
       serverBundleOutputRoot: projectStructure.serverBundleOutputRoot.path,
       scopedTemplatesPath: projectStructure.scopedTemplatesPath?.path,
     },

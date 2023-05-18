@@ -36,7 +36,6 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
             input: await discoverInputs(
               projectStructure.templatesRoot.getAbsolutePath(),
               projectStructure.scopedTemplatesPath?.getAbsolutePath(),
-              projectStructure.hydrationBundleOutputRoot.getAbsolutePath(),
               projectStructure
             ),
             output: {
@@ -63,14 +62,12 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
  *
  * @param rootTemplateDir the directory where all templates are stored.
  * @param scopedTemplateDir the directory where a subset of templates use for the build are stored.
- * @param hydrationOutputDir the directory where hydration inputs will be generated at.
  * @param projectStructure
  * @returns
  */
 const discoverInputs = async (
   rootTemplateDir: string,
   scopedTemplateDir: string | undefined,
-  hydrationOutputDir: string,
   projectStructure: ProjectStructure
 ): Promise<InputOption> => {
   const entryPoints: Record<string, string> = {};

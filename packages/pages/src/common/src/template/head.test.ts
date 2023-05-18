@@ -201,7 +201,6 @@ const templateProps: TemplateRenderProps = {
       projectFilepaths: {
         templatesRoot: "",
         distRoot: "",
-        hydrationBundleOutputRoot: "",
         serverBundleOutputRoot: "",
       },
       bundlerManifest: {},

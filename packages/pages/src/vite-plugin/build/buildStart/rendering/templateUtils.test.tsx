@@ -25,7 +25,6 @@ const baseProps: TemplateProps = {
       projectFilepaths: {
         templatesRoot: "",
         distRoot: "",
-        hydrationBundleOutputRoot: "",
         serverBundleOutputRoot: "",
       },
       bundlerManifest: {},
