@@ -34,27 +34,27 @@ export const getHydrationTemplate = (
  * Get the server template with injected html common to both the dev and plugin side of things.
  * For the most part, injects data into the <head> tag. It also provides validation.
  *
- * @param clientHtml
+ * @param clientHtml if this is undefined then hydration is skipped
  * @param serverHtml
  * @param appLanguage
  * @param headConfig
  * @returns the server template with injected html
  */
 const getCommonInjectedServerHtml = (
-  clientHtml: string,
+  clientHtml: string | undefined,
   serverHtml: string,
   appLanguage: string,
   headConfig?: HeadConfig
 ): string => {
-  validateHeadTagExists(serverHtml);
-
   // Add the language to the <html> tag if it exists
   serverHtml.replace("<!--app-lang-->", appLanguage);
 
-  serverHtml = injectIntoHead(
-    serverHtml,
-    `<script type="module">${clientHtml}</script>`
-  );
+  if (clientHtml) {
+    serverHtml = injectIntoHead(
+      serverHtml,
+      `<script type="module">${clientHtml}</script>`
+    );
+  }
 
   if (headConfig) {
     serverHtml = injectIntoHead(
@@ -76,7 +76,7 @@ const getCommonInjectedServerHtml = (
  * @returns the server template to render in the Vite dev environment
  */
 export const getServerTemplateDev = (
-  clientHtml: string,
+  clientHtml: string | undefined,
   serverHtml: string,
   appLanguage: string,
   headConfig?: HeadConfig
@@ -104,7 +104,7 @@ export const getServerTemplateDev = (
  * @returns the server template to render in the Deno plugin execution context when rendering HTML
  */
 export const getServerTemplatePlugin = (
-  clientHtml: string,
+  clientHtml: string | undefined,
   serverHtml: string,
   templateFilepath: string,
   bundlerManifest: bundlerManifest,
@@ -168,18 +168,17 @@ const getCssTags = (
   return cssFiles;
 };
 
-const validateHeadTagExists = (serverHtml: string): void => {
-  if (serverHtml.indexOf("</head>") === -1) {
-    throw new Error("No head tag is defined _server.tsx");
-  }
-};
-
 /**
  * Finds the closing </head> tag and injects the input string into it.
  * @param html
  */
 const injectIntoHead = (html: string, stringToInject: string): string => {
   const closingHeadIndex = html.indexOf("</head>");
+
+  if (closingHeadIndex === -1) {
+    throw new Error("_server.tsx: No head tag is defined");
+  }
+
   return (
     html.slice(0, closingHeadIndex) +
     stringToInject +

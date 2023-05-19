@@ -143,14 +143,16 @@ export class ProjectStructure {
 
     this.distRoot = new Path(this.#config.filepathsConfig.distRoot);
     this.serverBundleOutputRoot = new Path(
-      this.#config.filepathsConfig.distRoot +
-        "/" +
+      pathLib.join(
+        this.#config.filepathsConfig.distRoot,
         this.#config.filepathsConfig.serverBundleOutputRoot
+      )
     );
     this.renderBundleOutputRoot = new Path(
-      this.#config.filepathsConfig.distRoot +
-        "/" +
+      pathLib.join(
+        this.#config.filepathsConfig.distRoot,
         this.#config.filepathsConfig.renderBundleOutputRoot
+      )
     );
     this.ciConfig = this.#config.filenamesConfig.ciConfig;
     this.featuresConfig = this.#config.filenamesConfig.featuresConfig;

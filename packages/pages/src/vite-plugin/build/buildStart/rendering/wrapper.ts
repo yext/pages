@@ -45,11 +45,14 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
     pageProps: props,
   });
 
-  const clientHtml = getHydrationTemplate(
-    path.join("..", clientRenderPath),
-    path.join("..", "assets", templateModuleInternal.path.replace("..", "")),
-    props
-  );
+  let clientHtml;
+  if (hydrate) {
+    clientHtml = getHydrationTemplate(
+      path.join("..", clientRenderPath),
+      path.join("..", "assets", templateModuleInternal.path.replace("..", "")),
+      props
+    );
+  }
 
   const clientInjectedServerHtml = getServerTemplatePlugin(
     clientHtml,

@@ -127,7 +127,6 @@ const findGlobalRenderFile = (
     );
   }
 
-  // console.log("import.meta.url", import.meta.url);
   // Use the built-in default rendering templates if none defined by the user
   const __filename = fileURLToPath(curDirectory);
   const __dirname = path.dirname(__filename);

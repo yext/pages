@@ -198,17 +198,34 @@ export interface TemplateRenderProps extends TemplateProps {
   relativePrefixToRoot: string;
 }
 
+/**
+ * Defines the paths of the _client and _server render templates. During execution
+ * it will use the paths of the user's custom render templates if they exist,
+ * otherwise it falls back to the ones built-in to PagesJS.
+ */
 export interface ClientServerRenderTemplates {
+  /** The path to _client.tsx */
   clientRenderTemplatePath: string;
+  /** The path to _server.tsx */
   serverRenderTemplatePath: string;
+  /** If the render templates are user-defined or built-in */
   isCustomRenderTemplate: boolean;
 }
 
+/**
+ * The type of the client/server render templates.
+ */
 export interface RenderTemplate {
+  /** The render function required by the render templates */
   render(pageContext: PageContext<any>): Promise<string>;
 }
 
+/**
+ * Context of a page, which defines the template itself and its props.
+ */
 export interface PageContext<T extends TemplateRenderProps> {
+  /** The props injected into the template */
   pageProps: T;
+  /** The template to render */
   Page: Template<T>;
 }
