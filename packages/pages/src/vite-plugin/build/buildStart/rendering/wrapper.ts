@@ -45,9 +45,9 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
     pageProps: props,
   });
 
-  let clientHtml;
+  let clientHydrationString;
   if (hydrate) {
-    clientHtml = getHydrationTemplate(
+    clientHydrationString = getHydrationTemplate(
       path.join("..", clientRenderPath),
       path.join("..", "assets", templateModuleInternal.path.replace("..", "")),
       props
@@ -55,7 +55,7 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
   }
 
   const clientInjectedServerHtml = getServerTemplatePlugin(
-    clientHtml,
+    clientHydrationString,
     serverHtml,
     templateFilepath,
     bundlerManifest,

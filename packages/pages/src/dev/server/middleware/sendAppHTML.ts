@@ -52,14 +52,14 @@ export default async function sendAppHTML(
     ? templateModuleInternal.getHeadConfig(props)
     : undefined;
 
-  const clientHtml = getHydrationTemplate(
+  const clientHydrationString = getHydrationTemplate(
     clientServerRenderTemplates.clientRenderTemplatePath,
     templateModuleInternal.path,
     props
   );
 
   const clientInjectedServerHtml = getServerTemplateDev(
-    clientHtml,
+    clientHydrationString,
     serverHtml,
     getLang(headConfig, props),
     headConfig

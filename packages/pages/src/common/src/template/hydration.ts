@@ -34,14 +34,14 @@ export const getHydrationTemplate = (
  * Get the server template with injected html common to both the dev and plugin side of things.
  * For the most part, injects data into the <head> tag. It also provides validation.
  *
- * @param clientHtml if this is undefined then hydration is skipped
+ * @param clientHydrationString if this is undefined then hydration is skipped
  * @param serverHtml
  * @param appLanguage
  * @param headConfig
  * @returns the server template with injected html
  */
 const getCommonInjectedServerHtml = (
-  clientHtml: string | undefined,
+  clientHydrationString: string | undefined,
   serverHtml: string,
   appLanguage: string,
   headConfig?: HeadConfig
@@ -49,10 +49,10 @@ const getCommonInjectedServerHtml = (
   // Add the language to the <html> tag if it exists
   serverHtml.replace("<!--app-lang-->", appLanguage);
 
-  if (clientHtml) {
+  if (clientHydrationString) {
     serverHtml = injectIntoHead(
       serverHtml,
-      `<script type="module">${clientHtml}</script>`
+      `<script type="module">${clientHydrationString}</script>`
     );
   }
 
@@ -69,20 +69,20 @@ const getCommonInjectedServerHtml = (
 /**
  * Use for the Vite dev server.
  *
- * @param clientHtml
+ * @param clientHydrationString
  * @param serverHtml
  * @param appLanguage
  * @param headConfig
  * @returns the server template to render in the Vite dev environment
  */
 export const getServerTemplateDev = (
-  clientHtml: string | undefined,
+  clientHydrationString: string | undefined,
   serverHtml: string,
   appLanguage: string,
   headConfig?: HeadConfig
 ): string => {
   return getCommonInjectedServerHtml(
-    clientHtml,
+    clientHydrationString,
     serverHtml,
     appLanguage,
     headConfig
@@ -94,7 +94,7 @@ export const getServerTemplateDev = (
  * and {@link getServerTemplateDev} is that it also injects the CSS import tags which is
  * not required by Vite since those are injected automatically by the Vite dev server.
  *
- * @param clientHtml
+ * @param clientHydrationString
  * @param serverHtml
  * @param templateFilepath
  * @param bundlerManifest
@@ -104,7 +104,7 @@ export const getServerTemplateDev = (
  * @returns the server template to render in the Deno plugin execution context when rendering HTML
  */
 export const getServerTemplatePlugin = (
-  clientHtml: string | undefined,
+  clientHydrationString: string | undefined,
   serverHtml: string,
   templateFilepath: string,
   bundlerManifest: bundlerManifest,
@@ -113,7 +113,7 @@ export const getServerTemplatePlugin = (
   headConfig?: HeadConfig
 ) => {
   let html = getCommonInjectedServerHtml(
-    clientHtml,
+    clientHydrationString,
     serverHtml,
     appLanguage,
     headConfig
