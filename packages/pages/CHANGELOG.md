@@ -1,3 +1,9 @@
+#### 1.0.0-beta.22 (2023-05-23)
+
+##### Bug Fixes
+
+* **plugin:**  update the single file size limit (#312) (f14472c5)
+
 #### 1.0.0-beta.21 (2023-04-19)
 
 ##### Bug Fixes

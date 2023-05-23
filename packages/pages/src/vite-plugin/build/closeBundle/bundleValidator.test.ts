@@ -7,13 +7,13 @@ describe("bundleValidator", () => {
     jest.spyOn(glob, "sync").mockImplementation(() => ["file1.js", "file2.js"]);
     jest.spyOn(fs, "statSync").mockImplementation((input) => {
       if (input == "file1.js") {
-        return getStats(1.6);
+        return getStats(10.1);
       }
       return getStats(0.1);
     });
 
     expect(() => validateBundles()).toThrowError(
-      "Bundled file file1.js exceeds max size of 1.5 MB"
+      "Bundled file file1.js exceeds max size of 10 MB"
     );
 
     jest.restoreAllMocks();
