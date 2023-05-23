@@ -6,6 +6,7 @@ import {
   generateResponses,
   readTemplateModules,
   GeneratedPage,
+  getPluginRenderTemplates,
 } from "./templateUtils.js";
 
 /**
@@ -20,11 +21,12 @@ import {
 export default async (props: TemplateProps): Promise<GeneratedPage> => {
   const manifest = props.__meta.manifest as Manifest;
   const template = await readTemplateModules(props.document.__.name, manifest);
+  const pluginRenderTemplates = await getPluginRenderTemplates(manifest);
+
   const responses = await generateResponses(
     template,
     props,
-    manifest.renderPaths._client,
-    manifest.renderPaths._server
+    pluginRenderTemplates
   );
 
   return responses;

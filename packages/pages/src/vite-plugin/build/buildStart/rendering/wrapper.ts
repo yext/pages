@@ -9,13 +9,13 @@ import {
   getServerTemplatePlugin,
 } from "../../../../common/src/template/hydration.js";
 import path from "path";
+import { PluginRenderTemplates } from "./templateUtils.js";
 
 export const reactWrapper = async <T extends TemplateRenderProps>(
   props: T,
   templateModuleInternal: TemplateModuleInternal<any, any>,
   hydrate: boolean,
-  clientRenderPath: string,
-  serverRenderPath: string
+  pluginRenderTemplates: PluginRenderTemplates
 ): Promise<string> => {
   if (!props.__meta.manifest) {
     throw new Error("Manifest is undefined");
@@ -35,12 +35,7 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
       ? scopedTemplateFilepath
       : rootTemplateFilepath;
 
-  const relativeServerRenderPath = serverRenderPath.replace("assets", "..");
-  const serverRenderTemplateModule = (await import(
-    relativeServerRenderPath
-  )) as RenderTemplate;
-
-  const serverHtml = await serverRenderTemplateModule.render({
+  const serverHtml = await pluginRenderTemplates.server.render({
     Page: templateModuleInternal.default!,
     pageProps: props,
   });
@@ -48,7 +43,7 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
   let clientHydrationString;
   if (hydrate) {
     clientHydrationString = getHydrationTemplate(
-      path.join("..", clientRenderPath),
+      pluginRenderTemplates.client,
       path.join("..", "assets", templateModuleInternal.path.replace("..", "")),
       props
     );
