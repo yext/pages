@@ -45,8 +45,10 @@ export const Marker = ({
     if (zIndex !== 0 && !zIndex) {
       return;
     }
-    const wrapper = marker.getProviderPin().getWrapperElement();
-    wrapper.style.zIndex = zIndex;
+    const wrapper: HTMLDivElement = marker.getProviderPin().getWrapperElement();
+    if (wrapper) {
+      wrapper.style.zIndex = zIndex.toString();
+    }
   }, [zIndex]);
 
   // Sync events
@@ -68,7 +70,6 @@ export const Marker = ({
     Object.assign(pinEl.style, {
       height: "auto",
       width: "auto",
-      fontSize: 0,
     });
     return createPortal(elementToRender, pinEl);
   }

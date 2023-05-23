@@ -142,5 +142,6 @@ Map.defaultProps = {
   panHandler: () => null,
   panStartHandler: () => null,
   provider: GoogleMaps,
+  providerOptions: {},
   singleZoom: 14,
 };
