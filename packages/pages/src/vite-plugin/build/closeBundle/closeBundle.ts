@@ -32,6 +32,7 @@ export default (projectStructure: ProjectStructure) => {
         true,
         projectStructure
       );
+      validateUniqueFeatureName(templateModules);
       validateBundles();
       finisher.succeed("Validated template modules");
     } catch (e: any) {
@@ -78,4 +79,22 @@ export default (projectStructure: ProjectStructure) => {
       }
     }
   };
+};
+
+/**
+ * Checks that a feature name doesn't appear twice in the set of template modules.
+ * @param templateModuleCollection
+ */
+const validateUniqueFeatureName = (
+  templateModuleCollection: TemplateModuleCollection
+) => {
+  const featureNames = new Set<string>();
+  [...templateModuleCollection.keys()].forEach((featureName) => {
+    if (featureNames.has(featureName)) {
+      throw new Error(
+        `Templates must have unique feature names. Found multiple modules with "${featureName}"`
+      );
+    }
+    featureNames.add(featureName);
+  });
 };

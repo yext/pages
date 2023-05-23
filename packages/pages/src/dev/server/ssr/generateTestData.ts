@@ -11,14 +11,17 @@ import path from "path";
 import fs from "fs";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getFeaturesConfig } from "../../../generate/features/createFeaturesJson.js";
-import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import {
+  getGlobalClientServerRenderTemplates,
+  getTemplateFilepathsFromProjectStructure,
+} from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../../../common/src/template/internal/types.js";
 import { ViteDevServer } from "vite";
 import { loadTemplateModule } from "./loadTemplateModule.js";
-import { TemplateModuleCollection } from "../../../vite-plugin/build/closeBundle/moduleLoader.js";
+import { TemplateModuleCollection } from "../../../common/src/template/internal/loader.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
@@ -56,7 +59,8 @@ export const generateTestDataForSlug = async (
     getTemplateFilepathsFromProjectStructure(projectStructure);
   const templateModuleCollection = await loadTemplateModuleCollectionUsingVite(
     vite,
-    templateFilepaths
+    templateFilepaths,
+    projectStructure
   );
   const featuresConfig = await getFeaturesConfig(templateModuleCollection);
   const featuresConfigForEntityPages: FeaturesConfig = {
@@ -72,8 +76,14 @@ export const generateTestDataForSlug = async (
 
 const loadTemplateModuleCollectionUsingVite = async (
   vite: ViteDevServer,
-  templateFilepaths: string[]
+  templateFilepaths: string[],
+  projectStructure: ProjectStructure
 ): Promise<TemplateModuleCollection> => {
+  const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
+    projectStructure.templatesRoot,
+    projectStructure.scopedTemplatesPath
+  );
+
   const templateModules: TemplateModuleInternal<any, any>[] = await Promise.all(
     templateFilepaths.map(async (templateFilepath) => {
       const templateModule = await loadTemplateModule(vite, templateFilepath);
@@ -81,7 +91,7 @@ const loadTemplateModuleCollectionUsingVite = async (
         templateFilepath,
         templateModule,
         false,
-        false // doesn't matter here
+        clientServerRenderTemplates.isCustomRenderTemplate
       );
     })
   );
