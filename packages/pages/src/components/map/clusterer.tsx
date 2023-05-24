@@ -91,6 +91,7 @@ export const Clusterer = ({
   // at their center.
   useEffect(() => {
     setClustersToRender(() => []);
+    setClusterIds(() => []);
 
     if (clusters?.length === 0) {
       return;
