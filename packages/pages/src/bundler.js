@@ -24,7 +24,7 @@ const testFilter = (f) =>
 const filters = new Set(["./src/bundler.js"]);
 
 const files = glob
-  .sync("./src/**/*\\.*")
+  .sync("./src/**/*.*")
   .filter(testFilter)
   .filter((f) => !filters.has(f))
   .filter((f) => !f.endsWith(".md"));

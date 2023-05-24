@@ -1,15 +1,18 @@
-import React from "react";
-import ReactDOMServer from "react-dom/server.js";
 import { ViteDevServer } from "vite";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
-import { TemplateRenderProps } from "../../../common/src/template/types.js";
-import templateBase from "../public/templateBase.js";
 import {
-  renderHeadConfigToString,
-  getLang,
-} from "../../../common/src/template/head.js";
+  RenderTemplate,
+  TemplateRenderProps,
+} from "../../../common/src/template/types.js";
+import { getLang } from "../../../common/src/template/head.js";
 import { Response } from "express-serve-static-core";
 import { getContentType } from "./getContentType.js";
+import { getGlobalClientServerRenderTemplates } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { ProjectStructure } from "../../../common/src/project/structure.js";
+import {
+  getHydrationTemplate,
+  getServerTemplateDev,
+} from "../../../common/src/template/hydration.js";
 
 /**
  * Renders the HTML for a given {@link TemplateModuleInternal}
@@ -20,7 +23,8 @@ export default async function sendAppHTML(
   templateModuleInternal: TemplateModuleInternal<any, any>,
   props: TemplateRenderProps,
   vite: ViteDevServer,
-  pathname: string
+  pathname: string,
+  projectStructure: ProjectStructure
 ) {
   if (templateModuleInternal.render) {
     res
@@ -30,28 +34,40 @@ export default async function sendAppHTML(
     return;
   }
 
-  const appHtml = ReactDOMServer.renderToString(
-    React.createElement(templateModuleInternal.default || "", props)
+  const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
+    projectStructure.templatesRoot,
+    projectStructure.scopedTemplatesPath
   );
+
+  const serverRenderTemplateModule = (await vite.ssrLoadModule(
+    clientServerRenderTemplates.serverRenderTemplatePath
+  )) as RenderTemplate;
+
+  const serverHtml = await serverRenderTemplateModule.render({
+    Page: templateModuleInternal.default!,
+    pageProps: props,
+  });
 
   const headConfig = templateModuleInternal.getHeadConfig
     ? templateModuleInternal.getHeadConfig(props)
     : undefined;
 
-  const template = await vite.transformIndexHtml(pathname, templateBase);
+  const clientHydrationString = getHydrationTemplate(
+    clientServerRenderTemplates.clientRenderTemplatePath,
+    templateModuleInternal.path,
+    props
+  );
 
-  // Inject the app-rendered HTML into the template. Only invoke the users headFunction
-  // if they are rendering by way of a default export and not a custom render function.
-  const html = template.replace(`<!--app-html-->`, appHtml).replace(
-    `<!--app-head-->`,
-    `<head>
-        <script type="text/javascript">
-          window._RSS_PROPS_ = ${JSON.stringify(props)};
-          window._RSS_TEMPLATE_PATH_ = '${templateModuleInternal.path}';
-          window._RSS_LANG_ = '${getLang(headConfig, props)}';
-        </script>
-        ${headConfig ? renderHeadConfigToString(headConfig) : ""}
-      </head>`
+  const clientInjectedServerHtml = getServerTemplateDev(
+    clientHydrationString,
+    serverHtml,
+    getLang(headConfig, props),
+    headConfig
+  );
+
+  const html = await vite.transformIndexHtml(
+    pathname,
+    clientInjectedServerHtml
   );
 
   // Send the rendered HTML back.

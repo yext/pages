@@ -2,8 +2,8 @@ import path from "path";
 import { CommandModule } from "yargs";
 import { Path } from "../../common/src/project/path.js";
 import {
-  defaultProjectStructureConfig,
   ProjectFilepaths,
+  ProjectStructure,
 } from "../../common/src/project/structure.js";
 import { getTemplateFilepaths } from "../../common/src/template/internal/getTemplateFilepaths.js";
 import { loadTemplateModules } from "../../common/src/template/internal/loader.js";
@@ -12,10 +12,9 @@ import { createFeaturesJson } from "./createFeaturesJson.js";
 type FeaturesArgs = Pick<ProjectFilepaths, "scope">;
 
 const handler = async ({ scope }: FeaturesArgs): Promise<void> => {
-  const templatesRoot =
-    defaultProjectStructureConfig.filepathsConfig.templatesRoot;
-  const sitesConfigRoot =
-    defaultProjectStructureConfig.filepathsConfig.sitesConfigRoot;
+  const projectStructure = new ProjectStructure();
+  const templatesRoot = projectStructure.templatesRoot.path;
+  const sitesConfigRoot = projectStructure.sitesConfigRoot.path;
   const templateRootAbsolutePath = path.join(process.cwd(), templatesRoot);
   const templateFilepaths = getTemplateFilepaths(
     scope
@@ -28,7 +27,8 @@ const handler = async ({ scope }: FeaturesArgs): Promise<void> => {
   const templateModules = await loadTemplateModules(
     templateFilepaths,
     true,
-    false
+    false,
+    projectStructure
   );
   const featuresFilepath = path.join(
     process.cwd(),

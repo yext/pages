@@ -1,11 +1,9 @@
-import { createElement } from "react";
-import { renderToString } from "react-dom/server.js";
 import {
   TemplateProps,
   TemplateRenderProps,
   Manifest,
   TemplateModule,
-  Template,
+  RenderTemplate,
 } from "../../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../../common/src/template/paths.js";
 import { reactWrapper } from "./wrapper.js";
@@ -13,6 +11,7 @@ import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../../../../common/src/template/internal/types.js";
+import path from "node:path";
 
 const pathToModule = new Map();
 
@@ -35,12 +34,42 @@ export const readTemplateModules = async (
   const templateModuleInternal = convertTemplateModuleToTemplateModuleInternal(
     path,
     importedModule,
-    true
+    true,
+    false // doesn't matter here, it's already been validated at this point
   );
 
   pathToModule.set(path, templateModuleInternal);
 
   return templateModuleInternal;
+};
+
+/** The render template information needed by the plugin execution */
+export interface PluginRenderTemplates {
+  /** The server render module */
+  server: RenderTemplate;
+  /** The client render relative path */
+  client: string;
+}
+
+/**
+ * Creates a {@link PluginRenderTemplates} based on the {@link Manifest}'s renderPaths.
+ * @param manifest
+ * @returns
+ */
+export const getPluginRenderTemplates = async (
+  manifest: Manifest
+): Promise<PluginRenderTemplates> => {
+  const clientRenderPath = path.join("..", manifest.renderPaths._client);
+  const serverRenderPath = manifest.renderPaths._server.replace("assets", "..");
+
+  const serverRenderTemplateModule = (await import(
+    serverRenderPath
+  )) as RenderTemplate;
+
+  return {
+    server: serverRenderTemplateModule,
+    client: clientRenderPath,
+  };
 };
 
 // Represents a page produced by the generation procees.
@@ -55,10 +84,12 @@ export type GeneratedPage = {
  *
  * @param templateModuleInternal
  * @param templateProps
+ * @param pluginRenderTemplates
  */
 export const generateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
-  templateProps: TemplateProps
+  templateProps: TemplateProps,
+  pluginRenderTemplates: PluginRenderTemplates
 ): Promise<GeneratedPage> => {
   if (templateModuleInternal.transformProps) {
     templateProps = await templateModuleInternal.transformProps(templateProps);
@@ -77,7 +108,11 @@ export const generateResponses = async (
     relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
   };
 
-  const content = renderHtml(templateModuleInternal, templateRenderProps);
+  const content = await renderHtml(
+    templateModuleInternal,
+    templateRenderProps,
+    pluginRenderTemplates
+  );
 
   return {
     content,
@@ -93,9 +128,10 @@ export const generateResponses = async (
  * 2. If a module exports a default export or a render function, use whatever is exported
  * 3. If a module doesn't export either, throw an error.
  */
-const renderHtml = (
+const renderHtml = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
-  props: TemplateRenderProps
+  props: TemplateRenderProps,
+  pluginRenderTemplates: PluginRenderTemplates
 ) => {
   const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {
@@ -114,12 +150,11 @@ const renderHtml = (
     return render(props);
   }
 
-  return reactWrapper(
+  return await reactWrapper(
     props,
     templateModuleInternal,
-    renderToString(createElement(component as Template<any>, props)),
     // TODO -- allow hydration be configurable.
     true,
-    getHeadConfig
+    pluginRenderTemplates
   );
 };

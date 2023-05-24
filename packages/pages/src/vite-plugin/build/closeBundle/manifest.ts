@@ -4,6 +4,7 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { TemplateModuleCollection } from "../../../common/src/template/internal/loader.js";
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
 import { Manifest } from "../../../common/src/template/types.js";
+import glob from "glob";
 
 /**
  * Creates a manifest.json for use with the Pages vite-plugin
@@ -27,17 +28,31 @@ export const generateManifestFile = (
     ]
   );
 
+  // Add the renderPaths to the manifest. This defines the _client and _server entries.
+  const renderPaths = glob.sync(
+    path.join(
+      projectStructure.renderBundleOutputRoot.getAbsolutePath(),
+      "**/*.js"
+    )
+  );
+
+  const relativeRenderPaths = Array.from(renderPaths.entries()).map(
+    ([_, filepath]) => [
+      path.parse(filepath).name.split(".")[0], // get the name of the file without the hash or extension
+      convertToPosixPath(projectStructure.distRoot.getRelativePath(filepath)),
+    ]
+  );
+
   let bundlerManifest = Buffer.from("{}");
   if (fs.existsSync(path.join(distRoot, "manifest.json"))) {
     bundlerManifest = fs.readFileSync(path.join(distRoot, "manifest.json"));
   }
   const manifest: Manifest = {
     bundlePaths: Object.fromEntries(relativeBundlePaths),
+    renderPaths: Object.fromEntries(relativeRenderPaths),
     projectFilepaths: {
       templatesRoot: projectStructure.templatesRoot.path,
       distRoot: projectStructure.distRoot.path,
-      hydrationBundleOutputRoot:
-        projectStructure.hydrationBundleOutputRoot.path,
       serverBundleOutputRoot: projectStructure.serverBundleOutputRoot.path,
       scopedTemplatesPath: projectStructure.scopedTemplatesPath?.path,
     },

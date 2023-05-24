@@ -23,6 +23,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       convertTemplateModuleToTemplateModuleInternal(
         "src/templates/myTemplateName.tsx",
         templateModule,
+        false,
         false
       );
 
@@ -62,6 +63,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       convertTemplateModuleToTemplateModuleInternal(
         "src/templates/myTemplateName.tsx",
         templateModule,
+        false,
         false
       );
 
@@ -95,7 +97,8 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       convertTemplateModuleToTemplateModuleInternal(
         "src/templates/myTemplateName.0ab33d.tsx",
         templateModule,
-        true
+        true,
+        false
       );
 
     const expected: TemplateModuleInternal<any, any> = {
