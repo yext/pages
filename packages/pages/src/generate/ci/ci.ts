@@ -94,7 +94,7 @@ export const getUpdatedCiConfig = (ciConfig: CiConfig): CiConfig => {
 };
 
 const generatorPlugin: Plugin = {
-  pluginName: "Pages Generator",
+  pluginName: "PagesGenerator",
   sourceFiles: [
     {
       root: "dist/plugin",
