@@ -36,7 +36,7 @@ describe("ci - getUpdatedCiConfig", () => {
         features: "sites-config/features.json",
         plugins: [
           {
-            pluginName: "Pages Generator",
+            pluginName: "PagesGenerator",
             sourceFiles: [
               {
                 root: "dist/plugin",
@@ -119,7 +119,7 @@ describe("ci - getUpdatedCiConfig", () => {
         features: "sites-config/features.json",
         plugins: [
           {
-            pluginName: "Pages Generator",
+            pluginName: "PagesGenerator",
             sourceFiles: [
               {
                 root: "dist/plugin",
