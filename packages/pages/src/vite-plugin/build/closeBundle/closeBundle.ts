@@ -38,8 +38,7 @@ export default (projectStructure: ProjectStructure) => {
       finisher.succeed("Validated template modules");
     } catch (e: any) {
       finisher.fail("One or more template modules failed validation");
-      console.error(colors.red(e.message));
-      return;
+      throw new Error(e);
     }
 
     finisher = logger.timedLog({ startLog: "Writing features.json" });
@@ -54,8 +53,7 @@ export default (projectStructure: ProjectStructure) => {
       finisher.succeed("Successfully wrote features.json");
     } catch (e: any) {
       finisher.fail("Failed to write features.json");
-      console.error(colors.red(e.message));
-      return;
+      throw new Error(e);
     }
 
     finisher = logger.timedLog({ startLog: "Writing manifest.json" });
@@ -64,8 +62,7 @@ export default (projectStructure: ProjectStructure) => {
       finisher.succeed("Successfully wrote manifest.json");
     } catch (e: any) {
       finisher.fail("Failed to write manifest.json");
-      console.error(colors.red(e.message));
-      return;
+      throw new Error(e);
     }
 
     if (shouldGenerateFunctionMetadata()) {
@@ -75,8 +72,7 @@ export default (projectStructure: ProjectStructure) => {
         finisher.succeed("Successfully wrote functionMetadata.json");
       } catch (e: any) {
         finisher.fail("Failed to write functionMetadata.json");
-        console.error(colors.red(e.message));
-        return;
+        throw new Error(e);
       }
     }
 
@@ -92,8 +88,7 @@ export default (projectStructure: ProjectStructure) => {
       finisher.succeed("Successfully updated ci.json");
     } catch (e: any) {
       finisher.fail("Failed to update ci.json");
-      console.error(colors.red(e.message));
-      return;
+      throw new Error(e);
     }
   };
 };
