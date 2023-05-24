@@ -14,10 +14,10 @@ export interface ProjectFilepaths {
   sitesConfigRoot: string;
   /** The folder path where the compiled files should go */
   distRoot: string;
-  /** The folder path where the compiled hydration bundles should go */
-  hydrationBundleOutputRoot: string;
   /** The folder path where the compiled server bundles should go */
   serverBundleOutputRoot: string;
+  /** The folder path where the compiled render (_client/_server) bundles should go */
+  renderBundleOutputRoot: string;
   /**
    * This is used for the case of multibrand setup within a single repo.
    *
@@ -77,8 +77,8 @@ export const defaultProjectStructureConfig: ProjectStructureConfig = {
     templatesRoot: "src/templates",
     sitesConfigRoot: "sites-config",
     distRoot: "dist",
-    hydrationBundleOutputRoot: "hydration_templates",
     serverBundleOutputRoot: "assets/server",
+    renderBundleOutputRoot: "assets/render",
   },
   filenamesConfig: {
     ciConfig: "ci.json",
@@ -115,8 +115,8 @@ export class ProjectStructure {
   scopedSitesConfigPath?: Path;
 
   distRoot: Path;
-  hydrationBundleOutputRoot: Path;
   serverBundleOutputRoot: Path;
+  renderBundleOutputRoot: Path;
   ciConfig: string;
   featuresConfig: string;
   envVarDir: string;
@@ -142,15 +142,17 @@ export class ProjectStructure {
     }
 
     this.distRoot = new Path(this.#config.filepathsConfig.distRoot);
-    this.hydrationBundleOutputRoot = new Path(
-      this.#config.filepathsConfig.distRoot +
-        "/" +
-        this.#config.filepathsConfig.hydrationBundleOutputRoot
-    );
     this.serverBundleOutputRoot = new Path(
-      this.#config.filepathsConfig.distRoot +
-        "/" +
+      pathLib.join(
+        this.#config.filepathsConfig.distRoot,
         this.#config.filepathsConfig.serverBundleOutputRoot
+      )
+    );
+    this.renderBundleOutputRoot = new Path(
+      pathLib.join(
+        this.#config.filepathsConfig.distRoot,
+        this.#config.filepathsConfig.renderBundleOutputRoot
+      )
     );
     this.ciConfig = this.#config.filenamesConfig.ciConfig;
     this.featuresConfig = this.#config.filenamesConfig.featuresConfig;

@@ -11,8 +11,6 @@ export type Manifest = {
     templatesRoot: string;
     /** The folder path where the compiled files live */
     distRoot: string;
-    /** The folder path where the compiled hydration bundles live */
-    hydrationBundleOutputRoot: string;
     /** The folder path where the compiled server bundles live */
     serverBundleOutputRoot: string;
     /** The folder path where a subset of template files use for the build live */

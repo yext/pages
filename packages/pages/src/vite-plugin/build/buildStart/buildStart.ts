@@ -4,40 +4,14 @@ import logger from "../../log.js";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { PluginContext, EmitFile } from "rollup";
-import { generateHydrationEntryPoints } from "./hydration.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
-import { getTemplateFilepaths } from "../../../common/src/template/internal/getTemplateFilepaths.js";
-
-const REACT_EXTENSIONS = new Set([".tsx", ".jsx"]);
 
 export default (projectStructure: ProjectStructure) => {
   return async function (this: PluginContext): Promise<void> {
     console.log(yextBanner);
     clean(projectStructure.distRoot.getAbsolutePath());
 
-    const templates = getTemplateFilepaths(
-      projectStructure.scopedTemplatesPath
-        ? [projectStructure.scopedTemplatesPath, projectStructure.templatesRoot]
-        : [projectStructure.templatesRoot]
-    );
-    const reactTemplates = templates.filter((templatePath) =>
-      REACT_EXTENSIONS.has(path.parse(templatePath).ext)
-    );
-
     copyPluginFiles(this.emitFile);
-
-    const finisher = logger.timedLog({
-      startLog: "Generating entry-points for hydration",
-    });
-    await generateHydrationEntryPoints(
-      reactTemplates,
-      projectStructure.hydrationBundleOutputRoot.getAbsolutePath()
-    );
-    finisher.succeed(
-      `Generated ${reactTemplates.length} hydration entry-point${
-        reactTemplates.length > 1 ? "s" : ""
-      }`
-    );
 
     await injectRenderer(this.emitFile);
   };
@@ -65,6 +39,7 @@ const copyPluginFiles = (fileEmitter: EmitFile) => {
     currentPath,
     path.join("..", "..", "..", "..", "plugin")
   );
+
   // We must use path.resolve to reconcile filepaths on Windows as glob returns filepaths with forward slashes by default.
   const pluginFiles = glob
     .sync(`${pathToPluginsDir}/*.ts`)

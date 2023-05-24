@@ -6,6 +6,8 @@ import {
 import esbuild from "esbuild";
 import { importFromString } from "module-from-string";
 import { pathToFileURL } from "url";
+import { ProjectStructure } from "../../project/structure.js";
+import { getGlobalClientServerRenderTemplates } from "./getTemplateFilepaths.js";
 
 const TEMP_DIR = ".temp";
 
@@ -20,8 +22,14 @@ const TEMP_DIR = ".temp";
 export const loadTemplateModules = async (
   templateModulePaths: string[],
   transpile: boolean,
-  adjustForFingerprintedAsset: boolean
+  adjustForFingerprintedAsset: boolean,
+  projectStructure: ProjectStructure
 ): Promise<TemplateModuleCollection> => {
+  const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
+    projectStructure.templatesRoot,
+    projectStructure.scopedTemplatesPath
+  );
+
   const importedModules = [] as TemplateModuleInternal<any, any>[];
   for (const templateModulePath of templateModulePaths) {
     let templateModule = {} as TemplateModule<any, any>;
@@ -51,7 +59,8 @@ export const loadTemplateModules = async (
       convertTemplateModuleToTemplateModuleInternal(
         templateModulePath,
         templateModule,
-        adjustForFingerprintedAsset
+        adjustForFingerprintedAsset,
+        clientServerRenderTemplates.isCustomRenderTemplate
       );
 
     importedModules.push({

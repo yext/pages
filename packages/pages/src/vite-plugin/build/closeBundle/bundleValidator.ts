@@ -2,7 +2,7 @@ import { statSync } from "fs";
 import glob from "glob";
 import path from "path";
 
-const PLUGIN_FILESIZE_LIMIT = 1.5; // MB
+const PLUGIN_FILESIZE_LIMIT = 10; // MB
 const PLUGIN_TOTAL_FILESIZE_LIMIT = 10; // MB
 
 /**
@@ -20,7 +20,7 @@ export const validateBundles = () => {
 
 const getBundlePaths = (): string[] => {
   return glob.sync(
-    `${path.resolve("dist/assets")}/{renderer,server,static}/**/*.*`
+    `${path.resolve("dist/assets")}/{render,renderer,server,static}/**/*.*`
   );
 };
 

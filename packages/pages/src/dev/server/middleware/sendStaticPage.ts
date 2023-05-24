@@ -1,3 +1,4 @@
+import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { TemplateRenderProps } from "../../../common/src/template/types.js";
 import { getLocalDataForEntityOrStaticPage } from "../ssr/getLocalData.js";
@@ -15,7 +16,8 @@ export default async function sendStaticPage(
   vite: ViteDevServer,
   matchingStaticTemplate: TemplateModuleInternal<any, any>,
   locale: string,
-  templatePath: string
+  templatePath: string,
+  projectStructure: ProjectStructure
 ) {
   const document = await getLocalDataForEntityOrStaticPage({
     entityId: "",
@@ -27,5 +29,12 @@ export default async function sendStaticPage(
     locale,
     document,
   });
-  await sendAppHTML(res, matchingStaticTemplate, props, vite, templatePath);
+  await sendAppHTML(
+    res,
+    matchingStaticTemplate,
+    props,
+    vite,
+    templatePath,
+    projectStructure
+  );
 }

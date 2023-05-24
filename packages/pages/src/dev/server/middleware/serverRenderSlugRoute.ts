@@ -3,7 +3,10 @@ import { ViteDevServer } from "vite";
 import { propsLoader } from "../ssr/propsLoader.js";
 import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
-import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import {
+  getGlobalClientServerRenderTemplates,
+  getTemplateFilepathsFromProjectStructure,
+} from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { TemplateRenderProps } from "../../../common/src/template/types.js";
 import sendAppHTML from "./sendAppHTML.js";
 import { generateTestDataForSlug } from "../ssr/generateTestData.js";
@@ -27,12 +30,29 @@ export const serverRenderSlugRoute =
       const locale = req.query.locale?.toString() ?? "en";
       const slug = decodeURI(url.pathname.substring(1));
 
+      const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
+        projectStructure.templatesRoot,
+        projectStructure.scopedTemplatesPath
+      );
+
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
       const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
-        await findMatchingStaticTemplate(vite, slug, templateFilepaths);
+        await findMatchingStaticTemplate(
+          vite,
+          slug,
+          templateFilepaths,
+          clientServerRenderTemplates.isCustomRenderTemplate
+        );
       if (matchingStaticTemplate) {
-        sendStaticPage(res, vite, matchingStaticTemplate, locale, url.pathname);
+        sendStaticPage(
+          res,
+          vite,
+          matchingStaticTemplate,
+          locale,
+          url.pathname,
+          projectStructure
+        );
         return;
       }
 
@@ -53,7 +73,8 @@ export const serverRenderSlugRoute =
       const templateModuleInternal = await findTemplateModuleInternal(
         vite,
         (t) => feature === t.config.name,
-        templateFilepaths
+        templateFilepaths,
+        clientServerRenderTemplates.isCustomRenderTemplate
       );
       if (!templateModuleInternal) {
         send404(
@@ -69,7 +90,14 @@ export const serverRenderSlugRoute =
         locale,
         document,
       });
-      sendAppHTML(res, templateModuleInternal, props, vite, `/${slug}`);
+      sendAppHTML(
+        res,
+        templateModuleInternal,
+        props,
+        vite,
+        `/${slug}`,
+        projectStructure
+      );
     } catch (e: any) {
       // If an error is caught, calling next with the error will invoke
       // our error handling middleware which will then handle it.

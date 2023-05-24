@@ -6,8 +6,11 @@ import { InputOption } from "rollup";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { readdir } from "fs/promises";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
+import { getGlobalClientServerRenderTemplates } from "../../common/src/template/internal/getTemplateFilepaths.js";
 
-const intro = `var global = globalThis;`;
+const intro = `
+var global = globalThis;
+`;
 
 /**
  * This plugin defines how to build the project for production. It bundles
@@ -22,6 +25,9 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
       return {
         envDir: projectStructure.envVarDir,
         envPrefix: projectStructure.envVarPrefix,
+        resolve: {
+          conditions: ["worker", "webworker"],
+        },
         build: {
           outDir: projectStructure.distRoot.path,
           manifest: true,
@@ -30,7 +36,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
             input: await discoverInputs(
               projectStructure.templatesRoot.getAbsolutePath(),
               projectStructure.scopedTemplatesPath?.getAbsolutePath(),
-              projectStructure.hydrationBundleOutputRoot.getAbsolutePath()
+              projectStructure
             ),
             output: {
               intro,
@@ -56,19 +62,20 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
  *
  * @param rootTemplateDir the directory where all templates are stored.
  * @param scopedTemplateDir the directory where a subset of templates use for the build are stored.
- * @param hydrationOutputDir the directory where hydration inputs will be generated at.
+ * @param projectStructure
  * @returns
  */
 const discoverInputs = async (
   rootTemplateDir: string,
   scopedTemplateDir: string | undefined,
-  hydrationOutputDir: string
+  projectStructure: ProjectStructure
 ): Promise<InputOption> => {
   const entryPoints: Record<string, string> = {};
   const updateEntryPoints = async (dir: string) =>
     (await readdir(dir, { withFileTypes: true }))
       .filter((dirent) => !dirent.isDirectory())
       .map((file) => file.name)
+      .filter((f) => f !== "_client.tsx" && f !== "_server.tsx")
       .forEach((template) => {
         const parsedPath = parse(template);
         const outputPath = `server/${parsedPath.name}`;
@@ -76,16 +83,45 @@ const discoverInputs = async (
           return;
         }
         entryPoints[outputPath] = path.join(dir, template);
-        if (parsedPath.ext === ".tsx" || parsedPath.ext === ".jsx") {
-          entryPoints[`hydrate/${parsedPath.name}`] = path
-            .join(hydrationOutputDir, template)
-            .replace("jsx", "tsx");
-        }
       });
 
   if (scopedTemplateDir) {
     await updateEntryPoints(scopedTemplateDir);
   }
+
   await updateEntryPoints(rootTemplateDir);
+
+  return { ...entryPoints, ...discoverRenderTemplates(projectStructure) };
+};
+
+/**
+ * Produces the entry points for the client and server render templates to be output at
+ * {@code render/}.
+ *
+ * @param projectStructure
+ */
+const discoverRenderTemplates = (
+  projectStructure: ProjectStructure
+): Record<string, string> => {
+  const entryPoints: Record<string, string> = {};
+
+  // Move the [compiled] _server.ts and _client.ts render template to /assets/render
+  const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
+    projectStructure.templatesRoot,
+    projectStructure.scopedTemplatesPath
+  );
+
+  // server
+  let parsedPath = parse(clientServerRenderTemplates.serverRenderTemplatePath);
+  let outputPath = `render/${parsedPath.name}`;
+  entryPoints[outputPath] =
+    clientServerRenderTemplates.serverRenderTemplatePath;
+
+  // client
+  parsedPath = parse(clientServerRenderTemplates.clientRenderTemplatePath);
+  outputPath = `render/${parsedPath.name}`;
+  entryPoints[outputPath] =
+    clientServerRenderTemplates.clientRenderTemplatePath;
+
   return entryPoints;
 };

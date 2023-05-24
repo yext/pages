@@ -3,11 +3,6 @@
  * doesn't error when we import content from these modules.
  */
 
-declare module "*public/templateBase.js" {
-  const value: string;
-  export default value;
-}
-
 declare module "*public/500.js" {
   const value: string;
   export default value;

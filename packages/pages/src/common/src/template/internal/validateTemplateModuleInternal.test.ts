@@ -62,7 +62,8 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
 
     const validateTemplateModuleInternalFunc = () =>
       validateTemplateModuleInternal(
-        templateModuleInteral as TemplateModuleInternal<any, any>
+        templateModuleInteral as TemplateModuleInternal<any, any>,
+        false
       );
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
@@ -86,11 +87,12 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
 
     const validateTemplateModuleInternalFunc = () =>
       validateTemplateModuleInternal(
-        templateModuleInteral as TemplateModuleInternal<any, any>
+        templateModuleInteral as TemplateModuleInternal<any, any>,
+        false
       );
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
-      `Module foo.tsx does not have the necessary exports to produce page. ` +
+      `Template foo.tsx does not have the necessary exports to produce page. ` +
         "A module should either have a React component as a default export or a render function."
     );
   });
@@ -110,7 +112,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
     };
 
     const validateTemplateModuleInternalFunc = () =>
-      validateTemplateModuleInternal(templateModuleInteral);
+      validateTemplateModuleInternal(templateModuleInteral, false);
 
     expect(validateTemplateModuleInternalFunc).not.toThrow();
   });

@@ -1,7 +1,12 @@
 import React from "react";
 import { TemplateModuleInternal } from "../../../../common/src/template/internal/types.js";
-import { TemplateProps } from "../../../../common/src/template/types.js";
+import {
+  PageContext,
+  RenderTemplate,
+  TemplateProps,
+} from "../../../../common/src/template/types.js";
 import { generateResponses } from "./templateUtils.js";
+import path from "node:path";
 
 const baseTemplateModule: TemplateModuleInternal<any, any> = {
   path: "path",
@@ -20,14 +25,28 @@ const baseProps: TemplateProps = {
     mode: "development",
     manifest: {
       bundlePaths: {},
+      renderPaths: {},
       projectFilepaths: {
         templatesRoot: "",
         distRoot: "",
-        hydrationBundleOutputRoot: "",
         serverBundleOutputRoot: "",
       },
       bundlerManifest: {},
     },
+  },
+};
+
+const serverRenderTemplate: RenderTemplate = {
+  render: () => {
+    return Promise.resolve(
+      `<!DOCTYPE html>
+        <html lang="<!--app-lang-->">
+          <head></head>
+          <body>
+            <div id="reactele"></div>
+          </body>
+        </html>`
+    );
   },
 };
 
@@ -36,7 +55,14 @@ describe("generateResponses", () => {
     const fn = jest.fn((props) => props);
     await generateResponses(
       { ...baseTemplateModule, transformProps: fn },
-      baseProps
+      baseProps,
+      {
+        client: path.join(
+          process.cwd(),
+          "src/common/src/template/internal/_client.tsx"
+        ),
+        server: serverRenderTemplate,
+      }
     );
     expect(fn).toHaveBeenCalled();
   });
@@ -45,7 +71,14 @@ describe("generateResponses", () => {
     const fn = jest.fn();
     await generateResponses(
       { ...baseTemplateModule, getRedirects: fn },
-      baseProps
+      baseProps,
+      {
+        client: path.join(
+          process.cwd(),
+          "src/common/src/template/internal/_client.tsx"
+        ),
+        server: serverRenderTemplate,
+      }
     );
     expect(fn).toHaveBeenCalled();
   });
