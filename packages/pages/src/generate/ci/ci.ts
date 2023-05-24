@@ -17,6 +17,9 @@ const handler = (): void => {
   updateCiConfig(ciConfigAbsolutePath.getAbsolutePath(), true);
 };
 
+/**
+ * The "ci" command that updates a ci.json file.
+ */
 export const ciCommandModule: CommandModule<unknown, unknown> = {
   command: "ci",
   describe: "Generates ci.json file",
@@ -24,6 +27,15 @@ export const ciCommandModule: CommandModule<unknown, unknown> = {
   handler,
 };
 
+/**
+ * Updates the ci.json by adding or updating the Generator plugin. Retunrs an error if the
+ * file does not exist.
+ *
+ * @param ciConfigPath path to the ci.json file
+ * @param calledViaCommand whether this function was called directly via the 'pages' command or
+ * by another internal function. It guards whether the function throws or console.errors to give
+ * a better UX.
+ */
 export const updateCiConfig = (
   ciConfigPath: string,
   calledViaCommand: boolean
@@ -45,40 +57,44 @@ export const updateCiConfig = (
     }
   }
 
-  const ciJson = mergeCiConfig(originalCiConfigJson);
-  if (ciJson) {
-    fs.writeFileSync(ciConfigPath, JSON.stringify(ciJson, null, "  "));
+  const updatedCiConfigJson = getUpdatedCiConfig(originalCiConfigJson);
+  if (updatedCiConfigJson) {
+    fs.writeFileSync(
+      ciConfigPath,
+      JSON.stringify(updatedCiConfigJson, null, "  ")
+    );
   }
 };
 
-export const mergeCiConfig = (ciConfig: CiConfig): CiConfig | undefined => {
-  if (!ciConfig.artifactStructure.plugins) {
-    ciConfig.artifactStructure.plugins = [];
+/**
+ * Does the work of actually adding or replacing the Generator plugin.
+ */
+export const getUpdatedCiConfig = (ciConfig: CiConfig): CiConfig => {
+  const ciConfigCopy = structuredClone(ciConfig);
+  if (!ciConfigCopy.artifactStructure.plugins) {
+    ciConfigCopy.artifactStructure.plugins = [];
   }
 
-  let hasGeneratorPlugin = false;
-
-  // replace the "Generator" plugin if it was already defined
-  ciConfig.artifactStructure.plugins = ciConfig.artifactStructure.plugins.map(
+  const generatorPluginIndex = ciConfigCopy.artifactStructure.plugins.findIndex(
     (plugin) => {
-      if (plugin.pluginName === generatorPluginName) {
-        hasGeneratorPlugin = true;
-        return generatorPlugin;
-      }
-      return plugin;
+      return plugin.event === "ON_PAGE_GENERATE";
     }
   );
 
-  if (!hasGeneratorPlugin) {
-    ciConfig.artifactStructure.plugins.push(generatorPlugin);
+  // replace the "Generator" plugin if it was already defined
+  if (generatorPluginIndex !== -1) {
+    ciConfigCopy.artifactStructure.plugins[generatorPluginIndex] =
+      generatorPlugin;
+    // otherwise add it
+  } else {
+    ciConfigCopy.artifactStructure.plugins.push(generatorPlugin);
   }
 
-  return ciConfig;
+  return ciConfigCopy;
 };
 
-const generatorPluginName = "Generator";
 const generatorPlugin: Plugin = {
-  pluginName: generatorPluginName,
+  pluginName: "Pages Generator",
   sourceFiles: [
     {
       root: "dist/plugin",
@@ -90,5 +106,5 @@ const generatorPlugin: Plugin = {
     },
   ],
   event: "ON_PAGE_GENERATE",
-  functionName: "Generate",
+  functionName: "PagesGenerator",
 };

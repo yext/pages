@@ -1,7 +1,7 @@
 import { CiConfig } from "../../common/src/ci/ci.js";
-import { mergeCiConfig } from "./ci.js";
+import { getUpdatedCiConfig } from "./ci.js";
 
-describe("ci - mergeCiConfig", () => {
+describe("ci - getUpdatedCiConfig", () => {
   it("adds the Generator plugin to the config if it does not exist", async () => {
     const input: CiConfig = {
       artifactStructure: {
@@ -36,7 +36,7 @@ describe("ci - mergeCiConfig", () => {
         features: "sites-config/features.json",
         plugins: [
           {
-            pluginName: "Generator",
+            pluginName: "Pages Generator",
             sourceFiles: [
               {
                 root: "dist/plugin",
@@ -49,7 +49,7 @@ describe("ci - mergeCiConfig", () => {
               },
             ],
             event: "ON_PAGE_GENERATE",
-            functionName: "Generate",
+            functionName: "PagesGenerator",
           },
         ],
       },
@@ -65,7 +65,7 @@ describe("ci - mergeCiConfig", () => {
       },
     };
 
-    expect(mergeCiConfig(input)).toEqual(expected);
+    expect(getUpdatedCiConfig(input)).toEqual(expected);
   });
 
   it("updates the Generator plugin if it exists", async () => {
@@ -92,7 +92,7 @@ describe("ci - mergeCiConfig", () => {
               },
             ],
             event: "ON_PAGE_GENERATE",
-            functionName: "Generate",
+            functionName: "PagesGenerator",
           },
         ],
       },
@@ -119,7 +119,7 @@ describe("ci - mergeCiConfig", () => {
         features: "sites-config/features.json",
         plugins: [
           {
-            pluginName: "Generator",
+            pluginName: "Pages Generator",
             sourceFiles: [
               {
                 root: "dist/plugin",
@@ -132,7 +132,7 @@ describe("ci - mergeCiConfig", () => {
               },
             ],
             event: "ON_PAGE_GENERATE",
-            functionName: "Generate",
+            functionName: "PagesGenerator",
           },
         ],
       },
@@ -148,6 +148,6 @@ describe("ci - mergeCiConfig", () => {
       },
     };
 
-    expect(mergeCiConfig(input)).toEqual(expected);
+    expect(getUpdatedCiConfig(input)).toEqual(expected);
   });
 });
