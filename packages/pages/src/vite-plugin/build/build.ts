@@ -38,6 +38,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
               projectStructure.scopedTemplatesPath?.getAbsolutePath(),
               projectStructure
             ),
+            external: ["node:path"],
             output: {
               intro,
               assetFileNames: "assets/static/[name]-[hash][extname]",
