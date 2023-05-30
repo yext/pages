@@ -5,6 +5,7 @@ import {
   ProjectStructureConfig,
 } from "../common/src/project/structure.js";
 import { build } from "./build/build.js";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 const plugin = (): PluginOption[] => {
   const projectConfigFromBuildArgs: Optional<ProjectStructureConfig> = {
@@ -14,7 +15,7 @@ const plugin = (): PluginOption[] => {
   };
   const projectStructure = new ProjectStructure(projectConfigFromBuildArgs);
 
-  return [build(projectStructure)];
+  return [nodePolyfills(), build(projectStructure)];
 };
 
 export default plugin;
