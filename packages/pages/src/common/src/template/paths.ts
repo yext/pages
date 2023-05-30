@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 
 /**
  * Function that takes a path to a generated template and returns the

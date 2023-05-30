@@ -1,14 +1,11 @@
 import { TemplateModuleInternal } from "../../../../common/src/template/internal/types.js";
 import { getLang } from "../../../../common/src/template/head.js";
-import {
-  TemplateRenderProps,
-  RenderTemplate,
-} from "../../../../common/src/template/types.js";
+import { TemplateRenderProps } from "../../../../common/src/template/types.js";
 import {
   getHydrationTemplate,
   getServerTemplatePlugin,
 } from "../../../../common/src/template/hydration.js";
-import path from "path";
+import path from "node:path";
 import { PluginRenderTemplates } from "./templateUtils.js";
 
 export const reactWrapper = async <T extends TemplateRenderProps>(
