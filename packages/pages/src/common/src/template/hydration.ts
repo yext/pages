@@ -6,6 +6,9 @@ import { TemplateRenderProps } from "./types.js";
  * Imports the custom hydration template and entrypoint template as modules and calls
  * the render function.
  *
+ * The component paths need to be resolved to the current domain's relative path in order
+ * to support reverse proxies.
+ *
  * @param clientRenderTemplatePath the path to the custom client render template
  * @param templateModulePath the path to the template module
  * @param props the {@link TemplateRenderProps}
@@ -17,13 +20,19 @@ export const getHydrationTemplate = (
   props: TemplateRenderProps
 ): string => {
   return `
-        import {default as Component} from "${convertToPosixPath(
+        const componentUrl = import.meta.resolve("./${convertToPosixPath(
           templateModulePath
-        )}";
-        import {render} from "${convertToPosixPath(clientRenderTemplatePath)}";
-        render(
+        )}");
+        const renderUrl = import.meta.resolve("./${convertToPosixPath(
+          clientRenderTemplatePath
+        )}");
+        
+        const component = await import(componentUrl);
+        const render = await import(renderUrl);
+
+        render.render(
         {
-            Page: Component,
+            Page: component.default,
             pageProps: ${JSON.stringify(props)},
         }
         );

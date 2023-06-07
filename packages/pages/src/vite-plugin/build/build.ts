@@ -46,6 +46,19 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
           },
         },
         define: processEnvVariables(projectStructure.envVarPrefix),
+        experimental: {
+          renderBuiltUrl(filename, { hostType }) {
+            // Assets are returned with a leading slash for some reason. This adjusts the
+            // paths to be relative for reverse proxy support.
+            if (hostType === "js") {
+              if (filename.at(0) === "/") {
+                return filename.substring(1);
+              }
+              return filename;
+            }
+            return { relative: true };
+          },
+        },
       };
     },
     buildStart: buildStart(projectStructure),
