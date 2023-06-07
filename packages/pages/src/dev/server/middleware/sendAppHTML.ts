@@ -10,7 +10,7 @@ import { getContentType } from "./getContentType.js";
 import { getGlobalClientServerRenderTemplates } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import {
-  getHydrationTemplate,
+  getHydrationTemplateDev,
   getServerTemplateDev,
 } from "../../../common/src/template/hydration.js";
 
@@ -52,7 +52,7 @@ export default async function sendAppHTML(
     ? templateModuleInternal.getHeadConfig(props)
     : undefined;
 
-  const clientHydrationString = getHydrationTemplate(
+  const clientHydrationString = getHydrationTemplateDev(
     clientServerRenderTemplates.clientRenderTemplatePath,
     templateModuleInternal.path,
     props
