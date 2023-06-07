@@ -59,6 +59,7 @@ export interface PluginRenderTemplates {
 export const getPluginRenderTemplates = async (
   manifest: Manifest
 ): Promise<PluginRenderTemplates> => {
+  const clientRenderPath = pathLib.join("..", manifest.renderPaths._client);
   const serverRenderPath = manifest.renderPaths._server.replace("assets", "..");
 
   const serverRenderTemplateModule = (await import(
@@ -67,7 +68,7 @@ export const getPluginRenderTemplates = async (
 
   return {
     server: serverRenderTemplateModule,
-    client: manifest.renderPaths._client,
+    client: clientRenderPath,
   };
 };
 
