@@ -11,7 +11,7 @@ import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../../../../common/src/template/internal/types.js";
-import path from "node:path";
+import pathLib from "node:path";
 
 const pathToModule = new Map();
 
@@ -59,7 +59,7 @@ export interface PluginRenderTemplates {
 export const getPluginRenderTemplates = async (
   manifest: Manifest
 ): Promise<PluginRenderTemplates> => {
-  const clientRenderPath = path.join("..", manifest.renderPaths._client);
+  const clientRenderPath = pathLib.join("..", manifest.renderPaths._client);
   const serverRenderPath = manifest.renderPaths._server.replace("assets", "..");
 
   const serverRenderTemplateModule = (await import(
