@@ -4,7 +4,7 @@
 import * as React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MapboxMaps } from "@yext/components-tsx-maps";
-import { Map, Marker, useMapContext } from ".";
+import { Clusterer, Map, Marker, useMapContext } from ".";
 
 describe("Map", () => {
   it("renders with Google Maps", async () => {
@@ -56,5 +56,22 @@ describe("Map", () => {
     };
 
     expect(() => render(<MapSiblingComponent />)).toThrow();
+  });
+
+  it("renders with Clusterer", async () => {
+    render(
+      <Map clientKey="gme-yextinc">
+        <Clusterer>
+          <Marker
+            id="1"
+            coordinate={{ latitude: 38.8974, longitude: -97.0638 }}
+          />
+          <Marker
+            id="1"
+            coordinate={{ latitude: 38.9974, longitude: -97.1638 }}
+          />
+        </Clusterer>
+      </Map>
+    );
   });
 });
