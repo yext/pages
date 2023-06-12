@@ -1,4 +1,8 @@
-import type { Map as MapType, MapProvider } from "@yext/components-tsx-maps";
+import type {
+  Map as MapType,
+  MapProvider,
+  MapPin,
+} from "@yext/components-tsx-maps";
 import type { GeoBounds } from "@yext/components-tsx-geo";
 import React from "react";
 
@@ -50,4 +54,27 @@ export interface MarkerProps {
   onFocus: (focused: boolean, id: string) => void;
   statusOptions?: { [key: string]: boolean };
   zIndex?: number;
+}
+
+// Clusterer
+
+export type ClusterTemplateProps = {
+  count?: number;
+};
+
+export type ClustererProps = {
+  clusterRadius?: number;
+  children: JSX.Element[] | JSX.Element;
+  ClusterTemplate?: (props: ClusterTemplateProps) => JSX.Element;
+};
+
+export type PinStoreType = {
+  id: string;
+  pin: MapPin;
+};
+
+export interface ClustererContextType {
+  clusters: PinStoreType[][];
+  clusterIds: string[];
+  setPinStore: React.Dispatch<React.SetStateAction<PinStoreType[]>>;
 }
