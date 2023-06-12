@@ -4,10 +4,7 @@ import { propsLoader } from "../ssr/propsLoader.js";
 import { urlToFeature } from "../ssr/urlToFeature.js";
 import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
-import {
-  getGlobalClientServerRenderTemplates,
-  getTemplateFilepathsFromProjectStructure,
-} from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import sendAppHTML from "./sendAppHTML.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { convertTemplateConfigInternalToFeaturesConfig } from "../../../common/src/feature/features.js";
@@ -30,20 +27,10 @@ export const serverRenderRoute =
       const url = new URL("http://" + req.headers.host + req.originalUrl);
       const { feature, entityId, locale, staticURL } = urlToFeature(url);
 
-      const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
-        projectStructure.templatesRoot,
-        projectStructure.scopedTemplatesPath
-      );
-
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
       const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
-        await findMatchingStaticTemplate(
-          vite,
-          staticURL,
-          templateFilepaths,
-          clientServerRenderTemplates.isCustomRenderTemplate
-        );
+        await findMatchingStaticTemplate(vite, staticURL, templateFilepaths);
       if (matchingStaticTemplate) {
         sendStaticPage(
           res,
@@ -65,8 +52,7 @@ export const serverRenderRoute =
       const templateModuleInternal = await findTemplateModuleInternal(
         vite,
         (t) => feature === t.config.name,
-        templateFilepaths,
-        clientServerRenderTemplates.isCustomRenderTemplate
+        templateFilepaths
       );
       if (!templateModuleInternal) {
         send404(

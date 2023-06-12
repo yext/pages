@@ -209,20 +209,24 @@ const getCssTags = (
   return cssFiles;
 };
 
+const headTag = "<head>";
+
 /**
- * Finds the closing </head> tag and injects the input string into it.
+ * Finds the opening <head> tag and injects the input string into it.
  * @param html
  */
 const injectIntoHead = (html: string, stringToInject: string): string => {
-  const closingHeadIndex = html.indexOf("</head>");
+  let openingHeadIndex = html.indexOf(headTag);
 
-  if (closingHeadIndex === -1) {
+  if (openingHeadIndex === -1) {
     throw new Error("_server.tsx: No head tag is defined");
   }
 
+  openingHeadIndex += headTag.length;
+
   return (
-    html.slice(0, closingHeadIndex) +
+    html.slice(0, openingHeadIndex) +
     stringToInject +
-    html.slice(closingHeadIndex)
+    html.slice(openingHeadIndex)
   );
 };

@@ -3,7 +3,6 @@ import * as path from "path";
 import logger from "../../log.js";
 import { generateManifestFile } from "./manifest.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
-import colors from "picocolors";
 import { validateBundles } from "./bundleValidator.js";
 import {
   loadTemplateModules,
@@ -27,12 +26,7 @@ export default (projectStructure: ProjectStructure) => {
           "**/*.js"
         )
       );
-      templateModules = await loadTemplateModules(
-        serverBundles,
-        false,
-        true,
-        projectStructure
-      );
+      templateModules = await loadTemplateModules(serverBundles, false, true);
       validateUniqueFeatureName(templateModules);
       validateBundles();
       finisher.succeed("Validated template modules");

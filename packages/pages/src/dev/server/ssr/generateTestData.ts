@@ -11,10 +11,7 @@ import path from "path";
 import fs from "fs";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getFeaturesConfig } from "../../../generate/features/createFeaturesJson.js";
-import {
-  getGlobalClientServerRenderTemplates,
-  getTemplateFilepathsFromProjectStructure,
-} from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
@@ -79,19 +76,13 @@ const loadTemplateModuleCollectionUsingVite = async (
   templateFilepaths: string[],
   projectStructure: ProjectStructure
 ): Promise<TemplateModuleCollection> => {
-  const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
-    projectStructure.templatesRoot,
-    projectStructure.scopedTemplatesPath
-  );
-
   const templateModules: TemplateModuleInternal<any, any>[] = await Promise.all(
     templateFilepaths.map(async (templateFilepath) => {
       const templateModule = await loadTemplateModule(vite, templateFilepath);
       return convertTemplateModuleToTemplateModuleInternal(
         templateFilepath,
         templateModule,
-        false,
-        clientServerRenderTemplates.isCustomRenderTemplate
+        false
       );
     })
   );
