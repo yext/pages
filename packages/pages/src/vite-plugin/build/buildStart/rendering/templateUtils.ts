@@ -11,7 +11,6 @@ import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../../../../common/src/template/internal/types.js";
-import pathLib from "node:path";
 
 const pathToModule = new Map();
 
@@ -34,8 +33,7 @@ export const readTemplateModules = async (
   const templateModuleInternal = convertTemplateModuleToTemplateModuleInternal(
     path,
     importedModule,
-    true,
-    false // doesn't matter here, it's already been validated at this point
+    true
   );
 
   pathToModule.set(path, templateModuleInternal);

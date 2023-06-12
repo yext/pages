@@ -27,8 +27,7 @@ const handler = async ({ scope }: FeaturesArgs): Promise<void> => {
   const templateModules = await loadTemplateModules(
     templateFilepaths,
     true,
-    false,
-    projectStructure
+    false
   );
   const featuresFilepath = path.join(
     process.cwd(),

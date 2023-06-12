@@ -5,8 +5,7 @@ import { findTemplateModuleInternal } from "./findTemplateModuleInternal.js";
 export default async function findMatchingStaticTemplate(
   vite: ViteDevServer,
   slug: string,
-  templateFilepaths: string[],
-  isCustomRenderTemplate: boolean
+  templateFilepaths: string[]
 ) {
   return findTemplateModuleInternal(
     vite,
@@ -16,7 +15,6 @@ export default async function findMatchingStaticTemplate(
       }
       return slug === t.getPath({});
     },
-    templateFilepaths,
-    isCustomRenderTemplate
+    templateFilepaths
   );
 }

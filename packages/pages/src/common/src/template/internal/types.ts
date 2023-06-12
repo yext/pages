@@ -86,8 +86,7 @@ const parse = (filepath: string, adjustForFingerprintedAsset: boolean) => {
 export const convertTemplateModuleToTemplateModuleInternal = (
   templateFilepath: string,
   templateModule: TemplateModule<any, any>,
-  adjustForFingerprintedAsset: boolean,
-  isCustomRenderTemplate: boolean
+  adjustForFingerprintedAsset: boolean
 ): TemplateModuleInternal<any, any> => {
   const templatePath = parse(templateFilepath, adjustForFingerprintedAsset);
 
@@ -102,10 +101,7 @@ export const convertTemplateModuleToTemplateModuleInternal = (
     templateName: templatePath.name,
   };
 
-  validateTemplateModuleInternal(
-    templateModuleInternal,
-    isCustomRenderTemplate
-  );
+  validateTemplateModuleInternal(templateModuleInternal);
 
   return templateModuleInternal;
 };
