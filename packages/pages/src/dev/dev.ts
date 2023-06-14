@@ -3,6 +3,7 @@ import { CommandModule } from "yargs";
 import open from "open";
 import { ProjectFilepaths } from "../common/src/project/structure.js";
 import { devServerPort } from "./server/middleware/constants.js";
+import { spawnSync } from "child_process";
 
 interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
   local?: boolean;
@@ -16,6 +17,14 @@ const handler = async ({
   "prod-url": useProdURLs,
   "open-browser": openBrowser,
 }: DevArgs) => {
+  spawnSync("yext pages build", [], {
+    stdio: ["inherit", "pipe", "inherit"],
+    shell: true,
+  });
+  spawnSync("yext pages generate-test-data", [], {
+    stdio: ["inherit", "pipe", "inherit"],
+    shell: true,
+  });
   await createServer(!local, !!useProdURLs, scope);
   if (!openBrowser) {
     return;
