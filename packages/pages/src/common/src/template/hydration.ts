@@ -88,7 +88,7 @@ const getCommonInjectedServerHtml = (
   headConfig?: HeadConfig
 ): string => {
   // Add the language to the <html> tag if it exists
-  serverHtml.replace("<!--app-lang-->", appLanguage);
+  serverHtml = serverHtml.replace("<!--app-lang-->", appLanguage);
 
   if (clientHydrationString) {
     serverHtml = injectIntoHead(
@@ -163,6 +163,11 @@ export const getServerTemplatePlugin = (
     html,
     getCssHtml(templateFilepath, bundlerManifest, relativePrefixToRoot)
   );
+
+  // Assets imported in js files need to be relative based on current url's path. We can achieve this by
+  // using the relativePrefixToRoot. The replacement tag was added during the Vite build step in
+  // packages/pages/src/vite-plugin/build/build.ts.
+  html = html.replaceAll("<!--relativePrefixToRoot-->", relativePrefixToRoot);
 
   return html;
 };

@@ -48,14 +48,17 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
         define: processEnvVariables(projectStructure.envVarPrefix),
         experimental: {
           renderBuiltUrl(filename, { hostType }) {
-            // Assets are returned with a leading slash for some reason. This adjusts the
-            // paths to be relative for reverse proxy support.
+            // Assets imported in js files need to be relative based on current url's path. We can achieve this by
+            // using the relativePrefixToRoot. This adds a replacement tag that is replaced during the generation
+            // phase. See getServerTemplatePlugin in packages/pages/src/common/src/template/hydration.ts.
             if (hostType === "js") {
               if (filename.at(0) === "/") {
-                return filename.substring(1);
+                filename = filename.substring(1);
               }
-              return filename;
+
+              return `<!--relativePrefixToRoot-->${filename}`;
             }
+
             return { relative: true };
           },
         },
