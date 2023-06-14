@@ -33,6 +33,9 @@ export const loadTemplateModules = async (
           write: false,
           format: "esm",
           bundle: true,
+          loader: {
+            ".ico": "dataurl",
+          },
         });
 
         templateModule = await importFromString(
