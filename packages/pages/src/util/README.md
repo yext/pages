@@ -21,5 +21,5 @@ Determines if the code is being executed on the production site on the client. T
 ## runSubprocess()
 
 Creates a child process and returns a promise that resolves when the child process completes.
-Allows child processes to be run asynchronously with stdout streamed the main
+Allows child processes to be run asynchronously with stdout streamed to the main
 process's stdout in real time.
