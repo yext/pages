@@ -1,0 +1,27 @@
+import { spawn } from "child_process";
+import process from "process";
+
+/**
+ * Creates a child process and writes to stdout and stderr in real time
+ * @param {String} command the CLI command to run
+ * @return {Promise<number>} the process's exit code
+ */
+function runSubProcess(command: string) {
+  const childProcess = spawn(command, {
+    stdio: ["inherit", "pipe", "pipe"],
+    shell: true,
+  });
+  return new Promise((resolveFunc) => {
+    childProcess.stdout.on("data", (x) => {
+      process.stdout.write(x.toString());
+    });
+    childProcess.stderr.on("data", (x) => {
+      process.stderr.write(x.toString());
+    });
+    childProcess.on("exit", (code) => {
+      resolveFunc(code);
+    });
+  });
+}
+
+export default runSubProcess;
