@@ -3,11 +3,11 @@ import { ProjectFilepaths } from "../common/src/project/structure.js";
 import runSubprocess from "../util/runSubprocess.js";
 
 interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
-  r?: string;
-  p?: number;
-  f?: string;
-  o?: string;
-  l?: string;
+  root?: string;
+  port?: number;
+  files?: string;
+  output?: string;
+  localData?: string;
   hostname?: string;
   noBuild?: boolean;
   noRender?: boolean;
@@ -20,26 +20,26 @@ const handler = async (args: DevArgs) => {
   let renderArgs = ["render"];
   let serveArgs = ["serve"];
 
-  if (args.r) {
-    buildArgs = buildArgs.concat("--root", args.r);
-    renderArgs = renderArgs.concat("--root", args.r);
-    serveArgs = serveArgs.concat("--root", args.r);
+  if (args.root) {
+    buildArgs = buildArgs.concat("--root", args.root);
+    renderArgs = renderArgs.concat("--root", args.root);
+    serveArgs = serveArgs.concat("--root", args.root);
   }
 
-  if (args.p) {
-    serveArgs = serveArgs.concat("--port", args.p.toString());
+  if (args.port) {
+    serveArgs = serveArgs.concat("--port", args.port.toString());
   }
 
-  if (args.f) {
-    serveArgs = serveArgs.concat("--files", args.f);
+  if (args.files) {
+    serveArgs = serveArgs.concat("--files", args.files);
   }
 
-  if (args.o) {
-    renderArgs = renderArgs.concat("--output", args.o);
+  if (args.output) {
+    renderArgs = renderArgs.concat("--output", args.output);
   }
 
-  if (args.l) {
-    renderArgs = renderArgs.concat("--localData", args.l);
+  if (args.localData) {
+    renderArgs = renderArgs.concat("--localData", args.localData);
   }
 
   if (args.hostname) {
@@ -57,48 +57,48 @@ export const prodCommandModule: CommandModule<unknown, DevArgs> = {
   describe: "Runs a custom local production server",
   builder: (yargs) => {
     return yargs
-      .option("h", {
-        alias: "help",
+      .option("help", {
+        alias: "h",
         describe: "help for pages prod",
         type: "boolean",
         demandOption: false,
       })
-      .option("r", {
-        alias: "root",
-        describe: "[build,render,serve] Path to the repo root directory",
+      .option("root", {
+        alias: "r",
+        describe: "Path to the repo root directory",
         type: "string",
         demandOption: false,
       })
-      .option("p", {
-        alias: "port",
-        describe: "[serve] Port to serve at (default 8000)",
+      .option("port", {
+        alias: "p",
+        describe: "Port to serve at (default 8000)",
         type: "number",
         demandOption: false,
       })
-      .option("f", {
-        alias: "files",
+      .option("files", {
+        alias: "f",
         describe:
-          '[serve] Directory of files to serve (default "sites-rendered-output")',
+          'Directory of files to serve (default "sites-rendered-output")',
         type: "string",
         demandOption: false,
       })
-      .option("o", {
-        alias: "output",
+      .option("output", {
+        alias: "o",
         describe:
-          '[render] Path to render output directory (default "sites-rendered-output")',
+          'Path to render output directory (default "sites-rendered-output")',
         type: "string",
         demandOption: false,
       })
-      .option("l", {
-        alias: "localData",
+      .option("localData", {
+        alias: "l",
         describe:
-          "[render] Relative path to directory with data to generate pages for (default" +
-          ' "localData")',
+          "Relative path to directory with data to generate pages for (default:" +
+          " local_data)",
         type: "string",
         demandOption: false,
       })
       .option("hostname", {
-        describe: "[build,render] Hostname of site to render",
+        describe: "Hostname of site to render",
         type: "string",
         demandOption: false,
       })
