@@ -7,6 +7,7 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { readdir } from "fs/promises";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { getGlobalClientServerRenderTemplates } from "../../common/src/template/internal/getTemplateFilepaths.js";
+import { relativePrefixToRootReplacementTag } from "../../common/src/template/hydration.js";
 
 const intro = `
 var global = globalThis;
@@ -56,7 +57,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
                 filename = filename.substring(1);
               }
 
-              return `<!--relativePrefixToRoot-->${filename}`;
+              return `${relativePrefixToRootReplacementTag}${filename}`;
             }
 
             return { relative: true };

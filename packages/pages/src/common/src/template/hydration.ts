@@ -2,6 +2,8 @@ import { HeadConfig, renderHeadConfigToString } from "./head.js";
 import { convertToPosixPath } from "./paths.js";
 import { TemplateRenderProps } from "./types.js";
 
+export const relativePrefixToRootReplacementTag = "<!--relativePrefixToRoot-->";
+
 /**
  * Imports the custom hydration template and entrypoint template as modules and calls
  * the render function.
@@ -167,7 +169,10 @@ export const getServerTemplatePlugin = (
   // Assets imported in js files need to be relative based on current url's path. We can achieve this by
   // using the relativePrefixToRoot. The replacement tag was added during the Vite build step in
   // packages/pages/src/vite-plugin/build/build.ts.
-  html = html.replaceAll("<!--relativePrefixToRoot-->", relativePrefixToRoot);
+  html = html.replaceAll(
+    relativePrefixToRootReplacementTag,
+    relativePrefixToRoot
+  );
 
   return html;
 };
