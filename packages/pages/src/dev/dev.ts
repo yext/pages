@@ -14,35 +14,32 @@ interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
   noGenTestData?: boolean;
 }
 
-const handler = async (args: DevArgs) => {
-  const {
-    local,
-    "prod-url": useProdURLs,
-    "open-browser": openBrowser,
-    scope,
-  } = args;
-
-  if (!args.noGenFeatures)
+const handler = async ({
+  local,
+  "prod-url": useProdURLs,
+  "open-browser": openBrowser,
+  scope,
+  noGenFeatures,
+  noGenTestData,
+}: DevArgs) => {
+  if (!noGenFeatures)
     await runSubProcess(
       "pages generate features",
-      args.scope ? ["--scope" + " " + args.scope] : []
+      scope ? ["--scope" + " " + scope] : []
     );
 
-  if (!args.noGenTestData)
-    await runSubProcess("yext pages generate-test-data", []);
+  if (!noGenTestData) await runSubProcess("yext pages generate-test-data", []);
 
   await createServer(!local, !!useProdURLs, scope);
 
   if (openBrowser) await open(`http://localhost:${devServerPort}/`);
 };
 
-const devCommandDescription =
-  "Creates features.json, generates test data, and runs a custom local development server that" +
-  " is backed by Vite.";
-
 export const devCommandModule: CommandModule<unknown, DevArgs> = {
   command: "dev",
-  describe: devCommandDescription,
+  describe:
+    "Creates features.json, generates test data, and runs a custom local development" +
+    " server that is backed by Vite.",
   builder: (yargs) => {
     return yargs
       .option("h", {
