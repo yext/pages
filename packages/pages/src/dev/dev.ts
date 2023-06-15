@@ -17,9 +17,9 @@ const handler = async ({
   "prod-url": useProdURLs,
   "open-browser": openBrowser,
 }: DevArgs) => {
-  await runSubProcess("pages generate features");
+  await runSubProcess("pages generate features", []);
 
-  await runSubProcess("yext pages generate-test-data");
+  await runSubProcess("yext pages generate-test-data", []);
 
   await createServer(!local, !!useProdURLs, scope);
   if (!openBrowser) {
