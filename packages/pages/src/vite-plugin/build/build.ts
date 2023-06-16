@@ -45,6 +45,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
               chunkFileNames: "assets/static/[name]-[hash].js",
             },
           },
+          reportCompressedSize: false,
         },
         define: processEnvVariables(projectStructure.envVarPrefix),
         experimental: {
