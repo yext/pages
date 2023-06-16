@@ -3,6 +3,8 @@ import { convertToPosixPath } from "./paths.js";
 import { TemplateRenderProps } from "./types.js";
 
 export const relativePrefixToRootReplacementTag = "<!--relativePrefixToRoot-->";
+const relativePrefixToRootEscapedReplacementTag =
+  "&lt;!--relativePrefixToRoot--&gt;";
 
 /**
  * Imports the custom hydration template and entrypoint template as modules and calls
@@ -171,6 +173,10 @@ export const getServerTemplatePlugin = (
   // packages/pages/src/vite-plugin/build/build.ts.
   html = html.replaceAll(
     relativePrefixToRootReplacementTag,
+    relativePrefixToRoot
+  );
+  html = html.replaceAll(
+    relativePrefixToRootEscapedReplacementTag,
     relativePrefixToRoot
   );
 
