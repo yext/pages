@@ -59,14 +59,27 @@ export const getPluginRenderTemplates = async (
 ): Promise<PluginRenderTemplates> => {
   const serverRenderPath = manifest.renderPaths._server.replace("assets", "..");
 
-  const serverRenderTemplateModule = (await import(
+  const serverRenderTemplateModule = await importRenderTemplate(
     serverRenderPath
-  )) as RenderTemplate;
+  );
 
   return {
     server: serverRenderTemplateModule,
     client: manifest.renderPaths._client,
   };
+};
+
+// caches dynamically imported plugin render template modules. Without this, dynamically imported
+// modules will leak some memory during generation. This can cause issues on a publish with a large
+// number of generations.
+const pluginRenderTemplatesCache = new Map<string, RenderTemplate>();
+
+const importRenderTemplate = async (path: string): Promise<RenderTemplate> => {
+  let module = pluginRenderTemplatesCache.get(path);
+  if (!module) {
+    module = (await import(path)) as RenderTemplate;
+  }
+  return module;
 };
 
 // Represents a page produced by the generation procees.
