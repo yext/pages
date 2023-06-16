@@ -78,6 +78,7 @@ const importRenderTemplate = async (path: string): Promise<RenderTemplate> => {
   let module = pluginRenderTemplatesCache.get(path);
   if (!module) {
     module = (await import(path)) as RenderTemplate;
+    pluginRenderTemplatesCache.set(path, module);
   }
   return module;
 };
