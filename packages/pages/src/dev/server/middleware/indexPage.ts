@@ -236,7 +236,7 @@ const createEntityPageListItems = (
     if (!slug) {
       return entityId;
     }
-    return `${slug} (${entityId})`;
+    return `${slug}`;
   };
 
   const entities = localDataManifest.entity.get(templateName) || [];
