@@ -52,10 +52,16 @@ export default async function sendAppHTML(
     ? templateModuleInternal.getHeadConfig(props)
     : undefined;
 
+  const hydrate =
+    templateModuleInternal.config.hydration === undefined
+      ? false
+      : templateModuleInternal.config.hydration;
+
   const clientHydrationString = getHydrationTemplateDev(
     clientServerRenderTemplates.clientRenderTemplatePath,
     templateModuleInternal.path,
-    props
+    props,
+    hydrate
   );
 
   const clientInjectedServerHtml = getServerTemplateDev(

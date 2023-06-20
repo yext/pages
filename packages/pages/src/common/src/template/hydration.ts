@@ -9,6 +9,9 @@ import { TemplateRenderProps } from "./types.js";
  * Dev has a separate function than {@link getHydrationTemplate} due to how Vite messes
  * with the import.meta.url.
  *
+ * Result is split into two strings becuase if user when hydration is disabled,
+ * the first part allows CSS to load in but second part disbales rest of hydration.
+ *
  * @param clientRenderTemplatePath the path to the custom client render template
  * @param templateModulePath the path to the template module
  * @param props the {@link TemplateRenderProps}
@@ -17,21 +20,28 @@ import { TemplateRenderProps } from "./types.js";
 export const getHydrationTemplateDev = (
   clientRenderTemplatePath: string,
   templateModulePath: string,
-  props: TemplateRenderProps
+  props: TemplateRenderProps,
+  hydrate: boolean
 ): string => {
-  return `
-      import {default as Component} from "${convertToPosixPath(
-        templateModulePath
-      )}";
-      import {render} from "${convertToPosixPath(clientRenderTemplatePath)}";
-      
-      render(
-      {
-          Page: Component,
-          pageProps: ${JSON.stringify(props)},
-      }
-      );
-    `;
+  let hydrationTemplate = `
+  import {default as Component} from "${convertToPosixPath(
+    templateModulePath
+  )}";
+  `;
+
+  if (hydrate) {
+    hydrationTemplate += `
+    import {render} from "${convertToPosixPath(clientRenderTemplatePath)}";
+    render(
+    {
+        Page: Component,
+        pageProps: ${JSON.stringify(props)},
+    }
+    );
+  `;
+  }
+
+  return hydrationTemplate;
 };
 
 /**

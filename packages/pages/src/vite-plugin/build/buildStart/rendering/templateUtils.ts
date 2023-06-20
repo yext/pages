@@ -161,11 +161,16 @@ const renderHtml = async (
     return render(props);
   }
 
+  // since hydrate is optional, if not set by user, default to false
+  const hydrate =
+    templateModuleInternal.config.hydration === undefined
+      ? false
+      : templateModuleInternal.config.hydration;
+
   return await reactWrapper(
     props,
     templateModuleInternal,
-    // TODO -- allow hydration be configurable.
-    true,
+    hydrate,
     pluginRenderTemplates
   );
 };
