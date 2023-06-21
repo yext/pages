@@ -10,11 +10,7 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
-import fs from "fs";
-import { Path } from "../../common/src/project/path.js";
-import path from "path";
-import { CiConfig, ServerlessFunction } from "../../common/src/ci/ci.js";
-import { loadServerlessFunctionModules } from "../../common/src/function/internal/loader.js";
+import { loadServerlessFunctions } from "../../common/src/function/internal/loader.js";
 import { serveServerlessFunction } from "./middleware/serverlessFunctions.js";
 
 export const createServer = async (
@@ -65,33 +61,12 @@ export const createServer = async (
     ));
   }
 
-  const ciConfig: CiConfig = JSON.parse(
-    fs.readFileSync(
-      path.join(
-        projectStructure.sitesConfigRoot.getAbsolutePath(),
-        projectStructure.ciConfig
-      ),
-      "utf8"
-    )
-  );
+  const loadedFunctions = await loadServerlessFunctions();
 
-  if (ciConfig.artifactStructure.functions) {
-    const serverlessFunctions: ServerlessFunction[] =
-      ciConfig.artifactStructure.functions;
-    const loadedFunctions = await loadServerlessFunctionModules(
-      serverlessFunctions.map((serverlessFunction) =>
-        new Path("src/" + serverlessFunction.src).getAbsolutePath()
-      ),
-      true,
-      false
-    );
-    app.use(
-      serverlessFunctions.map(
-        (serverlessFunction) => "/" + serverlessFunction.slug
-      ),
-      (req, res) => serveServerlessFunction(req, res, loadedFunctions)
-    );
-  }
+  app.use(
+    [...loadedFunctions.keys()].map((slug) => "/" + slug),
+    (req, res) => serveServerlessFunction(req, res, loadedFunctions)
+  );
 
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.

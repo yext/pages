@@ -5,10 +5,8 @@ import { defaultProjectStructureConfig } from "../../common/src/project/structur
 import { CiConfig, Plugin } from "../../common/src/ci/ci.js";
 import fs from "node:fs";
 import colors from "picocolors";
-import { getServerlessFunctionFilepaths } from "../../common/src/function/internal/getServerlessFunctionFilepaths.js";
-import { loadServerlessFunctionModules } from "../../common/src/function/internal/loader.js";
 
-const handler = async () => {
+const handler = (): void => {
   const ciConfigFilename =
     defaultProjectStructureConfig.filenamesConfig.ciConfig;
   const sitesConfigRoot =
@@ -16,7 +14,7 @@ const handler = async () => {
   const ciConfigAbsolutePath = new Path(
     path.join(process.cwd(), sitesConfigRoot, ciConfigFilename)
   );
-  await updateCiConfig(ciConfigAbsolutePath.getAbsolutePath(), true);
+  updateCiConfig(ciConfigAbsolutePath.getAbsolutePath(), true);
 };
 
 /**
@@ -38,7 +36,7 @@ export const ciCommandModule: CommandModule<unknown, unknown> = {
  * by another internal function. It guards whether the function throws or console.errors to give
  * a better UX.
  */
-export const updateCiConfig = async (
+export const updateCiConfig = (
   ciConfigPath: string,
   calledViaCommand: boolean
 ) => {
@@ -59,7 +57,7 @@ export const updateCiConfig = async (
     }
   }
 
-  const updatedCiConfigJson = await getUpdatedCiConfig(originalCiConfigJson);
+  const updatedCiConfigJson = getUpdatedCiConfig(originalCiConfigJson);
   if (updatedCiConfigJson) {
     fs.writeFileSync(
       ciConfigPath,
@@ -71,9 +69,7 @@ export const updateCiConfig = async (
 /**
  * Does the work of actually adding or replacing the Generator plugin.
  */
-export const getUpdatedCiConfig = async (
-  ciConfig: CiConfig
-): Promise<CiConfig> => {
+export const getUpdatedCiConfig = (ciConfig: CiConfig): CiConfig => {
   const ciConfigCopy = structuredClone(ciConfig);
   if (!ciConfigCopy.artifactStructure.plugins) {
     ciConfigCopy.artifactStructure.plugins = [];
@@ -94,25 +90,6 @@ export const getUpdatedCiConfig = async (
     ciConfigCopy.artifactStructure.plugins.push(generatorPlugin);
   }
 
-  const serverlessFunctions = await loadServerlessFunctions();
-
-  if (serverlessFunctions.size > 0) {
-    ciConfigCopy.artifactStructure.functions = [];
-
-    serverlessFunctions.forEach((serverlessFunction) => {
-      const functionCiEntry = {
-        name: serverlessFunction.config.name,
-        functionName: serverlessFunction.functionName,
-        src: "functions" + serverlessFunction.path.split("/src/functions")[1],
-        event: serverlessFunction.config.event,
-        slug: serverlessFunction.slug,
-      };
-      if (ciConfigCopy.artifactStructure.functions) {
-        ciConfigCopy.artifactStructure.functions.push(functionCiEntry);
-      }
-    });
-  }
-
   return ciConfigCopy;
 };
 
@@ -130,17 +107,4 @@ const generatorPlugin: Plugin = {
   ],
   event: "ON_PAGE_GENERATE",
   functionName: "PagesGenerator",
-};
-
-const loadServerlessFunctions = async () => {
-  const serverlessFunctionFilepaths = getServerlessFunctionFilepaths([
-    new Path(
-      defaultProjectStructureConfig.filepathsConfig.serverlessFunctionsRoot
-    ),
-  ]);
-  return await loadServerlessFunctionModules(
-    serverlessFunctionFilepaths,
-    true,
-    false
-  );
 };

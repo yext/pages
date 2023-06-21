@@ -6,6 +6,9 @@ import {
 import esbuild from "esbuild";
 import { importFromString } from "module-from-string";
 import { pathToFileURL } from "url";
+import { getServerlessFunctionFilepaths } from "./getServerlessFunctionFilepaths.js";
+import { Path } from "../../project/path.js";
+import { defaultProjectStructureConfig } from "../../project/structure.js";
 
 const TEMP_DIR = ".temp";
 
@@ -84,3 +87,16 @@ export type ServerlessFunctionModuleCollection = Map<
   string,
   ServerlessFunctionModuleInternal<any, any>
 >;
+
+export const loadServerlessFunctions = async () => {
+  const serverlessFunctionFilepaths = getServerlessFunctionFilepaths([
+    new Path(
+      defaultProjectStructureConfig.filepathsConfig.serverlessFunctionsRoot
+    ),
+  ]);
+  return await loadServerlessFunctionModules(
+    serverlessFunctionFilepaths,
+    true,
+    false
+  );
+};
