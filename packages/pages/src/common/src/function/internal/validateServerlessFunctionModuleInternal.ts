@@ -1,7 +1,7 @@
 import {
   ServerlessFunctionConfigInternal,
   ServerlessFunctionModuleInternal,
-} from "../internal/types.js";
+} from "./types.js";
 import {
   ServerlessFunctionModule,
   ServerlessFunctionConfig,

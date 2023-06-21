@@ -94,7 +94,6 @@ export const getUpdatedCiConfig = async (
     ciConfigCopy.artifactStructure.plugins.push(generatorPlugin);
   }
 
-  console.log("trying:");
   const serverlessFunctions = await loadServerlessFunctions();
 
   if (serverlessFunctions.size > 0) {
@@ -139,12 +138,9 @@ const loadServerlessFunctions = async () => {
       defaultProjectStructureConfig.filepathsConfig.serverlessFunctionsRoot
     ),
   ]);
-  const serverlessFunctionModules = await loadServerlessFunctionModules(
+  return await loadServerlessFunctionModules(
     serverlessFunctionFilepaths,
     true,
     false
   );
-  console.log("module output:", serverlessFunctionModules);
-
-  return serverlessFunctionModules;
 };

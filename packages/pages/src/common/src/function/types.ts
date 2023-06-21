@@ -26,7 +26,7 @@ export interface ServerlessFunctionModule<
  */
 export type Execute<T extends ServerlessFunctionRenderProps> = (
   props: T
-) => string;
+) => HttpResponse;
 
 /**
  * The exported `config` function's definition.
@@ -78,3 +78,9 @@ export interface ServerlessFunctionRenderProps extends ServerlessFunctionProps {
    */
   relativePrefixToRoot: string;
 }
+
+export type HttpResponse = {
+  body?: string;
+  statusCode: number;
+  headers?: Headers;
+};

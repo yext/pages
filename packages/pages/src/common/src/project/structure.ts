@@ -113,6 +113,7 @@ export class ProjectStructure {
 
   sitesConfigRoot: Path;
   templatesRoot: Path;
+  serverlessFunctionsRoot: Path;
   scope?: string;
   scopedTemplatesPath?: Path;
   scopedSitesConfigPath?: Path;
@@ -132,6 +133,9 @@ export class ProjectStructure {
       this.#config.filepathsConfig.sitesConfigRoot
     );
     this.templatesRoot = new Path(this.#config.filepathsConfig.templatesRoot);
+    this.serverlessFunctionsRoot = new Path(
+      this.#config.filepathsConfig.serverlessFunctionsRoot
+    );
 
     const scope = this.#config.filepathsConfig.scope;
     if (scope) {

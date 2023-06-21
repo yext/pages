@@ -62,33 +62,28 @@ export const convertServerlessFunctionModuleToServerlessFunctionModuleInternal =
       serverlessFunctionFilepath,
       adjustForFingerprintedAsset
     );
-    console.log(
-      serverlessFunctionFilepath,
-      JSON.stringify(serverlessFunctionModule)
-    );
 
     let serverlessFunctionInternal;
-    console.log(
-      serverlessFunctionFilepath.includes("/functions/http"),
-      Object.keys(serverlessFunctionModule)
-    );
 
     if (
       serverlessFunctionFilepath.includes("/functions/http") &&
       Object.keys(serverlessFunctionModule).length === 1
     ) {
+      const defaultPath = serverlessFunctionFilepath
+        .split("/functions/http/")[1]
+        .split(".")
+        .slice(-2)[0];
       serverlessFunctionInternal = {
         ...serverlessFunctionModule,
         config: {
-          name: serverlessFunctionPath.name,
+          name: defaultPath,
           functionName: serverlessFunctionPath.name,
         },
         path: serverlessFunctionFilepath,
         filename: serverlessFunctionPath.base,
         functionName: serverlessFunctionPath.name,
-        slug: serverlessFunctionFilepath.split("/functions/http/")[1],
-        getPath: (props: string) =>
-          serverlessFunctionFilepath.split("/functions/http/")[1],
+        slug: defaultPath,
+        getPath: () => defaultPath,
       };
     } else {
       validateServerlessFunctionModule(

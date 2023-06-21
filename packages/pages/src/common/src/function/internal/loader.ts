@@ -69,7 +69,12 @@ export const loadServerlessFunctionModules = async (
         `Serverless Functions must have unique feature names. Found multiple modules with "${module.config.name}"`
       );
     }
-    return prev.set(module.config.name, module);
+    if (prev.has(module.slug)) {
+      throw new Error(
+        `Serverless Functions must have unique slugs. Found multiple modules with "${module.slug}"`
+      );
+    }
+    return prev.set(module.slug, module);
   }, new Map());
 };
 
