@@ -63,7 +63,10 @@ export interface TemplateConfigInternal {
 /**
  * Parses a filepath and returns the relevant parts, such as the base filename.
  */
-const parse = (filepath: string, adjustForFingerprintedAsset: boolean) => {
+export const parse = (
+  filepath: string,
+  adjustForFingerprintedAsset: boolean
+) => {
   let base = filepath.split("/")[filepath.split("/").length - 1];
   const extension = base.slice(base.lastIndexOf("."));
   let name = base.slice(0, base.lastIndexOf("."));

@@ -52,7 +52,7 @@ export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
  *
  * @public
  */
-export type GetPath<T extends TemplateProps> = (props: T) => string;
+export type GetPath<T extends TemplateProps | void> = (props: T) => string;
 
 /**
  * The type definition for the template's getHeadConfig function. getHeadConfig

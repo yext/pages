@@ -46,6 +46,8 @@ export interface ArtifactStructure {
   features: string;
   /** Arbitrary functions that will be fired at pre-defined events in the build process */
   plugins?: Plugin[];
+  /** Serverless functions that will be hosted by Pages */
+  functions?: ServerlessFunction[];
 }
 
 /**
@@ -86,4 +88,20 @@ export interface SourceFile {
   root: string;
   /** The pattern of file types to include */
   pattern: string;
+}
+
+/**
+ * Defines everything about a plugin for the Yext system.
+ */
+export interface ServerlessFunction {
+  /** The name of the plugin */
+  name: string;
+  /** Specifies the location of source files where the function is defined */
+  src: string;
+  /** The exact event when the plugin will be fired */
+  event?: PluginEvent;
+  /** The entry-point for the plugin. This is the function that must be defined in the
+   * source files and will be invoked upon event firing. */
+  functionName: string;
+  slug: string;
 }
