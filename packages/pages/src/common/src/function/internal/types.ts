@@ -1,9 +1,8 @@
 import {
-  Execute,
+  ExecuteServerlessFunction,
+  ServerlessFunctionArgument,
   ServerlessFunctionConfig,
   ServerlessFunctionModule,
-  ServerlessFunctionProps,
-  ServerlessFunctionRenderProps,
 } from "../types.js";
 import { GetPath } from "../../template/types.js";
 import { parse } from "../../template/internal/types.js";
@@ -14,16 +13,14 @@ import {
 import { PluginEvent } from "../../ci/ci.js";
 
 /**
- * A domain representation of a template module. Contains all fields from an imported module as well
- * as metadata about the module used in downstream processing.
+ * A domain representation of a serverless function module. Contains all fields from an imported
+ * module as well as metadata about the module used in downstream processing.
  */
 export interface ServerlessFunctionModuleInternal<
-  T extends ServerlessFunctionProps,
-  U extends ServerlessFunctionRenderProps
+  U extends ServerlessFunctionArgument
 > {
   /**
-   * The filepath to the template file. This can be the raw TSX file when used during dev mode or
-   * the path to the server bundle this module was imported from during prod build.
+   * The filepath to the serverless function file.
    */
   path: string;
   /** The name of the file (with extension) */
@@ -33,9 +30,9 @@ export interface ServerlessFunctionModuleInternal<
   /** The exported config function */
   config: ServerlessFunctionConfigInternal;
   /** The exported getPath function */
-  getPath: GetPath<T>;
+  getPath: GetPath<void>;
   /** The exported function */
-  default?: Execute<U>;
+  default?: ExecuteServerlessFunction<U>;
   /** The slug to host the function at */
   slug: string;
 }
@@ -55,9 +52,9 @@ export interface ServerlessFunctionConfigInternal {
 export const convertServerlessFunctionModuleToServerlessFunctionModuleInternal =
   (
     serverlessFunctionFilepath: string,
-    serverlessFunctionModule: ServerlessFunctionModule<any, any>,
+    serverlessFunctionModule: ServerlessFunctionModule<any>,
     adjustForFingerprintedAsset: boolean
-  ): ServerlessFunctionModuleInternal<any, any> => {
+  ): ServerlessFunctionModuleInternal<any> => {
     const serverlessFunctionPath = parse(
       serverlessFunctionFilepath,
       adjustForFingerprintedAsset
@@ -101,7 +98,7 @@ export const convertServerlessFunctionModuleToServerlessFunctionModuleInternal =
         path: serverlessFunctionFilepath,
         filename: serverlessFunctionPath.base,
         functionName: serverlessFunctionPath.name,
-        slug: serverlessFunctionModule.getPath(null),
+        slug: serverlessFunctionModule.getPath(),
       };
     }
 

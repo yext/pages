@@ -8,7 +8,7 @@ import {
 } from "../types.js";
 
 export const validateServerlessFunctionModuleInternal = (
-  serverlessFunction: ServerlessFunctionModuleInternal<any, any>
+  serverlessFunction: ServerlessFunctionModuleInternal<any>
 ) => {
   validateConfigInternal(
     serverlessFunction.filename,
@@ -48,7 +48,7 @@ export const validateConfigInternal = (
 
 export const validateServerlessFunctionModule = (
   filepath: string,
-  serverlessFunction: ServerlessFunctionModule<any, any>
+  serverlessFunction: ServerlessFunctionModule<any>
 ) => {
   if (!serverlessFunction.config) {
     throw new Error(`${filepath} is missing an exported config function.`);

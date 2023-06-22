@@ -25,9 +25,9 @@ export const loadServerlessFunctionModules = async (
   transpile: boolean,
   adjustForFingerprintedAsset: boolean
 ): Promise<ServerlessFunctionModuleCollection> => {
-  const importedModules = [] as ServerlessFunctionModuleInternal<any, any>[];
+  const importedModules = [] as ServerlessFunctionModuleInternal<any>[];
   for (const serverlessFunctionModulePath of serverlessFunctionModulePaths) {
-    let serverlessFunctionModule = {} as ServerlessFunctionModule<any, any>;
+    let serverlessFunctionModule = {} as ServerlessFunctionModule<any>;
     try {
       if (transpile) {
         const buildResult = await esbuild.build({
@@ -81,13 +81,20 @@ export const loadServerlessFunctionModules = async (
   }, new Map());
 };
 
-// A ServerlessFunctionModuleCollection is a collection of serverless function modules indexed by
-// feature name.
+/**
+ * A ServerlessFunctionModuleCollection is a collection of serverless function modules
+ * indexed by feature name.
+ */
 export type ServerlessFunctionModuleCollection = Map<
   string,
-  ServerlessFunctionModuleInternal<any, any>
+  ServerlessFunctionModuleInternal<any>
 >;
 
+/**
+ * Loads all serverless function by finding all files under /src/functions and then creating
+ * serverlessFunctionModules for each
+ * @return Promise<ServerlessFunctionModuleCollection>
+ */
 export const loadServerlessFunctions = async () => {
   const serverlessFunctionFilepaths = getServerlessFunctionFilepaths([
     new Path(
