@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ServerlessFunctionModuleCollection } from "../../../common/src/function/internal/loader.js";
+import { ServerlessFunctionModuleInternal } from "../../../common/src/function/internal/types.js";
 import {
   ServerlessFunctionArgument,
   Site,
@@ -8,21 +8,16 @@ import {
 export const serveServerlessFunction = async (
   req: Request,
   res: Response,
-  loadedFunctions: ServerlessFunctionModuleCollection
+  serverlessFunction: ServerlessFunctionModuleInternal<ServerlessFunctionArgument>
 ) => {
-  const serverlessFunction = loadedFunctions.get(req.baseUrl.slice(1));
+  const argument: ServerlessFunctionArgument = {
+    queryParams: req.query as { [p: string]: string },
+    pathParams: req.params,
+    site: mockSiteInfo,
+  };
 
-  if (serverlessFunction && serverlessFunction.default) {
-    const argument: ServerlessFunctionArgument = {
-      queryParams: Object(req),
-      pathParams: {},
-      site: mockSiteInfo,
-    };
-
-    const fnRes = serverlessFunction.default(argument);
-    res.status(fnRes.statusCode).header(fnRes.headers).send(fnRes.body);
-  }
-  res.status(404).send();
+  const fnRes = serverlessFunction.default(argument);
+  res.status(fnRes.statusCode).header(fnRes.headers).send(fnRes.body);
 };
 
 const mockSiteInfo: Site = {

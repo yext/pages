@@ -7,6 +7,15 @@ import {
   ServerlessFunctionConfig,
 } from "../types.js";
 
+export const validateServerlessFunctionDefaultExport = (
+  filepath: string,
+  serverlessFunction: ServerlessFunctionModule<any>
+) => {
+  if (!serverlessFunction.default) {
+    throw new Error(`${filepath} is missing an default export function.`);
+  }
+};
+
 export const validateServerlessFunctionModuleInternal = (
   serverlessFunction: ServerlessFunctionModuleInternal<any>
 ) => {
@@ -18,13 +27,6 @@ export const validateServerlessFunctionModuleInternal = (
   if (!serverlessFunction.getPath) {
     throw new Error(
       `Function ${serverlessFunction.filename} is missing an exported getPath function.`
-    );
-  }
-
-  if (!serverlessFunction.default) {
-    throw new Error(
-      `Template ${serverlessFunction.filename} does not have the necessary exports. ` +
-        "A module should have an exported function"
     );
   }
 };
@@ -60,9 +62,7 @@ export const validateServerlessFunctionModule = (
     throw new Error(`${filepath} is missing an exported getPath function.`);
   }
 
-  if (!serverlessFunction.default) {
-    throw new Error(`${filepath} is missing an default export function.`);
-  }
+  validateServerlessFunctionDefaultExport(filepath, serverlessFunction);
 };
 
 export const validateConfig = (

@@ -11,9 +11,9 @@ export interface ServerlessFunctionModule<
   /** The exported config function */
   config?: ServerlessFunctionConfig;
   /** The exported getPath function */
-  getPath: GetPath<void>;
+  getPath?: GetPath<void>;
   /** The exported function */
-  default?: ExecuteServerlessFunction<U>;
+  default: ExecuteServerlessFunction<U>;
 }
 
 /**

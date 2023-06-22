@@ -62,11 +62,20 @@ export const createServer = async (
   }
 
   const loadedFunctions = await loadServerlessFunctions();
-
-  app.use(
-    [...loadedFunctions.keys()].map((slug) => "/" + slug),
-    (req, res) => serveServerlessFunction(req, res, loadedFunctions)
+  const loadedFunctionPaths = [...loadedFunctions.keys()].map(
+    (slug) => "/" + slug
   );
+
+  if (loadedFunctionPaths.length > 0) {
+    loadedFunctionPaths.forEach((loadedFunctionPath) => {
+      const loadedFunction = loadedFunctions.get(loadedFunctionPath.slice(1));
+      if (loadedFunction) {
+        app.use(loadedFunctionPath, (req, res) =>
+          serveServerlessFunction(req, res, loadedFunction)
+        );
+      }
+    });
+  }
 
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.

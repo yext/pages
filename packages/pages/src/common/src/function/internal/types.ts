@@ -7,6 +7,7 @@ import {
 import { GetPath } from "../../template/types.js";
 import { parse } from "../../template/internal/types.js";
 import {
+  validateServerlessFunctionDefaultExport,
   validateServerlessFunctionModule,
   validateServerlessFunctionModuleInternal,
 } from "./validateServerlessFunctionModuleInternal.js";
@@ -30,9 +31,9 @@ export interface ServerlessFunctionModuleInternal<
   /** The exported config function */
   config: ServerlessFunctionConfigInternal;
   /** The exported getPath function */
-  getPath: GetPath<void>;
+  getPath?: GetPath<void>;
   /** The exported function */
-  default?: ExecuteServerlessFunction<U>;
+  default: ExecuteServerlessFunction<U>;
   /** The slug to host the function at */
   slug: string;
 }
@@ -66,6 +67,10 @@ export const convertServerlessFunctionModuleToServerlessFunctionModuleInternal =
       serverlessFunctionFilepath.includes("/functions/http") &&
       Object.keys(serverlessFunctionModule).length === 1
     ) {
+      validateServerlessFunctionDefaultExport(
+        serverlessFunctionFilepath,
+        serverlessFunctionModule
+      );
       const defaultPath = serverlessFunctionFilepath
         .split("/functions/http/")[1]
         .split(".")
@@ -81,6 +86,7 @@ export const convertServerlessFunctionModuleToServerlessFunctionModuleInternal =
         functionName: serverlessFunctionPath.name,
         slug: defaultPath,
         getPath: () => defaultPath,
+        default: serverlessFunctionModule.default,
       };
     } else {
       validateServerlessFunctionModule(
@@ -98,7 +104,9 @@ export const convertServerlessFunctionModuleToServerlessFunctionModuleInternal =
         path: serverlessFunctionFilepath,
         filename: serverlessFunctionPath.base,
         functionName: serverlessFunctionPath.name,
-        slug: serverlessFunctionModule.getPath(),
+        slug: serverlessFunctionModule.getPath
+          ? serverlessFunctionModule.getPath()
+          : "",
       };
     }
 
