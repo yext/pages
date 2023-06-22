@@ -1,7 +1,7 @@
-import { ServerlessFunctionModule } from "../types.js";
+import { FunctionModule } from "../types.js";
 import {
-  convertServerlessFunctionModuleToServerlessFunctionModuleInternal,
-  ServerlessFunctionModuleInternal,
+  convertFunctionModuleToFunctionModuleInternal,
+  FunctionModuleInternal,
 } from "./types.js";
 import esbuild from "esbuild";
 import { importFromString } from "module-from-string";
@@ -25,9 +25,9 @@ export const loadServerlessFunctionModules = async (
   transpile: boolean,
   adjustForFingerprintedAsset: boolean
 ): Promise<ServerlessFunctionModuleCollection> => {
-  const importedModules = [] as ServerlessFunctionModuleInternal<any>[];
+  const importedModules = [] as FunctionModuleInternal[];
   for (const serverlessFunctionModulePath of serverlessFunctionModulePaths) {
-    let serverlessFunctionModule = {} as ServerlessFunctionModule<any>;
+    let serverlessFunctionModule = {} as FunctionModule;
     try {
       if (transpile) {
         const buildResult = await esbuild.build({
@@ -54,7 +54,7 @@ export const loadServerlessFunctionModules = async (
     }
 
     const serverlessFunctionModuleInternal =
-      convertServerlessFunctionModuleToServerlessFunctionModuleInternal(
+      convertFunctionModuleToFunctionModuleInternal(
         serverlessFunctionModulePath,
         serverlessFunctionModule,
         adjustForFingerprintedAsset
@@ -87,7 +87,7 @@ export const loadServerlessFunctionModules = async (
  */
 export type ServerlessFunctionModuleCollection = Map<
   string,
-  ServerlessFunctionModuleInternal<any>
+  FunctionModuleInternal
 >;
 
 /**

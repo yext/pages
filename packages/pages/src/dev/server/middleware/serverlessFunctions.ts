@@ -1,23 +1,25 @@
 import { Request, Response } from "express";
-import { ServerlessFunctionModuleInternal } from "../../../common/src/function/internal/types.js";
-import {
-  ServerlessFunctionArgument,
-  Site,
-} from "../../../common/src/function/types.js";
+import { FunctionModuleInternal } from "../../../common/src/function/internal/types.js";
+import { FunctionArgument, Site } from "../../../common/src/function/types.js";
+import send404 from "./send404.js";
 
 export const serveServerlessFunction = async (
   req: Request,
   res: Response,
-  serverlessFunction: ServerlessFunctionModuleInternal<ServerlessFunctionArgument>
+  serverlessFunction: FunctionModuleInternal
 ) => {
-  const argument: ServerlessFunctionArgument = {
+  const argument: FunctionArgument = {
     queryParams: req.query as { [p: string]: string },
     pathParams: req.params,
     site: mockSiteInfo,
   };
 
-  const fnRes = serverlessFunction.default(argument);
-  res.status(fnRes.statusCode).header(fnRes.headers).send(fnRes.body);
+  if (serverlessFunction.default) {
+    const fnRes = serverlessFunction.default(argument);
+    res.status(fnRes.statusCode).header(fnRes.headers).send(fnRes.body);
+  } else {
+    send404(res, "Cannot load function");
+  }
 };
 
 const mockSiteInfo: Site = {

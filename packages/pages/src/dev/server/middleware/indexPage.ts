@@ -16,7 +16,7 @@ import {
 import { ViteDevServer } from "vite";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
-import { EventType, getPluginFileMap } from "../ssr/getPluginFileMap.js";
+import { loadServerlessFunctions } from "../../../common/src/function/internal/loader.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -24,6 +24,13 @@ type Props = {
   displayGenerateTestDataWarning: boolean;
   useProdURLs: boolean;
   projectStructure: ProjectStructure;
+};
+
+type serverlessFunctionListItem = {
+  name: string;
+  functionName: string;
+  slug: string;
+  httpEvent: string | undefined;
 };
 
 export const indexPage =
@@ -108,7 +115,7 @@ export const indexPage =
         );
       }
 
-      indexPageHtml = addHttpFuncs(indexPageHtml);
+      indexPageHtml = await addHttpFuncs(indexPageHtml);
 
       if (displayGenerateTestDataWarning) {
         // If there was an issue regenerating the local test data on dev server start, then
@@ -132,29 +139,34 @@ export const indexPage =
     }
   };
 
-const addHttpFuncs = (indexPageHtml: string) => {
-  const pluginFileMap = getPluginFileMap();
-  const httpFuncs = Object.entries(pluginFileMap).filter(
-    ([funcName, source]) => {
-      if (source.event === EventType.HTTP) {
-        if (source.apiPath) {
-          return true;
-        }
-        console.error(
-          `Serverless HTTP function ${funcName} is missing a path. It will not be listed on the index page.`
-        );
-      }
-      return false;
-    }
-  );
+const addHttpFuncs = async (indexPageHtml: string) => {
+  const serverlessFunctions = await loadServerlessFunctions();
 
-  return httpFuncs.length
+  const functionsToDisplay: serverlessFunctionListItem[] = [];
+  serverlessFunctions.forEach((serverlessFunction) => {
+    functionsToDisplay.push({
+      slug: serverlessFunction.slug,
+      functionName: serverlessFunction.config.functionName,
+      name: serverlessFunction.config.name,
+      httpEvent: serverlessFunction.config.event,
+    });
+  });
+
+  return functionsToDisplay.length
     ? indexPageHtml.replace(
         `<!--serverless-functions-html-->`,
         `<div class="section-title">HTTP Functions</div>
         <ul>
-          ${httpFuncs
-            .map(([_, source]) => `<li>${source.apiPath}</li>`)
+          ${functionsToDisplay
+            .map((func) => {
+              return `
+                <li>
+                    <a href=${func.slug}>${func.slug} (${func.name} - ${
+                func.functionName
+              }) ${func.httpEvent ? "[" + func.httpEvent + "]" : ""}</a>
+                </li>
+            `;
+            })
             .join("")}
         </ul>`
       )

@@ -1,38 +1,33 @@
-import { GetPath } from "../template/types.js";
 import { PluginEvent } from "../ci/ci.js";
 
 /**
  * Defines the functions and fields that are available to the serverless function.
  * @public
  */
-export interface ServerlessFunctionModule<
-  U extends ServerlessFunctionArgument
-> {
+export interface FunctionModule {
   /** The exported config function */
-  config?: ServerlessFunctionConfig;
+  config?: FunctionConfig;
   /** The exported getPath function */
-  getPath?: GetPath<void>;
+  getPath?: () => string;
   /** The exported function */
-  default: ExecuteServerlessFunction<U>;
+  default?: ServerlessFunction;
 }
 
 /**
  * The type definition for serverless function itself.
  * @public
  */
-export type ExecuteServerlessFunction<T extends ServerlessFunctionArgument> = (
-  props: T
-) => ServerlessFunctionReturnValue;
+export type ServerlessFunction = (arg: FunctionArgument) => FunctionReturnValue;
 
 /**
  * The exported `config` function's definition.
  * @public
  */
-export interface ServerlessFunctionConfig {
+export interface FunctionConfig {
   /** The name of the serverless function feature. */
   name?: string;
   /** The http event. */
-  event?: PluginEvent;
+  event: PluginEvent;
   /** The function's name */
   functionName?: string;
 }
@@ -41,7 +36,7 @@ export interface ServerlessFunctionConfig {
  * The standard return value for a serverless function
  * @public
  */
-export interface ServerlessFunctionReturnValue {
+export interface FunctionReturnValue {
   /** HTTP response body (refer to MDN Web Docs). */
   body: string;
 
@@ -56,11 +51,11 @@ export interface ServerlessFunctionReturnValue {
  * The argument passed to a serverless function
  * @public
  */
-export interface ServerlessFunctionArgument {
-  /** Object containing each query parameter as  */
+export interface FunctionArgument {
+  /** Object containing each query parameter  */
   queryParams: { [key: string]: string };
 
-  /** Internal ID of the site branch. */
+  /** Object containing each path parameter  */
   pathParams: { [key: string]: string };
 
   /** Site object containing all deploy-related information. */

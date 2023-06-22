@@ -1,23 +1,17 @@
-import {
-  ServerlessFunctionConfigInternal,
-  ServerlessFunctionModuleInternal,
-} from "./types.js";
-import {
-  ServerlessFunctionModule,
-  ServerlessFunctionConfig,
-} from "../types.js";
+import { FunctionConfigInternal, FunctionModuleInternal } from "./types.js";
+import { FunctionModule, FunctionConfig } from "../types.js";
 
-export const validateServerlessFunctionDefaultExport = (
+export const validateFunctionDefaultExport = (
   filepath: string,
-  serverlessFunction: ServerlessFunctionModule<any>
+  serverlessFunction: FunctionModule
 ) => {
   if (!serverlessFunction.default) {
     throw new Error(`${filepath} is missing an default export function.`);
   }
 };
 
-export const validateServerlessFunctionModuleInternal = (
-  serverlessFunction: ServerlessFunctionModuleInternal<any>
+export const validateFunctionModuleInternal = (
+  serverlessFunction: FunctionModuleInternal
 ) => {
   validateConfigInternal(
     serverlessFunction.filename,
@@ -33,7 +27,7 @@ export const validateServerlessFunctionModuleInternal = (
 
 export const validateConfigInternal = (
   filename: string,
-  serverlessFunctionConfigInternal: ServerlessFunctionConfigInternal
+  serverlessFunctionConfigInternal: FunctionConfigInternal
 ) => {
   if (!serverlessFunctionConfigInternal.name) {
     throw new Error(
@@ -48,9 +42,9 @@ export const validateConfigInternal = (
   }
 };
 
-export const validateServerlessFunctionModule = (
+export const validateFunctionModule = (
   filepath: string,
-  serverlessFunction: ServerlessFunctionModule<any>
+  serverlessFunction: FunctionModule
 ) => {
   if (!serverlessFunction.config) {
     throw new Error(`${filepath} is missing an exported config function.`);
@@ -62,12 +56,12 @@ export const validateServerlessFunctionModule = (
     throw new Error(`${filepath} is missing an exported getPath function.`);
   }
 
-  validateServerlessFunctionDefaultExport(filepath, serverlessFunction);
+  validateFunctionDefaultExport(filepath, serverlessFunction);
 };
 
 export const validateConfig = (
   filename: string,
-  serverlessFunctionConfig: ServerlessFunctionConfig
+  serverlessFunctionConfig: FunctionConfig
 ) => {
   if (!serverlessFunctionConfig.name) {
     throw new Error(`${filename} is missing a "name" in the config function.`);

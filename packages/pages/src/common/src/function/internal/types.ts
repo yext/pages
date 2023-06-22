@@ -1,25 +1,21 @@
 import {
-  ExecuteServerlessFunction,
-  ServerlessFunctionArgument,
-  ServerlessFunctionConfig,
-  ServerlessFunctionModule,
+  ServerlessFunction,
+  FunctionConfig,
+  FunctionModule,
 } from "../types.js";
-import { GetPath } from "../../template/types.js";
 import { parse } from "../../template/internal/types.js";
 import {
-  validateServerlessFunctionDefaultExport,
-  validateServerlessFunctionModule,
-  validateServerlessFunctionModuleInternal,
-} from "./validateServerlessFunctionModuleInternal.js";
+  validateFunctionDefaultExport,
+  validateFunctionModule,
+  validateFunctionModuleInternal,
+} from "./validateFunctionModuleInternal.js";
 import { PluginEvent } from "../../ci/ci.js";
 
 /**
  * A domain representation of a serverless function module. Contains all fields from an imported
  * module as well as metadata about the module used in downstream processing.
  */
-export interface ServerlessFunctionModuleInternal<
-  U extends ServerlessFunctionArgument
-> {
+export interface FunctionModuleInternal {
   /**
    * The filepath to the serverless function file.
    */
@@ -29,11 +25,11 @@ export interface ServerlessFunctionModuleInternal<
   /** The name of the file (without extension) */
   functionName: string;
   /** The exported config function */
-  config: ServerlessFunctionConfigInternal;
+  config: FunctionConfigInternal;
   /** The exported getPath function */
-  getPath?: GetPath<void>;
+  getPath?: () => string;
   /** The exported function */
-  default: ExecuteServerlessFunction<U>;
+  default?: ServerlessFunction;
   /** The slug to host the function at */
   slug: string;
 }
@@ -41,88 +37,76 @@ export interface ServerlessFunctionModuleInternal<
 /**
  * The exported `config` function's definition.
  */
-export interface ServerlessFunctionConfigInternal {
+export interface FunctionConfigInternal {
   /** The name of the serverless function feature. */
   name: string;
   /** The http event. */
-  event?: PluginEvent;
+  event: PluginEvent;
   /** The function's name */
   functionName: string;
 }
 
-export const convertServerlessFunctionModuleToServerlessFunctionModuleInternal =
-  (
-    serverlessFunctionFilepath: string,
-    serverlessFunctionModule: ServerlessFunctionModule<any>,
-    adjustForFingerprintedAsset: boolean
-  ): ServerlessFunctionModuleInternal<any> => {
-    const serverlessFunctionPath = parse(
-      serverlessFunctionFilepath,
-      adjustForFingerprintedAsset
-    );
+export const convertFunctionModuleToFunctionModuleInternal = (
+  functionFilepath: string,
+  functionModule: FunctionModule,
+  adjustForFingerprintedAsset: boolean
+): FunctionModuleInternal => {
+  const functionPath = parse(functionFilepath, adjustForFingerprintedAsset);
 
-    let serverlessFunctionInternal;
+  let functionInternal;
 
-    if (
-      serverlessFunctionFilepath.includes("/functions/http") &&
-      Object.keys(serverlessFunctionModule).length === 1
-    ) {
-      validateServerlessFunctionDefaultExport(
-        serverlessFunctionFilepath,
-        serverlessFunctionModule
-      );
-      const defaultPath = serverlessFunctionFilepath
-        .split("/functions/http/")[1]
-        .split(".")
-        .slice(-2)[0];
-      serverlessFunctionInternal = {
-        ...serverlessFunctionModule,
-        config: {
-          name: defaultPath,
-          functionName: serverlessFunctionPath.name,
-        },
-        path: serverlessFunctionFilepath,
-        filename: serverlessFunctionPath.base,
-        functionName: serverlessFunctionPath.name,
-        slug: defaultPath,
-        getPath: () => defaultPath,
-        default: serverlessFunctionModule.default,
-      };
-    } else {
-      validateServerlessFunctionModule(
-        serverlessFunctionFilepath,
-        serverlessFunctionModule
-      );
+  if (
+    functionFilepath.includes("/functions/http") &&
+    Object.keys(functionModule).length === 1
+  ) {
+    validateFunctionDefaultExport(functionFilepath, functionModule);
+    const defaultPath = functionFilepath
+      .split("/functions/http/")[1]
+      .split(".")
+      .slice(-2)[0];
+    functionInternal = {
+      ...functionModule,
+      config: {
+        name: defaultPath,
+        functionName: functionPath.name,
+        event: "API" as PluginEvent,
+      },
+      path: functionFilepath,
+      filename: functionPath.base,
+      functionName: functionPath.name,
+      slug: defaultPath,
+      getPath: () => defaultPath,
+      default: functionModule.default,
+    };
+  } else {
+    validateFunctionModule(functionFilepath, functionModule);
 
-      serverlessFunctionInternal = {
-        ...serverlessFunctionModule,
-        config:
-          convertServerlessFunctionConfigToServerlessFunctionConfigInternal(
-            serverlessFunctionPath.name,
-            serverlessFunctionModule.config
-          ),
-        path: serverlessFunctionFilepath,
-        filename: serverlessFunctionPath.base,
-        functionName: serverlessFunctionPath.name,
-        slug: serverlessFunctionModule.getPath
-          ? serverlessFunctionModule.getPath()
-          : "",
-      };
-    }
+    functionInternal = {
+      ...functionModule,
+      config: convertFunctionConfigToFunctionConfigInternal(
+        functionPath.name,
+        functionModule.config
+      ),
+      path: functionFilepath,
+      filename: functionPath.base,
+      functionName: functionPath.name,
+      slug: functionModule.getPath ? functionModule.getPath() : "",
+    };
+  }
 
-    validateServerlessFunctionModuleInternal(serverlessFunctionInternal);
+  validateFunctionModuleInternal(functionInternal);
 
-    return serverlessFunctionInternal;
-  };
+  return functionInternal;
+};
 
-const convertServerlessFunctionConfigToServerlessFunctionConfigInternal = (
-  serverlessFunctionName: string,
-  serverlessFunctionConfig: ServerlessFunctionConfig | undefined
-): ServerlessFunctionConfigInternal => {
+const convertFunctionConfigToFunctionConfigInternal = (
+  functionName: string,
+  functionConfig: FunctionConfig | undefined
+): FunctionConfigInternal => {
   return {
-    name: serverlessFunctionConfig?.name ?? serverlessFunctionName,
-    functionName:
-      serverlessFunctionConfig?.functionName ?? serverlessFunctionName,
-    ...serverlessFunctionConfig,
+    name: functionConfig?.name ?? functionName,
+    event: functionConfig?.event ?? "API",
+    functionName: functionConfig?.functionName ?? functionName,
+    ...functionConfig,
   };
 };
