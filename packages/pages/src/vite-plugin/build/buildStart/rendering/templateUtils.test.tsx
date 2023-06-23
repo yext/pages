@@ -12,7 +12,10 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
   path: "path",
   filename: "filename",
   templateName: "template",
-  config: { name: "name" },
+  config: {
+    name: "name",
+    hydrate: true,
+  },
   getPath: () => {
     return "path";
   },
