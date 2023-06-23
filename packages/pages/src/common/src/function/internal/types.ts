@@ -1,14 +1,9 @@
-import {
-  ServerlessFunction,
-  FunctionConfig,
-  FunctionModule,
-} from "../types.js";
+import { ServerlessFunction, FunctionModule } from "../types.js";
 import { parse } from "../../template/internal/types.js";
 import {
   validateFunctionDefaultExport,
   validateFunctionModule,
-  validateFunctionModuleInternal,
-} from "./validateFunctionModuleInternal.js";
+} from "./validateFunctionModule.js";
 import { PluginEvent } from "../../ci/ci.js";
 
 /**
@@ -16,14 +11,10 @@ import { PluginEvent } from "../../ci/ci.js";
  * module as well as metadata about the module used in downstream processing.
  */
 export interface FunctionModuleInternal {
-  /**
-   * The filepath to the serverless function file.
-   */
+  /** The filepath to the serverless function file. */
   path: string;
   /** The name of the file (with extension) */
   filename: string;
-  /** The name of the file (without extension) */
-  functionName: string;
   /** The exported config function */
   config: FunctionConfigInternal;
   /** The exported getPath function */
@@ -38,11 +29,11 @@ export interface FunctionModuleInternal {
  * The exported `config` function's definition.
  */
 export interface FunctionConfigInternal {
-  /** The name of the serverless function feature. */
+  /** The given name of the serverless function. */
   name: string;
   /** The http event. */
   event: PluginEvent;
-  /** The function's name */
+  /** The default export's name */
   functionName: string;
 }
 
@@ -52,7 +43,6 @@ export const convertFunctionModuleToFunctionModuleInternal = (
   adjustForFingerprintedAsset: boolean
 ): FunctionModuleInternal => {
   const functionPath = parse(functionFilepath, adjustForFingerprintedAsset);
-
   let functionInternal;
 
   if (
@@ -60,53 +50,39 @@ export const convertFunctionModuleToFunctionModuleInternal = (
     Object.keys(functionModule).length === 1
   ) {
     validateFunctionDefaultExport(functionFilepath, functionModule);
+
     const defaultPath = functionFilepath
       .split("/functions/http/")[1]
       .split(".")
       .slice(-2)[0];
+
     functionInternal = {
       ...functionModule,
       config: {
         name: defaultPath,
-        functionName: functionPath.name,
+        functionName: functionModule.default?.name ?? functionPath.name,
         event: "API" as PluginEvent,
       },
       path: functionFilepath,
       filename: functionPath.base,
-      functionName: functionPath.name,
       slug: defaultPath,
       getPath: () => defaultPath,
-      default: functionModule.default,
     };
   } else {
     validateFunctionModule(functionFilepath, functionModule);
 
     functionInternal = {
       ...functionModule,
-      config: convertFunctionConfigToFunctionConfigInternal(
-        functionPath.name,
-        functionModule.config
-      ),
+      config: {
+        name: functionModule.config?.name ?? functionPath.name,
+        functionName: functionModule.default?.name ?? functionPath.name,
+        event: "API" as PluginEvent,
+      },
       path: functionFilepath,
       filename: functionPath.base,
-      functionName: functionPath.name,
       slug: functionModule.getPath ? functionModule.getPath() : "",
     };
   }
 
-  validateFunctionModuleInternal(functionInternal);
-
   return functionInternal;
-};
-
-const convertFunctionConfigToFunctionConfigInternal = (
-  functionName: string,
-  functionConfig: FunctionConfig | undefined
-): FunctionConfigInternal => {
-  return {
-    name: functionConfig?.name ?? functionName,
-    event: functionConfig?.event ?? "API",
-    functionName: functionConfig?.functionName ?? functionName,
-    ...functionConfig,
-  };
 };

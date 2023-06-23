@@ -1,5 +1,3 @@
-import { PluginEvent } from "../ci/ci.js";
-
 /**
  * Defines the functions and fields that are available to the serverless function.
  * @public
@@ -24,12 +22,8 @@ export type ServerlessFunction = (arg: FunctionArgument) => FunctionReturnValue;
  * @public
  */
 export interface FunctionConfig {
-  /** The name of the serverless function feature. */
+  /** The name of the serverless function. */
   name?: string;
-  /** The http event. */
-  event: PluginEvent;
-  /** The function's name */
-  functionName?: string;
 }
 
 /**
@@ -52,10 +46,10 @@ export interface FunctionReturnValue {
  * @public
  */
 export interface FunctionArgument {
-  /** Object containing each query parameter  */
+  /** Object containing each query parameter. */
   queryParams: { [key: string]: string };
 
-  /** Object containing each path parameter  */
+  /** Object containing each path parameter. */
   pathParams: { [key: string]: string };
 
   /** Site object containing all deploy-related information. */
