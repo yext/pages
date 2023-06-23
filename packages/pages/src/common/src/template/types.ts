@@ -87,8 +87,8 @@ export type Template<T extends TemplateRenderProps> = (props: T) => JSX.Element;
 export interface TemplateConfig {
   /** The name of the template feature. If not defined uses the template filename (without extension) */
   name?: string;
-  /** Determines if hydration is allowed or not for webpages. Defaults to false */
-  hydration?: boolean;
+  /** Determines if hydration is allowed or not for webpages */
+  hydrate?: boolean;
   /** The stream that this template uses. If a stream is defined the streamId is not required. */
   streamId?: string;
   /** The stream configuration used by the template */

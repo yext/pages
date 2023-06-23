@@ -11,6 +11,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
     const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
       streamId: "$id",
+      hydrate: true,
     };
 
     const featuresConfig =
@@ -35,6 +36,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
   it("returns a FeaturesConfig with a StreamConfig if stream is defined", async () => {
     const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
+      hydrate: true,
       stream: {
         $id: "$id",
         fields: ["foo"],
@@ -81,6 +83,7 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
   it("uses the streamId if defined and return an EntityPageSetConfig", async () => {
     const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
+      hydrate: true,
       streamId: "$id",
     };
 
@@ -101,6 +104,7 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
   it("uses the stream if defined and returns an EntityPageSetConfig", async () => {
     const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
+      hydrate: true,
       stream: {
         $id: "$id",
         fields: ["foo"],
@@ -128,6 +132,7 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
   it("returns a StaticPageConfig if 'no config' defined", async () => {
     const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
+      hydrate: true,
     };
     const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
 
