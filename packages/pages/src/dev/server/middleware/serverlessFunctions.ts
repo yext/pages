@@ -16,7 +16,10 @@ export const serveServerlessFunction = async (
 
   if (serverlessFunction.default) {
     const fnRes = serverlessFunction.default(argument);
-    res.status(fnRes.statusCode).header(fnRes.headers).send(fnRes.body);
+    res
+      .status(fnRes.statusCode)
+      .header({ ...fnRes.headers, "Content-Type": "application/json" })
+      .send(fnRes.body);
   } else {
     send404(res, "Cannot load function");
   }
