@@ -121,7 +121,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     );
   });
 
-  it("defualts hydrate to false when not set", async () => {
+  it("defaults hydrate to false when not set", async () => {
     const templateModule: TemplateModule<any, any> = {
       default: {} as Template<any>,
       getPath: () => "",
@@ -165,7 +165,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     );
   });
 
-  it("convert's hydrate to true whenever hydrate is set to true", async () => {
+  it("converts hydrate to true whenever hydrate is set to true", async () => {
     const templateModule: TemplateModule<any, any> = {
       default: {} as Template<any>,
       getPath: () => "",
