@@ -3,31 +3,51 @@ import { CommandModule } from "yargs";
 import open from "open";
 import { ProjectFilepaths } from "../common/src/project/structure.js";
 import { devServerPort } from "./server/middleware/constants.js";
+import runSubProcess from "../util/runSubprocess.js";
 
 interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
   local?: boolean;
   "prod-url"?: boolean;
   "open-browser": boolean;
+  scope?: string;
+  noGenFeatures?: boolean;
+  noGenTestData?: boolean;
 }
 
 const handler = async ({
-  scope,
   local,
   "prod-url": useProdURLs,
   "open-browser": openBrowser,
+  scope,
+  noGenFeatures,
+  noGenTestData,
 }: DevArgs) => {
+  if (!noGenFeatures)
+    await runSubProcess(
+      "pages generate features",
+      scope ? ["--scope" + " " + scope] : []
+    );
+
+  if (!noGenTestData) await runSubProcess("yext pages generate-test-data", []);
+
   await createServer(!local, !!useProdURLs, scope);
-  if (!openBrowser) {
-    return;
-  }
-  await open(`http://localhost:${devServerPort}/`);
+
+  if (openBrowser) await open(`http://localhost:${devServerPort}/`);
 };
 
 export const devCommandModule: CommandModule<unknown, DevArgs> = {
   command: "dev",
-  describe: "Runs a custom local development server that is backed by Vite",
+  describe:
+    "Creates features.json, generates test data, and runs a custom local development" +
+    " server that is backed by Vite.",
   builder: (yargs) => {
     return yargs
+      .option("h", {
+        alias: "help",
+        describe: "Help for pages dev",
+        type: "boolean",
+        demandOption: false,
+      })
       .option("local", {
         describe: "Disables dynamically generated test data",
         type: "boolean",
@@ -50,6 +70,16 @@ export const devCommandModule: CommandModule<unknown, DevArgs> = {
         type: "boolean",
         demandOption: false,
         default: true,
+      })
+      .option("noGenFeatures", {
+        describe: "Disable feature.json generation step",
+        type: "boolean",
+        demandOption: false,
+      })
+      .option("noGenTestData", {
+        describe: "Disable test data generation step",
+        type: "boolean",
+        demandOption: false,
       });
   },
   handler,
