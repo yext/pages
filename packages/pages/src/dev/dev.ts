@@ -9,6 +9,7 @@ interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
   local?: boolean;
   "prod-url"?: boolean;
   "open-browser": boolean;
+  "auto-init"?: boolean;
 }
 
 const handler = async ({
@@ -16,8 +17,11 @@ const handler = async ({
   local,
   "prod-url": useProdURLs,
   "open-browser": openBrowser,
+  "auto-init": autoInit,
 }: DevArgs) => {
-  await autoYextInit();
+  if (autoInit) {
+    await autoYextInit();
+  }
   await createServer(!local, !!useProdURLs, scope);
   if (!openBrowser) {
     return;
@@ -49,6 +53,12 @@ export const devCommandModule: CommandModule<unknown, DevArgs> = {
       })
       .option("open-browser", {
         describe: "Automatically opens the browser on server start-up",
+        type: "boolean",
+        demandOption: false,
+        default: true,
+      })
+      .option("auto-init", {
+        describe: "Disables automatic yext init with .yextrc file",
         type: "boolean",
         demandOption: false,
         default: true,

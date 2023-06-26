@@ -8,7 +8,7 @@ const config: PlaywrightTestConfig = {
   ...base,
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run dev -- --no-open-browser",
+    command: "npm run dev -- --no-open-browser --no-auto-init",
     url: "http://localhost:5173",
     reuseExistingServer: !process.env.CI,
   },
