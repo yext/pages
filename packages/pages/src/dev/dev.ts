@@ -9,7 +9,7 @@ interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
   local?: boolean;
   "prod-url"?: boolean;
   "open-browser": boolean;
-  "auto-init"?: boolean;
+  noInit?: boolean;
 }
 
 const handler = async ({
@@ -17,9 +17,9 @@ const handler = async ({
   local,
   "prod-url": useProdURLs,
   "open-browser": openBrowser,
-  "auto-init": autoInit,
+  noInit,
 }: DevArgs) => {
-  if (autoInit) {
+  if (!noInit) {
     await autoYextInit();
   }
   await createServer(!local, !!useProdURLs, scope);
@@ -57,11 +57,11 @@ export const devCommandModule: CommandModule<unknown, DevArgs> = {
         demandOption: false,
         default: true,
       })
-      .option("auto-init", {
+      .option("noInit", {
         describe: "Disables automatic yext init with .yextrc file",
         type: "boolean",
         demandOption: false,
-        default: true,
+        default: false,
       });
   },
   handler,

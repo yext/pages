@@ -8,7 +8,7 @@ const config: PlaywrightTestConfig = {
   ...base,
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `npm run dev:oakley -- --no-open-browser --no-auto-init`,
+    command: `npm run dev:oakley -- --no-open-browser --noInit`,
     url: "http://localhost:5173",
     reuseExistingServer: !process.env.CI,
   },
