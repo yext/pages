@@ -9,8 +9,9 @@ import { TemplateRenderProps } from "./types.js";
  * Dev has a separate function than {@link getHydrationTemplate} due to how Vite messes
  * with the import.meta.url.
  *
- * Result is split into two strings becuase if user when hydration is disabled,
- * the first part allows CSS to load in but second part disbales rest of hydration.
+ * Output string is split into two strings. The first part is required for Vite to load in CSS
+ * and the second part allows hydration. We want CSS to always load but hydration to be
+ * controllable.
  *
  * @param clientRenderTemplatePath the path to the custom client render template
  * @param templateModulePath the path to the template module
