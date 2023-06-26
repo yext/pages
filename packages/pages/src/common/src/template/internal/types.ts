@@ -52,6 +52,8 @@ export interface TemplateModuleInternal<
 export interface TemplateConfigInternal {
   /** The name of the template feature. If not defined uses the template filename (without extension) */
   name: string;
+  /** Determines if hydration is allowed or not for webpages */
+  hydrate: boolean;
   /** The stream that this template uses. If a stream is defined the streamId is not required. */
   streamId?: string;
   /** The stream configuration used by the template */
@@ -112,6 +114,7 @@ const convertTemplateConfigToTemplateConfigInternal = (
 ): TemplateConfigInternal => {
   return {
     name: templateConfig?.name ?? templateName,
+    hydrate: templateConfig?.hydrate ?? false,
     ...templateConfig,
   };
 };

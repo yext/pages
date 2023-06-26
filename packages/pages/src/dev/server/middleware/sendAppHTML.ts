@@ -55,7 +55,8 @@ export default async function sendAppHTML(
   const clientHydrationString = getHydrationTemplateDev(
     clientServerRenderTemplates.clientRenderTemplatePath,
     templateModuleInternal.path,
-    props
+    props,
+    templateModuleInternal.config.hydrate
   );
 
   const clientInjectedServerHtml = getServerTemplateDev(
