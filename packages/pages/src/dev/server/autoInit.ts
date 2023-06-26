@@ -47,14 +47,16 @@ const parseYextrcContents = () => {
   const parsedContents = YAML.parse(yextrcContents);
   const businessId: string = parsedContents.businessId;
   const universe: string = parsedContents.universe;
-  if (isNaN(Number(businessId)))
+  if (isNaN(Number(businessId))) {
     logErrorAndExit(
-      "Invalid businessId format in .yextrc file. Please enter a valid businessId"
+      "Invalid businessId format in .yextrc file. Please enter a valid businessId."
     );
-  if (universe != "sandbox" && universe != "production")
+  }
+  if (universe != "sandbox" && universe != "production") {
     logErrorAndExit(
-      "Invalide universe in .yextrc file. Please enter a valid universe (sandbox or production)"
+      "Invalid universe in .yextrc file. Please enter a valid universe (sandbox or production)."
     );
+  }
   return { businessId, universe };
 };
 
@@ -82,7 +84,7 @@ const askForBusinessId = async (): Promise<string> => {
   return new Promise((resolve) => {
     readline.question(`Enter your BusinessId: `, (userInput: string) => {
       if (isNaN(Number(userInput))) {
-        console.error(colors.red("BusinessId must be a number"));
+        console.error(colors.red("BusinessId must be a number."));
         readline.close();
         resolve(askForBusinessId());
       }
@@ -91,6 +93,8 @@ const askForBusinessId = async (): Promise<string> => {
     });
   });
 };
+
+const validUniverses = ["sandbox", "production", "sbx", "prod"];
 
 const askForUniverse = async (): Promise<string> => {
   const readline = createInterface({
@@ -102,15 +106,20 @@ const askForUniverse = async (): Promise<string> => {
       `Enter a universe (sandbox or production): `,
       (userInput: string) => {
         userInput = userInput.toLowerCase();
-        const validUniverses = ["sandbox", "production", "sbx", "prod"];
         if (!validUniverses.includes(userInput)) {
-          console.error(colors.red("Invalid universe choice"));
+          console.error(colors.red("Invalid universe."));
           readline.close();
           resolve(askForUniverse());
         }
         readline.close();
-        if (userInput == "sbx") userInput = "sandbox";
-        if (userInput == "prod") userInput = "production";
+        switch (userInput) {
+          case "sbx":
+            userInput = "sandbox";
+            break;
+          case "prod":
+            userInput = "production";
+            break;
+        }
         resolve(userInput);
       }
     );
