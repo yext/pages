@@ -1,6 +1,7 @@
 import { createServer } from "./server/server.js";
 import { CommandModule } from "yargs";
 import open from "open";
+import { autoYextInit } from "./server/autoInit.js";
 import { ProjectFilepaths } from "../common/src/project/structure.js";
 import { devServerPort } from "./server/middleware/constants.js";
 import runSubProcess from "../util/runSubprocess.js";
@@ -9,6 +10,7 @@ interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
   local?: boolean;
   "prod-url"?: boolean;
   "open-browser": boolean;
+  noInit?: boolean;
   scope?: string;
   noGenFeatures?: boolean;
   noGenTestData?: boolean;
@@ -18,10 +20,14 @@ const handler = async ({
   local,
   "prod-url": useProdURLs,
   "open-browser": openBrowser,
+  noInit,
   scope,
   noGenFeatures,
   noGenTestData,
 }: DevArgs) => {
+  if (!noInit) {
+    await autoYextInit();
+  }
   if (!noGenFeatures)
     await runSubProcess(
       "pages generate features",
@@ -29,7 +35,6 @@ const handler = async ({
     );
 
   if (!noGenTestData) await runSubProcess("yext pages generate-test-data", []);
-
   await createServer(!local, !!useProdURLs, scope);
 
   if (openBrowser) await open(`http://localhost:${devServerPort}/`);
@@ -70,6 +75,12 @@ export const devCommandModule: CommandModule<unknown, DevArgs> = {
         type: "boolean",
         demandOption: false,
         default: true,
+      })
+      .option("noInit", {
+        describe: "Disables automatic yext init with .yextrc file",
+        type: "boolean",
+        demandOption: false,
+        default: false,
       })
       .option("noGenFeatures", {
         describe: "Disable feature.json generation step",
