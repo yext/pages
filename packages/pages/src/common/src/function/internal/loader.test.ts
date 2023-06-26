@@ -1,9 +1,6 @@
 import glob from "glob";
 import path from "path";
-import {
-  loadServerlessFunctionModules,
-  ServerlessFunctionModuleCollection,
-} from "./loader.js";
+import { loadFunctionModules, FunctionModuleCollection } from "./loader.js";
 
 // our jest configuration doesn't support file urls so update pathToFileURL to do nothing during
 // this test.
@@ -23,7 +20,7 @@ describe("loadTemplateModules", () => {
     const functionFile = glob.sync(
       path.join(process.cwd(), "tests/fixtures/function.ts")
     );
-    const functionModules = await loadServerlessFunctionModules(
+    const functionModules = await loadFunctionModules(
       functionFile,
       true,
       false
@@ -35,7 +32,7 @@ describe("loadTemplateModules", () => {
     const functionFile = glob.sync(
       path.join(process.cwd(), "tests/fixtures/function.js")
     );
-    const functionModules = await loadServerlessFunctionModules(
+    const functionModules = await loadFunctionModules(
       functionFile,
       false,
       false
@@ -43,7 +40,7 @@ describe("loadTemplateModules", () => {
     commonTests(functionModules);
   });
 
-  const commonTests = (functionModules: ServerlessFunctionModuleCollection) => {
+  const commonTests = (functionModules: FunctionModuleCollection) => {
     expect(functionModules.get("hello")).toBeTruthy();
     expect(functionModules.get("hello")?.config.name).toEqual(
       "Hello World Testing Function"

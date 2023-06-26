@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { FunctionModuleInternal } from "../../../common/src/function/internal/types.js";
 import { FunctionArgument, Site } from "../../../common/src/function/types.js";
-import send404 from "./send404.js";
 
 export const serveServerlessFunction = async (
   req: Request,
   res: Response,
+  next: NextFunction,
   serverlessFunction: FunctionModuleInternal
 ) => {
   const argument: FunctionArgument = {
@@ -21,11 +21,11 @@ export const serveServerlessFunction = async (
       .header({ ...fnRes.headers, "Content-Type": "application/json" })
       .send(fnRes.body);
   } else {
-    send404(res, "Cannot load function");
+    next();
   }
 };
 
-const mockSiteInfo: Site = {
+export const mockSiteInfo: Site = {
   branchId: "mock-branch-id",
   businessId: "000000",
   businessName: "mock-dev-server-busines",

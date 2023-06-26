@@ -10,7 +10,7 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
-import { loadServerlessFunctions } from "../../common/src/function/internal/loader.js";
+import { loadFunctions } from "../../common/src/function/internal/loader.js";
 import { serveServerlessFunction } from "./middleware/serverlessFunctions.js";
 
 export const createServer = async (
@@ -61,7 +61,7 @@ export const createServer = async (
     ));
   }
 
-  const loadedFunctions = await loadServerlessFunctions();
+  const loadedFunctions = await loadFunctions();
   const loadedFunctionPaths = [...loadedFunctions.keys()].map(
     (slug) => "/" + slug
   );
@@ -70,8 +70,8 @@ export const createServer = async (
     loadedFunctionPaths.forEach((loadedFunctionPath) => {
       const loadedFunction = loadedFunctions.get(loadedFunctionPath.slice(1));
       if (loadedFunction) {
-        app.use(loadedFunctionPath, (req, res) =>
-          serveServerlessFunction(req, res, loadedFunction)
+        app.use(loadedFunctionPath, (req, res, next) =>
+          serveServerlessFunction(req, res, next, loadedFunction)
         );
       }
     });

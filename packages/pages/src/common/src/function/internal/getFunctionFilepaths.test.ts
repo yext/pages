@@ -1,5 +1,5 @@
 import path from "path";
-import { getServerlessFunctionFilepaths } from "./getServerlessFunctionFilepaths.js";
+import { getFunctionFilepaths } from "./getFunctionFilepaths.js";
 import minimatch from "minimatch";
 import { Path } from "../../project/path.js";
 
@@ -21,9 +21,9 @@ jest.mock("glob", () => {
   };
 });
 
-describe("getServerlessFunctionFilepaths", () => {
+describe("getFunctionFilepaths", () => {
   it("collects all function files under the root folder path", () => {
-    const templatesFilepath = getServerlessFunctionFilepaths([
+    const templatesFilepath = getFunctionFilepaths([
       new Path(path.join(process.cwd(), rootPath)),
     ]);
     expect(templatesFilepath.sort()).toEqual(filepaths.sort());

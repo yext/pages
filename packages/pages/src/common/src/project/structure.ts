@@ -11,7 +11,7 @@ export interface ProjectFilepaths {
   /** The folder path where all template files live */
   templatesRoot: string;
   /** The folder path where all serverless function files live */
-  serverlessFunctionsRoot: string;
+  functionsRoot: string;
   /** The folder path where the sites-config files live */
   sitesConfigRoot: string;
   /** The folder path where the compiled files should go */
@@ -77,7 +77,7 @@ export interface ProjectStructureConfig {
 export const defaultProjectStructureConfig: ProjectStructureConfig = {
   filepathsConfig: {
     templatesRoot: "src/templates",
-    serverlessFunctionsRoot: "src/functions",
+    functionsRoot: "src/functions",
     sitesConfigRoot: "sites-config",
     distRoot: "dist",
     serverBundleOutputRoot: "assets/server",
@@ -134,7 +134,7 @@ export class ProjectStructure {
     );
     this.templatesRoot = new Path(this.#config.filepathsConfig.templatesRoot);
     this.serverlessFunctionsRoot = new Path(
-      this.#config.filepathsConfig.serverlessFunctionsRoot
+      this.#config.filepathsConfig.functionsRoot
     );
 
     const scope = this.#config.filepathsConfig.scope;

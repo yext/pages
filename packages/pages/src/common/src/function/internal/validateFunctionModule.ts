@@ -11,9 +11,9 @@ export const validateFunctionDefaultExport = (
 
 export const validateConfig = (
   filepath: string,
-  serverlessFunctionConfig: FunctionConfig
+  functionConfig: FunctionConfig
 ) => {
-  if (!serverlessFunctionConfig.name) {
+  if (!functionConfig.name) {
     throw new Error(`${filepath} is missing "name" in the config function.`);
   }
 };

@@ -6,32 +6,32 @@ import {
 import esbuild from "esbuild";
 import { importFromString } from "module-from-string";
 import { pathToFileURL } from "url";
-import { getServerlessFunctionFilepaths } from "./getServerlessFunctionFilepaths.js";
+import { getFunctionFilepaths } from "./getFunctionFilepaths.js";
 import { Path } from "../../project/path.js";
 import { defaultProjectStructureConfig } from "../../project/structure.js";
 
 const TEMP_DIR = ".temp";
 
 /**
- * Loads all serverless functions in the project.
+ * Loads all functions in the project.
  *
- * @param serverlessFunctionModulePaths the serverless function filepaths to load as modules
- * @param transpile set to true if the serverless functions need to be transpiled (such as when they are in tsx format)
+ * @param functionPaths the function filepaths to load as modules
+ * @param transpile set to true if the functions need to be transpiled (such as when they are in tsx format)
  * @param adjustForFingerprintedAsset removes the fingerprint portion (for server bundles)
- * @returns Promise<{@link ServerlessFunctionModuleCollection}>
+ * @returns Promise<{@link FunctionModuleCollection}>
  */
-export const loadServerlessFunctionModules = async (
-  serverlessFunctionModulePaths: string[],
+export const loadFunctionModules = async (
+  functionPaths: string[],
   transpile: boolean,
   adjustForFingerprintedAsset: boolean
-): Promise<ServerlessFunctionModuleCollection> => {
+): Promise<FunctionModuleCollection> => {
   const importedModules = [] as FunctionModuleInternal[];
-  for (const serverlessFunctionModulePath of serverlessFunctionModulePaths) {
-    let serverlessFunctionModule = {} as FunctionModule;
+  for (const functionPath of functionPaths) {
+    let functionModule = {} as FunctionModule;
     try {
       if (transpile) {
         const buildResult = await esbuild.build({
-          entryPoints: [serverlessFunctionModulePath],
+          entryPoints: [functionPath],
           outdir: TEMP_DIR,
           write: false,
           format: "esm",
@@ -41,40 +41,38 @@ export const loadServerlessFunctionModules = async (
           },
         });
 
-        serverlessFunctionModule = await importFromString(
+        functionModule = await importFromString(
           buildResult.outputFiles[0].text
         );
       } else {
-        serverlessFunctionModule = await import(
-          pathToFileURL(serverlessFunctionModulePath).toString()
-        );
+        functionModule = await import(pathToFileURL(functionPath).toString());
       }
     } catch (e) {
-      throw new Error(`Could not import ${serverlessFunctionModulePath} ${e}`);
+      throw new Error(`Could not import ${functionPath} ${e}`);
     }
 
-    const serverlessFunctionModuleInternal =
+    const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
-        serverlessFunctionModulePath,
-        serverlessFunctionModule,
+        functionPath,
+        functionModule,
         adjustForFingerprintedAsset
       );
 
     importedModules.push({
-      ...serverlessFunctionModuleInternal,
-      path: serverlessFunctionModulePath,
+      ...functionModuleInternal,
+      path: functionPath,
     });
   }
 
   return importedModules.reduce((prev, module) => {
     if (prev.has(module.config.name)) {
       throw new Error(
-        `Serverless Functions must have unique feature names. Found multiple modules with "${module.config.name}"`
+        `Functions must have unique feature names. Found multiple modules with "${module.config.name}"`
       );
     }
     if (prev.has(module.slug)) {
       throw new Error(
-        `Serverless Functions must have unique slugs. Found multiple modules with "${module.slug}"`
+        `Functions must have unique slugs. Found multiple modules with "${module.slug}"`
       );
     }
     return prev.set(module.slug, module);
@@ -82,28 +80,19 @@ export const loadServerlessFunctionModules = async (
 };
 
 /**
- * A ServerlessFunctionModuleCollection is a collection of serverless function modules
+ * A FunctionModuleCollection is a collection of function modules
  * indexed by feature name.
  */
-export type ServerlessFunctionModuleCollection = Map<
-  string,
-  FunctionModuleInternal
->;
+export type FunctionModuleCollection = Map<string, FunctionModuleInternal>;
 
 /**
- * Loads all serverless function by finding all files under /src/functions and then creating
- * serverlessFunctionModules for each
- * @return Promise<ServerlessFunctionModuleCollection>
+ * Loads all functions by finding all files under /src/functions and then creating
+ * FunctionModules for each
+ * @return Promise<FunctionModuleCollection>
  */
-export const loadServerlessFunctions = async () => {
-  const serverlessFunctionFilepaths = getServerlessFunctionFilepaths([
-    new Path(
-      defaultProjectStructureConfig.filepathsConfig.serverlessFunctionsRoot
-    ),
+export const loadFunctions = async () => {
+  const functionFilepaths = getFunctionFilepaths([
+    new Path(defaultProjectStructureConfig.filepathsConfig.functionsRoot),
   ]);
-  return await loadServerlessFunctionModules(
-    serverlessFunctionFilepaths,
-    true,
-    false
-  );
+  return await loadFunctionModules(functionFilepaths, true, false);
 };

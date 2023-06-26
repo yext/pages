@@ -16,7 +16,7 @@ import {
 import { ViteDevServer } from "vite";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
-import { loadServerlessFunctions } from "../../../common/src/function/internal/loader.js";
+import { loadFunctions } from "../../../common/src/function/internal/loader.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -140,7 +140,7 @@ export const indexPage =
   };
 
 const addHttpFuncs = async (indexPageHtml: string) => {
-  const serverlessFunctions = await loadServerlessFunctions();
+  const serverlessFunctions = await loadFunctions();
 
   const functionsToDisplay: serverlessFunctionListItem[] = [];
   serverlessFunctions.forEach((serverlessFunction) => {

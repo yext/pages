@@ -51,7 +51,7 @@ export const convertFunctionModuleToFunctionModuleInternal = (
   ) {
     validateFunctionDefaultExport(functionFilepath, functionModule);
 
-    const defaultPath = functionFilepath
+    const defaultSlug = functionFilepath
       .split("/functions/http/")[1]
       .split(".")
       .slice(-2)[0];
@@ -59,14 +59,14 @@ export const convertFunctionModuleToFunctionModuleInternal = (
     functionInternal = {
       ...functionModule,
       config: {
-        name: defaultPath,
+        name: defaultSlug,
         functionName: functionModule.default?.name ?? functionPath.name,
         event: "API" as PluginEvent,
       },
       path: functionFilepath,
       filename: functionPath.base,
-      slug: defaultPath,
-      getPath: () => defaultPath,
+      slug: defaultSlug,
+      getPath: () => defaultSlug,
     };
   } else {
     validateFunctionModule(functionFilepath, functionModule);

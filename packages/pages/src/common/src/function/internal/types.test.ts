@@ -1,22 +1,29 @@
 import { convertFunctionModuleToFunctionModuleInternal } from "./types.js";
-import { ServerlessFunction, FunctionModule } from "../types.js";
+import {
+  ServerlessFunction,
+  FunctionModule,
+  FunctionArgument,
+} from "../types.js";
+import { mockSiteInfo } from "../../../../dev/server/middleware/serverlessFunctions.js";
 
-const exampleFunction: ServerlessFunction = () => {
-  return { body: "Hello World", headers: {}, statusCode: 200 };
+const exampleReturnValue = {
+  body: "Hello World",
+  headers: {},
+  statusCode: 200,
 };
 
-// JSON.stringify does not include functions in the output string
-// This function adds the function's name in place of the function
-const stringifyIncludeFunctionNames = (key: string, value: any) => {
-  if (typeof value === "function") {
-    return value.name;
-  } else {
-    return value;
-  }
+const exampleFunction: ServerlessFunction = () => {
+  return exampleReturnValue;
+};
+
+const exampleFunctionArgument: FunctionArgument = {
+  queryParams: {},
+  pathParams: {},
+  site: mockSiteInfo,
 };
 
 describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () => {
-  it("converts a function in /function/http using the default getPath and config", async () => {
+  it("converts a function in function/http using the default getPath and config", async () => {
     const functionModule: FunctionModule = {
       default: exampleFunction,
     };
@@ -27,7 +34,6 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         false
       );
     const expected = {
-      default: "exampleFunction",
       config: {
         name: "api/example",
         functionName: "exampleFunction",
@@ -36,14 +42,25 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       path: "src/functions/http/api/example.ts",
       filename: "example.ts",
       slug: "api/example",
-      getPath: "getPath",
     };
-    expect(
-      JSON.stringify(functionModuleInternal, stringifyIncludeFunctionNames)
-    ).toEqual(JSON.stringify(expected));
+    expect(JSON.stringify(functionModuleInternal)).toEqual(
+      JSON.stringify(expected)
+    );
+
+    const functionReturnValue = functionModuleInternal.default
+      ? functionModuleInternal.default(exampleFunctionArgument)
+      : undefined;
+    const functionGetPath = functionModuleInternal.getPath
+      ? functionModuleInternal.getPath()
+      : undefined;
+
+    expect(JSON.stringify(functionReturnValue)).toEqual(
+      JSON.stringify(exampleReturnValue)
+    );
+    expect(functionGetPath).toEqual("api/example");
   });
 
-  it("throws an error when a function outside /functions/http is missing a config", async () => {
+  it("throws an error when a function outside functions/http is missing a config", async () => {
     const functionModule: FunctionModule = {
       default: exampleFunction,
       getPath: () => "path",
@@ -59,7 +76,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     );
   });
 
-  it("throws an error when a function outside /functions/http is missing a getPath", async () => {
+  it("throws an error when a function outside functions/http is missing a getPath", async () => {
     const functionModule: FunctionModule = {
       default: exampleFunction,
       config: {
@@ -77,7 +94,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     );
   });
 
-  it("converts a function outside /function/http", async () => {
+  it("converts a function outside function/http", async () => {
     const functionModule: FunctionModule = {
       default: exampleFunction,
       config: {
@@ -92,23 +109,33 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         false
       );
     const expected = {
-      default: "exampleFunction",
       config: {
         name: "Test Function",
         functionName: "exampleFunction",
         event: "API",
       },
-      getPath: "getPath",
       path: "src/functions/example.ts",
       filename: "example.ts",
       slug: "myFunction",
     };
-    expect(
-      JSON.stringify(functionModuleInternal, stringifyIncludeFunctionNames)
-    ).toEqual(JSON.stringify(expected));
+
+    expect(JSON.stringify(functionModuleInternal)).toEqual(
+      JSON.stringify(expected)
+    );
+
+    const functionReturnValue = functionModuleInternal.default
+      ? functionModuleInternal.default(exampleFunctionArgument)
+      : undefined;
+    const functionGetPath = functionModuleInternal.getPath
+      ? functionModuleInternal.getPath()
+      : undefined;
+    expect(JSON.stringify(functionReturnValue)).toEqual(
+      JSON.stringify(exampleReturnValue)
+    );
+    expect(functionGetPath).toEqual("myFunction");
   });
 
-  it("converts a function in /function/http, overriding the default name and slug", async () => {
+  it("converts a function in function/http, overriding the default name and slug", async () => {
     const functionModule: FunctionModule = {
       default: exampleFunction,
       config: {
@@ -123,19 +150,29 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         false
       );
     const expected = {
-      default: "exampleFunction",
       config: {
         name: "Test Function",
         functionName: "exampleFunction",
         event: "API",
       },
-      getPath: "getPath",
       path: "src/functions/http/api/example.ts",
       filename: "example.ts",
       slug: "myFunction",
     };
-    expect(
-      JSON.stringify(functionModuleInternal, stringifyIncludeFunctionNames)
-    ).toEqual(JSON.stringify(expected));
+
+    expect(JSON.stringify(functionModuleInternal)).toEqual(
+      JSON.stringify(expected)
+    );
+
+    const functionReturnValue = functionModuleInternal.default
+      ? functionModuleInternal.default(exampleFunctionArgument)
+      : undefined;
+    const functionGetPath = functionModuleInternal.getPath
+      ? functionModuleInternal.getPath()
+      : undefined;
+    expect(JSON.stringify(functionReturnValue)).toEqual(
+      JSON.stringify(exampleReturnValue)
+    );
+    expect(functionGetPath).toEqual("myFunction");
   });
 });
