@@ -22,7 +22,6 @@ type Props = {
 export const serverRenderSlugRoute =
   ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
-    console.log("running normal");
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
       const locale = req.query.locale?.toString() ?? "en";

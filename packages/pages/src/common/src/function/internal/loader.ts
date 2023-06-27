@@ -9,6 +9,7 @@ import { pathToFileURL } from "url";
 import { getFunctionFilepaths } from "./getFunctionFilepaths.js";
 import { Path } from "../../project/path.js";
 import { defaultProjectStructureConfig } from "../../project/structure.js";
+import { processEnvVariables } from "../../../../util/processEnvVariables.js";
 
 const TEMP_DIR = ".temp";
 
@@ -39,6 +40,7 @@ export const loadFunctionModules = async (
           loader: {
             ".ico": "dataurl",
           },
+          define: processEnvVariables("YEXT_PUBLIC"),
         });
 
         functionModule = await importFromString(
