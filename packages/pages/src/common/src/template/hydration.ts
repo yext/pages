@@ -2,9 +2,7 @@ import { HeadConfig, renderHeadConfigToString } from "./head.js";
 import { convertToPosixPath } from "./paths.js";
 import { TemplateRenderProps } from "./types.js";
 
-export const relativePrefixToRootReplacementTag = "<!--relativePrefixToRoot-->";
-const relativePrefixToRootEscapedReplacementTag =
-  "&lt;!--relativePrefixToRoot--&gt;";
+export const relativePrefixToRootReplacementTag = "YEXT_RELATIVEPREFIXTOROOT";
 
 /**
  * Imports the custom hydration template and entrypoint template as modules and calls
@@ -66,12 +64,12 @@ export const getHydrationTemplate = (
         const component = await import(componentUrl);
         const render = await import(renderUrl);
 
-        render.render(
-        {
+        render.render({
             Page: component.default,
             pageProps: ${JSON.stringify(props)},
-        }
-        );
+        });
+
+        <!--INJECT-ASSET-FIX-->
     `;
 };
 
@@ -175,10 +173,33 @@ export const getServerTemplatePlugin = (
     relativePrefixToRootReplacementTag,
     relativePrefixToRoot
   );
-  html = html.replaceAll(
-    relativePrefixToRootEscapedReplacementTag,
-    relativePrefixToRoot
-  );
+
+  if (clientHydrationString) {
+    // Similar to above, we need the client hydration code to also make use of relativePrefixToRoot. The server and client
+    // code is exactly the same based on what is built, which means that there is a replacement tag that needs to be updated.
+    // Since the client side hydration occurs by importing the file directly, we need a way to still hook into the generated
+    // code and update the tags with the dynamic relativePrefixToRoot (which is determined by the document props at render time).
+    // This is somewhat of a hack that updates the src and href urls in place.
+    html = html.replace(
+      "<!--INJECT-ASSET-FIX-->",
+      `function fixUrls() {
+         console.log("updating urls");
+         var srcNodeList = document.querySelectorAll('[src],[href]');
+         for (var i = 0; i < srcNodeList.length; ++i) {
+           var item = srcNodeList[i];
+             if (item.getAttribute('src') !== null && item.getAttribute('src').includes('${relativePrefixToRootReplacementTag}')){
+                 item.setAttribute('src', item.getAttribute('src').replace("${relativePrefixToRootReplacementTag}", "${relativePrefixToRoot}"));
+             }
+             if (item.getAttribute('href') !== null && item.getAttribute('href').includes('${relativePrefixToRootReplacementTag}')){
+                 item.setAttribute('href', item.getAttribute('href').replace("${relativePrefixToRootReplacementTag}", "${relativePrefixToRoot}"));
+             }
+         }
+       }    
+
+      fixUrls();
+      `
+    );
+  }
 
   return html;
 };
