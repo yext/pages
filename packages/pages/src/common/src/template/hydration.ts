@@ -11,6 +11,10 @@ export const relativePrefixToRootReplacementTag = "YEXT_RELATIVEPREFIXTOROOT";
  * Dev has a separate function than {@link getHydrationTemplate} due to how Vite messes
  * with the import.meta.url.
  *
+ * Output string is split into two strings. The first part is required for Vite to load in CSS
+ * and the second part allows hydration. We want CSS to always load but hydration to be
+ * controllable.
+ *
  * @param clientRenderTemplatePath the path to the custom client render template
  * @param templateModulePath the path to the template module
  * @param props the {@link TemplateRenderProps}
@@ -19,21 +23,28 @@ export const relativePrefixToRootReplacementTag = "YEXT_RELATIVEPREFIXTOROOT";
 export const getHydrationTemplateDev = (
   clientRenderTemplatePath: string,
   templateModulePath: string,
-  props: TemplateRenderProps
+  props: TemplateRenderProps,
+  hydrate: boolean
 ): string => {
-  return `
-      import {default as Component} from "${convertToPosixPath(
-        templateModulePath
-      )}";
-      import {render} from "${convertToPosixPath(clientRenderTemplatePath)}";
-      
-      render(
-      {
-          Page: Component,
-          pageProps: ${JSON.stringify(props)},
-      }
-      );
-    `;
+  let hydrationTemplate = `
+  import {default as Component} from "${convertToPosixPath(
+    templateModulePath
+  )}";
+  `;
+
+  if (hydrate) {
+    hydrationTemplate += `
+    import {render} from "${convertToPosixPath(clientRenderTemplatePath)}";
+    render(
+    {
+        Page: Component,
+        pageProps: ${JSON.stringify(props)},
+    }
+    );
+  `;
+  }
+
+  return hydrationTemplate;
 };
 
 /**
