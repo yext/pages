@@ -12,6 +12,7 @@ import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { loadFunctions } from "../../common/src/function/internal/loader.js";
 import { serveServerlessFunction } from "./middleware/serverlessFunctions.js";
+import { FunctionModuleInternal } from "../../common/src/function/internal/types.js";
 
 export const createServer = async (
   dynamicGenerateData: boolean,
@@ -61,21 +62,40 @@ export const createServer = async (
     ));
   }
 
-  const loadedFunctions = await loadFunctions();
-  const loadedFunctionPaths = [...loadedFunctions.keys()].map(
-    (slug) => "/" + slug
-  );
+  // Load functions from their source files
+  const functionModules: Map<string, FunctionModuleInternal> = new Map();
+  const loadUpdatedFunctionModules = async () => {
+    const loadedFunctionModules = await loadFunctions();
+    loadedFunctionModules.forEach((functionModule) => {
+      functionModules.set(functionModule.slug, functionModule);
+    });
+  };
 
-  if (loadedFunctionPaths.length > 0) {
-    loadedFunctionPaths.forEach((loadedFunctionPath) => {
-      const loadedFunction = loadedFunctions.get(loadedFunctionPath.slice(1));
-      if (loadedFunction) {
-        app.use(loadedFunctionPath, (req, res, next) =>
-          serveServerlessFunction(req, res, next, loadedFunction)
-        );
-      }
+  await loadUpdatedFunctionModules(); // Load functions on initial setup
+
+  // Assign routes for functions based on their slug when the server started
+  const loadedFunctionSlugs = [...functionModules.keys()];
+  if (loadedFunctionSlugs.length > 0) {
+    loadedFunctionSlugs.forEach((loadedFunctionSlug) => {
+      app.use("/" + loadedFunctionSlug, (req, res, next) => {
+        const loadedFunction = functionModules.get(loadedFunctionSlug);
+        if (!loadedFunction) {
+          throw new Error(
+            "Could not load function with slug" + loadedFunctionSlug
+          );
+        }
+        serveServerlessFunction(req, res, next, loadedFunction);
+      });
     });
   }
+
+  // Reload functions if their source files change
+  // Only supports updates in the default export, changes to the slug require server restart
+  vite.watcher.on("change", async (filepath) => {
+    if (filepath.includes("src/functions")) {
+      await loadUpdatedFunctionModules();
+    }
+  });
 
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.
