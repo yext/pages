@@ -164,8 +164,7 @@ const renderHtml = async (
   return await reactWrapper(
     props,
     templateModuleInternal,
-    // TODO -- allow hydration be configurable.
-    true,
+    templateModuleInternal.config.hydrate,
     pluginRenderTemplates
   );
 };
