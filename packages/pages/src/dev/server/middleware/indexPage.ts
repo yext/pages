@@ -12,6 +12,9 @@ import {
   generateTestDataWarningText,
   localModeInfoText,
   noLocalDataErrorText,
+  localDevHitchhikersText,
+  yextLogoWhiteSvg,
+  laptopIconBlackSvg,
 } from "./constants.js";
 import { ViteDevServer } from "vite";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
@@ -43,15 +46,25 @@ export const indexPage =
         templateFilepaths
       );
 
-      let indexPageHtml = index
-        // Inject an informative message depending on if the user is in dynamic mode or not.
-        .replace(
-          `<!--info-html-->`,
-          `<div class="info">
-          <i class="fa fa-info-circle"></i>
+      // Inject the header
+      let indexPageHtml = index.replace(
+        `<!--header-html-->`,
+        `
+        <div class="header">
+          ${yextLogoWhiteSvg}
+          <h1>Pages Development</h1>
+        </div>
+        `
+      );
+
+      // Inject the sidebar
+      indexPageHtml = indexPageHtml.replace(
+        `<!--sidebar-html-->`,
+        `<div class="sidebar">
+          ${laptopIconBlackSvg}
           ${getInfoMessage(dynamicGenerateData, useProdURLs)}
         </div>`
-        );
+      );
 
       // If there is any localData, display hyperlinks to each page that will be generated
       // from each data document.
@@ -60,11 +73,8 @@ export const indexPage =
         if (localDataManifest.static.length) {
           indexPageHtml = indexPageHtml.replace(
             `<!--static-pages-html-->`,
-            `<div class="section-title">Static Pages</div>
-          <div class="list">
-          ${createStaticPageListItems(localDataManifest)}
-          </div>
-          `
+            `<h3>Static Pages</h3>
+            ${createStaticPageListItems(localDataManifest)}`
           );
         }
 
@@ -72,26 +82,36 @@ export const indexPage =
         if (Array.from(localDataManifest.entity.keys()).length) {
           indexPageHtml = indexPageHtml.replace(
             `<!--entity-pages-html-->`,
-            `<div class="section-title">Entity Pages</div>
+            `<h3>Entity Pages</h3>
             <div class="list">
           ${Array.from(localDataManifest.entity.keys()).reduce(
             (templateAccumulator, templateName) =>
               templateAccumulator +
-              `<div class="list-title">
-                    <span class="list-title-templateName">${templateName}</span>
-                    Pages (${
-                      (
-                        localDataManifest.entity
-                          .get(templateName)
-                          ?.filter((d) => !useProdURLs || d.slug) || []
-                      ).length
-                    }):
-                  </div>
-                  <ul>${createEntityPageListItems(
-                    localDataManifest,
-                    templateName,
-                    useProdURLs
-                  )}</ul>`,
+              `<h4>
+                ${templateName}
+                pages (${
+                  (
+                    localDataManifest.entity
+                      .get(templateName)
+                      ?.filter((d) => !useProdURLs || d.slug) || []
+                  ).length
+                }):
+              </h4>
+                <table>
+                  <thead>
+                    <tr>
+                      <td>URL</td>
+                      <td>Entity ID</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${createEntityPageListItems(
+                      localDataManifest,
+                      templateName,
+                      useProdURLs
+                    )}
+                  </tbody>
+                </table>`,
             ""
           )}
           </div>`
@@ -103,17 +123,18 @@ export const indexPage =
           `<!--error-html-->`,
           `<div class="error">
            <i class="fa fa-times-circle"></i>
-             ${noLocalDataErrorText}
+             <p>${noLocalDataErrorText}</p>
           </div>`
         );
       }
 
+      // Add http/serverless functions
       indexPageHtml = addHttpFuncs(indexPageHtml);
 
+      // If there was an issue regenerating the local test data on dev server start, then
+      // display a warning message that informs the user. This will only be displayed when
+      // in dynamic mode (local test data is not refreshed in local mode).
       if (displayGenerateTestDataWarning) {
-        // If there was an issue regenerating the local test data on dev server start, then
-        // display a warning message that informs the user. This will only be displayed when
-        // in dynamic mode (local test data is not refreshed in local mode).
         indexPageHtml = indexPageHtml.replace(
           `<!--warning-html-->`,
           `<div class="warning">
@@ -151,12 +172,19 @@ const addHttpFuncs = (indexPageHtml: string) => {
   return httpFuncs.length
     ? indexPageHtml.replace(
         `<!--serverless-functions-html-->`,
-        `<div class="section-title">HTTP Functions</div>
-        <ul>
+        `<h3>HTTP Functions</h3>
+      <table>
+        <thead>
+          <tr>
+            <td>URL</td>
+          </tr>
+        </thead>
+        <tbody>
           ${httpFuncs
-            .map(([_, source]) => `<li>${source.apiPath}</li>`)
+            .map(([_, source]) => `<tr><td>${source.apiPath}</td></tr>`)
             .join("")}
-        </ul>`
+        </tbody>
+      </table>`
       )
     : indexPageHtml;
 };
@@ -165,16 +193,26 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
   return Array.from(localDataManifest.static).reduce(
     (templateAccumulator, { featureName, staticURL }) =>
       templateAccumulator +
-      `<div class="list-title"> <span class="list-title-templateName">${featureName}</span> Pages (1):</div>
-    <ul>
-      <li>
-        <a href="http://localhost:${devServerPort}/${encodeURIComponent(
+      `<h4>${featureName} pages (1):</h4>
+      <table>
+        <thead>
+          <tr>
+            <td>URL</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <a href="http://localhost:${devServerPort}/${encodeURIComponent(
         staticURL
       )}">
-          ${staticURL}
-        </a>
-      </li>
-    </ul>`,
+                ${staticURL}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+`,
     ""
   );
 };
@@ -198,7 +236,7 @@ const createEntityPageListItems = (
     if (!slug) {
       return entityId;
     }
-    return `${slug} (${entityId})`;
+    return `${slug}`;
   };
 
   const entities = localDataManifest.entity.get(templateName) || [];
@@ -211,11 +249,16 @@ const createEntityPageListItems = (
     }
     return (
       entityAccumulator +
-      `<li>
-      <a href="${formatLink(entityId, slug)}">
-        ${formatDisplayValue(entityId, slug)}
-      </a>
-    </li>`
+      `<tr>
+        <td>
+          <a href="${formatLink(entityId, slug)}">
+            ${formatDisplayValue(entityId, slug)}
+           </a>
+        </td>
+        <td>
+          ${entityId}
+        </td>
+    </tr>`
     );
   }, "");
 };
@@ -226,6 +269,7 @@ const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
         <li>${dynamicModeInfoText}</li>
         <li>${localDevUrlInfoText}</li>
         <li>${localDevUrlHelpText}</li>
+        <li>${localDevHitchhikersText}</li>
       <ul>`;
   }
 
@@ -233,5 +277,5 @@ const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
     return dynamicModeInfoText;
   }
 
-  return localModeInfoText;
+  return `<p>${localModeInfoText}</p>`;
 };

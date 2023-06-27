@@ -9,7 +9,7 @@ const LOCATION_ID = "location7";
 test("index page loads", async ({ page }) => {
   await page.goto("/");
   await waitForStyling();
-  await expect(page).toHaveTitle(/Pages Development Page/);
+  await expect(page).toHaveTitle(/Pages Development/);
   await expect(page.locator("a", { hasText: LOCATION_ID })).toHaveAttribute(
     "href",
     `${page.url()}location/${LOCATION_ID}`
