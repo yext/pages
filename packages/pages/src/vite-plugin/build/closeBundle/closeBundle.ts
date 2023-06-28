@@ -14,6 +14,7 @@ import {
   shouldGenerateFunctionMetadata,
 } from "./functionMetadata.js";
 import { updateCiConfig } from "../../../generate/ci/ci.js";
+import { loadFunctions } from "../../../common/src/function/internal/loader.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -24,7 +25,13 @@ export default (projectStructure: ProjectStructure) => {
         path.join(
           projectStructure.serverBundleOutputRoot.getAbsolutePath(),
           "**/*.js"
-        )
+        ),
+        {
+          ignore: path.join(
+            projectStructure.serverBundleOutputRoot.getAbsolutePath(),
+            "functions/**"
+          ),
+        }
       );
       templateModules = await loadTemplateModules(serverBundles, false, true);
       validateUniqueFeatureName(templateModules);
@@ -32,6 +39,16 @@ export default (projectStructure: ProjectStructure) => {
       finisher.succeed("Validated template modules");
     } catch (e: any) {
       finisher.fail("One or more template modules failed validation");
+      throw new Error(e);
+    }
+
+    finisher = logger.timedLog({ startLog: "Validating function modules" });
+    try {
+      // loading the modules checks for all required aspects
+      await loadFunctions(projectStructure.functionBundleOutputRoot.path);
+      finisher.succeed("Validated function modules");
+    } catch (e: any) {
+      finisher.fail("One or more function modules failed validation");
       throw new Error(e);
     }
 
@@ -72,7 +89,7 @@ export default (projectStructure: ProjectStructure) => {
 
     finisher = logger.timedLog({ startLog: "Updating ci.json" });
     try {
-      updateCiConfig(
+      await updateCiConfig(
         path.join(
           projectStructure.sitesConfigRoot.getAbsolutePath(),
           projectStructure.ciConfig

@@ -1,16 +1,41 @@
 import path from "path";
 import { getFunctionFilepaths } from "./getFunctionFilepaths.js";
 import minimatch from "minimatch";
-import { Path } from "../../project/path.js";
+import { defaultProjectStructureConfig } from "../../project/structure.js";
 
-const rootPath = "src/functions";
-const multiLevelPath = "src/functions/http/api/fetch";
+const rootPath = defaultProjectStructureConfig.filepathsConfig.functionsRoot;
+const multiLevelPath =
+  defaultProjectStructureConfig.filepathsConfig.functionsRoot +
+  "/http/api/fetch";
 
 const filepaths = [
   `${multiLevelPath}/test1.ts`,
   `${multiLevelPath}/test2.js`,
   `${rootPath}/test3.js`,
   `${rootPath}/test4.ts`,
+];
+
+const expected = [
+  {
+    absolute: "src/functions/http/api/fetch/test1.ts",
+    relative: "/http/api/fetch/test1",
+    extension: "ts",
+  },
+  {
+    absolute: "src/functions/http/api/fetch/test2.js",
+    relative: "/http/api/fetch/test2",
+    extension: "js",
+  },
+  {
+    absolute: "src/functions/test3.js",
+    relative: "/test3",
+    extension: "js",
+  },
+  {
+    absolute: "src/functions/test4.ts",
+    relative: "/test4",
+    extension: "ts",
+  },
 ];
 
 jest.mock("glob", () => {
@@ -22,10 +47,10 @@ jest.mock("glob", () => {
 });
 
 describe("getFunctionFilepaths", () => {
-  it("collects all function files under the root folder path", () => {
-    const templatesFilepath = getFunctionFilepaths([
-      new Path(path.join(process.cwd(), rootPath)),
-    ]);
-    expect(templatesFilepath.sort()).toEqual(filepaths.sort());
+  it("collects all function files under the src/functions path", () => {
+    const templatesFilepath = getFunctionFilepaths("src/functions");
+    expect(JSON.stringify(templatesFilepath.sort())).toEqual(
+      JSON.stringify(expected)
+    );
   });
 });

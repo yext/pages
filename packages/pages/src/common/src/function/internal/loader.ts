@@ -1,14 +1,13 @@
 import { FunctionModule } from "../types.js";
 import {
   convertFunctionModuleToFunctionModuleInternal,
+  FunctionFilePath,
   FunctionModuleInternal,
 } from "./types.js";
 import esbuild from "esbuild";
 import { importFromString } from "module-from-string";
 import { pathToFileURL } from "url";
 import { getFunctionFilepaths } from "./getFunctionFilepaths.js";
-import { Path } from "../../project/path.js";
-import { defaultProjectStructureConfig } from "../../project/structure.js";
 import { processEnvVariables } from "../../../../util/processEnvVariables.js";
 
 const TEMP_DIR = ".temp";
@@ -18,13 +17,11 @@ const TEMP_DIR = ".temp";
  *
  * @param functionPaths the function filepaths to load as modules
  * @param transpile set to true if the functions need to be transpiled (such as when they are in tsx format)
- * @param adjustForFingerprintedAsset removes the fingerprint portion (for server bundles)
  * @returns Promise<{@link FunctionModuleCollection}>
  */
 export const loadFunctionModules = async (
-  functionPaths: string[],
-  transpile: boolean,
-  adjustForFingerprintedAsset: boolean
+  functionPaths: FunctionFilePath[],
+  transpile: boolean
 ): Promise<FunctionModuleCollection> => {
   const importedModules = [] as FunctionModuleInternal[];
   for (const functionPath of functionPaths) {
@@ -32,7 +29,7 @@ export const loadFunctionModules = async (
     try {
       if (transpile) {
         const buildResult = await esbuild.build({
-          entryPoints: [functionPath],
+          entryPoints: [functionPath.absolute],
           outdir: TEMP_DIR,
           write: false,
           format: "esm",
@@ -47,7 +44,9 @@ export const loadFunctionModules = async (
           buildResult.outputFiles[0].text
         );
       } else {
-        functionModule = await import(pathToFileURL(functionPath).toString());
+        functionModule = await import(
+          pathToFileURL(functionPath.absolute).toString()
+        );
       }
     } catch (e) {
       throw new Error(`Could not import ${functionPath} ${e}`);
@@ -56,13 +55,11 @@ export const loadFunctionModules = async (
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
         functionPath,
-        functionModule,
-        adjustForFingerprintedAsset
+        functionModule
       );
 
     importedModules.push({
       ...functionModuleInternal,
-      path: functionPath,
     });
   }
 
@@ -82,19 +79,17 @@ export const loadFunctionModules = async (
 };
 
 /**
- * A FunctionModuleCollection is a collection of function modules
- * indexed by feature name.
+ * A FunctionModuleCollection maps function slug to interal function modules
  */
 export type FunctionModuleCollection = Map<string, FunctionModuleInternal>;
 
 /**
- * Loads all functions by finding all files under /src/functions and then creating
+ * Loads all functions by finding all files under the provided root and then creating
  * FunctionModules for each
+ * @param root the directory to check for functions
  * @return Promise<FunctionModuleCollection>
  */
-export const loadFunctions = async () => {
-  const functionFilepaths = getFunctionFilepaths([
-    new Path(defaultProjectStructureConfig.filepathsConfig.functionsRoot),
-  ]);
-  return await loadFunctionModules(functionFilepaths, true, false);
+export const loadFunctions = async (root: string) => {
+  const functionFilepaths = getFunctionFilepaths(root);
+  return await loadFunctionModules(functionFilepaths, true);
 };

@@ -1,4 +1,7 @@
-import { convertFunctionModuleToFunctionModuleInternal } from "./types.js";
+import {
+  convertFunctionModuleToFunctionModuleInternal,
+  FunctionFilePath,
+} from "./types.js";
 import {
   ServerlessFunction,
   FunctionModule,
@@ -22,6 +25,14 @@ const exampleFunctionArgument: FunctionArgument = {
   site: mockSiteInfo,
 };
 
+const createMockFilePath = (path: string): FunctionFilePath => {
+  return {
+    absolute: process.cwd() + "/src/functions/" + path,
+    relative: "/" + path.split(".")[0],
+    extension: "ts",
+  };
+};
+
 describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () => {
   it("converts a function in function/http using the default getPath and config", async () => {
     const functionModule: FunctionModule = {
@@ -29,18 +40,20 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
-        "src/functions/http/api/example.ts",
-        functionModule,
-        false
+        createMockFilePath("http/api/example.ts"),
+        functionModule
       );
     const expected = {
       config: {
         name: "api/example",
-        functionName: "exampleFunction",
+        functionName: "default",
         event: "API",
       },
-      path: "src/functions/http/api/example.ts",
-      filename: "example.ts",
+      filePath: {
+        absolute: process.cwd() + "/src/functions/http/api/example.ts",
+        relative: "/http/api/example",
+        extension: "ts",
+      },
       slug: "api/example",
     };
     expect(JSON.stringify(functionModuleInternal)).toEqual(
@@ -67,9 +80,8 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     };
     expect(() =>
       convertFunctionModuleToFunctionModuleInternal(
-        "src/functions/example.ts",
-        functionModule,
-        false
+        createMockFilePath("example.ts"),
+        functionModule
       )
     ).toThrow(
       "src/functions/example.ts is missing an exported config function."
@@ -85,9 +97,8 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     };
     expect(() =>
       convertFunctionModuleToFunctionModuleInternal(
-        "src/functions/example.ts",
-        functionModule,
-        false
+        createMockFilePath("example.ts"),
+        functionModule
       )
     ).toThrow(
       "src/functions/example.ts is missing an exported getPath function."
@@ -104,18 +115,20 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
-        "src/functions/example.ts",
-        functionModule,
-        false
+        createMockFilePath("example.ts"),
+        functionModule
       );
     const expected = {
       config: {
         name: "Test Function",
-        functionName: "exampleFunction",
+        functionName: "default",
         event: "API",
       },
-      path: "src/functions/example.ts",
-      filename: "example.ts",
+      filePath: {
+        absolute: process.cwd() + "/src/functions/example.ts",
+        relative: "/example",
+        extension: "ts",
+      },
       slug: "myFunction",
     };
 
@@ -145,18 +158,20 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
-        "src/functions/http/api/example.ts",
-        functionModule,
-        false
+        createMockFilePath("http/api/example.ts"),
+        functionModule
       );
     const expected = {
       config: {
         name: "Test Function",
-        functionName: "exampleFunction",
+        functionName: "default",
         event: "API",
       },
-      path: "src/functions/http/api/example.ts",
-      filename: "example.ts",
+      filePath: {
+        absolute: process.cwd() + "/src/functions/http/api/example.ts",
+        relative: "/http/api/example",
+        extension: "ts",
+      },
       slug: "myFunction",
     };
 

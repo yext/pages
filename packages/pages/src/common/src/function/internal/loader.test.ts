@@ -1,6 +1,6 @@
-import glob from "glob";
 import path from "path";
 import { loadFunctionModules, FunctionModuleCollection } from "./loader.js";
+import { FunctionFilePath } from "./types.js";
 
 // our jest configuration doesn't support file urls so update pathToFileURL to do nothing during
 // this test.
@@ -17,26 +17,27 @@ afterAll(() => jest.unmock("url"));
 
 describe("loadTemplateModules", () => {
   it("loads and transpiles raw templates", async () => {
-    const functionFile = glob.sync(
-      path.join(process.cwd(), "tests/fixtures/function.ts")
-    );
-    const functionModules = await loadFunctionModules(
-      functionFile,
-      true,
-      false
-    );
+    const functionFile: FunctionFilePath[] = [
+      {
+        absolute: path.join(process.cwd(), "tests/fixtures/function.ts"),
+        relative: "tests/fixtures/function",
+        extension: ".ts",
+      },
+    ];
+
+    const functionModules = await loadFunctionModules(functionFile, true);
     commonTests(functionModules);
   });
 
   it("loads transpiled templates", async () => {
-    const functionFile = glob.sync(
-      path.join(process.cwd(), "tests/fixtures/function.js")
-    );
-    const functionModules = await loadFunctionModules(
-      functionFile,
-      false,
-      false
-    );
+    const functionFile: FunctionFilePath[] = [
+      {
+        absolute: path.join(process.cwd(), "tests/fixtures/function.js"),
+        relative: "tests/fixtures/function",
+        extension: "js",
+      },
+    ];
+    const functionModules = await loadFunctionModules(functionFile, false);
     commonTests(functionModules);
   });
 
@@ -47,7 +48,7 @@ describe("loadTemplateModules", () => {
     );
     expect(functionModules.get("hello")?.config.event).toEqual("API");
     expect(functionModules.get("hello")?.config.functionName).toEqual(
-      "helloWorld"
+      "default"
     );
     expect(functionModules.get("hello")?.slug).toEqual("hello");
   };

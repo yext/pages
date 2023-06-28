@@ -20,6 +20,8 @@ export interface ProjectFilepaths {
   serverBundleOutputRoot: string;
   /** The folder path where the compiled render (_client/_server) bundles should go */
   renderBundleOutputRoot: string;
+  /** The folder path where the compiled function bundles should go */
+  functionBundleOutputRoot: string;
   /**
    * This is used for the case of multibrand setup within a single repo.
    *
@@ -82,6 +84,7 @@ export const defaultProjectStructureConfig: ProjectStructureConfig = {
     distRoot: "dist",
     serverBundleOutputRoot: "assets/server",
     renderBundleOutputRoot: "assets/render",
+    functionBundleOutputRoot: "assets/functions",
   },
   filenamesConfig: {
     ciConfig: "ci.json",
@@ -121,6 +124,7 @@ export class ProjectStructure {
   distRoot: Path;
   serverBundleOutputRoot: Path;
   renderBundleOutputRoot: Path;
+  functionBundleOutputRoot: Path;
   ciConfig: string;
   featuresConfig: string;
   envVarDir: string;
@@ -159,6 +163,12 @@ export class ProjectStructure {
       pathLib.join(
         this.#config.filepathsConfig.distRoot,
         this.#config.filepathsConfig.renderBundleOutputRoot
+      )
+    );
+    this.functionBundleOutputRoot = new Path(
+      pathLib.join(
+        this.#config.filepathsConfig.distRoot,
+        this.#config.filepathsConfig.functionBundleOutputRoot
       )
     );
     this.ciConfig = this.#config.filenamesConfig.ciConfig;

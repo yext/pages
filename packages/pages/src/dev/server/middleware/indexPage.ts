@@ -14,7 +14,10 @@ import {
   noLocalDataErrorText,
 } from "./constants.js";
 import { ViteDevServer } from "vite";
-import { ProjectStructure } from "../../../common/src/project/structure.js";
+import {
+  defaultProjectStructureConfig,
+  ProjectStructure,
+} from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { loadFunctions } from "../../../common/src/function/internal/loader.js";
 
@@ -140,7 +143,9 @@ export const indexPage =
   };
 
 const addHttpFuncs = async (indexPageHtml: string) => {
-  const serverlessFunctions = await loadFunctions();
+  const serverlessFunctions = await loadFunctions(
+    defaultProjectStructureConfig.filepathsConfig.functionsRoot
+  );
 
   const functionsToDisplay: serverlessFunctionListItem[] = [];
   serverlessFunctions.forEach((serverlessFunction) => {
@@ -161,9 +166,7 @@ const addHttpFuncs = async (indexPageHtml: string) => {
             .map((func) => {
               return `
                 <li>
-                    <a href=${func.slug}>${func.slug} (${func.name} - ${
-                func.functionName
-              }) ${func.httpEvent ? "[" + func.httpEvent + "]" : ""}</a>
+                    <a href=${func.slug}>${func.slug} (${func.name})</a>
                 </li>
             `;
             })

@@ -1,5 +1,4 @@
 import { ServerlessFunction, FunctionModule } from "../types.js";
-import { parse } from "../../template/internal/types.js";
 import {
   validateFunctionDefaultExport,
   validateFunctionModule,
@@ -12,9 +11,7 @@ import { PluginEvent } from "../../ci/ci.js";
  */
 export interface FunctionModuleInternal {
   /** The filepath to the serverless function file. */
-  path: string;
-  /** The name of the file (with extension) */
-  filename: string;
+  filePath: FunctionFilePath;
   /** The exported config function */
   config: FunctionConfigInternal;
   /** The exported getPath function */
@@ -37,49 +34,59 @@ export interface FunctionConfigInternal {
   functionName: string;
 }
 
+/**
+ * Stores the filepath to a function
+ */
+export interface FunctionFilePath {
+  /** The absolute path from the user's root directory */
+  absolute: string;
+  /** The path from src/functions */
+  relative: string;
+  /** The file extensions */
+  extension: string;
+}
+
+/**
+ * Converts user-provided function information to an internal module
+ * @param functionFilepath the filepath information for the function
+ * @param functionModule the public function module to convert
+ */
 export const convertFunctionModuleToFunctionModuleInternal = (
-  functionFilepath: string,
-  functionModule: FunctionModule,
-  adjustForFingerprintedAsset: boolean
+  functionFilepath: FunctionFilePath,
+  functionModule: FunctionModule
 ): FunctionModuleInternal => {
-  const functionPath = parse(functionFilepath, adjustForFingerprintedAsset);
   let functionInternal;
 
   if (
-    functionFilepath.includes("/functions/http") &&
+    functionFilepath.relative.slice(0, 5) === "/http" &&
     Object.keys(functionModule).length === 1
   ) {
-    validateFunctionDefaultExport(functionFilepath, functionModule);
+    validateFunctionDefaultExport(functionFilepath.absolute, functionModule);
 
-    const defaultSlug = functionFilepath
-      .split("/functions/http/")[1]
-      .split(".")
-      .slice(-2)[0];
+    const defaultSlug = functionFilepath.relative.replace("/http/", "");
 
     functionInternal = {
       ...functionModule,
       config: {
         name: defaultSlug,
-        functionName: functionModule.default?.name ?? functionPath.name,
+        functionName: "default",
         event: "API" as PluginEvent,
       },
-      path: functionFilepath,
-      filename: functionPath.base,
+      filePath: functionFilepath,
       slug: defaultSlug,
       getPath: () => defaultSlug,
     };
   } else {
-    validateFunctionModule(functionFilepath, functionModule);
+    validateFunctionModule(functionFilepath.absolute, functionModule);
 
     functionInternal = {
       ...functionModule,
       config: {
-        name: functionModule.config?.name ?? functionPath.name,
-        functionName: functionModule.default?.name ?? functionPath.name,
+        name: functionModule.config?.name ?? functionFilepath.relative,
+        functionName: "default",
         event: "API" as PluginEvent,
       },
-      path: functionFilepath,
-      filename: functionPath.base,
+      filePath: functionFilepath,
       slug: functionModule.getPath ? functionModule.getPath() : "",
     };
   }

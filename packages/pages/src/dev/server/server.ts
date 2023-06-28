@@ -10,9 +10,11 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
-import { loadFunctions } from "../../common/src/function/internal/loader.js";
+import {
+  FunctionModuleCollection,
+  loadFunctions,
+} from "../../common/src/function/internal/loader.js";
 import { serveServerlessFunction } from "./middleware/serverlessFunctions.js";
-import { FunctionModuleInternal } from "../../common/src/function/internal/types.js";
 
 export const createServer = async (
   dynamicGenerateData: boolean,
@@ -63,9 +65,11 @@ export const createServer = async (
   }
 
   // Load functions from their source files
-  const functionModules: Map<string, FunctionModuleInternal> = new Map();
+  const functionModules: FunctionModuleCollection = new Map();
   const loadUpdatedFunctionModules = async () => {
-    const loadedFunctionModules = await loadFunctions();
+    const loadedFunctionModules = await loadFunctions(
+      projectStructure.serverlessFunctionsRoot.path
+    );
     loadedFunctionModules.forEach((functionModule) => {
       functionModules.set(functionModule.slug, functionModule);
     });

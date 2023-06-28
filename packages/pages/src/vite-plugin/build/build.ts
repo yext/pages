@@ -3,10 +3,14 @@ import buildStart from "./buildStart/buildStart.js";
 import closeBundle from "./closeBundle/closeBundle.js";
 import path, { parse } from "path";
 import { InputOption } from "rollup";
-import { ProjectStructure } from "../../common/src/project/structure.js";
+import {
+  defaultProjectStructureConfig,
+  ProjectStructure,
+} from "../../common/src/project/structure.js";
 import { readdir } from "fs/promises";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { getGlobalClientServerRenderTemplates } from "../../common/src/template/internal/getTemplateFilepaths.js";
+import { getFunctionFilepaths } from "../../common/src/function/internal/getFunctionFilepaths.js";
 
 const intro = `
 var global = globalThis;
@@ -104,6 +108,12 @@ const discoverInputs = async (
   }
 
   await updateEntryPoints(rootTemplateDir);
+
+  getFunctionFilepaths(
+    defaultProjectStructureConfig.filepathsConfig.functionsRoot
+  ).forEach((functionPath) => {
+    entryPoints[`functions/${functionPath.relative}`] = functionPath.absolute;
+  });
 
   return { ...entryPoints, ...discoverRenderTemplates(projectStructure) };
 };

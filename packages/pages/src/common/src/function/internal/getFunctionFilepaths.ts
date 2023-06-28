@@ -1,30 +1,29 @@
 import glob from "glob";
-import path from "path";
 import { Path } from "../../project/path.js";
+import { FunctionFilePath } from "./types.js";
 
 /**
- * Get all the functions files in the provided function folder path(s).
- *
- * If there are files that share the same name between the provided
- * function folder paths, only the file found in the first visited path
- * from the list is included.
- *
- * @param paths a list of paths to collect serverless function files from
+ * Get all the functions files in a directory
+ * @param root the directory to check for functions
  * @returns a list of function filepaths
  */
-export const getFunctionFilepaths = (paths: Path[]): string[] => {
-  const functionFilepaths: string[] = [];
-  const addedFilenames: Set<string> = new Set();
-  paths.forEach((p) => {
-    const filepaths = glob.sync(`${p.getAbsolutePath()}/**/*.{tsx,jsx,js,ts}`);
-    filepaths.forEach((f) => {
-      const fileName = path.basename(f);
-      if (!addedFilenames.has(fileName)) {
-        addedFilenames.add(fileName);
-        functionFilepaths.push(f);
-      }
-    });
-  });
+export const getFunctionFilepaths = (root: string): FunctionFilePath[] => {
+  const functionsRoot = new Path(root);
+  const filepaths = glob.sync(
+    `${functionsRoot.getAbsolutePath()}/**/*.{tsx,jsx,js,ts}`
+  );
 
-  return functionFilepaths;
+  return filepaths.map((filepath) => {
+    const filePathMatcher = filepath.match(`${root}(.*)\\.`);
+    if (!filePathMatcher || filePathMatcher.length < 2) {
+      throw new Error(
+        `Cannot resolve relative path from ${root} for ${filepath}`
+      );
+    }
+    return {
+      absolute: filepath,
+      relative: filePathMatcher[1] ?? "",
+      extension: filepath.split(".").pop() ?? "",
+    };
+  }) as FunctionFilePath[];
 };
