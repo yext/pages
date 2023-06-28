@@ -12,6 +12,7 @@ describe("validateTemplateModuleInternal - validateConfig", () => {
   it("validates that a config name is defined", async () => {
     const templateConfigInternal: TemplateConfigInternal = {
       name: "",
+      hydrate: true,
     };
 
     const validateConfigFunc = () =>
@@ -25,6 +26,7 @@ describe("validateTemplateModuleInternal - validateConfig", () => {
   it("validates that both a streamId and stream are not defined", async () => {
     const templateConfigInternal: TemplateConfigInternal = {
       name: "foo",
+      hydrate: true,
       streamId: "$id",
       stream: {
         $id: "$id",
@@ -56,6 +58,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
       path: "/src/templates/foo.tsx",
       config: {
         name: "foo",
+        hydrate: true,
         streamId: "$id",
       },
     };
@@ -80,6 +83,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
       path: "/src/templates/foo.tsx",
       config: {
         name: "foo",
+        hydrate: true,
         streamId: "$id",
       },
     };
@@ -105,6 +109,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
       getRedirects: () => [],
       config: {
         name: "foo",
+        hydrate: true,
         streamId: "$id",
       },
     };

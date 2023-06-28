@@ -1,16 +1,24 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Pages Development Page</title>
+    <title>Pages Development</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato&family=Poppins:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <div class="title">Pages Development Page</div>
-    <!--info-html-->
-    <!--warning-html-->
-    <!--error-html-->
-    <!--static-pages-html-->
-    <!--entity-pages-html-->
-    <!--serverless-functions-html-->
+    <!--header-html-->
+    <!--sidebar-html-->
+    <div class="main">
+      <!--warning-html-->
+      <!--error-html-->
+      <!--entity-pages-html-->
+      <!--static-pages-html-->
+      <!--serverless-functions-html-->
+    </div>
   </body>
 </html>
 
@@ -18,16 +26,37 @@
   @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
   :root {
+    --sidebar-width: min(25vw, 400px);
+    --header-height: 25vh;
+    --header-height-short: 15vh;
+    --content-max-width: 1000px;
+    --standard-padding: 32px;
+    --standard-margin: 12px;
+
     /* Yext brand colors */
     --concrete-300: #c5cace;
     --concrete-650: #161616;
     --white: #ffffff;
     --yext-brand-blue: #1564f9;
+    --monochrome-gray1: #f9fafb;
+    --monochrome-gray2: #f0f2f4;
+    --monochrome-gray3: #e1e5e8;
+    --monochrome-gray4: #c4cbd0;
+    --monochrome-gray7: #374151;
 
     /* light mode */
     --background-color: white;
-    --text-color: black;
+    --text-color: var(--monochrome-gray7);
     --link-color: var(--yext-brand-blue);
+    --row-color-main: white;
+    --row-color-alt: var(--monochrome-gray1);
+    --sidebar-background: var(--monochrome-gray2);
+    --code-background: var(--monochrome-gray4);
+    --table-head-color: var(--monochrome-gray3);
+
+    --main-width: calc(100vw - var(--sidebar-width));
+    --main-height: calc(100vh - var(--header-height));
+    --main-height-short: calc(100vh - var(--header-height-short));
   }
 
   /* dark mode */
@@ -36,31 +65,48 @@
       --background-color: var(--concrete-650);
       --text-color: var(--white);
       --link-color: var(--concrete-300);
+      --row-color-main: black;
+      --row-color-alt: var(--monochrome-gray7);
+      --sidebar-background: var(--monochrome-gray7);
+      --code-background: black;
+      --table-head-color: var(--monochrome-gray7);
+    }
+    .sidebar svg {
+      filter: invert(1);
     }
   }
 
   body {
     font-family: "Lato", sans-serif;
-    padding: 20px;
     display: flex;
     flex-direction: column;
-    max-width: 1000px;
-    margin: auto;
+    max-width: var(--content-max-width);
     background-color: var(--background-color);
     color: var(--text-color);
   }
 
-  .list {
-    margin-top: 20px;
+  h3 {
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+    color: var(--text-color);
+    margin: var(--standard-margin) auto;
   }
 
-  .list-title {
-    font-size: 20px;
+  h4 {
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 28px;
+    color: var(--text-color);
+    margin: var(--standard-margin) auto;
   }
 
-  .list-title-templateName {
-    font-size: 20px;
-    font-weight: bolder;
+  svg {
+    display: block;
   }
 
   ul {
@@ -78,7 +124,6 @@
 
   a:link,
   a:visited {
-    padding: 5px;
     border-radius: 4px;
   }
 
@@ -87,59 +132,174 @@
     text-decoration: underline;
   }
 
-  .title {
-    margin: auto;
-    font-size: 30px;
-    font-weight: bold;
+  .main {
+    position: fixed;
+    left: var(--sidebar-width);
+    width: var(--main-width);
+    height: var(--main-height);
+    top: var(--header-height);
+    padding: var(--standard-padding);
+    box-sizing: border-box;
+    overflow-y: scroll;
   }
 
-  .section-title {
-    margin-top: 20px;
-    font-size: 25px;
-    font-weight: bold;
+  .main > * {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--content-max-width);
   }
 
-  .info,
-  .success,
-  .warning,
-  .error {
-    margin: auto;
-    margin-top: 20px;
-    padding: 12px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    max-width: 800px;
-    border-radius: 8px;
-    border: 1px solid black;
+  .main table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: var(--standard-padding);
   }
 
-  .info {
-    color: #00529b;
-    background-color: #bde5f8;
+  .main thead {
+    font-family: "Lato", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 16px;
   }
 
-  .success {
-    color: #4f8a10;
-    background-color: #dff2bf;
+  .main tbody {
+    font-family: "Lato", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+    color: var(--text-color);
   }
 
+  .main tr:nth-child(odd) {
+    background-color: var(--row-color-main);
+  }
+
+  .main tr:nth-child(even) {
+    background-color: var(--row-color-alt);
+  }
+
+  .main thead tr:first-child {
+    background-color: var(--table-head-color);
+  }
+
+  .main td {
+    padding: 8px 12px;
+    width: 50%;
+  }
+
+  .error,
   .warning {
-    color: #9f6000;
-    background-color: #feefb3;
+    color: #ba031c;
+    font-family: "Lato", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    max-width: calc(var(--content-max-width) - 200px);
+    margin: 0 auto var(--standard-padding) auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
-  .error {
-    color: #d8000c;
-    background-color: #ffd2d2;
+  .header {
+    width: 100vw;
+    height: var(--header-height);
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: linear-gradient(
+      42.2deg,
+      #f48534 14.33%,
+      #d25573 39.34%,
+      #614f8a 63.6%,
+      #2186a2 86%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2vh;
   }
 
-  .info i,
-  .success i,
-  .warning i,
-  .error i {
-    margin: 0 20px 0 10px;
-    font-size: 1.5em;
-    vertical-align: middle;
+  .header h1 {
+    color: white;
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 50px;
+    line-height: 49px;
+    text-align: center;
+    margin: 0;
+  }
+
+  .sidebar {
+    position: fixed;
+    width: var(--sidebar-width);
+    height: var(--main-height);
+    top: var(--header-height);
+    left: 0;
+    background-color: var(--sidebar-background);
+    padding: var(--standard-padding);
+    box-sizing: border-box;
+    overflow-y: scroll;
+  }
+
+  .sidebar ul {
+    padding-inline-start: 20px;
+  }
+
+  .sidebar li {
+    font-family: "Lato", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--text-color);
+  }
+
+  .code {
+    font-family: monospace;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 15px;
+    padding: 2px 4px;
+    background: var(--code-background);
+    border: 1px solid #c4cbd0;
+    border-radius: 3px;
+    overflow-y: scroll;
+  }
+
+  .sidebar svg {
+    margin: auto;
+  }
+
+  .sidebar p {
+    line-height: 20px;
+  }
+
+  @media (max-height: 800px) {
+    .header {
+      flex-direction: row;
+      height: var(--header-height-short);
+      gap: 10px;
+    }
+    .header h1 {
+      font-size: 7.5vh;
+    }
+    .header svg {
+      height: 10vh;
+    }
+    .sidebar {
+      top: var(--header-height-short);
+      height: var(--main-height-short);
+    }
+    .main {
+      top: var(--header-height-short);
+      height: var(--main-height-short);
+    }
   }
 </style>
