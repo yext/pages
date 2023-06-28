@@ -100,7 +100,8 @@ export const getUpdatedCiConfig = async (
       pluginName: functionModule.config.name,
       event: functionModule.config.event,
       functionName: functionModule.config.functionName,
-      apiPath: functionModule.slug,
+      apiPath:
+        functionModule.config.event === "API" ? functionModule.slug : undefined,
       sourceFiles: [
         {
           root: defaultProjectStructureConfig.filepathsConfig.distRoot,

@@ -3,7 +3,7 @@ import {
   validateFunctionDefaultExport,
   validateFunctionModule,
 } from "./validateFunctionModule.js";
-import { PluginEvent } from "../../ci/ci.js";
+import { convertToPluginEvent, PluginEvent } from "../../ci/ci.js";
 
 /**
  * A domain representation of a serverless function module. Contains all fields from an imported
@@ -57,20 +57,27 @@ export const convertFunctionModuleToFunctionModuleInternal = (
 ): FunctionModuleInternal => {
   let functionInternal;
 
+  const functionType = functionFilepath.relative.split("/")[1];
+
   if (
-    functionFilepath.relative.slice(0, 5) === "/http" &&
+    (functionType === "http" ||
+      functionType === "onUrlChange" ||
+      functionType === "onPageGenerate") &&
     Object.keys(functionModule).length === 1
   ) {
     validateFunctionDefaultExport(functionFilepath.absolute, functionModule);
 
-    const defaultSlug = functionFilepath.relative.replace("/http/", "");
+    const defaultSlug = functionFilepath.relative.replace(
+      `/${functionType}/`,
+      ""
+    );
 
     functionInternal = {
       ...functionModule,
       config: {
         name: defaultSlug,
         functionName: "default",
-        event: "API" as PluginEvent,
+        event: convertToPluginEvent(functionType),
       },
       filePath: functionFilepath,
       slug: defaultSlug,

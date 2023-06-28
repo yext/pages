@@ -34,7 +34,7 @@ const createMockFilePath = (path: string): FunctionFilePath => {
 };
 
 describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () => {
-  it("converts a function in function/http using the default getPath and config", async () => {
+  it("converts a function in functions/http using the default getPath and config", async () => {
     const functionModule: FunctionModule = {
       default: exampleFunction,
     };
@@ -105,7 +105,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     );
   });
 
-  it("converts a function outside function/http", async () => {
+  it("converts a function outside functions/http", async () => {
     const functionModule: FunctionModule = {
       default: exampleFunction,
       config: {
@@ -148,7 +148,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     expect(functionGetPath).toEqual("myFunction");
   });
 
-  it("converts a function in function/http, overriding the default name and slug", async () => {
+  it("converts a function in functions/http, overriding the default name and slug", async () => {
     const functionModule: FunctionModule = {
       default: exampleFunction,
       config: {
@@ -189,5 +189,83 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       JSON.stringify(exampleReturnValue)
     );
     expect(functionGetPath).toEqual("myFunction");
+  });
+
+  it("converts a function in functions/onUrlChange using the default getPath and config", async () => {
+    const functionModule: FunctionModule = {
+      default: exampleFunction,
+    };
+    const functionModuleInternal =
+      convertFunctionModuleToFunctionModuleInternal(
+        createMockFilePath("onUrlChange/example.ts"),
+        functionModule
+      );
+    const expected = {
+      config: {
+        name: "example",
+        functionName: "default",
+        event: "ON_URL_CHANGE",
+      },
+      filePath: {
+        absolute: process.cwd() + "/src/functions/onUrlChange/example.ts",
+        relative: "/onUrlChange/example",
+        extension: "ts",
+      },
+      slug: "example",
+    };
+    expect(JSON.stringify(functionModuleInternal)).toEqual(
+      JSON.stringify(expected)
+    );
+
+    const functionReturnValue = functionModuleInternal.default
+      ? functionModuleInternal.default(exampleFunctionArgument)
+      : undefined;
+    const functionGetPath = functionModuleInternal.getPath
+      ? functionModuleInternal.getPath()
+      : undefined;
+
+    expect(JSON.stringify(functionReturnValue)).toEqual(
+      JSON.stringify(exampleReturnValue)
+    );
+    expect(functionGetPath).toEqual("example");
+  });
+
+  it("converts a function in functions/onPageGenerate using the default getPath and config", async () => {
+    const functionModule: FunctionModule = {
+      default: exampleFunction,
+    };
+    const functionModuleInternal =
+      convertFunctionModuleToFunctionModuleInternal(
+        createMockFilePath("onPageGenerate/example.ts"),
+        functionModule
+      );
+    const expected = {
+      config: {
+        name: "example",
+        functionName: "default",
+        event: "ON_PAGE_GENERATE",
+      },
+      filePath: {
+        absolute: process.cwd() + "/src/functions/onPageGenerate/example.ts",
+        relative: "/onPageGenerate/example",
+        extension: "ts",
+      },
+      slug: "example",
+    };
+    expect(JSON.stringify(functionModuleInternal)).toEqual(
+      JSON.stringify(expected)
+    );
+
+    const functionReturnValue = functionModuleInternal.default
+      ? functionModuleInternal.default(exampleFunctionArgument)
+      : undefined;
+    const functionGetPath = functionModuleInternal.getPath
+      ? functionModuleInternal.getPath()
+      : undefined;
+
+    expect(JSON.stringify(functionReturnValue)).toEqual(
+      JSON.stringify(exampleReturnValue)
+    );
+    expect(functionGetPath).toEqual("example");
   });
 });
