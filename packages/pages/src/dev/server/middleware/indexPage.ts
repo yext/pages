@@ -19,6 +19,8 @@ import {
 import { ViteDevServer } from "vite";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { loadFunctions } from "../../../common/src/function/internal/loader.js";
+import { FunctionModuleInternal } from "../../../common/src/function/internal/types.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -26,13 +28,6 @@ type Props = {
   displayGenerateTestDataWarning: boolean;
   useProdURLs: boolean;
   projectStructure: ProjectStructure;
-};
-
-type serverlessFunctionListItem = {
-  name: string;
-  functionName: string;
-  slug: string;
-  httpEvent: string | undefined;
 };
 
 export const indexPage =
@@ -133,6 +128,11 @@ export const indexPage =
           </div>`
         );
       }
+
+      const functionsList = [
+        ...(await loadFunctions("src/functions")).values(),
+      ];
+      indexPageHtml = createFunctionsTable(functionsList, indexPageHtml);
 
       // If there was an issue regenerating the local test data on dev server start, then
       // display a warning message that informs the user. This will only be displayed when
@@ -245,4 +245,46 @@ const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
   }
 
   return `<p>${localModeInfoText}</p>`;
+};
+
+const createFunctionsTable = (
+  functionsList: FunctionModuleInternal[],
+  indexPageHtml: string
+) => {
+  if (functionsList.length > 0) {
+    return indexPageHtml.replace(
+      "<!--plugins-html-->",
+      `
+          <h3>Functions</h3>
+          <table>
+            <thead>
+              <tr>
+                <td>URL</td>
+                 <td>Function Type</td>
+              </tr>
+            </thead>
+            <tbody>
+              ${functionsList.reduce((previous, func) => {
+                return (
+                  previous +
+                  `
+                  <tr>
+                    <td>
+                      <a href="http://localhost:${devServerPort}/${func.slug}">
+                        ${func.slug}                 
+                      </a>
+                    </td>
+                    <td>
+                      ${func.config.event}
+                    </td>
+                  </tr>
+                `
+                );
+              }, "")}
+            </tbody>
+          </table>
+        `
+    );
+  }
+  return indexPageHtml;
 };
