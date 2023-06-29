@@ -74,12 +74,12 @@ export const loadFunctionModules = async (
         `Functions must have unique slugs. Found multiple modules with "${module.slug}"`
       );
     }
-    return prev.set(module.slug, module);
+    return prev.set(module.config.name, module);
   }, new Map());
 };
 
 /**
- * A FunctionModuleCollection maps function slug to interal function modules
+ * A FunctionModuleCollection maps function name to internal function modules
  */
 export type FunctionModuleCollection = Map<string, FunctionModuleInternal>;
 

@@ -54,7 +54,11 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         relative: "/http/api/example",
         extension: "ts",
       },
-      slug: "api/example",
+      slug: {
+        original: "api/example",
+        dev: "api/example",
+        production: "api/example",
+      },
     };
     expect(JSON.stringify(functionModuleInternal)).toEqual(
       JSON.stringify(expected)
@@ -129,7 +133,11 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         relative: "/example",
         extension: "ts",
       },
-      slug: "myFunction",
+      slug: {
+        original: "myFunction",
+        dev: "myFunction",
+        production: "myFunction",
+      },
     };
 
     expect(JSON.stringify(functionModuleInternal)).toEqual(
@@ -172,7 +180,11 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         relative: "/http/api/example",
         extension: "ts",
       },
-      slug: "myFunction",
+      slug: {
+        original: "myFunction",
+        dev: "myFunction",
+        production: "myFunction",
+      },
     };
 
     expect(JSON.stringify(functionModuleInternal)).toEqual(
@@ -211,7 +223,11 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         relative: "/onUrlChange/example",
         extension: "ts",
       },
-      slug: "example",
+      slug: {
+        original: "example",
+        dev: "example",
+        production: "example",
+      },
     };
     expect(JSON.stringify(functionModuleInternal)).toEqual(
       JSON.stringify(expected)
@@ -250,7 +266,11 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         relative: "/onPageGenerate/example",
         extension: "ts",
       },
-      slug: "example",
+      slug: {
+        original: "example",
+        dev: "example",
+        production: "example",
+      },
     };
     expect(JSON.stringify(functionModuleInternal)).toEqual(
       JSON.stringify(expected)
@@ -267,5 +287,49 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       JSON.stringify(exampleReturnValue)
     );
     expect(functionGetPath).toEqual("example");
+  });
+
+  it("converts an api function with path params", async () => {
+    const functionModule: FunctionModule = {
+      default: exampleFunction,
+    };
+    const functionModuleInternal =
+      convertFunctionModuleToFunctionModuleInternal(
+        createMockFilePath("http/api/example/[testParam].ts"),
+        functionModule
+      );
+    const expected = {
+      config: {
+        name: "api/example/[testParam]",
+        functionName: "default",
+        event: "API",
+      },
+      filePath: {
+        absolute:
+          process.cwd() + "/src/functions/http/api/example/[testParam].ts",
+        relative: "/http/api/example/[testParam]",
+        extension: "ts",
+      },
+      slug: {
+        original: "api/example/[testParam]",
+        dev: "api/example/:testParam",
+        production: "api/example/{{testParam}}",
+      },
+    };
+    expect(JSON.stringify(functionModuleInternal)).toEqual(
+      JSON.stringify(expected)
+    );
+
+    const functionReturnValue = functionModuleInternal.default
+      ? functionModuleInternal.default(exampleFunctionArgument)
+      : undefined;
+    const functionGetPath = functionModuleInternal.getPath
+      ? functionModuleInternal.getPath()
+      : undefined;
+
+    expect(JSON.stringify(functionReturnValue)).toEqual(
+      JSON.stringify(exampleReturnValue)
+    );
+    expect(functionGetPath).toEqual("api/example/[testParam]");
   });
 });

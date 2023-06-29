@@ -42,14 +42,25 @@ describe("loadTemplateModules", () => {
   });
 
   const commonTests = (functionModules: FunctionModuleCollection) => {
-    expect(functionModules.get("hello")).toBeTruthy();
-    expect(functionModules.get("hello")?.config.name).toEqual(
-      "Hello World Testing Function"
+    console.log(functionModules);
+    expect(functionModules.get("Hello World Testing Function")).toBeTruthy();
+    expect(
+      functionModules.get("Hello World Testing Function")?.config.name
+    ).toEqual("Hello World Testing Function");
+    expect(
+      functionModules.get("Hello World Testing Function")?.config.event
+    ).toEqual("API");
+    expect(
+      functionModules.get("Hello World Testing Function")?.config.functionName
+    ).toEqual("default");
+    expect(
+      JSON.stringify(functionModules.get("Hello World Testing Function")?.slug)
+    ).toEqual(
+      JSON.stringify({
+        original: "hello/[param]",
+        dev: "hello/:param",
+        production: "hello/{{param}}",
+      })
     );
-    expect(functionModules.get("hello")?.config.event).toEqual("API");
-    expect(functionModules.get("hello")?.config.functionName).toEqual(
-      "default"
-    );
-    expect(functionModules.get("hello")?.slug).toEqual("hello");
   };
 });

@@ -17,5 +17,5 @@ export const config: FunctionConfig = {
 };
 
 export const getPath = () => {
-  return "hello";
+  return "hello/[param]";
 };

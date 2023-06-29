@@ -71,22 +71,20 @@ export const createServer = async (
       projectStructure.serverlessFunctionsRoot.path
     );
     loadedFunctionModules.forEach((functionModule) => {
-      functionModules.set(functionModule.slug, functionModule);
+      functionModules.set(functionModule.config.name, functionModule);
     });
   };
 
   await loadUpdatedFunctionModules(); // Load functions on initial setup
 
   // Assign routes for functions based on their slug when the server started
-  const loadedFunctionSlugs = [...functionModules.keys()];
-  if (loadedFunctionSlugs.length > 0) {
-    loadedFunctionSlugs.forEach((loadedFunctionSlug) => {
-      app.use("/" + loadedFunctionSlug, (req, res, next) => {
-        const loadedFunction = functionModules.get(loadedFunctionSlug);
+  const loadedFunctions = [...functionModules.values()];
+  if (loadedFunctions.length > 0) {
+    loadedFunctions.forEach((func) => {
+      app.use("/" + func.slug.dev, (req, res, next) => {
+        const loadedFunction = functionModules.get(func.config.name);
         if (!loadedFunction) {
-          throw new Error(
-            "Could not load function with slug" + loadedFunctionSlug
-          );
+          throw new Error("Could not load function with slug" + func);
         }
         serveServerlessFunction(req, res, next, loadedFunction);
       });

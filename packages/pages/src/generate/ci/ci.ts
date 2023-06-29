@@ -101,14 +101,18 @@ export const getUpdatedCiConfig = async (
       event: functionModule.config.event,
       functionName: functionModule.config.functionName,
       apiPath:
-        functionModule.config.event === "API" ? functionModule.slug : undefined,
+        functionModule.config.event === "API"
+          ? functionModule.slug.production
+          : undefined,
       sourceFiles: [
         {
           root: defaultProjectStructureConfig.filepathsConfig.distRoot,
           pattern:
             defaultProjectStructureConfig.filepathsConfig
               .functionBundleOutputRoot +
-            functionModule.filePath.relative +
+            functionModule.filePath.relative
+              .replaceAll("[", "\\[")
+              .replaceAll("]", "\\]") +
             ".*.*",
         },
       ],

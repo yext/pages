@@ -18,8 +18,12 @@ export interface FunctionModuleInternal {
   getPath?: () => string;
   /** The exported function */
   default?: ServerlessFunction;
-  /** The slug to host the function at */
-  slug: string;
+  /** The slug to host the function at on the Express dev server */
+  slug: {
+    production: string;
+    dev: string;
+    original: string;
+  };
 }
 
 /**
@@ -80,11 +84,17 @@ export const convertFunctionModuleToFunctionModuleInternal = (
         event: convertToPluginEvent(functionType),
       },
       filePath: functionFilepath,
-      slug: defaultSlug,
+      slug: {
+        original: defaultSlug,
+        dev: defaultSlug.replaceAll("[", ":").replaceAll("]", ""),
+        production: defaultSlug.replaceAll("[", "{{").replaceAll("]", "}}"),
+      },
       getPath: () => defaultSlug,
     };
   } else {
     validateFunctionModule(functionFilepath.absolute, functionModule);
+
+    const slug = functionModule.getPath ? functionModule.getPath() : "";
 
     functionInternal = {
       ...functionModule,
@@ -94,7 +104,11 @@ export const convertFunctionModuleToFunctionModuleInternal = (
         event: "API" as PluginEvent,
       },
       filePath: functionFilepath,
-      slug: functionModule.getPath ? functionModule.getPath() : "",
+      slug: {
+        original: slug,
+        dev: slug.replaceAll("[", ":").replaceAll("]", ""),
+        production: slug.replaceAll("[", "{{").replaceAll("]", "}}"),
+      },
     };
   }
 

@@ -270,9 +270,13 @@ const createFunctionsTable = (
                   `
                   <tr>
                     <td>
-                      <a href="http://localhost:${devServerPort}/${func.slug}">
-                        ${func.slug}                 
-                      </a>
+                      ${
+                        func.config.event === "API"
+                          ? `<a href="http://localhost:${devServerPort}/${func.slug.dev}">
+                          ${func.slug.original}                 
+                        </a>`
+                          : func.slug.dev
+                      }
                     </td>
                     <td>
                       ${func.config.event}
