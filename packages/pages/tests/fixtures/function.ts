@@ -1,10 +1,12 @@
 import {
   FunctionConfig,
   FunctionArgument,
-  FunctionReturnValue,
+  HttpFunctionReturnValue,
 } from "../../src";
 
-export default function helloWorld(_: FunctionArgument): FunctionReturnValue {
+export default function helloWorld(
+  _: FunctionArgument
+): HttpFunctionReturnValue {
   return {
     body: "Hello World",
     headers: {},

@@ -42,7 +42,6 @@ describe("loadTemplateModules", () => {
   });
 
   const commonTests = (functionModules: FunctionModuleCollection) => {
-    console.log(functionModules);
     expect(functionModules.get("Hello World Testing Function")).toBeTruthy();
     expect(
       functionModules.get("Hello World Testing Function")?.config.name

@@ -78,16 +78,20 @@ export const createServer = async (
   await loadUpdatedFunctionModules(); // Load functions on initial setup
 
   // Assign routes for functions based on their slug when the server started
-  const loadedFunctions = [...functionModules.values()];
-  if (loadedFunctions.length > 0) {
-    loadedFunctions.forEach((func) => {
-      app.use("/" + func.slug.dev, (req, res, next) => {
-        const loadedFunction = functionModules.get(func.config.name);
-        if (!loadedFunction) {
-          throw new Error("Could not load function with slug" + func);
-        }
-        serveServerlessFunction(req, res, next, loadedFunction);
-      });
+  const functionsAtServerStart = [...functionModules.values()];
+  if (functionsAtServerStart.length > 0) {
+    functionsAtServerStart.forEach((func) => {
+      if (func.config.event !== "API") {
+        app.use("/" + func.slug.dev, (req, res, next) => {
+          const updatedFunction = functionModules.get(func.config.name);
+          if (!updatedFunction) {
+            throw new Error(
+              "Could not load function with name" + func.config.name
+            );
+          }
+          serveServerlessFunction(req, res, next, updatedFunction);
+        });
+      }
     });
   }
 

@@ -15,7 +15,9 @@ export interface FunctionModule {
  * The type definition for serverless function itself.
  * @public
  */
-export type ServerlessFunction = (arg: FunctionArgument) => FunctionReturnValue;
+export type ServerlessFunction = (
+  arg: FunctionArgument
+) => HttpFunctionReturnValue;
 
 /**
  * The exported `config` function's definition.
@@ -27,10 +29,10 @@ export interface FunctionConfig {
 }
 
 /**
- * The standard return value for a serverless function
+ * The return value for a http/api serverless function
  * @public
  */
-export interface FunctionReturnValue {
+export interface HttpFunctionReturnValue {
   /** HTTP response body (refer to MDN Web Docs). */
   body: string;
 
@@ -42,7 +44,7 @@ export interface FunctionReturnValue {
 }
 
 /**
- * The argument passed to a serverless function
+ * The argument passed to a serverless function or plugin
  * @public
  */
 export interface FunctionArgument {
@@ -55,6 +57,24 @@ export interface FunctionArgument {
   /** Site object containing all deploy-related information. */
   site: Site;
 }
+
+/**
+ * The return value for an onPageGenerate plugin
+ * @public
+ */
+export interface OnPageGenerateReturnValue {
+  path: string;
+
+  content: string;
+
+  redirects: string[];
+}
+
+/**
+ * The return value for an onUrlChange plugin
+ * @public
+ */
+export type OnUrlChange = HttpFunctionReturnValue;
 
 /**
  * The site information passed to a serverless function by the Yext system
