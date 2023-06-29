@@ -81,7 +81,7 @@ export const createServer = async (
   const functionsAtServerStart = [...functionModules.values()];
   if (functionsAtServerStart.length > 0) {
     functionsAtServerStart.forEach((func) => {
-      if (func.config.event !== "API") {
+      if (func.config.event === "API") {
         app.use("/" + func.slug.dev, (req, res, next) => {
           const updatedFunction = functionModules.get(func.config.name);
           if (!updatedFunction) {
