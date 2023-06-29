@@ -253,7 +253,7 @@ const createFunctionsTable = (
 ) => {
   if (functionsList.length > 0) {
     return indexPageHtml.replace(
-      "<!--plugins-html-->",
+      "<!--functions-html-->",
       `
           <h3>Functions</h3>
           <table>

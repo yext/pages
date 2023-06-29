@@ -28,8 +28,8 @@ export default (projectStructure: ProjectStructure) => {
         ),
         {
           ignore: path.join(
-            projectStructure.serverBundleOutputRoot.getAbsolutePath(),
-            "functions/**"
+            projectStructure.functionBundleOutputRoot.getAbsolutePath(),
+            "**"
           ),
         }
       );
@@ -42,13 +42,13 @@ export default (projectStructure: ProjectStructure) => {
       throw new Error(e);
     }
 
-    finisher = logger.timedLog({ startLog: "Validating function modules" });
+    finisher = logger.timedLog({ startLog: "Validating functions" });
     try {
       // loading the modules checks for all required aspects
       await loadFunctions(projectStructure.functionBundleOutputRoot.path);
-      finisher.succeed("Validated function modules");
+      finisher.succeed("Validated functions");
     } catch (e: any) {
-      finisher.fail("One or more function modules failed validation");
+      finisher.fail("One or more functions failed validation");
       throw new Error(e);
     }
 

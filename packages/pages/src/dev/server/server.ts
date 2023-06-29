@@ -79,6 +79,17 @@ export const createServer = async (
 
   // Assign routes for functions based on their slug when the server started
   const functionsAtServerStart = [...functionModules.values()];
+
+  /*
+   * Sort in reverse alphabetical so that any functions with [] path params comes last
+   * This allows a file like http/api/users/specialCase.ts (slug /api/users/specialCase)
+   * to take precedence over http/api/users/[id].ts (slug /api/users/:id)
+   * This mimics the prod server's behavior
+   */
+  functionsAtServerStart.sort((a, b) =>
+    a.config.name < b.config.name ? 1 : -1
+  );
+
   if (functionsAtServerStart.length > 0) {
     functionsAtServerStart.forEach((func) => {
       if (func.config.event === "API") {

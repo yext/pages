@@ -18,22 +18,22 @@ const filepaths = [
 const expected = [
   {
     absolute: "src/functions/http/api/fetch/test1.ts",
-    relative: "/http/api/fetch/test1",
+    relative: "http/api/fetch/test1",
     extension: "ts",
   },
   {
     absolute: "src/functions/http/api/fetch/test2.js",
-    relative: "/http/api/fetch/test2",
+    relative: "http/api/fetch/test2",
     extension: "js",
   },
   {
     absolute: "src/functions/test3.js",
-    relative: "/test3",
+    relative: "test3",
     extension: "js",
   },
   {
     absolute: "src/functions/test4.ts",
-    relative: "/test4",
+    relative: "test4",
     extension: "ts",
   },
 ];

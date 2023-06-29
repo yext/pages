@@ -22,7 +22,7 @@ export const getFunctionFilepaths = (root: string): FunctionFilePath[] => {
     }
     return {
       absolute: filepath,
-      relative: filePathMatcher[1] ?? "",
+      relative: filePathMatcher[1].slice(1) ?? "",
       extension: filepath.split(".").pop() ?? "",
     };
   }) as FunctionFilePath[];

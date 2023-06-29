@@ -3,7 +3,7 @@ import {
   validateFunctionDefaultExport,
   validateFunctionModule,
 } from "./validateFunctionModule.js";
-import { convertToPluginEvent, PluginEvent } from "../../ci/ci.js";
+import { PluginEvent } from "../../ci/ci.js";
 
 /**
  * A domain representation of a serverless function module. Contains all fields from an imported
@@ -18,11 +18,14 @@ export interface FunctionModuleInternal {
   getPath?: () => string;
   /** The exported function */
   default?: ServerlessFunction;
-  /** The slug to host the function at on the Express dev server */
+  /** The slugs to host the function at */
   slug: {
-    production: string;
-    dev: string;
+    /** the slug defined by the user. Example: api/user/[id]/profile */
     original: string;
+    /** used for the production build. Example: api/user/{{id}}/profile */
+    production: string;
+    /** used for the dev server. Example: api/user/:id/profile */
+    dev: string;
   };
 }
 
@@ -61,7 +64,7 @@ export const convertFunctionModuleToFunctionModuleInternal = (
 ): FunctionModuleInternal => {
   let functionInternal;
 
-  const functionType = functionFilepath.relative.split("/")[1];
+  const functionType = functionFilepath.relative.split("/")[0];
 
   if (
     (functionType === "http" ||
@@ -72,7 +75,7 @@ export const convertFunctionModuleToFunctionModuleInternal = (
     validateFunctionDefaultExport(functionFilepath.absolute, functionModule);
 
     const defaultSlug = functionFilepath.relative.replace(
-      `/${functionType}/`,
+      `${functionType}/`,
       ""
     );
 
@@ -113,4 +116,17 @@ export const convertFunctionModuleToFunctionModuleInternal = (
   }
 
   return functionInternal;
+};
+
+export const convertToPluginEvent = (event: string): PluginEvent => {
+  switch (event) {
+    case "http":
+      return "API";
+    case "onUrlChange":
+      return "ON_URL_CHANGE";
+    case "onPageGenerate":
+      return "ON_PAGE_GENERATE";
+    default:
+      throw new Error(`No matching PluginEvent found for: ${event}`);
+  }
 };

@@ -110,6 +110,7 @@ export const getUpdatedCiConfig = async (
           pattern:
             defaultProjectStructureConfig.filepathsConfig
               .functionBundleOutputRoot +
+            "/" +
             functionModule.filePath.relative
               .replaceAll("[", "\\[")
               .replaceAll("]", "\\]") +

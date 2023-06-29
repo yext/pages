@@ -80,13 +80,6 @@ export interface Plugin {
  */
 export type PluginEvent = "ON_URL_CHANGE" | "ON_PAGE_GENERATE" | "API";
 
-export const convertToPluginEvent = (event: string): PluginEvent => {
-  if (event === "http") return "API";
-  if (event === "onUrlChange") return "ON_URL_CHANGE";
-  if (event === "onPageGenerate") return "ON_PAGE_GENERATE";
-  throw new Error(`No matching PluginEvent found for: ${event}`);
-};
-
 /**
  * Defines the source files of a {@link Plugin}.
  */

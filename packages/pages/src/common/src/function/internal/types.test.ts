@@ -28,7 +28,7 @@ const exampleFunctionArgument: FunctionArgument = {
 const createMockFilePath = (path: string): FunctionFilePath => {
   return {
     absolute: process.cwd() + "/src/functions/" + path,
-    relative: "/" + path.split(".")[0],
+    relative: path.split(".")[0],
     extension: "ts",
   };
 };
@@ -51,7 +51,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       },
       filePath: {
         absolute: process.cwd() + "/src/functions/http/api/example.ts",
-        relative: "/http/api/example",
+        relative: "http/api/example",
         extension: "ts",
       },
       slug: {
@@ -130,7 +130,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       },
       filePath: {
         absolute: process.cwd() + "/src/functions/example.ts",
-        relative: "/example",
+        relative: "example",
         extension: "ts",
       },
       slug: {
@@ -177,7 +177,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       },
       filePath: {
         absolute: process.cwd() + "/src/functions/http/api/example.ts",
-        relative: "/http/api/example",
+        relative: "http/api/example",
         extension: "ts",
       },
       slug: {
@@ -220,7 +220,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       },
       filePath: {
         absolute: process.cwd() + "/src/functions/onUrlChange/example.ts",
-        relative: "/onUrlChange/example",
+        relative: "onUrlChange/example",
         extension: "ts",
       },
       slug: {
@@ -263,7 +263,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       },
       filePath: {
         absolute: process.cwd() + "/src/functions/onPageGenerate/example.ts",
-        relative: "/onPageGenerate/example",
+        relative: "onPageGenerate/example",
         extension: "ts",
       },
       slug: {
@@ -307,7 +307,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       filePath: {
         absolute:
           process.cwd() + "/src/functions/http/api/example/[testParam].ts",
-        relative: "/http/api/example/[testParam]",
+        relative: "http/api/example/[testParam]",
         extension: "ts",
       },
       slug: {
