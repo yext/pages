@@ -3,33 +3,43 @@
  * @public
  */
 export interface FunctionModule {
-  /** The exported config function */
-  config?: FunctionConfig;
-  /** The exported getPath function */
-  getPath?: () => string;
   /** The exported function */
-  default?: ServerlessFunction;
+  default?: FunctionTypes;
 }
 
 /**
- * The type definition for serverless function itself.
+ * The valid Serverless Function types;
  * @public
  */
-export type ServerlessFunction = (
+export type FunctionTypes =
+  | HttpFunction
+  | OnPageGenerateFunction
+  | OnUrlChangeFunction;
+
+/**
+ * A function that runs when a specific path is visited on the site.
+ * @public
+ */
+export type HttpFunction = (arg: FunctionArgument) => HttpFunctionResponse;
+
+/**
+ * A function that runs when a stream document is processed for HTML rendering.
+ * @public
+ */
+export type OnPageGenerateFunction = (
   arg: FunctionArgument
-) => HttpFunctionResponse;
+) => OnPageGenerateResponse;
 
 /**
- * The exported `config` function's definition.
+ * A function that runs when the path of a production page changes.
  * @public
  */
-export interface FunctionConfig {
-  /** The name of the serverless function. */
-  name?: string;
-}
+export type OnUrlChangeFunction = (
+  arg: FunctionArgument
+) => OnUrlChangeResponse;
 
 /**
- * The return value for a http/api serverless function
+ * The return value for a http/api serverless function.
  * @public
  */
 export interface HttpFunctionResponse {
@@ -44,7 +54,7 @@ export interface HttpFunctionResponse {
 }
 
 /**
- * The argument passed to a serverless function or plugin
+ * The argument passed to a serverless function or plugin.
  * @public
  */
 export interface FunctionArgument {
@@ -59,7 +69,7 @@ export interface FunctionArgument {
 }
 
 /**
- * The return value for an onPageGenerate plugin
+ * The return value for an onPageGenerate plugin.
  * @public
  */
 export interface OnPageGenerateResponse {
@@ -72,7 +82,13 @@ export interface OnPageGenerateResponse {
 }
 
 /**
- * The site information passed to a serverless function by the Yext system
+ * onUrlUpdate plugins return void.
+ * @public
+ */
+export type OnUrlChangeResponse = void;
+
+/**
+ * The site information passed to a serverless function by the Yext system.
  * @public
  */
 export interface Site {

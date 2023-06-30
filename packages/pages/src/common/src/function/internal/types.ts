@@ -1,8 +1,5 @@
-import { ServerlessFunction, FunctionModule } from "../types.js";
-import {
-  validateFunctionDefaultExport,
-  validateFunctionModule,
-} from "./validateFunctionModule.js";
+import { FunctionModule, FunctionTypes } from "../types.js";
+import { validateFunctionModule } from "./validateFunctionModule.js";
 import { PluginEvent } from "../../ci/ci.js";
 
 /**
@@ -12,19 +9,17 @@ import { PluginEvent } from "../../ci/ci.js";
 export interface FunctionModuleInternal {
   /** The filepath to the serverless function file. */
   filePath: FunctionFilePath;
-  /** The exported config function */
+  /** The exported config function. */
   config: FunctionConfigInternal;
-  /** The exported getPath function */
-  getPath?: () => string;
-  /** The exported function */
-  default?: ServerlessFunction;
-  /** The slugs to host the function at */
+  /** The exported function. */
+  default?: FunctionTypes;
+  /** The slugs to host the function at. */
   slug: {
-    /** the slug defined by the user. Example: api/user/[id]/profile */
+    /** The slug defined by the user. Example: api/user/[id]/profile */
     original: string;
-    /** used for the production build. Example: api/user/{{id}}/profile */
+    /** Used for the production build. Example: api/user/{{id}}/profile */
     production: string;
-    /** used for the dev server. Example: api/user/:id/profile */
+    /** Used for the dev server. Example: api/user/:id/profile */
     dev: string;
   };
 }
@@ -37,7 +32,7 @@ export interface FunctionConfigInternal {
   name: string;
   /** The http event. */
   event: PluginEvent;
-  /** The default export's name */
+  /** The default export's name. */
   functionName: string;
 }
 
@@ -45,16 +40,16 @@ export interface FunctionConfigInternal {
  * Stores the filepath to a function
  */
 export interface FunctionFilePath {
-  /** The absolute path from the user's root directory */
+  /** The absolute path from the user's root directory. */
   absolute: string;
-  /** The path from src/functions */
+  /** The path from src/functions. */
   relative: string;
-  /** The file extensions */
+  /** The file extension. */
   extension: string;
 }
 
 /**
- * Converts user-provided function information to an internal module
+ * Converts user-provided function information to an internal module.
  * @param functionFilepath the filepath information for the function
  * @param functionModule the public function module to convert
  */
@@ -67,12 +62,11 @@ export const convertFunctionModuleToFunctionModuleInternal = (
   const functionType = functionFilepath.relative.split("/")[0];
 
   if (
-    (functionType === "http" ||
-      functionType === "onUrlChange" ||
-      functionType === "onPageGenerate") &&
-    Object.keys(functionModule).length === 1
+    functionType === "http" ||
+    functionType === "onUrlChange" ||
+    functionType === "onPageGenerate"
   ) {
-    validateFunctionDefaultExport(functionFilepath.absolute, functionModule);
+    validateFunctionModule(functionFilepath.absolute, functionModule);
 
     const defaultSlug = functionFilepath.relative.replace(
       `${functionType}/`,
@@ -80,7 +74,7 @@ export const convertFunctionModuleToFunctionModuleInternal = (
     );
 
     functionInternal = {
-      ...functionModule,
+      default: functionModule.default,
       config: {
         name: defaultSlug,
         functionName: "default",
@@ -92,27 +86,12 @@ export const convertFunctionModuleToFunctionModuleInternal = (
         dev: defaultSlug.replaceAll("[", ":").replaceAll("]", ""),
         production: defaultSlug.replaceAll("[", "{{").replaceAll("]", "}}"),
       },
-      getPath: () => defaultSlug,
     };
   } else {
-    validateFunctionModule(functionFilepath.absolute, functionModule);
-
-    const slug = functionModule.getPath ? functionModule.getPath() : "";
-
-    functionInternal = {
-      ...functionModule,
-      config: {
-        name: functionModule.config?.name ?? functionFilepath.relative,
-        functionName: "default",
-        event: "API" as PluginEvent,
-      },
-      filePath: functionFilepath,
-      slug: {
-        original: slug,
-        dev: slug.replaceAll("[", ":").replaceAll("]", ""),
-        production: slug.replaceAll("[", "{{").replaceAll("]", "}}"),
-      },
-    };
+    throw new Error(
+      "All Serverless Functions should live in src/functions/http," +
+        " src/functions/onPageGenerate, or src/functions/onUrlChange. "
+    );
   }
 
   return functionInternal;

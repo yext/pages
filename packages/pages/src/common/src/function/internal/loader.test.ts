@@ -19,8 +19,11 @@ describe("loadTemplateModules", () => {
   it("loads and transpiles raw templates", async () => {
     const functionFile: FunctionFilePath[] = [
       {
-        absolute: path.join(process.cwd(), "tests/fixtures/function.ts"),
-        relative: "tests/fixtures/function",
+        absolute: path.join(
+          process.cwd(),
+          "tests/fixtures/src/functions/http/[param].ts"
+        ),
+        relative: "http/[param]",
         extension: ".ts",
       },
     ];
@@ -32,8 +35,11 @@ describe("loadTemplateModules", () => {
   it("loads transpiled templates", async () => {
     const functionFile: FunctionFilePath[] = [
       {
-        absolute: path.join(process.cwd(), "tests/fixtures/function.js"),
-        relative: "tests/fixtures/function",
+        absolute: path.join(
+          process.cwd(),
+          "tests/fixtures/src/functions/http/[param].js"
+        ),
+        relative: "http/[param]",
         extension: "js",
       },
     ];
@@ -42,23 +48,17 @@ describe("loadTemplateModules", () => {
   });
 
   const commonTests = (functionModules: FunctionModuleCollection) => {
-    expect(functionModules.get("Hello World Testing Function")).toBeTruthy();
-    expect(
-      functionModules.get("Hello World Testing Function")?.config.name
-    ).toEqual("Hello World Testing Function");
-    expect(
-      functionModules.get("Hello World Testing Function")?.config.event
-    ).toEqual("API");
-    expect(
-      functionModules.get("Hello World Testing Function")?.config.functionName
-    ).toEqual("default");
-    expect(
-      JSON.stringify(functionModules.get("Hello World Testing Function")?.slug)
-    ).toEqual(
+    expect(functionModules.get("[param]")).toBeTruthy();
+    expect(functionModules.get("[param]")?.config.name).toEqual("[param]");
+    expect(functionModules.get("[param]")?.config.event).toEqual("API");
+    expect(functionModules.get("[param]")?.config.functionName).toEqual(
+      "default"
+    );
+    expect(JSON.stringify(functionModules.get("[param]")?.slug)).toEqual(
       JSON.stringify({
-        original: "hello/[param]",
-        dev: "hello/:param",
-        production: "hello/{{param}}",
+        original: "[param]",
+        dev: ":param",
+        production: "{{param}}",
       })
     );
   };

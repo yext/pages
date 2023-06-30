@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { FunctionModuleInternal } from "../../../common/src/function/internal/types.js";
-import { FunctionArgument, Site } from "../../../common/src/function/types.js";
+import {
+  FunctionArgument,
+  Site,
+  HttpFunctionResponse,
+} from "../../../common/src/function/types.js";
 
-export const serveServerlessFunction = async (
+export const serveHttpFunction = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -15,7 +19,7 @@ export const serveServerlessFunction = async (
   };
 
   if (serverlessFunction.default) {
-    const fnRes = serverlessFunction.default(argument);
+    const fnRes = serverlessFunction.default(argument) as HttpFunctionResponse;
     res
       .status(fnRes.statusCode)
       .header({ ...fnRes.headers, "Content-Type": "application/json" })

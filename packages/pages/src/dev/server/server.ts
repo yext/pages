@@ -14,7 +14,7 @@ import {
   FunctionModuleCollection,
   loadFunctions,
 } from "../../common/src/function/internal/loader.js";
-import { serveServerlessFunction } from "./middleware/serverlessFunctions.js";
+import { serveHttpFunction } from "./middleware/serveHttpFunction.js";
 
 export const createServer = async (
   dynamicGenerateData: boolean,
@@ -100,7 +100,7 @@ export const createServer = async (
               "Could not load function with name" + func.config.name
             );
           }
-          serveServerlessFunction(req, res, next, updatedFunction);
+          serveHttpFunction(req, res, next, updatedFunction);
         });
       }
     });

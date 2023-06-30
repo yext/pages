@@ -3,26 +3,44 @@ import {
   FunctionFilePath,
 } from "./types.js";
 import {
-  ServerlessFunction,
+  HttpFunction,
   FunctionModule,
   FunctionArgument,
+  OnPageGenerateFunction,
+  OnPageGenerateResponse,
+  OnUrlChangeFunction,
+  HttpFunctionResponse,
 } from "../types.js";
-import { mockSiteInfo } from "../../../../dev/server/middleware/serverlessFunctions.js";
+import { mockSiteInfo } from "../../../../dev/server/middleware/serveHttpFunction.js";
 
-const exampleReturnValue = {
+const exampleReturnValue: HttpFunctionResponse = {
   body: "Hello World",
   headers: {},
   statusCode: 200,
 };
 
-const exampleFunction: ServerlessFunction = () => {
+const exampleApiFunction: HttpFunction = () => {
   return exampleReturnValue;
+};
+
+const exampleOnPageGenerateFunction: OnPageGenerateFunction = () => {
+  return exampleOnPageGenerateResponse;
+};
+
+const exampleOnUrlChangeFunction: OnUrlChangeFunction = () => {
+  return;
 };
 
 const exampleFunctionArgument: FunctionArgument = {
   queryParams: {},
   pathParams: {},
   site: mockSiteInfo,
+};
+
+const exampleOnPageGenerateResponse: OnPageGenerateResponse = {
+  path: "abc",
+  content: "xyz",
+  redirects: ["home"],
 };
 
 const createMockFilePath = (path: string): FunctionFilePath => {
@@ -34,9 +52,9 @@ const createMockFilePath = (path: string): FunctionFilePath => {
 };
 
 describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () => {
-  it("converts a function in functions/http using the default getPath and config", async () => {
+  it("converts a function in functions/http", async () => {
     const functionModule: FunctionModule = {
-      default: exampleFunction,
+      default: exampleApiFunction,
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
@@ -67,145 +85,15 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     const functionReturnValue = functionModuleInternal.default
       ? functionModuleInternal.default(exampleFunctionArgument)
       : undefined;
-    const functionGetPath = functionModuleInternal.getPath
-      ? functionModuleInternal.getPath()
-      : undefined;
 
     expect(JSON.stringify(functionReturnValue)).toEqual(
       JSON.stringify(exampleReturnValue)
     );
-    expect(functionGetPath).toEqual("api/example");
   });
 
-  it("throws an error when a function outside functions/http is missing a config", async () => {
+  it("converts a function in functions/onUrlChange", async () => {
     const functionModule: FunctionModule = {
-      default: exampleFunction,
-      getPath: () => "path",
-    };
-    expect(() =>
-      convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath("example.ts"),
-        functionModule
-      )
-    ).toThrow(
-      "src/functions/example.ts is missing an exported config function."
-    );
-  });
-
-  it("throws an error when a function outside functions/http is missing a getPath", async () => {
-    const functionModule: FunctionModule = {
-      default: exampleFunction,
-      config: {
-        name: "Test Name",
-      },
-    };
-    expect(() =>
-      convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath("example.ts"),
-        functionModule
-      )
-    ).toThrow(
-      "src/functions/example.ts is missing an exported getPath function."
-    );
-  });
-
-  it("converts a function outside functions/http", async () => {
-    const functionModule: FunctionModule = {
-      default: exampleFunction,
-      config: {
-        name: "Test Function",
-      },
-      getPath: () => "myFunction",
-    };
-    const functionModuleInternal =
-      convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath("example.ts"),
-        functionModule
-      );
-    const expected = {
-      config: {
-        name: "Test Function",
-        functionName: "default",
-        event: "API",
-      },
-      filePath: {
-        absolute: process.cwd() + "/src/functions/example.ts",
-        relative: "example",
-        extension: "ts",
-      },
-      slug: {
-        original: "myFunction",
-        dev: "myFunction",
-        production: "myFunction",
-      },
-    };
-
-    expect(JSON.stringify(functionModuleInternal)).toEqual(
-      JSON.stringify(expected)
-    );
-
-    const functionReturnValue = functionModuleInternal.default
-      ? functionModuleInternal.default(exampleFunctionArgument)
-      : undefined;
-    const functionGetPath = functionModuleInternal.getPath
-      ? functionModuleInternal.getPath()
-      : undefined;
-    expect(JSON.stringify(functionReturnValue)).toEqual(
-      JSON.stringify(exampleReturnValue)
-    );
-    expect(functionGetPath).toEqual("myFunction");
-  });
-
-  it("converts a function in functions/http, overriding the default name and slug", async () => {
-    const functionModule: FunctionModule = {
-      default: exampleFunction,
-      config: {
-        name: "Test Function",
-      },
-      getPath: () => "myFunction",
-    };
-    const functionModuleInternal =
-      convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath("http/api/example.ts"),
-        functionModule
-      );
-    const expected = {
-      config: {
-        name: "Test Function",
-        functionName: "default",
-        event: "API",
-      },
-      filePath: {
-        absolute: process.cwd() + "/src/functions/http/api/example.ts",
-        relative: "http/api/example",
-        extension: "ts",
-      },
-      slug: {
-        original: "myFunction",
-        dev: "myFunction",
-        production: "myFunction",
-      },
-    };
-
-    expect(JSON.stringify(functionModuleInternal)).toEqual(
-      JSON.stringify(expected)
-    );
-
-    const functionReturnValue = functionModuleInternal.default
-      ? functionModuleInternal.default(exampleFunctionArgument)
-      : undefined;
-    const functionGetPath = functionModuleInternal.getPath
-      ? functionModuleInternal.getPath()
-      : undefined;
-    expect(JSON.stringify(functionReturnValue)).toEqual(
-      JSON.stringify(exampleReturnValue)
-    );
-    expect(functionGetPath).toEqual("myFunction");
-  });
-
-  it("converts a function in functions/onUrlChange using the default getPath and config", async () => {
-    const functionModule: FunctionModule = {
-      default: exampleFunction,
+      default: exampleOnUrlChangeFunction,
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
@@ -236,19 +124,13 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     const functionReturnValue = functionModuleInternal.default
       ? functionModuleInternal.default(exampleFunctionArgument)
       : undefined;
-    const functionGetPath = functionModuleInternal.getPath
-      ? functionModuleInternal.getPath()
-      : undefined;
 
-    expect(JSON.stringify(functionReturnValue)).toEqual(
-      JSON.stringify(exampleReturnValue)
-    );
-    expect(functionGetPath).toEqual("example");
+    expect(JSON.stringify(functionReturnValue)).toBeFalsy();
   });
 
-  it("converts a function in functions/onPageGenerate using the default getPath and config", async () => {
+  it("converts a function in functions/onPageGenerate", async () => {
     const functionModule: FunctionModule = {
-      default: exampleFunction,
+      default: exampleOnPageGenerateFunction,
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
@@ -279,19 +161,14 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     const functionReturnValue = functionModuleInternal.default
       ? functionModuleInternal.default(exampleFunctionArgument)
       : undefined;
-    const functionGetPath = functionModuleInternal.getPath
-      ? functionModuleInternal.getPath()
-      : undefined;
-
     expect(JSON.stringify(functionReturnValue)).toEqual(
-      JSON.stringify(exampleReturnValue)
+      JSON.stringify(exampleOnPageGenerateResponse)
     );
-    expect(functionGetPath).toEqual("example");
   });
 
   it("converts an api function with path params", async () => {
     const functionModule: FunctionModule = {
-      default: exampleFunction,
+      default: exampleApiFunction,
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
@@ -323,13 +200,28 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     const functionReturnValue = functionModuleInternal.default
       ? functionModuleInternal.default(exampleFunctionArgument)
       : undefined;
-    const functionGetPath = functionModuleInternal.getPath
-      ? functionModuleInternal.getPath()
-      : undefined;
 
     expect(JSON.stringify(functionReturnValue)).toEqual(
       JSON.stringify(exampleReturnValue)
     );
-    expect(functionGetPath).toEqual("api/example/[testParam]");
   });
+
+  it(
+    "throws an error when a function is outside functions/http, functions/onPageGenerate, or" +
+      " functions/onUrlChange",
+    async () => {
+      const functionModule: FunctionModule = {
+        default: exampleApiFunction,
+      };
+      expect(() =>
+        convertFunctionModuleToFunctionModuleInternal(
+          createMockFilePath("myFunctions/example.ts"),
+          functionModule
+        )
+      ).toThrow(
+        "All Serverless Functions should live in src/functions/http," +
+          " src/functions/onPageGenerate, or src/functions/onUrlChange. "
+      );
+    }
+  );
 });
