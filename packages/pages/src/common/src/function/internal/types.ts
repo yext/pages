@@ -62,6 +62,17 @@ export const convertFunctionModuleToFunctionModuleInternal = (
   const functionType = functionFilepath.relative.split("/")[0];
 
   if (
+    (functionType === "onUrlChange" || functionType === "onPageGenerate") &&
+    functionFilepath.relative.split("/").length > 2
+  ) {
+    throw new Error(
+      "Nested directories are not supported for onUrlChange and onPageGenerate" +
+        " plugins. All functions must be located in src/functions/onUrlChange or" +
+        " src/functions/onPageGenerate. "
+    );
+  }
+
+  if (
     functionType === "http" ||
     functionType === "onUrlChange" ||
     functionType === "onPageGenerate"
