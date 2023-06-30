@@ -5,17 +5,21 @@ export const devServerPort = await getPort({
   port: portNumbers(5173, 6000),
 });
 
-export const dynamicModeInfoText = `Dynamic mode enabled. Below are sample URLs generated based on the contents 
-of the <span class="code">localData</span> folder, but entity data will be re-fetched on each page load and reflect updates in real time.`;
+export const dynamicModeInfoText = `URLs displayed here are generated 
+from the contents of the <span class="code">localData</span> folder. This folder is auto-generated 
+every time you re-run the dev server.  By default, you will receive real-time data updates from the 
+Yext Platform into your local environment.`;
 
-export const localDevUrlInfoText = `Local development URLs will match production urls for all entity pages IF a slug 
-is configured for each entity.`;
+export const localDevUrlInfoText = `To ensure local URLs match URLs 
+in the deployed environment, use the slug field on every entity to specify the URL path. 
+Local development URLs will only match deployed URLs if the slug field is returned from 
+the <span class="code">getPath</span> function in entity-powered templates. 
+To learn more or disable, check out this 
+<a href="https://hitchhikers.yext.com/docs/pages/paths-and-slugs/" target="_blank">
+ref doc.</a>`;
 
-const disableProdUrl = "https://hitchhikers.yext.com/docs/pages/local-dev-urls";
-export const localDevUrlHelpText = `You can learn more/how to disable this <a href="${disableProdUrl}">here</a>`;
-
-const hitchhikersUrl = "https://hitchhikers.yext.com/docs/pages";
-export const localDevHitchhikersText = `You can learn more about Hitchhikers <a href="${hitchhikersUrl}">here</a>`;
+export const localDevUrlHelpText = `Learn more with our 
+<a href="https://hitchhikers.yext.com/docs/pages/templates/" target="_blank">complete ref docs</a>.`;
 
 export const localModeInfoText = `Local mode enabled. Below are the URLs that are available based on 
 the contents of the <span class="code">localData</span> folder. Entity Data will only be refreshed upon regenerating the test data, so updates 

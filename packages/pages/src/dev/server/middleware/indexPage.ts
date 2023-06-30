@@ -12,7 +12,6 @@ import {
   generateTestDataWarningText,
   localModeInfoText,
   noLocalDataErrorText,
-  localDevHitchhikersText,
   yextLogoWhiteSvg,
   laptopIconBlackSvg,
 } from "./constants.js";
@@ -269,7 +268,6 @@ const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
         <li>${dynamicModeInfoText}</li>
         <li>${localDevUrlInfoText}</li>
         <li>${localDevUrlHelpText}</li>
-        <li>${localDevHitchhikersText}</li>
       <ul>`;
   }
 

@@ -10,6 +10,11 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
+import * as Favicon from "./public/favicon.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const createServer = async (
   dynamicGenerateData: boolean,
@@ -44,6 +49,12 @@ export const createServer = async (
   app.use(vite.middlewares);
 
   // Ignore favicon requests if it doesn't exist
+  app.use("/favicon.png", (req, res) => {
+    res
+      .status(200)
+      .header({ "content-type": "image/png" })
+      .sendFile(path.resolve(__dirname, "./", Favicon.default));
+  });
   app.use(ignoreFavicon);
 
   // Redirect urls with a final slash to their canonical url without the slash
