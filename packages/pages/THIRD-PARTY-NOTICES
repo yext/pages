@@ -42,7 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The following NPM packages may be included in this product:
 
  - @yext/components-tsx-geo@1.0.3
- - @yext/components-tsx-maps@1.0.9
+ - @yext/components-tsx-maps@1.0.11
 
 These packages each contain the following license and notice below:
 
