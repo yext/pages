@@ -1,39 +1,60 @@
 import fs from "fs";
 import YAML from "yaml";
 import { spawn } from "child_process";
-import { createInterface } from "readline";
 import colors from "picocolors";
+import prompts from "prompts";
 
 export const autoYextInit = async () => {
   if (!fs.existsSync(".yextrc")) {
-    try {
-      const businessId = await askForBusinessId();
-      const universe = await askForUniverse();
-      await runCommand("yext", ["init", businessId, "-u", universe])
-        .then((output) => console.log(output))
-        .catch((error: Error) => {
-          console.log(error.message);
-          process.exit(1);
-        });
-      fs.writeFileSync(
-        ".yextrc",
-        `businessId: ${businessId}\nuniverse: ${universe}`
-      );
-    } catch (error) {
-      logErrorAndExit(error);
-    }
+    await autoYextInitWithoutYextrc();
   } else {
-    try {
-      const { businessId, universe } = parseYextrcContents();
-      await runCommand("yext", ["init", businessId, "-u", universe])
-        .then((output) => console.log(output))
-        .catch((error: Error) => {
-          console.log(error.message);
-          process.exit(1);
-        });
-    } catch (error) {
-      logErrorAndExit(error);
-    }
+    await autoYextInitWithYextrc();
+  }
+};
+
+const autoYextInitWithYextrc = async () => {
+  try {
+    const { accountId, universe } = parseYextrcContents();
+    await runCommand("yext", ["init", accountId, "-u", universe])
+      .then((output) => console.log(output))
+      .catch((error: Error) => {
+        console.log(error.message);
+        process.exit(1);
+      });
+  } catch (error) {
+    logErrorAndExit(error);
+  }
+};
+
+const autoYextInitWithoutYextrc = async () => {
+  try {
+    console.log(
+      `*******************************************************
+Welcome to Yext Pages!
+Let's connect to your Yext Account
+*******************************************************`
+    );
+    const accountId = await askForAccountId();
+    const universe = await askForUniverse();
+    await runCommand("yext", ["init", accountId, "-u", universe])
+      .then((output) => console.log(output))
+      .catch((error: Error) => {
+        console.log(error.message);
+        process.exit(1);
+      });
+    fs.writeFileSync(
+      ".yextrc",
+      `accountId: ${accountId}\nuniverse: ${universe}`
+    );
+    console.log(
+      `*******************************************************
+Congrats! You've successfully connected to your Yext Account.
+You'll be automatically logged in upon running the dev server with \`npm run dev\`
+To change your account details, modify the \`.yextrc\` at the root of your project. 
+*******************************************************`
+    );
+  } catch (error) {
+    logErrorAndExit(error);
   }
 };
 
@@ -42,22 +63,20 @@ const logErrorAndExit = (error: string | any) => {
   process.exit(1);
 };
 
+const validUniverses = ["sandbox", "production", "sbx", "prod", "qa", "dev"];
+
 const parseYextrcContents = () => {
   const yextrcContents: string = fs.readFileSync(".yextrc", "utf8");
   const parsedContents = YAML.parse(yextrcContents);
-  const businessId: string = parsedContents.businessId;
+  const accountId: string = parsedContents.accountId;
   const universe: string = parsedContents.universe;
-  if (isNaN(Number(businessId))) {
-    logErrorAndExit(
-      "Invalid businessId format in .yextrc file. Please enter a valid businessId."
-    );
+  if (isNaN(Number(accountId))) {
+    logErrorAndExit("Invalid Account ID format in .yextrc file.");
   }
-  if (universe != "sandbox" && universe != "production") {
-    logErrorAndExit(
-      "Invalid universe in .yextrc file. Please enter a valid universe (sandbox or production)."
-    );
+  if (!validUniverses.includes(universe)) {
+    logErrorAndExit("Invalid Universe in .yextrc file.");
   }
-  return { businessId, universe };
+  return { accountId, universe };
 };
 
 const runCommand = (command: string, args: string[]) => {
@@ -76,52 +95,41 @@ const runCommand = (command: string, args: string[]) => {
   });
 };
 
-const askForBusinessId = async (): Promise<string> => {
-  const readline = createInterface({
-    input: process.stdin,
-    output: process.stdout,
+const askForAccountId = async (): Promise<string> => {
+  console.log(`
+What is your Yext Account ID?
+
+Your Account ID is found in the URL of your Yext Account, e.g. \`yext.com/s/<ACCOUNT_ID>/home\`
+  `);
+  const response = await prompts({
+    type: "number",
+    name: "value",
+    message: "Yext Account ID:\n",
   });
-  return new Promise((resolve) => {
-    readline.question(`Enter your BusinessId: `, (userInput: string) => {
-      if (isNaN(Number(userInput))) {
-        console.error(colors.red("BusinessId must be a number."));
-        readline.close();
-        resolve(askForBusinessId());
-      }
-      readline.close();
-      resolve(userInput);
-    });
-  });
+
+  return response.value;
 };
 
-const validUniverses = ["sandbox", "production", "sbx", "prod"];
-
 const askForUniverse = async (): Promise<string> => {
-  const readline = createInterface({
-    input: process.stdin,
-    output: process.stdout,
+  console.log("\nWhat is the universe of your Yext Account?\n");
+
+  const response = await prompts({
+    type: "select",
+    name: "value",
+    message: "Yext Universe:",
+    choices: [
+      {
+        title: "Production (Account URL looks like: `yext.com/s/<ACCOUNT_ID>`)",
+        value: "production",
+      },
+      {
+        title:
+          "Sandbox (Account URL looks like: `sandbox.yext.com/s/<ACCOUNT_ID>`)",
+        value: "sandbox",
+      },
+    ],
+    initial: 1,
   });
-  return new Promise((resolve) => {
-    readline.question(
-      `Enter a universe (sandbox or production): `,
-      (userInput: string) => {
-        userInput = userInput.toLowerCase();
-        if (!validUniverses.includes(userInput)) {
-          console.error(colors.red("Invalid universe."));
-          readline.close();
-          resolve(askForUniverse());
-        }
-        readline.close();
-        switch (userInput) {
-          case "sbx":
-            userInput = "sandbox";
-            break;
-          case "prod":
-            userInput = "production";
-            break;
-        }
-        resolve(userInput);
-      }
-    );
-  });
+
+  return response.value;
 };
