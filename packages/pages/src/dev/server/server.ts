@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import { createServer as createViteServer } from "vite";
 import { serverRenderRoute } from "./middleware/serverRenderRoute.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
@@ -10,10 +11,9 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
-import * as Favicon from "./public/favicon.js";
-import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import * as Favicon from "./public/favicon.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const createServer = async (
@@ -50,24 +50,21 @@ export const createServer = async (
 
   // Ignore favicon requests if it doesn't exist
   app.use("/favicon.png", (req, res) => {
+    const faviconRelativePath = Favicon.default.splice(3); // the import has one too many "../"
     res
       .status(200)
       .header({ "content-type": "image/png" })
-      .sendFile(path.resolve(__dirname, "./", Favicon.default));
+      .sendFile(path.resolve(__dirname, faviconRelativePath));
   });
   app.use(ignoreFavicon);
 
   // Redirect urls with a final slash to their canonical url without the slash
   app.use(finalSlashRedirect);
 
-  let displayGenerateTestDataWarning = false;
   // Call generateTestData to ensure we have data to populate the index page.
   // If the user specifies dynamicGenerateData = false we assume they have localData already.
   if (dynamicGenerateData) {
-    // display the warning if the call to generateTestData fails.
-    displayGenerateTestDataWarning = !(await generateTestData(
-      projectStructure.scope
-    ));
+    await generateTestData(projectStructure.scope);
   }
 
   // When a page is requested that is anything except the root, call our
@@ -85,7 +82,6 @@ export const createServer = async (
     indexPage({
       vite,
       dynamicGenerateData,
-      displayGenerateTestDataWarning,
       useProdURLs,
       projectStructure,
     })

@@ -26,9 +26,6 @@ the contents of the <span class="code">localData</span> folder. Entity Data will
 to entities will not be reflected in real time. To regenerate test data, enter the command <span class="code">yext pages 
 generate-test-data</span>. Also, entities other than the ones listed below will not be available unless run in dynamic mode.`;
 
-export const generateTestDataWarningText = `On server start-up, the call to regenerate test data failed. 
-Check your network connection and that the CLI is authorized to the correct account. Functionality may be limited.`;
-
 export const noLocalDataErrorText = `No localData directory present, cannot generate example URLs. Run <span class="code">yext pages
 generate-test-data</span> to generate the localData directory.`;
 
@@ -39,7 +36,7 @@ export const yextLogoWhiteSvg = `
   </svg>
 `;
 
-export const laptopIconBlackSvg = `
+export const webDevelopmentIconBlackSvg = `
   <svg width="72" height="53" viewBox="0 0 72 53" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M0.772949 52.0092H71.2269V32.5736V0.990799H0.772949V52.0092ZM68.7975 49.5798H3.2024V13.138H68.7975V32.5736V49.5798ZM68.7975 3.42025V10.7086H3.2024V3.42025H68.7975Z" fill="#374151"/>
     <path d="M66.3679 5.8497H63.9385V8.27915H66.3679V5.8497Z" fill="#374151"/>
