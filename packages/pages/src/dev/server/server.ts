@@ -50,7 +50,7 @@ export const createServer = async (
 
   // Load favicon for index page
   app.use("/favicon.png", (req, res) => {
-    const faviconRelativePath = Favicon.default.splice(3); // the import has one too many "../"
+    const faviconRelativePath = Favicon.default.slice(3); // the import has one too many "../"
     res
       .status(200)
       .header({ "content-type": "image/png" })
