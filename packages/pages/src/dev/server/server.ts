@@ -48,7 +48,7 @@ export const createServer = async (
   // register vite's middleware
   app.use(vite.middlewares);
 
-  // Ignore favicon requests if it doesn't exist
+  // Load favicon for index page
   app.use("/favicon.png", (req, res) => {
     const faviconRelativePath = Favicon.default.splice(3); // the import has one too many "../"
     res
@@ -56,6 +56,7 @@ export const createServer = async (
       .header({ "content-type": "image/png" })
       .sendFile(path.resolve(__dirname, faviconRelativePath));
   });
+  // Otherwise, ignore favicon requests
   app.use(ignoreFavicon);
 
   // Redirect urls with a final slash to their canonical url without the slash
