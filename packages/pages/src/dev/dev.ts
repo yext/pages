@@ -23,7 +23,6 @@ const handler = async ({
   noInit,
   scope,
   noGenFeatures,
-  noGenTestData,
 }: DevArgs) => {
   if (!noInit) {
     await autoYextInit();
@@ -34,7 +33,6 @@ const handler = async ({
       scope ? ["--scope" + " " + scope] : []
     );
 
-  if (!noGenTestData) await runSubProcess("yext pages generate-test-data", []);
   await createServer(!local, !!useProdURLs, scope);
 
   if (openBrowser) await open(`http://localhost:${devServerPort}/`);
@@ -84,11 +82,6 @@ export const devCommandModule: CommandModule<unknown, DevArgs> = {
       })
       .option("noGenFeatures", {
         describe: "Disable feature.json generation step",
-        type: "boolean",
-        demandOption: false,
-      })
-      .option("noGenTestData", {
-        describe: "Disable test data generation step",
         type: "boolean",
         demandOption: false,
       });
