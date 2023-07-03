@@ -47,6 +47,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
           reportCompressedSize: false,
         },
         define: processEnvVariables(projectStructure.envVarPrefix),
+        base: "", // makes static assets relative for reverse proxies and doesn't affect non-RP sites
         experimental: {
           renderBuiltUrl(filename, { hostType }) {
             // Assets are returned with a leading slash for some reason. This adjusts the
