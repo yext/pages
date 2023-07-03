@@ -52,6 +52,7 @@ export const devCommandModule: CommandModule<unknown, DevArgs> = {
         demandOption: false,
       })
       .option("local", {
+        alias: "noGenTestData",
         describe: "Disables dynamically generated test data",
         type: "boolean",
         demandOption: false,
