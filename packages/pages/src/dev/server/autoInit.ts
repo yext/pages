@@ -49,7 +49,7 @@ Let's connect to your Yext Account
     console.log(
       `*******************************************************
 Congrats! You've successfully connected to your Yext Account.
-You'll be automatically logged in upon running the dev server with \`npm run dev\`
+You'll be automatically logged in upon running the dev server with \`npm run dev\`.
 To change your account details, modify the \`.yextrc\` at the root of your project. 
 *******************************************************`
     );
@@ -103,11 +103,11 @@ Your Account ID is found in the URL of your Yext Account, e.g. \`yext.com/s/<ACC
   `);
   const response = await prompts({
     type: "number",
-    name: "value",
+    name: "accountId",
     message: "Yext Account ID:\n",
   });
 
-  return response.value;
+  return response.accountId;
 };
 
 const askForUniverse = async (): Promise<string> => {
@@ -115,7 +115,7 @@ const askForUniverse = async (): Promise<string> => {
 
   const response = await prompts({
     type: "select",
-    name: "value",
+    name: "universe",
     message: "Yext Universe:",
     choices: [
       {
@@ -130,5 +130,5 @@ const askForUniverse = async (): Promise<string> => {
     initial: 1,
   });
 
-  return response.value;
+  return response.universe;
 };
