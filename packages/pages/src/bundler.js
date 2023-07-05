@@ -36,7 +36,7 @@ const commonBuildOpts = {
   loader: {
     ".ts": "ts",
     ".html": "text",
-    ".png": "copy",
+    ".ico": "copy",
   },
   tsconfig: "tsconfig.json",
   logLevel: "error",

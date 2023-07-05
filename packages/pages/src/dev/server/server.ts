@@ -48,11 +48,11 @@ export const createServer = async (
   app.use(vite.middlewares);
 
   // Load favicon for index page
-  app.use("/favicon.png", (req, res) => {
+  app.use("/favicon.ico", (req, res) => {
     res
       .status(200)
-      .header({ "content-type": "image/png" })
-      .sendFile(path.resolve(__dirname, "./public/favicon.png"));
+      .header({ "content-type": "image/x-icon" })
+      .sendFile(path.resolve(__dirname, "./public/favicon.ico"));
   });
   // Otherwise, ignore favicon requests
   app.use(ignoreFavicon);
