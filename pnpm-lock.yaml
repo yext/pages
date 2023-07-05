@@ -88,9 +88,6 @@ importers:
 
   packages/pages:
     dependencies:
-      '@types/prompts':
-        specifier: ^2.4.0
-        version: 2.4.0
       '@yext/analytics':
         specifier: ^0.3.0
         version: 0.3.0
@@ -266,6 +263,9 @@ importers:
       '@types/node':
         specifier: ^17.0.45
         version: 17.0.45
+      '@types/prompts':
+        specifier: ^2.4.0
+        version: 2.4.0
       '@types/react':
         specifier: ^17.0.49
         version: 17.0.49
@@ -4854,6 +4854,7 @@ packages:
 
   /@types/prompts@2.4.0:
     resolution: {integrity: sha512-7th8Opn+0XlN0O6qzO7dXOPwL6rigq/EwRS2DntaTHwSw8cLaYKeAPt5dWEKHSL+ffVSUl1itTPUC06+FlsV4Q==}
+    dev: true
 
   /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
