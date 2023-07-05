@@ -119,12 +119,11 @@ const askForUniverse = async (): Promise<string> => {
     message: "Yext Universe:",
     choices: [
       {
-        title: "Production (Account URL looks like: `yext.com/s/<ACCOUNT_ID>`)",
+        title: "Production (Account URL looks like: `yext.com`)",
         value: "production",
       },
       {
-        title:
-          "Sandbox (Account URL looks like: `sandbox.yext.com/s/<ACCOUNT_ID>`)",
+        title: "Sandbox (Account URL looks like: `sandbox.yext.com`)",
         value: "sandbox",
       },
     ],
