@@ -8,7 +8,7 @@ import { HeadConfig } from "./head.js";
  */
 export interface TemplateModule<
   T extends TemplateProps,
-  U extends TemplateRenderProps
+  U extends TemplateRenderProps,
 > {
   /** The exported config function */
   config?: TemplateConfig;
@@ -62,7 +62,7 @@ export type GetPath<T extends TemplateProps> = (props: T) => string;
  * @public
  */
 export type GetHeadConfig<T extends TemplateRenderProps> = (
-  props: T
+  props: T,
 ) => HeadConfig;
 
 /**

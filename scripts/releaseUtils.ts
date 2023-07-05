@@ -68,7 +68,7 @@ export async function getPackageInfo(pkgName: string): Promise<{
 export async function run(
   bin: string,
   args: string[],
-  opts: ExecaOptions<string> = {}
+  opts: ExecaOptions<string> = {},
 ): Promise<ExecaReturnValue<string>> {
   return execa(bin, args, { stdio: "inherit", ...opts });
 }
@@ -76,11 +76,11 @@ export async function run(
 export async function dryRun(
   bin: string,
   args: string[],
-  opts?: ExecaOptions<string>
+  opts?: ExecaOptions<string>,
 ): Promise<void> {
   return console.log(
     colors.blue(`[dryrun] ${bin} ${args.join(" ")}`),
-    opts || ""
+    opts || "",
   );
 }
 
@@ -140,7 +140,7 @@ export function getVersionChoices(currentVersion: string): VersionChoice[] {
       {
         title: "major",
         value: inc("major"),
-      }
+      },
     );
   } else if (currentAlpha) {
     versionChoices.push({
@@ -171,7 +171,7 @@ export function updateVersion(pkgPath: string, version: string): void {
 
 export async function publishPackage(
   pkdDir: string,
-  tag?: string
+  tag?: string,
 ): Promise<void> {
   const publicArgs = ["publish", "--access", "public"];
   if (tag) {
@@ -202,9 +202,9 @@ export async function logRecentCommits(pkgName: string): Promise<void> {
   console.log(
     colors.bold(
       `\n${colors.blue(`i`)} Commits of ${colors.green(
-        pkgName
-      )} since ${colors.green(tag)} ${colors.gray(`(${sha.slice(0, 5)})`)}`
-    )
+        pkgName,
+      )} since ${colors.green(tag)} ${colors.gray(`(${sha.slice(0, 5)})`)}`,
+    ),
   );
   await run(
     "git",
@@ -216,7 +216,7 @@ export async function logRecentCommits(pkgName: string): Promise<void> {
       "--",
       `packages/${pkgName}`,
     ],
-    { stdio: "inherit" }
+    { stdio: "inherit" },
   );
   console.log();
 }

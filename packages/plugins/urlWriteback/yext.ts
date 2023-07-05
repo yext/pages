@@ -42,7 +42,7 @@ const API_BASE_SBX = "https://api-sandbox.yext.com/v2/accounts/me/";
 export function buildApiUrl(
   base: string,
   path: string,
-  params?: Record<string, string>
+  params?: Record<string, string>,
 ) {
   const result = new URL(path, base);
   for (const k in params) {
@@ -61,7 +61,7 @@ export async function updateEntity<T extends EntityProfile>(
   options?: {
     env?: "prod" | "sbx";
     v?: string;
-  }
+  },
 ): Promise<T> {
   const URL_BASE = options?.env === "sbx" ? API_BASE_SBX : API_BASE_PROD;
 

@@ -10,7 +10,7 @@ The type definiton for the template's getRedirects function.
 
 ```typescript
 export declare type GetRedirects<T extends TemplateProps> = (
-  props: T
+  props: T,
 ) => string[];
 ```
 

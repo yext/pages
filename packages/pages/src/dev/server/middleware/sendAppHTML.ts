@@ -24,7 +24,7 @@ export default async function sendAppHTML(
   props: TemplateRenderProps,
   vite: ViteDevServer,
   pathname: string,
-  projectStructure: ProjectStructure
+  projectStructure: ProjectStructure,
 ) {
   if (templateModuleInternal.render) {
     res
@@ -36,11 +36,11 @@ export default async function sendAppHTML(
 
   const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
     projectStructure.templatesRoot,
-    projectStructure.scopedTemplatesPath
+    projectStructure.scopedTemplatesPath,
   );
 
   const serverRenderTemplateModule = (await vite.ssrLoadModule(
-    clientServerRenderTemplates.serverRenderTemplatePath
+    clientServerRenderTemplates.serverRenderTemplatePath,
   )) as RenderTemplate;
 
   const serverHtml = await serverRenderTemplateModule.render({
@@ -56,19 +56,19 @@ export default async function sendAppHTML(
     clientServerRenderTemplates.clientRenderTemplatePath,
     templateModuleInternal.path,
     props,
-    templateModuleInternal.config.hydrate
+    templateModuleInternal.config.hydrate,
   );
 
   const clientInjectedServerHtml = getServerTemplateDev(
     clientHydrationString,
     serverHtml,
     getLang(headConfig, props),
-    headConfig
+    headConfig,
   );
 
   const html = await vite.transformIndexHtml(
     pathname,
-    clientInjectedServerHtml
+    clientInjectedServerHtml,
   );
 
   // Send the rendered HTML back.

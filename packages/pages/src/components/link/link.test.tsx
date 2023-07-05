@@ -18,7 +18,7 @@ describe("Link", () => {
     render(
       <Link
         cta={{ link: "https://yext.com", label: "Click Me", linkType: "URL" }}
-      />
+      />,
     );
   });
 

@@ -7,7 +7,7 @@ describe("getRelativePrefixToRootFromPath", () => {
     const expectedRelativePathPrefix = "";
 
     expect(getRelativePrefixToRootFromPath(path)).toEqual(
-      expectedRelativePathPrefix
+      expectedRelativePathPrefix,
     );
   });
 
@@ -17,7 +17,7 @@ describe("getRelativePrefixToRootFromPath", () => {
     const expectedRelativePathPrefix = "../../../";
 
     expect(getRelativePrefixToRootFromPath(path)).toEqual(
-      expectedRelativePathPrefix
+      expectedRelativePathPrefix,
     );
   });
 });

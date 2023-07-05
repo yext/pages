@@ -20,7 +20,7 @@ const TEMP_DIR = ".temp";
 export const loadTemplateModules = async (
   templateModulePaths: string[],
   transpile: boolean,
-  adjustForFingerprintedAsset: boolean
+  adjustForFingerprintedAsset: boolean,
 ): Promise<TemplateModuleCollection> => {
   const importedModules = [] as TemplateModuleInternal<any, any>[];
   for (const templateModulePath of templateModulePaths) {
@@ -47,7 +47,7 @@ export const loadTemplateModules = async (
         });
 
         templateModule = await importFromString(
-          buildResult.outputFiles[0].text
+          buildResult.outputFiles[0].text,
         );
       } else {
         templateModule = await import(
@@ -62,7 +62,7 @@ export const loadTemplateModules = async (
       convertTemplateModuleToTemplateModuleInternal(
         templateModulePath,
         templateModule,
-        adjustForFingerprintedAsset
+        adjustForFingerprintedAsset,
       );
 
     importedModules.push({
@@ -74,7 +74,7 @@ export const loadTemplateModules = async (
   return importedModules.reduce((prev, module) => {
     if (prev.has(module.config.name)) {
       throw new Error(
-        `Templates must have unique feature names. Found multiple modules with "${module.config.name}"`
+        `Templates must have unique feature names. Found multiple modules with "${module.config.name}"`,
       );
     }
     return prev.set(module.config.name, module);

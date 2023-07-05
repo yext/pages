@@ -43,14 +43,14 @@ describe("Image", () => {
         height={height}
         style={{ objectFit: overrideObjectFit }}
         imgOverrides={{ src: overrideSrc }}
-      />
+      />,
     );
 
     expect(screen.getByRole("img").style.objectFit).toEqual(overrideObjectFit);
     expect(screen.getByRole("img")).toHaveProperty("src", overrideSrc);
     expect(screen.getByRole("img")).toHaveProperty(
       "alt",
-      image.image.alternateText
+      image.image.alternateText,
     );
   });
 
@@ -66,14 +66,14 @@ describe("Image", () => {
         height={height}
         style={{ objectFit: overrideObjectFit }}
         imgOverrides={{ src: overrideSrc }}
-      />
+      />,
     );
 
     expect(screen.getByRole("img").style.objectFit).toEqual(overrideObjectFit);
     expect(screen.getByRole("img")).toHaveProperty("src", overrideSrc);
     expect(screen.getByRole("img")).toHaveProperty(
       "alt",
-      simpleImage.alternateText
+      simpleImage.alternateText,
     );
   });
 
@@ -87,7 +87,7 @@ describe("Image", () => {
         image={image}
         placeholder={placeholder}
         imgOverrides={{ onLoad: () => onLoad() }}
-      />
+      />,
     );
 
     expect(screen.getByText(placeholderText)).toBeTruthy();
@@ -110,7 +110,7 @@ describe("Image", () => {
           image: { ...image.image, url: invalidUrl },
         }}
         placeholder={placeholder}
-      />
+      />,
     );
 
     expect(screen.getByText(placeholderText)).toBeTruthy();
@@ -132,7 +132,7 @@ describe("Image", () => {
         image={{
           image: { ...image.image, url: invalidUrl },
         }}
-      />
+      />,
     );
 
     expect(screen.queryByRole("img")).toBeNull();
@@ -173,7 +173,7 @@ describe("Image", () => {
         layout={ImageLayoutOption.FIXED}
         width={width}
         height={height}
-      />
+      />,
     );
 
     const img = screen.getByRole("img", {
@@ -191,7 +191,7 @@ describe("Image", () => {
     });
 
     expect(img.getAttribute("sizes")).toEqual(
-      "(max-width: 640px) 100px, (max-width: 768px) 320px, (max-width: 1024px) 640px, (max-width: 1280px) 960px, (max-width: 1536px) 1280px, 1920px"
+      "(max-width: 640px) 100px, (max-width: 768px) 320px, (max-width: 1024px) 640px, (max-width: 1280px) 960px, (max-width: 1536px) 1280px, 1920px",
     );
   });
 
@@ -210,38 +210,38 @@ describe("getImageUUID", () => {
   it("properly extracts the image UUID", () => {
     expect(
       getImageUUID(
-        "http://a.mktgcdn.com/p/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
-      )
+        "http://a.mktgcdn.com/p/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg",
+      ),
     ).toBe("EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54");
     expect(
       getImageUUID(
-        "https://a.mktgcdn.com/p/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo/1300x872.jpg"
-      )
+        "https://a.mktgcdn.com/p/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo/1300x872.jpg",
+      ),
     ).toBe("ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo");
     expect(
       getImageUUID(
-        "https://a.mktgcdn.com/p/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo/"
-      )
+        "https://a.mktgcdn.com/p/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo/",
+      ),
     ).toBe("ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo");
     expect(
       getImageUUID(
-        "https://a.mktgcdn.com/p/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo"
-      )
+        "https://a.mktgcdn.com/p/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo",
+      ),
     ).toBe("");
     expect(
       getImageUUID(
-        "http://a.mktgcdn.com/p-sandbox/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
-      )
+        "http://a.mktgcdn.com/p-sandbox/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg",
+      ),
     ).toBe("EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54");
     expect(
       getImageUUID(
-        "http://a.mktgcdn.com/p-qa/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
-      )
+        "http://a.mktgcdn.com/p-qa/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg",
+      ),
     ).toBe("EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54");
     expect(
       getImageUUID(
-        "http://a.mktgcdn.com/p-dev/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
-      )
+        "http://a.mktgcdn.com/p-dev/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg",
+      ),
     ).toBe("EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54");
     expect(getImageUUID("https://a.mktgcdn.com/p//1300x872.jpg")).toBe("");
     expect(getImageUUID("https://a.mktgcdn.com/p/1300x872.jpg")).toBe("");
@@ -254,23 +254,23 @@ describe("getImageUUID", () => {
     it("properly extracts the image env", () => {
       expect(
         getImageEnv(
-          "http://a.mktgcdn.com/p/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
-        )
+          "http://a.mktgcdn.com/p/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg",
+        ),
       ).toBe(undefined);
       expect(
         getImageEnv(
-          "https://a.mktgcdn.com/p-sandbox/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo/"
-        )
+          "https://a.mktgcdn.com/p-sandbox/ob40t_wP5WDgMN16PKEBrt8gAYyKfev_Hl1ahZPlGJo/",
+        ),
       ).toBe("-sandbox");
       expect(
         getImageEnv(
-          "http://a.mktgcdn.com/p-qa/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
-        )
+          "http://a.mktgcdn.com/p-qa/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg",
+        ),
       ).toBe("-qa");
       expect(
         getImageEnv(
-          "http://a.mktgcdn.com/p-dev/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg"
-        )
+          "http://a.mktgcdn.com/p-dev/EttBe_p52CsFx6ZlAn0-WpvY9h_MCYPH793iInfWY54/443x443.jpg",
+        ),
       ).toBe("-dev");
 
       jest.clearAllMocks();
@@ -309,7 +309,7 @@ describe("handleLayout", () => {
       "",
       width,
       height,
-      aspectRatio
+      aspectRatio,
     );
 
     expect(imgStyle.aspectRatio).toEqual(aspectRatio.toString());
@@ -325,7 +325,7 @@ describe("handleLayout", () => {
       "",
       width,
       height,
-      undefined
+      undefined,
     );
 
     expect(imgStyle.aspectRatio).toEqual(`${imgWidth} / ${imgHeight}`);
@@ -341,11 +341,11 @@ describe("handleLayout", () => {
       "",
       width,
       undefined,
-      undefined
+      undefined,
     );
 
     expect(src).toEqual(
-      `https://dynl.mktgcdn.com/p/${imgUUID}/${width}x${height}`
+      `https://dynl.mktgcdn.com/p/${imgUUID}/${width}x${height}`,
     );
     expect(imgStyle.width).toEqual(width);
     expect(imgStyle.height).toEqual(height);
@@ -362,7 +362,7 @@ describe("handleLayout", () => {
       "",
       undefined,
       undefined,
-      aspectRatio
+      aspectRatio,
     );
 
     expect(imgStyle.aspectRatio).toEqual(aspectRatio.toString());
@@ -378,7 +378,7 @@ describe("handleLayout", () => {
       "",
       undefined,
       undefined,
-      aspectRatio
+      aspectRatio,
     );
 
     expect(imgStyle.width).toEqual("100%");
@@ -399,11 +399,11 @@ describe("validateRequiredProps", () => {
       imgHeight,
       width,
       undefined,
-      undefined
+      undefined,
     );
     expect(logMock.mock.calls.length).toBe(1);
     expect(logMock.mock.calls[0][0]).toBe(
-      "Width or height is passed in but layout is not fixed. These will have no impact. If you want to have a fixed height or width then set layout to fixed."
+      "Width or height is passed in but layout is not fixed. These will have no impact. If you want to have a fixed height or width then set layout to fixed.",
     );
     jest.clearAllMocks();
   });
@@ -421,12 +421,12 @@ describe("validateRequiredProps", () => {
       imgHeight,
       undefined,
       undefined,
-      undefined
+      undefined,
     );
 
     expect(logMock.mock.calls.length).toBe(1);
     expect(logMock.mock.calls[0][0]).toBe(
-      "Using fixed layout but neither width nor height is passed as props."
+      "Using fixed layout but neither width nor height is passed as props.",
     );
     jest.clearAllMocks();
   });
@@ -445,12 +445,12 @@ describe("validateRequiredProps", () => {
       imgHeight,
       invalidWidth,
       undefined,
-      undefined
+      undefined,
     );
 
     expect(logMock.mock.calls.length).toBe(1);
     expect(logMock.mock.calls[0][0]).toBe(
-      `Using fixed layout but width is invalid: ${invalidWidth}.`
+      `Using fixed layout but width is invalid: ${invalidWidth}.`,
     );
     jest.clearAllMocks();
   });
@@ -468,12 +468,12 @@ describe("validateRequiredProps", () => {
       imgHeight,
       undefined,
       undefined,
-      undefined
+      undefined,
     );
 
     expect(logMock.mock.calls.length).toBe(1);
     expect(logMock.mock.calls[0][0]).toBe(
-      "Using aspect layout but aspectRatio is not passed as a prop."
+      "Using aspect layout but aspectRatio is not passed as a prop.",
     );
     jest.clearAllMocks();
   });
@@ -492,12 +492,12 @@ describe("validateRequiredProps", () => {
       imgHeight,
       undefined,
       undefined,
-      undefined
+      undefined,
     );
 
     expect(logMock.mock.calls.length).toBe(1);
     expect(logMock.mock.calls[0][0]).toBe(
-      `Invalid image width: ${invalidImgWidth}.`
+      `Invalid image width: ${invalidImgWidth}.`,
     );
     jest.clearAllMocks();
   });
@@ -511,21 +511,27 @@ describe("getImageSizeForFixedLayout", () => {
         imgHeight,
         widths,
         undefined,
-        undefined
-      )
+        undefined,
+      ),
     ).toEqual({
       fixedWidth: imgWidth,
       fixedHeight: imgHeight,
       fixedWidths: widths,
     });
     expect(
-      getImageSizeForFixedLayout(imgWidth, imgHeight, widths, width, undefined)
+      getImageSizeForFixedLayout(imgWidth, imgHeight, widths, width, undefined),
     ).toEqual({ fixedWidth: width, fixedHeight: height, fixedWidths: [width] });
     expect(
-      getImageSizeForFixedLayout(imgWidth, imgHeight, widths, undefined, height)
+      getImageSizeForFixedLayout(
+        imgWidth,
+        imgHeight,
+        widths,
+        undefined,
+        height,
+      ),
     ).toEqual({ fixedWidth: width, fixedHeight: height, fixedWidths: [width] });
     expect(
-      getImageSizeForFixedLayout(imgWidth, imgHeight, widths, width, height)
+      getImageSizeForFixedLayout(imgWidth, imgHeight, widths, width, height),
     ).toEqual({ fixedWidth: width, fixedHeight: height, fixedWidths: [width] });
   });
 });

@@ -1,4 +1,4 @@
-import glob from "glob";
+import { glob } from "glob";
 import * as path from "path";
 import logger from "../../log.js";
 import { generateManifestFile } from "./manifest.js";
@@ -23,8 +23,8 @@ export default (projectStructure: ProjectStructure) => {
       const serverBundles = glob.sync(
         path.join(
           projectStructure.serverBundleOutputRoot.getAbsolutePath(),
-          "**/*.js"
-        )
+          "**/*.js",
+        ),
       );
       templateModules = await loadTemplateModules(serverBundles, false, true);
       validateUniqueFeatureName(templateModules);
@@ -42,7 +42,7 @@ export default (projectStructure: ProjectStructure) => {
         projectStructure.sitesConfigRoot.getAbsolutePath();
       createFeaturesJson(
         templateModules,
-        path.join(`${sitesConfigPath}/features.json`)
+        path.join(`${sitesConfigPath}/features.json`),
       );
       finisher.succeed("Successfully wrote features.json");
     } catch (e: any) {
@@ -75,9 +75,9 @@ export default (projectStructure: ProjectStructure) => {
       updateCiConfig(
         path.join(
           projectStructure.sitesConfigRoot.getAbsolutePath(),
-          projectStructure.ciConfig
+          projectStructure.ciConfig,
         ),
-        false
+        false,
       );
       finisher.succeed("Successfully updated ci.json");
     } catch (e: any) {
@@ -92,13 +92,13 @@ export default (projectStructure: ProjectStructure) => {
  * @param templateModuleCollection
  */
 const validateUniqueFeatureName = (
-  templateModuleCollection: TemplateModuleCollection
+  templateModuleCollection: TemplateModuleCollection,
 ) => {
   const featureNames = new Set<string>();
   [...templateModuleCollection.keys()].forEach((featureName) => {
     if (featureNames.has(featureName)) {
       throw new Error(
-        `Templates must have unique feature names. Found multiple modules with "${featureName}"`
+        `Templates must have unique feature names. Found multiple modules with "${featureName}"`,
       );
     }
     featureNames.add(featureName);

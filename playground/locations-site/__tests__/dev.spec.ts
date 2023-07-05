@@ -12,7 +12,7 @@ test("index page loads", async ({ page }) => {
   await expect(page).toHaveTitle(/Pages Development/);
   await expect(page.locator("a", { hasText: LOCATION_ID })).toHaveAttribute(
     "href",
-    `${page.url()}location/${LOCATION_ID}`
+    `${page.url()}location/${LOCATION_ID}`,
   );
   await expect(page).toHaveScreenshot();
 });

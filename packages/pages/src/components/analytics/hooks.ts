@@ -40,7 +40,7 @@ export function useAnalytics(): AnalyticsMethods | null {
   return {
     trackClick(
       eventName: string,
-      conversionData?: ConversionDetails
+      conversionData?: ConversionDetails,
     ): (e: MouseEvent<HTMLAnchorElement>) => Promise<void> {
       return ctx.trackClick(concatScopes(scope, eventName), conversionData);
     },
@@ -61,7 +61,7 @@ export function useAnalytics(): AnalyticsMethods | null {
     },
     track(
       eventName: string,
-      conversionData?: ConversionDetails
+      conversionData?: ConversionDetails,
     ): Promise<void> {
       return ctx.track(concatScopes(scope, eventName), conversionData);
     },

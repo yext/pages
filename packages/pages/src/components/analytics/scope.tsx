@@ -23,7 +23,7 @@ export const useScope = () => {
  * @param props - AnalyticsScopeProps
  */
 export function AnalyticsScopeProvider(
-  props: PropsWithChildren<AnalyticsScopeProps>
+  props: PropsWithChildren<AnalyticsScopeProps>,
 ): JSX.Element {
   const parentScope = useScope();
   const combinedScope = concatScopes(parentScope, props.name);

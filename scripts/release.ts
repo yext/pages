@@ -116,8 +116,8 @@ if (isDryRun) {
 } else {
   console.log(
     colors.green(
-      "\nPushed, publishing should starts shortly on CI.\nhttps://github.com/yext/pages/.github/workflows/publish.yml"
-    )
+      "\nPushed, publishing should starts shortly on CI.\nhttps://github.com/yext/pages/.github/workflows/publish.yml",
+    ),
   );
 }
 

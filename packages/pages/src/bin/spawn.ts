@@ -10,7 +10,7 @@ const pathToPagesScript = path.resolve(
   "pages",
   "dist",
   "bin",
-  "pages.js"
+  "pages.js",
 );
 
 spawnSync(
@@ -18,5 +18,5 @@ spawnSync(
   ["--experimental-vm-modules", pathToPagesScript, ...process.argv.slice(2)],
   {
     stdio: "inherit",
-  }
+  },
 );

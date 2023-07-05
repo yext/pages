@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
 import { Address as AddressComponent } from ".";
 import {
   ADDRESS,
@@ -13,20 +13,21 @@ import {
   SanFrancisco,
 } from "./sampleData.js";
 
-const meta: ComponentMeta<typeof AddressComponent> = {
+const meta: Meta<typeof AddressComponent> = {
   title: "components/Address",
   component: AddressComponent,
 };
 
 export default meta;
 
-const Template: ComponentStory<typeof AddressComponent> = (args) => (
+const Template: StoryFn<typeof AddressComponent> = (args) => (
   <AddressComponent {...args} />
 );
 
 // Address in the United States
 
-export const Address = Template.bind({});
+// const app: ReturnType<typeof express> = express();
+export const Address: StoryFn<typeof AddressComponent> = Template.bind({});
 
 Address.args = {
   address: ADDRESS,
@@ -34,7 +35,8 @@ Address.args = {
 
 // Address to Yext Arlington Office
 
-export const Address_Arlington = Template.bind({});
+export const Address_Arlington: StoryFn<typeof AddressComponent> =
+  Template.bind({});
 
 Address_Arlington.args = {
   address: Arlington,
@@ -42,7 +44,9 @@ Address_Arlington.args = {
 
 // Address to Yext Berlin Office
 
-export const Address_Berlin = Template.bind({});
+export const Address_Berlin: StoryFn<typeof AddressComponent> = Template.bind(
+  {},
+);
 
 Address_Berlin.args = {
   address: Berlin,
@@ -50,7 +54,9 @@ Address_Berlin.args = {
 
 // Address to Yext Chicago Office
 
-export const Address_Chicago = Template.bind({});
+export const Address_Chicago: StoryFn<typeof AddressComponent> = Template.bind(
+  {},
+);
 
 Address_Chicago.args = {
   address: Chicago,
@@ -58,7 +64,9 @@ Address_Chicago.args = {
 
 // Address to Yext London Office
 
-export const Address_London = Template.bind({});
+export const Address_London: StoryFn<typeof AddressComponent> = Template.bind(
+  {},
+);
 
 Address_London.args = {
   address: London,
@@ -66,7 +74,9 @@ Address_London.args = {
 
 // Address to Yext Miami Office
 
-export const Address_Miami = Template.bind({});
+export const Address_Miami: StoryFn<typeof AddressComponent> = Template.bind(
+  {},
+);
 
 Address_Miami.args = {
   address: Miami,
@@ -74,7 +84,9 @@ Address_Miami.args = {
 
 // Address to Yext New York Office
 
-export const Address_NewYork = Template.bind({});
+export const Address_NewYork: StoryFn<typeof AddressComponent> = Template.bind(
+  {},
+);
 
 Address_NewYork.args = {
   address: NewYork,
@@ -82,7 +94,9 @@ Address_NewYork.args = {
 
 // Address to Yext Paris Office
 
-export const Address_Paris = Template.bind({});
+export const Address_Paris: StoryFn<typeof AddressComponent> = Template.bind(
+  {},
+);
 
 Address_Paris.args = {
   address: Paris,
@@ -90,7 +104,8 @@ Address_Paris.args = {
 
 // Address to Yext San Francisco Office
 
-export const Address_SanFrancisco = Template.bind({});
+export const Address_SanFrancisco: StoryFn<typeof AddressComponent> =
+  Template.bind({});
 
 Address_SanFrancisco.args = {
   address: SanFrancisco,

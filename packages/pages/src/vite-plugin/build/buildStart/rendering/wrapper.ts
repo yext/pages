@@ -12,7 +12,7 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
   props: T,
   templateModuleInternal: TemplateModuleInternal<any, any>,
   hydrate: boolean,
-  pluginRenderTemplates: PluginRenderTemplates
+  pluginRenderTemplates: PluginRenderTemplates,
 ): Promise<string> => {
   if (!props.__meta.manifest) {
     throw new Error("Manifest is undefined");
@@ -44,9 +44,9 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
       path.join(
         props.relativePrefixToRoot,
         "assets",
-        templateModuleInternal.path.replace("..", "")
+        templateModuleInternal.path.replace("..", ""),
       ),
-      props
+      props,
     );
   }
 
@@ -57,7 +57,7 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
     bundlerManifest,
     props.relativePrefixToRoot,
     getLang(headConfig, props),
-    headConfig
+    headConfig,
   );
 
   return clientInjectedServerHtml;

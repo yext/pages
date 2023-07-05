@@ -38,7 +38,7 @@ export const serverRenderSlugRoute =
           matchingStaticTemplate,
           locale,
           url.pathname,
-          projectStructure
+          projectStructure,
         );
         return;
       }
@@ -48,7 +48,7 @@ export const serverRenderSlugRoute =
         vite,
         slug,
         locale,
-        projectStructure
+        projectStructure,
       );
       if (!document) {
         send404(res, `Cannot find document corresponding to slug: ${slug}`);
@@ -60,12 +60,12 @@ export const serverRenderSlugRoute =
       const templateModuleInternal = await findTemplateModuleInternal(
         vite,
         (t) => feature === t.config.name,
-        templateFilepaths
+        templateFilepaths,
       );
       if (!templateModuleInternal) {
         send404(
           res,
-          `Cannot find template corresponding to feature: ${feature}`
+          `Cannot find template corresponding to feature: ${feature}`,
         );
         return;
       }
@@ -82,7 +82,7 @@ export const serverRenderSlugRoute =
         props,
         vite,
         `/${slug}`,
-        projectStructure
+        projectStructure,
       );
     } catch (e: any) {
       // If an error is caught, calling next with the error will invoke
@@ -96,7 +96,7 @@ const getDocument = async (
   vite: ViteDevServer,
   slug: string,
   locale: string,
-  projectStructure: ProjectStructure
+  projectStructure: ProjectStructure,
 ): Promise<any> => {
   if (dynamicGenerateData) {
     return generateTestDataForSlug(
@@ -104,7 +104,7 @@ const getDocument = async (
       vite,
       slug,
       locale,
-      projectStructure
+      projectStructure,
     );
   }
   return getLocalDataForSlug({ slug, locale });

@@ -11,7 +11,7 @@ import { getRuntime } from "./runtime.js";
  */
 const fetchInternal = async (
   input: RequestInfo,
-  init?: RequestInit | undefined
+  init?: RequestInit | undefined,
 ): Promise<any> => {
   const runtime = getRuntime();
 

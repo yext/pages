@@ -105,8 +105,8 @@ const renderTag = (tag: Tag): string => {
       console.log(
         pc.yellow(
           `[WARNING]: Tag type ${tag.type} is unsupported by the Tag interface. ` +
-            `Please use "other" to render this tag.`
-        )
+            `Please use "other" to render this tag.`,
+        ),
       );
       return "";
     }
@@ -129,7 +129,7 @@ const renderAttributes = (attributes: Attributes): string => {
  */
 export const getLang = <T extends TemplateRenderProps>(
   headConfig: HeadConfig | undefined,
-  props: T
+  props: T,
 ): string => {
   if (headConfig?.lang) {
     return headConfig.lang;

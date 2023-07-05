@@ -1,5 +1,5 @@
 import { statSync } from "fs";
-import glob from "glob";
+import { glob } from "glob";
 import path from "path";
 
 const PLUGIN_FILESIZE_LIMIT = 10; // MB
@@ -20,7 +20,7 @@ export const validateBundles = () => {
 
 const getBundlePaths = (): string[] => {
   return glob.sync(
-    `${path.resolve("dist/assets")}/{render,renderer,server,static}/**/*.*`
+    `${path.resolve("dist/assets")}/{render,renderer,server,static}/**/*.*`,
   );
 };
 
@@ -31,7 +31,7 @@ const validateFilesize = (serverBundlePath: string): number => {
   const stats = statSync(serverBundlePath);
   if (stats.size / (1024 * 1024) > PLUGIN_FILESIZE_LIMIT) {
     throw new Error(
-      `Bundled file ${serverBundlePath} exceeds max size of ${PLUGIN_FILESIZE_LIMIT} MB`
+      `Bundled file ${serverBundlePath} exceeds max size of ${PLUGIN_FILESIZE_LIMIT} MB`,
     );
   }
 
@@ -45,7 +45,7 @@ const validateFilesize = (serverBundlePath: string): number => {
 const validateTotalSourceSize = (totalSizeInBytes: number) => {
   if (totalSizeInBytes / (1024 * 1024) > PLUGIN_TOTAL_FILESIZE_LIMIT) {
     throw new Error(
-      `The total size of all bundles exceeds the max size of ${PLUGIN_TOTAL_FILESIZE_LIMIT} MB`
+      `The total size of all bundles exceeds the max size of ${PLUGIN_TOTAL_FILESIZE_LIMIT} MB`,
     );
   }
 };

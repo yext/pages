@@ -24,7 +24,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       convertTemplateModuleToTemplateModuleInternal(
         "src/templates/myTemplateName.tsx",
         templateModule,
-        false
+        false,
       );
 
     const expected: TemplateModuleInternal<any, any> = {
@@ -46,7 +46,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
-      JSON.stringify(expected)
+      JSON.stringify(expected),
     );
   });
 
@@ -65,7 +65,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       convertTemplateModuleToTemplateModuleInternal(
         "src/templates/myTemplateName.tsx",
         templateModule,
-        false
+        false,
       );
 
     const expected: TemplateModuleInternal<any, any> = {
@@ -82,7 +82,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
-      JSON.stringify(expected)
+      JSON.stringify(expected),
     );
   });
 
@@ -100,7 +100,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       convertTemplateModuleToTemplateModuleInternal(
         "src/templates/myTemplateName.0ab33d.tsx",
         templateModule,
-        true
+        true,
       );
 
     const expected: TemplateModuleInternal<any, any> = {
@@ -117,7 +117,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
-      JSON.stringify(expected)
+      JSON.stringify(expected),
     );
   });
 
@@ -139,7 +139,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       convertTemplateModuleToTemplateModuleInternal(
         "src/templates/myTemplateName.tsx",
         templateModule,
-        false
+        false,
       );
 
     const expected: TemplateModuleInternal<any, any> = {
@@ -161,7 +161,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
-      JSON.stringify(expected)
+      JSON.stringify(expected),
     );
   });
 
@@ -184,7 +184,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       convertTemplateModuleToTemplateModuleInternal(
         "src/templates/myTemplateName.tsx",
         templateModule,
-        false
+        false,
       );
 
     const expected: TemplateModuleInternal<any, any> = {
@@ -206,7 +206,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
-      JSON.stringify(expected)
+      JSON.stringify(expected),
     );
   });
 });

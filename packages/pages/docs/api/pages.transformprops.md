@@ -10,7 +10,7 @@ The type definition for the template's transformProps function. Can be used to a
 
 ```typescript
 export declare type TransformProps<T extends TemplateProps> = (
-  props: T
+  props: T,
 ) => Promise<T>;
 ```
 

@@ -14,7 +14,7 @@ import { AnalyticsContext } from "./context.js";
  * @public
  */
 export function AnalyticsProvider(
-  props: PropsWithChildren<AnalyticsProviderProps>
+  props: PropsWithChildren<AnalyticsProviderProps>,
 ): JSX.Element {
   const {
     children,
@@ -31,7 +31,7 @@ export function AnalyticsProvider(
     analyticsRef.current = new Analytics(
       templateData,
       requireOptIn,
-      pageDomain
+      pageDomain,
     );
   }
 

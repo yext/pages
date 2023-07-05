@@ -43,7 +43,7 @@ export const indexPage =
         getTemplateFilepathsFromProjectStructure(projectStructure);
       const localDataManifest = await getLocalDataManifest(
         vite,
-        templateFilepaths
+        templateFilepaths,
       );
 
       // Inject the header
@@ -54,7 +54,7 @@ export const indexPage =
           ${yextLogoWhiteSvg}
           <h1>Pages Development</h1>
         </div>
-        `
+        `,
       );
 
       // Inject the sidebar
@@ -63,7 +63,7 @@ export const indexPage =
         `<div class="sidebar">
           ${laptopIconBlackSvg}
           ${getInfoMessage(dynamicGenerateData, useProdURLs)}
-        </div>`
+        </div>`,
       );
 
       // If there is any localData, display hyperlinks to each page that will be generated
@@ -74,7 +74,7 @@ export const indexPage =
           indexPageHtml = indexPageHtml.replace(
             `<!--static-pages-html-->`,
             `<h3>Static Pages</h3>
-            ${createStaticPageListItems(localDataManifest)}`
+            ${createStaticPageListItems(localDataManifest)}`,
           );
         }
 
@@ -108,13 +108,13 @@ export const indexPage =
                     ${createEntityPageListItems(
                       localDataManifest,
                       templateName,
-                      useProdURLs
+                      useProdURLs,
                     )}
                   </tbody>
                 </table>`,
-            ""
+            "",
           )}
-          </div>`
+          </div>`,
           );
         }
       } else {
@@ -124,7 +124,7 @@ export const indexPage =
           `<div class="error">
            <i class="fa fa-times-circle"></i>
              <p>${noLocalDataErrorText}</p>
-          </div>`
+          </div>`,
         );
       }
 
@@ -140,7 +140,7 @@ export const indexPage =
           `<div class="warning">
           <i class="fa fa-warning"></i>
           ${generateTestDataWarningText} 
-        </div>`
+        </div>`,
         );
       }
 
@@ -162,11 +162,11 @@ const addHttpFuncs = (indexPageHtml: string) => {
           return true;
         }
         console.error(
-          `Serverless HTTP function ${funcName} is missing a path. It will not be listed on the index page.`
+          `Serverless HTTP function ${funcName} is missing a path. It will not be listed on the index page.`,
         );
       }
       return false;
-    }
+    },
   );
 
   return httpFuncs.length
@@ -181,10 +181,10 @@ const addHttpFuncs = (indexPageHtml: string) => {
         </thead>
         <tbody>
           ${httpFuncs
-            .map(([_, source]) => `<tr><td>${source.apiPath}</td></tr>`)
+            .map((httpFunc) => `<tr><td>${httpFunc[1].apiPath}</td></tr>`)
             .join("")}
         </tbody>
-      </table>`
+      </table>`,
       )
     : indexPageHtml;
 };
@@ -204,8 +204,8 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
           <tr>
             <td>
               <a href="http://localhost:${devServerPort}/${encodeURIComponent(
-        staticURL
-      )}">
+                staticURL,
+              )}">
                 ${staticURL}
               </a>
             </td>
@@ -213,14 +213,14 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
         </tbody>
       </table>
 `,
-    ""
+    "",
   );
 };
 
 const createEntityPageListItems = (
   localDataManifest: LocalDataManifest,
   templateName: string,
-  useProdURLs: boolean
+  useProdURLs: boolean,
 ) => {
   const formatLink = (entityId: string, slug: string | undefined) => {
     if (useProdURLs) {
@@ -228,7 +228,7 @@ const createEntityPageListItems = (
     }
 
     return `http://localhost:${devServerPort}/${encodeURIComponent(
-      templateName
+      templateName,
     )}/${entityId}`;
   };
 
@@ -243,7 +243,7 @@ const createEntityPageListItems = (
   return entities.reduce((entityAccumulator, { entityId, slug }) => {
     if (useProdURLs && !slug) {
       console.error(
-        `No document.slug found for entityId "${entityId}", no link will be rendered in the index page.`
+        `No document.slug found for entityId "${entityId}", no link will be rendered in the index page.`,
       );
       return entityAccumulator;
     }

@@ -42,7 +42,7 @@ export interface StreamConfig {
  */
 export const convertTemplateConfigToStreamConfig = (
   // config is optional for a user to set
-  config: TemplateConfig | undefined
+  config: TemplateConfig | undefined,
 ): StreamConfig | void => {
   if (!config) {
     config = {};

@@ -22,18 +22,18 @@ const handler = async ({ scope }: FeaturesArgs): Promise<void> => {
           new Path(path.join(templateRootAbsolutePath, scope)),
           new Path(templateRootAbsolutePath),
         ]
-      : [new Path(templateRootAbsolutePath)]
+      : [new Path(templateRootAbsolutePath)],
   );
   const templateModules = await loadTemplateModules(
     templateFilepaths,
     true,
-    false
+    false,
   );
   const featuresFilepath = path.join(
     process.cwd(),
     sitesConfigRoot,
     scope ?? "",
-    "features.json"
+    "features.json",
   );
   await createFeaturesJson(templateModules, featuresFilepath);
 };

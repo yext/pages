@@ -1,4 +1,3 @@
-import { initCommandModule } from "../init/init.js";
 import { devCommandModule } from "../dev/dev.js";
 import { generateCommandModule } from "../generate/generate.js";
 import { buildCommandModule } from "../build/build.js";
@@ -13,7 +12,7 @@ import { hideBin } from "yargs/helpers";
     import(dep);
   } catch (e) {
     console.error(
-      `Cannot find "${dep}" which is a necessary dependency for generation. Please install this module.`
+      `Cannot find "${dep}" which is a necessary dependency for generation. Please install this module.`,
     );
     process.exit(1);
   }
@@ -23,7 +22,6 @@ yargs(hideBin(process.argv))
   .scriptName("pages")
   .command(prodCommandModule)
   .command(devCommandModule)
-  .command(initCommandModule)
   .command(generateCommandModule)
   .command(buildCommandModule)
   .demandCommand()

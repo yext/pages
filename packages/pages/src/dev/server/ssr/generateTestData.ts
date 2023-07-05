@@ -50,14 +50,13 @@ export const generateTestDataForSlug = async (
   vite: ViteDevServer,
   slug: string,
   locale: string,
-  projectStructure: ProjectStructure
+  projectStructure: ProjectStructure,
 ): Promise<any> => {
   const templateFilepaths =
     getTemplateFilepathsFromProjectStructure(projectStructure);
   const templateModuleCollection = await loadTemplateModuleCollectionUsingVite(
     vite,
     templateFilepaths,
-    projectStructure
   );
   const featuresConfig = await getFeaturesConfig(templateModuleCollection);
   const featuresConfigForEntityPages: FeaturesConfig = {
@@ -74,7 +73,6 @@ export const generateTestDataForSlug = async (
 const loadTemplateModuleCollectionUsingVite = async (
   vite: ViteDevServer,
   templateFilepaths: string[],
-  projectStructure: ProjectStructure
 ): Promise<TemplateModuleCollection> => {
   const templateModules: TemplateModuleInternal<any, any>[] = await Promise.all(
     templateFilepaths.map(async (templateFilepath) => {
@@ -82,9 +80,9 @@ const loadTemplateModuleCollectionUsingVite = async (
       return convertTemplateModuleToTemplateModuleInternal(
         templateFilepath,
         templateModule,
-        false
+        false,
       );
-    })
+    }),
   );
   return templateModules.reduce((prev, module) => {
     return prev.set(module.config.name, module);
@@ -96,7 +94,7 @@ export const generateTestDataForPage = async (
   featuresConfig: FeaturesConfig,
   entityId: string,
   locale: string,
-  projectStructure: ProjectStructure
+  projectStructure: ProjectStructure,
 ): Promise<any> => {
   const featureName = featuresConfig.features[0]?.name;
   const args = getCommonArgs(featuresConfig, projectStructure);
@@ -120,7 +118,7 @@ export const generateTestDataForPage = async (
 async function spawnTestDataCommand(
   stdout: NodeJS.WriteStream,
   command: string,
-  args: string[]
+  args: string[],
 ): Promise<undefined | any> {
   return new Promise((resolve) => {
     const childProcess = spawn(command, args, {
@@ -149,7 +147,7 @@ async function spawnTestDataCommand(
       // Check to see if the test data has begun to be printed in this chunk.
       const dataStartIndex = Math.max(
         lines.indexOf(STREAM_DATA_CHUNK_BEGIN),
-        lines.indexOf(STREAM_DATA_CHUNK_BEGIN_MULTIPLE)
+        lines.indexOf(STREAM_DATA_CHUNK_BEGIN_MULTIPLE),
       );
       if (dataStartIndex !== -1) {
         foundTestData = true;
@@ -164,7 +162,7 @@ async function spawnTestDataCommand(
         .filter(
           (boilerplateLine) =>
             boilerplateLine.startsWith(UPGRADE_MESSAGE_LINE_BEGIN) ||
-            boilerplateLine.startsWith(UPGRADE_INSTRUCTIONS_LINE_BEGIN)
+            boilerplateLine.startsWith(UPGRADE_INSTRUCTIONS_LINE_BEGIN),
         )
         .join("\n");
 
@@ -187,16 +185,16 @@ async function spawnTestDataCommand(
         } catch (e) {
           stdout.write(
             `\nUnable to parse test data from command: \`${command} ${args.join(
-              " "
-            )}\``
+              " ",
+            )}\``,
           );
           resolve(null);
         }
       } else {
         stdout.write(
           `\nUnable to generate test data from command: \`${command} ${args.join(
-            " "
-          )}\``
+            " ",
+          )}\``,
         );
       }
 
@@ -208,7 +206,7 @@ async function spawnTestDataCommand(
 
 const getCommonArgs = (
   featuresConfig: FeaturesConfig,
-  projectStructure: ProjectStructure
+  projectStructure: ProjectStructure,
 ) => {
   const args = ["pages", "generate-test-data", "--printDocuments"];
 
@@ -219,11 +217,11 @@ const getCommonArgs = (
     projectStructure.sitesConfigRoot.getAbsolutePath();
   const siteStreamPath = path.resolve(
     process.cwd(),
-    path.join(sitesConfigPath, projectStructure.siteStreamConfig)
+    path.join(sitesConfigPath, projectStructure.siteStreamConfig),
   );
   if (fs.existsSync(siteStreamPath)) {
     const siteStream = prepareJsonForCmd(
-      JSON.parse(fs.readFileSync(siteStreamPath).toString())
+      JSON.parse(fs.readFileSync(siteStreamPath).toString()),
     );
     args.push("--siteStreamConfig", siteStream);
   }

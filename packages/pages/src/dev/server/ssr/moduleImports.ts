@@ -11,10 +11,10 @@ import { TemplateModule } from "../../../common/src/template/types.js";
  */
 export async function importFresh(
   devserver: ViteDevServer,
-  modulePath: string
+  modulePath: string,
 ): Promise<TemplateModule<any, any>> {
   const cacheBustingModulePath = `${modulePath}?update=${Date.now()}`;
   return (await devserver.ssrLoadModule(
-    cacheBustingModulePath
+    cacheBustingModulePath,
   )) as TemplateModule<any, any>;
 }

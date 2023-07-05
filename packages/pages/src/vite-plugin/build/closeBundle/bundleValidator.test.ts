@@ -13,7 +13,7 @@ describe("bundleValidator", () => {
     });
 
     expect(() => validateBundles()).toThrowError(
-      "Bundled file file1.js exceeds max size of 10 MB"
+      "Bundled file file1.js exceeds max size of 10 MB",
     );
 
     jest.restoreAllMocks();
@@ -36,7 +36,7 @@ describe("bundleValidator", () => {
     });
 
     expect(() => validateBundles()).toThrowError(
-      "The total size of all bundles exceeds the max size of 10 MB"
+      "The total size of all bundles exceeds the max size of 10 MB",
     );
 
     jest.restoreAllMocks();

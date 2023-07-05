@@ -30,7 +30,7 @@ const handler = async ({
   if (!noGenFeatures)
     await runSubProcess(
       "pages generate features",
-      scope ? ["--scope" + " " + scope] : []
+      scope ? ["--scope" + " " + scope] : [],
     );
 
   await createServer(!local, !!useProdURLs, scope);

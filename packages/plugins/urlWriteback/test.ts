@@ -9,6 +9,6 @@ Deno.test("buildApiUrl", () => {
 
   assertEquals(
     url,
-    "https://www.yext.com/entities/123?api_key=apikey&v=customvparam"
+    "https://www.yext.com/entities/123?api_key=apikey&v=customvparam",
   );
 });

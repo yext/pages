@@ -55,7 +55,7 @@ const defaultClusterTemplate = ({ count }: ClusterTemplateProps) => {
 };
 
 export const ClustererContext = createContext<ClustererContextType | null>(
-  null
+  null,
 );
 
 export function useClusterContext() {
@@ -63,7 +63,7 @@ export function useClusterContext() {
 
   if (!ctx) {
     throw new Error(
-      "Attempted to call useClustererContext() outside of <Clusterer>."
+      "Attempted to call useClustererContext() outside of <Clusterer>.",
     );
   }
 
@@ -107,7 +107,7 @@ export const Clusterer = ({
         // Calculate center of all markers in the cluster.
         // Used to set the coordinate of the marker as well as generate a unique id.
         const clusterCenter: Coordinate = GeoBounds.fit(
-          cluster.map((p) => p.pin.getCoordinate())
+          cluster.map((p) => p.pin.getCoordinate()),
         ).getCenter(Projection.MERCATOR);
         const id = `cluster-{${clusterCenter._lat},${clusterCenter._lon}}`;
 
@@ -129,7 +129,7 @@ export const Clusterer = ({
               map.fitCoordinates(
                 cluster.map((p) => p.pin.getCoordinate()),
                 true,
-                Infinity
+                Infinity,
               )
             }
           >
@@ -166,7 +166,7 @@ export const Clusterer = ({
 const _generateClusters = (
   pins: PinStoreType[],
   map: Map,
-  clusterRadius: number
+  clusterRadius: number,
 ) => {
   const clusterRadiusRadians =
     (clusterRadius * Math.PI) / 2 ** (map.getZoom() + 7);
@@ -180,7 +180,7 @@ const _generateClusters = (
         const distance = new Coordinate(pin.pin.getCoordinate()).distanceTo(
           new Coordinate(pins[otherIndex].pin.getCoordinate()),
           Unit.RADIAN,
-          Projection.MERCATOR
+          Projection.MERCATOR,
         );
 
         if (distance <= clusterRadiusRadians) {
@@ -225,8 +225,8 @@ const _generateClusters = (
       pinGroup.forEach((otherIndex) =>
         pinsInRadius[otherIndex].splice(
           pinsInRadius[otherIndex].indexOf(index),
-          1
-        )
+          1,
+        ),
       );
     }
 

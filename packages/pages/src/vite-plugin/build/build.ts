@@ -36,7 +36,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
             input: await discoverInputs(
               projectStructure.templatesRoot.getAbsolutePath(),
               projectStructure.scopedTemplatesPath?.getAbsolutePath(),
-              projectStructure
+              projectStructure,
             ),
             output: {
               intro,
@@ -83,7 +83,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
 const discoverInputs = async (
   rootTemplateDir: string,
   scopedTemplateDir: string | undefined,
-  projectStructure: ProjectStructure
+  projectStructure: ProjectStructure,
 ): Promise<InputOption> => {
   const entryPoints: Record<string, string> = {};
   const updateEntryPoints = async (dir: string) =>
@@ -116,14 +116,14 @@ const discoverInputs = async (
  * @param projectStructure
  */
 const discoverRenderTemplates = (
-  projectStructure: ProjectStructure
+  projectStructure: ProjectStructure,
 ): Record<string, string> => {
   const entryPoints: Record<string, string> = {};
 
   // Move the [compiled] _server.ts and _client.ts render template to /assets/render
   const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
     projectStructure.templatesRoot,
-    projectStructure.scopedTemplatesPath
+    projectStructure.scopedTemplatesPath,
   );
 
   // server

@@ -11,6 +11,6 @@ Function that takes in a [HeadConfig](./pages.headconfig.md) interface and a pro
 ```typescript
 getLang: <T extends TemplateRenderProps>(
   headConfig: HeadConfig | undefined,
-  props: T
+  props: T,
 ) => string;
 ```

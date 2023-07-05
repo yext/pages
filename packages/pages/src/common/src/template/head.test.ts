@@ -11,7 +11,7 @@ describe("renderHeadConfigToString", () => {
       <meta name="viewport" content="width=device-width,initial-scale=1">`;
 
     expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
-      expectedHeadConfig.replaceAll(" ", "")
+      expectedHeadConfig.replaceAll(" ", ""),
     );
   });
 
@@ -25,7 +25,7 @@ describe("renderHeadConfigToString", () => {
       <meta name="viewport" content="width=device-width,initial-scale=1">`;
 
     expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
-      expectedHeadConfig.replaceAll(" ", "")
+      expectedHeadConfig.replaceAll(" ", ""),
     );
   });
 
@@ -49,7 +49,7 @@ describe("renderHeadConfigToString", () => {
         <meta name="viewport" content="bar">`;
 
     expect(
-      renderHeadConfigToString(headConfig as HeadConfig).replaceAll(" ", "")
+      renderHeadConfigToString(headConfig as HeadConfig).replaceAll(" ", ""),
     ).toEqual(expectedHeadConfig.replaceAll(" ", ""));
   });
 
@@ -64,7 +64,7 @@ describe("renderHeadConfigToString", () => {
       <meta name="viewport" content="width=device-width,initial-scale=1">`;
 
     expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
-      expectedHeadConfig.replaceAll(" ", "")
+      expectedHeadConfig.replaceAll(" ", ""),
     );
   });
 
@@ -104,7 +104,7 @@ describe("renderHeadConfigToString", () => {
         <script src="./path/to/script"></script>`;
 
     expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
-      expectedHeadConfig.replaceAll(" ", "")
+      expectedHeadConfig.replaceAll(" ", ""),
     );
   });
 
@@ -126,7 +126,7 @@ describe("renderHeadConfigToString", () => {
         </template>`;
 
     expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
-      expectedHeadConfig.replaceAll(" ", "")
+      expectedHeadConfig.replaceAll(" ", ""),
     );
   });
 
@@ -147,7 +147,7 @@ describe("renderHeadConfigToString", () => {
 
     const expectedLog = pc.yellow(
       `[WARNING]: Tag type wrongtype is unsupported by the Tag interface. ` +
-        `Please use "other" to render this tag.`
+        `Please use "other" to render this tag.`,
     );
 
     jest.clearAllMocks();

@@ -25,7 +25,7 @@ var __toESM = (mod, isNodeMode, target) => (
     isNodeMode || !mod || !mod.__esModule
       ? __defProp(target, "default", { value: mod, enumerable: true })
       : target,
-    mod
+    mod,
   )
 );
 var __toCommonJS = (mod) =>
@@ -100,7 +100,7 @@ const Location = ({ relativePrefixToRoot, path, document }) => {
   return /* @__PURE__ */ React.createElement(
     React.Fragment,
     null,
-    "Hello, World"
+    "Hello, World",
   );
 };
 var stdin_default = Location;

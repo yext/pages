@@ -19,7 +19,7 @@ import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal
  */
 export interface TemplateModuleInternal<
   T extends TemplateProps,
-  U extends TemplateRenderProps
+  U extends TemplateRenderProps,
 > {
   /**
    * The filepath to the template file. This can be the raw TSX file when used during dev mode or
@@ -88,7 +88,7 @@ const parse = (filepath: string, adjustForFingerprintedAsset: boolean) => {
 export const convertTemplateModuleToTemplateModuleInternal = (
   templateFilepath: string,
   templateModule: TemplateModule<any, any>,
-  adjustForFingerprintedAsset: boolean
+  adjustForFingerprintedAsset: boolean,
 ): TemplateModuleInternal<any, any> => {
   const templatePath = parse(templateFilepath, adjustForFingerprintedAsset);
 
@@ -96,7 +96,7 @@ export const convertTemplateModuleToTemplateModuleInternal = (
     ...templateModule,
     config: convertTemplateConfigToTemplateConfigInternal(
       templatePath.name,
-      templateModule.config
+      templateModule.config,
     ),
     path: templateFilepath,
     filename: templatePath.base,
@@ -110,7 +110,7 @@ export const convertTemplateModuleToTemplateModuleInternal = (
 
 const convertTemplateConfigToTemplateConfigInternal = (
   templateName: string,
-  templateConfig: TemplateConfig | undefined
+  templateConfig: TemplateConfig | undefined,
 ): TemplateConfigInternal => {
   return {
     name: templateConfig?.name ?? templateName,

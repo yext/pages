@@ -14,7 +14,7 @@ import { processEnvVariables } from "../../util/processEnvVariables.js";
 export const createServer = async (
   dynamicGenerateData: boolean,
   useProdURLs: boolean,
-  scope?: string
+  scope?: string,
 ) => {
   // creates a standard express app
   const app = express();
@@ -55,7 +55,7 @@ export const createServer = async (
   if (dynamicGenerateData) {
     // display the warning if the call to generateTestData fails.
     displayGenerateTestDataWarning = !(await generateTestData(
-      projectStructure.scope
+      projectStructure.scope,
     ));
   }
 
@@ -65,7 +65,7 @@ export const createServer = async (
     /^\/(.+)/,
     useProdURLs
       ? serverRenderSlugRoute({ vite, dynamicGenerateData, projectStructure })
-      : serverRenderRoute({ vite, dynamicGenerateData, projectStructure })
+      : serverRenderRoute({ vite, dynamicGenerateData, projectStructure }),
   );
 
   // Serve the index page at the root of the dev server.
@@ -77,12 +77,12 @@ export const createServer = async (
       displayGenerateTestDataWarning,
       useProdURLs,
       projectStructure,
-    })
+    }),
   );
 
   app.use(errorMiddleware(vite));
 
   app.listen(devServerPort, () =>
-    process.stdout.write(`listening on :${devServerPort}\n`)
+    process.stdout.write(`listening on :${devServerPort}\n`),
   );
 };

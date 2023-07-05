@@ -46,13 +46,12 @@ export const Image = ({
     imageData.height,
     width,
     height,
-    aspectRatio
+    aspectRatio,
   );
 
   const imgWidth = Math.abs(imageData.width);
   const imgHeight = Math.abs(imageData.height);
   const imgUUID = getImageUUID(imageData.url);
-  const imgEnv = getImageEnv(imageData.url);
 
   // The image is invalid, only try to load the placeholder
   if (!imgUUID) {
@@ -71,7 +70,7 @@ export const Image = ({
     imageData.url,
     absWidth,
     absHeight,
-    aspectRatio
+    aspectRatio,
   );
 
   // Generate Image Sourceset
@@ -82,8 +81,8 @@ export const Image = ({
           imgUUID,
           w,
           (imgHeight / imgWidth) * w,
-          imageData.url
-        )} ${w}w`
+          imageData.url,
+        )} ${w}w`,
     )
     .join(", ");
 
@@ -93,7 +92,7 @@ export const Image = ({
     .map((w, i) =>
       i === widths.length - 1
         ? `${w}px`
-        : `(max-width: ${maxWidthBreakpoints[i]}px) ${w}px`
+        : `(max-width: ${maxWidthBreakpoints[i]}px) ${w}px`,
     )
     .join(", ");
 
@@ -124,7 +123,7 @@ export const validateRequiredProps = (
   imgHeight: number,
   width?: number,
   height?: number,
-  aspectRatio?: number
+  aspectRatio?: number,
 ) => {
   if (imgWidth < 0) {
     console.warn(`Invalid image width: ${imgWidth}.`);
@@ -137,7 +136,7 @@ export const validateRequiredProps = (
   if (layout == ImageLayoutOption.FIXED) {
     if (!width && !height) {
       console.warn(
-        "Using fixed layout but neither width nor height is passed as props."
+        "Using fixed layout but neither width nor height is passed as props.",
       );
 
       return;
@@ -156,13 +155,13 @@ export const validateRequiredProps = (
 
   if (width || height) {
     console.warn(
-      "Width or height is passed in but layout is not fixed. These will have no impact. If you want to have a fixed height or width then set layout to fixed."
+      "Width or height is passed in but layout is not fixed. These will have no impact. If you want to have a fixed height or width then set layout to fixed.",
     );
   }
 
   if (layout == ImageLayoutOption.ASPECT && !aspectRatio) {
     console.warn(
-      "Using aspect layout but aspectRatio is not passed as a prop."
+      "Using aspect layout but aspectRatio is not passed as a prop.",
     );
   }
 };
@@ -197,12 +196,12 @@ export const getImageUrl = (
   uuid: string,
   width: number,
   height: number,
-  imgUrl: string
+  imgUrl: string,
 ) => {
   const env = getImageEnv(imgUrl);
   const bucket = env ? `p${env}` : "p";
   return `https://dynl.mktgcdn.com/${bucket}/${uuid}/${Math.round(
-    width
+    width,
   )}x${Math.round(height)}`;
 };
 
@@ -219,7 +218,7 @@ export const handleLayout = (
   imgUrl: string,
   absWidth?: number,
   absHeight?: number,
-  aspectRatio?: number
+  aspectRatio?: number,
 ): { src: string; imgStyle: React.CSSProperties; widths: number[] } => {
   let widths: number[] = [100, 320, 640, 960, 1280, 1920];
   let src: string = getImageUrl(imgUUID, 500, 500, imgUrl);
@@ -244,7 +243,7 @@ export const handleLayout = (
           imgHeight,
           widths,
           absWidth,
-          absHeight
+          absHeight,
         );
       imgStyle.width = fixedWidth;
       imgStyle.height = fixedHeight;
@@ -280,7 +279,7 @@ export const getImageSizeForFixedLayout = (
   imgHeight: number,
   defaultWidths: number[],
   absWidth?: number,
-  absHeight?: number
+  absHeight?: number,
 ): { fixedWidth: number; fixedHeight: number; fixedWidths: number[] } => {
   if (absWidth && absHeight) {
     return {

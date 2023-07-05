@@ -33,7 +33,7 @@ export const Address = ({
         separator={separator}
         key={line.toString()}
       />
-    )
+    ),
   );
 
   return <div {...props}>{renderedLines}</div>;
@@ -68,7 +68,7 @@ const AddressLine = ({
         <abbr key={field} title={unabbreviated}>
           {" "}
           {value}
-        </abbr>
+        </abbr>,
       );
       continue;
     }

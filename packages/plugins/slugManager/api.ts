@@ -52,19 +52,19 @@ export interface ListLanguageProfilesResponse<EntityType> {
 export interface IAPI {
   savedSearchesIncludeEntity: (
     searchIds: string[],
-    entityId: string
+    entityId: string,
   ) => Promise<boolean>;
   updateField: <EntityType = BaseEntity>(
     id: string,
     locale: string,
     field: string,
-    value: string
+    value: string,
   ) => Promise<EntityType>;
   listLanguageProfiles: <EntityType = BaseEntity>(
-    params?: URLSearchParams
+    params?: URLSearchParams,
   ) => Promise<ListLanguageProfilesResponse<EntityType>>;
   listEntities: <EntityType = BaseEntity>(
-    params?: URLSearchParams
+    params?: URLSearchParams,
   ) => Promise<ListEntitiesResponse<EntityType>>;
 }
 
@@ -79,7 +79,7 @@ export class API implements IAPI {
     config: {
       v?: string;
       env?: "sandbox" | "production";
-    }
+    },
   ) {
     const { v = "20220909", env = "production" } = config;
     this.apiKey = apiKey;
@@ -121,7 +121,7 @@ export class API implements IAPI {
     id: string,
     locale: string,
     field: string,
-    value: string
+    value: string,
   ) {
     const url = this.constructRequestUrl(`entityprofiles/${id}/${locale}`);
     const req = new Request(url, {
@@ -136,7 +136,7 @@ export class API implements IAPI {
   }
 
   async listEntities<EntityType = BaseEntity>(
-    additionalParams?: URLSearchParams
+    additionalParams?: URLSearchParams,
   ) {
     const url = this.constructRequestUrl(`entities`, additionalParams);
     const req = new Request(url, { headers });
@@ -145,7 +145,7 @@ export class API implements IAPI {
   }
 
   async listLanguageProfiles<T = BaseEntity>(
-    additionalParams?: URLSearchParams
+    additionalParams?: URLSearchParams,
   ) {
     const url = this.constructRequestUrl("entityprofiles", additionalParams);
     const req = new Request(url, { headers });

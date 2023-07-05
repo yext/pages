@@ -10,7 +10,7 @@ The type definition for the template's default function.
 
 ```typescript
 export declare type Template<T extends TemplateRenderProps> = (
-  props: T
+  props: T,
 ) => JSX.Element;
 ```
 

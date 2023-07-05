@@ -10,7 +10,7 @@ The type definition for the template's render function.
 
 ```typescript
 export declare type Render<T extends TemplateRenderProps> = (
-  props: T
+  props: T,
 ) => string;
 ```
 

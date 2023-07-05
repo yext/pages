@@ -15,7 +15,7 @@ export interface FeaturesConfig {
  * Converts a {@link TemplateConfigInternal} into a valid {@link FeaturesConfig} (features and streams).
  */
 export const convertTemplateConfigInternalToFeaturesConfig = (
-  config: TemplateConfigInternal
+  config: TemplateConfigInternal,
 ): FeaturesConfig => {
   const featureConfig = convertTemplateConfigToFeatureConfig(config);
   const streamConfig = convertTemplateConfigToStreamConfig(config);
@@ -50,7 +50,7 @@ interface StaticPageConfig extends FeatureConfigBase {
 export type FeatureConfig = EntityPageSetConfig | StaticPageConfig;
 
 export const isStaticTemplateConfig = (
-  config: TemplateConfigInternal
+  config: TemplateConfigInternal,
 ): boolean => {
   const streamConfig = config.stream || null;
   return !config.streamId && (!streamConfig || !streamConfig.$id);
@@ -60,7 +60,7 @@ export const isStaticTemplateConfig = (
  * Converts a {@link TemplateConfigInternal} into a valid single {@link FeatureConfig}.
  */
 export const convertTemplateConfigToFeatureConfig = (
-  config: TemplateConfigInternal
+  config: TemplateConfigInternal,
 ): FeatureConfig => {
   const streamConfig = config.stream || null;
 
