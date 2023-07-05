@@ -42,6 +42,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
               intro,
               assetFileNames: "assets/static/[name]-[hash][extname]",
               chunkFileNames: "assets/static/[name]-[hash].js",
+              entryFileNames: "assets/[name].[hash].js",
             },
           },
           reportCompressedSize: false,
