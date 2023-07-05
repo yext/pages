@@ -17,8 +17,3 @@ declare module "*public/index.js" {
   const value: string;
   export default value;
 }
-
-declare module "*public/favicon.js" {
-  const value: any;
-  export default value;
-}

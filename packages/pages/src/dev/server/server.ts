@@ -13,7 +13,6 @@ import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import * as Favicon from "./public/favicon.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const createServer = async (
@@ -50,11 +49,10 @@ export const createServer = async (
 
   // Load favicon for index page
   app.use("/favicon.png", (req, res) => {
-    const faviconRelativePath = Favicon.default.slice(3); // the import has one too many "../"
     res
       .status(200)
       .header({ "content-type": "image/png" })
-      .sendFile(path.resolve(__dirname, faviconRelativePath));
+      .sendFile(path.resolve(__dirname, "./public/favicon.png"));
   });
   // Otherwise, ignore favicon requests
   app.use(ignoreFavicon);
