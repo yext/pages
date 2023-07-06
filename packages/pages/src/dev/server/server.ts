@@ -84,20 +84,24 @@ export const createServer = async (
    * Sort so that any functions with path params come last
    * This allows a file like http/api/users/specialCase.ts (slug /api/users/specialCase)
    * to take precedence over http/api/users/[id].ts (slug /api/users/:id)
-   * This mimics the prod server's behavior
+   * This mimics the production server's behavior
    */
   functionsAtServerStart.sort((a, b) => {
     const aContainsParam = a.slug.dev.includes(":");
     const bContainsParam = b.slug.dev.includes(":");
     if (aContainsParam && !bContainsParam) return 1;
     if (!aContainsParam && bContainsParam) return -1;
-    return 0;
+    return b.slug.dev.length - a.slug.dev.length;
   });
 
   if (functionsAtServerStart.length > 0) {
     functionsAtServerStart.forEach((func) => {
       if (func.config.event === "API") {
         app.use("/" + func.slug.dev, (req, res, next) => {
+          if (req.baseUrl !== req.originalUrl) {
+            // mimic production server behavior by only using strict matches
+            return next();
+          }
           const updatedFunction = functionModules.get(func.config.name);
           if (!updatedFunction) {
             throw new Error(
