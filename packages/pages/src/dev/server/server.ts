@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import { createServer as createViteServer } from "vite";
 import { serverRenderRoute } from "./middleware/serverRenderRoute.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
@@ -15,6 +16,9 @@ import {
   loadFunctions,
 } from "../../common/src/function/internal/loader.js";
 import { serveHttpFunction } from "./middleware/serveHttpFunction.js";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const createServer = async (
   dynamicGenerateData: boolean,
@@ -48,20 +52,23 @@ export const createServer = async (
   // register vite's middleware
   app.use(vite.middlewares);
 
-  // Ignore favicon requests if it doesn't exist
+  // Load favicon for index page
+  app.use("/favicon.ico", (req, res) => {
+    res
+      .status(200)
+      .header({ "content-type": "image/x-icon" })
+      .sendFile(path.resolve(__dirname, "./public/favicon.ico"));
+  });
+  // Otherwise, ignore favicon requests
   app.use(ignoreFavicon);
 
   // Redirect urls with a final slash to their canonical url without the slash
   app.use(finalSlashRedirect);
 
-  let displayGenerateTestDataWarning = false;
   // Call generateTestData to ensure we have data to populate the index page.
   // If the user specifies dynamicGenerateData = false we assume they have localData already.
   if (dynamicGenerateData) {
-    // display the warning if the call to generateTestData fails.
-    displayGenerateTestDataWarning = !(await generateTestData(
-      projectStructure.scope
-    ));
+    await generateTestData(projectStructure.scope);
   }
 
   // Load functions from their source files
@@ -137,7 +144,6 @@ export const createServer = async (
     indexPage({
       vite,
       dynamicGenerateData,
-      displayGenerateTestDataWarning,
       useProdURLs,
       projectStructure,
     })

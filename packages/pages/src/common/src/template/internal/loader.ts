@@ -34,7 +34,15 @@ export const loadTemplateModules = async (
           format: "esm",
           bundle: true,
           loader: {
+            ".css": "css",
+            ".scss": "css",
             ".ico": "dataurl",
+            ".avif": "dataurl",
+            ".jpg": "dataurl",
+            ".png": "dataurl",
+            ".gif": "dataurl",
+            ".svg": "dataurl",
+            ".webp": "dataurl",
           },
         });
 

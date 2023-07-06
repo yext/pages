@@ -1,6 +1,9 @@
 import { TemplateModuleInternal } from "../../../../common/src/template/internal/types.js";
 import { getLang } from "../../../../common/src/template/head.js";
-import { TemplateRenderProps } from "../../../../common/src/template/types.js";
+import {
+  TemplateRenderProps,
+  Manifest,
+} from "../../../../common/src/template/types.js";
 import {
   getHydrationTemplate,
   getServerTemplatePlugin,
@@ -12,17 +15,18 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
   props: T,
   templateModuleInternal: TemplateModuleInternal<any, any>,
   hydrate: boolean,
-  pluginRenderTemplates: PluginRenderTemplates
+  pluginRenderTemplates: PluginRenderTemplates,
+  manifest: Manifest
 ): Promise<string> => {
-  if (!props.__meta.manifest) {
+  if (!manifest) {
     throw new Error("Manifest is undefined");
   }
-  const projectFilepaths = props.__meta.manifest.projectFilepaths;
+  const projectFilepaths = manifest.projectFilepaths;
   const headConfig = templateModuleInternal.getHeadConfig
     ? templateModuleInternal.getHeadConfig(props)
     : undefined;
 
-  const bundlerManifest = props.__meta.manifest.bundlerManifest;
+  const bundlerManifest = manifest.bundlerManifest;
   const rootTemplateFilepath = `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`;
   const scopedTemplateFilepath = `${projectFilepaths.scopedTemplatesPath}/${templateModuleInternal.templateName}.tsx`;
 
@@ -40,8 +44,12 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
   let clientHydrationString;
   if (hydrate) {
     clientHydrationString = getHydrationTemplate(
-      pluginRenderTemplates.client,
-      path.join("assets", templateModuleInternal.path.replace("..", "")),
+      path.join(props.relativePrefixToRoot, pluginRenderTemplates.client),
+      path.join(
+        props.relativePrefixToRoot,
+        "assets",
+        templateModuleInternal.path.replace("..", "")
+      ),
       props
     );
   }

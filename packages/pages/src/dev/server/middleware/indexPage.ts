@@ -9,12 +9,10 @@ import {
   dynamicModeInfoText,
   localDevUrlInfoText,
   localDevUrlHelpText,
-  generateTestDataWarningText,
   localModeInfoText,
   noLocalDataErrorText,
-  localDevHitchhikersText,
   yextLogoWhiteSvg,
-  laptopIconBlackSvg,
+  webDevelopmentIconBlackSvg,
 } from "./constants.js";
 import { ViteDevServer } from "vite";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
@@ -25,7 +23,6 @@ import { FunctionModuleInternal } from "../../../common/src/function/internal/ty
 type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
-  displayGenerateTestDataWarning: boolean;
   useProdURLs: boolean;
   projectStructure: ProjectStructure;
 };
@@ -34,7 +31,6 @@ export const indexPage =
   ({
     vite,
     dynamicGenerateData,
-    displayGenerateTestDataWarning,
     useProdURLs,
     projectStructure,
   }: Props): RequestHandler =>
@@ -62,7 +58,7 @@ export const indexPage =
       indexPageHtml = indexPageHtml.replace(
         `<!--sidebar-html-->`,
         `<div class="sidebar">
-          ${laptopIconBlackSvg}
+          ${webDevelopmentIconBlackSvg}
           ${getInfoMessage(dynamicGenerateData, useProdURLs)}
         </div>`
       );
@@ -133,19 +129,6 @@ export const indexPage =
         ...(await loadFunctions("src/functions")).values(),
       ];
       indexPageHtml = createFunctionsTable(functionsList, indexPageHtml);
-
-      // If there was an issue regenerating the local test data on dev server start, then
-      // display a warning message that informs the user. This will only be displayed when
-      // in dynamic mode (local test data is not refreshed in local mode).
-      if (displayGenerateTestDataWarning) {
-        indexPageHtml = indexPageHtml.replace(
-          `<!--warning-html-->`,
-          `<div class="warning">
-          <i class="fa fa-warning"></i>
-          ${generateTestDataWarningText} 
-        </div>`
-        );
-      }
 
       // Send the HTML back.
       res.status(200).set({ "Content-Type": "text/html" }).end(indexPageHtml);
@@ -238,7 +221,6 @@ const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
         <li>${dynamicModeInfoText}</li>
         <li>${localDevUrlInfoText}</li>
         <li>${localDevUrlHelpText}</li>
-        <li>${localDevHitchhikersText}</li>
       <ul>`;
   }
 

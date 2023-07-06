@@ -70,7 +70,7 @@ export type GetHeadConfig<T extends TemplateRenderProps> = (
  *
  * @public
  */
-export type Render<T extends TemplateRenderProps> = (props: T) => string;
+export type Render<T extends TemplateRenderProps<T>> = (props: T) => string;
 
 /**
  * The type definition for the template's default function.
@@ -167,15 +167,13 @@ export type Manifest = {
  *
  * @public
  */
-export interface TemplateProps {
+export interface TemplateProps<T = Record<string, any>> {
   /** The entire document returned after applying the stream to a single entity */
-  document: Record<string, any>;
+  document: T;
   /** Additional metadata added by the toolchain */
   __meta: {
     /** Specifies if the data is returned in development or production mode */
     mode: "development" | "production";
-    /** A manifest of bundled files present during production mode */
-    manifest?: Manifest;
   };
 }
 
@@ -186,7 +184,7 @@ export interface TemplateProps {
  *
  * @public
  */
-export interface TemplateRenderProps extends TemplateProps {
+export interface TemplateRenderProps<T = any> extends TemplateProps<T> {
   /**
    * The path that the generated file will live at on the site, as defined
    * by the {@link GetPath} function.
@@ -225,7 +223,7 @@ export interface RenderTemplate {
 /**
  * Context of a page, which defines the template itself and its props.
  */
-export interface PageContext<T extends TemplateRenderProps> {
+export interface PageContext<T extends TemplateRenderProps<T>> {
   /** The props injected into the template */
   pageProps: T;
   /** The template to render */

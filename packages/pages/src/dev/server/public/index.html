@@ -8,6 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Lato&family=Poppins:wght@500;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
   </head>
   <body>
     <!--header-html-->
@@ -26,7 +27,7 @@
   @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
   :root {
-    --sidebar-width: min(25vw, 400px);
+    --sidebar-width: max(250px, min(25vw, 400px));
     --header-height: 25vh;
     --header-height-short: 15vh;
     --content-max-width: 1000px;
@@ -197,7 +198,6 @@
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
-    max-width: calc(var(--content-max-width) - 200px);
     margin: 0 auto var(--standard-padding) auto;
     display: flex;
     align-items: center;
