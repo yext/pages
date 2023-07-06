@@ -63,9 +63,7 @@ export default (projectStructure: ProjectStructure) => {
           try {
             fs.copyFileSync(filepath.absolute, jsFilepath);
             const functionModule = await import(
-              pathToFileURL(
-                filepath.absolute.replace(".ts", ".jssdafasd")
-              ).toString()
+              pathToFileURL(filepath.absolute.replace(".ts", ".js")).toString()
             );
             if (!functionModule.default) {
               return Promise.reject(
