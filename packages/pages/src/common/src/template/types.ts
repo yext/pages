@@ -174,8 +174,6 @@ export interface TemplateProps {
   __meta: {
     /** Specifies if the data is returned in development or production mode */
     mode: "development" | "production";
-    /** A manifest of bundled files present during production mode */
-    manifest?: Manifest;
   };
 }
 

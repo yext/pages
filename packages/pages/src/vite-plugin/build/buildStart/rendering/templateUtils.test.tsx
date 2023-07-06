@@ -4,6 +4,7 @@ import {
   PageContext,
   RenderTemplate,
   TemplateProps,
+  Manifest,
 } from "../../../../common/src/template/types.js";
 import { generateResponses } from "./templateUtils.js";
 import path from "node:path";
@@ -22,20 +23,21 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
   default: () => <div></div>,
 };
 
+const manifest: Manifest = {
+  bundlePaths: {},
+  renderPaths: {},
+  projectFilepaths: {
+    templatesRoot: "",
+    distRoot: "",
+    serverBundleOutputRoot: "",
+  },
+  bundlerManifest: {},
+};
+
 const baseProps: TemplateProps = {
   document: {},
   __meta: {
     mode: "development",
-    manifest: {
-      bundlePaths: {},
-      renderPaths: {},
-      projectFilepaths: {
-        templatesRoot: "",
-        distRoot: "",
-        serverBundleOutputRoot: "",
-      },
-      bundlerManifest: {},
-    },
   },
 };
 
@@ -65,7 +67,8 @@ describe("generateResponses", () => {
           "src/common/src/template/internal/_client.tsx"
         ),
         server: serverRenderTemplate,
-      }
+      },
+      manifest
     );
     expect(fn).toHaveBeenCalled();
   });
@@ -81,7 +84,8 @@ describe("generateResponses", () => {
           "src/common/src/template/internal/_client.tsx"
         ),
         server: serverRenderTemplate,
-      }
+      },
+      manifest
     );
     expect(fn).toHaveBeenCalled();
   });
