@@ -9,6 +9,9 @@ export const PagesGenerator = async (data): Promise<Record<any, any>> => {
   return await render(
     {
       document: data.streamOutput,
+      __meta: {
+        mode: "production",
+      },
     },
     manifest
   );
