@@ -117,7 +117,7 @@ const getLocalData = async (
     }
   } catch (err: any) {
     if (err.code === "ENOENT") {
-      throw "No localData exists. Please run `yext sites generate-test-data`";
+      throw "No localData exists. Please run `yext pages generate-test-data`";
     } else {
       throw err;
     }
@@ -184,7 +184,7 @@ const getAllLocalData = async (): Promise<Record<string, any>[]> => {
     });
   } catch (err: any) {
     if (err.code === "ENOENT") {
-      throw "No localData exists. Please run `yext sites generate-test-data`";
+      throw "No localData exists. Please run `yext pages generate-test-data`";
     } else {
       throw err;
     }
