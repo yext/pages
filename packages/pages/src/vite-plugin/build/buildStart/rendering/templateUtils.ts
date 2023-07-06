@@ -96,11 +96,13 @@ export type GeneratedPage = {
  * @param templateModuleInternal
  * @param templateProps
  * @param pluginRenderTemplates
+ * @param manifest
  */
 export const generateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   templateProps: TemplateProps,
-  pluginRenderTemplates: PluginRenderTemplates
+  pluginRenderTemplates: PluginRenderTemplates,
+  manifest: Manifest
 ): Promise<GeneratedPage> => {
   if (templateModuleInternal.transformProps) {
     templateProps = await templateModuleInternal.transformProps(templateProps);
@@ -122,7 +124,8 @@ export const generateResponses = async (
   const content = await renderHtml(
     templateModuleInternal,
     templateRenderProps,
-    pluginRenderTemplates
+    pluginRenderTemplates,
+    manifest
   );
 
   return {
@@ -142,7 +145,8 @@ export const generateResponses = async (
 const renderHtml = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   props: TemplateRenderProps,
-  pluginRenderTemplates: PluginRenderTemplates
+  pluginRenderTemplates: PluginRenderTemplates,
+  manifest: Manifest
 ) => {
   const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {
@@ -165,6 +169,7 @@ const renderHtml = async (
     props,
     templateModuleInternal,
     templateModuleInternal.config.hydrate,
-    pluginRenderTemplates
+    pluginRenderTemplates,
+    manifest
   );
 };
