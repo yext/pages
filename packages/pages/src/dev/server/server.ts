@@ -87,7 +87,7 @@ export const createServer = async (
    * This mimics the prod server's behavior
    */
   functionsAtServerStart.sort((a, b) =>
-    a.config.name < b.config.name ? 1 : -1
+    a.config.name < b.config.name ? -1 : 1
   );
 
   if (functionsAtServerStart.length > 0) {
