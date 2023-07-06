@@ -195,15 +195,5 @@ const templateProps: TemplateRenderProps = {
   document: {},
   __meta: {
     mode: "development",
-    manifest: {
-      bundlePaths: {},
-      renderPaths: {},
-      projectFilepaths: {
-        templatesRoot: "",
-        distRoot: "",
-        serverBundleOutputRoot: "",
-      },
-      bundlerManifest: {},
-    },
   },
 };
