@@ -18,28 +18,28 @@ const filepaths = [
 const expected = [
   {
     root: "/",
-    dir: "/Users/blife/pages/packages/pages/src/functions/http/api/fetch",
+    dir: process.cwd() + "/src/functions/http/api/fetch",
     base: "test1.ts",
     ext: ".ts",
     name: "test1",
   },
   {
     root: "/",
-    dir: "/Users/blife/pages/packages/pages/src/functions/http/api/fetch",
+    dir: process.cwd() + "/src/functions/http/api/fetch",
     base: "test2.js",
     ext: ".js",
     name: "test2",
   },
   {
     root: "/",
-    dir: "/Users/blife/pages/packages/pages/src/functions",
+    dir: process.cwd() + "/src/functions",
     base: "test3.js",
     ext: ".js",
     name: "test3",
   },
   {
     root: "/",
-    dir: "/Users/blife/pages/packages/pages/src/functions",
+    dir: process.cwd() + "/src/functions",
     base: "test4.ts",
     ext: ".ts",
     name: "test4",
