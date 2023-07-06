@@ -106,15 +106,16 @@ export const getUpdatedCiConfig = async (
           : undefined,
       sourceFiles: [
         {
-          root: defaultProjectStructureConfig.filepathsConfig.distRoot,
-          pattern:
+          root:
+            defaultProjectStructureConfig.filepathsConfig.distRoot +
+            "/" +
             defaultProjectStructureConfig.filepathsConfig
               .functionBundleOutputRoot +
             "/" +
-            functionModule.filePath.relative
+            functionModule.config.name
               .replaceAll("[", "\\[")
-              .replaceAll("]", "\\]") +
-            ".*.*",
+              .replaceAll("]", "\\]"),
+          pattern: "*{.js,.ts}",
         },
       ],
     };

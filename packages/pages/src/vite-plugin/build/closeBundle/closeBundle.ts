@@ -1,5 +1,7 @@
 import glob from "glob";
 import * as path from "path";
+import esbuild from "esbuild";
+import { importFromString } from "module-from-string";
 import logger from "../../log.js";
 import { generateManifestFile } from "./manifest.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
@@ -14,7 +16,7 @@ import {
   shouldGenerateFunctionMetadata,
 } from "./functionMetadata.js";
 import { updateCiConfig } from "../../../generate/ci/ci.js";
-import { loadFunctions } from "../../../common/src/function/internal/loader.js";
+import { getFunctionFilepaths } from "../../../common/src/function/internal/getFunctionFilepaths.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -44,8 +46,29 @@ export default (projectStructure: ProjectStructure) => {
 
     finisher = logger.timedLog({ startLog: "Validating functions" });
     try {
-      // loading the modules checks for all required aspects
-      await loadFunctions(projectStructure.functionBundleOutputRoot.path);
+      const functionFilepaths = getFunctionFilepaths("dist/functions");
+      await Promise.all(
+        functionFilepaths.map(async (filepath) => {
+          const buildResult = await esbuild.build({
+            entryPoints: [filepath.absolute],
+            outdir: ".temp",
+            write: false,
+            format: "esm",
+            bundle: true,
+            loader: {
+              ".ico": "dataurl",
+            },
+          });
+          const functionModule = await importFromString(
+            buildResult.outputFiles[0].text
+          );
+          if (!functionModule.default) {
+            throw new Error(
+              `${filepath.absolute} is missing a default export.`
+            );
+          }
+        })
+      );
       finisher.succeed("Validated functions");
     } catch (e: any) {
       finisher.fail("One or more functions failed validation");

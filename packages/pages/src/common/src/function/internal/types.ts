@@ -46,6 +46,8 @@ export interface FunctionFilePath {
   relative: string;
   /** The file extension. */
   extension: string;
+  /** The file name */
+  filename: string;
 }
 
 /**
@@ -63,13 +65,12 @@ export const convertFunctionModuleToFunctionModuleInternal = (
 
   if (
     (functionType === "onUrlChange" || functionType === "onPageGenerate") &&
-    functionFilepath.relative.split("/").length > 2
+    functionFilepath.relative.split("/").length > 2 &&
+    !functionFilepath.absolute.includes("dist")
   ) {
-    throw new Error(
-      "Nested directories are not supported for onUrlChange and onPageGenerate" +
-        " plugins. All functions must be located in src/functions/onUrlChange or" +
-        " src/functions/onPageGenerate. "
-    );
+    throw new Error(`Cannot load ${functionFilepath.relative}.\n Nested directories are not 
+    supported for onUrlChange and onPageGenerate plugins. All functions must be located at the 
+    root of src/functions/onUrlChange or src/functions/onPageGenerate.`);
   }
 
   if (
@@ -84,10 +85,24 @@ export const convertFunctionModuleToFunctionModuleInternal = (
       ""
     );
 
+    const hashCode = (value: string) => {
+      let hash = 0;
+      for (let i = 0; i < value.length; i++) {
+        const code = value.charCodeAt(i);
+        hash = (hash << 5) - hash + code;
+        hash = hash & hash; // Convert to 32bit integer
+      }
+      return (Math.abs(hash) % 100000).toLocaleString("en-US", {
+        minimumIntegerDigits: 5,
+        useGrouping: false,
+      });
+    };
+
     functionInternal = {
       default: functionModule.default,
       config: {
-        name: defaultSlug,
+        name:
+          functionFilepath.filename + "-" + hashCode(functionFilepath.relative),
         functionName: "default",
         event: convertToPluginEvent(functionType),
       },
@@ -100,8 +115,7 @@ export const convertFunctionModuleToFunctionModuleInternal = (
     };
   } else {
     throw new Error(
-      "All Serverless Functions should live in src/functions/http," +
-        " src/functions/onPageGenerate, or src/functions/onUrlChange. "
+      `Cannot load ${functionFilepath.relative}.\nAll Serverless Functions should live in src/functions/http, src/functions/onPageGenerate, or src/functions/onUrlChange.`
     );
   }
 

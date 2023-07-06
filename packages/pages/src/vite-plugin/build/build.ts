@@ -10,7 +10,7 @@ import {
 import { readdir } from "fs/promises";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { getGlobalClientServerRenderTemplates } from "../../common/src/template/internal/getTemplateFilepaths.js";
-import { getFunctionFilepaths } from "../../common/src/function/internal/getFunctionFilepaths.js";
+import { loadFunctions } from "../../common/src/function/internal/loader.js";
 
 const intro = `
 var global = globalThis;
@@ -47,6 +47,18 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
               assetFileNames: "assets/static/[name]-[hash][extname]",
               chunkFileNames: "assets/static/[name]-[hash].js",
               sanitizeFileName: false,
+              entryFileNames: (chunkInfo) => {
+                if (chunkInfo.name.includes("functions")) {
+                  return "[name]/mod.ts";
+                }
+                if (
+                  chunkInfo.name.includes("render") ||
+                  chunkInfo.name.includes("server")
+                ) {
+                  return "assets/[name].[hash].js";
+                }
+                return "[name].js"; // rollup default
+              },
             },
           },
           reportCompressedSize: false,
@@ -110,10 +122,13 @@ const discoverInputs = async (
 
   await updateEntryPoints(rootTemplateDir);
 
-  getFunctionFilepaths(
-    defaultProjectStructureConfig.filepathsConfig.functionsRoot
-  ).forEach((functionPath) => {
-    entryPoints[`functions/${functionPath.relative}`] = functionPath.absolute;
+  (
+    await loadFunctions(
+      defaultProjectStructureConfig.filepathsConfig.functionsRoot
+    )
+  ).forEach((functionModule) => {
+    entryPoints[`functions/${functionModule.config.name}`] =
+      functionModule.filePath.absolute;
   });
 
   return { ...entryPoints, ...discoverRenderTemplates(projectStructure) };

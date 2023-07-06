@@ -24,6 +24,7 @@ export const getFunctionFilepaths = (root: string): FunctionFilePath[] => {
       absolute: filepath,
       relative: filePathMatcher[1].slice(1) ?? "",
       extension: filepath.split(".").pop() ?? "",
+      filename: filepath.split("/").slice(-1)[0].split(".")[0],
     };
   }) as FunctionFilePath[];
 };

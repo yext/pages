@@ -84,7 +84,7 @@ export const defaultProjectStructureConfig: ProjectStructureConfig = {
     distRoot: "dist",
     serverBundleOutputRoot: "assets/server",
     renderBundleOutputRoot: "assets/render",
-    functionBundleOutputRoot: "assets/functions",
+    functionBundleOutputRoot: "functions",
   },
   filenamesConfig: {
     ciConfig: "ci.json",

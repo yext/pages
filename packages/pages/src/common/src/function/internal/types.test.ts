@@ -48,6 +48,7 @@ const createMockFilePath = (path: string): FunctionFilePath => {
     absolute: process.cwd() + "/src/functions/" + path,
     relative: path.split(".")[0],
     extension: "ts",
+    filename: path.split("/").slice(-1)[0].split(".")[0],
   };
 };
 
@@ -63,7 +64,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "api/example",
+        name: "example-47566",
         functionName: "default",
         event: "API",
       },
@@ -71,6 +72,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         absolute: process.cwd() + "/src/functions/http/api/example.ts",
         relative: "http/api/example",
         extension: "ts",
+        filename: "example",
       },
       slug: {
         original: "api/example",
@@ -102,7 +104,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "example",
+        name: "example-29339",
         functionName: "default",
         event: "ON_URL_CHANGE",
       },
@@ -110,6 +112,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         absolute: process.cwd() + "/src/functions/onUrlChange/example.ts",
         relative: "onUrlChange/example",
         extension: "ts",
+        filename: "example",
       },
       slug: {
         original: "example",
@@ -139,7 +142,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "example",
+        name: "example-68642",
         functionName: "default",
         event: "ON_PAGE_GENERATE",
       },
@@ -147,6 +150,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         absolute: process.cwd() + "/src/functions/onPageGenerate/example.ts",
         relative: "onPageGenerate/example",
         extension: "ts",
+        filename: "example",
       },
       slug: {
         original: "example",
@@ -177,7 +181,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "api/example/[testParam]",
+        name: "[testParam]-54884",
         functionName: "default",
         event: "API",
       },
@@ -186,6 +190,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
           process.cwd() + "/src/functions/http/api/example/[testParam].ts",
         relative: "http/api/example/[testParam]",
         extension: "ts",
+        filename: "[testParam]",
       },
       slug: {
         original: "api/example/[testParam]",
@@ -219,8 +224,9 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
           functionModule
         )
       ).toThrow(
-        "All Serverless Functions should live in src/functions/http," +
-          " src/functions/onPageGenerate, or src/functions/onUrlChange. "
+        "Cannot load myFunctions/example.\n" +
+          "All Serverless Functions should live in src/functions/http," +
+          " src/functions/onPageGenerate, or src/functions/onUrlChange."
       );
     }
   );

@@ -20,21 +20,25 @@ const expected = [
     absolute: "src/functions/http/api/fetch/test1.ts",
     relative: "http/api/fetch/test1",
     extension: "ts",
+    filename: "test1",
   },
   {
     absolute: "src/functions/http/api/fetch/test2.js",
     relative: "http/api/fetch/test2",
     extension: "js",
+    filename: "test2",
   },
   {
     absolute: "src/functions/test3.js",
     relative: "test3",
     extension: "js",
+    filename: "test3",
   },
   {
     absolute: "src/functions/test4.ts",
     relative: "test4",
     extension: "ts",
+    filename: "test4",
   },
 ];
 
