@@ -1,3 +1,4 @@
+import path from "path";
 import { FunctionModule, FunctionTypes } from "../types.js";
 import { validateFunctionModule } from "./validateFunctionModule.js";
 import { PluginEvent } from "../../ci/ci.js";
@@ -8,7 +9,7 @@ import { PluginEvent } from "../../ci/ci.js";
  */
 export interface FunctionModuleInternal {
   /** The filepath to the serverless function file. */
-  filePath: FunctionFilePath;
+  filePath: path.ParsedPath;
   /** The exported config function. */
   config: FunctionConfigInternal;
   /** The exported function. */
@@ -59,19 +60,33 @@ export interface FunctionFilePath {
  * @param functionModule the public function module to convert
  */
 export const convertFunctionModuleToFunctionModuleInternal = (
-  functionFilepath: FunctionFilePath,
+  functionFilepath: path.ParsedPath,
   functionModule: FunctionModule
 ): FunctionModuleInternal => {
   let functionInternal;
 
-  const functionType = functionFilepath.relative.split("/")[0];
+  let functionsRoot;
+  if (path.format(functionFilepath).includes("src/functions")) {
+    functionsRoot = "src/functions"; // local dev server
+  } else if (path.format(functionFilepath).includes("dist/functions")) {
+    functionsRoot = "dist/functions"; // production build
+  } else if (
+    path.format(functionFilepath).includes("tests/fixtures/src/functions")
+  ) {
+    functionsRoot = "tests/fixtures/src/functions"; // unit testing
+  }
+
+  const relativePath = path.format(functionFilepath).split("/functions/")[1];
+  const functionType = relativePath.split("/")[0];
 
   if (
     (functionType === "onUrlChange" || functionType === "onPageGenerate") &&
-    functionFilepath.relative.split("/").length > 2 &&
-    !functionFilepath.absolute.includes("dist")
+    relativePath.split("/").length > 2 &&
+    functionsRoot !== "dist/functions"
   ) {
-    throw new Error(`Cannot load ${functionFilepath.relative}.\n Nested directories are not 
+    throw new Error(`Cannot load ${path.format(
+      functionFilepath
+    )}.\n Nested directories are not 
     supported for onUrlChange and onPageGenerate plugins. All functions must be located at the 
     root of src/functions/onUrlChange or src/functions/onPageGenerate.`);
   }
@@ -81,20 +96,21 @@ export const convertFunctionModuleToFunctionModuleInternal = (
     functionType === "onUrlChange" ||
     functionType === "onPageGenerate"
   ) {
-    validateFunctionModule(functionFilepath.absolute, functionModule);
+    validateFunctionModule(functionFilepath.dir, functionModule);
 
-    const defaultSlug = functionFilepath.relative.replace(
-      `${functionType}/`,
-      ""
-    );
+    const defaultSlug = relativePath
+      .replace(`${functionType}/`, "")
+      .split(".")
+      .slice(0, -1)
+      .join(".");
 
     functionInternal = {
       default: functionModule.default,
       config: {
         name:
-          functionFilepath.filename.replaceAll("[", "").replaceAll("]", "") +
+          functionFilepath.name.replaceAll("[", "").replaceAll("]", "") +
           "-" +
-          unsecureHashName(functionFilepath.relative),
+          unsecureHashName(relativePath),
         functionName: "default",
         event: convertToPluginEvent(functionType),
       },
@@ -107,7 +123,9 @@ export const convertFunctionModuleToFunctionModuleInternal = (
     };
   } else {
     throw new Error(
-      `Cannot load ${functionFilepath.relative}.\nAll Serverless Functions should live in src/functions/http, src/functions/onPageGenerate, or src/functions/onUrlChange.`
+      `Cannot load ${path.format(
+        functionFilepath
+      )}.\nAll Serverless Functions should live in src/functions/http, src/functions/onPageGenerate, or src/functions/onUrlChange.`
     );
   }
 

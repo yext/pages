@@ -121,8 +121,9 @@ const discoverInputs = async (
       defaultProjectStructureConfig.filepathsConfig.functionsRoot
     )
   ).forEach((functionModule) => {
-    entryPoints[`functions/${functionModule.config.name}`] =
-      functionModule.filePath.absolute;
+    entryPoints[`functions/${functionModule.config.name}`] = path.format(
+      functionModule.filePath
+    );
   });
 
   return { ...entryPoints, ...discoverRenderTemplates(projectStructure) };

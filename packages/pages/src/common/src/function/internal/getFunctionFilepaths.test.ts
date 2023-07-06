@@ -17,28 +17,32 @@ const filepaths = [
 
 const expected = [
   {
-    absolute: "src/functions/http/api/fetch/test1.ts",
-    relative: "http/api/fetch/test1",
-    extension: "ts",
-    filename: "test1",
+    root: "/",
+    dir: "/Users/blife/pages/packages/pages/src/functions/http/api/fetch",
+    base: "test1.ts",
+    ext: ".ts",
+    name: "test1",
   },
   {
-    absolute: "src/functions/http/api/fetch/test2.js",
-    relative: "http/api/fetch/test2",
-    extension: "js",
-    filename: "test2",
+    root: "/",
+    dir: "/Users/blife/pages/packages/pages/src/functions/http/api/fetch",
+    base: "test2.js",
+    ext: ".js",
+    name: "test2",
   },
   {
-    absolute: "src/functions/test3.js",
-    relative: "test3",
-    extension: "js",
-    filename: "test3",
+    root: "/",
+    dir: "/Users/blife/pages/packages/pages/src/functions",
+    base: "test3.js",
+    ext: ".js",
+    name: "test3",
   },
   {
-    absolute: "src/functions/test4.ts",
-    relative: "test4",
-    extension: "ts",
-    filename: "test4",
+    root: "/",
+    dir: "/Users/blife/pages/packages/pages/src/functions",
+    base: "test4.ts",
+    ext: ".ts",
+    name: "test4",
   },
 ];
 

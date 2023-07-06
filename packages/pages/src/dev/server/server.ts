@@ -81,14 +81,18 @@ export const createServer = async (
   const functionsAtServerStart = [...functionModules.values()];
 
   /*
-   * Sort in reverse alphabetical so that any functions with [] path params comes last
+   * Sort so that any functions with path params come last
    * This allows a file like http/api/users/specialCase.ts (slug /api/users/specialCase)
    * to take precedence over http/api/users/[id].ts (slug /api/users/:id)
    * This mimics the prod server's behavior
    */
-  functionsAtServerStart.sort((a, b) =>
-    a.config.name < b.config.name ? -1 : 1
-  );
+  functionsAtServerStart.sort((a, b) => {
+    const aContainsParam = a.slug.dev.includes(":");
+    const bContainsParam = b.slug.dev.includes(":");
+    if (aContainsParam && !bContainsParam) return 1;
+    if (!aContainsParam && bContainsParam) return -1;
+    return 0;
+  });
 
   if (functionsAtServerStart.length > 0) {
     functionsAtServerStart.forEach((func) => {

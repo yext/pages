@@ -1,6 +1,5 @@
 import path from "path";
 import { loadFunctionModules, FunctionModuleCollection } from "./loader.js";
-import { FunctionFilePath } from "./types.js";
 
 // our jest configuration doesn't support file urls so update pathToFileURL to do nothing during
 // this test.
@@ -17,48 +16,35 @@ afterAll(() => jest.unmock("url"));
 
 describe("loadTemplateModules", () => {
   it("loads and transpiles raw templates", async () => {
-    const functionFile: FunctionFilePath[] = [
-      {
-        absolute: path.join(
-          process.cwd(),
-          "tests/fixtures/src/functions/http/[param].ts"
-        ),
-        relative: "http/[param]",
-        extension: ".ts",
-        filename: "[param]",
-      },
+    const functionFile: path.ParsedPath[] = [
+      path.parse("tests/fixtures/src/functions/http/[param].ts"),
     ];
 
     const functionModules = await loadFunctionModules(functionFile, true);
-    commonTests(functionModules);
+    commonTests(functionModules, "param-47543");
   });
 
   it("loads transpiled templates", async () => {
-    const functionFile: FunctionFilePath[] = [
-      {
-        absolute: path.join(
-          process.cwd(),
-          "tests/fixtures/src/functions/http/[param].js"
-        ),
-        relative: "http/[param]",
-        extension: "js",
-        filename: "[param]",
-      },
+    const functionFile: path.ParsedPath[] = [
+      path.parse(path.resolve("tests/fixtures/src/functions/http/[param].js")),
     ];
     const functionModules = await loadFunctionModules(functionFile, false);
-    commonTests(functionModules);
+    commonTests(functionModules, "param-47853");
   });
 
-  const commonTests = (functionModules: FunctionModuleCollection) => {
-    expect(functionModules.get("param-90812")).toBeTruthy();
-    expect(functionModules.get("param-90812")?.config.name).toEqual(
-      "param-90812"
+  const commonTests = (
+    functionModules: FunctionModuleCollection,
+    functionName: string
+  ) => {
+    expect(functionModules.get(functionName)).toBeTruthy();
+    expect(functionModules.get(functionName)?.config.name).toEqual(
+      functionName
     );
-    expect(functionModules.get("param-90812")?.config.event).toEqual("API");
-    expect(functionModules.get("param-90812")?.config.functionName).toEqual(
+    expect(functionModules.get(functionName)?.config.event).toEqual("API");
+    expect(functionModules.get(functionName)?.config.functionName).toEqual(
       "default"
     );
-    expect(JSON.stringify(functionModules.get("param-90812")?.slug)).toEqual(
+    expect(JSON.stringify(functionModules.get(functionName)?.slug)).toEqual(
       JSON.stringify({
         original: "[param]",
         dev: ":param",

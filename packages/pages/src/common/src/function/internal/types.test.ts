@@ -1,7 +1,5 @@
-import {
-  convertFunctionModuleToFunctionModuleInternal,
-  FunctionFilePath,
-} from "./types.js";
+import path from "path";
+import { convertFunctionModuleToFunctionModuleInternal } from "./types.js";
 import {
   HttpFunction,
   FunctionModule,
@@ -43,13 +41,8 @@ const exampleOnPageGenerateResponse: OnPageGenerateResponse = {
   redirects: ["home"],
 };
 
-const createMockFilePath = (path: string): FunctionFilePath => {
-  return {
-    absolute: process.cwd() + "/src/functions/" + path,
-    relative: path.split(".")[0],
-    extension: "ts",
-    filename: path.split("/").slice(-1)[0].split(".")[0],
-  };
+const createMockFilePath = (filepath: string): path.ParsedPath => {
+  return path.parse(path.resolve(path.join("src/functions/", filepath)));
 };
 
 describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () => {
@@ -64,15 +57,16 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "example-47566",
+        name: "example-01535",
         functionName: "default",
         event: "API",
       },
       filePath: {
-        absolute: process.cwd() + "/src/functions/http/api/example.ts",
-        relative: "http/api/example",
-        extension: "ts",
-        filename: "example",
+        root: "/",
+        dir: process.cwd() + "/src/functions/http/api",
+        base: "example.ts",
+        ext: ".ts",
+        name: "example",
       },
       slug: {
         original: "api/example",
@@ -104,15 +98,16 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "example-29339",
+        name: "example-55662",
         functionName: "default",
         event: "ON_URL_CHANGE",
       },
       filePath: {
-        absolute: process.cwd() + "/src/functions/onUrlChange/example.ts",
-        relative: "onUrlChange/example",
-        extension: "ts",
-        filename: "example",
+        root: "/",
+        dir: process.cwd() + "/src/functions/onUrlChange",
+        base: "example.ts",
+        ext: ".ts",
+        name: "example",
       },
       slug: {
         original: "example",
@@ -142,15 +137,16 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "example-68642",
+        name: "example-85295",
         functionName: "default",
         event: "ON_PAGE_GENERATE",
       },
       filePath: {
-        absolute: process.cwd() + "/src/functions/onPageGenerate/example.ts",
-        relative: "onPageGenerate/example",
-        extension: "ts",
-        filename: "example",
+        root: "/",
+        dir: process.cwd() + "/src/functions/onPageGenerate",
+        base: "example.ts",
+        ext: ".ts",
+        name: "example",
       },
       slug: {
         original: "example",
@@ -181,16 +177,16 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "testParam-54884",
+        name: "testParam-00975",
         functionName: "default",
         event: "API",
       },
       filePath: {
-        absolute:
-          process.cwd() + "/src/functions/http/api/example/[testParam].ts",
-        relative: "http/api/example/[testParam]",
-        extension: "ts",
-        filename: "[testParam]",
+        root: "/",
+        dir: process.cwd() + "/src/functions/http/api/example",
+        base: "[testParam].ts",
+        ext: ".ts",
+        name: "[testParam]",
       },
       slug: {
         original: "api/example/[testParam]",
@@ -224,7 +220,9 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
           functionModule
         )
       ).toThrow(
-        "Cannot load myFunctions/example.\n" +
+        "Cannot load " +
+          path.join(process.cwd(), "src/functions/myFunctions/example.ts") +
+          ".\n" +
           "All Serverless Functions should live in src/functions/http," +
           " src/functions/onPageGenerate, or src/functions/onUrlChange."
       );

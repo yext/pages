@@ -50,8 +50,8 @@ export default (projectStructure: ProjectStructure) => {
      * loadFunctionModules because that makes assumptions about the directory structure of src,
      * not dist.
      *
-     * This code makes a copy of mod.ts named mod.js so we can import it. After importing,
-     * it deletes the copy file and then checks the import for a default export.
+     * This code makes a copy of mod.ts named mod.js so we can import it. It
+     * checks for a default export and then deletes the .js file.
      * The outer try/catch is for validation errors. The inner try/catch is for copy/import errors.
      */
     finisher = logger.timedLog({ startLog: "Validating functions" });
@@ -59,15 +59,17 @@ export default (projectStructure: ProjectStructure) => {
       const functionFilepaths = getFunctionFilepaths("dist/functions");
       await Promise.all(
         functionFilepaths.map(async (filepath) => {
-          const jsFilepath = filepath.absolute.replace(".ts", ".js");
+          const jsFilepath = path.format(filepath).replace(".ts", ".js");
           try {
-            fs.copyFileSync(filepath.absolute, jsFilepath);
+            fs.copyFileSync(path.format(filepath), jsFilepath);
             const functionModule = await import(
-              pathToFileURL(filepath.absolute.replace(".ts", ".js")).toString()
+              pathToFileURL(
+                path.format(filepath).replace(".ts", ".js")
+              ).toString()
             );
             if (!functionModule.default) {
               return Promise.reject(
-                `${filepath.absolute} is missing a default export.`
+                `${path.format(filepath)} is missing a default export.`
               );
             }
           } finally {

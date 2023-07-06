@@ -1,7 +1,7 @@
+import path from "path";
 import { FunctionModule } from "../types.js";
 import {
   convertFunctionModuleToFunctionModuleInternal,
-  FunctionFilePath,
   FunctionModuleInternal,
 } from "./types.js";
 import esbuild from "esbuild";
@@ -20,7 +20,7 @@ const TEMP_DIR = ".temp";
  * @returns Promise<{@link FunctionModuleCollection}>
  */
 export const loadFunctionModules = async (
-  functionPaths: FunctionFilePath[],
+  functionPaths: path.ParsedPath[],
   transpile: boolean
 ): Promise<FunctionModuleCollection> => {
   const importedModules = [] as FunctionModuleInternal[];
@@ -29,7 +29,7 @@ export const loadFunctionModules = async (
     try {
       if (transpile) {
         const buildResult = await esbuild.build({
-          entryPoints: [functionPath.absolute],
+          entryPoints: [path.format(functionPath)],
           outdir: TEMP_DIR,
           write: false,
           format: "esm",
@@ -45,11 +45,11 @@ export const loadFunctionModules = async (
         );
       } else {
         functionModule = await import(
-          pathToFileURL(functionPath.absolute).toString()
+          pathToFileURL(path.format(functionPath)).toString()
         );
       }
     } catch (e) {
-      throw new Error(`Could not import ${functionPath} ${e}`);
+      throw new Error(`Could not import ${path.format(functionPath)} ${e}`);
     }
 
     const functionModuleInternal =
