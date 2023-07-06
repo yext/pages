@@ -51,13 +51,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
                 if (chunkInfo.name.includes("functions")) {
                   return "[name]/mod.ts";
                 }
-                if (
-                  chunkInfo.name.includes("render") ||
-                  chunkInfo.name.includes("server")
-                ) {
-                  return "assets/[name].[hash].js";
-                }
-                return "[name].js"; // rollup default
+                return "assets/[name].[hash].js";
               },
             },
           },

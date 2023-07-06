@@ -1,7 +1,7 @@
 import glob from "glob";
 import * as path from "path";
-import esbuild from "esbuild";
-import { importFromString } from "module-from-string";
+import { pathToFileURL } from "url";
+import fs from "fs";
 import logger from "../../log.js";
 import { generateManifestFile } from "./manifest.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
@@ -44,35 +44,43 @@ export default (projectStructure: ProjectStructure) => {
       throw new Error(e);
     }
 
+    /*
+     * Functions are bundled as mod.ts. This code runs as closeBuild.js. JS files cannot
+     * import TS, so we cannot simply import the function file. We also cannot do
+     * loadFunctionModules because that makes assumptions about the directory structure of src,
+     * not dist.
+     *
+     * This code makes a copy of mod.ts named mod.js so we can import it. After importing,
+     * it deletes the copy file and then checks the import for a default export.
+     * The outer try/catch is for validation errors. The inner try/catch is for copy/import errors.
+     */
     finisher = logger.timedLog({ startLog: "Validating functions" });
     try {
       const functionFilepaths = getFunctionFilepaths("dist/functions");
       await Promise.all(
         functionFilepaths.map(async (filepath) => {
-          const buildResult = await esbuild.build({
-            entryPoints: [filepath.absolute],
-            outdir: ".temp",
-            write: false,
-            format: "esm",
-            bundle: true,
-            loader: {
-              ".ico": "dataurl",
-            },
-          });
-          const functionModule = await importFromString(
-            buildResult.outputFiles[0].text
-          );
-          if (!functionModule.default) {
-            throw new Error(
-              `${filepath.absolute} is missing a default export.`
+          const jsFilepath = filepath.absolute.replace(".ts", ".js");
+          try {
+            fs.copyFileSync(filepath.absolute, jsFilepath);
+            const functionModule = await import(
+              pathToFileURL(
+                filepath.absolute.replace(".ts", ".jssdafasd")
+              ).toString()
             );
+            if (!functionModule.default) {
+              return Promise.reject(
+                `${filepath.absolute} is missing a default export.`
+              );
+            }
+          } finally {
+            fs.unlinkSync(jsFilepath);
           }
         })
       );
       finisher.succeed("Validated functions");
-    } catch (e: any) {
+    } catch (e) {
       finisher.fail("One or more functions failed validation");
-      throw new Error(e);
+      throw e;
     }
 
     finisher = logger.timedLog({ startLog: "Writing features.json" });

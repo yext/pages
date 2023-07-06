@@ -37,16 +37,19 @@ export interface FunctionConfigInternal {
 }
 
 /**
- * Stores the filepath to a function
+ * Stores the filepath to a function.
  */
 export interface FunctionFilePath {
-  /** The absolute path from the user's root directory. */
+  /**
+   * The absolute path from the user's root directory.
+   * Ex. /Users/example/Desktop/mySite/src/functions/http/getInfo.ts
+   */
   absolute: string;
-  /** The path from src/functions. */
+  /** The path from src/functions. Ex. http/getInfo */
   relative: string;
-  /** The file extension. */
+  /** The file extension. Ex: ts */
   extension: string;
-  /** The file name */
+  /** The file name. Ex: getInfo */
   filename: string;
 }
 
@@ -125,8 +128,8 @@ export const convertToPluginEvent = (event: string): PluginEvent => {
 };
 
 /**
- * Hashes a string into a five-digit number.
- * Used to de-duplicate function names.
+ * Hashes a string into a five-digit number. Used to de-duplicate function names.
+ * Source: {@link https://stackoverflow.com/questions/194846/is-there-hash-code-function-accepting-any-object-type}
  * @param input The value to hash.
  * @returns A five-character string of the hash.
  */
