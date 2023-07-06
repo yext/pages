@@ -181,7 +181,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "[testParam]-54884",
+        name: "testParam-54884",
         functionName: "default",
         event: "API",
       },

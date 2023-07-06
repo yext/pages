@@ -85,24 +85,13 @@ export const convertFunctionModuleToFunctionModuleInternal = (
       ""
     );
 
-    const hashCode = (value: string) => {
-      let hash = 0;
-      for (let i = 0; i < value.length; i++) {
-        const code = value.charCodeAt(i);
-        hash = (hash << 5) - hash + code;
-        hash = hash & hash; // Convert to 32bit integer
-      }
-      return (Math.abs(hash) % 100000).toLocaleString("en-US", {
-        minimumIntegerDigits: 5,
-        useGrouping: false,
-      });
-    };
-
     functionInternal = {
       default: functionModule.default,
       config: {
         name:
-          functionFilepath.filename + "-" + hashCode(functionFilepath.relative),
+          functionFilepath.filename.replaceAll("[", "").replaceAll("]", "") +
+          "-" +
+          unsecureHashName(functionFilepath.relative),
         functionName: "default",
         event: convertToPluginEvent(functionType),
       },
@@ -133,4 +122,23 @@ export const convertToPluginEvent = (event: string): PluginEvent => {
     default:
       throw new Error(`No matching PluginEvent found for: ${event}`);
   }
+};
+
+/**
+ * Hashes a string into a five-digit number.
+ * Used to de-duplicate function names.
+ * @param input The value to hash.
+ * @returns A five-character string of the hash.
+ */
+const unsecureHashName = (input: string): string => {
+  let hash = 0;
+  for (let i = 0; i < input.length; i++) {
+    const code = input.charCodeAt(i);
+    hash = (hash << 5) - hash + code;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return (Math.abs(hash) % 100000).toLocaleString("en-US", {
+    minimumIntegerDigits: 5,
+    useGrouping: false,
+  });
 };

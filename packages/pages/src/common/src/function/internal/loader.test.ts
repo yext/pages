@@ -50,15 +50,15 @@ describe("loadTemplateModules", () => {
   });
 
   const commonTests = (functionModules: FunctionModuleCollection) => {
-    expect(functionModules.get("[param]-90812")).toBeTruthy();
-    expect(functionModules.get("[param]-90812")?.config.name).toEqual(
-      "[param]-90812"
+    expect(functionModules.get("param-90812")).toBeTruthy();
+    expect(functionModules.get("param-90812")?.config.name).toEqual(
+      "param-90812"
     );
-    expect(functionModules.get("[param]-90812")?.config.event).toEqual("API");
-    expect(functionModules.get("[param]-90812")?.config.functionName).toEqual(
+    expect(functionModules.get("param-90812")?.config.event).toEqual("API");
+    expect(functionModules.get("param-90812")?.config.functionName).toEqual(
       "default"
     );
-    expect(JSON.stringify(functionModules.get("[param]-90812")?.slug)).toEqual(
+    expect(JSON.stringify(functionModules.get("param-90812")?.slug)).toEqual(
       JSON.stringify({
         original: "[param]",
         dev: ":param",
