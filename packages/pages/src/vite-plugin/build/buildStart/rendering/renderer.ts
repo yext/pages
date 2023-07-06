@@ -17,16 +17,20 @@ import {
  * calling `getPath` on the template module.
  *
  * @param props The stream document for the current feature.
+ * @param manifest The manifest of bundled files present during production mode.
  */
-export default async (props: TemplateProps): Promise<GeneratedPage> => {
-  const manifest = props.__meta.manifest as Manifest;
+export default async (
+  props: TemplateProps,
+  manifest: Manifest,
+): Promise<GeneratedPage> => {
   const template = await readTemplateModules(props.document.__.name, manifest);
   const pluginRenderTemplates = await getPluginRenderTemplates(manifest);
 
   const responses = await generateResponses(
     template,
     props,
-    pluginRenderTemplates
+    pluginRenderTemplates,
+    manifest,
   );
 
   return responses;
