@@ -1,5 +1,5 @@
 import path from "path";
-import { FunctionModule, FunctionTypes } from "../types.js";
+import { FunctionModule, FunctionType } from "../types.js";
 import { validateFunctionModule } from "./validateFunctionModule.js";
 import { PluginEvent } from "../../ci/ci.js";
 
@@ -13,7 +13,7 @@ export interface FunctionModuleInternal {
   /** The exported config function. */
   config: FunctionConfigInternal;
   /** The exported function. */
-  default?: FunctionTypes;
+  default?: FunctionType;
   /** The slugs to host the function at. */
   slug: {
     /** The slug defined by the user. Example: api/user/[id]/profile */
@@ -35,23 +35,6 @@ export interface FunctionConfigInternal {
   event: PluginEvent;
   /** The default export's name. */
   functionName: string;
-}
-
-/**
- * Stores the filepath to a function.
- */
-export interface FunctionFilePath {
-  /**
-   * The absolute path from the user's root directory.
-   * Ex. /Users/example/Desktop/mySite/src/functions/http/getInfo.ts
-   */
-  absolute: string;
-  /** The path from src/functions. Ex. http/getInfo */
-  relative: string;
-  /** The file extension. Ex: ts */
-  extension: string;
-  /** The file name. Ex: getInfo */
-  filename: string;
 }
 
 /**

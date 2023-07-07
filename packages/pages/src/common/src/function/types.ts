@@ -4,14 +4,14 @@
  */
 export interface FunctionModule {
   /** The exported function */
-  default?: FunctionTypes;
+  default?: FunctionType;
 }
 
 /**
  * The valid Serverless Function types;
  * @public
  */
-export type FunctionTypes =
+export type FunctionType =
   | HttpFunction
   | OnPageGenerateFunction
   | OnUrlChangeFunction;
