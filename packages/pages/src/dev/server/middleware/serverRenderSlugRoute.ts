@@ -17,14 +17,20 @@ type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
   projectStructure: ProjectStructure;
+  defaultLocale: string;
 };
 
 export const serverRenderSlugRoute =
-  ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
+  ({
+    vite,
+    dynamicGenerateData,
+    projectStructure,
+    defaultLocale,
+  }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
-      const locale = req.query.locale?.toString() ?? "en";
+      const locale = req.query.locale?.toString() ?? defaultLocale;
       const slug = decodeURI(url.pathname.substring(1));
 
       const templateFilepaths =

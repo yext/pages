@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { serverRenderRoute } from "./middleware/serverRenderRoute.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
@@ -30,6 +31,30 @@ export const createServer = async (
       scope,
     },
   });
+
+  // Read features.json and set the default locale to the first locale listed
+  // Default to en if features.json cannot be read or there is no locales entry
+  let defaultLocale = "en";
+  try {
+    const featuresJson = JSON.parse(
+      fs.readFileSync(
+        path.join(
+          projectStructure.sitesConfigRoot.getAbsolutePath(),
+          projectStructure.featuresConfig
+        ),
+        "utf-8"
+      )
+    );
+    if (featuresJson.locales && featuresJson.locales.length > 0) {
+      defaultLocale = featuresJson.locales[0];
+    }
+  } catch (e) {
+    if (e === "Error: ENOENT: no such file or directory") {
+      console.warn("Could not find features.json");
+    } else {
+      console.warn(e);
+    }
+  }
 
   // create vite using ssr mode
   const vite = await createViteServer({
@@ -71,8 +96,18 @@ export const createServer = async (
   app.use(
     /^\/(.+)/,
     useProdURLs
-      ? serverRenderSlugRoute({ vite, dynamicGenerateData, projectStructure })
-      : serverRenderRoute({ vite, dynamicGenerateData, projectStructure })
+      ? serverRenderSlugRoute({
+          vite,
+          dynamicGenerateData,
+          projectStructure,
+          defaultLocale,
+        })
+      : serverRenderRoute({
+          vite,
+          dynamicGenerateData,
+          projectStructure,
+          defaultLocale,
+        })
   );
 
   // Serve the index page at the root of the dev server.

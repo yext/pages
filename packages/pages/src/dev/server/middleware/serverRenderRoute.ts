@@ -18,10 +18,16 @@ type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
   projectStructure: ProjectStructure;
+  defaultLocale: string;
 };
 
 export const serverRenderRoute =
-  ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
+  ({
+    vite,
+    dynamicGenerateData,
+    projectStructure,
+    defaultLocale,
+  }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
@@ -36,7 +42,7 @@ export const serverRenderRoute =
           res,
           vite,
           matchingStaticTemplate,
-          locale,
+          locale ?? defaultLocale,
           url.pathname,
           projectStructure
         );

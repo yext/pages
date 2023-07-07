@@ -64,9 +64,9 @@ export const indexPage =
 
       // If there is any localData, display hyperlinks to each page that will be generated
       // from each data document.
-      if (localDataManifest.static.length + localDataManifest.entity.size) {
+      if (localDataManifest.static.size + localDataManifest.entity.size) {
         // If there are any data documents for static pages, render that section.
-        if (localDataManifest.static.length) {
+        if (localDataManifest.static.size) {
           indexPageHtml = indexPageHtml.replace(
             `<!--static-pages-html-->`,
             `<h3>Static Pages</h3>
@@ -174,24 +174,40 @@ const addHttpFuncs = (indexPageHtml: string) => {
 
 const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
   return Array.from(localDataManifest.static).reduce(
-    (templateAccumulator, { featureName, staticURL }) =>
+    (templateAccumulator, [, { featureName, staticURL, locales }]) =>
       templateAccumulator +
-      `<h4>${featureName} pages (1):</h4>
-      <table>
+      `<h4>${featureName} pages (${locales.length}):</h4>` +
+      `<table>
         <thead>
           <tr>
             <td>URL</td>
+            ${locales.length > 1 ? "<td>Locale</td>" : ""}
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              <a href="http://localhost:${devServerPort}/${encodeURIComponent(
-        staticURL
-      )}">
-                ${staticURL}
-              </a>
-            </td>
+          ${locales
+            .map(
+              (locale) => `<tr>
+            ${
+              locales.length > 1
+                ? `<td>
+                <a href="http://localhost:${devServerPort}/${encodeURIComponent(
+                    staticURL
+                  )}?locale=${locale}">
+                  ${staticURL}?locale=${locale}
+                </a>
+              </td>`
+                : `<td>
+                <a href="http://localhost:${devServerPort}/${encodeURIComponent(
+                    staticURL
+                  )}">
+                  ${staticURL}
+                </a>
+              </td>`
+            }
+            ${locales.length > 1 ? `<td>${locale}</td>` : ""}`
+            )
+            .join("")}
           </tr>
         </tbody>
       </table>
