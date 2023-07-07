@@ -44,7 +44,7 @@ In most circumstance all changes should be associate with a unit test that lives
 - PR titles must follow the [semantic pull request](https://github.com/marketplace/actions/semantic-pull-request) style so that changelogs can be automatically generated. PR titles are automatically validated by a Github action.
 
   - ```
-      feat(components): add `Button` component.
+      feat(dev): add hydration option
       ^    ^    ^
       |    |    |__ Subject
       |    |_______ Scope
