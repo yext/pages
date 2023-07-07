@@ -174,9 +174,7 @@ const createEntityPageListItems = (
 ) => {
   const formatLink = (entityId: string, slug: string | undefined) => {
     if (useProdURLs) {
-      return `http://localhost:${devServerPort}/${encodeURIComponent(
-        slug ?? ""
-      )}`;
+      return `http://localhost:${devServerPort}/${slug}`;
     }
 
     return `http://localhost:${devServerPort}/${encodeURIComponent(
