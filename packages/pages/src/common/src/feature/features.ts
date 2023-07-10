@@ -87,9 +87,9 @@ export const convertTemplateConfigToFeatureConfig = (
     alternateLanguageFields: config.alternateLanguageFields,
   };
 
-  // If an onUrlChange function name is specified in the feature config, lookup that plugin and
-  // calculate it's hashed name for use in features.json
-  if (config.onUrlChangeFunctionName) {
+  // If an onUrlChange function name is specified in the feature config, look up that plugin and
+  // calculate its hashed name for use in features.json
+  if (config.onUrlChange) {
     try {
       // Have to look up the filename from the functions directory because we do not know file extension
       const onUrlChangeFilenames = fs.readdirSync(
@@ -97,23 +97,22 @@ export const convertTemplateConfigToFeatureConfig = (
           "/onUrlChange"
       );
       const filename = onUrlChangeFilenames.find((name) =>
-        name.includes(config.onUrlChangeFunctionName ?? "")
+        name.includes(config.onUrlChange ?? "")
       );
-      if (!filename) {
-        console.warn(
-          "Could not find file onUrlChange/" + config.onUrlChangeFunctionName
-        );
+      if (filename) {
+        featureConfigBase.onUrlChange = {
+          pluginName:
+            config.onUrlChange +
+            "-" +
+            unsecureHashPluginName("onUrlChange/" + filename),
+          functionName: "default",
+        };
+      } else {
+        console.warn("Could not find file onUrlChange/" + config.onUrlChange);
       }
-      featureConfigBase.onUrlChange = {
-        pluginName:
-          config.onUrlChangeFunctionName +
-          "-" +
-          unsecureHashPluginName("onUrlChange/" + filename),
-        functionName: "default",
-      };
     } catch (e) {
       console.warn(
-        `Error resolving onUrlChange plugin name ${config.onUrlChangeFunctionName}:\n${e}`
+        `Error resolving onUrlChange plugin name ${config.onUrlChange}:\n${e}`
       );
     }
   }
