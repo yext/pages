@@ -49,9 +49,7 @@ export const createServer = async (
       defaultLocale = featuresJson.locales[0];
     }
   } catch (e) {
-    if (e === "Error: ENOENT: no such file or directory") {
-      console.warn("Could not find features.json");
-    } else {
+    if (e !== "Error: ENOENT: no such file or directory") {
       console.warn(e);
     }
   }
