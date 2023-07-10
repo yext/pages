@@ -105,8 +105,8 @@ export const createServer = async (
     functionsAtServerStart.forEach((func) => {
       if (func.config.event === "API") {
         app.use("/" + func.slug.dev, (req, res, next) => {
-          if (req.baseUrl !== req.originalUrl) {
-            // mimic production server behavior by only using strict matches
+          if (req.baseUrl !== req.originalUrl.split("?")[0]) {
+            // mimic production server behavior by only using strict matches (ignoring query params)
             return next();
           }
           const updatedFunction = functionModules.get(func.config.name);

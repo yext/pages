@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { FunctionModuleInternal } from "../../../common/src/function/internal/types.js";
 import {
-  FunctionArgument,
+  HttpFunctionArgument,
   Site,
-  HttpFunctionResponse,
+  HttpFunction,
 } from "../../../common/src/function/types.js";
 
 export const serveHttpFunction = async (
@@ -12,14 +12,14 @@ export const serveHttpFunction = async (
   next: NextFunction,
   serverlessFunction: FunctionModuleInternal
 ) => {
-  const argument: FunctionArgument = {
+  const argument: HttpFunctionArgument = {
     queryParams: req.query as { [p: string]: string },
     pathParams: req.params,
     site: mockSiteInfo,
   };
 
   if (serverlessFunction.default) {
-    const fnRes = serverlessFunction.default(argument) as HttpFunctionResponse;
+    const fnRes = (serverlessFunction.default as HttpFunction)(argument);
     res
       .status(fnRes.statusCode)
       .header({ ...fnRes.headers, "Content-Type": "application/json" })

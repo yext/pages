@@ -3,11 +3,14 @@ import { convertFunctionModuleToFunctionModuleInternal } from "./types.js";
 import {
   HttpFunction,
   FunctionModule,
-  FunctionArgument,
+  HttpFunctionArgument,
   OnPageGenerateFunction,
   OnPageGenerateResponse,
   OnUrlChangeFunction,
   HttpFunctionResponse,
+  OnPageGenerateArgument,
+  Site,
+  OnUrlChangeArgument,
 } from "../types.js";
 import { mockSiteInfo } from "../../../../dev/server/middleware/serveHttpFunction.js";
 
@@ -29,10 +32,26 @@ const exampleOnUrlChangeFunction: OnUrlChangeFunction = () => {
   return;
 };
 
-const exampleFunctionArgument: FunctionArgument = {
+const exampleHttpFunctionArgument: HttpFunctionArgument = {
   queryParams: {},
   pathParams: {},
   site: mockSiteInfo,
+};
+
+const exampleOnPageGenerateArgument: OnPageGenerateArgument = {
+  feature: "feature",
+  streamOutput: {},
+  site: mockSiteInfo,
+};
+
+const exampleOnUrlChangeArgument: OnUrlChangeArgument = {
+  domains: ["exampledomain.com"],
+  entityId: "entity12",
+  feature: "feature",
+  locale: "en",
+  path: "slug",
+  site: mockSiteInfo,
+  url: "/slug",
 };
 
 const exampleOnPageGenerateResponse: OnPageGenerateResponse = {
@@ -79,7 +98,9 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     );
 
     const functionReturnValue = functionModuleInternal.default
-      ? functionModuleInternal.default(exampleFunctionArgument)
+      ? (functionModuleInternal.default as HttpFunction)(
+          exampleHttpFunctionArgument
+        )
       : undefined;
 
     expect(JSON.stringify(functionReturnValue)).toEqual(
@@ -120,7 +141,9 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     );
 
     const functionReturnValue = functionModuleInternal.default
-      ? functionModuleInternal.default(exampleFunctionArgument)
+      ? (functionModuleInternal.default as OnUrlChangeFunction)(
+          exampleOnUrlChangeArgument
+        )
       : undefined;
 
     expect(JSON.stringify(functionReturnValue)).toBeFalsy();
@@ -159,7 +182,9 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     );
 
     const functionReturnValue = functionModuleInternal.default
-      ? functionModuleInternal.default(exampleFunctionArgument)
+      ? (functionModuleInternal.default as OnPageGenerateFunction)(
+          exampleOnPageGenerateArgument
+        )
       : undefined;
     expect(JSON.stringify(functionReturnValue)).toEqual(
       JSON.stringify(exampleOnPageGenerateResponse)
@@ -199,7 +224,9 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     );
 
     const functionReturnValue = functionModuleInternal.default
-      ? functionModuleInternal.default(exampleFunctionArgument)
+      ? (functionModuleInternal.default as HttpFunction)(
+          exampleHttpFunctionArgument
+        )
       : undefined;
 
     expect(JSON.stringify(functionReturnValue)).toEqual(

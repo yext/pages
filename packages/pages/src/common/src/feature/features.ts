@@ -31,17 +31,28 @@ interface FeatureConfigBase {
   streamId?: string;
   templateType: "JS";
   alternateLanguageFields?: string[];
+  onUrlChange?: PluginFunctionSelector;
 }
 
 interface EntityPageSetConfig extends FeatureConfigBase {
   entityPageSet: {
-    plugin: Record<string, unknown>;
+    urlTemplate?: string;
+    htmlTemplate?: string;
+    linkedEntities?: { entityListField: string; templateField: string }[];
+    onPageGenerate?: PluginFunctionSelector;
   };
 }
 interface StaticPageConfig extends FeatureConfigBase {
   staticPage: {
-    plugin: Record<string, unknown>;
+    urlTemplate?: string;
+    htmlTemplate?: string;
+    onPageGenerate?: PluginFunctionSelector;
   };
+}
+
+interface PluginFunctionSelector {
+  pluginName: string;
+  functionName: string;
 }
 
 /**
@@ -80,16 +91,12 @@ export const convertTemplateConfigToFeatureConfig = (
   if (isStaticTemplateConfig(config)) {
     featureConfig = {
       ...featureConfigBase,
-      staticPage: {
-        plugin: {},
-      },
+      staticPage: {},
     };
   } else {
     featureConfig = {
       ...featureConfigBase,
-      entityPageSet: {
-        plugin: {},
-      },
+      entityPageSet: {},
     };
   }
 

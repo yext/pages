@@ -20,14 +20,14 @@ export type FunctionType =
  * A function that runs when a specific path is visited on the site.
  * @public
  */
-export type HttpFunction = (arg: FunctionArgument) => HttpFunctionResponse;
+export type HttpFunction = (arg: HttpFunctionArgument) => HttpFunctionResponse;
 
 /**
  * A function that runs when a stream document is processed for HTML rendering.
  * @public
  */
 export type OnPageGenerateFunction = (
-  arg: FunctionArgument
+  arg: OnPageGenerateArgument
 ) => OnPageGenerateResponse;
 
 /**
@@ -35,8 +35,21 @@ export type OnPageGenerateFunction = (
  * @public
  */
 export type OnUrlChangeFunction = (
-  arg: FunctionArgument
+  arg: OnUrlChangeArgument
 ) => OnUrlChangeResponse;
+
+/**
+ * The argument passed to a http/api type function.
+ * @public
+ */
+export interface HttpFunctionArgument {
+  /** Object containing each query parameter. */
+  queryParams: { [key: string]: string };
+  /** Object containing each path parameter. */
+  pathParams: { [key: string]: string };
+  /** Site object containing all deploy-related information. */
+  site: Site;
+}
 
 /**
  * The return value for a http/api serverless function.
@@ -45,27 +58,23 @@ export type OnUrlChangeFunction = (
 export interface HttpFunctionResponse {
   /** HTTP response body (refer to MDN Web Docs). */
   body: string;
-
   /** HTTP response status code (refer to MDN Web Docs). */
   statusCode: number;
-
   /** HTTP response headers (refer to MDN Web Docs).  */
   headers: object;
 }
 
 /**
- * The argument passed to a serverless function or plugin.
+ * The argument passed to an onPageGenerate type plugin.
  * @public
  */
-export interface FunctionArgument {
-  /** Object containing each query parameter. */
-  queryParams: { [key: string]: string };
-
-  /** Object containing each path parameter. */
-  pathParams: { [key: string]: string };
-
+export interface OnPageGenerateArgument {
+  /** The name of the feature. */
+  feature: string;
   /** Site object containing all deploy-related information. */
   site: Site;
+  /** Stream object containing all stream-related information. */
+  streamOutput: any;
 }
 
 /**
@@ -79,6 +88,27 @@ export interface OnPageGenerateResponse {
   content: string;
   /** A list of optional paths at which to install redirects to the page. */
   redirects?: string[];
+}
+
+/**
+ * The argument passed to an onUrlChange type plugin.
+ * @public
+ */
+export interface OnUrlChangeArgument {
+  /** The domains the site is hosted on. */
+  domains: string[];
+  /** The entity's ID. */
+  entityId: string;
+  /** The name of the feature. */
+  feature: string;
+  /** The entity's locale */
+  locale: string;
+  /** The entity's path. */
+  path: string;
+  /** Site object containing all deploy-related information. */
+  site: Site;
+  /** The entity's URL. */
+  url: string;
 }
 
 /**

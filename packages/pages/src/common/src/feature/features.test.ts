@@ -23,9 +23,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
           name: "myTemplateConfig",
           streamId: "$id",
           templateType: "JS",
-          entityPageSet: {
-            plugin: {},
-          },
+          entityPageSet: {},
         },
       ],
     };
@@ -56,9 +54,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
           name: "myTemplateConfig",
           streamId: "$id",
           templateType: "JS",
-          entityPageSet: {
-            plugin: {},
-          },
+          entityPageSet: {},
         },
       ],
       streams: [
@@ -93,9 +89,7 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
       name: "myTemplateConfig",
       streamId: "$id",
       templateType: "JS",
-      entityPageSet: {
-        plugin: {},
-      },
+      entityPageSet: {},
     };
 
     expect(featureConfig).toEqual(expected);
@@ -121,9 +115,7 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
       name: "myTemplateConfig",
       streamId: "$id",
       templateType: "JS",
-      entityPageSet: {
-        plugin: {},
-      },
+      entityPageSet: {},
     };
 
     expect(featureConfig).toEqual(expected);
@@ -139,9 +131,7 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
     const expected: FeatureConfig = {
       name: "myTemplateConfig",
       templateType: "JS",
-      staticPage: {
-        plugin: {},
-      },
+      staticPage: {},
     };
 
     expect(featureConfig).toEqual(expected);
