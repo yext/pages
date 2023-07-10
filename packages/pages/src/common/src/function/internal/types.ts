@@ -4,6 +4,11 @@ import { validateFunctionModule } from "./validateFunctionModule.js";
 import { PluginEvent } from "../../ci/ci.js";
 import { defaultProjectStructureConfig } from "../../project/structure.js";
 
+const productionBuildRoot =
+  defaultProjectStructureConfig.filepathsConfig.distRoot +
+  "/" +
+  defaultProjectStructureConfig.filepathsConfig.functionBundleOutputRoot;
+
 /**
  * A domain representation of a serverless function module. Contains all fields from an imported
  * module as well as metadata about the module used in downstream processing.
@@ -56,17 +61,8 @@ export const convertFunctionModuleToFunctionModuleInternal = (
       .includes(defaultProjectStructureConfig.filepathsConfig.functionsRoot)
   ) {
     functionsRoot = defaultProjectStructureConfig.filepathsConfig.functionsRoot; // local dev server
-  } else if (
-    path
-      .format(functionFilepath)
-      .includes(
-        defaultProjectStructureConfig.filepathsConfig.distRoot +
-          defaultProjectStructureConfig.filepathsConfig.functionBundleOutputRoot
-      )
-  ) {
-    functionsRoot =
-      defaultProjectStructureConfig.filepathsConfig.distRoot +
-      defaultProjectStructureConfig.filepathsConfig.functionBundleOutputRoot; // production build
+  } else if (path.format(functionFilepath).includes(productionBuildRoot)) {
+    functionsRoot = productionBuildRoot; // production build
   } else if (
     path.format(functionFilepath).includes("tests/fixtures/src/functions")
   ) {
@@ -81,22 +77,17 @@ export const convertFunctionModuleToFunctionModuleInternal = (
   const functionType = relativePath.split("/")[0];
 
   if (
-    (functionType === "onUrlChange" || functionType === "onPageGenerate") &&
+    functionType === "onUrlChange" &&
     relativePath.split("/").length > 2 &&
-    functionsRoot !== "dist/functions"
+    functionsRoot !== productionBuildRoot
   ) {
     throw new Error(`Cannot load ${path.format(
       functionFilepath
-    )}.\n Nested directories are not 
-    supported for onUrlChange and onPageGenerate plugins. All functions must be located at the 
-    root of src/functions/onUrlChange or src/functions/onPageGenerate.`);
+    )}.\n Nested directories are not supported for onUrlChange plugins. 
+    All functions must be located at the root of src/functions/onUrlChange.`);
   }
 
-  if (
-    functionType === "http" ||
-    functionType === "onUrlChange" ||
-    functionType === "onPageGenerate"
-  ) {
+  if (functionType === "http" || functionType === "onUrlChange") {
     validateFunctionModule(functionFilepath.dir, functionModule);
 
     const defaultSlug = relativePath
@@ -126,7 +117,7 @@ export const convertFunctionModuleToFunctionModuleInternal = (
     throw new Error(
       `Cannot load ${path.format(
         functionFilepath
-      )}.\nAll Serverless Functions should live in src/functions/http, src/functions/onPageGenerate, or src/functions/onUrlChange.`
+      )}.\nAll Serverless Functions should live in src/functions/http or src/functions/onUrlChange.`
     );
   }
 
@@ -139,8 +130,6 @@ export const convertToPluginEvent = (event: string): PluginEvent => {
       return "API";
     case "onUrlChange":
       return "ON_URL_CHANGE";
-    case "onPageGenerate":
-      return "ON_PAGE_GENERATE";
     default:
       throw new Error(`No matching PluginEvent found for: ${event}`);
   }

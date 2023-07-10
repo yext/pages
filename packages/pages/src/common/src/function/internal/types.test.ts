@@ -4,11 +4,8 @@ import {
   HttpFunction,
   FunctionModule,
   HttpFunctionArgument,
-  OnPageGenerateFunction,
-  OnPageGenerateResponse,
   OnUrlChangeFunction,
   HttpFunctionResponse,
-  OnPageGenerateArgument,
   OnUrlChangeArgument,
 } from "../types.js";
 import { mockSiteInfo } from "../../../../dev/server/middleware/serveHttpFunction.js";
@@ -23,10 +20,6 @@ const exampleApiFunction: HttpFunction = () => {
   return exampleReturnValue;
 };
 
-const exampleOnPageGenerateFunction: OnPageGenerateFunction = () => {
-  return exampleOnPageGenerateResponse;
-};
-
 const exampleOnUrlChangeFunction: OnUrlChangeFunction = () => {
   return;
 };
@@ -34,12 +27,6 @@ const exampleOnUrlChangeFunction: OnUrlChangeFunction = () => {
 const exampleHttpFunctionArgument: HttpFunctionArgument = {
   queryParams: {},
   pathParams: {},
-  site: mockSiteInfo,
-};
-
-const exampleOnPageGenerateArgument: OnPageGenerateArgument = {
-  feature: "feature",
-  streamOutput: {},
   site: mockSiteInfo,
 };
 
@@ -51,12 +38,6 @@ const exampleOnUrlChangeArgument: OnUrlChangeArgument = {
   path: "slug",
   site: mockSiteInfo,
   url: "/slug",
-};
-
-const exampleOnPageGenerateResponse: OnPageGenerateResponse = {
-  path: "abc",
-  content: "xyz",
-  redirects: ["home"],
 };
 
 const createMockFilePath = (filepath: string): path.ParsedPath => {
@@ -148,48 +129,6 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     expect(JSON.stringify(functionReturnValue)).toBeFalsy();
   });
 
-  it("converts a function in functions/onPageGenerate", async () => {
-    const functionModule: FunctionModule = {
-      default: exampleOnPageGenerateFunction,
-    };
-    const functionModuleInternal =
-      convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath("onPageGenerate/example.ts"),
-        functionModule
-      );
-    const expected = {
-      config: {
-        name: "example-85295",
-        functionName: "default",
-        event: "ON_PAGE_GENERATE",
-      },
-      filePath: {
-        root: "/",
-        dir: process.cwd() + "/src/functions/onPageGenerate",
-        base: "example.ts",
-        ext: ".ts",
-        name: "example",
-      },
-      slug: {
-        original: "example",
-        dev: "example",
-        production: "example",
-      },
-    };
-    expect(JSON.stringify(functionModuleInternal)).toEqual(
-      JSON.stringify(expected)
-    );
-
-    const functionReturnValue = functionModuleInternal.default
-      ? (functionModuleInternal.default as OnPageGenerateFunction)(
-          exampleOnPageGenerateArgument
-        )
-      : undefined;
-    expect(JSON.stringify(functionReturnValue)).toEqual(
-      JSON.stringify(exampleOnPageGenerateResponse)
-    );
-  });
-
   it("converts an api function with path params", async () => {
     const functionModule: FunctionModule = {
       default: exampleApiFunction,
@@ -233,25 +172,21 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     );
   });
 
-  it(
-    "throws an error when a function is outside functions/http, functions/onPageGenerate, or" +
-      " functions/onUrlChange",
-    async () => {
-      const functionModule: FunctionModule = {
-        default: exampleApiFunction,
-      };
-      expect(() =>
-        convertFunctionModuleToFunctionModuleInternal(
-          createMockFilePath("myFunctions/example.ts"),
-          functionModule
-        )
-      ).toThrow(
-        "Cannot load " +
-          path.join(process.cwd(), "src/functions/myFunctions/example.ts") +
-          ".\n" +
-          "All Serverless Functions should live in src/functions/http," +
-          " src/functions/onPageGenerate, or src/functions/onUrlChange."
-      );
-    }
-  );
+  it("throws an error when a function is outside functions/http or functions/onUrlChange", async () => {
+    const functionModule: FunctionModule = {
+      default: exampleApiFunction,
+    };
+    expect(() =>
+      convertFunctionModuleToFunctionModuleInternal(
+        createMockFilePath("myFunctions/example.ts"),
+        functionModule
+      )
+    ).toThrow(
+      "Cannot load " +
+        path.join(process.cwd(), "src/functions/myFunctions/example.ts") +
+        ".\n" +
+        "All Serverless Functions should live in src/functions/http" +
+        " or src/functions/onUrlChange."
+    );
+  });
 });

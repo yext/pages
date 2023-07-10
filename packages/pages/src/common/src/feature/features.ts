@@ -42,14 +42,12 @@ interface EntityPageSetConfig extends FeatureConfigBase {
     urlTemplate?: string;
     htmlTemplate?: string;
     linkedEntities?: { entityListField: string; templateField: string }[];
-    onPageGenerate?: PluginFunctionSelector;
   };
 }
 interface StaticPageConfig extends FeatureConfigBase {
   staticPage: {
     urlTemplate?: string;
     htmlTemplate?: string;
-    onPageGenerate?: PluginFunctionSelector;
   };
 }
 
@@ -94,11 +92,11 @@ export const convertTemplateConfigToFeatureConfig = (
   if (config.onUrlChangeFunctionName) {
     try {
       // Have to look up the filename from the functions directory because we do not know file extension
-      const onPageGenerateFilenames = fs.readdirSync(
+      const onUrlChangeFilenames = fs.readdirSync(
         defaultProjectStructureConfig.filepathsConfig.functionsRoot +
           "/onUrlChange"
       );
-      const filename = onPageGenerateFilenames.find((name) =>
+      const filename = onUrlChangeFilenames.find((name) =>
         name.includes(config.onUrlChangeFunctionName ?? "")
       );
       if (!filename) {

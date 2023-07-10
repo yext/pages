@@ -11,24 +11,13 @@ export interface FunctionModule {
  * The valid Serverless Function types;
  * @public
  */
-export type FunctionType =
-  | HttpFunction
-  | OnPageGenerateFunction
-  | OnUrlChangeFunction;
+export type FunctionType = HttpFunction | OnUrlChangeFunction;
 
 /**
  * A function that runs when a specific path is visited on the site.
  * @public
  */
 export type HttpFunction = (arg: HttpFunctionArgument) => HttpFunctionResponse;
-
-/**
- * A function that runs when a stream document is processed for HTML rendering.
- * @public
- */
-export type OnPageGenerateFunction = (
-  arg: OnPageGenerateArgument
-) => OnPageGenerateResponse;
 
 /**
  * A function that runs when the path of a production page changes.
@@ -62,32 +51,6 @@ export interface HttpFunctionResponse {
   statusCode: number;
   /** HTTP response headers (refer to MDN Web Docs).  */
   headers: object;
-}
-
-/**
- * The argument passed to an onPageGenerate type plugin.
- * @public
- */
-export interface OnPageGenerateArgument {
-  /** The name of the feature. */
-  feature: string;
-  /** Site object containing all deploy-related information. */
-  site: Site;
-  /** Stream object containing all stream-related information. */
-  streamOutput: any;
-}
-
-/**
- * The return value for an onPageGenerate plugin.
- * @public
- */
-export interface OnPageGenerateResponse {
-  /** The path at which to serve the generate file. */
-  path: string;
-  /** The HTML content of the page */
-  content: string;
-  /** A list of optional paths at which to install redirects to the page. */
-  redirects?: string[];
 }
 
 /**
