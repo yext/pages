@@ -38,7 +38,7 @@ export const serverRenderRoute =
       const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
         await findMatchingStaticTemplate(vite, staticURL, templateFilepaths);
       if (matchingStaticTemplate) {
-        sendStaticPage(
+        await sendStaticPage(
           res,
           vite,
           matchingStaticTemplate,
