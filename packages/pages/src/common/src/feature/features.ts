@@ -1,5 +1,8 @@
+import fs from "fs";
 import { TemplateConfigInternal } from "../template/internal/types.js";
 import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
+import { unsecureHashPluginName } from "../function/internal/types.js";
+import { defaultProjectStructureConfig } from "../project/structure.js";
 
 /**
  * The shape of data that represents a features.json file, used by Yext Pages.
@@ -85,6 +88,37 @@ export const convertTemplateConfigToFeatureConfig = (
     templateType: "JS",
     alternateLanguageFields: config.alternateLanguageFields,
   };
+
+  // If an onUrlChange function name is specified in the feature config, lookup that plugin and
+  // calculate it's hashed name for use in features.json
+  if (config.onUrlChangeFunctionName) {
+    try {
+      // Have to look up the filename from the functions directory because we do not know file extension
+      const onPageGenerateFilenames = fs.readdirSync(
+        defaultProjectStructureConfig.filepathsConfig.functionsRoot +
+          "/onUrlChange"
+      );
+      const filename = onPageGenerateFilenames.find((name) =>
+        name.includes(config.onUrlChangeFunctionName ?? "")
+      );
+      if (!filename) {
+        console.warn(
+          "Could not find file onUrlChange/" + config.onUrlChangeFunctionName
+        );
+      }
+      featureConfigBase.onUrlChange = {
+        pluginName:
+          config.onUrlChangeFunctionName +
+          "-" +
+          unsecureHashPluginName("onUrlChange/" + filename),
+        functionName: "default",
+      };
+    } catch (e) {
+      console.warn(
+        `Error resolving onUrlChange plugin name ${config.onUrlChangeFunctionName}:\n${e}`
+      );
+    }
+  }
 
   let featureConfig: FeatureConfig;
   // If the templateConfig does not reference a stream, assume it's a static feature.

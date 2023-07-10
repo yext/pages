@@ -60,6 +60,8 @@ export interface TemplateConfigInternal {
   stream?: Stream;
   /** The specific fields to add additional language options to based on the stream's localization */
   alternateLanguageFields?: string[];
+  /** The name of the onUrlChange function to use. */
+  onUrlChangeFunctionName?: string;
 }
 
 /**

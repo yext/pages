@@ -9,7 +9,6 @@ import {
   OnUrlChangeFunction,
   HttpFunctionResponse,
   OnPageGenerateArgument,
-  Site,
   OnUrlChangeArgument,
 } from "../types.js";
 import { mockSiteInfo } from "../../../../dev/server/middleware/serveHttpFunction.js";

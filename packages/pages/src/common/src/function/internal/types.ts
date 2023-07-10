@@ -2,6 +2,7 @@ import path from "path";
 import { FunctionModule, FunctionType } from "../types.js";
 import { validateFunctionModule } from "./validateFunctionModule.js";
 import { PluginEvent } from "../../ci/ci.js";
+import { defaultProjectStructureConfig } from "../../project/structure.js";
 
 /**
  * A domain representation of a serverless function module. Contains all fields from an imported
@@ -49,17 +50,34 @@ export const convertFunctionModuleToFunctionModuleInternal = (
   let functionInternal;
 
   let functionsRoot;
-  if (path.format(functionFilepath).includes("src/functions")) {
-    functionsRoot = "src/functions"; // local dev server
-  } else if (path.format(functionFilepath).includes("dist/functions")) {
-    functionsRoot = "dist/functions"; // production build
+  if (
+    path
+      .format(functionFilepath)
+      .includes(defaultProjectStructureConfig.filepathsConfig.functionsRoot)
+  ) {
+    functionsRoot = defaultProjectStructureConfig.filepathsConfig.functionsRoot; // local dev server
+  } else if (
+    path
+      .format(functionFilepath)
+      .includes(
+        defaultProjectStructureConfig.filepathsConfig.distRoot +
+          defaultProjectStructureConfig.filepathsConfig.functionBundleOutputRoot
+      )
+  ) {
+    functionsRoot =
+      defaultProjectStructureConfig.filepathsConfig.distRoot +
+      defaultProjectStructureConfig.filepathsConfig.functionBundleOutputRoot; // production build
   } else if (
     path.format(functionFilepath).includes("tests/fixtures/src/functions")
   ) {
     functionsRoot = "tests/fixtures/src/functions"; // unit testing
   }
 
-  const relativePath = path.format(functionFilepath).split("/functions/")[1];
+  const relativePath = path
+    .format(functionFilepath)
+    .split(
+      `/${defaultProjectStructureConfig.filepathsConfig.functionsRoot}/`
+    )[1];
   const functionType = relativePath.split("/")[0];
 
   if (
@@ -93,7 +111,7 @@ export const convertFunctionModuleToFunctionModuleInternal = (
         name:
           functionFilepath.name.replaceAll("[", "").replaceAll("]", "") +
           "-" +
-          unsecureHashName(relativePath),
+          unsecureHashPluginName(relativePath),
         functionName: "default",
         event: convertToPluginEvent(functionType),
       },
@@ -131,10 +149,10 @@ export const convertToPluginEvent = (event: string): PluginEvent => {
 /**
  * Hashes a string into a five-digit number. Used to de-duplicate function names.
  * Source: {@link https://stackoverflow.com/questions/194846/is-there-hash-code-function-accepting-any-object-type}
- * @param input The value to hash.
+ * @param input The value to hash. (For plugins, everything after src/functions/)
  * @returns A five-character string of the hash.
  */
-const unsecureHashName = (input: string): string => {
+export const unsecureHashPluginName = (input: string): string => {
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
     const code = input.charCodeAt(i);
