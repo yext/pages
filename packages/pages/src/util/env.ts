@@ -13,5 +13,7 @@ import { getRuntime } from "./runtime.js";
 export const isProduction = (domain: string): boolean => {
   const runtime = getRuntime();
 
-  return runtime.name === "browser" && domain === window?.location?.hostname;
+  return (
+    runtime.name === "browser" && domain?.includes(window?.location?.hostname)
+  );
 };
