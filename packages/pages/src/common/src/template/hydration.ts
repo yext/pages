@@ -88,7 +88,7 @@ const getCommonInjectedServerHtml = (
   headConfig?: HeadConfig
 ): string => {
   // Add the language to the <html> tag if it exists
-  serverHtml.replace("<!--app-lang-->", appLanguage);
+  serverHtml = serverHtml.replace("<!--app-lang-->", appLanguage);
 
   if (clientHydrationString) {
     serverHtml = injectIntoHead(
