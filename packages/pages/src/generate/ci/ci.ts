@@ -5,6 +5,7 @@ import { defaultProjectStructureConfig } from "../../common/src/project/structur
 import { CiConfig, Plugin } from "../../common/src/ci/ci.js";
 import fs from "node:fs";
 import colors from "picocolors";
+import { loadFunctions } from "../../common/src/function/internal/loader.js";
 
 const handler = (): void => {
   const ciConfigFilename =
@@ -36,7 +37,7 @@ export const ciCommandModule: CommandModule<unknown, unknown> = {
  * by another internal function. It guards whether the function throws or console.errors to give
  * a better UX.
  */
-export const updateCiConfig = (
+export const updateCiConfig = async (
   ciConfigPath: string,
   calledViaCommand: boolean
 ) => {
@@ -57,7 +58,7 @@ export const updateCiConfig = (
     }
   }
 
-  const updatedCiConfigJson = getUpdatedCiConfig(originalCiConfigJson);
+  const updatedCiConfigJson = await getUpdatedCiConfig(originalCiConfigJson);
   if (updatedCiConfigJson) {
     fs.writeFileSync(
       ciConfigPath,
@@ -69,11 +70,11 @@ export const updateCiConfig = (
 /**
  * Does the work of actually adding or replacing the Generator plugin.
  */
-export const getUpdatedCiConfig = (ciConfig: CiConfig): CiConfig => {
+export const getUpdatedCiConfig = async (
+  ciConfig: CiConfig
+): Promise<CiConfig> => {
   const ciConfigCopy = structuredClone(ciConfig);
-  if (!ciConfigCopy.artifactStructure.plugins) {
-    ciConfigCopy.artifactStructure.plugins = [];
-  }
+  ciConfigCopy.artifactStructure.plugins = [];
 
   const generatorPluginIndex = ciConfigCopy.artifactStructure.plugins.findIndex(
     (plugin) => {
@@ -89,6 +90,46 @@ export const getUpdatedCiConfig = (ciConfig: CiConfig): CiConfig => {
   } else {
     ciConfigCopy.artifactStructure.plugins.push(generatorPlugin);
   }
+
+  // add any user-defined functions
+  const functionModules = await loadFunctions(
+    defaultProjectStructureConfig.filepathsConfig.functionsRoot
+  );
+  functionModules.forEach((functionModule) => {
+    const newEntry: Plugin = {
+      pluginName: functionModule.config.name,
+      event: functionModule.config.event,
+      functionName: functionModule.config.functionName,
+      apiPath:
+        functionModule.config.event === "API"
+          ? functionModule.slug.production
+          : undefined,
+      sourceFiles: [
+        {
+          root: path.join(
+            defaultProjectStructureConfig.filepathsConfig.distRoot,
+            defaultProjectStructureConfig.filepathsConfig
+              .functionBundleOutputRoot,
+            functionModule.config.name
+          ),
+          pattern: "*{.js,.ts}",
+        },
+      ],
+    };
+
+    if (ciConfigCopy.artifactStructure.plugins) {
+      const functionPluginIndex =
+        ciConfigCopy.artifactStructure.plugins.findIndex((plugin) => {
+          return plugin.pluginName === functionModule.config.name;
+        });
+
+      if (functionPluginIndex !== -1) {
+        ciConfigCopy.artifactStructure.plugins[functionPluginIndex] = newEntry;
+      } else {
+        ciConfigCopy.artifactStructure.plugins?.push(newEntry);
+      }
+    }
+  });
 
   return ciConfigCopy;
 };

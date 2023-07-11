@@ -1,5 +1,8 @@
+import fs from "fs";
 import { TemplateConfigInternal } from "../template/internal/types.js";
 import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
+import { unsecureHashPluginName } from "../function/internal/types.js";
+import { defaultProjectStructureConfig } from "../project/structure.js";
 
 /**
  * The shape of data that represents a features.json file, used by Yext Pages.
@@ -31,17 +34,26 @@ interface FeatureConfigBase {
   streamId?: string;
   templateType: "JS";
   alternateLanguageFields?: string[];
+  onUrlChange?: PluginFunctionSelector;
 }
 
 interface EntityPageSetConfig extends FeatureConfigBase {
   entityPageSet: {
-    plugin: Record<string, unknown>;
+    urlTemplate?: string;
+    htmlTemplate?: string;
+    linkedEntities?: { entityListField: string; templateField: string }[];
   };
 }
 interface StaticPageConfig extends FeatureConfigBase {
   staticPage: {
-    plugin: Record<string, unknown>;
+    urlTemplate?: string;
+    htmlTemplate?: string;
   };
+}
+
+interface PluginFunctionSelector {
+  pluginName: string;
+  functionName: string;
 }
 
 /**
@@ -75,21 +87,47 @@ export const convertTemplateConfigToFeatureConfig = (
     alternateLanguageFields: config.alternateLanguageFields,
   };
 
+  // If an onUrlChange function name is specified in the feature config, look up that plugin and
+  // calculate its hashed name for use in features.json
+  if (config.onUrlChange) {
+    try {
+      // Have to look up the filename from the functions directory because we do not know file extension
+      const onUrlChangeFilenames = fs.readdirSync(
+        defaultProjectStructureConfig.filepathsConfig.functionsRoot +
+          "/onUrlChange"
+      );
+      const filename = onUrlChangeFilenames.find((name) =>
+        name.includes(config.onUrlChange ?? "")
+      );
+      if (filename) {
+        featureConfigBase.onUrlChange = {
+          pluginName:
+            config.onUrlChange +
+            "-" +
+            unsecureHashPluginName("onUrlChange/" + filename),
+          functionName: "default",
+        };
+      } else {
+        console.warn("Could not find file onUrlChange/" + config.onUrlChange);
+      }
+    } catch (e) {
+      console.warn(
+        `Error resolving onUrlChange plugin name ${config.onUrlChange}:\n${e}`
+      );
+    }
+  }
+
   let featureConfig: FeatureConfig;
   // If the templateConfig does not reference a stream, assume it's a static feature.
   if (isStaticTemplateConfig(config)) {
     featureConfig = {
       ...featureConfigBase,
-      staticPage: {
-        plugin: {},
-      },
+      staticPage: {},
     };
   } else {
     featureConfig = {
       ...featureConfigBase,
-      entityPageSet: {
-        plugin: {},
-      },
+      entityPageSet: {},
     };
   }
 
