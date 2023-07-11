@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
 import { Hours } from ".";
 import {
   HOURS,
@@ -7,18 +7,18 @@ import {
   HOURS_WITH_REOPEN_DATE,
 } from "./sampleData.js";
 
-const meta: ComponentMeta<typeof Hours> = {
+const meta: Meta<typeof Hours> = {
   title: "components/Hours",
   component: Hours,
 };
 
 export default meta;
 
-const Template: ComponentStory<typeof Hours> = (args) => <Hours {...args} />;
+const Template: StoryFn<typeof Hours> = (args) => <Hours {...args} />;
 
 // Hours table with normal hours
 
-export const NormalHours = Template.bind({});
+export const NormalHours: StoryFn<typeof Hours> = Template.bind({});
 
 NormalHours.args = {
   hours: HOURS,
@@ -35,7 +35,7 @@ NormalHours.args = {
 
 // Hours table with normal hours in military time
 
-export const NormalHours24 = Template.bind({});
+export const NormalHours24: StoryFn<typeof Hours> = Template.bind({});
 
 NormalHours24.args = {
   hours: HOURS,
@@ -46,7 +46,7 @@ NormalHours24.args = {
 
 // Hours table with an upcomming holiday
 
-export const HolidayHours = Template.bind({});
+export const HolidayHours: StoryFn<typeof Hours> = Template.bind({});
 
 HolidayHours.args = {
   hours: HOURS_WITH_HOLIDAY,
@@ -54,7 +54,7 @@ HolidayHours.args = {
 
 // Hours table that's temporarily closed
 
-export const TemporarilyClosedHours = Template.bind({});
+export const TemporarilyClosedHours: StoryFn<typeof Hours> = Template.bind({});
 
 TemporarilyClosedHours.args = {
   hours: HOURS_WITH_REOPEN_DATE,

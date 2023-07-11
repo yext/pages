@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { ComponentMeta } from "@storybook/react";
+import { Meta } from "@storybook/react";
 import { LocationMap } from ".";
 import { getDirections } from "../address/methods.js";
 import { MapProviderOption } from "../address/types.js";
 
-export default {
+export const meta: Meta<typeof LocationMap> = {
   title: "components/LocationMap",
   component: LocationMap,
-} as ComponentMeta<typeof LocationMap>;
+};
 
 const sampleAddress = {
   city: "New York",
@@ -69,7 +69,7 @@ export const Map_With_Link = () => {
 
 export const Map_With_Hover_State = () => {
   const [hovered, setHovered] = useState(false);
-  const handleHover = (hovered: boolean, id: string) => {
+  const handleHover = (hovered: boolean) => {
     setHovered(hovered);
   };
 

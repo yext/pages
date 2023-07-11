@@ -16,7 +16,7 @@ export const LinkType = {
  *
  * @public
  */
-export type LinkType = typeof LinkType[keyof typeof LinkType];
+export type LinkType = (typeof LinkType)[keyof typeof LinkType];
 
 /**
  * Type for CTA field
@@ -62,7 +62,7 @@ export interface HREFLinkProps extends LinkConfig {
 export interface CTAWithChildrenLinkProps extends LinkConfig {
   href?: never;
   cta: CTA;
-  children?: never;
+  children?: React.ReactNode;
 }
 
 /**

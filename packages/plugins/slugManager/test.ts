@@ -101,8 +101,7 @@ Deno.test("getUpdates respects slug format", () => {
 });
 
 const baseMockAPI: IAPI = {
-  savedSearchesIncludeEntity: (_searchIds: string[], _entityId: string) =>
-    Promise.resolve(true),
+  savedSearchesIncludeEntity: () => Promise.resolve(true),
   updateField: <T>(
     id: string,
     locale: string,
@@ -118,10 +117,10 @@ const baseMockAPI: IAPI = {
       },
     } as unknown as T);
   },
-  listLanguageProfiles: (_params?: URLSearchParams) => {
+  listLanguageProfiles: () => {
     return Promise.resolve({ profileLists: [], count: 0 });
   },
-  listEntities: (_params?: URLSearchParams) => {
+  listEntities: () => {
     return Promise.resolve({ entities: [], count: 0 });
   },
 };
@@ -186,7 +185,7 @@ Deno.test("webhook skips entities with incorrect type", () => {
 Deno.test("webhook skips entities outside of saved search", () => {
   let updateFieldWasCalled = false;
   const mockApi: IAPI = Object.assign({}, baseMockAPI, {
-    savedSearchesIncludeEntity: (_searchIds: string[], _entityId: string) => {
+    savedSearchesIncludeEntity: () => {
       return false;
     },
     updateField: (id: string, locale: string, field: string, value: string) => {

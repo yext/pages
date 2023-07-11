@@ -1,7 +1,6 @@
 import {
   AddressType,
   GetDirectionsConfig,
-  ListingPublisher,
   ListingPublisherOption,
   ListingType,
   MapProviderOption,

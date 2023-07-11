@@ -1,7 +1,6 @@
 import React from "react";
 import { TemplateModuleInternal } from "../../../../common/src/template/internal/types.js";
 import {
-  PageContext,
   RenderTemplate,
   TemplateProps,
   Manifest,

@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import esbuild from "esbuild";
 import { importFromString } from "module-from-string";
-import glob from "glob";
+import { glob } from "glob";
 import chalk from "chalk";
 import os from "os";
 

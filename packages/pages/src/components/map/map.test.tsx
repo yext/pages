@@ -51,7 +51,7 @@ describe("Map", () => {
 
   it("userMapContext in non map child component", () => {
     const MapSiblingComponent = () => {
-      const map = useMapContext();
+      useMapContext();
       return <div />;
     };
 

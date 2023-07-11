@@ -1,4 +1,3 @@
-import { initCommandModule } from "../init/init.js";
 import { devCommandModule } from "../dev/dev.js";
 import { generateCommandModule } from "../generate/generate.js";
 import { buildCommandModule } from "../build/build.js";
@@ -23,7 +22,6 @@ yargs(hideBin(process.argv))
   .scriptName("pages")
   .command(prodCommandModule)
   .command(devCommandModule)
-  .command(initCommandModule)
   .command(generateCommandModule)
   .command(buildCommandModule)
   .demandCommand()
