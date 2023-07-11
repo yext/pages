@@ -22,11 +22,11 @@ export const getHydrationTemplateDev = (
   clientRenderTemplatePath: string,
   templateModulePath: string,
   props: TemplateRenderProps,
-  hydrate: boolean,
+  hydrate: boolean
 ): string => {
   let hydrationTemplate = `
   import {default as Component} from "${convertToPosixPath(
-    templateModulePath,
+    templateModulePath
   )}";
   `;
 
@@ -60,14 +60,14 @@ export const getHydrationTemplateDev = (
 export const getHydrationTemplate = (
   clientRenderTemplatePath: string,
   templateModulePath: string,
-  props: TemplateRenderProps,
+  props: TemplateRenderProps
 ): string => {
   return `
         const componentUrl = import.meta.resolve("./${convertToPosixPath(
-          templateModulePath,
+          templateModulePath
         )}");
         const renderUrl = import.meta.resolve("./${convertToPosixPath(
-          clientRenderTemplatePath,
+          clientRenderTemplatePath
         )}");
         
         const component = await import(componentUrl);
@@ -96,7 +96,7 @@ const getCommonInjectedServerHtml = (
   clientHydrationString: string | undefined,
   serverHtml: string,
   appLanguage: string,
-  headConfig?: HeadConfig,
+  headConfig?: HeadConfig
 ): string => {
   // Add the language to the <html> tag if it exists
   serverHtml.replace("<!--app-lang-->", appLanguage);
@@ -104,14 +104,14 @@ const getCommonInjectedServerHtml = (
   if (clientHydrationString) {
     serverHtml = injectIntoHead(
       serverHtml,
-      `<script type="module">${clientHydrationString}</script>`,
+      `<script type="module">${clientHydrationString}</script>`
     );
   }
 
   if (headConfig) {
     serverHtml = injectIntoHead(
       serverHtml,
-      renderHeadConfigToString(headConfig),
+      renderHeadConfigToString(headConfig)
     );
   }
 
@@ -131,13 +131,13 @@ export const getServerTemplateDev = (
   clientHydrationString: string | undefined,
   serverHtml: string,
   appLanguage: string,
-  headConfig?: HeadConfig,
+  headConfig?: HeadConfig
 ): string => {
   return getCommonInjectedServerHtml(
     clientHydrationString,
     serverHtml,
     appLanguage,
-    headConfig,
+    headConfig
   );
 };
 
@@ -162,17 +162,17 @@ export const getServerTemplatePlugin = (
   bundlerManifest: bundlerManifest,
   relativePrefixToRoot: string,
   appLanguage: string,
-  headConfig?: HeadConfig,
+  headConfig?: HeadConfig
 ) => {
   let html = getCommonInjectedServerHtml(
     clientHydrationString,
     serverHtml,
     appLanguage,
-    headConfig,
+    headConfig
   );
   html = injectIntoHead(
     html,
-    getCssHtml(templateFilepath, bundlerManifest, relativePrefixToRoot),
+    getCssHtml(templateFilepath, bundlerManifest, relativePrefixToRoot)
   );
 
   return html;
@@ -191,7 +191,7 @@ type ManifestInfo = {
 const getCssHtml = (
   templateFilepath: string,
   bundlerManifest: bundlerManifest,
-  relativePrefixToRoot: string,
+  relativePrefixToRoot: string
 ): string => {
   return Array.from(getCssTags(templateFilepath, bundlerManifest, new Set()))
     .map((f) => `<link rel="stylesheet" href="${relativePrefixToRoot + f}"/>`)
@@ -201,10 +201,10 @@ const getCssHtml = (
 const getCssTags = (
   filepath: string,
   manifest: bundlerManifest,
-  seen: Set<string>,
+  seen: Set<string>
 ): Set<string> => {
   const entry = structuredClone(
-    Object.entries(manifest).find(([file]) => file === filepath),
+    Object.entries(manifest).find(([file]) => file === filepath)
   );
   if (!entry) {
     return new Set();

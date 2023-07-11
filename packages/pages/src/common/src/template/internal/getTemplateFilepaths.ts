@@ -26,7 +26,7 @@ export const getTemplateFilepaths = (paths: Path[]): string[] => {
       .filter(
         (f) =>
           f.indexOf(globalClientRenderFilename) === -1 &&
-          f.indexOf(globalServerRenderFilename) === -1,
+          f.indexOf(globalServerRenderFilename) === -1
       )
       .forEach((f) => {
         const fileName = path.basename(f);
@@ -41,12 +41,12 @@ export const getTemplateFilepaths = (paths: Path[]): string[] => {
 };
 
 export const getTemplateFilepathsFromProjectStructure = (
-  projectStructure: ProjectStructure,
+  projectStructure: ProjectStructure
 ): string[] => {
   return getTemplateFilepaths(
     projectStructure.scopedTemplatesPath
       ? [projectStructure.scopedTemplatesPath, projectStructure.templatesRoot]
-      : [projectStructure.templatesRoot],
+      : [projectStructure.templatesRoot]
   );
 };
 
@@ -65,17 +65,17 @@ const globalServerRenderFilename = "_server.tsx";
  */
 export const getGlobalClientServerRenderTemplates = (
   templatesRootPath: Path,
-  scopedTemplatePath: Path | undefined,
+  scopedTemplatePath: Path | undefined
 ): ClientServerRenderTemplates => {
   const [clientRenderTemplatePath, usingCustomClient] = findGlobalRenderFile(
     templatesRootPath,
     scopedTemplatePath,
-    globalClientRenderFilename,
+    globalClientRenderFilename
   );
   const [serverRenderTemplatePath, usingCustomServer] = findGlobalRenderFile(
     templatesRootPath,
     scopedTemplatePath,
-    globalServerRenderFilename,
+    globalServerRenderFilename
   );
 
   return {
@@ -94,12 +94,12 @@ export const getGlobalClientServerRenderTemplates = (
 const findGlobalRenderFile = (
   templatesRootPath: Path,
   scopedTemplatePath: Path | undefined,
-  globalFilename: string,
+  globalFilename: string
 ): [string, boolean] => {
   if (scopedTemplatePath) {
     const pathToGlobalFile = path.join(
       scopedTemplatePath.getAbsolutePath(),
-      globalFilename,
+      globalFilename
     );
     if (fs.existsSync(pathToGlobalFile)) {
       return [pathToGlobalFile, true];
@@ -108,7 +108,7 @@ const findGlobalRenderFile = (
 
   const pathToGlobalFile = path.join(
     templatesRootPath.getAbsolutePath(),
-    globalFilename,
+    globalFilename
   );
 
   if (fs.existsSync(pathToGlobalFile)) {
@@ -123,7 +123,7 @@ const findGlobalRenderFile = (
     curDirectory = path.join(
       "file://",
       process.cwd(),
-      "src/common/src/template/internal",
+      "src/common/src/template/internal"
     );
   }
 

@@ -38,13 +38,13 @@ export const serverRenderRoute =
           matchingStaticTemplate,
           locale,
           url.pathname,
-          projectStructure,
+          projectStructure
         );
         return;
       } else if (!entityId) {
         send404(
           res,
-          `Cannot find static template with getPath() equal to "${staticURL}"`,
+          `Cannot find static template with getPath() equal to "${staticURL}"`
         );
         return;
       }
@@ -52,12 +52,12 @@ export const serverRenderRoute =
       const templateModuleInternal = await findTemplateModuleInternal(
         vite,
         (t) => feature === t.config.name,
-        templateFilepaths,
+        templateFilepaths
       );
       if (!templateModuleInternal) {
         send404(
           res,
-          `Cannot find template corresponding to feature: ${feature}`,
+          `Cannot find template corresponding to feature: ${feature}`
         );
         return;
       }
@@ -66,7 +66,7 @@ export const serverRenderRoute =
         templateModuleInternal,
         entityId,
         locale,
-        projectStructure,
+        projectStructure
       );
       const props = await propsLoader({
         templateModuleInternal,
@@ -80,7 +80,7 @@ export const serverRenderRoute =
         props,
         vite,
         url.pathname,
-        projectStructure,
+        projectStructure
       );
     } catch (e: any) {
       // If an error is caught, calling next with the error will invoke
@@ -94,11 +94,11 @@ const getDocument = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   entityId: string,
   locale: string,
-  projectStructure: ProjectStructure,
+  projectStructure: ProjectStructure
 ) => {
   if (dynamicGenerateData) {
     const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(
-      templateModuleInternal.config,
+      templateModuleInternal.config
     );
 
     return generateTestDataForPage(
@@ -106,7 +106,7 @@ const getDocument = async (
       featuresConfig,
       entityId,
       locale,
-      projectStructure,
+      projectStructure
     );
   }
   return getLocalDataForEntityOrStaticPage({

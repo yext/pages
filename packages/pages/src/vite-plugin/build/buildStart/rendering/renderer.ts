@@ -26,7 +26,7 @@ export default async (props: TemplateProps): Promise<GeneratedPage> => {
   const responses = await generateResponses(
     template,
     props,
-    pluginRenderTemplates,
+    pluginRenderTemplates
   );
 
   return responses;

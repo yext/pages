@@ -9,19 +9,19 @@ import {
 export const findTemplateModuleInternal = async (
   devserver: ViteDevServer,
   criterion: (t: TemplateModuleInternal<any, any>) => boolean | undefined,
-  templateFilepaths: string[],
+  templateFilepaths: string[]
 ): Promise<TemplateModuleInternal<any, any> | null> => {
   for (const templateFilepath of templateFilepaths) {
     const templateModule = await loadTemplateModule(
       devserver,
-      templateFilepath,
+      templateFilepath
     );
 
     const templateModuleInternal =
       convertTemplateModuleToTemplateModuleInternal(
         templateFilepath,
         templateModule,
-        false,
+        false
       );
 
     if (criterion(templateModuleInternal)) {

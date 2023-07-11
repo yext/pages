@@ -30,7 +30,7 @@ export class HoursIntervalManipulator {
     [interval.start, interval.end].forEach((time) => {
       if (time.split(":").length != 2) {
         throw new Error(
-          `expected interval start and end data to be in the format "HH:MM"`,
+          `expected interval start and end data to be in the format "HH:MM"`
         );
       }
     });
@@ -108,7 +108,7 @@ export class HoursManipulator {
    */
   constructor(hours: HoursType) {
     this.holidayHoursByDate = Object.fromEntries(
-      (hours.holidayHours || []).map((hours) => [hours.date, hours]),
+      (hours.holidayHours || []).map((hours) => [hours.date, hours])
     );
     this.hours = hours;
   }
@@ -134,7 +134,7 @@ export class HoursManipulator {
         for (const interval of hours.openIntervals || []) {
           const hoursInterval = new HoursIntervalManipulator(
             hoursDate,
-            interval,
+            interval
           );
 
           if (hoursInterval.contains(date)) {
@@ -165,7 +165,7 @@ export class HoursManipulator {
     // Ensure the intervals are sorted by start time
     const sortFn = (
       interval1: HoursIntervalManipulator,
-      interval2: HoursIntervalManipulator,
+      interval2: HoursIntervalManipulator
     ) => {
       if (interval1.start === interval2.start) return 0;
       return interval1.start > interval2.start ? 1 : -1;
@@ -215,8 +215,8 @@ export class HoursManipulator {
       if (hours && !hours.isClosed) {
         intervalsList.push(
           ...hours.openIntervals.map(
-            (interval) => new HoursIntervalManipulator(theDate, interval),
-          ),
+            (interval) => new HoursIntervalManipulator(theDate, interval)
+          )
         );
       }
     }
@@ -340,7 +340,7 @@ export function arrayShift(arr: Array<any>, n: number): Array<any> {
  */
 export function intervalsListsAreEqual(
   il1: HoursIntervalManipulator[],
-  il2: HoursIntervalManipulator[],
+  il2: HoursIntervalManipulator[]
 ): boolean {
   if (il1.length != il2.length) {
     return false;

@@ -62,7 +62,7 @@ export type GetPath<T extends TemplateProps> = (props: T) => string;
  * @public
  */
 export type GetHeadConfig<T extends TemplateRenderProps> = (
-  props: T,
+  props: T
 ) => HeadConfig;
 
 /**

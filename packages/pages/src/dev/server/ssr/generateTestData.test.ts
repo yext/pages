@@ -72,7 +72,7 @@ const getGenerateTestDataForPageRunner = () =>
     FEATURE_CONFIG,
     "loc3",
     "en",
-    projectStructure,
+    projectStructure
   );
 
 const getGenerateTestDataForPageWithAlternateLanguageFieldsRunner = () =>
@@ -81,7 +81,7 @@ const getGenerateTestDataForPageWithAlternateLanguageFieldsRunner = () =>
     FEATURE_CONFIG_ALTERNATE_LANGUAGE_FIELDS,
     "4092",
     "es-US",
-    projectStructure,
+    projectStructure
   );
 
 describe("generateTestDataForPage", () => {
@@ -90,7 +90,7 @@ describe("generateTestDataForPage", () => {
 
     mockChildProcess.stdout.emit(
       "data",
-      `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`,
+      `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`
     );
     mockChildProcess.emit("close");
 
@@ -108,7 +108,7 @@ describe("generateTestDataForPage", () => {
 
     mockChildProcess.stdout.emit(
       "data",
-      `${JSON.stringify(CLI_STREAM_DATA_MULTIPLE_DOCS, null, "  ")}`,
+      `${JSON.stringify(CLI_STREAM_DATA_MULTIPLE_DOCS, null, "  ")}`
     );
     mockChildProcess.emit("close");
 
@@ -126,11 +126,11 @@ describe("generateTestDataForPage", () => {
     const streamDataAsString = `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`;
     mockChildProcess.stdout.emit(
       "data",
-      `${streamDataAsString.slice(0, streamDataAsString.length / 2)}`,
+      `${streamDataAsString.slice(0, streamDataAsString.length / 2)}`
     );
     mockChildProcess.stdout.emit(
       "data",
-      `${streamDataAsString.slice(streamDataAsString.length / 2)}`,
+      `${streamDataAsString.slice(streamDataAsString.length / 2)}`
     );
     mockChildProcess.emit("close");
 
@@ -149,16 +149,16 @@ describe("generateTestDataForPage", () => {
 
     mockChildProcess.stdout.emit(
       "data",
-      `${CLI_BOILERPLATE_WITHOUT_UPGRADE_LINES}`,
+      `${CLI_BOILERPLATE_WITHOUT_UPGRADE_LINES}`
     );
     mockChildProcess.stdout.emit("data", `${unrecognizedData}`);
     mockChildProcess.stdout.emit(
       "data",
-      `${CLI_BOILERPLATE_WITHOUT_UPGRADE_LINES}`,
+      `${CLI_BOILERPLATE_WITHOUT_UPGRADE_LINES}`
     );
     mockChildProcess.stdout.emit(
       "data",
-      `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`,
+      `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`
     );
     mockChildProcess.emit("close");
 
@@ -168,7 +168,7 @@ describe("generateTestDataForPage", () => {
     // Make sure we write back the expected messages to the parent process.
     expect(mockParentProcessStdout.write).toHaveBeenCalledTimes(1);
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
-      unrecognizedData + "\n",
+      unrecognizedData + "\n"
     );
   });
 
@@ -179,12 +179,12 @@ describe("generateTestDataForPage", () => {
 
     mockChildProcess.stdout.emit(
       "data",
-      `${CLI_BOILERPLATE_WITH_UPGRADE_LINES}`,
+      `${CLI_BOILERPLATE_WITH_UPGRADE_LINES}`
     );
     mockChildProcess.stdout.emit("data", `${unrecognizedData}`);
     mockChildProcess.stdout.emit(
       "data",
-      `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`,
+      `${JSON.stringify(CLI_STREAM_DATA, null, "  ")}`
     );
     mockChildProcess.emit("close");
 
@@ -194,10 +194,10 @@ describe("generateTestDataForPage", () => {
     // Make sure we write back the expected messages to the parent process.
     expect(mockParentProcessStdout.write).toHaveBeenCalledTimes(2);
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
-      UPGRADE_LINES_OF_CLI_BOILERPLATE,
+      UPGRADE_LINES_OF_CLI_BOILERPLATE
     );
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
-      unrecognizedData + "\n",
+      unrecognizedData + "\n"
     );
   });
 
@@ -247,12 +247,12 @@ describe("generateTestDataForPage", () => {
         "name": "Manchester Farm",
         "siteId": 0,
         "uid": 45138271
-      }`),
+      }`)
     );
     // Make sure we write back the expected messages to the parent process.
     expect(mockParentProcessStdout.write).toHaveBeenCalledTimes(2);
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
-      `Generated 1 files for stream "my-stream-id-1"\n`,
+      `Generated 1 files for stream "my-stream-id-1"\n`
     );
   });
 });

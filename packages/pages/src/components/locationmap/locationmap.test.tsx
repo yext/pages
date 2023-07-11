@@ -12,7 +12,7 @@ describe("LocationMap", () => {
       <LocationMap
         clientKey="gme-yextinc"
         coordinate={{ latitude: 38.8974, longitude: -97.0638 }}
-      />,
+      />
     );
 
     const title = "Open this area in Google Maps (opens a new window)";
@@ -27,7 +27,7 @@ describe("LocationMap", () => {
         provider={MapboxMaps}
         apiKey={process.env.MAPBOX_APIKEY}
         coordinate={{ latitude: 38.8974, longitude: -97.0638 }}
-      />,
+      />
     );
 
     const role = "region";
@@ -43,7 +43,7 @@ describe("LocationMap", () => {
         apiKey={process.env.MAPBOX_APIKEY}
         coordinate={{ latitude: 38.8974, longitude: -97.0638 }}
         pinUrl="https://yext.com"
-      />,
+      />
     );
   });
 
@@ -70,7 +70,7 @@ describe("LocationMap", () => {
             fill="#a1362e"
           />
         </svg>
-      </LocationMap>,
+      </LocationMap>
     );
   });
 });

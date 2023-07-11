@@ -8,7 +8,7 @@ test("getHref: Url type", () => {
       label: "",
       link: "https://yext.com",
       linkType: LinkType.URL,
-    }),
+    })
   ).toEqual("https://yext.com");
 });
 
@@ -18,7 +18,7 @@ test("getHref: Email type", () => {
       label: "",
       link: "email@test.com",
       linkType: LinkType.Email,
-    }),
+    })
   ).toEqual("mailto:email@test.com");
 });
 
@@ -28,7 +28,7 @@ test("getHref: Telephone type", () => {
       label: "",
       link: "+11234567890",
       linkType: LinkType.Phone,
-    }),
+    })
   ).toEqual("tel:+11234567890");
 });
 

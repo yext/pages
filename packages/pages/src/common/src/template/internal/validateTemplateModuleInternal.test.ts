@@ -19,7 +19,7 @@ describe("validateTemplateModuleInternal - validateConfig", () => {
       validateConfig("foo.tsx", templateConfigInternal);
 
     expect(validateConfigFunc).toThrowError(
-      `Template foo.tsx is missing a "name" in the config function.`,
+      `Template foo.tsx is missing a "name" in the config function.`
     );
   });
 
@@ -42,7 +42,7 @@ describe("validateTemplateModuleInternal - validateConfig", () => {
       validateConfig("foo.tsx", templateConfigInternal);
 
     expect(validateConfigFunc).toThrowError(
-      `Template foo.tsx must not define both a "streamId" and a "stream".`,
+      `Template foo.tsx must not define both a "streamId" and a "stream".`
     );
   });
 });
@@ -65,11 +65,11 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
 
     const validateTemplateModuleInternalFunc = () =>
       validateTemplateModuleInternal(
-        templateModuleInteral as TemplateModuleInternal<any, any>,
+        templateModuleInteral as TemplateModuleInternal<any, any>
       );
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
-      `Template foo.tsx is missing an exported getPath function.`,
+      `Template foo.tsx is missing an exported getPath function.`
     );
   });
 
@@ -90,12 +90,12 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
 
     const validateTemplateModuleInternalFunc = () =>
       validateTemplateModuleInternal(
-        templateModuleInteral as TemplateModuleInternal<any, any>,
+        templateModuleInteral as TemplateModuleInternal<any, any>
       );
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
       `Template foo.tsx does not have the necessary exports to produce page. ` +
-        "A module should either have a React component as a default export or a render function.",
+        "A module should either have a React component as a default export or a render function."
     );
   });
 

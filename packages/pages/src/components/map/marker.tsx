@@ -77,7 +77,7 @@ export const Marker = ({
 
       if (cluster) {
         cluster.setPinStore((pinStore) =>
-          pinStore.filter((pin) => pin.id !== id),
+          pinStore.filter((pin) => pin.id !== id)
         );
       }
     };

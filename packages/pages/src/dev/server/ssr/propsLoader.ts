@@ -22,7 +22,7 @@ export const propsLoader = async ({
 
   if (entityId && !document) {
     throw new Error(
-      `Could not find document data for entityId and locale: ${entityId} ${locale}`,
+      `Could not find document data for entityId and locale: ${entityId} ${locale}`
     );
   }
 
@@ -38,7 +38,7 @@ export const propsLoader = async ({
   const path = getPath(templateProps);
   if (!path) {
     throw new Error(
-      `getPath does not return a valid string in template '${templateModuleInternal.path}'`,
+      `getPath does not return a valid string in template '${templateModuleInternal.path}'`
     );
   }
 

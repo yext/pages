@@ -32,7 +32,7 @@ describe("Map", () => {
           id="1"
           coordinate={{ latitude: 38.8974, longitude: -97.0638 }}
         />
-      </Map>,
+      </Map>
     );
   });
 
@@ -45,7 +45,7 @@ describe("Map", () => {
     render(
       <Map clientKey="gme-yextinc">
         <MapChildComponent />
-      </Map>,
+      </Map>
     );
   });
 
@@ -71,7 +71,7 @@ describe("Map", () => {
             coordinate={{ latitude: 38.9974, longitude: -97.1638 }}
           />
         </Clusterer>
-      </Map>,
+      </Map>
     );
   });
 });

@@ -13,7 +13,7 @@ import { glob } from "glob";
  */
 export const generateManifestFile = (
   templateModules: TemplateModuleCollection,
-  projectStructure: ProjectStructure,
+  projectStructure: ProjectStructure
 ): void => {
   const featureNameToBundlePath = new Map();
   for (const [featureName, module] of templateModules.entries()) {
@@ -25,15 +25,15 @@ export const generateManifestFile = (
     ([name, path]) => [
       name,
       convertToPosixPath(projectStructure.distRoot.getRelativePath(path)),
-    ],
+    ]
   );
 
   // Add the renderPaths to the manifest. This defines the _client and _server entries.
   const renderPaths = glob.sync(
     path.join(
       projectStructure.renderBundleOutputRoot.getAbsolutePath(),
-      "**/*.js",
-    ),
+      "**/*.js"
+    )
   );
 
   const relativeRenderPaths = renderPaths.map((filepath) => [
@@ -59,7 +59,7 @@ export const generateManifestFile = (
 
   writeFile(
     path.join(distRoot, "plugin", "manifest.json"),
-    JSON.stringify(manifest, null, "  "),
+    JSON.stringify(manifest, null, "  ")
   );
 
   fs.remove(path.join(distRoot, "manifest.json"));

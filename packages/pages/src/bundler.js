@@ -53,7 +53,7 @@ if (pluginFiles.length == 0) {
 }
 mkdirSync(pluginOutputPath, { recursive: true });
 pluginFiles.map((filepath) =>
-  copyFileSync(filepath, `${pluginOutputPath}${path.basename(filepath)}`),
+  copyFileSync(filepath, `${pluginOutputPath}${path.basename(filepath)}`)
 );
 
 try {

@@ -12,7 +12,7 @@ import { hideBin } from "yargs/helpers";
     import(dep);
   } catch (e) {
     console.error(
-      `Cannot find "${dep}" which is a necessary dependency for generation. Please install this module.`,
+      `Cannot find "${dep}" which is a necessary dependency for generation. Please install this module.`
     );
     process.exit(1);
   }

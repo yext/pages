@@ -45,7 +45,7 @@ export interface HoursTableProps {
   collapseDays?: boolean; // Combine adjacent day rows with the same intervals.
   intervalStringsBuilderFn?: (
     h: HoursTableDayData,
-    t?: Intl.DateTimeFormatOptions,
+    t?: Intl.DateTimeFormatOptions
   ) => string[];
   className?: string;
 }

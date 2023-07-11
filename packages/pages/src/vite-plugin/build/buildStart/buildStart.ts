@@ -37,7 +37,7 @@ const copyPluginFiles = (fileEmitter: EmitFile) => {
   const currentPath = fileURLToPath(import.meta.url);
   const pathToPluginsDir = path.resolve(
     currentPath,
-    path.join("..", "..", "..", "..", "plugin"),
+    path.join("..", "..", "..", "..", "plugin")
   );
 
   // We must use path.resolve to reconcile filepaths on Windows as glob returns filepaths with forward slashes by default.

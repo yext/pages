@@ -44,7 +44,7 @@ export class Analytics implements AnalyticsMethods {
   constructor(
     private templateData: TemplateProps,
     requireOptIn?: boolean | undefined,
-    private pageDomain?: string,
+    private pageDomain?: string
   ) {
     this._optedIn = !requireOptIn;
     this.makeReporter();
@@ -112,7 +112,7 @@ export class Analytics implements AnalyticsMethods {
     this._cookieManager = new CookieManager();
     this._analyticsReporter?.setConversionTrackingEnabled(
       true,
-      this._cookieManager.setAndGetYextCookie(),
+      this._cookieManager.setAndGetYextCookie()
     );
   }
 
@@ -160,7 +160,7 @@ export class Analytics implements AnalyticsMethods {
   /** {@inheritDoc AnalyticsMethods.track} */
   async track(
     eventName: string,
-    conversionData?: ConversionDetails,
+    conversionData?: ConversionDetails
   ): Promise<void> {
     if (!this.canTrack()) {
       return Promise.resolve();
@@ -168,7 +168,7 @@ export class Analytics implements AnalyticsMethods {
 
     await this._analyticsReporter?.track(
       { eventType: slugify(eventName) },
-      conversionData,
+      conversionData
     );
   }
 
@@ -181,7 +181,7 @@ export class Analytics implements AnalyticsMethods {
   /** {@inheritDoc AnalyticsMethods.trackClick} */
   trackClick(
     eventName: string,
-    conversionData?: ConversionDetails,
+    conversionData?: ConversionDetails
   ): (e: MouseEvent<HTMLAnchorElement>) => Promise<void> {
     return (e: MouseEvent) => {
       if (!this.canTrack()) {

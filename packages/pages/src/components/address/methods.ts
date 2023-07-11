@@ -17,7 +17,7 @@ import {
  */
 export const getUnabbreviated = (
   field: keyof AddressType,
-  address: AddressType,
+  address: AddressType
 ): string | undefined => {
   const abbrFields: { [k: string]: keyof AddressType } = {
     region: "localizedRegionName",
@@ -45,7 +45,7 @@ export const getDirections = (
   googlePlaceId?: string,
   config: GetDirectionsConfig = {
     route: false,
-  },
+  }
 ): string | undefined => {
   const NO_QUERY_WARNING = "Failed to construct query for maps service.";
   // Default query for all providers
@@ -65,7 +65,7 @@ export const getDirections = (
       // Apple Maps requires a query string
       if (!query) {
         console.warn(
-          `${NO_QUERY_WARNING} Check that you've provided a valid Yext Address.`,
+          `${NO_QUERY_WARNING} Check that you've provided a valid Yext Address.`
         );
         break;
       }
@@ -85,7 +85,7 @@ export const getDirections = (
       // Bing Maps requires a query
       if (!query) {
         console.warn(
-          `${NO_QUERY_WARNING} Check that you've provided a valid Yext Address.`,
+          `${NO_QUERY_WARNING} Check that you've provided a valid Yext Address.`
         );
         break;
       }
@@ -98,7 +98,7 @@ export const getDirections = (
           listing &&
           listing.publisher &&
           listing.publisher.toUpperCase() ===
-            ListingPublisherOption.GOOGLEMYBUSINESS,
+            ListingPublisherOption.GOOGLEMYBUSINESS
       );
 
       if (gmbListing && gmbListing.listingUrl) {
@@ -112,7 +112,7 @@ export const getDirections = (
       // Google Maps without Listings data requires a query
       if (!query) {
         console.warn(
-          `${NO_QUERY_WARNING} Check that you've provided a valid Yext Address, Yext ListingType, or Google Place ID.`,
+          `${NO_QUERY_WARNING} Check that you've provided a valid Yext Address, Yext ListingType, or Google Place ID.`
         );
         break;
       }
@@ -163,7 +163,7 @@ const getDirectionsBing = (query: string, route?: boolean): string => {
 const getDirectionsGooglePlaceID = (
   placeId: string,
   query?: string,
-  route?: boolean,
+  route?: boolean
 ): string => {
   const queryParam = query ? `&query=${query}` : ``;
   if (route) {

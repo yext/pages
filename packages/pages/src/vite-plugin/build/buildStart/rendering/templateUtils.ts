@@ -19,7 +19,7 @@ const pathToModule = new Map();
  */
 export const readTemplateModules = async (
   feature: string,
-  manifest: Manifest,
+  manifest: Manifest
 ): Promise<TemplateModuleInternal<any, any>> => {
   const path = manifest.bundlePaths[feature].replace("assets", "..");
   if (!path) {
@@ -33,7 +33,7 @@ export const readTemplateModules = async (
   const templateModuleInternal = convertTemplateModuleToTemplateModuleInternal(
     path,
     importedModule,
-    true,
+    true
   );
 
   pathToModule.set(path, templateModuleInternal);
@@ -55,12 +55,12 @@ export interface PluginRenderTemplates {
  * @returns
  */
 export const getPluginRenderTemplates = async (
-  manifest: Manifest,
+  manifest: Manifest
 ): Promise<PluginRenderTemplates> => {
   const serverRenderPath = manifest.renderPaths._server.replace("assets", "..");
 
   const serverRenderTemplateModule = await importRenderTemplate(
-    serverRenderPath,
+    serverRenderPath
   );
 
   return {
@@ -100,7 +100,7 @@ export type GeneratedPage = {
 export const generateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   templateProps: TemplateProps,
-  pluginRenderTemplates: PluginRenderTemplates,
+  pluginRenderTemplates: PluginRenderTemplates
 ): Promise<GeneratedPage> => {
   if (templateModuleInternal.transformProps) {
     templateProps = await templateModuleInternal.transformProps(templateProps);
@@ -109,7 +109,7 @@ export const generateResponses = async (
   const path = templateModuleInternal.getPath(templateProps);
   if (!path) {
     throw new Error(
-      `getPath does not return a valid string in template '${templateModuleInternal.templateName}'`,
+      `getPath does not return a valid string in template '${templateModuleInternal.templateName}'`
     );
   }
 
@@ -122,7 +122,7 @@ export const generateResponses = async (
   const content = await renderHtml(
     templateModuleInternal,
     templateRenderProps,
-    pluginRenderTemplates,
+    pluginRenderTemplates
   );
 
   return {
@@ -142,19 +142,19 @@ export const generateResponses = async (
 const renderHtml = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   props: TemplateRenderProps,
-  pluginRenderTemplates: PluginRenderTemplates,
+  pluginRenderTemplates: PluginRenderTemplates
 ) => {
   const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {
     throw new Error(
-      `Cannot render html from template '${templateModuleInternal.config.name}'. Template is missing render function or default export.`,
+      `Cannot render html from template '${templateModuleInternal.config.name}'. Template is missing render function or default export.`
     );
   }
 
   if (render) {
     if (getHeadConfig) {
       console.warn(
-        `getHeadConfig for template ${templateModuleInternal.config.name} will not be called since a custom render function is defined.`,
+        `getHeadConfig for template ${templateModuleInternal.config.name} will not be called since a custom render function is defined.`
       );
     }
 
@@ -165,6 +165,6 @@ const renderHtml = async (
     props,
     templateModuleInternal,
     templateModuleInternal.config.hydrate,
-    pluginRenderTemplates,
+    pluginRenderTemplates
   );
 };

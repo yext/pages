@@ -35,7 +35,7 @@ export interface AnalyticsMethods {
    */
   trackClick(
     eventName: string,
-    conversionData?: ConversionDetails,
+    conversionData?: ConversionDetails
   ): (e: MouseEvent<HTMLAnchorElement>) => Promise<void>;
 
   /**

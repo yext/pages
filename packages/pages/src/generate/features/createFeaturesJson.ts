@@ -8,7 +8,7 @@ import {
 import { TemplateModuleCollection } from "../../common/src/template/internal/loader.js";
 
 export const getFeaturesConfig = async (
-  templateModules: TemplateModuleCollection,
+  templateModules: TemplateModuleCollection
 ): Promise<FeaturesConfig> => {
   const features: FeatureConfig[] = [];
   const streams: any[] = [];
@@ -26,7 +26,7 @@ export const getFeaturesConfig = async (
  */
 export const createFeaturesJson = async (
   templateModules: TemplateModuleCollection,
-  featurePath: string,
+  featurePath: string
 ): Promise<void> => {
   const { features, streams } = await getFeaturesConfig(templateModules);
   const featureDir = path.dirname(featurePath);
@@ -44,7 +44,7 @@ export const createFeaturesJson = async (
 const mergeFeatureJson = (
   featurePath: string,
   features: FeatureConfig[],
-  streams: any,
+  streams: any
 ): FeaturesConfig => {
   let originalFeaturesJson = {} as any;
   if (fs.existsSync(featurePath)) {

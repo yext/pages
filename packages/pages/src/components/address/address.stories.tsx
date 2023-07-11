@@ -45,7 +45,7 @@ Address_Arlington.args = {
 // Address to Yext Berlin Office
 
 export const Address_Berlin: StoryFn<typeof AddressComponent> = Template.bind(
-  {},
+  {}
 );
 
 Address_Berlin.args = {
@@ -55,7 +55,7 @@ Address_Berlin.args = {
 // Address to Yext Chicago Office
 
 export const Address_Chicago: StoryFn<typeof AddressComponent> = Template.bind(
-  {},
+  {}
 );
 
 Address_Chicago.args = {
@@ -65,7 +65,7 @@ Address_Chicago.args = {
 // Address to Yext London Office
 
 export const Address_London: StoryFn<typeof AddressComponent> = Template.bind(
-  {},
+  {}
 );
 
 Address_London.args = {
@@ -75,7 +75,7 @@ Address_London.args = {
 // Address to Yext Miami Office
 
 export const Address_Miami: StoryFn<typeof AddressComponent> = Template.bind(
-  {},
+  {}
 );
 
 Address_Miami.args = {
@@ -85,7 +85,7 @@ Address_Miami.args = {
 // Address to Yext New York Office
 
 export const Address_NewYork: StoryFn<typeof AddressComponent> = Template.bind(
-  {},
+  {}
 );
 
 Address_NewYork.args = {
@@ -95,7 +95,7 @@ Address_NewYork.args = {
 // Address to Yext Paris Office
 
 export const Address_Paris: StoryFn<typeof AddressComponent> = Template.bind(
-  {},
+  {}
 );
 
 Address_Paris.args = {

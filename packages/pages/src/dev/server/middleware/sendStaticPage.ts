@@ -17,7 +17,7 @@ export default async function sendStaticPage(
   matchingStaticTemplate: TemplateModuleInternal<any, any>,
   locale: string,
   templatePath: string,
-  projectStructure: ProjectStructure,
+  projectStructure: ProjectStructure
 ) {
   const document = await getLocalDataForEntityOrStaticPage({
     entityId: "",
@@ -35,6 +35,6 @@ export default async function sendStaticPage(
     props,
     vite,
     templatePath,
-    projectStructure,
+    projectStructure
   );
 }

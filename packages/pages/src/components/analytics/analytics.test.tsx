@@ -49,7 +49,7 @@ beforeAll(() => {
         configurable: true,
         value: jest.fn(),
       },
-    },
+    }
   );
 
   // this mock allows us to inspect the fetch requests sent by the analytics
@@ -57,7 +57,7 @@ beforeAll(() => {
   global.fetch = jest.fn().mockImplementation(
     jest.fn(() => {
       return Promise.resolve({ status: 200 });
-    }) as jest.Mock,
+    }) as jest.Mock
   );
 
   jest.spyOn(global, "fetch");
@@ -125,7 +125,7 @@ describe("Analytics", () => {
         <Link href="https://yext.com" onClick={(e) => e.preventDefault()}>
           Click Me
         </Link>
-      </AnalyticsProvider>,
+      </AnalyticsProvider>
     );
 
     fireEvent.click(screen.getByRole("link"));
@@ -216,7 +216,7 @@ describe("Analytics", () => {
         enableTrackingCookie={true}
       >
         <MyButton />
-      </AnalyticsProvider>,
+      </AnalyticsProvider>
     );
 
     const user = userEvent.setup();
@@ -235,10 +235,10 @@ describe("Analytics", () => {
       const generatedConversionUrl = new URL(generatedConversionUrlStr);
       expect(generatedConversionUrl.searchParams.get("_yfpc")).toBeTruthy();
       expect(generatedConversionUrl.searchParams.get("cid")).toBe(
-        expectedConversionData.cid,
+        expectedConversionData.cid
       );
       expect(generatedConversionUrl.searchParams.get("cv")).toBe(
-        expectedConversionData.cv,
+        expectedConversionData.cv
       );
     });
   });

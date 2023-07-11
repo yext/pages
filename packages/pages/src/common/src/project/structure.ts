@@ -126,7 +126,7 @@ export class ProjectStructure {
   constructor(config?: Optional<ProjectStructureConfig>) {
     this.#config = merge(defaultProjectStructureConfig, config);
     this.sitesConfigRoot = new Path(
-      this.#config.filepathsConfig.sitesConfigRoot,
+      this.#config.filepathsConfig.sitesConfigRoot
     );
     this.templatesRoot = new Path(this.#config.filepathsConfig.templatesRoot);
 
@@ -134,10 +134,10 @@ export class ProjectStructure {
     if (scope) {
       this.scope = scope;
       this.scopedSitesConfigPath = new Path(
-        pathLib.join(this.sitesConfigRoot.path, scope),
+        pathLib.join(this.sitesConfigRoot.path, scope)
       );
       this.scopedTemplatesPath = new Path(
-        pathLib.join(this.templatesRoot.path, scope),
+        pathLib.join(this.templatesRoot.path, scope)
       );
     }
 
@@ -145,14 +145,14 @@ export class ProjectStructure {
     this.serverBundleOutputRoot = new Path(
       pathLib.join(
         this.#config.filepathsConfig.distRoot,
-        this.#config.filepathsConfig.serverBundleOutputRoot,
-      ),
+        this.#config.filepathsConfig.serverBundleOutputRoot
+      )
     );
     this.renderBundleOutputRoot = new Path(
       pathLib.join(
         this.#config.filepathsConfig.distRoot,
-        this.#config.filepathsConfig.renderBundleOutputRoot,
-      ),
+        this.#config.filepathsConfig.renderBundleOutputRoot
+      )
     );
     this.ciConfig = this.#config.filenamesConfig.ciConfig;
     this.featuresConfig = this.#config.filenamesConfig.featuresConfig;

@@ -12,7 +12,7 @@ const handler = (): void => {
   const sitesConfigRoot =
     defaultProjectStructureConfig.filepathsConfig.sitesConfigRoot;
   const ciConfigAbsolutePath = new Path(
-    path.join(process.cwd(), sitesConfigRoot, ciConfigFilename),
+    path.join(process.cwd(), sitesConfigRoot, ciConfigFilename)
   );
   updateCiConfig(ciConfigAbsolutePath.getAbsolutePath(), true);
 };
@@ -38,7 +38,7 @@ export const ciCommandModule: CommandModule<unknown, unknown> = {
  */
 export const updateCiConfig = (
   ciConfigPath: string,
-  calledViaCommand: boolean,
+  calledViaCommand: boolean
 ) => {
   const ciDir = path.dirname(ciConfigPath);
   if (!fs.existsSync(ciDir)) {
@@ -61,7 +61,7 @@ export const updateCiConfig = (
   if (updatedCiConfigJson) {
     fs.writeFileSync(
       ciConfigPath,
-      JSON.stringify(updatedCiConfigJson, null, "  "),
+      JSON.stringify(updatedCiConfigJson, null, "  ")
     );
   }
 };
@@ -78,7 +78,7 @@ export const getUpdatedCiConfig = (ciConfig: CiConfig): CiConfig => {
   const generatorPluginIndex = ciConfigCopy.artifactStructure.plugins.findIndex(
     (plugin) => {
       return plugin.event === "ON_PAGE_GENERATE";
-    },
+    }
   );
 
   // replace the "Generator" plugin if it was already defined

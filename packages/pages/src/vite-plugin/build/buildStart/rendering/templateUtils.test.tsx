@@ -47,7 +47,7 @@ const serverRenderTemplate: RenderTemplate = {
           <body>
             <div id="reactele"></div>
           </body>
-        </html>`,
+        </html>`
     );
   },
 };
@@ -61,10 +61,10 @@ describe("generateResponses", () => {
       {
         client: path.join(
           process.cwd(),
-          "src/common/src/template/internal/_client.tsx",
+          "src/common/src/template/internal/_client.tsx"
         ),
         server: serverRenderTemplate,
-      },
+      }
     );
     expect(fn).toHaveBeenCalled();
   });
@@ -77,10 +77,10 @@ describe("generateResponses", () => {
       {
         client: path.join(
           process.cwd(),
-          "src/common/src/template/internal/_client.tsx",
+          "src/common/src/template/internal/_client.tsx"
         ),
         server: serverRenderTemplate,
-      },
+      }
     );
     expect(fn).toHaveBeenCalled();
   });

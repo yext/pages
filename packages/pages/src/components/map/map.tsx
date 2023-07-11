@@ -119,7 +119,7 @@ export const Map = ({
         {
           "is-loaded": loaded,
         },
-        className,
+        className
       )}
       id="map"
       ref={wrapper}

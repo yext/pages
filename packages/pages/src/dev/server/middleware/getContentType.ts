@@ -7,7 +7,7 @@ import { TemplateRenderProps } from "../../../common/src/template/types.js";
  */
 export const getContentType = (
   templateModuleInternal: TemplateModuleInternal<any, any>,
-  props: TemplateRenderProps,
+  props: TemplateRenderProps
 ) => {
   // TODO: once custom headers are supported at the template level use that instead,
   // with a fallback to the current logic.

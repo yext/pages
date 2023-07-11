@@ -70,5 +70,5 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
         {children || link.label || renderedLink}
       </a>
     );
-  },
+  }
 );

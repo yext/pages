@@ -9,7 +9,7 @@ import os from "os";
 const FUNCTIONS_PATH = path.resolve("functions");
 const FUNCTION_METADATA_PATH = path.join(
   FUNCTIONS_PATH,
-  "functionMetadata.json",
+  "functionMetadata.json"
 );
 const TEMP_DIR = os.tmpdir();
 
@@ -33,7 +33,7 @@ const getFunctionMetadataMap = async (): Promise<
     .map((f) => path.resolve(f));
 
   const results = await Promise.allSettled(
-    filepaths.map(generateFunctionMetadata),
+    filepaths.map(generateFunctionMetadata)
   );
   const functionMetadataArray: [string, FunctionMetadata][] = results
     .filter((result) => {
@@ -57,7 +57,7 @@ const getFunctionMetadataMap = async (): Promise<
  * If the file does not contain a default export, a rejected {@link Promise} will be returned.
  */
 async function generateFunctionMetadata(
-  filepath: string,
+  filepath: string
 ): Promise<[string, FunctionMetadata]> {
   const buildResult = await esbuild.build({
     entryPoints: [filepath],
@@ -81,7 +81,7 @@ export const generateFunctionMetadataFile = async () => {
   const functionMetadataMap = await getFunctionMetadataMap();
   fs.writeFileSync(
     FUNCTION_METADATA_PATH,
-    JSON.stringify(functionMetadataMap, null, 2),
+    JSON.stringify(functionMetadataMap, null, 2)
   );
 };
 

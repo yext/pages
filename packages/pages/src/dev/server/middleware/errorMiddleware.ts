@@ -40,7 +40,7 @@ export const errorMiddleware =
           (unescapedLine) =>
             "<li>" +
             ansiToHtmlConverter.toHtml(escapeHtmlBlock(unescapedLine)) +
-            "</li>",
+            "</li>"
         )
         .join("");
 
@@ -53,7 +53,7 @@ export const errorMiddleware =
       res
         .status(500)
         .end(
-          await vite.transformIndexHtml(req.originalUrl, htmlResponseString),
+          await vite.transformIndexHtml(req.originalUrl, htmlResponseString)
         );
     } catch (e: any) {
       console.error(e);

@@ -91,7 +91,7 @@ function collapseDays(hoursDays: HoursTableDayData[]): HoursTableDayData[] {
 
 function defaultIntervalStringsBuilder(
   dayData: HoursTableDayData,
-  timeOptions?: Intl.DateTimeFormatOptions,
+  timeOptions?: Intl.DateTimeFormatOptions
 ): string[] {
   const intervalStrings: string[] = [];
   if (dayData.intervals.length === 0) {
@@ -162,7 +162,7 @@ const Hours: React.FC<HoursTableProps> = (props) => {
       dayOfWeek: dayOfWeekNames[i],
       sortIdx: dayOfWeekSortIdx[i],
       intervals: allIntervals.filter(
-        (interval) => interval.start.getDay() === i,
+        (interval) => interval.start.getDay() === i
       ),
       isToday: now.getDay() === i,
     });
@@ -191,7 +191,7 @@ const Hours: React.FC<HoursTableProps> = (props) => {
               props.intervalStringsBuilderFn || defaultIntervalStringsBuilder;
             const intervalStrings = intervalStringsBuilderFn(
               dayData,
-              props.timeOptions,
+              props.timeOptions
             );
 
             return (

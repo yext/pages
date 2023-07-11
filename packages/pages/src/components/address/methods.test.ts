@@ -52,9 +52,9 @@ describe("getDirections()", () => {
     expect(
       getDirections(sampleAddress, sampleListings, undefined, {
         provider: MapProviderOption.APPLE,
-      }),
+      })
     ).toEqual(
-      "https://maps.apple.com/?address=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US",
+      "https://maps.apple.com/?address=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US"
     );
   });
 
@@ -62,9 +62,9 @@ describe("getDirections()", () => {
     expect(
       getDirections(sampleAddress, sampleListings, undefined, {
         provider: MapProviderOption.BING,
-      }),
+      })
     ).toEqual(
-      "https://bing.com/maps/default.aspx?where1=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010",
+      "https://bing.com/maps/default.aspx?where1=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010"
     );
   });
 
@@ -73,15 +73,15 @@ describe("getDirections()", () => {
       getDirections(sampleAddress, sampleListings, undefined, {
         provider: MapProviderOption.BING,
         route: true,
-      }),
+      })
     ).toEqual(
-      "https://bing.com/maps/default.aspx?rtp=adr.60%20W%2023rd%20St,%20New%20York,%20NY,%2010010",
+      "https://bing.com/maps/default.aspx?rtp=adr.60%20W%2023rd%20St,%20New%20York,%20NY,%2010010"
     );
   });
 
   it("returns URL to Google Maps address query", () => {
     expect(getDirections(sampleAddress)).toEqual(
-      "https://maps.google.com/maps/search/?api=1&query=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US",
+      "https://maps.google.com/maps/search/?api=1&query=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US"
     );
   });
 
@@ -89,41 +89,41 @@ describe("getDirections()", () => {
     expect(
       getDirections(sampleAddress, undefined, undefined, {
         route: true,
-      }),
+      })
     ).toEqual(
-      "https://maps.google.com/maps/dir/?api=1&destination=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US",
+      "https://maps.google.com/maps/dir/?api=1&destination=60%20W%2023rd%20St,%20New%20York,%20NY,%2010010,%20US"
     );
   });
 
   it("returns URL to Google Maps GMB listing", () => {
     expect(getDirections(undefined, sampleListings)).toEqual(
-      "https://maps.google.com/maps?cid=3287244376840534043",
+      "https://maps.google.com/maps?cid=3287244376840534043"
     );
   });
 
   it("returns URL to Google Maps GMB listing with lower case publisher", () => {
     expect(getDirections(undefined, sampleListingsLowerCase)).toEqual(
-      "https://maps.google.com/maps?cid=3287244376840534043",
+      "https://maps.google.com/maps?cid=3287244376840534043"
     );
   });
 
   it("returns URL to Google Maps GMB listing with upper case publisher", () => {
     expect(getDirections(undefined, sampleListingsUpperCase)).toEqual(
-      "https://maps.google.com/maps?cid=3287244376840534043",
+      "https://maps.google.com/maps?cid=3287244376840534043"
     );
   });
 
   it("returns URL to Google Maps Place ID with route", () => {
     expect(
-      getDirections(undefined, undefined, "someID", { route: true }),
+      getDirections(undefined, undefined, "someID", { route: true })
     ).toEqual(
-      "https://maps.google.com/maps/dir/?api=1&destination_place_id=someID&destination=direct",
+      "https://maps.google.com/maps/dir/?api=1&destination_place_id=someID&destination=direct"
     );
   });
 
   it("returns URL to Google Maps Place ID, by forcing route", () => {
     expect(getDirections(undefined, undefined, "someID")).toEqual(
-      "https://maps.google.com/maps/dir/?api=1&destination_place_id=someID&destination=direct",
+      "https://maps.google.com/maps/dir/?api=1&destination_place_id=someID&destination=direct"
     );
   });
 });

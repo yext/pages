@@ -28,7 +28,7 @@ describe("getTemplateFilepaths", () => {
       new Path(path.join(process.cwd(), rootPath)),
     ]);
     expect(templatesFilepath.sort()).toEqual(
-      [`${rootPath}/share.tsx`, `${rootPath}/test.tsx`].sort(),
+      [`${rootPath}/share.tsx`, `${rootPath}/test.tsx`].sort()
     );
   });
 
@@ -42,7 +42,7 @@ describe("getTemplateFilepaths", () => {
         `${rootPath}/share.tsx`,
         `${domain1Path}/test.tsx`,
         `${domain1Path}/brand1.tsx`,
-      ].sort(),
+      ].sort()
     );
   });
 });
