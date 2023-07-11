@@ -59,7 +59,16 @@ export interface HttpFunctionResponse {
  */
 export interface OnUrlChangeArgument {
   /** The domains the site is hosted on. */
-  domains: string[];
+  domainMap: {
+    /** The production domain. */
+    production: string;
+    /** The staging domain. */
+    staging: string;
+    /** The preview domain. */
+    deployPreview: string;
+    /** The reverse proxy prefix. */
+    displayUrlPrefix: string;
+  };
   /** The entity's ID. */
   entityId: string;
   /** The name of the feature. */
@@ -70,8 +79,10 @@ export interface OnUrlChangeArgument {
   path: string;
   /** Site object containing all deploy-related information. */
   site: Site;
-  /** The entity's URL. */
+  /** The entity's new URL. */
   url: string;
+  /** The entity's old URL. */
+  previousUrl: string;
 }
 
 /**

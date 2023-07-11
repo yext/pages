@@ -31,13 +31,19 @@ const exampleHttpFunctionArgument: HttpFunctionArgument = {
 };
 
 const exampleOnUrlChangeArgument: OnUrlChangeArgument = {
-  domains: ["exampledomain.com"],
+  domainMap: {
+    production: "example.com",
+    staging: "alpha-beta-charlie-pgsdemo.com-preview.pagescdn.com",
+    deployPreview: "h2if81-pgsdemo.com-preview.pagescdn.com",
+    displayUrlPrefix: "prefix",
+  },
   entityId: "entity12",
   feature: "feature",
   locale: "en",
   path: "slug",
   site: mockSiteInfo,
   url: "/slug",
+  previousUrl: "/slug-old",
 };
 
 const createMockFilePath = (filepath: string): path.ParsedPath => {
