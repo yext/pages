@@ -117,6 +117,16 @@ const convertTemplateConfigToTemplateConfigInternal = (
   templateName: string,
   templateConfig: TemplateConfig | undefined
 ): TemplateConfigInternal => {
+  if (
+    templateConfig?.stream?.localization?.locales &&
+    templateConfig.stream.localization.locales.length > 0 &&
+    templateConfig.stream.localization.primary === undefined
+  ) {
+    templateConfig.stream.localization.primary = false;
+  } else if (templateConfig?.stream) {
+    templateConfig.stream.localization = { primary: true };
+  }
+
   return {
     name: templateConfig?.name ?? templateName,
     hydrate: templateConfig?.hydrate ?? false,

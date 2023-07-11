@@ -122,8 +122,9 @@ export interface Stream {
   localization: {
     /** The entity profiles languages to apply to the stream */
     locales?: string[];
-    /** Whether to include the primary profile language. Must be false when locales is defined. */
-    primary: boolean;
+    /** Whether to include the primary profile language.
+     * Defaults to false when locales is defined. */
+    primary?: boolean;
   };
   /** The transformation to apply to the stream */
   transform?: {
