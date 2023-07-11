@@ -71,6 +71,8 @@ export interface Plugin {
   /** The entry-point for the plugin. This is the function that must be defined in the
    * source files and will be invoked upon event firing. */
   functionName: string;
+  /** The route to host the plug in at */
+  apiPath?: string;
 }
 
 /**

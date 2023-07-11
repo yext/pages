@@ -60,12 +60,17 @@ export interface TemplateConfigInternal {
   stream?: Stream;
   /** The specific fields to add additional language options to based on the stream's localization */
   alternateLanguageFields?: string[];
+  /** The name of the onUrlChange function to use. */
+  onUrlChange?: string;
 }
 
 /**
  * Parses a filepath and returns the relevant parts, such as the base filename.
  */
-const parse = (filepath: string, adjustForFingerprintedAsset: boolean) => {
+export const parse = (
+  filepath: string,
+  adjustForFingerprintedAsset: boolean
+) => {
   let base = filepath.split("/")[filepath.split("/").length - 1];
   const extension = base.slice(base.lastIndexOf("."));
   let name = base.slice(0, base.lastIndexOf("."));

@@ -6,9 +6,7 @@ export const FEATURE_CONFIG: FeaturesConfig = {
       name: "index",
       streamId: "products",
       templateType: "JS",
-      entityPageSet: {
-        plugin: {},
-      },
+      entityPageSet: {},
     },
   ],
   streams: [
@@ -31,9 +29,7 @@ export const FEATURE_CONFIG_ALTERNATE_LANGUAGE_FIELDS: FeaturesConfig = {
       name: "index",
       streamId: "products",
       templateType: "JS",
-      entityPageSet: {
-        plugin: {},
-      },
+      entityPageSet: {},
       alternateLanguageFields: ["name"],
     },
   ],

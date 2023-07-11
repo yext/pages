@@ -65,7 +65,7 @@ describe("ci - getUpdatedCiConfig", () => {
       },
     };
 
-    expect(getUpdatedCiConfig(input)).toEqual(expected);
+    expect(getUpdatedCiConfig(input)).resolves.toEqual(expected);
   });
 
   it("updates the Generator plugin if it exists", async () => {
@@ -148,6 +148,6 @@ describe("ci - getUpdatedCiConfig", () => {
       },
     };
 
-    expect(getUpdatedCiConfig(input)).toEqual(expected);
+    expect(getUpdatedCiConfig(input)).resolves.toEqual(expected);
   });
 });

@@ -17,7 +17,8 @@ import {
 import { ViteDevServer } from "vite";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
-import { EventType, getPluginFileMap } from "../ssr/getPluginFileMap.js";
+import { loadFunctions } from "../../../common/src/function/internal/loader.js";
+import { FunctionModuleInternal } from "../../../common/src/function/internal/types.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -124,8 +125,10 @@ export const indexPage =
         );
       }
 
-      // Add http/serverless functions
-      indexPageHtml = addHttpFuncs(indexPageHtml);
+      const functionsList = [
+        ...(await loadFunctions("src/functions")).values(),
+      ];
+      indexPageHtml = createFunctionsTable(functionsList, indexPageHtml);
 
       // Send the HTML back.
       res.status(200).set({ "Content-Type": "text/html" }).end(indexPageHtml);
@@ -135,42 +138,6 @@ export const indexPage =
       next(e);
     }
   };
-
-const addHttpFuncs = (indexPageHtml: string) => {
-  const pluginFileMap = getPluginFileMap();
-  const httpFuncs = Object.entries(pluginFileMap).filter(
-    ([funcName, source]) => {
-      if (source.event === EventType.HTTP) {
-        if (source.apiPath) {
-          return true;
-        }
-        console.error(
-          `Serverless HTTP function ${funcName} is missing a path. It will not be listed on the index page.`
-        );
-      }
-      return false;
-    }
-  );
-
-  return httpFuncs.length
-    ? indexPageHtml.replace(
-        `<!--serverless-functions-html-->`,
-        `<h3>HTTP Functions</h3>
-      <table>
-        <thead>
-          <tr>
-            <td>URL</td>
-          </tr>
-        </thead>
-        <tbody>
-          ${httpFuncs
-            .map(([_, source]) => `<tr><td>${source.apiPath}</td></tr>`)
-            .join("")}
-        </tbody>
-      </table>`
-      )
-    : indexPageHtml;
-};
 
 const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
   return Array.from(localDataManifest.static).reduce(
@@ -276,4 +243,50 @@ const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
   }
 
   return `<p>${localModeInfoText}</p>`;
+};
+
+const createFunctionsTable = (
+  functionsList: FunctionModuleInternal[],
+  indexPageHtml: string
+) => {
+  if (functionsList.length > 0) {
+    return indexPageHtml.replace(
+      "<!--functions-html-->",
+      `
+          <h3>Functions</h3>
+          <table>
+            <thead>
+              <tr>
+                <td>URL</td>
+                 <td>Function Type</td>
+              </tr>
+            </thead>
+            <tbody>
+              ${functionsList.reduce((previous, func) => {
+                return (
+                  previous +
+                  `
+                  <tr>
+                    <td>
+                      ${
+                        func.config.event === "API"
+                          ? `<a href="http://localhost:${devServerPort}/${func.slug.dev}">
+                          ${func.slug.original}                 
+                        </a>`
+                          : func.slug.dev
+                      }
+                    </td>
+                    <td>
+                      ${func.config.event}
+                    </td>
+                  </tr>
+                `
+                );
+              }, "")}
+            </tbody>
+          </table>
+        `
+    );
+  }
+  return indexPageHtml;
 };
