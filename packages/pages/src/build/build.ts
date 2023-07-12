@@ -9,7 +9,7 @@ const handler = async ({ scope }: BuildArgs) => {
   if (scope) {
     process.env.YEXT_PAGES_SCOPE = scope;
   }
-  build();
+  await build();
 };
 
 export const buildCommandModule: CommandModule<unknown, BuildArgs> = {
