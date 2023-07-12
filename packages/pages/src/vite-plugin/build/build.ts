@@ -3,10 +3,14 @@ import buildStart from "./buildStart/buildStart.js";
 import closeBundle from "./closeBundle/closeBundle.js";
 import path, { parse } from "path";
 import { InputOption } from "rollup";
-import { ProjectStructure } from "../../common/src/project/structure.js";
+import {
+  defaultProjectStructureConfig,
+  ProjectStructure,
+} from "../../common/src/project/structure.js";
 import { readdir } from "fs/promises";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { getGlobalClientServerRenderTemplates } from "../../common/src/template/internal/getTemplateFilepaths.js";
+import { loadFunctions } from "../../common/src/function/internal/loader.js";
 
 const intro = `
 var global = globalThis;
@@ -42,6 +46,13 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
               intro,
               assetFileNames: "assets/static/[name]-[hash][extname]",
               chunkFileNames: "assets/static/[name]-[hash].js",
+              sanitizeFileName: false,
+              entryFileNames: (chunkInfo) => {
+                if (chunkInfo.name.includes("functions")) {
+                  return "[name]/mod.ts";
+                }
+                return "assets/[name].[hash].js";
+              },
             },
           },
           reportCompressedSize: false,
@@ -105,6 +116,16 @@ const discoverInputs = async (
   }
 
   await updateEntryPoints(rootTemplateDir);
+
+  (
+    await loadFunctions(
+      defaultProjectStructureConfig.filepathsConfig.functionsRoot
+    )
+  ).forEach((functionModule) => {
+    entryPoints[`functions/${functionModule.config.name}`] = path.format(
+      functionModule.filePath
+    );
+  });
 
   return { ...entryPoints, ...discoverRenderTemplates(projectStructure) };
 };

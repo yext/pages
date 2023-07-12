@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { serverRenderRoute } from "./middleware/serverRenderRoute.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
@@ -11,6 +12,11 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
+import {
+  FunctionModuleCollection,
+  loadFunctions,
+} from "../../common/src/function/internal/loader.js";
+import { serveHttpFunction } from "./middleware/serveHttpFunction.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -30,6 +36,28 @@ export const createServer = async (
       scope,
     },
   });
+
+  // Read features.json and set the default locale to the first locale listed
+  // Default to en if features.json cannot be read or there is no locales entry
+  let defaultLocale = "en";
+  try {
+    const featuresJson = JSON.parse(
+      fs.readFileSync(
+        path.join(
+          projectStructure.sitesConfigRoot.getAbsolutePath(),
+          projectStructure.featuresConfig
+        ),
+        "utf-8"
+      )
+    );
+    if (featuresJson.locales && featuresJson.locales.length > 0) {
+      defaultLocale = featuresJson.locales[0];
+    }
+  } catch (e) {
+    if (e !== "Error: ENOENT: no such file or directory") {
+      console.warn(e);
+    }
+  }
 
   // create vite using ssr mode
   const vite = await createViteServer({
@@ -66,13 +94,81 @@ export const createServer = async (
     await generateTestData(projectStructure.scope);
   }
 
+  // Load functions from their source files
+  const functionModules: FunctionModuleCollection = new Map();
+  const loadUpdatedFunctionModules = async () => {
+    const loadedFunctionModules = await loadFunctions(
+      projectStructure.serverlessFunctionsRoot.path
+    );
+    loadedFunctionModules.forEach((functionModule) => {
+      functionModules.set(functionModule.config.name, functionModule);
+    });
+  };
+
+  await loadUpdatedFunctionModules(); // Load functions on initial setup
+
+  // Assign routes for functions based on their slug when the server started
+  const functionsAtServerStart = [...functionModules.values()];
+
+  /*
+   * Sort so that any functions with path params come last
+   * This allows a file like http/api/users/specialCase.ts (slug /api/users/specialCase)
+   * to take precedence over http/api/users/[id].ts (slug /api/users/:id)
+   * This mimics the production server's behavior
+   */
+  functionsAtServerStart.sort((a, b) => {
+    const aContainsParam = a.slug.dev.includes(":");
+    const bContainsParam = b.slug.dev.includes(":");
+    if (aContainsParam && !bContainsParam) return 1;
+    if (!aContainsParam && bContainsParam) return -1;
+    return b.slug.dev.length - a.slug.dev.length;
+  });
+
+  if (functionsAtServerStart.length > 0) {
+    functionsAtServerStart.forEach((func) => {
+      if (func.config.event === "API") {
+        app.use("/" + func.slug.dev, (req, res, next) => {
+          if (req.baseUrl !== req.originalUrl.split("?")[0]) {
+            // mimic production server behavior by only using strict matches (ignoring query params)
+            return next();
+          }
+          const updatedFunction = functionModules.get(func.config.name);
+          if (!updatedFunction) {
+            throw new Error(
+              "Could not load function with name" + func.config.name
+            );
+          }
+          serveHttpFunction(req, res, next, updatedFunction);
+        });
+      }
+    });
+  }
+
+  // Reload functions if their source files change
+  // Only supports updates in the default export, changes to the slug require server restart
+  vite.watcher.on("change", async (filepath) => {
+    if (filepath.includes("src/functions")) {
+      await loadUpdatedFunctionModules();
+    }
+  });
+
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.
   app.use(
     /^\/(.+)/,
     useProdURLs
-      ? serverRenderSlugRoute({ vite, dynamicGenerateData, projectStructure })
-      : serverRenderRoute({ vite, dynamicGenerateData, projectStructure })
+      ? serverRenderSlugRoute({
+          vite,
+          dynamicGenerateData,
+          projectStructure,
+          defaultLocale,
+        })
+      : serverRenderRoute({
+          vite,
+          dynamicGenerateData,
+          projectStructure,
+          defaultLocale,
+        })
   );
 
   // Serve the index page at the root of the dev server.

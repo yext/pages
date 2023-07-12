@@ -10,6 +10,8 @@ import { Path } from "./path.js";
 export interface ProjectFilepaths {
   /** The folder path where all template files live */
   templatesRoot: string;
+  /** The folder path where all serverless function files live */
+  functionsRoot: string;
   /** The folder path where the sites-config files live */
   sitesConfigRoot: string;
   /** The folder path where the compiled files should go */
@@ -18,6 +20,8 @@ export interface ProjectFilepaths {
   serverBundleOutputRoot: string;
   /** The folder path where the compiled render (_client/_server) bundles should go */
   renderBundleOutputRoot: string;
+  /** The folder path where the compiled function bundles should go */
+  functionBundleOutputRoot: string;
   /**
    * This is used for the case of multibrand setup within a single repo.
    *
@@ -75,10 +79,12 @@ export interface ProjectStructureConfig {
 export const defaultProjectStructureConfig: ProjectStructureConfig = {
   filepathsConfig: {
     templatesRoot: "src/templates",
+    functionsRoot: "src/functions",
     sitesConfigRoot: "sites-config",
     distRoot: "dist",
     serverBundleOutputRoot: "assets/server",
     renderBundleOutputRoot: "assets/render",
+    functionBundleOutputRoot: "functions",
   },
   filenamesConfig: {
     ciConfig: "ci.json",
@@ -110,6 +116,7 @@ export class ProjectStructure {
 
   sitesConfigRoot: Path;
   templatesRoot: Path;
+  serverlessFunctionsRoot: Path;
   scope?: string;
   scopedTemplatesPath?: Path;
   scopedSitesConfigPath?: Path;
@@ -117,6 +124,7 @@ export class ProjectStructure {
   distRoot: Path;
   serverBundleOutputRoot: Path;
   renderBundleOutputRoot: Path;
+  functionBundleOutputRoot: Path;
   ciConfig: string;
   featuresConfig: string;
   envVarDir: string;
@@ -129,6 +137,9 @@ export class ProjectStructure {
       this.#config.filepathsConfig.sitesConfigRoot
     );
     this.templatesRoot = new Path(this.#config.filepathsConfig.templatesRoot);
+    this.serverlessFunctionsRoot = new Path(
+      this.#config.filepathsConfig.functionsRoot
+    );
 
     const scope = this.#config.filepathsConfig.scope;
     if (scope) {
@@ -152,6 +163,12 @@ export class ProjectStructure {
       pathLib.join(
         this.#config.filepathsConfig.distRoot,
         this.#config.filepathsConfig.renderBundleOutputRoot
+      )
+    );
+    this.functionBundleOutputRoot = new Path(
+      pathLib.join(
+        this.#config.filepathsConfig.distRoot,
+        this.#config.filepathsConfig.functionBundleOutputRoot
       )
     );
     this.ciConfig = this.#config.filenamesConfig.ciConfig;

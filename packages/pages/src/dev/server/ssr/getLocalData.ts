@@ -11,12 +11,17 @@ const LOCAL_DATA_PATH = "localData";
  * to generate in the indexPage.
  */
 export interface LocalDataManifest {
-  static: {
-    // The featureName for a specific static template
-    featureName: string;
-    // The return value of the template's getPath()
-    staticURL: string;
-  }[];
+  static: Map<
+    string,
+    {
+      // The featureName for a specific static template
+      featureName: string;
+      // The return value of the template's getPath()
+      staticURL: string;
+      // The locale codes
+      locales: string[];
+    }
+  >;
   entity: Map<
     string,
     {
@@ -36,7 +41,7 @@ export const getLocalDataManifest = async (
   templateFilepaths: string[]
 ): Promise<LocalDataManifest> => {
   const localDataManifest: LocalDataManifest = {
-    static: [],
+    static: new Map(),
     entity: new Map(),
   };
 
@@ -87,10 +92,17 @@ export const getLocalDataManifest = async (
         );
         continue;
       }
-      localDataManifest.static.push({
-        featureName,
-        staticURL: templateModuleInternal.getPath({}),
-      });
+      if (localDataManifest.static.has(featureName)) {
+        localDataManifest.static
+          .get(featureName)
+          ?.locales.push(data.meta.locale);
+      } else {
+        localDataManifest.static.set(featureName, {
+          featureName,
+          staticURL: templateModuleInternal.getPath({}),
+          locales: [data.meta.locale],
+        });
+      }
     }
   }
 

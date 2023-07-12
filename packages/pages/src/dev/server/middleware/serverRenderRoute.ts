@@ -18,10 +18,16 @@ type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
   projectStructure: ProjectStructure;
+  defaultLocale: string;
 };
 
 export const serverRenderRoute =
-  ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
+  ({
+    vite,
+    dynamicGenerateData,
+    projectStructure,
+    defaultLocale,
+  }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
@@ -32,11 +38,11 @@ export const serverRenderRoute =
       const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
         await findMatchingStaticTemplate(vite, staticURL, templateFilepaths);
       if (matchingStaticTemplate) {
-        sendStaticPage(
+        await sendStaticPage(
           res,
           vite,
           matchingStaticTemplate,
-          locale,
+          locale ?? defaultLocale,
           url.pathname,
           projectStructure
         );
