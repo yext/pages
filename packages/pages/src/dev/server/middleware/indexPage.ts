@@ -158,16 +158,12 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
             ${
               locales.length > 1
                 ? `<td>
-                <a href="http://localhost:${devServerPort}/${encodeURIComponent(
-                    staticURL
-                  )}?locale=${locale}">
+                <a href="http://localhost:${devServerPort}/${staticURL}?locale=${locale}">
                   ${staticURL}?locale=${locale}
                 </a>
               </td>`
                 : `<td>
-                <a href="http://localhost:${devServerPort}/${encodeURIComponent(
-                    staticURL
-                  )}">
+                <a href="http://localhost:${devServerPort}/${staticURL}">
                   ${staticURL}
                 </a>
               </td>`
