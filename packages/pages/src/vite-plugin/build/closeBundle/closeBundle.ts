@@ -120,11 +120,11 @@ export default (projectStructure: ProjectStructure) => {
 
     finisher = logger.timedLog({ startLog: "Updating ci.json" });
     try {
+      const sitesConfigPath =
+        projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
+        projectStructure.sitesConfigRoot.getAbsolutePath();
       await updateCiConfig(
-        path.join(
-          projectStructure.sitesConfigRoot.getAbsolutePath(),
-          projectStructure.ciConfig
-        ),
+        path.join(sitesConfigPath, projectStructure.ciConfig),
         false
       );
       finisher.succeed("Successfully updated ci.json");
