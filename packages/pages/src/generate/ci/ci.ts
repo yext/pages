@@ -1,30 +1,43 @@
 import path from "path";
 import { CommandModule } from "yargs";
 import { Path } from "../../common/src/project/path.js";
-import { defaultProjectStructureConfig } from "../../common/src/project/structure.js";
+import {
+  defaultProjectStructureConfig,
+  ProjectFilepaths,
+} from "../../common/src/project/structure.js";
 import { CiConfig, Plugin } from "../../common/src/ci/ci.js";
 import fs from "node:fs";
 import colors from "picocolors";
 import { loadFunctions } from "../../common/src/function/internal/loader.js";
 
-const handler = (): void => {
+type FeaturesArgs = Pick<ProjectFilepaths, "scope">;
+
+const handler = ({ scope }: FeaturesArgs): void => {
   const ciConfigFilename =
     defaultProjectStructureConfig.filenamesConfig.ciConfig;
   const sitesConfigRoot =
     defaultProjectStructureConfig.filepathsConfig.sitesConfigRoot;
-  const ciConfigAbsolutePath = new Path(
-    path.join(process.cwd(), sitesConfigRoot, ciConfigFilename)
-  );
+  const ciConfigAbsolutePath = scope
+    ? new Path(
+        path.join(process.cwd(), sitesConfigRoot, scope, ciConfigFilename)
+      )
+    : new Path(path.join(process.cwd(), sitesConfigRoot, ciConfigFilename));
   updateCiConfig(ciConfigAbsolutePath.getAbsolutePath(), true);
 };
 
 /**
  * The "ci" command that updates a ci.json file.
  */
-export const ciCommandModule: CommandModule<unknown, unknown> = {
+export const ciCommandModule: CommandModule<unknown, FeaturesArgs> = {
   command: "ci",
   describe: "Generates ci.json file",
-  builder: (yargs) => yargs,
+  builder: (yargs) => {
+    return yargs.option("scope", {
+      describe: "The subfolder to scope the served templates from",
+      type: "string",
+      demandOption: false,
+    });
+  },
   handler,
 };
 
