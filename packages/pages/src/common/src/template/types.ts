@@ -129,10 +129,10 @@ export interface Stream<LocalizationType> {
   };
 }
 
-/** The localization to be used. Either */
+/** The localization to be used. Either set primary: true or specify a locales array. */
 export type LocalizationOptions =
   | {
-      /** The entity profiles languages to apply to the stream */
+      /** The entity profiles languages to apply to the stream. */
       locales: string[];
       primary?: never;
     }
