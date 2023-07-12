@@ -1,13 +1,11 @@
-import {
-  convertTemplateConfigToStreamConfig,
-  StreamConfig,
-} from "../../src/feature/stream.js";
-import { TemplateConfig } from "../../src/template/types.js";
+import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
+import { TemplateConfigInternal } from "../template/internal/types.js";
 
 describe("stream", () => {
   it("returns void if no stream", async () => {
-    const templateConfig: TemplateConfig = {
+    const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
+      hydrate: false,
     };
 
     const streamConfig = convertTemplateConfigToStreamConfig(templateConfig);
@@ -16,8 +14,9 @@ describe("stream", () => {
   });
 
   it("adds source and destination if StreamConfig defined", async () => {
-    const templateConfig: TemplateConfig = {
+    const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
+      hydrate: true,
       stream: {
         $id: "$id",
         fields: ["foo"],

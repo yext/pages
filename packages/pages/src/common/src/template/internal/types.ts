@@ -10,6 +10,7 @@ import {
   TemplateModule,
   TemplateProps,
   TemplateRenderProps,
+  LocalizationOptions,
 } from "../types.js";
 import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal.js";
 
@@ -57,11 +58,18 @@ export interface TemplateConfigInternal {
   /** The stream that this template uses. If a stream is defined the streamId is not required. */
   streamId?: string;
   /** The stream configuration used by the template */
-  stream?: Stream;
+  stream?: Stream<LocalizationInternal>;
   /** The specific fields to add additional language options to based on the stream's localization */
   alternateLanguageFields?: string[];
   /** The name of the onUrlChange function to use. */
   onUrlChange?: string;
+}
+
+export interface LocalizationInternal {
+  /** The entity profiles languages to apply to the stream */
+  locales?: string[];
+  /** Whether to include the primary profile language. */
+  primary: boolean;
 }
 
 /**
@@ -117,19 +125,28 @@ const convertTemplateConfigToTemplateConfigInternal = (
   templateName: string,
   templateConfig: TemplateConfig | undefined
 ): TemplateConfigInternal => {
-  if (
-    templateConfig?.stream?.localization?.locales &&
-    templateConfig.stream.localization.locales.length > 0 &&
-    templateConfig.stream.localization.primary === undefined
-  ) {
-    templateConfig.stream.localization.primary = false;
-  } else if (templateConfig?.stream) {
-    templateConfig.stream.localization = { primary: true };
-  }
-
   return {
     name: templateConfig?.name ?? templateName,
     hydrate: templateConfig?.hydrate ?? false,
     ...templateConfig,
+    stream: convertStreamToStreamInternal(templateConfig?.stream),
   };
+};
+
+/**
+ * Converts a {@link Stream<LocalizationOptions>} into a valid {@link Stream<LocalizationInternal>}
+ * by setting stream.localization.primary: false if a locales array exists.
+ */
+const convertStreamToStreamInternal = (
+  stream: Stream<LocalizationOptions> | undefined
+): Stream<LocalizationInternal> | undefined => {
+  if (!stream) return;
+
+  if (stream.localization.locales && stream.localization.locales.length > 0) {
+    return {
+      ...stream,
+      localization: { locales: stream.localization.locales, primary: false },
+    };
+  }
+  return { ...stream, localization: { primary: true } };
 };

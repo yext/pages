@@ -92,7 +92,7 @@ export interface TemplateConfig {
   /** The stream that this template uses. If a stream is defined the streamId is not required. */
   streamId?: string;
   /** The stream configuration used by the template */
-  stream?: Stream;
+  stream?: Stream<LocalizationOptions>;
   /** The specific fields to add additional language options to based on the stream's localization */
   alternateLanguageFields?: string[];
   /** The name of the onUrlChange function to use. */
@@ -104,7 +104,7 @@ export interface TemplateConfig {
  *
  * @public
  */
-export interface Stream {
+export interface Stream<LocalizationType> {
   /** The identifier of the stream */
   $id: string;
   /** The fields to apply to the stream */
@@ -119,13 +119,7 @@ export interface Stream {
     savedFilterIds?: string[];
   };
   /** The localization used by the filter */
-  localization: {
-    /** The entity profiles languages to apply to the stream */
-    locales?: string[];
-    /** Whether to include the primary profile language.
-     * Defaults to false when locales is defined. */
-    primary?: boolean;
-  };
+  localization: LocalizationType;
   /** The transformation to apply to the stream */
   transform?: {
     /** The option fields to be expanded to include the display fields, numeric values, and selected boolean */
@@ -134,6 +128,19 @@ export interface Stream {
     replaceOptionValuesWithDisplayNames?: string[];
   };
 }
+
+/** The localization to be used. Either */
+export type LocalizationOptions =
+  | {
+      /** The entity profiles languages to apply to the stream */
+      locales: string[];
+      primary?: never;
+    }
+  | {
+      /** Use the primary profile language. */
+      primary: true;
+      locales?: never;
+    };
 
 /**
  * A manifest of bundled files present during a production build.
