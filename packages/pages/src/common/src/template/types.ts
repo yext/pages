@@ -118,13 +118,18 @@ export interface Stream {
     /** The saved filters to apply to the stream */
     savedFilterIds?: string[];
   };
-  /** The localization used by the filter */
-  localization: {
-    /** The entity profiles languages to apply to the stream */
-    locales?: string[];
-    /** Whether to include the primary profile language. Must be false when locales is defined. */
-    primary: boolean;
-  };
+  /** The localization used by the filter. Either set primary: true or specify a locales array. */
+  localization:
+    | {
+        /** The entity profiles languages to apply to the stream. */
+        locales: string[];
+        primary?: never;
+      }
+    | {
+        /** Use the primary profile language. */
+        primary: true;
+        locales?: never;
+      };
   /** The transformation to apply to the stream */
   transform?: {
     /** The option fields to be expanded to include the display fields, numeric values, and selected boolean */
