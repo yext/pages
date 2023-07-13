@@ -13,10 +13,14 @@ const pathToPagesScript = path.resolve(
   "pages.js"
 );
 
-spawnSync(
+const results = spawnSync(
   "node",
   ["--experimental-vm-modules", pathToPagesScript, ...process.argv.slice(2)],
   {
     stdio: "inherit",
   }
 );
+
+if (results?.status != undefined && results.status !== 0) {
+  process.exitCode = results.status;
+}
