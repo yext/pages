@@ -18,7 +18,7 @@ export interface InternalSlugManagerConfig {
     | "listLanguageProfiles"
     | "listEntities"
   >;
-  slugGeneratorFn?: Function;
+  slugGeneratorFn?: (lang: string, profile: BaseEntity) => string;
   slugGeneratorFnFields?: string[];
 }
 
@@ -39,10 +39,7 @@ export function createManager(config: InternalSlugManagerConfig) {
     const pageToken = input.pageToken || "";
 
     const params = new URLSearchParams({
-      fields: [
-        'meta',
-        ...(slugGeneratorFnFields || []),
-      ].join(','),
+      fields: ["meta", ...(slugGeneratorFnFields || [])].join(","),
     });
     if (pageToken) {
       params.set("pageToken", pageToken);
@@ -56,11 +53,7 @@ export function createManager(config: InternalSlugManagerConfig) {
     const entitiesResponse = await api.listEntities(params);
 
     const profileParams = new URLSearchParams({
-      fields: [
-        "meta",
-        slugField,
-        ...(slugGeneratorFnFields || []),
-    ].join(","),
+      fields: ["meta", slugField, ...(slugGeneratorFnFields || [])].join(","),
       filter: JSON.stringify({
         "meta.id": {
           $in: entitiesResponse.entities.map((entity) => entity.meta.id),
@@ -78,7 +71,7 @@ export function createManager(config: InternalSlugManagerConfig) {
       slugField,
       slugFormat,
       slugFormatLocaleOverrides,
-      slugGeneratorFn,
+      slugGeneratorFn
     );
 
     const outputString = JSON.stringify({
@@ -103,12 +96,11 @@ export function createManager(config: InternalSlugManagerConfig) {
     }
 
     const lang = event.changedFields.language;
-    const slug =
-      slugGeneratorFn ? 
-        slugGeneratorFn(lang, event.primaryProfile) : 
-        (lang in slugFormatLocaleOverrides
-          ? slugFormatLocaleOverrides[lang]
-          : slugFormat);
+    const slug = slugGeneratorFn
+      ? slugGeneratorFn(lang, event.primaryProfile)
+      : lang in slugFormatLocaleOverrides
+      ? slugFormatLocaleOverrides[lang]
+      : slugFormat;
 
     return api.updateField(event.entityId, lang, slugField, slug);
   }
@@ -122,17 +114,16 @@ export function getUpdates(
   slugField: string,
   slugFormat: string,
   slugFormatLocaleOverrides: Record<string, string>,
-  slugGeneratorFn?: Function
+  slugGeneratorFn?: (lang: string, profile: BaseEntity) => string
 ) {
   const updates: ProfileUpdate[] = [];
   for (const profile of profiles) {
     const lang = profile.meta.language;
-    const desiredSlug =
-      slugGeneratorFn ? 
-        slugGeneratorFn(lang, profile) : 
-        (lang in slugFormatLocaleOverrides
-          ? slugFormatLocaleOverrides[lang]
-          : slugFormat);
+    const desiredSlug = slugGeneratorFn
+      ? slugGeneratorFn(lang, profile)
+      : lang in slugFormatLocaleOverrides
+      ? slugFormatLocaleOverrides[lang]
+      : slugFormat;
 
     updates.push({
       [slugField]: desiredSlug,

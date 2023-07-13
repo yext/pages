@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
 import { Image } from "./image.js";
 
 const image = {
@@ -17,16 +17,16 @@ const image = {
   },
 };
 
-const meta: ComponentMeta<typeof Image> = {
+const meta: Meta<typeof Image> = {
   title: "components/Image",
   component: Image,
 };
 
 export default meta;
 
-const Template: ComponentStory<typeof Image> = (args) => <Image {...args} />;
+const Template: StoryFn<typeof Image> = (args) => <Image {...args} />;
 
-export const Platform_Image = Template.bind({});
+export const Platform_Image: StoryFn<typeof Image> = Template.bind({});
 
 Platform_Image.args = {
   image: image,

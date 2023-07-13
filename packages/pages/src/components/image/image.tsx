@@ -52,7 +52,6 @@ export const Image = ({
   const imgWidth = Math.abs(imageData.width);
   const imgHeight = Math.abs(imageData.height);
   const imgUUID = getImageUUID(imageData.url);
-  const imgEnv = getImageEnv(imageData.url);
 
   // The image is invalid, only try to load the placeholder
   if (!imgUUID) {

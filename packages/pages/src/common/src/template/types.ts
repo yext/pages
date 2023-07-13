@@ -8,7 +8,7 @@ import { HeadConfig } from "./head.js";
  */
 export interface TemplateModule<
   T extends TemplateProps,
-  U extends TemplateRenderProps
+  U extends TemplateRenderProps,
 > {
   /** The exported config function */
   config?: TemplateConfig;

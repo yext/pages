@@ -56,8 +56,7 @@ export const generateTestDataForSlug = async (
     getTemplateFilepathsFromProjectStructure(projectStructure);
   const templateModuleCollection = await loadTemplateModuleCollectionUsingVite(
     vite,
-    templateFilepaths,
-    projectStructure
+    templateFilepaths
   );
   const featuresConfig = await getFeaturesConfig(templateModuleCollection);
   const featuresConfigForEntityPages: FeaturesConfig = {
@@ -73,8 +72,7 @@ export const generateTestDataForSlug = async (
 
 const loadTemplateModuleCollectionUsingVite = async (
   vite: ViteDevServer,
-  templateFilepaths: string[],
-  projectStructure: ProjectStructure
+  templateFilepaths: string[]
 ): Promise<TemplateModuleCollection> => {
   const templateModules: TemplateModuleInternal<any, any>[] = await Promise.all(
     templateFilepaths.map(async (templateFilepath) => {

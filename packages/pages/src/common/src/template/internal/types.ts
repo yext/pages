@@ -19,7 +19,7 @@ import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal
  */
 export interface TemplateModuleInternal<
   T extends TemplateProps,
-  U extends TemplateRenderProps
+  U extends TemplateRenderProps,
 > {
   /**
    * The filepath to the template file. This can be the raw TSX file when used during dev mode or

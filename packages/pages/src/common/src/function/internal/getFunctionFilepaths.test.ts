@@ -1,6 +1,6 @@
 import path from "path";
 import { getFunctionFilepaths } from "./getFunctionFilepaths.js";
-import minimatch from "minimatch";
+import { minimatch } from "minimatch";
 import { defaultProjectStructureConfig } from "../../project/structure.js";
 
 const rootPath = defaultProjectStructureConfig.filepathsConfig.functionsRoot;
@@ -48,7 +48,7 @@ const expected = [
 
 jest.mock("glob", () => {
   return {
-    sync: (glob: string) => {
+    globSync: (glob: string) => {
       return filepaths.filter((f) => minimatch(path.resolve(f), glob));
     },
   };

@@ -1,39 +1,4 @@
 {
-  "features": [
-    {
-      "name": "sunglasses",
-      "streamId": "oakley-stream",
-      "templateType": "JS",
-      "entityPageSet": {
-        "plugin": {}
-      }
-    },
-    {
-      "name": "robots",
-      "templateType": "JS",
-      "staticPage": {
-        "plugin": {}
-      }
-    },
-    {
-      "name": "turtlehead-tacos",
-      "templateType": "JS",
-      "staticPage": {
-        "plugin": {}
-      }
-    }
-  ],
-  "streams": [
-    {
-      "$id": "oakley-stream",
-      "fields": ["id", "name", "slug"],
-      "filter": {
-        "savedFilterIds": ["1241548641"]
-      },
-      "localization": {
-        "locales": ["en"],
-        "primary": false
-      }
-    }
-  ]
+  "features": [],
+  "streams": []
 }

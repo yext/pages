@@ -1,21 +1,21 @@
 import React, { useRef, useState } from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
 import { Map, Marker, Coordinate as CoordinateType } from ".";
 import { MAP_MULTIPLE_LOCATIONS } from "./sampleData.js";
 import { Map as MapType } from "@yext/components-tsx-maps";
 
-const meta: ComponentMeta<typeof Map> = {
+const meta: Meta<typeof Map> = {
   title: "components/Map",
   component: Map,
 };
 
 export default meta;
 
-const Template: ComponentStory<typeof Map> = (args) => <Map {...args} />;
+const Template: StoryFn<typeof Map> = (args) => <Map {...args} />;
 
 // Simple Map
 
-export const Simple_Map = Template.bind({});
+export const Simple_Map: StoryFn<typeof Map> = Template.bind({});
 Simple_Map.args = {
   clientKey: "gme-yextinc",
 };

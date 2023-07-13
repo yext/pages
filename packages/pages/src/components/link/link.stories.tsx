@@ -1,24 +1,24 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
 import { Link } from "./link.js";
 
-const meta: ComponentMeta<typeof Link> = {
+const meta: Meta<typeof Link> = {
   title: "components/Link",
   component: Link,
 };
 
 export default meta;
 
-const Template: ComponentStory<typeof Link> = (args) => <Link {...args} />;
+const Template: StoryFn<typeof Link> = (args) => <Link {...args} />;
 
-export const HREF = Template.bind({});
+export const HREF: StoryFn<typeof Link> = Template.bind({});
 
 HREF.args = {
   href: "https://yext.com",
   children: "Learn More",
 };
 
-export const CTA = Template.bind({});
+export const CTA: StoryFn<typeof Link> = Template.bind({});
 
 CTA.args = {
   cta: {
@@ -28,7 +28,7 @@ CTA.args = {
   },
 };
 
-export const Phone = Template.bind({});
+export const Phone: StoryFn<typeof Link> = Template.bind({});
 
 Phone.args = {
   cta: {
@@ -38,7 +38,7 @@ Phone.args = {
   },
 };
 
-export const Email = Template.bind({});
+export const Email: StoryFn<typeof Link> = Template.bind({});
 
 Email.args = {
   cta: {
@@ -48,7 +48,7 @@ Email.args = {
   },
 };
 
-export const Detect_Email = Template.bind({});
+export const Detect_Email: StoryFn<typeof Link> = Template.bind({});
 
 Detect_Email.args = {
   cta: {
@@ -56,7 +56,7 @@ Detect_Email.args = {
   },
 };
 
-export const CTA_With_Children = Template.bind({});
+export const CTA_With_Children: StoryFn<typeof Link> = Template.bind({});
 
 CTA_With_Children.args = {
   cta: {

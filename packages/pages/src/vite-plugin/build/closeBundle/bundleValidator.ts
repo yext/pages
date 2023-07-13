@@ -1,5 +1,5 @@
 import { statSync } from "fs";
-import glob from "glob";
+import { glob } from "glob";
 import path from "path";
 
 const PLUGIN_FILESIZE_LIMIT = 10; // MB
