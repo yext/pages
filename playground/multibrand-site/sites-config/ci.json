@@ -1,0 +1,43 @@
+{
+  "artifactStructure": {
+    "assets": [
+      {
+        "root": "packages/pages/storybook-static"
+      }
+    ],
+    "plugins": [
+      {
+        "pluginName": "PagesGenerator",
+        "sourceFiles": [
+          {
+            "root": "dist/plugin",
+            "pattern": "*{.ts,.json}"
+          },
+          {
+            "root": "dist",
+            "pattern": "assets/{server,static,renderer,render}/**/*{.js,.css}"
+          }
+        ],
+        "event": "ON_PAGE_GENERATE",
+        "functionName": "PagesGenerator"
+      }
+    ]
+  },
+  "dependencies": {
+    "installDepsCmd": "npm install -g pnpm && pnpm install",
+    "requiredFiles": [
+      "package.json",
+      "pnpm-lock.json",
+      "pnpm-workspace.yaml",
+      ".npmrc",
+      "packages/pages/package.json"
+    ]
+  },
+  "buildArtifacts": {
+    "buildCmd": "(cd packages/pages && pnpm run build-storybook)"
+  },
+  "livePreview": {
+    "serveSetupCmd": "(cd packages/pages && pnpm run build-storybook)",
+    "serveCmd": "(cd packages/pages && pnpm run storybook -- -p 8080)"
+  }
+}

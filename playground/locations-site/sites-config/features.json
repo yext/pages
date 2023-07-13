@@ -4,23 +4,17 @@
       "name": "location",
       "streamId": "location-stream",
       "templateType": "JS",
-      "entityPageSet": {
-        "plugin": {}
-      }
+      "entityPageSet": {}
     },
     {
       "name": "robots",
       "templateType": "JS",
-      "staticPage": {
-        "plugin": {}
-      }
+      "staticPage": {}
     },
     {
       "name": "turtlehead-tacos",
       "templateType": "JS",
-      "staticPage": {
-        "plugin": {}
-      }
+      "staticPage": {}
     }
   ],
   "streams": [

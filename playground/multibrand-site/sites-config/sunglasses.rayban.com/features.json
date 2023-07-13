@@ -3,24 +3,18 @@
     {
       "name": "robots",
       "templateType": "JS",
-      "staticPage": {
-        "plugin": {}
-      }
+      "staticPage": {}
     },
     {
       "name": "turtlehead-tacos",
       "templateType": "JS",
-      "staticPage": {
-        "plugin": {}
-      }
+      "staticPage": {}
     },
     {
       "name": "sunglasses",
       "streamId": "ray-ban-stream",
       "templateType": "JS",
-      "entityPageSet": {
-        "plugin": {}
-      }
+      "entityPageSet": {}
     }
   ],
   "streams": [
