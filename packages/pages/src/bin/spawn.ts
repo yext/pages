@@ -22,5 +22,5 @@ const results = spawnSync(
 );
 
 if (results?.status != undefined && results.status !== 0) {
-  process.exit(results.status);
+  process.exitCode = results.status;
 }
