@@ -1,33 +1,4 @@
 {
-  "features": [
-    {
-      "name": "location",
-      "streamId": "location-stream",
-      "templateType": "JS",
-      "entityPageSet": {}
-    },
-    {
-      "name": "robots",
-      "templateType": "JS",
-      "staticPage": {}
-    },
-    {
-      "name": "turtlehead-tacos",
-      "templateType": "JS",
-      "staticPage": {}
-    }
-  ],
-  "streams": [
-    {
-      "$id": "location-stream",
-      "filter": {
-        "entityTypes": ["location"]
-      },
-      "fields": ["id", "uid", "meta", "address", "slug"],
-      "localization": {
-        "locales": ["en"],
-        "primary": false
-      }
-    }
-  ]
+  "features": [],
+  "streams": []
 }
