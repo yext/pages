@@ -1,4 +1,4 @@
-import { glob } from "glob";
+import { globSync } from "glob";
 import path from "path";
 import { Path } from "../../project/path.js";
 
@@ -10,7 +10,7 @@ import { Path } from "../../project/path.js";
 export const getFunctionFilepaths = (root: string): path.ParsedPath[] => {
   const functionsRoot = new Path(root); // resolve the functions root
   // Get all js/ts files in the directory or subdirectories
-  const filepaths = glob.sync(
+  const filepaths = globSync(
     `${functionsRoot.getAbsolutePath()}/**/*.{tsx,jsx,js,ts}`
   );
 

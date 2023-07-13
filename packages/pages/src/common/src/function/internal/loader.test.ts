@@ -12,6 +12,12 @@ jest.mock("url", () => {
   };
 });
 
+jest.mock("vite", () => {
+  return {
+    loadEnv: () => [],
+  };
+});
+
 afterAll(() => jest.unmock("url"));
 
 describe("loadTemplateModules", () => {

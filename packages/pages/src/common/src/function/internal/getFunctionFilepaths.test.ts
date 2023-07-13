@@ -48,7 +48,7 @@ const expected = [
 
 jest.mock("glob", () => {
   return {
-    sync: (glob: string) => {
+    globSync: (glob: string) => {
       return filepaths.filter((f) => minimatch(path.resolve(f), glob));
     },
   };
