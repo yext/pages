@@ -1,7 +1,4 @@
-import {
-  LocalizationInternal,
-  TemplateConfigInternal,
-} from "../template/internal/types.js";
+import { TemplateConfigInternal } from "../template/internal/types.js";
 
 /**
  * The shape of data that represents a stream configuration.
@@ -25,7 +22,12 @@ export interface StreamConfig {
     savedFilterIds?: string[];
   };
   /** The localization used by the filter */
-  localization: LocalizationInternal;
+  localization: {
+    /** The entity profiles languages to apply to the stream */
+    locales?: string[];
+    /** Whether to include the primary profile language. */
+    primary: boolean;
+  };
   /** The transformation to apply to the stream */
   transform?: {
     /** The option fields to be expanded to include the display fields, numeric values, and selected boolean */

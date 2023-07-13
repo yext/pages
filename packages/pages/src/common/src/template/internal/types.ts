@@ -10,7 +10,6 @@ import {
   TemplateModule,
   TemplateProps,
   TemplateRenderProps,
-  LocalizationOptions,
 } from "../types.js";
 import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal.js";
 
@@ -58,18 +57,44 @@ export interface TemplateConfigInternal {
   /** The stream that this template uses. If a stream is defined the streamId is not required. */
   streamId?: string;
   /** The stream configuration used by the template */
-  stream?: Stream<LocalizationInternal>;
+  stream?: StreamInternal;
   /** The specific fields to add additional language options to based on the stream's localization */
   alternateLanguageFields?: string[];
   /** The name of the onUrlChange function to use. */
   onUrlChange?: string;
 }
 
-export interface LocalizationInternal {
-  /** The entity profiles languages to apply to the stream */
-  locales?: string[];
-  /** Whether to include the primary profile language. */
-  primary: boolean;
+/**
+ * The stream config defined in {@link TemplateConfigInternal.stream}.
+ */
+export interface StreamInternal {
+  /** The identifier of the stream */
+  $id: string;
+  /** The fields to apply to the stream */
+  fields: string[];
+  /** The filter to apply to the stream */
+  filter: {
+    /** The entity IDs to apply to the stream */
+    entityIds?: string[];
+    /** The entity types to apply to the stream */
+    entityTypes?: string[];
+    /** The saved filters to apply to the stream */
+    savedFilterIds?: string[];
+  };
+  /** The localization used by the filter. Either set primary: true or specify a locales array. */
+  localization: {
+    /** The entity profiles languages to apply to the stream */
+    locales?: string[];
+    /** Whether to include the primary profile language. */
+    primary: boolean;
+  };
+  /** The transformation to apply to the stream */
+  transform?: {
+    /** The option fields to be expanded to include the display fields, numeric values, and selected boolean */
+    expandOptionFields?: string[];
+    /** The option fields to be replaced with display names */
+    replaceOptionValuesWithDisplayNames?: string[];
+  };
 }
 
 /**
@@ -134,12 +159,12 @@ const convertTemplateConfigToTemplateConfigInternal = (
 };
 
 /**
- * Converts a {@link Stream<LocalizationOptions>} into a valid {@link Stream<LocalizationInternal>}
+ * Converts a {@link Stream} into a valid {@link StreamInternal}
  * by setting stream.localization.primary: false if a locales array exists.
  */
 const convertStreamToStreamInternal = (
-  stream: Stream<LocalizationOptions> | undefined
-): Stream<LocalizationInternal> | undefined => {
+  stream: Stream | undefined
+): StreamInternal | undefined => {
   if (!stream) return;
 
   if (stream.localization.locales && stream.localization.locales.length > 0) {

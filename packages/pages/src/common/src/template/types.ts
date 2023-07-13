@@ -92,7 +92,7 @@ export interface TemplateConfig {
   /** The stream that this template uses. If a stream is defined the streamId is not required. */
   streamId?: string;
   /** The stream configuration used by the template */
-  stream?: Stream<LocalizationOptions>;
+  stream?: Stream;
   /** The specific fields to add additional language options to based on the stream's localization */
   alternateLanguageFields?: string[];
   /** The name of the onUrlChange function to use. */
@@ -104,7 +104,7 @@ export interface TemplateConfig {
  *
  * @public
  */
-export interface Stream<LocalizationType> {
+export interface Stream {
   /** The identifier of the stream */
   $id: string;
   /** The fields to apply to the stream */
@@ -118,8 +118,18 @@ export interface Stream<LocalizationType> {
     /** The saved filters to apply to the stream */
     savedFilterIds?: string[];
   };
-  /** The localization used by the filter */
-  localization: LocalizationType;
+  /** The localization used by the filter. Either set primary: true or specify a locales array. */
+  localization:
+    | {
+        /** The entity profiles languages to apply to the stream. */
+        locales: string[];
+        primary?: never;
+      }
+    | {
+        /** Use the primary profile language. */
+        primary: true;
+        locales?: never;
+      };
   /** The transformation to apply to the stream */
   transform?: {
     /** The option fields to be expanded to include the display fields, numeric values, and selected boolean */
@@ -128,19 +138,6 @@ export interface Stream<LocalizationType> {
     replaceOptionValuesWithDisplayNames?: string[];
   };
 }
-
-/** The localization to be used. Either set primary: true or specify a locales array. */
-export type LocalizationOptions =
-  | {
-      /** The entity profiles languages to apply to the stream. */
-      locales: string[];
-      primary?: never;
-    }
-  | {
-      /** Use the primary profile language. */
-      primary: true;
-      locales?: never;
-    };
 
 /**
  * A manifest of bundled files present during a production build.
