@@ -1,5 +1,4 @@
 import { Command } from "commander";
-import { initCommand } from "../init/init.js";
 import { buildCommand } from "../build/build.js";
 import { devCommand } from "../dev/dev.js";
 import { prodCommand } from "../prod/prod.js";
@@ -20,7 +19,6 @@ import { generateCommand } from "../generate/generate.js";
 
 const program = new Command();
 program.name("pages").description("Yext PagesJS CLI");
-initCommand(program);
 buildCommand(program);
 devCommand(program);
 prodCommand(program);
