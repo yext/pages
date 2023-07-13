@@ -31,7 +31,7 @@ export const serverRenderSlugRoute =
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
       const locale = req.query.locale?.toString() ?? defaultLocale;
-      const slug = decodeURI(url.pathname.substring(1));
+      const slug = decodeURIComponent(url.pathname.substring(1));
 
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
