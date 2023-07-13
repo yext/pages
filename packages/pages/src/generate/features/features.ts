@@ -11,7 +11,7 @@ export const featureCommand = (program: Command) => {
     .command("features")
     .description("Generates features.json file")
     .option(
-      "scope <string>",
+      "--scope <string>",
       "The subfolder to scope the served templates from"
     )
     .action(async (options, command) => {

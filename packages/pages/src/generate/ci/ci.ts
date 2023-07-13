@@ -12,7 +12,7 @@ export const ciCommand = (program: Command) => {
     .command("ci")
     .description("Generates ci.json file")
     .option(
-      "scope <string>",
+      "--scope <string>",
       "The subfolder to scope the served templates from"
     )
     .action((options, command) => {

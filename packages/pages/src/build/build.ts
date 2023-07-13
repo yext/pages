@@ -6,7 +6,7 @@ export const buildCommand = (program: Command) => {
     .command("build")
     .description("Build site using Vite")
     .option(
-      "scope <string>",
+      "--scope <string>",
       "The subfolder to scope the served templates from"
     )
     .action(async (options) => {

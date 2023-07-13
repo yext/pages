@@ -12,23 +12,33 @@ export const devCommand = (program: Command) => {
       "Creates features.json, generates test data, " +
         "and runs a custom local development server that is backed by Vite."
     )
-    .option("local, noGenTestData", "Disables dynamically generated test data")
     .option(
-      "scope <string>",
+      "--scope <string>",
       "The subfolder to scope the served templates from"
     )
+    .option("--local", "Disables dynamically generated test data")
     .option(
-      "prod-url",
+      "--prod-url",
       "Use production URLs, instead of /[template-name]/[external-id]",
       true
     )
     .option(
-      "open-browser",
+      "--no-prod-url",
+      "Use local URLs, such as /[template-name]/[external-id]",
+      false
+    )
+    .option(
+      "--open-browser",
       "Automatically opens the browser on server start-up",
       true
     )
-    .option("noInit", "Disables automatic yext init with .yextrc file")
-    .option("noGenFeatures", "Disable feature.json generation step")
+    .option(
+      "--no-open-browser",
+      "Do not open the browser on server start-up",
+      false
+    )
+    .option("--noInit", "Disables automatic yext init with .yextrc file")
+    .option("--noGenFeatures", "Disable feature.json generation step")
     .action(async (options) => {
       if (!options.noInit) {
         await autoYextInit();
