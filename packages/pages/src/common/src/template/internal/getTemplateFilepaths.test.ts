@@ -1,6 +1,6 @@
 import path from "path";
 import { getTemplateFilepaths } from "./getTemplateFilepaths.js";
-import minimatch from "minimatch";
+import { minimatch } from "minimatch";
 import { Path } from "../../project/path.js";
 
 const rootPath = "src/templates";
@@ -8,7 +8,7 @@ const domain1Path = "src/templates/some.domain1.com";
 const domain2Path = "src/templates/some.domain2.com";
 jest.mock("glob", () => {
   return {
-    sync: (glob: string) => {
+    globSync: (glob: string) => {
       const filepaths = [
         `${domain1Path}/brand1.tsx`,
         `${domain1Path}/test.tsx`,

@@ -2,7 +2,7 @@ import { updateEntity } from "./yext.ts";
 
 /**
  * The shape of the configuration options for the writeback plugin.
- * 
+ *
  * The featureToFieldMap is an optional property that can be used to define
  * a custom field to store a page's URL for other features that are powered by entity data
  * i.e., custom review forms that are powered by entity data but have a different
@@ -13,7 +13,7 @@ export interface UrlWritebackConfig {
   apiKey: string;
   environment?: "sbx" | "prod";
   v?: string;
-  featureToFieldMap?: Record<string, string>
+  featureToFieldMap?: Record<string, string>;
 }
 
 /**

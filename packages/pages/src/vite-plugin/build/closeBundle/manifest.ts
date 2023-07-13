@@ -4,7 +4,7 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { TemplateModuleCollection } from "../../../common/src/template/internal/loader.js";
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
 import { Manifest } from "../../../common/src/template/types.js";
-import glob from "glob";
+import { glob } from "glob";
 
 /**
  * Creates a manifest.json for use with the Pages vite-plugin
@@ -36,12 +36,10 @@ export const generateManifestFile = (
     )
   );
 
-  const relativeRenderPaths = Array.from(renderPaths.entries()).map(
-    ([_, filepath]) => [
-      path.parse(filepath).name.split(".")[0], // get the name of the file without the hash or extension
-      convertToPosixPath(projectStructure.distRoot.getRelativePath(filepath)),
-    ]
-  );
+  const relativeRenderPaths = renderPaths.map((filepath) => [
+    path.parse(filepath).name.split(".")[0], // get the name of the file without the hash or extension
+    convertToPosixPath(projectStructure.distRoot.getRelativePath(filepath)),
+  ]);
 
   let bundlerManifest = Buffer.from("{}");
   if (fs.existsSync(path.join(distRoot, "manifest.json"))) {

@@ -1,4 +1,4 @@
-import glob from "glob";
+import { globSync } from "glob";
 import path from "path";
 import { Path } from "../../project/path.js";
 import { ProjectStructure } from "../../project/structure.js";
@@ -20,7 +20,7 @@ export const getTemplateFilepaths = (paths: Path[]): string[] => {
   const templateFilepaths: string[] = [];
   const addedFilenames: Set<string> = new Set();
   paths.forEach((p) => {
-    const filepaths = glob.sync(`${p.getAbsolutePath()}/*.{tsx,jsx,js,ts}`);
+    const filepaths = globSync(`${p.getAbsolutePath()}/*.{tsx,jsx,js,ts}`);
     filepaths
       // Don't include the client/server rendering templates
       .filter(

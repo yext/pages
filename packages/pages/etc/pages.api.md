@@ -107,7 +107,7 @@ export interface TemplateConfig {
 // @public
 export interface TemplateModule<
   T extends TemplateProps,
-  U extends TemplateRenderProps
+  U extends TemplateRenderProps,
 > {
   config?: TemplateConfig;
   // Warning: (ae-unresolved-link) The @link reference could not be resolved: The package "@yext/pages" does not have an export "render"

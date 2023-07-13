@@ -53,6 +53,10 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
                 }
                 return "assets/[name].[hash].js";
               },
+              manualChunks: (id) => {
+                // Fixes an error where the output is prefixed like \x00commonjsHelpers-hash.js
+                if (id.includes("commonjsHelpers")) return "commonjsHelpers";
+              },
             },
           },
           reportCompressedSize: false,
