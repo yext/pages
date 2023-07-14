@@ -1,8 +1,9 @@
-import { Command } from "commander";
-import { buildCommand } from "../build/build.js";
-import { devCommand } from "../dev/dev.js";
-import { prodCommand } from "../prod/prod.js";
-import { generateCommand } from "../generate/generate.js";
+import { devCommandModule } from "../dev/dev.js";
+import { generateCommandModule } from "../generate/generate.js";
+import { buildCommandModule } from "../build/build.js";
+import { prodCommandModule } from "../prod/prod.js";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 
 // pages requires react and react-dom be installed to function appropriately. If
 // these are not installed in instruct the user to install them.
@@ -17,11 +18,14 @@ import { generateCommand } from "../generate/generate.js";
   }
 });
 
-const program = new Command();
-program.name("pages").description("Yext PagesJS CLI");
-buildCommand(program);
-devCommand(program);
-prodCommand(program);
-generateCommand(program);
-
-await program.parseAsync(process.argv);
+yargs(hideBin(process.argv))
+  .scriptName("pages")
+  .command(prodCommandModule)
+  .command(devCommandModule)
+  .command(generateCommandModule)
+  .command(buildCommandModule)
+  .demandCommand()
+  .version(false)
+  .strict()
+  .help()
+  .parse();
