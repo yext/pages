@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import { Link } from "./link.js";
 
 describe("Link", () => {
@@ -47,7 +47,7 @@ describe("Link Component Handles Analytics Failures", () => {
     render(<Link cta={{ link: "https://yext.com" }} />);
     const link = screen.getByRole("link");
 
-    link.click();
+    act(() => link.click());
     expect(errorMock).toBeCalledTimes(1);
     expect(errorMock).toBeCalledWith("Failed to report click Analytics Event");
   });
@@ -57,7 +57,7 @@ describe("Link Component Handles Analytics Failures", () => {
     render(<Link cta={{ link: "https://yext.com" }} onClick={onClick} />);
     const link = screen.getByRole("link");
 
-    link.click();
+    act(() => link.click());
     expect(onClick).toHaveBeenCalled();
   });
 });

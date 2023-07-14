@@ -1,3 +1,4 @@
+import React from "react";
 import { globSync } from "glob";
 import path from "path";
 import { Path } from "../../project/path.js";
@@ -50,6 +51,7 @@ export const getTemplateFilepathsFromProjectStructure = (
   );
 };
 
+const globalClientRenderFilename17 = "_client17.tsx";
 const globalClientRenderFilename = "_client.tsx";
 const globalServerRenderFilename = "_server.tsx";
 
@@ -67,10 +69,14 @@ export const getGlobalClientServerRenderTemplates = (
   templatesRootPath: Path,
   scopedTemplatePath: Path | undefined
 ): ClientServerRenderTemplates => {
+  const shouldUseReactRoot = parseInt(React.version) >= 18;
+
   const [clientRenderTemplatePath, usingCustomClient] = findGlobalRenderFile(
     templatesRootPath,
     scopedTemplatePath,
-    globalClientRenderFilename
+    shouldUseReactRoot
+      ? globalClientRenderFilename
+      : globalClientRenderFilename17
   );
   const [serverRenderTemplatePath, usingCustomServer] = findGlobalRenderFile(
     templatesRootPath,

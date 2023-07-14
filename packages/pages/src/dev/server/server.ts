@@ -69,7 +69,7 @@ export const createServer = async (
     envPrefix: projectStructure.envVarPrefix,
     define: processEnvVariables(projectStructure.envVarPrefix),
     optimizeDeps: {
-      include: ["react-dom"],
+      include: ["react-dom", "react-dom/client"],
     },
   });
   // register vite's middleware
