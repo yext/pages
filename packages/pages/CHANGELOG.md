@@ -1,3 +1,35 @@
+#### 1.0.0-beta.24 (2023-07-17)
+
+##### New Features
+
+* **dev:**
+  *  styled index page (#326) (0a0da397)
+  *  add .yextrc support for auto yext init (#329) (1755018d)
+* **plugin:**
+  *  add reverse proxy support (#318) (68cd81d2)
+  *  fail the build when there are errors (#314) (f90db5b9)
+* **components:**  add Clusterer component. (#313) (c7d97413)
+* **dev/plugin:**  add Generator plugin to ci.json during build (#311) (73aec942)
+
+##### Bug Fixes
+
+* **plugin:**
+  *  app lang not properly set (#344) (ea833e07)
+  *  finalize reverse proxy support (#330) (c6e59c9b)
+  *  cache dynamic import of plugin render templates (#325) (d199cfc3)
+  *  use vite-plugin-node-polyfills (#316) (45d0f922)
+  *  remove space from pluginName (#315) (877fb024)
+* **util:**  update isProduction to check for RPs (#342) (604f22f1)
+* **dev:**  handle ico import (#322) (65a224b8)
+
+##### Other Changes
+
+*  pages@1.0.0-beta.23 (8b3454f3)
+
+##### Performance Improvements
+
+* **plugin:**  do not report gzipped size (#323) (833b98d4)
+
 #### 1.0.0-beta.23 (2023-06-29)
 
 ##### New Features
