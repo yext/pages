@@ -210,10 +210,15 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
   );
 };
 
-const yextrcContents: string = fs.readFileSync(".yextrc", "utf8");
-const parsedContents = YAML.parse(yextrcContents);
-const accountId: string = parsedContents.accountId;
-const universe: string = parsedContents.universe;
+let accountId = "";
+let universe = "false";
+
+if (fs.existsSync(".yextrc")) {
+  const yextrcContents: string = fs.readFileSync(".yextrc", "utf8");
+  const parsedContents = YAML.parse(yextrcContents);
+  accountId = parsedContents.accountId;
+  universe = parsedContents.universe;
+}
 
 const createEntityPageListItems = (
   localDataManifest: LocalDataManifest,
@@ -261,9 +266,11 @@ const createEntityPageListItems = (
            </a>
         </td>
         <td>
-          <a href="${formatContentLink(uid)}">
-            ${entityId}
-          </a>
+          ${
+            universe === "false"
+              ? `${entityId}`
+              : `<a href="${formatContentLink(uid)}"> ${entityId} </a>`
+          }
         </td>
     </tr>`
     );
