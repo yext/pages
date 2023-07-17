@@ -105,7 +105,10 @@ const discoverInputs = async (
     (await readdir(dir, { withFileTypes: true }))
       .filter((dirent) => !dirent.isDirectory())
       .map((file) => file.name)
-      .filter((f) => f !== "_client.tsx" && f !== "_server.tsx")
+      .filter(
+        (f) =>
+          f !== "_client17.tsx" && f !== "_client.tsx" && f !== "_server.tsx"
+      )
       .forEach((template) => {
         const parsedPath = parse(template);
         const outputPath = `server/${parsedPath.name}`;
@@ -152,15 +155,11 @@ const discoverRenderTemplates = (
   );
 
   // server
-  let parsedPath = parse(clientServerRenderTemplates.serverRenderTemplatePath);
-  let outputPath = `render/${parsedPath.name}`;
-  entryPoints[outputPath] =
+  entryPoints["render/_server"] =
     clientServerRenderTemplates.serverRenderTemplatePath;
 
   // client
-  parsedPath = parse(clientServerRenderTemplates.clientRenderTemplatePath);
-  outputPath = `render/${parsedPath.name}`;
-  entryPoints[outputPath] =
+  entryPoints["render/_client"] =
     clientServerRenderTemplates.clientRenderTemplatePath;
 
   return entryPoints;
