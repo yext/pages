@@ -210,6 +210,11 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
   );
 };
 
+const yextrcContents: string = fs.readFileSync(".yextrc", "utf8");
+const parsedContents = YAML.parse(yextrcContents);
+const accountId: string = parsedContents.accountId;
+const universe: string = parsedContents.universe;
+
 const createEntityPageListItems = (
   localDataManifest: LocalDataManifest,
   templateName: string,
@@ -225,6 +230,13 @@ const createEntityPageListItems = (
     )}/${entityId}`;
   };
 
+  // Content is knowledge graph
+  const formatContentLink = (uid: string) => {
+    return universe === "prod" || universe === "production"
+      ? `https://yext.com/s/${accountId}/entity/edit?entityIds=${uid}`
+      : `https://sandbox.yext.com/s/${accountId}/entity/edit?entityIds=${uid}`;
+  };
+
   const formatDisplayValue = (entityId: string, slug: string | undefined) => {
     if (!slug) {
       return entityId;
@@ -233,7 +245,7 @@ const createEntityPageListItems = (
   };
 
   const entities = localDataManifest.entity.get(templateName) || [];
-  return entities.reduce((entityAccumulator, { entityId, slug }) => {
+  return entities.reduce((entityAccumulator, { uid, entityId, slug }) => {
     if (useProdURLs && !slug) {
       console.error(
         `No document.slug found for entityId "${entityId}", no link will be rendered in the index page.`
@@ -249,7 +261,9 @@ const createEntityPageListItems = (
            </a>
         </td>
         <td>
-          ${entityId}
+          <a href="${formatContentLink(uid)}">
+            ${entityId}
+          </a>
         </td>
     </tr>`
     );
