@@ -1,3 +1,16 @@
+#### 1.0.0-beta.24 (2023-07-17)
+
+##### Performance Improvements
+
+* **plugin:**  remove manifest from TemplateProps (#338) (dc66bb28)
+
+##### Bug Fixes
+
+* **plugin:**
+  *  app lang not properly set (#344) (ea833e07)
+  *  finalize reverse proxy support (#330) (c6e59c9b)
+* **util:**  update isProduction to check for RPs (#342) (604f22f1)
+
 #### 1.0.0-beta.23 (2023-06-29)
 
 ##### New Features
