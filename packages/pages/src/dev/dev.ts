@@ -3,6 +3,7 @@ import { createServer } from "./server/server.js";
 import runSubProcess from "../util/runSubprocess.js";
 import { devServerPort } from "./server/middleware/constants.js";
 import { autoYextInit } from "./server/autoInit.js";
+import open from "open";
 
 export const devCommand = (program: Command) => {
   program
