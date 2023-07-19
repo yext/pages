@@ -1,11 +1,29 @@
 import path from "path";
 import { Path } from "../../common/src/project/path.js";
-import { defaultProjectStructureConfig } from "../../common/src/project/structure.js";
+import {
+  ProjectFilepaths,
+  defaultProjectStructureConfig,
+} from "../../common/src/project/structure.js";
 import { CiConfig, Plugin } from "../../common/src/ci/ci.js";
 import fs from "node:fs";
 import colors from "picocolors";
 import { loadFunctions } from "../../common/src/function/internal/loader.js";
 import { Command } from "commander";
+
+type FeaturesArgs = Pick<ProjectFilepaths, "scope">;
+
+const handler = ({ scope }: FeaturesArgs): void => {
+  const ciConfigFilename =
+    defaultProjectStructureConfig.filenamesConfig.ciConfig;
+  const sitesConfigRoot =
+    defaultProjectStructureConfig.filepathsConfig.sitesConfigRoot;
+  const ciConfigAbsolutePath = scope
+    ? new Path(
+        path.join(process.cwd(), sitesConfigRoot, scope, ciConfigFilename)
+      )
+    : new Path(path.join(process.cwd(), sitesConfigRoot, ciConfigFilename));
+  updateCiConfig(ciConfigAbsolutePath.getAbsolutePath(), true);
+};
 
 export const ciCommand = (program: Command) => {
   program
@@ -15,19 +33,7 @@ export const ciCommand = (program: Command) => {
       "--scope <string>",
       "The subfolder to scope the served templates from"
     )
-    .action((options, command) => {
-      const scope = options.scope;
-      const ciConfigFilename =
-        defaultProjectStructureConfig.filenamesConfig.ciConfig;
-      const sitesConfigRoot =
-        defaultProjectStructureConfig.filepathsConfig.sitesConfigRoot;
-      const ciConfigAbsolutePath = scope
-        ? new Path(
-            path.join(process.cwd(), sitesConfigRoot, scope, ciConfigFilename)
-          )
-        : new Path(path.join(process.cwd(), sitesConfigRoot, ciConfigFilename));
-      updateCiConfig(ciConfigAbsolutePath.getAbsolutePath(), true);
-    });
+    .action(handler);
 };
 
 /**
