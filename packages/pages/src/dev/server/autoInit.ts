@@ -65,7 +65,7 @@ const logErrorAndExit = (error: string | any) => {
 
 const validUniverses = ["sandbox", "production", "sbx", "prod", "qa", "dev"];
 
-const parseYextrcContents = () => {
+export const parseYextrcContents = () => {
   const yextrcContents: string = fs.readFileSync(".yextrc", "utf8");
   const parsedContents = YAML.parse(yextrcContents);
   const accountId: string = parsedContents.accountId;

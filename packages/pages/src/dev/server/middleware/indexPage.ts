@@ -13,12 +13,15 @@ import {
   noLocalDataErrorText,
   yextLogoWhiteSvg,
   webDevelopmentIconBlackSvg,
+  externalLinkSvg,
 } from "./constants.js";
 import { ViteDevServer } from "vite";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { loadFunctions } from "../../../common/src/function/internal/loader.js";
 import { FunctionModuleInternal } from "../../../common/src/function/internal/types.js";
+import { parseYextrcContents } from "../autoInit.js";
+import { getPartition } from "../../../util/partition.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -36,6 +39,7 @@ export const indexPage =
   }: Props): RequestHandler =>
   async (_req, res, next) => {
     try {
+      const { accountId, universe } = parseYextrcContents();
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
       const localDataManifest = await getLocalDataManifest(
@@ -50,6 +54,20 @@ export const indexPage =
         <div class="header">
           ${yextLogoWhiteSvg}
           <h1>Pages Development</h1>
+          <h4 class="external-links">
+            <a target="_blank" rel="noopener noreferrer" href="${createYextAccountUrl(
+              accountId,
+              universe
+            )}">
+              Yext Account
+            </a>
+            ${externalLinkSvg}
+            <span style="margin:40px;"></span>
+            <a target="_blank" rel="noopener noreferrer" href="https://hitchhikers.yext.com/docs/pages/super-quick-start/">
+              Documentation
+            </a>
+            ${externalLinkSvg}
+          </h4>
         </div>
         `
       );
@@ -285,4 +303,33 @@ const createFunctionsTable = (
     );
   }
   return indexPageHtml;
+};
+
+const createYextAccountUrl = (accountId: string, universe: string) => {
+  let urlPrefix = "";
+  switch (getPartition(Number(accountId))) {
+    case "US": // US
+      switch (universe) {
+        case "prod":
+          break;
+        default:
+          urlPrefix = `${universe}.`;
+      }
+      break;
+    case "EU":
+      switch (universe) {
+        case "prod":
+          urlPrefix = "app.eu.";
+          break;
+        case "qa":
+          urlPrefix = "app-qa.eu.";
+          break;
+        default:
+          return "";
+      }
+      break;
+    default:
+      return "";
+  }
+  return `https://${urlPrefix}yext.com/s/${accountId}/`;
 };
