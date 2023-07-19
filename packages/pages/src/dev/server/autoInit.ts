@@ -1,8 +1,8 @@
 import fs from "fs";
-import YAML from "yaml";
 import { spawn } from "child_process";
-import colors from "picocolors";
 import prompts from "prompts";
+import { parseYextrcContents } from "../../util/yextrcContents.js";
+import { logErrorAndExit } from "../../util/logError.js";
 
 export const autoYextInit = async () => {
   if (!fs.existsSync(".yextrc")) {
@@ -56,27 +56,6 @@ To change your account details, modify the \`.yextrc\` at the root of your proje
   } catch (error) {
     logErrorAndExit(error);
   }
-};
-
-const logErrorAndExit = (error: string | any) => {
-  console.error(colors.red("ERROR: ") + error);
-  process.exit(1);
-};
-
-const validUniverses = ["sandbox", "production", "sbx", "prod", "qa", "dev"];
-
-export const parseYextrcContents = () => {
-  const yextrcContents: string = fs.readFileSync(".yextrc", "utf8");
-  const parsedContents = YAML.parse(yextrcContents);
-  const accountId: string = parsedContents.accountId;
-  const universe: string = parsedContents.universe;
-  if (isNaN(Number(accountId))) {
-    logErrorAndExit("Invalid Account ID format in .yextrc file.");
-  }
-  if (!validUniverses.includes(universe)) {
-    logErrorAndExit("Invalid Universe in .yextrc file.");
-  }
-  return { accountId, universe };
 };
 
 const runCommand = (command: string, args: string[]) => {
