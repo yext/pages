@@ -1,3 +1,9 @@
+#### 1.0.0-beta.26 (2023-07-19)
+
+##### Bug Fixes
+
+* **util:**  update isProduction to check for RPs (#342) (51248ac6)
+
 #### 1.0.0-beta.25 (2023-07-17)
 
 ##### Performance Improvements
