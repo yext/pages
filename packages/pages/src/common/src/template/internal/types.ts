@@ -152,7 +152,7 @@ const convertTemplateConfigToTemplateConfigInternal = (
 ): TemplateConfigInternal => {
   return {
     name: templateConfig?.name ?? templateName,
-    hydrate: templateConfig?.hydrate ?? false,
+    hydrate: templateConfig?.hydrate ?? true,
     ...templateConfig,
     stream: convertStreamToStreamInternal(templateConfig?.stream),
   };
