@@ -41,8 +41,8 @@ export const indexPage =
   async (_req, res, next) => {
     try {
       let accountLink = "";
-      try {
-        const { accountId, universe } = parseYextrcContents();
+      const { accountId, universe } = parseYextrcContents();
+      if (accountId !== undefined && universe !== undefined) {
         const partition = getPartition(Number(accountId));
         const accountUrl = `https://${getYextUrlForPartition(
           universe,
@@ -56,8 +56,6 @@ export const indexPage =
             ${externalLinkSvg}
           </span>
         `;
-      } catch (e: any) {
-        // Don't show account link if yextrc contents can't be found
       }
 
       const templateFilepaths =

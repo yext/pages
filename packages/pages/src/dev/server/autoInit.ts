@@ -13,16 +13,18 @@ export const autoYextInit = async () => {
 };
 
 const autoYextInitWithYextrc = async () => {
-  try {
-    const { accountId, universe } = parseYextrcContents();
+  const { accountId, universe } = parseYextrcContents();
+  if (accountId === undefined || universe === undefined) {
+    logErrorAndExit(
+      "Unable to parse Account ID and Universe from .yextrc file."
+    );
+  } else {
     await runCommand("yext", ["init", accountId, "-u", universe])
       .then((output) => console.log(output))
       .catch((error: Error) => {
         console.log(error.message);
         process.exit(1);
       });
-  } catch (error) {
-    logErrorAndExit(error);
   }
 };
 
