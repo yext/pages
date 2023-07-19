@@ -210,8 +210,8 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
   );
 };
 
-let accountId = "";
-let universe = "false";
+let accountId: string;
+let universe: string;
 
 if (fs.existsSync(".yextrc")) {
   const yextrcContents: string = fs.readFileSync(".yextrc", "utf8");
@@ -267,9 +267,9 @@ const createEntityPageListItems = (
         </td>
         <td>
           ${
-            universe === "false"
-              ? `${entityId}`
-              : `<a href="${formatContentLink(uid)}"> ${entityId} </a>`
+            accountId
+              ? `<a href="${formatContentLink(uid)}"> ${entityId} </a>`
+              : `${entityId}`
           }
         </td>
     </tr>`
