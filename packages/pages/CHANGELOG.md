@@ -1,3 +1,29 @@
+#### 1.0.0-beta.25 (2023-07-19)
+
+##### New Features
+
+* **plugin:**
+  *  add reverse proxy support (#318) (68cd81d2)
+  *  fail the build when there are errors (#314) (f90db5b9)
+* **components:**  add Clusterer component. (#313) (c7d97413)
+* **dev/plugin:**  add Generator plugin to ci.json during build (#311) (73aec942)
+
+##### Bug Fixes
+
+* **plugin:**
+  *  app lang not properly set (#344) (0d13be1a)
+  *  finalize reverse proxy support (#330) (351a699f)
+  *  cache dynamic import of plugin render templates (#325) (d199cfc3)
+  *  use vite-plugin-node-polyfills (#316) (45d0f922)
+  *  remove space from pluginName (#315) (877fb024)
+* **dev:**
+  *  add additional filetypes to esbuild loader for features.json (#331) (cbf416ba)
+  *  handle ico import (#322) (65a224b8)
+
+##### Performance Improvements
+
+* **plugin:**  do not report gzipped size (#323) (833b98d4)
+
 #### 1.0.0-beta.22 (2023-05-23)
 
 ##### Bug Fixes
