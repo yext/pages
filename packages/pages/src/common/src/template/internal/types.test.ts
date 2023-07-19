@@ -121,7 +121,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
     );
   });
 
-  it("defaults hydrate to false when not set", async () => {
+  it("defaults hydrate to true when not set", async () => {
     const templateModule: TemplateModule<any, any> = {
       default: {} as Template<any>,
       getPath: () => "",
@@ -132,6 +132,51 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       },
       config: {
         streamId: "$id",
+      },
+    };
+
+    const templateConfigInternal =
+      convertTemplateModuleToTemplateModuleInternal(
+        "src/templates/myTemplateName.tsx",
+        templateModule,
+        false
+      );
+
+    const expected: TemplateModuleInternal<any, any> = {
+      default: {} as Template<any>,
+      getPath: () => "",
+      getHeadConfig: () => {
+        return {
+          title: "foo",
+        };
+      },
+      config: {
+        name: "myTemplateName",
+        hydrate: true,
+        streamId: "$id",
+      },
+      path: "src/templates/myTemplateName.tsx",
+      filename: "myTemplateName.tsx",
+      templateName: "myTemplateName",
+    };
+
+    expect(JSON.stringify(templateConfigInternal)).toEqual(
+      JSON.stringify(expected)
+    );
+  });
+
+  it("converts hydrate to false whenever hydrate is set to false", async () => {
+    const templateModule: TemplateModule<any, any> = {
+      default: {} as Template<any>,
+      getPath: () => "",
+      getHeadConfig: () => {
+        return {
+          title: "foo",
+        };
+      },
+      config: {
+        streamId: "$id",
+        hydrate: false,
       },
     };
 
@@ -153,51 +198,6 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       config: {
         name: "myTemplateName",
         hydrate: false,
-        streamId: "$id",
-      },
-      path: "src/templates/myTemplateName.tsx",
-      filename: "myTemplateName.tsx",
-      templateName: "myTemplateName",
-    };
-
-    expect(JSON.stringify(templateConfigInternal)).toEqual(
-      JSON.stringify(expected)
-    );
-  });
-
-  it("converts hydrate to true whenever hydrate is set to true", async () => {
-    const templateModule: TemplateModule<any, any> = {
-      default: {} as Template<any>,
-      getPath: () => "",
-      getHeadConfig: () => {
-        return {
-          title: "foo",
-        };
-      },
-      config: {
-        streamId: "$id",
-        hydrate: true,
-      },
-    };
-
-    const templateConfigInternal =
-      convertTemplateModuleToTemplateModuleInternal(
-        "src/templates/myTemplateName.tsx",
-        templateModule,
-        false
-      );
-
-    const expected: TemplateModuleInternal<any, any> = {
-      default: {} as Template<any>,
-      getPath: () => "",
-      getHeadConfig: () => {
-        return {
-          title: "foo",
-        };
-      },
-      config: {
-        name: "myTemplateName",
-        hydrate: true,
         streamId: "$id",
       },
       path: "src/templates/myTemplateName.tsx",
