@@ -13,12 +13,16 @@ import {
   noLocalDataErrorText,
   yextLogoWhiteSvg,
   webDevelopmentIconBlackSvg,
+  externalLinkSvg,
 } from "./constants.js";
 import { ViteDevServer } from "vite";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { loadFunctions } from "../../../common/src/function/internal/loader.js";
 import { FunctionModuleInternal } from "../../../common/src/function/internal/types.js";
+import { parseYextrcContents } from "../../../util/yextrcContents.js";
+import { getPartition } from "../../../util/partition.js";
+import { getYextUrlForPartition } from "../../../util/url.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -36,6 +40,24 @@ export const indexPage =
   }: Props): RequestHandler =>
   async (_req, res, next) => {
     try {
+      let accountLink = "";
+      const { accountId, universe } = parseYextrcContents();
+      if (accountId !== undefined && universe !== undefined) {
+        const partition = getPartition(Number(accountId));
+        const accountUrl = `https://${getYextUrlForPartition(
+          universe,
+          partition
+        )}/s/${accountId}/`;
+        accountLink = `
+          <span class="link-container">
+            <a target="_blank" rel="noopener noreferrer" href="${accountUrl}">
+              Yext Account
+            </a>
+            ${externalLinkSvg}
+          </span>
+        `;
+      }
+
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
       const localDataManifest = await getLocalDataManifest(
@@ -50,6 +72,15 @@ export const indexPage =
         <div class="header">
           ${yextLogoWhiteSvg}
           <h1>Pages Development</h1>
+          <h4 class="external-links">
+            ${accountLink}
+            <span class="link-container">
+              <a target="_blank" rel="noopener noreferrer" href="https://hitchhikers.yext.com/docs/pages/super-quick-start/">
+                Documentation
+              </a>
+              ${externalLinkSvg}
+            </span>
+          </h4>
         </div>
         `
       );
