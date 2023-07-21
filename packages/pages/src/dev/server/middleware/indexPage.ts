@@ -210,19 +210,6 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
   );
 };
 
-const { accountId, universe } = parseYextrcContents();
-// Content is knowledge graph
-const formatContentLink = (uid: string) => {
-  if (accountId !== undefined && universe !== undefined) {
-    const partition = getPartition(Number(accountId));
-    return `https://${getYextUrlForPartition(
-      universe,
-      partition
-    )}/s/${accountId}/entity/edit?entityIds=${uid}`;
-  }
-  return "";
-};
-
 const createEntityPageListItems = (
   localDataManifest: LocalDataManifest,
   templateName: string,
@@ -243,6 +230,19 @@ const createEntityPageListItems = (
       return entityId;
     }
     return `${slug}`;
+  };
+
+  const { accountId, universe } = parseYextrcContents();
+  const partition = getPartition(Number(accountId));
+  // Content is knowledge graph
+  const formatContentLink = (uid: string) => {
+    if (accountId !== undefined && universe !== undefined) {
+      return `https://${getYextUrlForPartition(
+        universe,
+        partition
+      )}/s/${accountId}/entity/edit?entityIds=${uid}`;
+    }
+    return;
   };
 
   const entities = localDataManifest.entity.get(templateName) || [];
