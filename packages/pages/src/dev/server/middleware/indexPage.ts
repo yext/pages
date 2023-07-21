@@ -210,16 +210,6 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
   );
 };
 
-let accountId: string;
-let universe: string;
-
-if (fs.existsSync(".yextrc")) {
-  const yextrcContents: string = fs.readFileSync(".yextrc", "utf8");
-  const parsedContents = YAML.parse(yextrcContents);
-  accountId = parsedContents.accountId;
-  universe = parsedContents.universe;
-}
-
 const createEntityPageListItems = (
   localDataManifest: LocalDataManifest,
   templateName: string,
@@ -235,11 +225,17 @@ const createEntityPageListItems = (
     )}/${entityId}`;
   };
 
+  const { accountId, universe } = parseYextrcContents();
   // Content is knowledge graph
   const formatContentLink = (uid: string) => {
-    return universe === "prod" || universe === "production"
-      ? `https://yext.com/s/${accountId}/entity/edit?entityIds=${uid}`
-      : `https://sandbox.yext.com/s/${accountId}/entity/edit?entityIds=${uid}`;
+    if (accountId !== undefined && universe !== undefined) {
+      const partition = getPartition(Number(accountId));
+      return `https://${getYextUrlForPartition(
+        universe,
+        partition
+      )}/s/${accountId}/entity/edit?entityIds=${uid}`;
+    }
+    return;
   };
 
   const formatDisplayValue = (entityId: string, slug: string | undefined) => {
