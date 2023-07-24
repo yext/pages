@@ -225,13 +225,6 @@ const createEntityPageListItems = (
     )}/${entityId}`;
   };
 
-  const formatDisplayValue = (entityId: string, slug: string | undefined) => {
-    if (!slug) {
-      return entityId;
-    }
-    return `${slug}`;
-  };
-
   const { accountId, universe } = parseYextrcContents();
   const partition = getPartition(Number(accountId));
   // Content is knowledge graph
@@ -258,14 +251,14 @@ const createEntityPageListItems = (
       `<tr>
         <td>
           <a href="${formatLink(entityId, slug)}">
-            ${formatDisplayValue(entityId, slug)}
+            ${slug ?? entityId}
            </a>
         </td>
         <td>
           ${
             accountId && universe
-              ? `<a href=${formatContentLink(uid)}> ${entityId} </a>`
-              : `${entityId}`
+              ? `<a href="${formatContentLink(uid)}">${entityId}</a>`
+              : entityId
           }
         </td>
     </tr>`
