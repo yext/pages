@@ -12,7 +12,7 @@ export const getFeaturesConfig = async (
 ): Promise<FeaturesConfig> => {
   const features: FeatureConfig[] = [];
   const streams: any[] = [];
-  for (const [, module] of templateModules.entries()) {
+  for (const module of templateModules.values()) {
     const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
     features.push(featureConfig);
     module.config.stream && streams.push({ ...module.config.stream });
