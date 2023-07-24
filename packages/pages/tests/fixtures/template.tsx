@@ -96,11 +96,6 @@ export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = ({
 /**
  * This is the main template. It can have any name as long as it's the default export.
  * The props passed in here are the direct stream document defined by `config`.
- *
- * There are a bunch of custom components being used from the src/components folder. These are
- * an example of how you could create your own. You can set up your folder structure for custom
- * components any way you'd like as long as it lives in the src folder (though you should not put
- * them in the src/templates folder as this is specific for true template files).
  */
 const Location: Template<TemplateRenderProps> = ({
   relativePrefixToRoot,

@@ -12,8 +12,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./vite-plugin": "./dist/vite-plugin/plugin.js",
-    "./util": "./dist/util/index.js",
-    "./components": "./dist/components/index.js"
+    "./util": "./dist/util/index.js"
   },
   "typesVersions": {
     "*": {
@@ -25,9 +24,6 @@
       ],
       "util": [
         "dist/types/src/util/index.d.ts"
-      ],
-      "components": [
-        "dist/types/src/components/index.d.ts"
       ]
     }
   },
@@ -45,8 +41,6 @@
     "generate-docs": "api-documenter markdown --input-folder temp --output-folder docs/api && rm -rf temp",
     "test": "jest",
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
-    "storybook": "NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006 -h localhost",
-    "build-storybook": "NODE_OPTIONS=--openssl-legacy-provider build-storybook",
     "prepare": "pnpm build"
   },
   "bin": {
@@ -57,13 +51,9 @@
     "THIRD-PARTY-NOTICES"
   ],
   "dependencies": {
-    "@yext/analytics": "^0.3.0",
-    "@yext/components-tsx-geo": "^1.0.3",
-    "@yext/components-tsx-maps": "^1.0.11",
     "ansi-to-html": "^0.7.2",
     "browser-or-node": "^2.1.1",
     "chalk": "^5.3.0",
-    "classnames": "2.3.2",
     "cli-spinners": "^2.9.0",
     "commander": "^11.0.0",
     "cross-fetch": "^4.0.0",
@@ -91,18 +81,6 @@
     "@babel/core": "^7.22.6",
     "@microsoft/api-documenter": "^7.22.22",
     "@microsoft/api-extractor": "^7.36.0",
-    "@storybook/addon-actions": "^7.0.26",
-    "@storybook/addon-backgrounds": "^7.0.26",
-    "@storybook/addon-docs": "^7.0.26",
-    "@storybook/addon-essentials": "^7.0.26",
-    "@storybook/addon-interactions": "^7.0.26",
-    "@storybook/addon-links": "^7.0.26",
-    "@storybook/addon-measure": "^7.0.26",
-    "@storybook/addon-outline": "^7.0.26",
-    "@storybook/builder-vite": "^7.0.26",
-    "@storybook/client-api": "^7.0.26",
-    "@storybook/client-logger": "7.0.26",
-    "@storybook/react": "^7.0.26",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/escape-html": "^1.0.2",
