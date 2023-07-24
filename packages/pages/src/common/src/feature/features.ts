@@ -78,11 +78,7 @@ export const convertTemplateConfigToFeatureConfig = (
 
   const featureConfigBase: FeatureConfigBase = {
     name: config.name,
-    streamId: streamConfig
-      ? streamConfig.$id
-      : config.streamId
-      ? config.streamId
-      : undefined,
+    streamId: streamConfig?.$id ?? config.streamId,
     templateType: "JS",
     alternateLanguageFields: config.alternateLanguageFields,
   };
