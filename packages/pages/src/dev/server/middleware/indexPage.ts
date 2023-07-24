@@ -225,15 +225,21 @@ const createEntityPageListItems = (
     )}/${entityId}`;
   };
 
-  const formatDisplayValue = (entityId: string, slug: string | undefined) => {
-    if (!slug) {
-      return entityId;
+  const { accountId, universe } = parseYextrcContents();
+  const partition = getPartition(Number(accountId));
+  // Content is knowledge graph
+  const formatContentLink = (uid: string) => {
+    if (accountId !== undefined && universe !== undefined) {
+      return `https://${getYextUrlForPartition(
+        universe,
+        partition
+      )}/s/${accountId}/entity/edit?entityIds=${uid}`;
     }
-    return `${slug}`;
+    return;
   };
 
   const entities = localDataManifest.entity.get(templateName) || [];
-  return entities.reduce((entityAccumulator, { entityId, slug }) => {
+  return entities.reduce((entityAccumulator, { uid, entityId, slug }) => {
     if (useProdURLs && !slug) {
       console.error(
         `No document.slug found for entityId "${entityId}", no link will be rendered in the index page.`
@@ -245,11 +251,15 @@ const createEntityPageListItems = (
       `<tr>
         <td>
           <a href="${formatLink(entityId, slug)}">
-            ${formatDisplayValue(entityId, slug)}
+            ${slug ?? entityId}
            </a>
         </td>
         <td>
-          ${entityId}
+          ${
+            accountId && universe
+              ? `<a href="${formatContentLink(uid)}">${entityId}</a>`
+              : entityId
+          }
         </td>
     </tr>`
     );

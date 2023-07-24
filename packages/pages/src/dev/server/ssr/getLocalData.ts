@@ -25,6 +25,7 @@ export interface LocalDataManifest {
   entity: Map<
     string,
     {
+      uid: string;
       // The entity's document.id
       entityId: string;
       // The entity's document.slug
@@ -72,12 +73,14 @@ export const getLocalDataManifest = async (
     if (!featureName) {
       continue;
     }
+
+    const uid = data.uid?.toString();
     const entityId = data.id?.toString();
     const slug = data.slug?.toString();
     if (entityId) {
       localDataManifest.entity.set(featureName, [
         ...(localDataManifest.entity.get(featureName) || []),
-        { entityId, slug },
+        { uid, entityId, slug },
       ]);
     } else {
       // The lack of an entityId signifies that this is a static template.
