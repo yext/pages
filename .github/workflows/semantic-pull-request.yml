@@ -26,7 +26,6 @@ jobs:
           scopes: |
             dev
             plugin
-            components
             util
             dev/plugin
             pages-plugins

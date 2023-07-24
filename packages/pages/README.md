@@ -19,10 +19,6 @@ The main binary exported as `pages`. The two important commands are:
 
 Contains any code shared between the other subpackages. It also contains public types and internal domain types.
 
-### components
-
-Specialized React components that make development against data from the Yext Knowledge Graph easy. Many of these base components are the types of things many of our customers use on their Pages, such as an Hours component.
-
 ### dev
 
 All of the code related to the custom local dev server lives here. The server itself is an Express server that's backed by [Vite](https://vitejs.dev/), giving us ultra fast HMR (hot module replacement) out of the box.
