@@ -13,10 +13,7 @@ class Runtime {
   constructor() {
     if (isDeno) {
       this.name = "deno";
-      this.version = "";
-      if (isBrowser) {
-        this.version = (window as any).Deno?.version.deno || "";
-      }
+      this.version = Deno?.version.deno || "";
       this.isServerSide = true;
     } else if (isNode) {
       this.name = "node";

@@ -8,7 +8,7 @@ jest.mock("browser-or-node", () => ({
   __esModule: true,
   isNode: false,
   isDeno: false,
-  isBrowser: true,
+  isBrowser: false,
 }));
 
 declare global {
@@ -28,6 +28,7 @@ describe("runtime", () => {
   afterEach(() => {
     (browserOrNode.isDeno as any) = false;
     (browserOrNode.isNode as any) = false;
+    (browserOrNode.isBrowser as any) = false;
     global.process = originalProcess;
     global.Deno = undefined;
   });
@@ -75,7 +76,7 @@ describe("runtime", () => {
   });
 
   it("correctly identifies browser", async () => {
-    setupMockEnvironment();
+    setupMockEnvironment("browser");
 
     const runtime = getRuntime();
 
@@ -83,7 +84,7 @@ describe("runtime", () => {
   });
 
   it("returns false for isServerSide when runtime is browser", async () => {
-    setupMockEnvironment();
+    setupMockEnvironment("browser");
 
     const runtime = getRuntime();
 
@@ -91,7 +92,9 @@ describe("runtime", () => {
   });
 });
 
-const setupMockEnvironment = (simulatedEnvironment?: "node" | "deno") => {
+const setupMockEnvironment = (
+  simulatedEnvironment?: "node" | "deno" | "browser"
+) => {
   const originalProcess = process;
   (global.process as any) = undefined;
 
@@ -119,5 +122,9 @@ const setupMockEnvironment = (simulatedEnvironment?: "node" | "deno") => {
         openssl: "foo",
       },
     };
+  }
+
+  if (simulatedEnvironment === "browser") {
+    (browserOrNode.isBrowser as any) = true;
   }
 };
