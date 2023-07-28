@@ -9,16 +9,22 @@ import { Command } from "commander";
 export const featureCommand = (program: Command) => {
   program
     .command("features")
-    .description("Generates features.json file")
+    .description("Generates config file")
     .option(
       "--scope <string>",
       "The subfolder to scope the served templates from"
+    )
+    .option(
+      "--yaml",
+      "Write to templates.config + artifacts.config > features.json",
+      true
     )
     .action(async (options) => {
       const scope = options.scope;
       const projectStructure = new ProjectStructure();
       const templatesRoot = projectStructure.templatesRoot.path;
       const sitesConfigRoot = projectStructure.sitesConfigRoot.path;
+      const distRoot = projectStructure.distRoot.path;
       const templateRootAbsolutePath = path.join(process.cwd(), templatesRoot);
       const templateFilepaths = getTemplateFilepaths(
         scope
@@ -33,11 +39,13 @@ export const featureCommand = (program: Command) => {
         true,
         false
       );
+      console.log("yaml status: " + options.yaml);
+      const fileName = options.yaml ? "templates.config" : "features.json";
       const featuresFilepath = path.join(
         process.cwd(),
-        sitesConfigRoot,
+        options.yaml ? distRoot : sitesConfigRoot,
         scope ?? "",
-        "features.json"
+        fileName
       );
       await createFeaturesJson(templateModules, featuresFilepath);
     });

@@ -38,17 +38,29 @@ export const devCommand = (program: Command) => {
       false
     )
     .option("--noInit", "Disables automatic yext init with .yextrc file")
-    .option("--noGenFeatures", "Disable feature.json generation step")
+    .option(
+      "--noGenFeatures",
+      "Disable templates.config (or features.json) generation step"
+    )
+    .option("--yaml", "Write to templates.config + artifacts.config")
     .action(async (options) => {
+      console.log("dev file: " + options.yaml);
       if (!options.noInit) {
         await autoYextInit();
       }
       if (!options.noGenFeatures)
         await runSubProcess(
           "pages generate features",
-          options.scope ? ["--scope" + " " + options.scope] : []
+          options.scope
+            ? ["--scope" + " " + options.scope, !options.yaml ? "" : "--yaml"]
+            : [!options.yaml ? "" : "--yaml"]
         );
-      await createServer(!options.local, !!options.useProdURLs, options.scope);
+      await createServer(
+        !options.local,
+        !!options.useProdURLs,
+        options.scope,
+        options.yaml
+      );
       if (options.openBrowser) await open(`http://localhost:${devServerPort}/`);
     });
 };

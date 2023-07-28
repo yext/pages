@@ -12,7 +12,7 @@ export interface ProjectFilepaths {
   templatesRoot: string;
   /** The folder path where all serverless function files live */
   functionsRoot: string;
-  /** The folder path where the sites-config files live */
+  /** The folder path where the sites-config files live. Remove in SUMO-5189 */
   sitesConfigRoot: string;
   /** The folder path where the compiled files should go */
   distRoot: string;
@@ -43,6 +43,8 @@ export interface ProjectFilenames {
   featuresConfig: string;
   /** The name of the sites-stream.json file */
   siteStreamConfig: string;
+  /** The name of the templates.config file  */
+  templatesConfig?: string;
 }
 
 /**
@@ -76,6 +78,7 @@ export interface ProjectStructureConfig {
   envVarConfig: EnvVar;
 }
 
+/** SUMO-5189 */
 export const defaultProjectStructureConfig: ProjectStructureConfig = {
   filepathsConfig: {
     templatesRoot: "src/templates",
@@ -127,6 +130,7 @@ export class ProjectStructure {
   functionBundleOutputRoot: Path;
   ciConfig: string;
   featuresConfig: string;
+  templatesConfig?: string;
   envVarDir: string;
   envVarPrefix: string;
   siteStreamConfig: string;
@@ -150,6 +154,10 @@ export class ProjectStructure {
       this.scopedTemplatesPath = new Path(
         pathLib.join(this.templatesRoot.path, scope)
       );
+    }
+    const templatesConfig = this.#config.filenamesConfig.templatesConfig;
+    if (templatesConfig) {
+      this.templatesConfig = templatesConfig;
     }
 
     this.distRoot = new Path(this.#config.filepathsConfig.distRoot);

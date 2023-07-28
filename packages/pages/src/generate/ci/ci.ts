@@ -15,6 +15,11 @@ export const ciCommand = (program: Command) => {
       "--scope <string>",
       "The subfolder to scope the served templates from"
     )
+    .option(
+      "--yaml",
+      "Write to templates.config + artifacts.config > features.json",
+      true
+    )
     .action((options, command) => {
       const scope = options.scope;
       const ciConfigFilename =

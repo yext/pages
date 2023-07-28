@@ -11,7 +11,7 @@ describe("ci - getUpdatedCiConfig", () => {
             pattern: "assets/**/*",
           },
         ],
-        features: "sites-config/features.json",
+        templates: "sites-config/features.json",
       },
       dependencies: {
         installDepsCmd: "npm install",
@@ -33,7 +33,7 @@ describe("ci - getUpdatedCiConfig", () => {
             pattern: "assets/**/*",
           },
         ],
-        features: "sites-config/features.json",
+        templates: "sites-config/features.json",
         plugins: [
           {
             pluginName: "PagesGenerator",
@@ -77,7 +77,7 @@ describe("ci - getUpdatedCiConfig", () => {
             pattern: "assets/**/*",
           },
         ],
-        features: "sites-config/features.json",
+        templates: "sites-config/features.json",
         plugins: [
           {
             pluginName: "Generator",
@@ -116,7 +116,7 @@ describe("ci - getUpdatedCiConfig", () => {
             pattern: "assets/**/*",
           },
         ],
-        features: "sites-config/features.json",
+        templates: "sites-config/features.json",
         plugins: [
           {
             pluginName: "PagesGenerator",

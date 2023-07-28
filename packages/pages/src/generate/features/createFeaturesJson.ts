@@ -22,7 +22,7 @@ export const getFeaturesConfig = async (
 };
 
 /**
- * Generates a features.json from the templates.
+ * Generates templates.config (or features.json) from the templates.
  */
 export const createFeaturesJson = async (
   templateModules: TemplateModuleCollection,

@@ -24,7 +24,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export const createServer = async (
   dynamicGenerateData: boolean,
   useProdURLs: boolean,
-  scope?: string
+  scope?: string,
+  yaml?: boolean
 ) => {
   // creates a standard express app
   const app = express();
@@ -35,17 +36,22 @@ export const createServer = async (
     filepathsConfig: {
       scope,
     },
+    filenamesConfig: {
+      templatesConfig: yaml ? "templates.config" : undefined,
+    },
   });
 
-  // Read features.json and set the default locale to the first locale listed
-  // Default to en if features.json cannot be read or there is no locales entry
+  // Read template.config (or features.json) and set the default locale to the first locale listed
+  // Default to en if template.config (or features.json) cannot be read or there is no locales entry
   let defaultLocale = "en";
   try {
     const featuresJson = JSON.parse(
       fs.readFileSync(
         path.join(
-          projectStructure.sitesConfigRoot.getAbsolutePath(),
-          projectStructure.featuresConfig
+          yaml
+            ? projectStructure.distRoot.getAbsolutePath()
+            : projectStructure.sitesConfigRoot.getAbsolutePath(),
+          projectStructure.templatesConfig ?? projectStructure.featuresConfig
         ),
         "utf-8"
       )

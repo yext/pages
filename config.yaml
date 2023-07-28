@@ -1,0 +1,62 @@
+# Title: Sites Configuration
+# Instructions: Uncomment the following lines to set up your own custom configuration.
+---
+# TBD If we want to include.  This could replace .yextrc
+# This is the Yext Account associated with this site.
+# These values are auto-populated by the CLI, but can be override here.
+yextAccount:
+  universe: # prod | sandbox
+  accountId: # 123456
+
+# GlobalData is information that is pulled from the Yext Platform and availalbe in all your templates under the _globalData variable.
+globalData:
+  $id: # site-stream # Can we just call this id and not $id?
+  filter:
+    entityIds:
+      -  # site-entity
+  source: # knowledgeGraph # Is this Necesary?
+  fields:
+    -  # name
+    -  # logo
+  localization:
+    locales:
+      -  # en
+    primary: # false # Is this necessary?
+
+# Use Redirects to configure manual redirects from one page to another.
+redirects:
+  - from: # old
+    to: # new
+  - from: # old2
+    to: # new2
+
+# Comment: Custom configuration for your sitemap.
+# By default a Sitemap will be generated at /sitemap.xml
+# You can override Defaults by uncommenting and editing the following lines.
+sitemap:
+  disableSiteMapGeneration: # false
+  fileName: # sitemap-custom.xml
+  excludeList:
+    -  # feedback/
+    -  # robots
+
+# Configure Your Auth Policy
+authorization:
+  policyName: # example-auth-policy
+
+# Setup Your RP Settings Here
+reverseProxy:
+  displayUrlPrefix: # www.[brand].com/[subdirectory]
+
+# If using Studio, uncomment the following lines to configure your Studio Repo
+# TBD If we want to include this
+studio:
+  isStudioRepo: # true
+
+---
+# V2 Additions
+sharedBuildArtifacts:
+  sourceYextAccount:
+    universe: # prod | sandbox
+    accountId: # 123456
+    siteId: # siteId-1234

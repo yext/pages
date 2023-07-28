@@ -9,11 +9,16 @@ export const buildCommand = (program: Command) => {
       "--scope <string>",
       "The subfolder to scope the served templates from"
     )
+    .option("--yaml", "Write to templates.config + artifacts.config")
     .action(async (options) => {
       // Pass CLI arguments as env variables to use in vite-plugin
       const scope = options.scope;
       if (scope) {
         process.env.YEXT_PAGES_SCOPE = scope;
+      }
+      /** SUMO-5189 Remove */
+      if (options.yaml) {
+        process.env.YAML_CONFIG = "templates.config";
       }
       build();
     });

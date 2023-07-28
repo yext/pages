@@ -83,18 +83,22 @@ export default (projectStructure: ProjectStructure) => {
       throw e;
     }
 
-    finisher = logger.timedLog({ startLog: "Writing features.json" });
+    console.log(projectStructure);
+    const configFileName =
+      projectStructure.templatesConfig ?? projectStructure.featuresConfig;
+    finisher = logger.timedLog({ startLog: "Writing " + configFileName });
     try {
-      const sitesConfigPath =
-        projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
-        projectStructure.sitesConfigRoot.getAbsolutePath();
+      const configPath = projectStructure.templatesConfig
+        ? projectStructure.distRoot.getAbsolutePath()
+        : projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
+          projectStructure.sitesConfigRoot.getAbsolutePath();
       createFeaturesJson(
         templateModules,
-        path.join(`${sitesConfigPath}/features.json`)
+        path.join(`${configPath}/${configFileName}`)
       );
-      finisher.succeed("Successfully wrote features.json");
+      finisher.succeed("Successfully wrote " + configFileName);
     } catch (e: any) {
-      finisher.fail("Failed to write features.json");
+      finisher.fail("Failed to write " + configFileName);
       throw new Error(e);
     }
 

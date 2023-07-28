@@ -36,14 +36,16 @@ export interface CiConfig {
   };
 }
 
+// TODO - ALEXIS
+
 /**
  * Defines how the Yext CI system will produce artifacts for a site.
  */
 export interface ArtifactStructure {
   /** Files that do not change (CSS, JavaScript bundles, images) */
   assets: Asset[];
-  /** The path of the features.json file */
-  features: string;
+  /** The path of the templates.config file */
+  templates: string;
   /** Arbitrary functions that will be fired at pre-defined events in the build process */
   plugins?: Plugin[];
 }
