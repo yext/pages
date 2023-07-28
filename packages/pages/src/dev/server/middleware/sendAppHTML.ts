@@ -43,10 +43,12 @@ export default async function sendAppHTML(
     clientServerRenderTemplates.serverRenderTemplatePath
   )) as RenderTemplate;
 
-  const serverHtml = await serverRenderTemplateModule.render({
-    Page: templateModuleInternal.default!,
-    pageProps: props,
-  });
+  const getServerHtml = async () => {
+    return await serverRenderTemplateModule.render({
+      Page: templateModuleInternal.default!,
+      pageProps: props,
+    });
+  };
 
   const headConfig = templateModuleInternal.getHeadConfig
     ? templateModuleInternal.getHeadConfig(props)
@@ -61,7 +63,7 @@ export default async function sendAppHTML(
 
   const clientInjectedServerHtml = getServerTemplateDev(
     clientHydrationString,
-    serverHtml,
+    await getServerHtml(),
     getLang(headConfig, props),
     headConfig
   );
