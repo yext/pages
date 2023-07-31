@@ -46,7 +46,7 @@ export interface ProjectFilenames {
   /** The name of the templates.config file  */
   templatesConfig?: string;
   /** The name of the artifacts.config file */
-  artifactsConfig: string;
+  artifactsConfig?: string;
 }
 
 /**
@@ -92,7 +92,6 @@ export const defaultProjectStructureConfig: ProjectStructureConfig = {
     functionBundleOutputRoot: "functions",
   },
   filenamesConfig: {
-    artifactsConfig: "artifacts.config",
     featuresConfig: "features.json",
     siteStreamConfig: "site-stream.json",
   },
@@ -133,7 +132,7 @@ export class ProjectStructure {
   ciConfig?: string;
   featuresConfig: string;
   templatesConfig?: string;
-  artifactsConfig: string;
+  artifactsConfig?: string;
   envVarDir: string;
   envVarPrefix: string;
   siteStreamConfig: string;
@@ -186,7 +185,10 @@ export class ProjectStructure {
     if (ciConfig) {
       this.ciConfig = ciConfig;
     }
-    this.artifactsConfig = this.#config.filenamesConfig.artifactsConfig;
+    const artifactsConfig = this.#config.filenamesConfig.artifactsConfig;
+    if (artifactsConfig) {
+      this.artifactsConfig = artifactsConfig;
+    }
     this.featuresConfig = this.#config.filenamesConfig.featuresConfig;
     this.envVarDir = this.#config.envVarConfig.envVarDir;
     this.envVarPrefix = this.#config.envVarConfig.envVarPrefix;

@@ -16,10 +16,7 @@ export const ciCommand = (program: Command) => {
       "--scope <string>",
       "The subfolder to scope the served templates from"
     )
-    .option(
-      "--yaml",
-      "Write to templates.config + artifacts.config > features.json"
-    )
+    .option("--yaml", "Write to templates.config + artifacts.config")
     .action((options, command) => {
       if (!options.yaml) {
         const scope = options.scope;
