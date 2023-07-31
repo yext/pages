@@ -17,7 +17,6 @@ export const getFeaturesConfig = async (
     features.push(featureConfig);
     module.config.stream && streams.push({ ...module.config.stream });
   }
-
   return { features, streams };
 };
 

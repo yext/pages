@@ -8,7 +8,6 @@ import process from "process";
  * @return {Promise<number>} the process's exit code
  */
 function runSubProcess(command: string, args: ReadonlyArray<string>) {
-  console.log("args " + args);
   process.stdout.write("> " + command + " " + args.join(" ") + "\n");
   const childProcess = spawn(command, args, {
     stdio: ["inherit", "pipe", "pipe"],

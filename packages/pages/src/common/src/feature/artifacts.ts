@@ -1,39 +1,8 @@
 /**
- * The shape of data that represents a ci.json file, used by Yext Pages.
+ * The shape of data that represents a artifacts.config file, used by Yext Pages.
  */
-export interface CiConfig {
+export interface ArtifactsConfig {
   artifactStructure: ArtifactStructure;
-  /**
-   * An optional optimization for the build step. It utilizes image layer caching to
-   * prevent rerunning the installDepsCmd in subsequent builds if the specified
-   * required files are unchanged.
-   */
-  dependencies: {
-    /** Command used to install dependencies */
-    installDepsCmd: string;
-    /** Files required by the above installDepsCmd */
-    requiredFiles: string[];
-  };
-  /** Commands to control how your site is built */
-  buildArtifacts: {
-    /** Specifies the command to build your site */
-    buildCmd: string;
-  };
-  /** Commands to control how Live Preview works */
-  livePreview?: {
-    /**
-     * (optional): specifies a command to be executed by the live preview system before
-     * executing serveCmd - this would be a good place to install any serve dependencies.
-     */
-    serveSetupCmd?: string;
-    /** (optional): specifies a command to execute once the Live Preview container is online */
-    serveCmd?: string;
-    /**
-     * (optional): specifies a command to watch files for changes and re-execute the build/serve
-     * commands accordingly.
-     * */
-    watchCmd?: string;
-  };
 }
 
 /**
@@ -89,3 +58,11 @@ export interface SourceFile {
   /** The pattern of file types to include */
   pattern: string;
 }
+
+export const defaultArtifactConfig: ArtifactsConfig = {
+  artifactStructure: {
+    assets: [],
+    templates: "",
+    plugins: [],
+  },
+};

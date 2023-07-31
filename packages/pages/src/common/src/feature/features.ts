@@ -5,7 +5,7 @@ import { unsecureHashPluginName } from "../function/internal/types.js";
 import { defaultProjectStructureConfig } from "../project/structure.js";
 
 /**
- * The shape of data that represents a features.json file, used by Yext Pages.
+ * The shape of data that represents a templates.config (or features.json) file, used by Yext Pages.
  */
 export interface FeaturesConfig {
   /** The feature configurations */

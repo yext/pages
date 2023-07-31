@@ -8,7 +8,6 @@ import { build } from "./build/build.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 const plugin = (): PluginOption[] => {
-  console.log("process env: " + process.env.YAML_CONFIG);
   const projectConfigFromBuildArgs: Optional<ProjectStructureConfig> = {
     filepathsConfig: {
       scope: process.env.YEXT_PAGES_SCOPE,

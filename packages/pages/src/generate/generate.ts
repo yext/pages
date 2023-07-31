@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { featureCommand } from "./features/features.js";
 import { ciCommand } from "./ci/ci.js";
+import { artifactsCommand } from "./features/artifacts.js";
 
 export const generateCommand = (program: Command) => {
   const generate = program
@@ -10,5 +11,6 @@ export const generateCommand = (program: Command) => {
       console.log('Must provide a subcommand of "generate".');
     });
   featureCommand(generate);
+  artifactsCommand(generate);
   ciCommand(generate);
 };

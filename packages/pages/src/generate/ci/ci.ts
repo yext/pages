@@ -6,6 +6,7 @@ import fs from "node:fs";
 import colors from "picocolors";
 import { loadFunctions } from "../../common/src/function/internal/loader.js";
 import { Command } from "commander";
+import { artifactsCommand } from "../features/artifacts.js";
 
 export const ciCommand = (program: Command) => {
   program
@@ -17,21 +18,24 @@ export const ciCommand = (program: Command) => {
     )
     .option(
       "--yaml",
-      "Write to templates.config + artifacts.config > features.json",
-      true
+      "Write to templates.config + artifacts.config > features.json"
     )
     .action((options, command) => {
-      const scope = options.scope;
-      const ciConfigFilename =
-        defaultProjectStructureConfig.filenamesConfig.ciConfig;
-      const sitesConfigRoot =
-        defaultProjectStructureConfig.filepathsConfig.sitesConfigRoot;
-      const ciConfigAbsolutePath = scope
-        ? new Path(
-            path.join(process.cwd(), sitesConfigRoot, scope, ciConfigFilename)
-          )
-        : new Path(path.join(process.cwd(), sitesConfigRoot, ciConfigFilename));
-      updateCiConfig(ciConfigAbsolutePath.getAbsolutePath(), true);
+      if (!options.yaml) {
+        const scope = options.scope;
+        const ciConfigFilename =
+          defaultProjectStructureConfig.filenamesConfig.ciConfig ?? "ci.json";
+        const sitesConfigRoot =
+          defaultProjectStructureConfig.filepathsConfig.sitesConfigRoot;
+        const ciConfigAbsolutePath = scope
+          ? new Path(
+              path.join(process.cwd(), sitesConfigRoot, scope, ciConfigFilename)
+            )
+          : new Path(
+              path.join(process.cwd(), sitesConfigRoot, ciConfigFilename)
+            );
+        updateCiConfig(ciConfigAbsolutePath.getAbsolutePath(), true);
+      }
     });
 };
 

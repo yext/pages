@@ -44,7 +44,6 @@ export const devCommand = (program: Command) => {
     )
     .option("--yaml", "Write to templates.config + artifacts.config")
     .action(async (options) => {
-      console.log("dev file: " + options.yaml);
       if (!options.noInit) {
         await autoYextInit();
       }
@@ -52,8 +51,8 @@ export const devCommand = (program: Command) => {
         await runSubProcess(
           "pages generate features",
           options.scope
-            ? ["--scope" + " " + options.scope, !options.yaml ? "" : "--yaml"]
-            : [!options.yaml ? "" : "--yaml"]
+            ? ["--scope" + " " + options.scope, options.yaml ? "--yaml" : ""]
+            : [options.yaml ? "--yaml" : ""]
         );
       await createServer(
         !options.local,

@@ -38,6 +38,7 @@ export const createServer = async (
     },
     filenamesConfig: {
       templatesConfig: yaml ? "templates.config" : undefined,
+      ciConfig: yaml ? undefined : "ci.json",
     },
   });
 

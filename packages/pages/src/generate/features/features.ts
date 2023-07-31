@@ -16,8 +16,7 @@ export const featureCommand = (program: Command) => {
     )
     .option(
       "--yaml",
-      "Write to templates.config + artifacts.config > features.json",
-      true
+      "Write to templates.config + artifacts.config > features.json"
     )
     .action(async (options) => {
       const scope = options.scope;
@@ -39,7 +38,6 @@ export const featureCommand = (program: Command) => {
         true,
         false
       );
-      console.log("yaml status: " + options.yaml);
       const fileName = options.yaml ? "templates.config" : "features.json";
       const featuresFilepath = path.join(
         process.cwd(),

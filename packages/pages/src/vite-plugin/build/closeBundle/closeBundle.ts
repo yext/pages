@@ -17,6 +17,7 @@ import {
 } from "./functionMetadata.js";
 import { updateCiConfig } from "../../../generate/ci/ci.js";
 import { getFunctionFilepaths } from "../../../common/src/function/internal/getFunctionFilepaths.js";
+import { createArtifactsConfig } from "../../../generate/features/artifacts.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -83,7 +84,7 @@ export default (projectStructure: ProjectStructure) => {
       throw e;
     }
 
-    console.log(projectStructure);
+    /** SUMO-5189 */
     const configFileName =
       projectStructure.templatesConfig ?? projectStructure.featuresConfig;
     finisher = logger.timedLog({ startLog: "Writing " + configFileName });
@@ -100,6 +101,19 @@ export default (projectStructure: ProjectStructure) => {
     } catch (e: any) {
       finisher.fail("Failed to write " + configFileName);
       throw new Error(e);
+    }
+
+    if (projectStructure.artifactsConfig) {
+      const artifactsConfig = projectStructure.artifactsConfig;
+      finisher = logger.timedLog({ startLog: "Writing " + artifactsConfig });
+      try {
+        const distPath = projectStructure.distRoot.getAbsolutePath();
+        createArtifactsConfig(path.join(`${distPath}/${artifactsConfig}`));
+        finisher.succeed("Successfully wrote " + artifactsConfig);
+      } catch (e: any) {
+        finisher.fail("Failed to write " + artifactsConfig);
+        throw new Error(e);
+      }
     }
 
     finisher = logger.timedLog({ startLog: "Writing manifest.json" });
@@ -122,19 +136,22 @@ export default (projectStructure: ProjectStructure) => {
       }
     }
 
-    finisher = logger.timedLog({ startLog: "Updating ci.json" });
-    try {
-      const sitesConfigPath =
-        projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
-        projectStructure.sitesConfigRoot.getAbsolutePath();
-      await updateCiConfig(
-        path.join(sitesConfigPath, projectStructure.ciConfig),
-        false
-      );
-      finisher.succeed("Successfully updated ci.json");
-    } catch (e: any) {
-      finisher.fail("Failed to update ci.json");
-      throw new Error(e);
+    //Remove in SUMO-5189
+    if (projectStructure.ciConfig) {
+      finisher = logger.timedLog({ startLog: "Updating ci.json" });
+      try {
+        const sitesConfigPath =
+          projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
+          projectStructure.sitesConfigRoot.getAbsolutePath();
+        await updateCiConfig(
+          path.join(sitesConfigPath, projectStructure.ciConfig),
+          false
+        );
+        finisher.succeed("Successfully updated ci.json");
+      } catch (e: any) {
+        finisher.fail("Failed to update ci.json");
+        throw new Error(e);
+      }
     }
   };
 };
