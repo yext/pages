@@ -80,7 +80,7 @@ export const serverRenderRoute =
         locale,
         document,
       });
-      sendAppHTML(
+      await sendAppHTML(
         res,
         templateModuleInternal,
         props,

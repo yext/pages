@@ -82,7 +82,7 @@ export const serverRenderSlugRoute =
         locale,
         document,
       });
-      sendAppHTML(
+      await sendAppHTML(
         res,
         templateModuleInternal,
         props,
