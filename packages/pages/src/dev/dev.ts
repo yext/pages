@@ -8,8 +8,8 @@ import { ProjectFilepaths } from "../common/src/project/structure.js";
 
 interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
   local?: boolean;
-  "prod-url"?: boolean;
-  "open-browser": boolean;
+  prodUrl?: boolean;
+  openBrowser: boolean;
   noInit?: boolean;
   scope?: string;
   noGenFeatures?: boolean;
@@ -18,8 +18,8 @@ interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
 
 const handler = async ({
   local,
-  "prod-url": useProdURLs,
-  "open-browser": openBrowser,
+  prodUrl,
+  openBrowser,
   noInit,
   scope,
   noGenFeatures,
@@ -33,7 +33,7 @@ const handler = async ({
       scope ? ["--scope" + " " + scope] : []
     );
 
-  await createServer(!local, !!useProdURLs, scope);
+  await createServer(!local, !!prodUrl, scope);
 
   if (openBrowser) await open(`http://localhost:${devServerPort}/`);
 };
