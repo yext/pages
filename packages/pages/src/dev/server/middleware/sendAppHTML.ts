@@ -44,6 +44,8 @@ export default async function sendAppHTML(
   )) as RenderTemplate;
 
   const getServerHtml = async () => {
+    // using this wrapper function prevents SRR client-server mistmatches if
+    // the template modifies props
     return await serverRenderTemplateModule.render({
       Page: templateModuleInternal.default!,
       pageProps: props,
