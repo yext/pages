@@ -225,7 +225,9 @@ const getCommonArgs = (
     );
     args.push("--siteStreamConfig", siteStream);
   }
-
+  if (projectStructure.scope) {
+    args.push("--hostname", projectStructure.scope);
+  }
   return args;
 };
 
