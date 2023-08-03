@@ -1,6 +1,7 @@
 import fs from "fs";
 import { spawn } from "child_process";
 import prompts from "prompts";
+import chalk from "chalk";
 import { parseYextrcContents } from "../../util/yextrcContents.js";
 import { logErrorAndExit } from "../../util/logError.js";
 
@@ -31,7 +32,7 @@ const autoYextInitWithYextrc = async () => {
 const autoYextInitWithoutYextrc = async () => {
   try {
     console.log(
-      `*******************************************************
+      `\n\n*******************************************************
 Welcome to Yext Pages!
 Let's connect to your Yext Account
 *******************************************************`
@@ -77,11 +78,14 @@ const runCommand = (command: string, args: string[]) => {
 };
 
 const askForAccountId = async (): Promise<string> => {
-  console.log(`
+  console.log(
+    `
 What is your Yext Account ID?
-
-Your Account ID is found in the URL of your Yext Account, e.g. \`yext.com/s/<ACCOUNT_ID>/home\`
-  `);
+(e.g. \`yext.com/s/` +
+      chalk.bold(`<ACCOUNT_ID>`) +
+      `/home\`)
+  `
+  );
   const response = await prompts({
     type: "number",
     name: "accountId",
