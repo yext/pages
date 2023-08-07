@@ -1,3 +1,69 @@
+#### 1.0.0-rc.0 (2023-08-02)
+
+##### Chores
+
+*  update changelog and release version (1283e9e7)
+*  update changelog and release version (be69d2d0)
+*  update changelog and release version (e3b7928c)
+*  migrate from Yargs to CommanderJS (#351) (f37b727a)
+
+##### New Features
+
+* **dev:**
+  *  link entityId to KG (#354) (09bceb92)
+  *  add links to Yext account and documentation on index page (#357) (dd56dca4)
+  *  default hydrate to true (#359) (b4b84f62)
+  *  support document typing (#332) (8800df0a)
+  *  styled index page (#326) (0a0da397)
+  *  add .yextrc support for auto yext init (#329) (1755018d)
+* **dev/plugin:**
+  *  support React 18 (#353) (366d2931)
+  *  upgrade to Vite 4 (#350) (29c7fb75)
+  *  add Generator plugin to ci.json during build (#311) (73aec942)
+* **plugin:**
+  *  add reverse proxy support (#318) (68cd81d2)
+  *  fail the build when there are errors (#314) (f90db5b9)
+* **components:**  add Clusterer component. (#313) (c7d97413)
+
+##### Bug Fixes
+
+* **dev:**
+  *  server crashes instead of producing 500 error (#366) (9056b3a1)
+  *  scope/domain omitted in dynamic mode (#367) (b1971c3c)
+  *  opening browser tab not working (#355) (0b5e490e)
+  *  fixed URI encoding issue  (#346) (d24cfa9f)
+  *  static page locale support (#339) (f6d60695)
+  *  index page QA - update warning/info text and add favicon (#333) (b02fe061)
+  *  qa updates for `.yextrc` CLI (#336) (b34df159)
+  *  duplicated generate-test-data (#334) (589149ac)
+  *  add additional filetypes to esbuild loader for features.json (#331) (c9d50205)
+  *  handle ico import (#322) (65a224b8)
+* **util:**
+  *  deno version not properly set (#364) (c590208f)
+  *  update isProduction to check for RPs (#342) (37e26980)
+* **plugin:**
+  *  fail platform build when PagesJS build fails (fix #347) (#348) (eeb962c8)
+  *  include scope for ci.json generation (#343) (6102c745)
+  *  app lang not properly set (#344) (c98e1384)
+  *  finalize reverse proxy support (#330) (c6e59c9b)
+  *  cache dynamic import of plugin render templates (#325) (d199cfc3)
+  *  use vite-plugin-node-polyfills (#316) (45d0f922)
+  *  remove space from pluginName (#315) (877fb024)
+
+##### Other Changes
+
+*  pages@1.0.0-beta.23 (8b3454f3)
+
+##### Performance Improvements
+
+* **plugin:**  do not report gzipped size (#323) (833b98d4)
+
+##### Refactors
+
+*  restore command handlers (#356) (657c3e0c)
+*  use nullish coalescing in features.ts (#363) (d7e098f7)
+*  use values instead of entries in createFreaturesJson (#362) (93568160)
+
 #### 1.0.0-beta.26 (2023-07-19)
 
 ##### Bug Fixes

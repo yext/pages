@@ -4,6 +4,39 @@ import runSubProcess from "../util/runSubprocess.js";
 import { devServerPort } from "./server/middleware/constants.js";
 import { autoYextInit } from "./server/autoInit.js";
 import open from "open";
+import { ProjectFilepaths } from "../common/src/project/structure.js";
+
+interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
+  local?: boolean;
+  prodUrl?: boolean;
+  openBrowser: boolean;
+  noInit?: boolean;
+  scope?: string;
+  noGenFeatures?: boolean;
+  noGenTestData?: boolean;
+}
+
+const handler = async ({
+  local,
+  prodUrl,
+  openBrowser,
+  noInit,
+  scope,
+  noGenFeatures,
+}: DevArgs) => {
+  if (!noInit) {
+    await autoYextInit();
+  }
+  if (!noGenFeatures)
+    await runSubProcess(
+      "pages generate features",
+      scope ? ["--scope" + " " + scope] : []
+    );
+
+  await createServer(!local, !!prodUrl, scope);
+
+  if (openBrowser) await open(`http://localhost:${devServerPort}/`);
+};
 
 export const devCommand = (program: Command) => {
   program
@@ -39,16 +72,5 @@ export const devCommand = (program: Command) => {
     )
     .option("--noInit", "Disables automatic yext init with .yextrc file")
     .option("--noGenFeatures", "Disable feature.json generation step")
-    .action(async (options) => {
-      if (!options.noInit) {
-        await autoYextInit();
-      }
-      if (!options.noGenFeatures)
-        await runSubProcess(
-          "pages generate features",
-          options.scope ? ["--scope" + " " + options.scope] : []
-        );
-      await createServer(!options.local, !!options.useProdURLs, options.scope);
-      if (options.openBrowser) await open(`http://localhost:${devServerPort}/`);
-    });
+    .action(handler);
 };
