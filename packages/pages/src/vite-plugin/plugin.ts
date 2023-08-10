@@ -15,7 +15,16 @@ const plugin = (): PluginOption[] => {
   };
   const projectStructure = new ProjectStructure(projectConfigFromBuildArgs);
 
-  return [build(projectStructure), nodePolyfills()];
+  return [
+    build(projectStructure),
+    nodePolyfills({
+      globals: {
+        Buffer: "build",
+        global: "build",
+        process: "build",
+      },
+    }),
+  ];
 };
 
 export default plugin;
