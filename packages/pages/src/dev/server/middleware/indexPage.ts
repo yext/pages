@@ -5,7 +5,6 @@ import {
 } from "../ssr/getLocalData.js";
 import index from "../public/index.js";
 import {
-  devServerPort,
   dynamicModeInfoText,
   localDevUrlInfoText,
   localDevUrlHelpText,
@@ -29,6 +28,7 @@ type Props = {
   dynamicGenerateData: boolean;
   useProdURLs: boolean;
   projectStructure: ProjectStructure;
+  devServerPort: number;
 };
 
 export const indexPage =
@@ -37,6 +37,7 @@ export const indexPage =
     dynamicGenerateData,
     useProdURLs,
     projectStructure,
+    devServerPort,
   }: Props): RequestHandler =>
   async (_req, res, next) => {
     try {
@@ -102,7 +103,7 @@ export const indexPage =
           indexPageHtml = indexPageHtml.replace(
             `<!--static-pages-html-->`,
             `<h3>Static Pages</h3>
-            ${createStaticPageListItems(localDataManifest)}`
+            ${createStaticPageListItems(localDataManifest, devServerPort)}`
           );
         }
 
@@ -136,7 +137,8 @@ export const indexPage =
                     ${createEntityPageListItems(
                       localDataManifest,
                       templateName,
-                      useProdURLs
+                      useProdURLs,
+                      devServerPort
                     )}
                   </tbody>
                 </table>`,
@@ -159,7 +161,11 @@ export const indexPage =
       const functionsList = [
         ...(await loadFunctions("src/functions")).values(),
       ];
-      indexPageHtml = createFunctionsTable(functionsList, indexPageHtml);
+      indexPageHtml = createFunctionsTable(
+        functionsList,
+        indexPageHtml,
+        devServerPort
+      );
 
       // Send the HTML back.
       res.status(200).set({ "Content-Type": "text/html" }).end(indexPageHtml);
@@ -170,7 +176,10 @@ export const indexPage =
     }
   };
 
-const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
+const createStaticPageListItems = (
+  localDataManifest: LocalDataManifest,
+  devServerPort: number
+) => {
   return Array.from(localDataManifest.static).reduce(
     (templateAccumulator, [, { featureName, staticURL, locales }]) =>
       templateAccumulator +
@@ -213,7 +222,8 @@ const createStaticPageListItems = (localDataManifest: LocalDataManifest) => {
 const createEntityPageListItems = (
   localDataManifest: LocalDataManifest,
   templateName: string,
-  useProdURLs: boolean
+  useProdURLs: boolean,
+  devServerPort: number
 ) => {
   const formatLink = (entityId: string, slug: string | undefined) => {
     if (useProdURLs) {
@@ -284,7 +294,8 @@ const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
 
 const createFunctionsTable = (
   functionsList: FunctionModuleInternal[],
-  indexPageHtml: string
+  indexPageHtml: string,
+  devServerPort: number
 ) => {
   if (functionsList.length > 0) {
     return indexPageHtml.replace(

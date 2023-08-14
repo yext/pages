@@ -1,10 +1,3 @@
-import getPort, { portNumbers } from "get-port";
-
-// Will use any available port from 5173 to 6000, otherwise fall back to a random port
-export const devServerPort = await getPort({
-  port: portNumbers(5173, 6000),
-});
-
 export const dynamicModeInfoText = `URLs displayed here are generated 
 from the contents of the <span class="code">localData</span> folder. This folder is auto-generated 
 every time you re-run the dev server.  By default, you will receive real-time data updates from the 

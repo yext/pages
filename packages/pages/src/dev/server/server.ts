@@ -5,7 +5,6 @@ import { createServer as createViteServer } from "vite";
 import { serverRenderRoute } from "./middleware/serverRenderRoute.js";
 import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
-import { devServerPort } from "./middleware/constants.js";
 import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
@@ -24,6 +23,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export const createServer = async (
   dynamicGenerateData: boolean,
   useProdURLs: boolean,
+  devServerPort: number,
   scope?: string
 ) => {
   // creates a standard express app
@@ -179,6 +179,7 @@ export const createServer = async (
       dynamicGenerateData,
       useProdURLs,
       projectStructure,
+      devServerPort,
     })
   );
 
