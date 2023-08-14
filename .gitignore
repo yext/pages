@@ -17,6 +17,7 @@ lerna-debug.log*
 
 dist
 *.local
+**/.yextrc
 
 # Editor directories and files
 .vscode/*
