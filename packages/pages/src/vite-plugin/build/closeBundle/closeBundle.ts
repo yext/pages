@@ -22,22 +22,29 @@ export default (projectStructure: ProjectStructure) => {
   return async () => {
     let finisher = logger.timedLog({ startLog: "Validating template modules" });
     let templateModules: TemplateModuleCollection;
+
     try {
       const serverBundles = glob.sync(
         path.join(
-          projectStructure.serverBundleOutputRoot.getAbsolutePath(),
+          path.resolve(
+            projectStructure.config.rootFolders.dist,
+            projectStructure.config.subfolders.serverBundle
+          ),
           "**/*.js"
         ),
         {
           ignore: path.join(
-            projectStructure.functionBundleOutputRoot.getAbsolutePath(),
+            path.resolve(
+              projectStructure.config.rootFolders.dist,
+              projectStructure.config.subfolders.serverlessFunctions
+            ),
             "**"
           ),
         }
       );
       templateModules = await loadTemplateModules(serverBundles, false, true);
       validateUniqueFeatureName(templateModules);
-      validateBundles();
+      validateBundles(projectStructure);
       finisher.succeed("Validated template modules");
     } catch (e: any) {
       finisher.fail("One or more template modules failed validation");
@@ -85,13 +92,7 @@ export default (projectStructure: ProjectStructure) => {
 
     finisher = logger.timedLog({ startLog: "Writing features.json" });
     try {
-      const sitesConfigPath =
-        projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
-        projectStructure.sitesConfigRoot.getAbsolutePath();
-      createFeaturesJson(
-        templateModules,
-        path.join(`${sitesConfigPath}/features.json`)
-      );
+      createFeaturesJson(templateModules, projectStructure);
       finisher.succeed("Successfully wrote features.json");
     } catch (e: any) {
       finisher.fail("Failed to write features.json");
@@ -120,12 +121,16 @@ export default (projectStructure: ProjectStructure) => {
 
     finisher = logger.timedLog({ startLog: "Updating ci.json" });
     try {
-      const sitesConfigPath =
-        projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
-        projectStructure.sitesConfigRoot.getAbsolutePath();
+      const sitesConfigAbsolutePath = projectStructure
+        .getSitesConfigPath()
+        .getAbsolutePath();
       await updateCiConfig(
-        path.join(sitesConfigPath, projectStructure.ciConfig),
-        false
+        path.join(
+          sitesConfigAbsolutePath,
+          projectStructure.config.sitesConfigFiles.ci
+        ),
+        false,
+        projectStructure
       );
       finisher.succeed("Successfully updated ci.json");
     } catch (e: any) {

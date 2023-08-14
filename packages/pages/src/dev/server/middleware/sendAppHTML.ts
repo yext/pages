@@ -35,8 +35,7 @@ export default async function sendAppHTML(
   }
 
   const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
-    projectStructure.templatesRoot,
-    projectStructure.scopedTemplatesPath
+    projectStructure.getTemplatePaths()
   );
 
   const serverRenderTemplateModule = (await vite.ssrLoadModule(

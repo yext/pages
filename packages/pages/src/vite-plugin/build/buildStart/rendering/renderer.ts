@@ -1,3 +1,4 @@
+import { ProjectStructure } from "../../../../common/src/project/structure.js";
 import {
   Manifest,
   TemplateProps,
@@ -23,8 +24,18 @@ export default async (
   props: TemplateProps,
   manifest: Manifest
 ): Promise<GeneratedPage> => {
-  const template = await readTemplateModules(props.document.__.name, manifest);
-  const pluginRenderTemplates = await getPluginRenderTemplates(manifest);
+  const projectStructure = await ProjectStructure.init({
+    scope: props.document.scope,
+  });
+  const template = await readTemplateModules(
+    props.document.__.name,
+    manifest,
+    projectStructure
+  );
+  const pluginRenderTemplates = await getPluginRenderTemplates(
+    manifest,
+    projectStructure
+  );
 
   const responses = await generateResponses(
     template,

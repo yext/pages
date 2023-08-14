@@ -2,12 +2,7 @@ import path from "path";
 import { FunctionModule, FunctionType } from "../types.js";
 import { validateFunctionModule } from "./validateFunctionModule.js";
 import { PluginEvent } from "../../ci/ci.js";
-import { defaultProjectStructureConfig } from "../../project/structure.js";
-
-const productionBuildRoot =
-  defaultProjectStructureConfig.filepathsConfig.distRoot +
-  "/" +
-  defaultProjectStructureConfig.filepathsConfig.functionBundleOutputRoot;
+import { ProjectStructure } from "../../project/structure.js";
 
 /**
  * A domain representation of a serverless function module. Contains all fields from an imported
@@ -50,19 +45,24 @@ export interface FunctionConfigInternal {
  */
 export const convertFunctionModuleToFunctionModuleInternal = (
   functionFilepath: path.ParsedPath,
-  functionModule: FunctionModule
+  functionModule: FunctionModule,
+  projectStructure: ProjectStructure
 ): FunctionModuleInternal => {
-  let functionInternal;
+  const serverlessSourcePath =
+    projectStructure.config.rootFolders.source +
+    "/" + // purposefully using string concatentation and not path.join
+    projectStructure.config.subfolders.serverlessFunctions;
+  const serverlessDistPath =
+    projectStructure.config.rootFolders.dist +
+    "/" + // purposefully using string concatentation and not path.join
+    projectStructure.config.subfolders.serverlessFunctions;
 
+  let functionInternal;
   let functionsRoot;
-  if (
-    path
-      .format(functionFilepath)
-      .includes(defaultProjectStructureConfig.filepathsConfig.functionsRoot)
-  ) {
-    functionsRoot = defaultProjectStructureConfig.filepathsConfig.functionsRoot; // local dev server
-  } else if (path.format(functionFilepath).includes(productionBuildRoot)) {
-    functionsRoot = productionBuildRoot; // production build
+  if (path.format(functionFilepath).includes(serverlessSourcePath)) {
+    functionsRoot = serverlessSourcePath; // local dev server
+  } else if (path.format(functionFilepath).includes(serverlessDistPath)) {
+    functionsRoot = serverlessDistPath; // production build
   } else if (
     path.format(functionFilepath).includes("tests/fixtures/src/functions")
   ) {
@@ -71,15 +71,13 @@ export const convertFunctionModuleToFunctionModuleInternal = (
 
   const relativePath = path
     .format(functionFilepath)
-    .split(
-      `/${defaultProjectStructureConfig.filepathsConfig.functionsRoot}/`
-    )[1];
+    .split(`/${serverlessSourcePath}/`)[1];
   const functionType = relativePath.split("/")[0];
 
   if (
     functionType === "onUrlChange" &&
     relativePath.split("/").length > 2 &&
-    functionsRoot !== productionBuildRoot
+    functionsRoot !== serverlessDistPath
   ) {
     throw new Error(`Cannot load ${path.format(
       functionFilepath

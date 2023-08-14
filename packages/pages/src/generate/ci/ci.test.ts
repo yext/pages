@@ -1,7 +1,13 @@
 import { CiConfig } from "../../common/src/ci/ci.js";
+import { ProjectStructure } from "../../common/src/project/structure.js";
 import { getUpdatedCiConfig } from "./ci.js";
 
 describe("ci - getUpdatedCiConfig", () => {
+  let projectStructure: ProjectStructure;
+  beforeAll(async () => {
+    projectStructure = await ProjectStructure.init();
+  });
+
   it("adds the Generator plugin to the config if it does not exist", async () => {
     const input: CiConfig = {
       artifactStructure: {
@@ -65,7 +71,9 @@ describe("ci - getUpdatedCiConfig", () => {
       },
     };
 
-    expect(getUpdatedCiConfig(input)).resolves.toEqual(expected);
+    expect(getUpdatedCiConfig(input, projectStructure)).resolves.toEqual(
+      expected
+    );
   });
 
   it("updates the Generator plugin if it exists", async () => {
@@ -148,6 +156,8 @@ describe("ci - getUpdatedCiConfig", () => {
       },
     };
 
-    expect(getUpdatedCiConfig(input)).resolves.toEqual(expected);
+    expect(getUpdatedCiConfig(input, projectStructure)).resolves.toEqual(
+      expected
+    );
   });
 });

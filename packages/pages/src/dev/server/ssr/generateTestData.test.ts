@@ -64,27 +64,30 @@ jest.mock("child_process", () => ({
   }),
 }));
 
-const projectStructure = new ProjectStructure();
-
-const getGenerateTestDataForPageRunner = () =>
-  generateTestDataForPage(
-    mockParentProcessStdout,
-    FEATURE_CONFIG,
-    "loc3",
-    "en",
-    projectStructure
-  );
-
-const getGenerateTestDataForPageWithAlternateLanguageFieldsRunner = () =>
-  generateTestDataForPage(
-    mockParentProcessStdout,
-    FEATURE_CONFIG_ALTERNATE_LANGUAGE_FIELDS,
-    "4092",
-    "es-US",
-    projectStructure
-  );
-
 describe("generateTestDataForPage", () => {
+  let projectStructure: ProjectStructure;
+  beforeAll(async () => {
+    projectStructure = await ProjectStructure.init();
+  });
+
+  const getGenerateTestDataForPageRunner = () =>
+    generateTestDataForPage(
+      mockParentProcessStdout,
+      FEATURE_CONFIG,
+      "loc3",
+      "en",
+      projectStructure
+    );
+
+  const getGenerateTestDataForPageWithAlternateLanguageFieldsRunner = () =>
+    generateTestDataForPage(
+      mockParentProcessStdout,
+      FEATURE_CONFIG_ALTERNATE_LANGUAGE_FIELDS,
+      "4092",
+      "es-US",
+      projectStructure
+    );
+
   it("properly reads stream data from stdout and returns it as parsed JSON", async () => {
     const testRunnerPromise = getGenerateTestDataForPageRunner();
 

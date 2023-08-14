@@ -11,6 +11,7 @@ import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../../../../common/src/template/internal/types.js";
+import { ProjectStructure } from "../../../../common/src/project/structure.js";
 
 const pathToModule = new Map();
 
@@ -19,9 +20,13 @@ const pathToModule = new Map();
  */
 export const readTemplateModules = async (
   feature: string,
-  manifest: Manifest
+  manifest: Manifest,
+  projectStructure: ProjectStructure
 ): Promise<TemplateModuleInternal<any, any>> => {
-  const path = manifest.bundlePaths[feature].replace("assets", "..");
+  const path = manifest.bundlePaths[feature].replace(
+    projectStructure.config.subfolders.renderBundle,
+    ".."
+  );
   if (!path) {
     throw new Error(`Could not find path for feature ${feature}`);
   }
@@ -55,9 +60,13 @@ export interface PluginRenderTemplates {
  * @returns
  */
 export const getPluginRenderTemplates = async (
-  manifest: Manifest
+  manifest: Manifest,
+  projectStructure: ProjectStructure
 ): Promise<PluginRenderTemplates> => {
-  const serverRenderPath = manifest.renderPaths._server.replace("assets", "..");
+  const serverRenderPath = manifest.renderPaths._server.replace(
+    projectStructure.config.subfolders.renderBundle,
+    ".."
+  );
 
   const serverRenderTemplateModule = await importRenderTemplate(
     serverRenderPath

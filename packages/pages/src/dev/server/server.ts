@@ -31,11 +31,7 @@ export const createServer = async (
 
   // initialize the default project structure and use to help configure the
   // dev server
-  const projectStructure = new ProjectStructure({
-    filepathsConfig: {
-      scope,
-    },
-  });
+  const projectStructure = await ProjectStructure.init({ scope });
 
   // Read features.json and set the default locale to the first locale listed
   // Default to en if features.json cannot be read or there is no locales entry
@@ -43,9 +39,9 @@ export const createServer = async (
   try {
     const featuresJson = JSON.parse(
       fs.readFileSync(
-        path.join(
-          projectStructure.sitesConfigRoot.getAbsolutePath(),
-          projectStructure.featuresConfig
+        path.resolve(
+          projectStructure.getSitesConfigPath().path,
+          projectStructure.config.sitesConfigFiles.features
         ),
         "utf-8"
       )
@@ -65,9 +61,11 @@ export const createServer = async (
       middlewareMode: true,
     },
     appType: "custom",
-    envDir: projectStructure.envVarDir,
-    envPrefix: projectStructure.envVarPrefix,
-    define: processEnvVariables(projectStructure.envVarPrefix),
+    envDir: projectStructure.config.envVarConfig.envVarDir,
+    envPrefix: projectStructure.config.envVarConfig.envVarPrefix,
+    define: processEnvVariables(
+      projectStructure.config.envVarConfig.envVarPrefix
+    ),
     optimizeDeps: {
       include: ["react-dom", "react-dom/client"],
     },
@@ -91,14 +89,18 @@ export const createServer = async (
   // Call generateTestData to ensure we have data to populate the index page.
   // If the user specifies dynamicGenerateData = false we assume they have localData already.
   if (dynamicGenerateData) {
-    await generateTestData(projectStructure.scope);
+    await generateTestData(projectStructure.config.scope);
   }
 
   // Load functions from their source files
   const functionModules: FunctionModuleCollection = new Map();
   const loadUpdatedFunctionModules = async () => {
     const loadedFunctionModules = await loadFunctions(
-      projectStructure.serverlessFunctionsRoot.path
+      path.join(
+        projectStructure.config.rootFolders.source,
+        projectStructure.config.subfolders.serverlessFunctions
+      ),
+      projectStructure
     );
     loadedFunctionModules.forEach((functionModule) => {
       functionModules.set(functionModule.config.name, functionModule);

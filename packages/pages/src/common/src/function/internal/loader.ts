@@ -9,6 +9,7 @@ import { importFromString } from "module-from-string";
 import { pathToFileURL } from "url";
 import { getFunctionFilepaths } from "./getFunctionFilepaths.js";
 import { processEnvVariables } from "../../../../util/processEnvVariables.js";
+import { ProjectStructure } from "../../project/structure.js";
 
 const TEMP_DIR = ".temp";
 
@@ -21,7 +22,8 @@ const TEMP_DIR = ".temp";
  */
 export const loadFunctionModules = async (
   functionPaths: path.ParsedPath[],
-  transpile: boolean
+  transpile: boolean,
+  projectStructure: ProjectStructure
 ): Promise<FunctionModuleCollection> => {
   const importedModules = [] as FunctionModuleInternal[];
   for (const functionPath of functionPaths) {
@@ -55,7 +57,8 @@ export const loadFunctionModules = async (
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
         functionPath,
-        functionModule
+        functionModule,
+        projectStructure
       );
 
     importedModules.push({
@@ -89,7 +92,10 @@ export type FunctionModuleCollection = Map<string, FunctionModuleInternal>;
  * @param root the directory to check for functions
  * @return Promise<FunctionModuleCollection>
  */
-export const loadFunctions = async (root: string) => {
+export const loadFunctions = async (
+  root: string,
+  projectStructure: ProjectStructure
+) => {
   const functionFilepaths = getFunctionFilepaths(root);
-  return await loadFunctionModules(functionFilepaths, true);
+  return await loadFunctionModules(functionFilepaths, true, projectStructure);
 };

@@ -58,7 +58,10 @@ export const generateTestDataForSlug = async (
     vite,
     templateFilepaths
   );
-  const featuresConfig = await getFeaturesConfig(templateModuleCollection);
+  const featuresConfig = await getFeaturesConfig(
+    templateModuleCollection,
+    projectStructure
+  );
   const featuresConfigForEntityPages: FeaturesConfig = {
     features: featuresConfig.features.filter((f) => "entityPageSet" in f),
     streams: featuresConfig.streams,
@@ -212,12 +215,9 @@ const getCommonArgs = (
 
   args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
 
-  const sitesConfigPath =
-    projectStructure.scopedSitesConfigPath?.getAbsolutePath() ??
-    projectStructure.sitesConfigRoot.getAbsolutePath();
   const siteStreamPath = path.resolve(
-    process.cwd(),
-    path.join(sitesConfigPath, projectStructure.siteStreamConfig)
+    projectStructure.getSitesConfigPath().path,
+    projectStructure.config.sitesConfigFiles.siteStream
   );
   if (fs.existsSync(siteStreamPath)) {
     const siteStream = prepareJsonForCmd(
@@ -225,8 +225,8 @@ const getCommonArgs = (
     );
     args.push("--siteStreamConfig", siteStream);
   }
-  if (projectStructure.scope) {
-    args.push("--hostname", projectStructure.scope);
+  if (projectStructure.config.scope) {
+    args.push("--hostname", projectStructure.config.scope);
   }
   return args;
 };

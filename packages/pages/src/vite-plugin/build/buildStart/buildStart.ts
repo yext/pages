@@ -5,11 +5,12 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import { PluginContext, EmitFile } from "rollup";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { Path } from "../../../common/src/project/path.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async function (this: PluginContext): Promise<void> {
     console.log(yextBanner);
-    clean(projectStructure.distRoot.getAbsolutePath());
+    clean(new Path(projectStructure.config.rootFolders.dist).getAbsolutePath());
 
     copyPluginFiles(this.emitFile);
 

@@ -159,7 +159,7 @@ export const indexPage =
       }
 
       const functionsList = [
-        ...(await loadFunctions("src/functions")).values(),
+        ...(await loadFunctions("src/functions", projectStructure)).values(),
       ];
       indexPageHtml = createFunctionsTable(
         functionsList,

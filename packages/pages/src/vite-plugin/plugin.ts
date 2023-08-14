@@ -7,13 +7,13 @@ import {
 import { build } from "./build/build.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
-const plugin = (): PluginOption[] => {
+const plugin = async (): Promise<PluginOption[]> => {
   const projectConfigFromBuildArgs: Optional<ProjectStructureConfig> = {
-    filepathsConfig: {
-      scope: process.env.YEXT_PAGES_SCOPE,
-    },
+    scope: process.env.YEXT_PAGES_SCOPE,
   };
-  const projectStructure = new ProjectStructure(projectConfigFromBuildArgs);
+  const projectStructure = await ProjectStructure.init(
+    projectConfigFromBuildArgs
+  );
 
   return [
     build(projectStructure),

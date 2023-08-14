@@ -5,6 +5,7 @@ import { TemplateModuleCollection } from "../../../common/src/template/internal/
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
 import { Manifest } from "../../../common/src/template/types.js";
 import { glob } from "glob";
+import { Path } from "../../../common/src/project/path.js";
 
 /**
  * Creates a manifest.json for use with the Pages vite-plugin
@@ -20,49 +21,62 @@ export const generateManifestFile = (
     featureNameToBundlePath.set(featureName, module.path);
   }
 
-  const distRoot = projectStructure.distRoot.getAbsolutePath();
+  const distPath = new Path(projectStructure.config.rootFolders.dist);
+
   const relativeBundlePaths = Array.from(featureNameToBundlePath.entries()).map(
-    ([name, path]) => [
-      name,
-      convertToPosixPath(projectStructure.distRoot.getRelativePath(path)),
-    ]
+    ([name, path]) => [name, convertToPosixPath(distPath.getRelativePath(path))]
   );
 
   // Add the renderPaths to the manifest. This defines the _client and _server entries.
   const renderPaths = glob.sync(
-    path.join(
-      projectStructure.renderBundleOutputRoot.getAbsolutePath(),
+    path.resolve(
+      projectStructure.config.rootFolders.dist,
+      projectStructure.config.subfolders.renderBundle,
       "**/*.js"
     )
   );
 
   const relativeRenderPaths = renderPaths.map((filepath) => [
     path.parse(filepath).name.split(".")[0], // get the name of the file without the hash or extension
-    convertToPosixPath(projectStructure.distRoot.getRelativePath(filepath)),
+    convertToPosixPath(distPath.getRelativePath(filepath)),
   ]);
 
   let bundlerManifest = Buffer.from("{}");
-  if (fs.existsSync(path.join(distRoot, "manifest.json"))) {
-    bundlerManifest = fs.readFileSync(path.join(distRoot, "manifest.json"));
+  if (fs.existsSync(path.join(distPath.path, "manifest.json"))) {
+    bundlerManifest = fs.readFileSync(
+      path.join(distPath.path, "manifest.json")
+    );
   }
   const manifest: Manifest = {
     bundlePaths: Object.fromEntries(relativeBundlePaths),
     renderPaths: Object.fromEntries(relativeRenderPaths),
     projectFilepaths: {
-      templatesRoot: projectStructure.templatesRoot.path,
-      distRoot: projectStructure.distRoot.path,
-      serverBundleOutputRoot: projectStructure.serverBundleOutputRoot.path,
-      scopedTemplatesPath: projectStructure.scopedTemplatesPath?.path,
+      templatesRoot:
+        projectStructure.config.rootFolders.source +
+        "/" + // purposefully concatenated and not using path.join
+        projectStructure.config.subfolders.templates,
+      distRoot: distPath.path,
+      serverBundleOutputRoot:
+        projectStructure.config.rootFolders.dist +
+        "/" + // purposefully concatenated and not using path.join
+        projectStructure.config.subfolders.serverBundle,
+      scopedTemplatesPath: projectStructure.config.scope
+        ? projectStructure.config.rootFolders.source +
+          "/" + // purposefully concatenated and not using path.join
+          projectStructure.config.subfolders.templates +
+          "/" +
+          projectStructure.config.scope
+        : "",
     },
     bundlerManifest: JSON.parse(bundlerManifest.toString()),
   };
 
   writeFile(
-    path.join(distRoot, "plugin", "manifest.json"),
+    path.resolve(distPath.path, "plugin", "manifest.json"),
     JSON.stringify(manifest, null, "  ")
   );
 
-  fs.remove(path.join(distRoot, "manifest.json"));
+  fs.remove(path.resolve(distPath.path, "manifest.json"));
 };
 
 // writeFile ensures that the directory of the filepath exists before writing the file.
