@@ -3,10 +3,9 @@ import { createServer } from "./server/server.js";
 import runSubProcess from "../util/runSubprocess.js";
 import { autoYextInit } from "./server/autoInit.js";
 import open from "open";
-import { ProjectFilepaths } from "../common/src/project/structure.js";
 import getPort, { portNumbers } from "get-port";
 
-interface DevArgs extends Pick<ProjectFilepaths, "scope"> {
+interface DevArgs {
   local?: boolean;
   prodUrl?: boolean;
   openBrowser: boolean;

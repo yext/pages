@@ -1,10 +1,7 @@
 import { Command } from "commander";
 import { build } from "vite";
-import { ProjectFilepaths } from "../common/src/project/structure.js";
 
-type BuildArgs = Pick<ProjectFilepaths, "scope">;
-
-const handler = async ({ scope }: BuildArgs) => {
+const handler = async (scope: string) => {
   // Pass CLI arguments as env variables to use in vite-plugin
   if (scope) {
     process.env.YEXT_PAGES_SCOPE = scope;
