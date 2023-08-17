@@ -4,6 +4,7 @@ import { Command } from "commander";
 interface ProdArgs {
   noBuild?: boolean;
   noRender?: boolean;
+  scope?: string;
 }
 
 const handler = async (args: ProdArgs) => {

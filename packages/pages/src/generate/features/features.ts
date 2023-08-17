@@ -4,7 +4,7 @@ import { loadTemplateModules } from "../../common/src/template/internal/loader.j
 import { createFeaturesJson } from "./createFeaturesJson.js";
 import { Command } from "commander";
 
-const handler = async (scope: string): Promise<void> => {
+const handler = async ({ scope }: { scope: string }): Promise<void> => {
   const projectStructure = await ProjectStructure.init({ scope });
   const templateFilepaths = getTemplateFilepaths(
     projectStructure.getTemplatePaths()
@@ -15,7 +15,7 @@ const handler = async (scope: string): Promise<void> => {
     false
   );
 
-  await createFeaturesJson(templateModules, projectStructure);
+  createFeaturesJson(templateModules, projectStructure);
 };
 
 export const featureCommand = (program: Command) => {

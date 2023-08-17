@@ -57,24 +57,11 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
             },
           },
           reportCompressedSize: false,
+          assetsDir: projectStructure.config.subfolders.assets,
         },
         define: processEnvVariables(
           projectStructure.config.envVarConfig.envVarPrefix
         ),
-        base: "", // makes static assets relative for reverse proxies and doesn't affect non-RP sites
-        experimental: {
-          renderBuiltUrl(filename, { hostType }) {
-            // Assets are returned with a leading slash for some reason. This adjusts the
-            // paths to be relative for reverse proxy support.
-            if (hostType === "js") {
-              if (filename.at(0) === "/") {
-                return filename.substring(1);
-              }
-              return filename;
-            }
-            return { relative: true };
-          },
-        },
       };
     },
     buildStart: buildStart(projectStructure),
@@ -116,9 +103,9 @@ const discoverInputs = async (
         entryPoints[outputPath] = path.join(dir, template);
       });
 
-  templatePaths.forEach(async (templatePath) => {
+  for (const templatePath of templatePaths) {
     await updateEntryPoints(templatePath.getAbsolutePath());
-  });
+  }
 
   (
     await loadFunctions(

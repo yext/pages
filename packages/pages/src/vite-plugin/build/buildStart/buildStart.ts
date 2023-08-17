@@ -14,7 +14,7 @@ export default (projectStructure: ProjectStructure) => {
 
     copyPluginFiles(this.emitFile);
 
-    await injectRenderer(this.emitFile);
+    await injectRenderer(this.emitFile, projectStructure);
   };
 };
 
@@ -64,7 +64,10 @@ const copyPluginFiles = (fileEmitter: EmitFile) => {
 };
 
 // Injects the renderer module which is needed for all sites built with yss as an entrypoint chunk.
-const injectRenderer = async (fileEmitter: EmitFile) => {
+const injectRenderer = async (
+  fileEmitter: EmitFile,
+  projectStructure: ProjectStructure
+) => {
   const finisher = logger.timedLog({
     startLog: "Injecting template renderer.",
   });
@@ -73,7 +76,7 @@ const injectRenderer = async (fileEmitter: EmitFile) => {
   fileEmitter({
     type: "chunk",
     id: path.join(currentDir, "rendering", "renderer.js"),
-    fileName: "assets/renderer/templateRenderer.js",
+    fileName: `${projectStructure.config.subfolders.assets}/${projectStructure.config.subfolders.renderer}/templateRenderer.js`,
   });
 
   finisher.succeed("Injected template renderer.");

@@ -24,9 +24,7 @@ export default async (
   props: TemplateProps,
   manifest: Manifest
 ): Promise<GeneratedPage> => {
-  const projectStructure = await ProjectStructure.init({
-    scope: props.document.scope,
-  });
+  const projectStructure = new ProjectStructure(manifest.projectStructure);
   const template = await readTemplateModules(
     props.document.__.name,
     manifest,
@@ -41,7 +39,8 @@ export default async (
     template,
     props,
     pluginRenderTemplates,
-    manifest
+    manifest,
+    projectStructure
   );
 
   return responses;

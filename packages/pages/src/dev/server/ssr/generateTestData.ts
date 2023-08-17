@@ -58,7 +58,7 @@ export const generateTestDataForSlug = async (
     vite,
     templateFilepaths
   );
-  const featuresConfig = await getFeaturesConfig(
+  const featuresConfig = getFeaturesConfig(
     templateModuleCollection,
     projectStructure
   );

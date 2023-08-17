@@ -2,11 +2,12 @@ import fs from "node:fs";
 import { pathToFileURL } from "url";
 import { UserConfig } from "vite";
 import { import_ } from "./import.js";
+import yaml from "js-yaml";
+import { ConfigYaml } from "../config/config.js";
 
 /**
  * Determines the assets directory to use by checking the following, in order:
- * TODO: Check the config.yaml first once support is added
- * 1. site-config/serving.json
+ * 1. config.yaml
  * 2. vite.config.json assetDir
  * 3. default to "assets"
  * @param servingJsonPath the path to sites-config/serving.json - make sure to take scope into account
@@ -14,29 +15,21 @@ import { import_ } from "./import.js";
  */
 export const determineAssetsFilepath = async (
   defaultAssetsDir: string,
-  servingJsonPath: string,
+  configYamlPath: string,
   viteConfigPath: string
 ) => {
-  if (servingJsonPath === "" || viteConfigPath === "") {
+  if (configYamlPath === "" || viteConfigPath === "") {
     return defaultAssetsDir;
   }
 
-  if (fs.existsSync(servingJsonPath)) {
-    const servingJson = JSON.parse(fs.readFileSync(servingJsonPath).toString());
-    const displayUrlPrefix = servingJson.displayUrlPrefix as string;
+  if (fs.existsSync(configYamlPath)) {
+    const configYaml = yaml.load(
+      fs.readFileSync(configYamlPath, "utf-8")
+    ) as ConfigYaml;
 
-    if (displayUrlPrefix === "" || !displayUrlPrefix.includes("/")) {
-      return defaultAssetsDir;
+    if (configYaml.assetsDir && configYaml.assetsDir !== "") {
+      return configYaml.assetsDir;
     }
-
-    const displayUrlPrefixParts = displayUrlPrefix.split("/");
-    displayUrlPrefixParts.shift(); // remove the hostname
-
-    if (displayUrlPrefixParts.length > 0) {
-      return displayUrlPrefixParts.join("/");
-    }
-
-    return defaultAssetsDir;
   }
 
   const viteConfig = await import_(pathToFileURL(viteConfigPath).toString());

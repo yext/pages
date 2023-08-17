@@ -8,10 +8,10 @@ import {
 import { TemplateModuleCollection } from "../../common/src/template/internal/loader.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 
-export const getFeaturesConfig = async (
+export const getFeaturesConfig = (
   templateModules: TemplateModuleCollection,
   projectStructure: ProjectStructure
-): Promise<FeaturesConfig> => {
+): FeaturesConfig => {
   const features: FeatureConfig[] = [];
   const streams: any[] = [];
   for (const module of templateModules.values()) {
@@ -29,11 +29,11 @@ export const getFeaturesConfig = async (
 /**
  * Generates a features.json from the templates.
  */
-export const createFeaturesJson = async (
+export const createFeaturesJson = (
   templateModules: TemplateModuleCollection,
   projectStructure: ProjectStructure
-): Promise<void> => {
-  const { features, streams } = await getFeaturesConfig(
+): void => {
+  const { features, streams } = getFeaturesConfig(
     templateModules,
     projectStructure
   );

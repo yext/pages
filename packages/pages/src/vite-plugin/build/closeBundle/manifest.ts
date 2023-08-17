@@ -31,6 +31,7 @@ export const generateManifestFile = (
   const renderPaths = glob.sync(
     path.resolve(
       projectStructure.config.rootFolders.dist,
+      projectStructure.config.subfolders.assets,
       projectStructure.config.subfolders.renderBundle,
       "**/*.js"
     )
@@ -50,24 +51,7 @@ export const generateManifestFile = (
   const manifest: Manifest = {
     bundlePaths: Object.fromEntries(relativeBundlePaths),
     renderPaths: Object.fromEntries(relativeRenderPaths),
-    projectFilepaths: {
-      templatesRoot:
-        projectStructure.config.rootFolders.source +
-        "/" + // purposefully concatenated and not using path.join
-        projectStructure.config.subfolders.templates,
-      distRoot: distPath.path,
-      serverBundleOutputRoot:
-        projectStructure.config.rootFolders.dist +
-        "/" + // purposefully concatenated and not using path.join
-        projectStructure.config.subfolders.serverBundle,
-      scopedTemplatesPath: projectStructure.config.scope
-        ? projectStructure.config.rootFolders.source +
-          "/" + // purposefully concatenated and not using path.join
-          projectStructure.config.subfolders.templates +
-          "/" +
-          projectStructure.config.scope
-        : "",
-    },
+    projectStructure: projectStructure.config,
     bundlerManifest: JSON.parse(bundlerManifest.toString()),
   };
 

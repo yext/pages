@@ -65,10 +65,7 @@ jest.mock("child_process", () => ({
 }));
 
 describe("generateTestDataForPage", () => {
-  let projectStructure: ProjectStructure;
-  beforeAll(async () => {
-    projectStructure = await ProjectStructure.init();
-  });
+  const projectStructure = new ProjectStructure();
 
   const getGenerateTestDataForPageRunner = () =>
     generateTestDataForPage(

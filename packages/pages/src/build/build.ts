@@ -1,12 +1,12 @@
 import { Command } from "commander";
 import { build } from "vite";
 
-const handler = async (scope: string) => {
+const handler = async ({ scope }: { scope: string }) => {
   // Pass CLI arguments as env variables to use in vite-plugin
   if (scope) {
     process.env.YEXT_PAGES_SCOPE = scope;
   }
-  build();
+  await build();
 };
 
 export const buildCommand = (program: Command) => {

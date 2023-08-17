@@ -7,7 +7,7 @@ import colors from "picocolors";
 import { loadFunctions } from "../../common/src/function/internal/loader.js";
 import { Command } from "commander";
 
-const handler = async (scope: string) => {
+const handler = async ({ scope }: { scope: string }) => {
   const projectStructure = await ProjectStructure.init({ scope });
 
   const ciPath = new Path(
@@ -82,6 +82,13 @@ export const getUpdatedCiConfig = async (
   projectStructure: ProjectStructure
 ): Promise<CiConfig> => {
   const ciConfigCopy = structuredClone(ciConfig);
+
+  ciConfigCopy.artifactStructure.assets = [];
+  ciConfigCopy.artifactStructure.assets.push({
+    root: projectStructure.config.rootFolders.dist,
+    pattern: `${projectStructure.config.subfolders.assets}/**/*`,
+  });
+
   ciConfigCopy.artifactStructure.plugins = [];
 
   const generatorPluginIndex = ciConfigCopy.artifactStructure.plugins.findIndex(

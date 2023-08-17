@@ -7,6 +7,7 @@ import {
 } from "../../../../common/src/template/types.js";
 import { generateResponses } from "./templateUtils.js";
 import path from "node:path";
+import { ProjectStructure } from "../../../../common/src/project/structure.js";
 
 const baseTemplateModule: TemplateModuleInternal<any, any> = {
   path: "path",
@@ -25,11 +26,7 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
 const manifest: Manifest = {
   bundlePaths: {},
   renderPaths: {},
-  projectFilepaths: {
-    templatesRoot: "",
-    distRoot: "",
-    serverBundleOutputRoot: "",
-  },
+  projectStructure: new ProjectStructure().config,
   bundlerManifest: {},
 };
 
@@ -55,6 +52,8 @@ const serverRenderTemplate: RenderTemplate = {
 };
 
 describe("generateResponses", () => {
+  const projectStructure = new ProjectStructure();
+
   it("calls transformProps when transformProps is defined", async () => {
     const fn = jest.fn((props) => props);
     await generateResponses(
@@ -67,7 +66,8 @@ describe("generateResponses", () => {
         ),
         server: serverRenderTemplate,
       },
-      manifest
+      manifest,
+      projectStructure
     );
     expect(fn).toHaveBeenCalled();
   });
@@ -84,7 +84,8 @@ describe("generateResponses", () => {
         ),
         server: serverRenderTemplate,
       },
-      manifest
+      manifest,
+      projectStructure
     );
     expect(fn).toHaveBeenCalled();
   });

@@ -4,10 +4,7 @@ import { validateBundles } from "./bundleValidator.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 
 describe("bundleValidator", () => {
-  let projectStructure: ProjectStructure;
-  beforeAll(async () => {
-    projectStructure = await ProjectStructure.init();
-  });
+  const projectStructure = new ProjectStructure();
 
   it("throws an error when a single file is over the max filesize limit", async () => {
     jest.spyOn(glob, "sync").mockImplementation(() => ["file1.js", "file2.js"]);

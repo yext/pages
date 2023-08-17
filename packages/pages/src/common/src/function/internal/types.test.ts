@@ -52,10 +52,7 @@ const createMockFilePath = (filepath: string): path.ParsedPath => {
 };
 
 describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () => {
-  let projectStructure: ProjectStructure;
-  beforeAll(async () => {
-    projectStructure = await ProjectStructure.init();
-  });
+  const projectStructure = new ProjectStructure();
 
   it("converts a function in functions/http", async () => {
     const functionModule: FunctionModule = {

@@ -54,6 +54,14 @@ export interface SitesConfigFiles {
 }
 
 /**
+ * Important files at the project's root.
+ */
+export interface RootFiles {
+  /** The config.yaml file */
+  config: string;
+}
+
+/**
  * Defines how environment variables will be declared and processed.
  *
  * @public
@@ -85,6 +93,9 @@ export interface ProjectStructureConfig {
   subfolders: Subfolders;
   /** Files specific to the Yext configuration folder */
   sitesConfigFiles: SitesConfigFiles;
+  /** Important files at the project's root */
+  rootFiles: RootFiles;
+  /** Defines how environment variables will be declared and processed */
   envVarConfig: EnvVar;
   /**
    * This is used for the case of multibrand setup within a single repo.
@@ -120,6 +131,9 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
     siteStream: "site-stream.json",
     serving: "serving.json",
   },
+  rootFiles: {
+    config: "config.yaml",
+  },
   envVarConfig: {
     envVarDir: "",
     envVarPrefix: "YEXT_PUBLIC",
@@ -143,6 +157,11 @@ export type Optional<T> = {
 export class ProjectStructure {
   config: ProjectStructureConfig;
 
+  constructor(config?: Optional<ProjectStructureConfig>) {
+    const mergedConfig = merge(defaultProjectStructureConfig, config);
+    this.config = mergedConfig;
+  }
+
   static init = async (
     projectStructureConfig?: Optional<ProjectStructureConfig>
   ) => {
@@ -153,10 +172,7 @@ export class ProjectStructure {
         ? DEFAULT_ASSETS_DIR
         : await determineAssetsFilepath(
             DEFAULT_ASSETS_DIR,
-            pathLib.resolve(
-              config.rootFolders.sitesConfig,
-              config.sitesConfigFiles.serving
-            ),
+            pathLib.resolve(config.rootFiles.config),
             pathLib.resolve("vite.config.js")
           ); // TODO: handle other extensions
 
@@ -164,10 +180,6 @@ export class ProjectStructure {
 
     return new ProjectStructure(config);
   };
-
-  private constructor(config: ProjectStructureConfig) {
-    this.config = config;
-  }
 
   /**
    * @returns the list of of src/templates, taking scope into account. If a scope is defined then

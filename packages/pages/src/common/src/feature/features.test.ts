@@ -8,10 +8,7 @@ import { TemplateConfigInternal } from "../template/internal/types.js";
 import { ProjectStructure } from "../project/structure.js";
 
 describe("features - convertTemplateConfigToFeaturesConfig", () => {
-  let projectStructure: ProjectStructure;
-  beforeAll(async () => {
-    projectStructure = await ProjectStructure.init();
-  });
+  const projectStructure = new ProjectStructure();
 
   it("returns a FeaturesConfig with no StreamConfig if no stream is defined", async () => {
     const templateConfig: TemplateConfigInternal = {
@@ -86,10 +83,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
 });
 
 describe("features - convertTemplateConfigToFeatureConfig", () => {
-  let projectStructure: ProjectStructure;
-  beforeAll(async () => {
-    projectStructure = await ProjectStructure.init();
-  });
+  const projectStructure = new ProjectStructure();
 
   it("uses the streamId if defined and return an EntityPageSetConfig", async () => {
     const templateConfig: TemplateConfigInternal = {

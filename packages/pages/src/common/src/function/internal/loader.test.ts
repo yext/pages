@@ -22,10 +22,7 @@ jest.mock("vite", () => {
 afterAll(() => jest.unmock("url"));
 
 describe("loadTemplateModules", () => {
-  let projectStructure: ProjectStructure;
-  beforeAll(async () => {
-    projectStructure = await ProjectStructure.init();
-  });
+  const projectStructure = new ProjectStructure();
 
   it("loads and transpiles raw templates", async () => {
     const functionFile: path.ParsedPath[] = [

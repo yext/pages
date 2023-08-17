@@ -3,10 +3,7 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { getUpdatedCiConfig } from "./ci.js";
 
 describe("ci - getUpdatedCiConfig", () => {
-  let projectStructure: ProjectStructure;
-  beforeAll(async () => {
-    projectStructure = await ProjectStructure.init();
-  });
+  const projectStructure = new ProjectStructure();
 
   it("adds the Generator plugin to the config if it does not exist", async () => {
     const input: CiConfig = {

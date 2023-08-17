@@ -24,7 +24,7 @@ export const readTemplateModules = async (
   projectStructure: ProjectStructure
 ): Promise<TemplateModuleInternal<any, any>> => {
   const path = manifest.bundlePaths[feature].replace(
-    projectStructure.config.subfolders.renderBundle,
+    projectStructure.config.subfolders.assets,
     ".."
   );
   if (!path) {
@@ -64,7 +64,7 @@ export const getPluginRenderTemplates = async (
   projectStructure: ProjectStructure
 ): Promise<PluginRenderTemplates> => {
   const serverRenderPath = manifest.renderPaths._server.replace(
-    projectStructure.config.subfolders.renderBundle,
+    projectStructure.config.subfolders.assets,
     ".."
   );
 
@@ -111,7 +111,8 @@ export const generateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   templateProps: TemplateProps,
   pluginRenderTemplates: PluginRenderTemplates,
-  manifest: Manifest
+  manifest: Manifest,
+  projectStructure: ProjectStructure
 ): Promise<GeneratedPage> => {
   if (templateModuleInternal.transformProps) {
     templateProps = await templateModuleInternal.transformProps(templateProps);
@@ -134,7 +135,8 @@ export const generateResponses = async (
     templateModuleInternal,
     templateRenderProps,
     pluginRenderTemplates,
-    manifest
+    manifest,
+    projectStructure
   );
 
   return {
@@ -155,7 +157,8 @@ const renderHtml = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   props: TemplateRenderProps,
   pluginRenderTemplates: PluginRenderTemplates,
-  manifest: Manifest
+  manifest: Manifest,
+  projectStructure: ProjectStructure
 ) => {
   const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {
@@ -179,6 +182,7 @@ const renderHtml = async (
     templateModuleInternal,
     templateModuleInternal.config.hydrate,
     pluginRenderTemplates,
-    manifest
+    manifest,
+    projectStructure
   );
 };

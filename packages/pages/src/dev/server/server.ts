@@ -29,31 +29,10 @@ export const createServer = async (
   // creates a standard express app
   const app = express();
 
-  // initialize the default project structure and use to help configure the
-  // dev server
+  // initialize the default project structure and use to help configure the dev server
   const projectStructure = await ProjectStructure.init({ scope });
 
-  // Read features.json and set the default locale to the first locale listed
-  // Default to en if features.json cannot be read or there is no locales entry
-  let defaultLocale = "en";
-  try {
-    const featuresJson = JSON.parse(
-      fs.readFileSync(
-        path.resolve(
-          projectStructure.getSitesConfigPath().path,
-          projectStructure.config.sitesConfigFiles.features
-        ),
-        "utf-8"
-      )
-    );
-    if (featuresJson.locales && featuresJson.locales.length > 0) {
-      defaultLocale = featuresJson.locales[0];
-    }
-  } catch (e) {
-    if (e !== "Error: ENOENT: no such file or directory") {
-      console.warn(e);
-    }
-  }
+  const defaultLocale = getDefaultLocale(projectStructure);
 
   // create vite using ssr mode
   const vite = await createViteServer({
@@ -70,6 +49,7 @@ export const createServer = async (
       include: ["react-dom", "react-dom/client"],
     },
   });
+
   // register vite's middleware
   app.use(vite.middlewares);
 
@@ -190,4 +170,33 @@ export const createServer = async (
   app.listen(devServerPort, () =>
     process.stdout.write(`listening on :${devServerPort}\n`)
   );
+};
+
+/**
+ * Read features.json and set the default locale to the first locale listed
+ * Default to en if features.json cannot be read or there is no locales entry
+ */
+const getDefaultLocale = (projectStructure: ProjectStructure) => {
+  // Read features.json and set the default locale to the first locale listed
+  // Default to en if features.json cannot be read or there is no locales entry
+  try {
+    const featuresJson = JSON.parse(
+      fs.readFileSync(
+        path.resolve(
+          projectStructure.getSitesConfigPath().path,
+          projectStructure.config.sitesConfigFiles.features
+        ),
+        "utf-8"
+      )
+    );
+    if (featuresJson.locales && featuresJson.locales.length > 0) {
+      return featuresJson.locales[0];
+    }
+  } catch (e) {
+    if (e !== "Error: ENOENT: no such file or directory") {
+      console.warn(e);
+    }
+  }
+
+  return "en";
 };

@@ -28,6 +28,7 @@ export default (projectStructure: ProjectStructure) => {
         path.join(
           path.resolve(
             projectStructure.config.rootFolders.dist,
+            projectStructure.config.subfolders.assets,
             projectStructure.config.subfolders.serverBundle
           ),
           "**/*.js"
