@@ -20,14 +20,13 @@ export const validateBundles = (projectStructure: ProjectStructure) => {
 };
 
 const getBundlePaths = (projectStructure: ProjectStructure): string[] => {
+  const { rootFolders, subfolders } = projectStructure.config;
+
   return glob.sync(
-    `${path.resolve(
-      projectStructure.config.rootFolders.dist,
-      projectStructure.config.subfolders.assets
-    )}/{${projectStructure.config.subfolders.renderBundle},${
-      projectStructure.config.subfolders.renderer
-    },${projectStructure.config.subfolders.serverBundle},${
-      projectStructure.config.subfolders.static
+    `${path.resolve(rootFolders.dist, subfolders.assets)}/{${
+      subfolders.renderBundle
+    },${subfolders.renderer},${subfolders.serverBundle},${
+      subfolders.static
     }}/**/*.*`
   );
 };

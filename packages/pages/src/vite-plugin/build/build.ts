@@ -20,13 +20,15 @@ var global = globalThis;
  * environment, and puts them all in an output directory.
  */
 export const build = (projectStructure: ProjectStructure): Plugin => {
+  const { envVarConfig, subfolders } = projectStructure.config;
+
   return {
     name: "vite-plugin:build",
     apply: "build",
     config: async (): Promise<UserConfig> => {
       return {
-        envDir: projectStructure.config.envVarConfig.envVarDir,
-        envPrefix: projectStructure.config.envVarConfig.envVarPrefix,
+        envDir: envVarConfig.envVarDir,
+        envPrefix: envVarConfig.envVarPrefix,
         resolve: {
           conditions: ["worker", "webworker"],
         },
@@ -41,14 +43,14 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
             ),
             output: {
               intro,
-              assetFileNames: `${projectStructure.config.subfolders.assets}/${projectStructure.config.subfolders.static}/[name]-[hash][extname]`,
-              chunkFileNames: `${projectStructure.config.subfolders.assets}/${projectStructure.config.subfolders.static}/[name]-[hash].js`,
+              assetFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash][extname]`,
+              chunkFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash].js`,
               sanitizeFileName: false,
               entryFileNames: (chunkInfo) => {
                 if (chunkInfo.name.includes("functions")) {
                   return "[name]/mod.ts";
                 }
-                return `${projectStructure.config.subfolders.assets}/[name].[hash].js`;
+                return `${subfolders.assets}/[name].[hash].js`;
               },
               manualChunks: (id) => {
                 // Fixes an error where the output is prefixed like \x00commonjsHelpers-hash.js
@@ -57,11 +59,9 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
             },
           },
           reportCompressedSize: false,
-          assetsDir: projectStructure.config.subfolders.assets,
+          assetsDir: subfolders.assets,
         },
-        define: processEnvVariables(
-          projectStructure.config.envVarConfig.envVarPrefix
-        ),
+        define: processEnvVariables(envVarConfig.envVarPrefix),
       };
     },
     buildStart: buildStart(projectStructure),
@@ -140,12 +140,14 @@ const discoverRenderTemplates = (
     projectStructure.getTemplatePaths()
   );
 
+  const { renderBundle } = projectStructure.config.subfolders;
+
   // server
-  entryPoints[`${projectStructure.config.subfolders.renderBundle}/_server`] =
+  entryPoints[`${renderBundle}/_server`] =
     clientServerRenderTemplates.serverRenderTemplatePath;
 
   // client
-  entryPoints[`${projectStructure.config.subfolders.renderBundle}/_client`] =
+  entryPoints[`${renderBundle}/_client`] =
     clientServerRenderTemplates.clientRenderTemplatePath;
 
   return entryPoints;

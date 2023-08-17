@@ -108,12 +108,11 @@ export const getUpdatedCiConfig = async (
     ciConfigCopy.artifactStructure.plugins.push(generatorPlugin);
   }
 
+  const { rootFolders, subfolders } = projectStructure.config;
+
   // add any user-defined functions
   const functionModules = await loadFunctions(
-    path.join(
-      projectStructure.config.rootFolders.source,
-      projectStructure.config.subfolders.serverlessFunctions
-    ),
+    path.join(rootFolders.source, subfolders.serverlessFunctions),
     projectStructure
   );
   functionModules.forEach((functionModule) => {
@@ -128,8 +127,8 @@ export const getUpdatedCiConfig = async (
       sourceFiles: [
         {
           root: path.join(
-            projectStructure.config.rootFolders.dist,
-            projectStructure.config.subfolders.serverlessFunctions,
+            rootFolders.dist,
+            subfolders.serverlessFunctions,
             functionModule.config.name
           ),
           pattern: "*{.js,.ts}",
@@ -155,16 +154,18 @@ export const getUpdatedCiConfig = async (
 };
 
 const getGeneratorPlugin = (projectStructure: ProjectStructure): Plugin => {
+  const { rootFolders, subfolders } = projectStructure.config;
+
   return {
     pluginName: "PagesGenerator",
     sourceFiles: [
       {
-        root: `${projectStructure.config.rootFolders.dist}/${projectStructure.config.subfolders.plugin}`,
+        root: `${rootFolders.dist}/${subfolders.plugin}`,
         pattern: "*{.ts,.json}",
       },
       {
-        root: `${projectStructure.config.rootFolders.dist}`,
-        pattern: `${projectStructure.config.subfolders.assets}/{${projectStructure.config.subfolders.serverBundle},${projectStructure.config.subfolders.static},${projectStructure.config.subfolders.renderer},${projectStructure.config.subfolders.renderBundle}}/**/*{.js,.css}`,
+        root: `${rootFolders.dist}`,
+        pattern: `${subfolders.assets}/{${subfolders.serverBundle},${subfolders.static},${subfolders.renderer},${subfolders.renderBundle}}/**/*{.js,.css}`,
       },
     ],
     event: "ON_PAGE_GENERATE",

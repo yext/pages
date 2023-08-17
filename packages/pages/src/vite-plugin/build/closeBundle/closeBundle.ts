@@ -23,22 +23,21 @@ export default (projectStructure: ProjectStructure) => {
     let finisher = logger.timedLog({ startLog: "Validating template modules" });
     let templateModules: TemplateModuleCollection;
 
+    const { rootFolders, subfolders } = projectStructure.config;
+
     try {
       const serverBundles = glob.sync(
         path.join(
           path.resolve(
-            projectStructure.config.rootFolders.dist,
-            projectStructure.config.subfolders.assets,
-            projectStructure.config.subfolders.serverBundle
+            rootFolders.dist,
+            subfolders.assets,
+            subfolders.serverBundle
           ),
           "**/*.js"
         ),
         {
           ignore: path.join(
-            path.resolve(
-              projectStructure.config.rootFolders.dist,
-              projectStructure.config.subfolders.serverlessFunctions
-            ),
+            path.resolve(rootFolders.dist, subfolders.serverlessFunctions),
             "**"
           ),
         }
