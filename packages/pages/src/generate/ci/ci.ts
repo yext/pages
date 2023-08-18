@@ -155,17 +155,25 @@ export const getUpdatedCiConfig = async (
 
 const getGeneratorPlugin = (projectStructure: ProjectStructure): Plugin => {
   const { rootFolders, subfolders } = projectStructure.config;
+  const {
+    assets,
+    renderer,
+    serverBundle,
+    static: _static,
+    renderBundle,
+    plugin,
+  } = subfolders;
 
   return {
     pluginName: "PagesGenerator",
     sourceFiles: [
       {
-        root: `${rootFolders.dist}/${subfolders.plugin}`,
+        root: `${rootFolders.dist}/${plugin}`,
         pattern: "*{.ts,.json}",
       },
       {
         root: `${rootFolders.dist}`,
-        pattern: `${subfolders.assets}/{${subfolders.serverBundle},${subfolders.static},${subfolders.renderer},${subfolders.renderBundle}}/**/*{.js,.css}`,
+        pattern: `${assets}/{${serverBundle},${_static},${renderer},${renderBundle}}/**/*{.js,.css}`,
       },
     ],
     event: "ON_PAGE_GENERATE",
