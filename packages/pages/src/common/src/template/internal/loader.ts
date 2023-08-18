@@ -6,6 +6,7 @@ import {
 import esbuild from "esbuild";
 import { importFromString } from "module-from-string";
 import { pathToFileURL } from "url";
+import { COMMON_ESBUILD_LOADERS } from "../../loader/esbuild.js";
 
 const TEMP_DIR = ".temp";
 
@@ -33,17 +34,7 @@ export const loadTemplateModules = async (
           write: false,
           format: "esm",
           bundle: true,
-          loader: {
-            ".css": "css",
-            ".scss": "css",
-            ".ico": "dataurl",
-            ".avif": "dataurl",
-            ".jpg": "dataurl",
-            ".png": "dataurl",
-            ".gif": "dataurl",
-            ".svg": "dataurl",
-            ".webp": "dataurl",
-          },
+          loader: COMMON_ESBUILD_LOADERS,
         });
 
         templateModule = await importFromString(
