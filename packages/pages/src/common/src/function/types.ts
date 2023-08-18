@@ -36,6 +36,12 @@ export interface HttpFunctionArgument {
   queryParams: { [key: string]: string };
   /** Object containing each path parameter. */
   pathParams: { [key: string]: string };
+  /** Method of the request */
+  method: string;
+  /** Request headers in the request */
+  headers: { [key: string]: string[] };
+  /** The body of the request */
+  body: any;
   /** Site object containing all deploy-related information. */
   site: Site;
 }
