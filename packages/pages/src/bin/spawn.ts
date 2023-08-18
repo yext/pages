@@ -1,27 +1,14 @@
 #!/usr/bin/env node
 import { spawnSync } from "child_process";
+import { fileURLToPath } from "url";
 import process from "process";
 import path from "path";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const pathToPagesScript = path.resolve(
-  process.cwd(),
-  "node_modules",
-  "@yext",
-  "pages",
-  "dist",
-  "bin",
-  "pages.js"
-);
+const pathToPagesScript = path.resolve(__dirname, "./pages.js");
 
-const pathToLoader = path.resolve(
-  process.cwd(),
-  "node_modules",
-  "@yext",
-  "pages",
-  "dist",
-  "bin",
-  "loader.js"
-);
+const pathToLoader = path.resolve(__dirname, "./loader.js");
 
 const nodeVersion = Number(
   spawnSync("node", ["-v"], { encoding: "utf-8" })
