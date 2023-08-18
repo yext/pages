@@ -1,10 +1,10 @@
 import runSubprocess from "../util/runSubprocess.js";
 import { Command } from "commander";
-import { ProjectFilepaths } from "../common/src/project/structure.js";
 
-interface ProdArgs extends Pick<ProjectFilepaths, "scope"> {
+interface ProdArgs {
   noBuild?: boolean;
   noRender?: boolean;
+  scope?: string;
 }
 
 const handler = async (args: ProdArgs) => {

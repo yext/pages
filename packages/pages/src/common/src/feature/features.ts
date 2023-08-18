@@ -1,8 +1,9 @@
 import fs from "fs";
+import path from "path";
 import { TemplateConfigInternal } from "../template/internal/types.js";
 import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
 import { unsecureHashPluginName } from "../function/internal/types.js";
-import { defaultProjectStructureConfig } from "../project/structure.js";
+import { ProjectStructure } from "../project/structure.js";
 
 /**
  * The shape of data that represents a features.json file, used by Yext Pages.
@@ -18,9 +19,13 @@ export interface FeaturesConfig {
  * Converts a {@link TemplateConfigInternal} into a valid {@link FeaturesConfig} (features and streams).
  */
 export const convertTemplateConfigInternalToFeaturesConfig = (
-  config: TemplateConfigInternal
+  config: TemplateConfigInternal,
+  projectStructure: ProjectStructure
 ): FeaturesConfig => {
-  const featureConfig = convertTemplateConfigToFeatureConfig(config);
+  const featureConfig = convertTemplateConfigToFeatureConfig(
+    config,
+    projectStructure
+  );
   const streamConfig = convertTemplateConfigToStreamConfig(config);
 
   return {
@@ -72,7 +77,8 @@ export const isStaticTemplateConfig = (
  * Converts a {@link TemplateConfigInternal} into a valid single {@link FeatureConfig}.
  */
 export const convertTemplateConfigToFeatureConfig = (
-  config: TemplateConfigInternal
+  config: TemplateConfigInternal,
+  projectStructure: ProjectStructure
 ): FeatureConfig => {
   const streamConfig = config.stream || null;
 
@@ -89,8 +95,11 @@ export const convertTemplateConfigToFeatureConfig = (
     try {
       // Have to look up the filename from the functions directory because we do not know file extension
       const onUrlChangeFilenames = fs.readdirSync(
-        defaultProjectStructureConfig.filepathsConfig.functionsRoot +
-          "/onUrlChange"
+        path.join(
+          projectStructure.config.rootFolders.source,
+          projectStructure.config.subfolders.serverlessFunctions,
+          "onUrlChange"
+        )
       );
       const filename = onUrlChangeFilenames.find((name) =>
         name.includes(config.onUrlChange ?? "")

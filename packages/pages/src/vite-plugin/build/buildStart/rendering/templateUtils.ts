@@ -11,6 +11,7 @@ import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../../../../common/src/template/internal/types.js";
+import { ProjectStructure } from "../../../../common/src/project/structure.js";
 
 const pathToModule = new Map();
 
@@ -19,9 +20,13 @@ const pathToModule = new Map();
  */
 export const readTemplateModules = async (
   feature: string,
-  manifest: Manifest
+  manifest: Manifest,
+  projectStructure: ProjectStructure
 ): Promise<TemplateModuleInternal<any, any>> => {
-  const path = manifest.bundlePaths[feature].replace("assets", "..");
+  const path = manifest.bundlePaths[feature].replace(
+    projectStructure.config.subfolders.assets,
+    ".."
+  );
   if (!path) {
     throw new Error(`Could not find path for feature ${feature}`);
   }
@@ -55,9 +60,13 @@ export interface PluginRenderTemplates {
  * @returns
  */
 export const getPluginRenderTemplates = async (
-  manifest: Manifest
+  manifest: Manifest,
+  projectStructure: ProjectStructure
 ): Promise<PluginRenderTemplates> => {
-  const serverRenderPath = manifest.renderPaths._server.replace("assets", "..");
+  const serverRenderPath = manifest.renderPaths._server.replace(
+    projectStructure.config.subfolders.assets,
+    ".."
+  );
 
   const serverRenderTemplateModule = await importRenderTemplate(
     serverRenderPath
@@ -102,7 +111,8 @@ export const generateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   templateProps: TemplateProps,
   pluginRenderTemplates: PluginRenderTemplates,
-  manifest: Manifest
+  manifest: Manifest,
+  projectStructure: ProjectStructure
 ): Promise<GeneratedPage> => {
   if (templateModuleInternal.transformProps) {
     templateProps = await templateModuleInternal.transformProps(templateProps);
@@ -125,7 +135,8 @@ export const generateResponses = async (
     templateModuleInternal,
     templateRenderProps,
     pluginRenderTemplates,
-    manifest
+    manifest,
+    projectStructure
   );
 
   return {
@@ -146,7 +157,8 @@ const renderHtml = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   props: TemplateRenderProps,
   pluginRenderTemplates: PluginRenderTemplates,
-  manifest: Manifest
+  manifest: Manifest,
+  projectStructure: ProjectStructure
 ) => {
   const { default: component, render, getHeadConfig } = templateModuleInternal;
   if (!component && !render) {
@@ -170,6 +182,7 @@ const renderHtml = async (
     templateModuleInternal,
     templateModuleInternal.config.hydrate,
     pluginRenderTemplates,
-    manifest
+    manifest,
+    projectStructure
   );
 };

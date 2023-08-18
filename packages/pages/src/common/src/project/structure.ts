@@ -1,48 +1,64 @@
 import pathLib from "path";
 import merge from "lodash/merge.js";
 import { Path } from "./path.js";
+import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
 
 /**
- * Defines the folder paths where certain files live, relative to the root of the project.
- *
- * @public
+ * All important folders defined at the root of the project.
  */
-export interface ProjectFilepaths {
-  /** The folder path where all template files live */
-  templatesRoot: string;
-  /** The folder path where all serverless function files live */
-  functionsRoot: string;
-  /** The folder path where the sites-config files live */
-  sitesConfigRoot: string;
-  /** The folder path where the compiled files should go */
-  distRoot: string;
-  /** The folder path where the compiled server bundles should go */
-  serverBundleOutputRoot: string;
-  /** The folder path where the compiled render (_client/_server) bundles should go */
-  renderBundleOutputRoot: string;
-  /** The folder path where the compiled function bundles should go */
-  functionBundleOutputRoot: string;
-  /**
-   * This is used for the case of multibrand setup within a single repo.
-   *
-   * The subfolder path inside {@link templatesRoot} and {@link sitesConfigRoot}
-   * to scope a build to a subset of templates using specific sites-config folder.
-   */
-  scope?: string;
+export interface RootFolders {
+  /** The source code folder */
+  source: string;
+  /** Where to output the bundled code */
+  dist: string;
+  /** The Yext platform configuration files folder */
+  sitesConfig: string;
+  /** The Deno functions folder prior to the swap to Node functions */
+  functions: string; // Deno functions
 }
 
 /**
- * Defines the names of certain files, including extension.
- *
- * @public
+ * All important folders within a specific root folder.
  */
-export interface ProjectFilenames {
+export interface Subfolders {
+  /** The templates folder */
+  templates: string;
+  /** The Node functions folder */
+  serverlessFunctions: string; // Node functions
+  /** Where to output the bundled static assets */
+  assets: string;
+  /** Where to output the server bundles */
+  serverBundle: string;
+  /** Where to output the render bundles */
+  renderBundle: string; // _client and _server
+  /** Where to output the renderer bundle */
+  renderer: string;
+  /** Where to output the static bundles */
+  static: string;
+  /** The location of the Deno plugin entrypoint (mod.ts, manifest.ts, manifest.json) */
+  plugin: string;
+}
+
+/**
+ * Files specific to the Yext configuration folder.
+ */
+export interface SitesConfigFiles {
   /** The name of the ci.json file */
-  ciConfig: string;
+  ci: string;
   /** The name of the features.json file */
-  featuresConfig: string;
+  features: string;
   /** The name of the sites-stream.json file */
-  siteStreamConfig: string;
+  siteStream: string;
+  /** the name of the serving.json file */
+  serving: string;
+}
+
+/**
+ * Important files at the project's root.
+ */
+export interface RootFiles {
+  /** The config.yaml file */
+  config: string;
 }
 
 /**
@@ -57,7 +73,7 @@ export interface EnvVar {
    */
   envVarDir: string;
   /**
-   * If this prefix is prepended to an env vars name, then it will
+   * If this prefix is prepended to an env vars' name, then it will
    * be considered public. This means that at build time it will be
    * inline replaced in the code with the value of the env var and
    * accessible in the user's browser.
@@ -71,25 +87,52 @@ export interface EnvVar {
  * @public
  */
 export interface ProjectStructureConfig {
-  filepathsConfig: ProjectFilepaths;
-  filenamesConfig: ProjectFilenames;
+  /** All important folders defined at the root of the project */
+  rootFolders: RootFolders;
+  /** All important folders within a specific root folder */
+  subfolders: Subfolders;
+  /** Files specific to the Yext configuration folder */
+  sitesConfigFiles: SitesConfigFiles;
+  /** Important files at the project's root */
+  rootFiles: RootFiles;
+  /** Defines how environment variables will be declared and processed */
   envVarConfig: EnvVar;
+  /**
+   * This is used for the case of multibrand setup within a single repo.
+   *
+   * The subfolder path inside src/templates and sites-config
+   * to scope a build to a subset of templates using a specific sites-config folder.
+   */
+  scope?: string;
 }
 
-export const defaultProjectStructureConfig: ProjectStructureConfig = {
-  filepathsConfig: {
-    templatesRoot: "src/templates",
-    functionsRoot: "src/functions",
-    sitesConfigRoot: "sites-config",
-    distRoot: "dist",
-    serverBundleOutputRoot: "assets/server",
-    renderBundleOutputRoot: "assets/render",
-    functionBundleOutputRoot: "functions",
+const DEFAULT_ASSETS_DIR = "assets";
+
+const defaultProjectStructureConfig: ProjectStructureConfig = {
+  rootFolders: {
+    source: "src",
+    dist: "dist",
+    sitesConfig: "sites-config",
+    functions: "functions",
   },
-  filenamesConfig: {
-    ciConfig: "ci.json",
-    featuresConfig: "features.json",
-    siteStreamConfig: "site-stream.json",
+  subfolders: {
+    templates: "templates",
+    serverlessFunctions: "functions",
+    assets: DEFAULT_ASSETS_DIR,
+    serverBundle: "server",
+    renderBundle: "render",
+    renderer: "renderer",
+    static: "static",
+    plugin: "plugin",
+  },
+  sitesConfigFiles: {
+    ci: "ci.json",
+    features: "features.json",
+    siteStream: "site-stream.json",
+    serving: "serving.json",
+  },
+  rootFiles: {
+    config: "config.yaml",
   },
   envVarConfig: {
     envVarDir: "",
@@ -112,69 +155,59 @@ export type Optional<T> = {
  * @public
  */
 export class ProjectStructure {
-  #config: ProjectStructureConfig;
-
-  sitesConfigRoot: Path;
-  templatesRoot: Path;
-  serverlessFunctionsRoot: Path;
-  scope?: string;
-  scopedTemplatesPath?: Path;
-  scopedSitesConfigPath?: Path;
-
-  distRoot: Path;
-  serverBundleOutputRoot: Path;
-  renderBundleOutputRoot: Path;
-  functionBundleOutputRoot: Path;
-  ciConfig: string;
-  featuresConfig: string;
-  envVarDir: string;
-  envVarPrefix: string;
-  siteStreamConfig: string;
+  config: ProjectStructureConfig;
 
   constructor(config?: Optional<ProjectStructureConfig>) {
-    this.#config = merge(defaultProjectStructureConfig, config);
-    this.sitesConfigRoot = new Path(
-      this.#config.filepathsConfig.sitesConfigRoot
-    );
-    this.templatesRoot = new Path(this.#config.filepathsConfig.templatesRoot);
-    this.serverlessFunctionsRoot = new Path(
-      this.#config.filepathsConfig.functionsRoot
+    const mergedConfig = merge(defaultProjectStructureConfig, config);
+    this.config = mergedConfig;
+  }
+
+  static init = async (
+    projectStructureConfig?: Optional<ProjectStructureConfig>
+  ) => {
+    const config = merge(defaultProjectStructureConfig, projectStructureConfig);
+
+    const assetsDir =
+      process.env.JEST_WORKER_ID !== undefined // vite.config.js cannot be resolved during tests
+        ? DEFAULT_ASSETS_DIR
+        : await determineAssetsFilepath(
+            DEFAULT_ASSETS_DIR,
+            pathLib.resolve(config.rootFiles.config),
+            pathLib.resolve("vite.config.js")
+          ); // TODO: handle other extensions
+
+    config.subfolders.assets = assetsDir;
+
+    return new ProjectStructure(config);
+  };
+
+  /**
+   * @returns the list of of src/templates, taking scope into account. If a scope is defined then
+   * both the scoped and non-scoped template paths are returned.
+   */
+  getTemplatePaths = () => {
+    // src/templates
+    const templatesRoot = pathLib.join(
+      this.config.rootFolders.source,
+      this.config.subfolders.templates
     );
 
-    const scope = this.#config.filepathsConfig.scope;
-    if (scope) {
-      this.scope = scope;
-      this.scopedSitesConfigPath = new Path(
-        pathLib.join(this.sitesConfigRoot.path, scope)
-      );
-      this.scopedTemplatesPath = new Path(
-        pathLib.join(this.templatesRoot.path, scope)
-      );
+    if (this.config.scope) {
+      return [
+        new Path(pathLib.join(templatesRoot, this.config.scope)),
+        new Path(templatesRoot),
+      ];
     }
 
-    this.distRoot = new Path(this.#config.filepathsConfig.distRoot);
-    this.serverBundleOutputRoot = new Path(
-      pathLib.join(
-        this.#config.filepathsConfig.distRoot,
-        this.#config.filepathsConfig.serverBundleOutputRoot
-      )
+    return [new Path(templatesRoot)];
+  };
+
+  /**
+   * @returns the {@link Path} to the sites-config folder, taking scope into account.
+   */
+  getSitesConfigPath = () => {
+    return new Path(
+      pathLib.join(this.config.rootFolders.sitesConfig, this.config.scope ?? "")
     );
-    this.renderBundleOutputRoot = new Path(
-      pathLib.join(
-        this.#config.filepathsConfig.distRoot,
-        this.#config.filepathsConfig.renderBundleOutputRoot
-      )
-    );
-    this.functionBundleOutputRoot = new Path(
-      pathLib.join(
-        this.#config.filepathsConfig.distRoot,
-        this.#config.filepathsConfig.functionBundleOutputRoot
-      )
-    );
-    this.ciConfig = this.#config.filenamesConfig.ciConfig;
-    this.featuresConfig = this.#config.filenamesConfig.featuresConfig;
-    this.envVarDir = this.#config.envVarConfig.envVarDir;
-    this.envVarPrefix = this.#config.envVarConfig.envVarPrefix;
-    this.siteStreamConfig = this.#config.filenamesConfig.siteStreamConfig;
-  }
+  };
 }

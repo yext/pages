@@ -1,28 +1,23 @@
 import path from "path";
 import { Path } from "../../common/src/project/path.js";
-import {
-  ProjectFilepaths,
-  defaultProjectStructureConfig,
-} from "../../common/src/project/structure.js";
+import { ProjectStructure } from "../../common/src/project/structure.js";
 import { CiConfig, Plugin } from "../../common/src/ci/ci.js";
 import fs from "node:fs";
 import colors from "picocolors";
 import { loadFunctions } from "../../common/src/function/internal/loader.js";
 import { Command } from "commander";
 
-type FeaturesArgs = Pick<ProjectFilepaths, "scope">;
+const handler = async ({ scope }: { scope: string }) => {
+  const projectStructure = await ProjectStructure.init({ scope });
 
-const handler = ({ scope }: FeaturesArgs): void => {
-  const ciConfigFilename =
-    defaultProjectStructureConfig.filenamesConfig.ciConfig;
-  const sitesConfigRoot =
-    defaultProjectStructureConfig.filepathsConfig.sitesConfigRoot;
-  const ciConfigAbsolutePath = scope
-    ? new Path(
-        path.join(process.cwd(), sitesConfigRoot, scope, ciConfigFilename)
-      )
-    : new Path(path.join(process.cwd(), sitesConfigRoot, ciConfigFilename));
-  updateCiConfig(ciConfigAbsolutePath.getAbsolutePath(), true);
+  const ciPath = new Path(
+    path.join(
+      projectStructure.getSitesConfigPath().path,
+      projectStructure.config.sitesConfigFiles.ci
+    )
+  );
+
+  updateCiConfig(ciPath.getAbsolutePath(), true, projectStructure);
 };
 
 export const ciCommand = (program: Command) => {
@@ -47,7 +42,8 @@ export const ciCommand = (program: Command) => {
  */
 export const updateCiConfig = async (
   ciConfigPath: string,
-  calledViaCommand: boolean
+  calledViaCommand: boolean,
+  projectStructure: ProjectStructure
 ) => {
   const ciDir = path.dirname(ciConfigPath);
   if (!fs.existsSync(ciDir)) {
@@ -66,7 +62,10 @@ export const updateCiConfig = async (
     }
   }
 
-  const updatedCiConfigJson = await getUpdatedCiConfig(originalCiConfigJson);
+  const updatedCiConfigJson = await getUpdatedCiConfig(
+    originalCiConfigJson,
+    projectStructure
+  );
   if (updatedCiConfigJson) {
     fs.writeFileSync(
       ciConfigPath,
@@ -79,9 +78,17 @@ export const updateCiConfig = async (
  * Does the work of actually adding or replacing the Generator plugin.
  */
 export const getUpdatedCiConfig = async (
-  ciConfig: CiConfig
+  ciConfig: CiConfig,
+  projectStructure: ProjectStructure
 ): Promise<CiConfig> => {
   const ciConfigCopy = structuredClone(ciConfig);
+
+  ciConfigCopy.artifactStructure.assets = [];
+  ciConfigCopy.artifactStructure.assets.push({
+    root: projectStructure.config.rootFolders.dist,
+    pattern: `${projectStructure.config.subfolders.assets}/**/*`,
+  });
+
   ciConfigCopy.artifactStructure.plugins = [];
 
   const generatorPluginIndex = ciConfigCopy.artifactStructure.plugins.findIndex(
@@ -89,6 +96,8 @@ export const getUpdatedCiConfig = async (
       return plugin.event === "ON_PAGE_GENERATE";
     }
   );
+
+  const generatorPlugin = getGeneratorPlugin(projectStructure);
 
   // replace the "Generator" plugin if it was already defined
   if (generatorPluginIndex !== -1) {
@@ -99,9 +108,12 @@ export const getUpdatedCiConfig = async (
     ciConfigCopy.artifactStructure.plugins.push(generatorPlugin);
   }
 
+  const { rootFolders, subfolders } = projectStructure.config;
+
   // add any user-defined functions
   const functionModules = await loadFunctions(
-    defaultProjectStructureConfig.filepathsConfig.functionsRoot
+    path.join(rootFolders.source, subfolders.serverlessFunctions),
+    projectStructure
   );
   functionModules.forEach((functionModule) => {
     const newEntry: Plugin = {
@@ -115,9 +127,8 @@ export const getUpdatedCiConfig = async (
       sourceFiles: [
         {
           root: path.join(
-            defaultProjectStructureConfig.filepathsConfig.distRoot,
-            defaultProjectStructureConfig.filepathsConfig
-              .functionBundleOutputRoot,
+            rootFolders.dist,
+            subfolders.serverlessFunctions,
             functionModule.config.name
           ),
           pattern: "*{.js,.ts}",
@@ -142,18 +153,30 @@ export const getUpdatedCiConfig = async (
   return ciConfigCopy;
 };
 
-const generatorPlugin: Plugin = {
-  pluginName: "PagesGenerator",
-  sourceFiles: [
-    {
-      root: "dist/plugin",
-      pattern: "*{.ts,.json}",
-    },
-    {
-      root: "dist",
-      pattern: "assets/{server,static,renderer,render}/**/*{.js,.css}",
-    },
-  ],
-  event: "ON_PAGE_GENERATE",
-  functionName: "PagesGenerator",
+const getGeneratorPlugin = (projectStructure: ProjectStructure): Plugin => {
+  const { rootFolders, subfolders } = projectStructure.config;
+  const {
+    assets,
+    renderer,
+    serverBundle,
+    static: _static,
+    renderBundle,
+    plugin,
+  } = subfolders;
+
+  return {
+    pluginName: "PagesGenerator",
+    sourceFiles: [
+      {
+        root: `${rootFolders.dist}/${plugin}`,
+        pattern: "*{.ts,.json}",
+      },
+      {
+        root: `${rootFolders.dist}`,
+        pattern: `${assets}/{${serverBundle},${_static},${renderer},${renderBundle}}/**/*{.js,.css}`,
+      },
+    ],
+    event: "ON_PAGE_GENERATE",
+    functionName: "PagesGenerator",
+  };
 };

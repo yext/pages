@@ -22,6 +22,7 @@ import { FunctionModuleInternal } from "../../../common/src/function/internal/ty
 import { parseYextrcContents } from "../../../util/yextrcContents.js";
 import { getPartition } from "../../../util/partition.js";
 import { getYextUrlForPartition } from "../../../util/url.js";
+import path from "node:path";
 
 type Props = {
   vite: ViteDevServer;
@@ -158,8 +159,17 @@ export const indexPage =
         );
       }
 
+      // projectStructure
       const functionsList = [
-        ...(await loadFunctions("src/functions")).values(),
+        ...(
+          await loadFunctions(
+            path.join(
+              projectStructure.config.rootFolders.source,
+              projectStructure.config.subfolders.serverlessFunctions
+            ),
+            projectStructure
+          )
+        ).values(),
       ];
       indexPageHtml = createFunctionsTable(
         functionsList,

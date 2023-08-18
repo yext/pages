@@ -1,6 +1,7 @@
 import { statSync } from "fs";
 import { glob } from "glob";
 import path from "path";
+import { ProjectStructure } from "../../../common/src/project/structure.js";
 
 const PLUGIN_FILESIZE_LIMIT = 10; // MB
 const PLUGIN_TOTAL_FILESIZE_LIMIT = 10; // MB
@@ -8,8 +9,8 @@ const PLUGIN_TOTAL_FILESIZE_LIMIT = 10; // MB
 /**
  * Validates the server-side bundled files.
  */
-export const validateBundles = () => {
-  const bundlePaths = getBundlePaths();
+export const validateBundles = (projectStructure: ProjectStructure) => {
+  const bundlePaths = getBundlePaths(projectStructure);
 
   let sizeOfAllBundles = 0;
   bundlePaths.forEach((bundlePath) => {
@@ -18,9 +19,15 @@ export const validateBundles = () => {
   validateTotalSourceSize(sizeOfAllBundles);
 };
 
-const getBundlePaths = (): string[] => {
+const getBundlePaths = (projectStructure: ProjectStructure): string[] => {
+  const { rootFolders, subfolders } = projectStructure.config;
+
   return glob.sync(
-    `${path.resolve("dist/assets")}/{render,renderer,server,static}/**/*.*`
+    `${path.resolve(rootFolders.dist, subfolders.assets)}/{${
+      subfolders.renderBundle
+    },${subfolders.renderer},${subfolders.serverBundle},${
+      subfolders.static
+    }}/**/*.*`
   );
 };
 

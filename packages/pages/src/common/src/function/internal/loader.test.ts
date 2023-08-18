@@ -1,5 +1,6 @@
 import path from "path";
 import { loadFunctionModules, FunctionModuleCollection } from "./loader.js";
+import { ProjectStructure } from "../../project/structure.js";
 
 // our jest configuration doesn't support file urls so update pathToFileURL to do nothing during
 // this test.
@@ -21,12 +22,18 @@ jest.mock("vite", () => {
 afterAll(() => jest.unmock("url"));
 
 describe("loadTemplateModules", () => {
+  const projectStructure = new ProjectStructure();
+
   it("loads and transpiles raw templates", async () => {
     const functionFile: path.ParsedPath[] = [
       path.parse("tests/fixtures/src/functions/http/[param].ts"),
     ];
 
-    const functionModules = await loadFunctionModules(functionFile, true);
+    const functionModules = await loadFunctionModules(
+      functionFile,
+      true,
+      projectStructure
+    );
     commonTests(functionModules, "param-47543");
   });
 
@@ -34,7 +41,11 @@ describe("loadTemplateModules", () => {
     const functionFile: path.ParsedPath[] = [
       path.parse(path.resolve("tests/fixtures/src/functions/http/[param].js")),
     ];
-    const functionModules = await loadFunctionModules(functionFile, false);
+    const functionModules = await loadFunctionModules(
+      functionFile,
+      false,
+      projectStructure
+    );
     commonTests(functionModules, "param-47853");
   });
 

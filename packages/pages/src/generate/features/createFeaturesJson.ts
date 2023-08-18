@@ -6,14 +6,19 @@ import {
   convertTemplateConfigToFeatureConfig,
 } from "../../common/src/feature/features.js";
 import { TemplateModuleCollection } from "../../common/src/template/internal/loader.js";
+import { ProjectStructure } from "../../common/src/project/structure.js";
 
-export const getFeaturesConfig = async (
-  templateModules: TemplateModuleCollection
-): Promise<FeaturesConfig> => {
+export const getFeaturesConfig = (
+  templateModules: TemplateModuleCollection,
+  projectStructure: ProjectStructure
+): FeaturesConfig => {
   const features: FeatureConfig[] = [];
   const streams: any[] = [];
   for (const module of templateModules.values()) {
-    const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
+    const featureConfig = convertTemplateConfigToFeatureConfig(
+      module.config,
+      projectStructure
+    );
     features.push(featureConfig);
     module.config.stream && streams.push({ ...module.config.stream });
   }
@@ -24,17 +29,32 @@ export const getFeaturesConfig = async (
 /**
  * Generates a features.json from the templates.
  */
-export const createFeaturesJson = async (
+export const createFeaturesJson = (
   templateModules: TemplateModuleCollection,
-  featurePath: string
-): Promise<void> => {
-  const { features, streams } = await getFeaturesConfig(templateModules);
-  const featureDir = path.dirname(featurePath);
+  projectStructure: ProjectStructure
+): void => {
+  const { features, streams } = getFeaturesConfig(
+    templateModules,
+    projectStructure
+  );
+  const featuresAbsolutePath = path.resolve(
+    projectStructure.getSitesConfigPath().path,
+    projectStructure.config.sitesConfigFiles.features
+  );
+
+  const featureDir = path.dirname(featuresAbsolutePath);
   if (!fs.existsSync(featureDir)) {
     fs.mkdirSync(featureDir);
   }
-  const featuresJson = mergeFeatureJson(featurePath, features, streams);
-  fs.writeFileSync(featurePath, JSON.stringify(featuresJson, null, "  "));
+  const featuresJson = mergeFeatureJson(
+    featuresAbsolutePath,
+    features,
+    streams
+  );
+  fs.writeFileSync(
+    featuresAbsolutePath,
+    JSON.stringify(featuresJson, null, "  ")
+  );
 };
 
 /**

@@ -63,10 +63,10 @@ export const getHydrationTemplate = (
   props: TemplateRenderProps
 ): string => {
   return `
-        const componentUrl = import.meta.resolve("./${convertToPosixPath(
+        const componentUrl = import.meta.resolve("/${convertToPosixPath(
           templateModulePath
         )}");
-        const renderUrl = import.meta.resolve("./${convertToPosixPath(
+        const renderUrl = import.meta.resolve("/${convertToPosixPath(
           clientRenderTemplatePath
         )}");
         
@@ -160,7 +160,6 @@ export const getServerTemplatePlugin = (
   serverHtml: string,
   templateFilepath: string,
   bundlerManifest: bundlerManifest,
-  relativePrefixToRoot: string,
   appLanguage: string,
   headConfig?: HeadConfig
 ) => {
@@ -170,10 +169,7 @@ export const getServerTemplatePlugin = (
     appLanguage,
     headConfig
   );
-  html = injectIntoHead(
-    html,
-    getCssHtml(templateFilepath, bundlerManifest, relativePrefixToRoot)
-  );
+  html = injectIntoHead(html, getCssHtml(templateFilepath, bundlerManifest));
 
   return html;
 };
@@ -190,11 +186,10 @@ type ManifestInfo = {
 
 const getCssHtml = (
   templateFilepath: string,
-  bundlerManifest: bundlerManifest,
-  relativePrefixToRoot: string
+  bundlerManifest: bundlerManifest
 ): string => {
   return Array.from(getCssTags(templateFilepath, bundlerManifest, new Set()))
-    .map((f) => `<link rel="stylesheet" href="${relativePrefixToRoot + f}"/>`)
+    .map((f) => `<link rel="stylesheet" href="/${f}"/>`)
     .join("\n");
 };
 

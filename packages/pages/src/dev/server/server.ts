@@ -29,35 +29,10 @@ export const createServer = async (
   // creates a standard express app
   const app = express();
 
-  // initialize the default project structure and use to help configure the
-  // dev server
-  const projectStructure = new ProjectStructure({
-    filepathsConfig: {
-      scope,
-    },
-  });
+  // initialize the default project structure and use to help configure the dev server
+  const projectStructure = await ProjectStructure.init({ scope });
 
-  // Read features.json and set the default locale to the first locale listed
-  // Default to en if features.json cannot be read or there is no locales entry
-  let defaultLocale = "en";
-  try {
-    const featuresJson = JSON.parse(
-      fs.readFileSync(
-        path.join(
-          projectStructure.sitesConfigRoot.getAbsolutePath(),
-          projectStructure.featuresConfig
-        ),
-        "utf-8"
-      )
-    );
-    if (featuresJson.locales && featuresJson.locales.length > 0) {
-      defaultLocale = featuresJson.locales[0];
-    }
-  } catch (e) {
-    if (e !== "Error: ENOENT: no such file or directory") {
-      console.warn(e);
-    }
-  }
+  const defaultLocale = getDefaultLocale(projectStructure);
 
   // create vite using ssr mode
   const vite = await createViteServer({
@@ -65,13 +40,16 @@ export const createServer = async (
       middlewareMode: true,
     },
     appType: "custom",
-    envDir: projectStructure.envVarDir,
-    envPrefix: projectStructure.envVarPrefix,
-    define: processEnvVariables(projectStructure.envVarPrefix),
+    envDir: projectStructure.config.envVarConfig.envVarDir,
+    envPrefix: projectStructure.config.envVarConfig.envVarPrefix,
+    define: processEnvVariables(
+      projectStructure.config.envVarConfig.envVarPrefix
+    ),
     optimizeDeps: {
       include: ["react-dom", "react-dom/client"],
     },
   });
+
   // register vite's middleware
   app.use(vite.middlewares);
 
@@ -91,14 +69,18 @@ export const createServer = async (
   // Call generateTestData to ensure we have data to populate the index page.
   // If the user specifies dynamicGenerateData = false we assume they have localData already.
   if (dynamicGenerateData) {
-    await generateTestData(projectStructure.scope);
+    await generateTestData(projectStructure.config.scope);
   }
 
   // Load functions from their source files
   const functionModules: FunctionModuleCollection = new Map();
   const loadUpdatedFunctionModules = async () => {
     const loadedFunctionModules = await loadFunctions(
-      projectStructure.serverlessFunctionsRoot.path
+      path.join(
+        projectStructure.config.rootFolders.source,
+        projectStructure.config.subfolders.serverlessFunctions
+      ),
+      projectStructure
     );
     loadedFunctionModules.forEach((functionModule) => {
       functionModules.set(functionModule.config.name, functionModule);
@@ -188,4 +170,33 @@ export const createServer = async (
   app.listen(devServerPort, () =>
     process.stdout.write(`listening on :${devServerPort}\n`)
   );
+};
+
+/**
+ * Read features.json and set the default locale to the first locale listed
+ * Default to en if features.json cannot be read or there is no locales entry
+ */
+const getDefaultLocale = (projectStructure: ProjectStructure) => {
+  // Read features.json and set the default locale to the first locale listed
+  // Default to en if features.json cannot be read or there is no locales entry
+  try {
+    const featuresJson = JSON.parse(
+      fs.readFileSync(
+        path.resolve(
+          projectStructure.getSitesConfigPath().path,
+          projectStructure.config.sitesConfigFiles.features
+        ),
+        "utf-8"
+      )
+    );
+    if (featuresJson.locales && featuresJson.locales.length > 0) {
+      return featuresJson.locales[0];
+    }
+  } catch (e) {
+    if (e !== "Error: ENOENT: no such file or directory") {
+      console.warn(e);
+    }
+  }
+
+  return "en";
 };

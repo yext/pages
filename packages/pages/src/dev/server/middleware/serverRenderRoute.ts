@@ -104,7 +104,8 @@ const getDocument = async (
 ) => {
   if (dynamicGenerateData) {
     const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(
-      templateModuleInternal.config
+      templateModuleInternal.config,
+      projectStructure
     );
 
     return generateTestDataForPage(

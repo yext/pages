@@ -10,31 +10,26 @@ import {
 } from "../../../../common/src/template/hydration.js";
 import path from "node:path";
 import { PluginRenderTemplates } from "./templateUtils.js";
+import { ProjectStructure } from "../../../../common/src/project/structure.js";
 
 export const reactWrapper = async <T extends TemplateRenderProps>(
   props: T,
   templateModuleInternal: TemplateModuleInternal<any, any>,
   hydrate: boolean,
   pluginRenderTemplates: PluginRenderTemplates,
-  manifest: Manifest
+  manifest: Manifest,
+  projectStructure: ProjectStructure
 ): Promise<string> => {
   if (!manifest) {
     throw new Error("Manifest is undefined");
   }
-  const projectFilepaths = manifest.projectFilepaths;
   const headConfig = templateModuleInternal.getHeadConfig
     ? templateModuleInternal.getHeadConfig(props)
     : undefined;
 
-  const bundlerManifest = manifest.bundlerManifest;
-  const rootTemplateFilepath = `${projectFilepaths.templatesRoot}/${templateModuleInternal.templateName}.tsx`;
-  const scopedTemplateFilepath = `${projectFilepaths.scopedTemplatesPath}/${templateModuleInternal.templateName}.tsx`;
-
-  const templateFilepath: string =
-    !!projectFilepaths.scopedTemplatesPath &&
-    bundlerManifest[scopedTemplateFilepath]
-      ? scopedTemplateFilepath
-      : rootTemplateFilepath;
+  const templateFilepath = `${projectStructure.getTemplatePaths()[0].path}/${
+    templateModuleInternal.templateName
+  }.tsx`;
 
   const serverHtml = await pluginRenderTemplates.server.render({
     Page: templateModuleInternal.default!,
@@ -44,10 +39,9 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
   let clientHydrationString;
   if (hydrate) {
     clientHydrationString = getHydrationTemplate(
-      path.join(props.relativePrefixToRoot, pluginRenderTemplates.client),
+      pluginRenderTemplates.client,
       path.join(
-        props.relativePrefixToRoot,
-        "assets",
+        projectStructure.config.subfolders.assets,
         templateModuleInternal.path.replace("..", "")
       ),
       props
@@ -58,8 +52,7 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
     clientHydrationString,
     serverHtml,
     templateFilepath,
-    bundlerManifest,
-    props.relativePrefixToRoot,
+    manifest.bundlerManifest,
     getLang(headConfig, props),
     headConfig
   );

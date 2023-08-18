@@ -3,14 +3,12 @@ import buildStart from "./buildStart/buildStart.js";
 import closeBundle from "./closeBundle/closeBundle.js";
 import path, { parse } from "path";
 import { InputOption } from "rollup";
-import {
-  defaultProjectStructureConfig,
-  ProjectStructure,
-} from "../../common/src/project/structure.js";
+import { ProjectStructure } from "../../common/src/project/structure.js";
 import { readdir } from "fs/promises";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { getGlobalClientServerRenderTemplates } from "../../common/src/template/internal/getTemplateFilepaths.js";
 import { loadFunctions } from "../../common/src/function/internal/loader.js";
+import { Path } from "../../common/src/project/path.js";
 
 const intro = `
 var global = globalThis;
@@ -22,36 +20,37 @@ var global = globalThis;
  * environment, and puts them all in an output directory.
  */
 export const build = (projectStructure: ProjectStructure): Plugin => {
+  const { envVarConfig, subfolders } = projectStructure.config;
+
   return {
     name: "vite-plugin:build",
     apply: "build",
     config: async (): Promise<UserConfig> => {
       return {
-        envDir: projectStructure.envVarDir,
-        envPrefix: projectStructure.envVarPrefix,
+        envDir: envVarConfig.envVarDir,
+        envPrefix: envVarConfig.envVarPrefix,
         resolve: {
           conditions: ["worker", "webworker"],
         },
         build: {
-          outDir: projectStructure.distRoot.path,
+          outDir: projectStructure.config.rootFolders.dist,
           manifest: true,
           rollupOptions: {
             preserveEntrySignatures: "strict",
             input: await discoverInputs(
-              projectStructure.templatesRoot.getAbsolutePath(),
-              projectStructure.scopedTemplatesPath?.getAbsolutePath(),
+              projectStructure.getTemplatePaths(),
               projectStructure
             ),
             output: {
               intro,
-              assetFileNames: "assets/static/[name]-[hash][extname]",
-              chunkFileNames: "assets/static/[name]-[hash].js",
+              assetFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash][extname]`,
+              chunkFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash].js`,
               sanitizeFileName: false,
               entryFileNames: (chunkInfo) => {
                 if (chunkInfo.name.includes("functions")) {
                   return "[name]/mod.ts";
                 }
-                return "assets/[name].[hash].js";
+                return `${subfolders.assets}/[name].[hash].js`;
               },
               manualChunks: (id) => {
                 // Fixes an error where the output is prefixed like \x00commonjsHelpers-hash.js
@@ -60,22 +59,9 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
             },
           },
           reportCompressedSize: false,
+          assetsDir: subfolders.assets,
         },
-        define: processEnvVariables(projectStructure.envVarPrefix),
-        base: "", // makes static assets relative for reverse proxies and doesn't affect non-RP sites
-        experimental: {
-          renderBuiltUrl(filename, { hostType }) {
-            // Assets are returned with a leading slash for some reason. This adjusts the
-            // paths to be relative for reverse proxy support.
-            if (hostType === "js") {
-              if (filename.at(0) === "/") {
-                return filename.substring(1);
-              }
-              return filename;
-            }
-            return { relative: true };
-          },
-        },
+        define: processEnvVariables(envVarConfig.envVarPrefix),
       };
     },
     buildStart: buildStart(projectStructure),
@@ -96,8 +82,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
  * @returns
  */
 const discoverInputs = async (
-  rootTemplateDir: string,
-  scopedTemplateDir: string | undefined,
+  templatePaths: Path[],
   projectStructure: ProjectStructure
 ): Promise<InputOption> => {
   const entryPoints: Record<string, string> = {};
@@ -111,27 +96,29 @@ const discoverInputs = async (
       )
       .forEach((template) => {
         const parsedPath = parse(template);
-        const outputPath = `server/${parsedPath.name}`;
+        const outputPath = `${projectStructure.config.subfolders.serverBundle}/${parsedPath.name}`;
         if (entryPoints[outputPath]) {
           return;
         }
         entryPoints[outputPath] = path.join(dir, template);
       });
 
-  if (scopedTemplateDir) {
-    await updateEntryPoints(scopedTemplateDir);
+  for (const templatePath of templatePaths) {
+    await updateEntryPoints(templatePath.getAbsolutePath());
   }
-
-  await updateEntryPoints(rootTemplateDir);
 
   (
     await loadFunctions(
-      defaultProjectStructureConfig.filepathsConfig.functionsRoot
+      path.join(
+        projectStructure.config.rootFolders.source,
+        projectStructure.config.subfolders.serverlessFunctions
+      ),
+      projectStructure
     )
   ).forEach((functionModule) => {
-    entryPoints[`functions/${functionModule.config.name}`] = path.format(
-      functionModule.filePath
-    );
+    entryPoints[
+      `${projectStructure.config.subfolders.serverlessFunctions}/${functionModule.config.name}`
+    ] = path.format(functionModule.filePath);
   });
 
   return { ...entryPoints, ...discoverRenderTemplates(projectStructure) };
@@ -150,16 +137,17 @@ const discoverRenderTemplates = (
 
   // Move the [compiled] _server.ts and _client.ts render template to /assets/render
   const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
-    projectStructure.templatesRoot,
-    projectStructure.scopedTemplatesPath
+    projectStructure.getTemplatePaths()
   );
 
+  const { renderBundle } = projectStructure.config.subfolders;
+
   // server
-  entryPoints["render/_server"] =
+  entryPoints[`${renderBundle}/_server`] =
     clientServerRenderTemplates.serverRenderTemplatePath;
 
   // client
-  entryPoints["render/_client"] =
+  entryPoints[`${renderBundle}/_client`] =
     clientServerRenderTemplates.clientRenderTemplatePath;
 
   return entryPoints;

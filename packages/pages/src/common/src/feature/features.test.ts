@@ -5,8 +5,11 @@ import {
   FeaturesConfig,
 } from "./features.js";
 import { TemplateConfigInternal } from "../template/internal/types.js";
+import { ProjectStructure } from "../project/structure.js";
 
 describe("features - convertTemplateConfigToFeaturesConfig", () => {
+  const projectStructure = new ProjectStructure();
+
   it("returns a FeaturesConfig with no StreamConfig if no stream is defined", async () => {
     const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
@@ -14,8 +17,10 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
       hydrate: true,
     };
 
-    const featuresConfig =
-      convertTemplateConfigInternalToFeaturesConfig(templateConfig);
+    const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(
+      templateConfig,
+      projectStructure
+    );
 
     const expected: FeaturesConfig = {
       features: [
@@ -45,8 +50,10 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
       },
     };
 
-    const featuresConfig =
-      convertTemplateConfigInternalToFeaturesConfig(templateConfig);
+    const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(
+      templateConfig,
+      projectStructure
+    );
 
     const expected: FeaturesConfig = {
       features: [
@@ -76,6 +83,8 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
 });
 
 describe("features - convertTemplateConfigToFeatureConfig", () => {
+  const projectStructure = new ProjectStructure();
+
   it("uses the streamId if defined and return an EntityPageSetConfig", async () => {
     const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
@@ -83,7 +92,10 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
       streamId: "$id",
     };
 
-    const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
+    const featureConfig = convertTemplateConfigToFeatureConfig(
+      templateConfig,
+      projectStructure
+    );
 
     const expected: FeatureConfig = {
       name: "myTemplateConfig",
@@ -109,7 +121,10 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
       },
     };
 
-    const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
+    const featureConfig = convertTemplateConfigToFeatureConfig(
+      templateConfig,
+      projectStructure
+    );
 
     const expected: FeatureConfig = {
       name: "myTemplateConfig",
@@ -126,7 +141,10 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
       name: "myTemplateConfig",
       hydrate: true,
     };
-    const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
+    const featureConfig = convertTemplateConfigToFeatureConfig(
+      templateConfig,
+      projectStructure
+    );
 
     const expected: FeatureConfig = {
       name: "myTemplateConfig",

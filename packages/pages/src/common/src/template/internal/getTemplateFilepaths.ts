@@ -44,11 +44,7 @@ export const getTemplateFilepaths = (paths: Path[]): string[] => {
 export const getTemplateFilepathsFromProjectStructure = (
   projectStructure: ProjectStructure
 ): string[] => {
-  return getTemplateFilepaths(
-    projectStructure.scopedTemplatesPath
-      ? [projectStructure.scopedTemplatesPath, projectStructure.templatesRoot]
-      : [projectStructure.templatesRoot]
-  );
+  return getTemplateFilepaths(projectStructure.getTemplatePaths());
 };
 
 const globalClientRenderFilename17 = "_client17.tsx";
@@ -66,21 +62,18 @@ const globalServerRenderFilename = "_server.tsx";
  * @param scopedTemplatePath the subfolder path inside templatesRoot to scope to - used in multibrand setups
  */
 export const getGlobalClientServerRenderTemplates = (
-  templatesRootPath: Path,
-  scopedTemplatePath: Path | undefined
+  templatePaths: Path[]
 ): ClientServerRenderTemplates => {
   const shouldUseReactRoot = parseInt(React.version) >= 18;
 
   const [clientRenderTemplatePath, usingCustomClient] = findGlobalRenderFile(
-    templatesRootPath,
-    scopedTemplatePath,
+    templatePaths,
     shouldUseReactRoot
       ? globalClientRenderFilename
       : globalClientRenderFilename17
   );
   const [serverRenderTemplatePath, usingCustomServer] = findGlobalRenderFile(
-    templatesRootPath,
-    scopedTemplatePath,
+    templatePaths,
     globalServerRenderFilename
   );
 
@@ -98,22 +91,11 @@ export const getGlobalClientServerRenderTemplates = (
  * @returns the path to the appropriate file along with a boolean denoting if the path returned is a custom render template
  */
 const findGlobalRenderFile = (
-  templatesRootPath: Path,
-  scopedTemplatePath: Path | undefined,
+  templatePaths: Path[],
   globalFilename: string
 ): [string, boolean] => {
-  if (scopedTemplatePath) {
-    const pathToGlobalFile = path.join(
-      scopedTemplatePath.getAbsolutePath(),
-      globalFilename
-    );
-    if (fs.existsSync(pathToGlobalFile)) {
-      return [pathToGlobalFile, true];
-    }
-  }
-
   const pathToGlobalFile = path.join(
-    templatesRootPath.getAbsolutePath(),
+    templatePaths[0].getAbsolutePath(),
     globalFilename
   );
 

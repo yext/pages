@@ -9,6 +9,7 @@ import {
   OnUrlChangeArgument,
 } from "../types.js";
 import { mockSiteInfo } from "../../../../dev/server/middleware/serveHttpFunction.js";
+import { ProjectStructure } from "../../project/structure.js";
 
 const exampleReturnValue: HttpFunctionResponse = {
   body: "Hello World",
@@ -51,6 +52,8 @@ const createMockFilePath = (filepath: string): path.ParsedPath => {
 };
 
 describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () => {
+  const projectStructure = new ProjectStructure();
+
   it("converts a function in functions/http", async () => {
     const functionModule: FunctionModule = {
       default: exampleApiFunction,
@@ -58,7 +61,8 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
         createMockFilePath("http/api/example.ts"),
-        functionModule
+        functionModule,
+        projectStructure
       );
     const expected = {
       config: {
@@ -101,7 +105,8 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
         createMockFilePath("onUrlChange/example.ts"),
-        functionModule
+        functionModule,
+        projectStructure
       );
     const expected = {
       config: {
@@ -142,7 +147,8 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
         createMockFilePath("http/api/example/[testParam].ts"),
-        functionModule
+        functionModule,
+        projectStructure
       );
     const expected = {
       config: {
@@ -185,7 +191,8 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     expect(() =>
       convertFunctionModuleToFunctionModuleInternal(
         createMockFilePath("myFunctions/example.ts"),
-        functionModule
+        functionModule,
+        projectStructure
       )
     ).toThrow(
       "Cannot load " +
