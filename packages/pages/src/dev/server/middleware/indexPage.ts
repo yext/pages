@@ -165,7 +165,7 @@ export const indexPage =
           await loadFunctions(
             path.join(
               projectStructure.config.rootFolders.source,
-              projectStructure.config.subfolders.templates
+              projectStructure.config.subfolders.serverlessFunctions
             ),
             projectStructure
           )
