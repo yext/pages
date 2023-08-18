@@ -29,6 +29,10 @@ export const createServer = async (
   // creates a standard express app
   const app = express();
 
+  // necessary for serverless functions' req.body to be available
+  app.use(express.json()); // used to parse JSON bodies
+  app.use(express.urlencoded({ extended: true })); // parse URL-encoded bodies
+
   // initialize the default project structure and use to help configure the dev server
   const projectStructure = await ProjectStructure.init({ scope });
 

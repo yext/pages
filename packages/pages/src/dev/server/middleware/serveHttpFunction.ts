@@ -15,11 +15,14 @@ export const serveHttpFunction = async (
   const argument: HttpFunctionArgument = {
     queryParams: req.query as { [p: string]: string },
     pathParams: req.params,
+    method: req.method,
+    headers: req.headers as { [p: string]: string[] },
+    body: req.body,
     site: mockSiteInfo,
   };
 
   if (serverlessFunction.default) {
-    const fnRes = (serverlessFunction.default as HttpFunction)(argument);
+    const fnRes = await (serverlessFunction.default as HttpFunction)(argument);
     res
       .status(fnRes.statusCode)
       .header({ ...fnRes.headers, "Content-Type": "application/json" })

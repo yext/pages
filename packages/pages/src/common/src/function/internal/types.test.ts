@@ -29,6 +29,9 @@ const exampleHttpFunctionArgument: HttpFunctionArgument = {
   queryParams: {},
   pathParams: {},
   site: mockSiteInfo,
+  headers: {},
+  method: "",
+  body: "",
 };
 
 const exampleOnUrlChangeArgument: OnUrlChangeArgument = {
