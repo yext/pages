@@ -10,6 +10,7 @@ import { pathToFileURL } from "url";
 import { getFunctionFilepaths } from "./getFunctionFilepaths.js";
 import { processEnvVariables } from "../../../../util/processEnvVariables.js";
 import { ProjectStructure } from "../../project/structure.js";
+import { COMMON_ESBUILD_LOADERS } from "../../loader/esbuild.js";
 
 const TEMP_DIR = ".temp";
 
@@ -36,9 +37,7 @@ export const loadFunctionModules = async (
           write: false,
           format: "esm",
           bundle: true,
-          loader: {
-            ".ico": "dataurl",
-          },
+          loader: COMMON_ESBUILD_LOADERS,
           define: processEnvVariables("YEXT_PUBLIC"),
         });
 
