@@ -7,6 +7,7 @@
 ##### New Features
 
 * **dev:**  export createServer and add --port arg (#375) (3c1d05f6)
+* **dev/plugin:** redo reverse proxy setup (#376) (a6408020)
 
 ##### Bug Fixes
 
