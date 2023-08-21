@@ -19,8 +19,8 @@ the contents of the <span class="code">localData</span> folder. Entity Data will
 to entities will not be reflected in real time. To regenerate test data, enter the command <span class="code">yext pages 
 generate-test-data</span>. Also, entities other than the ones listed below will not be available unless run in dynamic mode.`;
 
-export const noLocalDataErrorText = `No localData directory present, cannot generate example URLs. Run <span class="code">yext pages
-generate-test-data</span> to generate the localData directory.`;
+export const noLocalDataErrorText = `No localData directory present - cannot generate example URLs. Your account may be empty. Ensure your streams have the correct scope and your
+account is populated. To manually clone localData, try running <span class="code">yext pages generate-test-data</span>.`;
 
 export const yextLogoWhiteSvg = `
   <svg class="yext-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720" width="64">
