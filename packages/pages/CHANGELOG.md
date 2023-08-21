@@ -1,3 +1,23 @@
+#### 1.0.0-rc.1 (2023-08-21)
+
+##### Chores
+
+*  update non-major dependencies (#373) (fa613e3b)
+
+##### New Features
+
+* **dev:**  export createServer and add --port arg (#375) (3c1d05f6)
+
+##### Bug Fixes
+
+* **dev:**
+  *  add more esbuild loaders (#379) (ed5937fb)
+  *  qa improvements for .yextrc init (#368) (0c38b240)
+  *  hydration does not reflect template data mutations (#365) (30b9382a)
+*  async serverless functions and body parsing (#378) (ba2d5ce4)
+*  update paths to support usage in monorepos (#377) (4cf67c99)
+* **plugin:**  polyfill upgrade breaking build (#374) (d376d4c1)
+
 #### 1.0.0-rc.0 (2023-08-02)
 
 ##### Chores
