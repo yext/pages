@@ -7,6 +7,7 @@ import esbuild from "esbuild";
 import { importFromString } from "module-from-string";
 import { pathToFileURL } from "url";
 import { COMMON_ESBUILD_LOADERS } from "../../loader/esbuild.js";
+import { processEnvVariables } from "../../../../util/processEnvVariables.js";
 
 const TEMP_DIR = ".temp";
 
@@ -35,6 +36,7 @@ export const loadTemplateModules = async (
           format: "esm",
           bundle: true,
           loader: COMMON_ESBUILD_LOADERS,
+          define: processEnvVariables("YEXT_PUBLIC"),
         });
 
         templateModule = await importFromString(
