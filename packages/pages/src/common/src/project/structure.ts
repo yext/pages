@@ -53,6 +53,13 @@ export interface SitesConfigFiles {
   serving: string;
 }
 
+export interface DistConfigFiles {
+  /** The name of the templates.json file */
+  templates: string;
+  /** The name of the artifacts.json file */
+  artifacts: string;
+}
+
 /**
  * Important files at the project's root.
  */
@@ -93,6 +100,8 @@ export interface ProjectStructureConfig {
   subfolders: Subfolders;
   /** Files specific to the Yext configuration folder */
   sitesConfigFiles: SitesConfigFiles;
+  /** Specific Yext configuration files that are read from the dist folder */
+  distConfigFiles: DistConfigFiles;
   /** Important files at the project's root */
   rootFiles: RootFiles;
   /** Defines how environment variables will be declared and processed */
@@ -130,6 +139,10 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
     features: "features.json",
     siteStream: "site-stream.json",
     serving: "serving.json",
+  },
+  distConfigFiles: {
+    templates: "templates.json",
+    artifacts: "artifacts.json",
   },
   rootFiles: {
     config: "config.yaml",

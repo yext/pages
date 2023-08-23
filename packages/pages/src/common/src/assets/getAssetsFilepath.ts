@@ -3,7 +3,7 @@ import { pathToFileURL } from "url";
 import { UserConfig } from "vite";
 import { import_ } from "./import.js";
 import yaml from "js-yaml";
-import { ConfigYaml } from "../config/config.js";
+import { ConfigYaml } from "../config/types.js";
 
 /**
  * Determines the assets directory to use by checking the following, in order:
