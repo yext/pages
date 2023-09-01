@@ -11,13 +11,14 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
-import {
-  FunctionModuleCollection,
-  loadFunctions,
-} from "../../common/src/function/internal/loader.js";
+import { FunctionModuleCollection } from "../../common/src/function/internal/loader.js";
 import { serveHttpFunction } from "./middleware/serveHttpFunction.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import { getFunctionFilepaths } from "../../common/src/function/internal/getFunctionFilepaths.js";
+import { convertFunctionModuleToFunctionModuleInternal } from "../../common/src/function/internal/types.js";
+import { loadViteModule } from "./ssr/loadViteModule.js";
+import { FunctionModule } from "../../common/src/function/types.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const createServer = async (
@@ -79,16 +80,30 @@ export const createServer = async (
   // Load functions from their source files
   const functionModules: FunctionModuleCollection = new Map();
   const loadUpdatedFunctionModules = async () => {
-    const loadedFunctionModules = await loadFunctions(
+    const functionFilepaths = getFunctionFilepaths(
       path.join(
         projectStructure.config.rootFolders.source,
         projectStructure.config.subfolders.serverlessFunctions
-      ),
-      projectStructure
+      )
     );
-    loadedFunctionModules.forEach((functionModule) => {
-      functionModules.set(functionModule.config.name, functionModule);
-    });
+    for (const functionPath of functionFilepaths) {
+      const functionModule = await loadViteModule<FunctionModule>(
+        vite,
+        path.format(functionPath)
+      );
+
+      const functionModuleInternal =
+        convertFunctionModuleToFunctionModuleInternal(
+          functionPath,
+          functionModule,
+          projectStructure
+        );
+
+      functionModules.set(
+        functionModuleInternal.config.name,
+        functionModuleInternal
+      );
+    }
   };
 
   await loadUpdatedFunctionModules(); // Load functions on initial setup

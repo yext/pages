@@ -5,12 +5,8 @@ import { importFromString } from "module-from-string";
 import { glob } from "glob";
 import chalk from "chalk";
 import os from "os";
+import { ProjectStructure } from "../../../common/src/project/structure.js";
 
-const FUNCTIONS_PATH = path.resolve("functions");
-const FUNCTION_METADATA_PATH = path.join(
-  FUNCTIONS_PATH,
-  "functionMetadata.json"
-);
 const TEMP_DIR = os.tmpdir();
 
 /** Metadata for a serverless function. */
@@ -25,11 +21,14 @@ type FunctionMetadata = {
  * export in the file, it will be left out of the mapping and an error will be logged
  * in the console.
  */
-const getFunctionMetadataMap = async (): Promise<
-  Record<string, FunctionMetadata>
-> => {
+const getFunctionMetadataMap = async (
+  projectStructure: ProjectStructure
+): Promise<Record<string, FunctionMetadata>> => {
   const filepaths = glob
-    .sync(path.join(FUNCTIONS_PATH, "**/*.{js,ts}"), { nodir: true })
+    .sync(
+      path.join(projectStructure.config.rootFolders.functions, "**/*.{js,ts}"),
+      { nodir: true }
+    )
     .map((f) => path.resolve(f));
 
   const results = await Promise.allSettled(
@@ -77,15 +76,21 @@ async function generateFunctionMetadata(
 }
 
 /** Generates a functionMetadata.json file from the functions directory. */
-export const generateFunctionMetadataFile = async () => {
-  const functionMetadataMap = await getFunctionMetadataMap();
+export const generateFunctionMetadataFile = async (
+  projectStructure: ProjectStructure
+) => {
+  const functionMetadataMap = await getFunctionMetadataMap(projectStructure);
+  const { rootFolders, distConfigFiles } = projectStructure.config;
+
   fs.writeFileSync(
-    FUNCTION_METADATA_PATH,
+    path.join(rootFolders.functions, distConfigFiles.functionMetadata),
     JSON.stringify(functionMetadataMap, null, 2)
   );
 };
 
 /** Returns whether or not a functionMetadata.json file should be generated. */
-export const shouldGenerateFunctionMetadata = () => {
-  return fs.existsSync(FUNCTIONS_PATH);
+export const shouldGenerateFunctionMetadata = (
+  projectStructure: ProjectStructure
+) => {
+  return fs.existsSync(projectStructure.config.rootFolders.functions);
 };

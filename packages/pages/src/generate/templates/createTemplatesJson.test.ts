@@ -1,12 +1,8 @@
-import { ArtifactsConfig } from "../../common/src/artifacts/internal/types.js";
 import { FeaturesConfig } from "../../common/src/feature/features.js";
-import { ProjectStructure } from "../../common/src/project/structure.js";
 import { TemplateModuleCollection } from "../../common/src/template/internal/loader.js";
 import { getTemplatesConfig } from "./createTemplatesJson.js";
 
 describe("createTemplatesJson - getTemplatesConfig", () => {
-  const projectStructure = new ProjectStructure();
-
   it("creates the proper default templates structure", async () => {
     const templateModules: TemplateModuleCollection = new Map();
     templateModules.set("turtlehead-tacos", {
@@ -86,8 +82,6 @@ describe("createTemplatesJson - getTemplatesConfig", () => {
       ],
     };
 
-    expect(getTemplatesConfig(templateModules, projectStructure)).toEqual(
-      expected
-    );
+    expect(getTemplatesConfig(templateModules)).toEqual(expected);
   });
 });

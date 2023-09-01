@@ -58,6 +58,8 @@ export interface DistConfigFiles {
   templates: string;
   /** The name of the artifacts.json file */
   artifacts: string;
+  /** The name of the functionMetadata.json file */
+  functionMetadata: string;
 }
 
 /**
@@ -143,6 +145,7 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
   distConfigFiles: {
     templates: "templates.json",
     artifacts: "artifacts.json",
+    functionMetadata: "functionMetadata.json",
   },
   rootFiles: {
     config: "config.yaml",

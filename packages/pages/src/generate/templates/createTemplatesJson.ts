@@ -13,16 +13,12 @@ import {
 } from "../../common/src/feature/stream.js";
 
 export const getTemplatesConfig = (
-  templateModules: TemplateModuleCollection,
-  projectStructure: ProjectStructure
+  templateModules: TemplateModuleCollection
 ): FeaturesConfig => {
   const features: FeatureConfig[] = [];
   const streams: StreamConfig[] = [];
   for (const module of templateModules.values()) {
-    const featureConfig = convertTemplateConfigToFeatureConfig(
-      module.config,
-      projectStructure
-    );
+    const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
     features.push(featureConfig);
     const streamConfig = convertTemplateConfigToStreamConfig(module.config);
     if (streamConfig) {
@@ -43,10 +39,7 @@ export const createTemplatesJson = (
   // Note: the object used to be known as "features" but it's been changed to "templates".
   // We're allowing the generation of a features.json file still for backwards compatibility,
   // which is why all of the types have not yet been renamed.
-  const { features, streams } = getTemplatesConfig(
-    templateModules,
-    projectStructure
-  );
+  const { features, streams } = getTemplatesConfig(templateModules);
   const templatesAbsolutePath = path.resolve(
     projectStructure.config.rootFolders.dist,
     projectStructure.config.distConfigFiles.templates

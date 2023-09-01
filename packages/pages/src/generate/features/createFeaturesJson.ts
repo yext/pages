@@ -9,16 +9,12 @@ import { TemplateModuleCollection } from "../../common/src/template/internal/loa
 import { ProjectStructure } from "../../common/src/project/structure.js";
 
 export const getFeaturesConfig = (
-  templateModules: TemplateModuleCollection,
-  projectStructure: ProjectStructure
+  templateModules: TemplateModuleCollection
 ): FeaturesConfig => {
   const features: FeatureConfig[] = [];
   const streams: any[] = [];
   for (const module of templateModules.values()) {
-    const featureConfig = convertTemplateConfigToFeatureConfig(
-      module.config,
-      projectStructure
-    );
+    const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
     features.push(featureConfig);
     module.config.stream && streams.push({ ...module.config.stream });
   }
@@ -33,10 +29,7 @@ export const createFeaturesJson = (
   templateModules: TemplateModuleCollection,
   projectStructure: ProjectStructure
 ): void => {
-  const { features, streams } = getFeaturesConfig(
-    templateModules,
-    projectStructure
-  );
+  const { features, streams } = getFeaturesConfig(templateModules);
   const featuresAbsolutePath = path.resolve(
     projectStructure.getSitesConfigPath().path,
     projectStructure.config.sitesConfigFiles.features
