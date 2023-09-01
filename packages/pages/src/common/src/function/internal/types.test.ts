@@ -3,15 +3,15 @@ import { convertFunctionModuleToFunctionModuleInternal } from "./types.js";
 import {
   HttpFunction,
   FunctionModule,
-  HttpFunctionRequest,
+  SitesHttpRequest,
   OnUrlChangeFunction,
-  HttpFunctionResponse,
-  OnUrlChangeRequest,
+  SitesHttpResponse,
+  SitesOnUrlChangeRequest,
 } from "../types.js";
 import { mockSiteInfo } from "../../../../dev/server/middleware/serveHttpFunction.js";
 import { ProjectStructure } from "../../project/structure.js";
 
-const exampleReturnValue: HttpFunctionResponse = {
+const exampleReturnValue: SitesHttpResponse = {
   body: "Hello World",
   headers: {},
   statusCode: 200,
@@ -25,7 +25,7 @@ const exampleOnUrlChangeFunction: OnUrlChangeFunction = () => {
   return;
 };
 
-const exampleHttpFunctionArgument: HttpFunctionRequest = {
+const exampleHttpFunctionArgument: SitesHttpRequest = {
   queryParams: {},
   pathParams: {},
   site: mockSiteInfo,
@@ -34,7 +34,7 @@ const exampleHttpFunctionArgument: HttpFunctionRequest = {
   body: "",
 };
 
-const exampleOnUrlChangeArgument: OnUrlChangeRequest = {
+const exampleOnUrlChangeArgument: SitesOnUrlChangeRequest = {
   domainMap: {
     production: "example.com",
     staging: "alpha-beta-charlie-pgsdemo.com-preview.pagescdn.com",
