@@ -17,6 +17,7 @@ import {
 } from "./functionMetadata.js";
 import { updateCiConfig } from "../../../generate/ci/ci.js";
 import { getFunctionFilepaths } from "../../../common/src/function/internal/getFunctionFilepaths.js";
+import { bundleServerlessFunctions } from "./serverlessFunctions.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -109,6 +110,15 @@ export default (projectStructure: ProjectStructure) => {
     }
 
     if (shouldGenerateFunctionMetadata()) {
+      finisher = logger.timedLog({ startLog: "Bundling serverless functions" });
+      try {
+        await bundleServerlessFunctions(projectStructure);
+        finisher.succeed("Successfully bundled serverless functions");
+      } catch (e: any) {
+        finisher.fail("Failed to bundle serverless functions");
+        throw new Error(e);
+      }
+
       finisher = logger.timedLog({ startLog: "Writing functionMetadata.json" });
       try {
         await generateFunctionMetadataFile();

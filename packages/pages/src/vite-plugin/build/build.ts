@@ -7,7 +7,6 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { readdir } from "fs/promises";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { getGlobalClientServerRenderTemplates } from "../../common/src/template/internal/getTemplateFilepaths.js";
-import { loadFunctions } from "../../common/src/function/internal/loader.js";
 import { Path } from "../../common/src/project/path.js";
 
 const intro = `
@@ -46,10 +45,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
               assetFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash][extname]`,
               chunkFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash].js`,
               sanitizeFileName: false,
-              entryFileNames: (chunkInfo) => {
-                if (chunkInfo.name.includes("functions")) {
-                  return "[name]/mod.ts";
-                }
+              entryFileNames: () => {
                 return `${subfolders.assets}/[name].[hash].js`;
               },
               manualChunks: (id) => {
@@ -106,20 +102,6 @@ const discoverInputs = async (
   for (const templatePath of templatePaths) {
     await updateEntryPoints(templatePath.getAbsolutePath());
   }
-
-  (
-    await loadFunctions(
-      path.join(
-        projectStructure.config.rootFolders.source,
-        projectStructure.config.subfolders.serverlessFunctions
-      ),
-      projectStructure
-    )
-  ).forEach((functionModule) => {
-    entryPoints[
-      `${projectStructure.config.subfolders.serverlessFunctions}/${functionModule.config.name}`
-    ] = path.format(functionModule.filePath);
-  });
 
   return { ...entryPoints, ...discoverRenderTemplates(projectStructure) };
 };

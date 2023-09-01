@@ -1,9 +1,5 @@
-import fs from "fs";
-import path from "path";
 import { TemplateConfigInternal } from "../template/internal/types.js";
 import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
-import { unsecureHashPluginName } from "../function/internal/types.js";
-import { ProjectStructure } from "../project/structure.js";
 
 /**
  * The shape of data that represents a features.json file, used by Yext Pages.
@@ -19,13 +15,9 @@ export interface FeaturesConfig {
  * Converts a {@link TemplateConfigInternal} into a valid {@link FeaturesConfig} (features and streams).
  */
 export const convertTemplateConfigInternalToFeaturesConfig = (
-  config: TemplateConfigInternal,
-  projectStructure: ProjectStructure
+  config: TemplateConfigInternal
 ): FeaturesConfig => {
-  const featureConfig = convertTemplateConfigToFeatureConfig(
-    config,
-    projectStructure
-  );
+  const featureConfig = convertTemplateConfigToFeatureConfig(config);
   const streamConfig = convertTemplateConfigToStreamConfig(config);
 
   return {
@@ -77,8 +69,7 @@ export const isStaticTemplateConfig = (
  * Converts a {@link TemplateConfigInternal} into a valid single {@link FeatureConfig}.
  */
 export const convertTemplateConfigToFeatureConfig = (
-  config: TemplateConfigInternal,
-  projectStructure: ProjectStructure
+  config: TemplateConfigInternal
 ): FeatureConfig => {
   const streamConfig = config.stream || null;
 
@@ -88,39 +79,6 @@ export const convertTemplateConfigToFeatureConfig = (
     templateType: "JS",
     alternateLanguageFields: config.alternateLanguageFields,
   };
-
-  // If an onUrlChange function name is specified in the feature config, look up that plugin and
-  // calculate its hashed name for use in features.json
-  if (config.onUrlChange) {
-    try {
-      // Have to look up the filename from the functions directory because we do not know file extension
-      const onUrlChangeFilenames = fs.readdirSync(
-        path.join(
-          projectStructure.config.rootFolders.source,
-          projectStructure.config.subfolders.serverlessFunctions,
-          "onUrlChange"
-        )
-      );
-      const filename = onUrlChangeFilenames.find((name) =>
-        name.includes(config.onUrlChange ?? "")
-      );
-      if (filename) {
-        featureConfigBase.onUrlChange = {
-          pluginName:
-            config.onUrlChange +
-            "-" +
-            unsecureHashPluginName("onUrlChange/" + filename),
-          functionName: "default",
-        };
-      } else {
-        console.warn("Could not find file onUrlChange/" + config.onUrlChange);
-      }
-    } catch (e) {
-      console.warn(
-        `Error resolving onUrlChange plugin name ${config.onUrlChange}:\n${e}`
-      );
-    }
-  }
 
   let featureConfig: FeatureConfig;
   // If the templateConfig does not reference a stream, assume it's a static feature.

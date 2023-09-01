@@ -1,9 +1,10 @@
 import { ViteDevServer } from "vite";
-import { loadTemplateModule } from "./loadTemplateModule.js";
+import { loadViteModule } from "./loadViteModule.js";
 import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../../../common/src/template/internal/types.js";
+import { TemplateModule } from "../../../common/src/template/types.js";
 
 // Determines the template module to load from a given feature name (from the exported config)
 export const findTemplateModuleInternal = async (
@@ -12,7 +13,7 @@ export const findTemplateModuleInternal = async (
   templateFilepaths: string[]
 ): Promise<TemplateModuleInternal<any, any> | null> => {
   for (const templateFilepath of templateFilepaths) {
-    const templateModule = await loadTemplateModule(
+    const templateModule = await loadViteModule<TemplateModule<any, any>>(
       devserver,
       templateFilepath
     );

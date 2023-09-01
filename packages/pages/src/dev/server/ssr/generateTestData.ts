@@ -17,8 +17,9 @@ import {
   TemplateModuleInternal,
 } from "../../../common/src/template/internal/types.js";
 import { ViteDevServer } from "vite";
-import { loadTemplateModule } from "./loadTemplateModule.js";
+import { loadViteModule } from "./loadViteModule.js";
 import { TemplateModuleCollection } from "../../../common/src/template/internal/loader.js";
+import { TemplateModule } from "../../../common/src/template/types.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
@@ -58,10 +59,7 @@ export const generateTestDataForSlug = async (
     vite,
     templateFilepaths
   );
-  const featuresConfig = getFeaturesConfig(
-    templateModuleCollection,
-    projectStructure
-  );
+  const featuresConfig = getFeaturesConfig(templateModuleCollection);
   const featuresConfigForEntityPages: FeaturesConfig = {
     features: featuresConfig.features.filter((f) => "entityPageSet" in f),
     streams: featuresConfig.streams,
@@ -79,7 +77,10 @@ const loadTemplateModuleCollectionUsingVite = async (
 ): Promise<TemplateModuleCollection> => {
   const templateModules: TemplateModuleInternal<any, any>[] = await Promise.all(
     templateFilepaths.map(async (templateFilepath) => {
-      const templateModule = await loadTemplateModule(vite, templateFilepath);
+      const templateModule = await loadViteModule<TemplateModule<any, any>>(
+        vite,
+        templateFilepath
+      );
       return convertTemplateModuleToTemplateModuleInternal(
         templateFilepath,
         templateModule,
