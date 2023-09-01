@@ -1,3 +1,19 @@
+#### 1.0.0-rc.2 (2023-09-01)
+
+##### Chores
+
+* **dev:**  update missing localData message (#381) (2f33ce02)
+*  update changelog (4d8d3d8d)
+
+##### New Features
+
+*  add templates and artifacts generation commands (#383) (4dd8dd1e)
+
+##### Bug Fixes
+
+*  serverless function imports (#384) (d95fa418)
+*  env vars causing error on feature generation (#380) (b8bb7a87)
+
 #### 1.0.0-rc.1 (2023-08-21)
 
 ##### Chores
