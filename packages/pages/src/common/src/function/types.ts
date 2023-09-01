@@ -17,21 +17,21 @@ export type FunctionType = HttpFunction | OnUrlChangeFunction;
  * A function that runs when a specific path is visited on the site.
  * @public
  */
-export type HttpFunction = (arg: HttpFunctionArgument) => HttpFunctionResponse;
+export type HttpFunction = (arg: HttpFunctionRequest) => HttpFunctionResponse;
 
 /**
  * A function that runs when the path of a production page changes.
  * @public
  */
 export type OnUrlChangeFunction = (
-  arg: OnUrlChangeArgument
+  arg: OnUrlChangeRequest
 ) => OnUrlChangeResponse;
 
 /**
  * The argument passed to a http/api type function.
  * @public
  */
-export interface HttpFunctionArgument {
+export interface HttpFunctionRequest {
   /** Object containing each query parameter. */
   queryParams: { [key: string]: string };
   /** Object containing each path parameter. */
@@ -41,7 +41,7 @@ export interface HttpFunctionArgument {
   /** Request headers in the request */
   headers: { [key: string]: string[] };
   /** The body of the request */
-  body: any;
+  body: string;
   /** Site object containing all deploy-related information. */
   site: Site;
 }
@@ -56,14 +56,15 @@ export interface HttpFunctionResponse {
   /** HTTP response status code (refer to MDN Web Docs). */
   statusCode: number;
   /** HTTP response headers (refer to MDN Web Docs).  */
-  headers: object;
+  // TODO: make the value an array when the backend supports it
+  headers: { [key: string]: string };
 }
 
 /**
  * The argument passed to an onUrlChange type plugin.
  * @public
  */
-export interface OnUrlChangeArgument {
+export interface OnUrlChangeRequest {
   /** The domains the site is hosted on. */
   domainMap: {
     /** The production domain. */
