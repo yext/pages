@@ -5,6 +5,7 @@ import esbuild from "esbuild";
 import { COMMON_ESBUILD_LOADERS } from "../../../common/src/loader/esbuild.js";
 import { processEnvVariables } from "../../../util/processEnvVariables.js";
 import { FunctionMetadataParser } from "../../../common/src/function/internal/functionMetadataParser.js";
+import fs from "fs";
 
 /**
  * Returns a mapping of file path (relative to the repo root) to the metadata
@@ -57,4 +58,13 @@ const bundleServerlessFunction = async (
     loader: COMMON_ESBUILD_LOADERS,
     define: processEnvVariables("YEXT_PUBLIC"),
   });
+};
+
+export const shouldBundleServerlessFunctions = (
+  projectStructure: ProjectStructure
+) => {
+  const { rootFolders, subfolders } = projectStructure.config;
+  return fs.existsSync(
+    path.join(rootFolders.source, subfolders.serverlessFunctions)
+  );
 };

@@ -17,7 +17,10 @@ import {
 } from "./functionMetadata.js";
 import { updateCiConfig } from "../../../generate/ci/ci.js";
 import { getFunctionFilepaths } from "../../../common/src/function/internal/getFunctionFilepaths.js";
-import { bundleServerlessFunctions } from "./serverlessFunctions.js";
+import {
+  bundleServerlessFunctions,
+  shouldBundleServerlessFunctions,
+} from "./serverlessFunctions.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -62,33 +65,55 @@ export default (projectStructure: ProjectStructure) => {
      * checks for a default export and then deletes the .js file.
      * The outer try/catch is for validation errors. The inner try/catch is for copy/import errors.
      */
-    finisher = logger.timedLog({ startLog: "Validating functions" });
-    try {
-      const functionFilepaths = getFunctionFilepaths("dist/functions");
-      await Promise.all(
-        functionFilepaths.map(async (filepath) => {
-          const jsFilepath = path.format(filepath).replace(".ts", ".js");
-          try {
-            fs.copyFileSync(path.format(filepath), jsFilepath);
-            const functionModule = await import(
-              pathToFileURL(
-                path.format(filepath).replace(".ts", ".js")
-              ).toString()
-            );
-            if (!functionModule.default) {
-              return Promise.reject(
-                `${path.format(filepath)} is missing a default export.`
+    if (shouldGenerateFunctionMetadata(projectStructure)) {
+      finisher = logger.timedLog({ startLog: "Validating functions" });
+      try {
+        const functionFilepaths = getFunctionFilepaths("dist/functions");
+        await Promise.all(
+          functionFilepaths.map(async (filepath) => {
+            const jsFilepath = path.format(filepath).replace(".ts", ".js");
+            try {
+              fs.copyFileSync(path.format(filepath), jsFilepath);
+              const functionModule = await import(
+                pathToFileURL(
+                  path.format(filepath).replace(".ts", ".js")
+                ).toString()
               );
+              if (!functionModule.default) {
+                return Promise.reject(
+                  `${path.format(filepath)} is missing a default export.`
+                );
+              }
+            } finally {
+              fs.unlinkSync(jsFilepath);
             }
-          } finally {
-            fs.unlinkSync(jsFilepath);
-          }
-        })
-      );
-      finisher.succeed("Validated functions");
-    } catch (e) {
-      finisher.fail("One or more functions failed validation");
-      throw e;
+          })
+        );
+        finisher.succeed("Validated functions");
+      } catch (e) {
+        finisher.fail("One or more functions failed validation");
+        throw e;
+      }
+
+      finisher = logger.timedLog({ startLog: "Writing functionMetadata.json" });
+      try {
+        await generateFunctionMetadataFile(projectStructure);
+        finisher.succeed("Successfully wrote functionMetadata.json");
+      } catch (e: any) {
+        finisher.fail("Failed to write functionMetadata.json");
+        throw new Error(e);
+      }
+    }
+
+    if (shouldBundleServerlessFunctions(projectStructure)) {
+      finisher = logger.timedLog({ startLog: "Bundling serverless functions" });
+      try {
+        await bundleServerlessFunctions(projectStructure);
+        finisher.succeed("Successfully bundled serverless functions");
+      } catch (e: any) {
+        finisher.fail("Failed to bundle serverless functions");
+        throw new Error(e);
+      }
     }
 
     finisher = logger.timedLog({ startLog: "Writing features.json" });
@@ -107,26 +132,6 @@ export default (projectStructure: ProjectStructure) => {
     } catch (e: any) {
       finisher.fail("Failed to write manifest.json");
       throw new Error(e);
-    }
-
-    if (shouldGenerateFunctionMetadata()) {
-      finisher = logger.timedLog({ startLog: "Bundling serverless functions" });
-      try {
-        await bundleServerlessFunctions(projectStructure);
-        finisher.succeed("Successfully bundled serverless functions");
-      } catch (e: any) {
-        finisher.fail("Failed to bundle serverless functions");
-        throw new Error(e);
-      }
-
-      finisher = logger.timedLog({ startLog: "Writing functionMetadata.json" });
-      try {
-        await generateFunctionMetadataFile();
-        finisher.succeed("Successfully wrote functionMetadata.json");
-      } catch (e: any) {
-        finisher.fail("Failed to write functionMetadata.json");
-        throw new Error(e);
-      }
     }
 
     finisher = logger.timedLog({ startLog: "Updating ci.json" });
