@@ -56,8 +56,7 @@ export interface SitesHttpResponse {
   /** HTTP response status code (refer to MDN Web Docs). */
   statusCode: number;
   /** HTTP response headers (refer to MDN Web Docs).  */
-  // TODO: make the value an array when the backend supports it
-  headers: { [key: string]: string };
+  headers: { [key: string]: string } | { [key: string]: [string] };
 }
 
 /**
