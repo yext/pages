@@ -11,6 +11,7 @@ import {
   TemplateProps,
   TemplateRenderProps,
 } from "../types.js";
+import path from "node:path";
 import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal.js";
 
 /**
@@ -104,7 +105,7 @@ export const parse = (
   filepath: string,
   adjustForFingerprintedAsset: boolean
 ) => {
-  let base = filepath.split("/")[filepath.split("/").length - 1];
+  let base = filepath.split(path.sep)[filepath.split(path.sep).length - 1];
   const extension = base.slice(base.lastIndexOf("."));
   let name = base.slice(0, base.lastIndexOf("."));
 

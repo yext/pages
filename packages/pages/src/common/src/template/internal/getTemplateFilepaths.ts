@@ -6,6 +6,7 @@ import { ProjectStructure } from "../../project/structure.js";
 import { ClientServerRenderTemplates } from "../types.js";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
+import { convertToPosixPath } from "../paths.js";
 
 /**
  * Get all the template files in the provided template folder path(s).
@@ -21,7 +22,9 @@ export const getTemplateFilepaths = (paths: Path[]): string[] => {
   const templateFilepaths: string[] = [];
   const addedFilenames: Set<string> = new Set();
   paths.forEach((p) => {
-    const filepaths = globSync(`${p.getAbsolutePath()}/*.{tsx,jsx,js,ts}`);
+    const filepaths = globSync(
+      convertToPosixPath(`${p.getAbsolutePath()}/*.{tsx,jsx,js,ts}`)
+    );
     filepaths
       // Don't include the client/server rendering templates
       .filter(

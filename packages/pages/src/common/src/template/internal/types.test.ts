@@ -3,6 +3,7 @@ import {
   TemplateModuleInternal,
 } from "./types.js";
 import { Template, TemplateModule } from "../types.js";
+import { convertToOSPath } from "../paths.js";
 
 describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () => {
   it("uses the filename as the config name when not set", async () => {
@@ -22,7 +23,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
-        "src/templates/myTemplateName.tsx",
+        convertToOSPath("src/templates/myTemplateName.tsx"),
         templateModule,
         false
       );
@@ -40,7 +41,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         hydrate: false,
         streamId: "$id",
       },
-      path: "src/templates/myTemplateName.tsx",
+      path: convertToOSPath("src/templates/myTemplateName.tsx"),
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
     };
@@ -63,7 +64,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
-        "src/templates/myTemplateName.tsx",
+        convertToOSPath("src/templates/myTemplateName.tsx"),
         templateModule,
         false
       );
@@ -76,7 +77,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         hydrate: false,
         streamId: "$id",
       },
-      path: "src/templates/myTemplateName.tsx",
+      path: convertToOSPath("src/templates/myTemplateName.tsx"),
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
     };
@@ -98,7 +99,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
-        "src/templates/myTemplateName.0ab33d.tsx",
+        convertToOSPath("src/templates/myTemplateName.0ab33d.tsx"),
         templateModule,
         true
       );
@@ -111,7 +112,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         hydrate: false,
         streamId: "$id",
       },
-      path: "src/templates/myTemplateName.0ab33d.tsx",
+      path: convertToOSPath("src/templates/myTemplateName.0ab33d.tsx"),
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
     };
@@ -137,7 +138,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
-        "src/templates/myTemplateName.tsx",
+        convertToOSPath("src/templates/myTemplateName.tsx"),
         templateModule,
         false
       );
@@ -155,7 +156,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         hydrate: true,
         streamId: "$id",
       },
-      path: "src/templates/myTemplateName.tsx",
+      path: convertToOSPath("src/templates/myTemplateName.tsx"),
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
     };
@@ -182,7 +183,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
-        "src/templates/myTemplateName.tsx",
+        convertToOSPath("src/templates/myTemplateName.tsx"),
         templateModule,
         false
       );
@@ -200,7 +201,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         hydrate: false,
         streamId: "$id",
       },
-      path: "src/templates/myTemplateName.tsx",
+      path: convertToOSPath("src/templates/myTemplateName.tsx"),
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
     };
