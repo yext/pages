@@ -42,10 +42,12 @@ export class FunctionMetadataParser {
     const testsPath = path.join("tests", "fixtures", "src", "functions");
 
     // The path after /src/functions
-    const relativePath = absolutePathToFunction.split(`/${sourcePath}/`)[1];
+    const relativePath = absolutePathToFunction.split(
+      `${path.sep}${sourcePath}${path.sep}`
+    )[1];
 
     // Should be onUrlChange or http
-    const functionType = relativePath.split("/")[0];
+    const functionType = relativePath.split(path.sep)[0];
     if (!validFunctionTypes.find((ft) => ft === functionType)) {
       throw new Error(
         `Cannot load ${absolutePathToFunction}.\n` +
@@ -64,7 +66,7 @@ export class FunctionMetadataParser {
 
     if (
       functionType === "onUrlChange" &&
-      relativePath.split("/").length > 2 &&
+      relativePath.split(path.sep).length > 2 &&
       functionsRoot !== distPath
     ) {
       throw new Error(
@@ -76,7 +78,7 @@ export class FunctionMetadataParser {
 
     // Slug is defined by the path and filename
     const defaultSlug = relativePath
-      .replace(`${functionType}/`, "")
+      .replace(`${functionType}${path.sep}`, "")
       .split(".")
       .slice(0, -1)
       .join(".");
