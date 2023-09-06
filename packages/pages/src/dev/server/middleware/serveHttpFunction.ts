@@ -17,7 +17,7 @@ export const serveHttpFunction = async (
     pathParams: req.params,
     method: req.method,
     headers: req.headers as { [p: string]: string[] },
-    body: req.body,
+    body: JSON.stringify(req.body),
     site: mockSiteInfo,
   };
 
