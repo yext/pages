@@ -1,7 +1,5 @@
 import path from "node:path";
 
-const winSep = "\\";
-
 /**
  * Function that takes a path to a generated template and returns the
  * relative path to the root of the site. Will return the empty string
@@ -23,12 +21,5 @@ export const getRelativePrefixToRootFromPath = (path: string): string => {
  * paths are supported with import.
  */
 export const convertToPosixPath = (p: string) => {
-  return p.split(winSep).join(path.posix.sep);
-};
-
-/**
- * Convert any path to match the format of the OS. If it already matches no change occurs.
- */
-export const convertToOSPath = (p: string) => {
-  return p.split(path.posix.sep).join(path.sep).split(winSep).join(path.sep);
+  return p.split(path.sep).join(path.posix.sep);
 };
