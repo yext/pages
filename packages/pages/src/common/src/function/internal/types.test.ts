@@ -10,7 +10,6 @@ import {
 } from "../types.js";
 import { mockSiteInfo } from "../../../../dev/server/middleware/serveHttpFunction.js";
 import { ProjectStructure } from "../../project/structure.js";
-import { convertToOSPath } from "../../template/paths.js";
 
 const exampleReturnValue: SitesHttpResponse = {
   body: "Hello World",
@@ -52,9 +51,7 @@ const exampleOnUrlChangeArgument: SitesOnUrlChangeRequest = {
 };
 
 const createMockFilePath = (filepath: string): path.ParsedPath => {
-  return path.parse(
-    path.resolve(convertToOSPath(path.join("src/functions/", filepath)))
-  );
+  return path.parse(path.resolve(path.join("src", "functions", filepath)));
 };
 
 describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () => {
@@ -66,7 +63,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath("http/api/example.ts"),
+        createMockFilePath(path.join("http", "api", "example.ts")),
         functionModule,
         projectStructure
       );
@@ -78,15 +75,15 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       },
       filePath: {
         root: path.resolve("/"),
-        dir: convertToOSPath(process.cwd() + "/src/functions/http/api"),
+        dir: path.join(process.cwd(), "src", "functions", "http", "api"),
         base: "example.ts",
         ext: ".ts",
         name: "example",
       },
       slug: {
-        original: convertToOSPath("api/example"),
-        dev: convertToOSPath("api/example"),
-        production: convertToOSPath("api/example"),
+        original: path.join("api", "example"),
+        dev: path.join("api", "example"),
+        production: path.join("api", "example"),
       },
     };
     expect(JSON.stringify(functionModuleInternal)).toEqual(
@@ -110,7 +107,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath("onUrlChange/example.ts"),
+        createMockFilePath(path.join("onUrlChange", "example.ts")),
         functionModule,
         projectStructure
       );
@@ -122,7 +119,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       },
       filePath: {
         root: path.resolve("/"),
-        dir: convertToOSPath(process.cwd() + "/src/functions/onUrlChange"),
+        dir: path.join(process.cwd(), "src", "functions", "onUrlChange"),
         base: "example.ts",
         ext: ".ts",
         name: "example",
@@ -152,7 +149,9 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath("http/api/example/[testParam].ts"),
+        createMockFilePath(
+          path.join("http", "api", "example", "[testParam].ts")
+        ),
         functionModule,
         projectStructure
       );
@@ -164,15 +163,22 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       },
       filePath: {
         root: path.resolve("/"),
-        dir: convertToOSPath(process.cwd() + "/src/functions/http/api/example"),
+        dir: path.join(
+          process.cwd(),
+          "src",
+          "functions",
+          "http",
+          "api",
+          "example"
+        ),
         base: "[testParam].ts",
         ext: ".ts",
         name: "[testParam]",
       },
       slug: {
-        original: convertToOSPath("api/example/[testParam]"),
-        dev: convertToOSPath("api/example/:testParam"),
-        production: convertToOSPath("api/example/{{testParam}}"),
+        original: path.join("api", "example", "[testParam]"),
+        dev: path.join("api", "example", ":testParam"),
+        production: path.join("api", "example", "{{testParam}}"),
       },
     };
     expect(JSON.stringify(functionModuleInternal)).toEqual(

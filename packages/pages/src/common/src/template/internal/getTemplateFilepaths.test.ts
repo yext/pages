@@ -2,21 +2,20 @@ import path from "path";
 import { getTemplateFilepaths } from "./getTemplateFilepaths.js";
 import { minimatch } from "minimatch";
 import { Path } from "../../project/path.js";
-import { convertToOSPath } from "../paths.js";
 
-const rootPath = "src/templates";
-const domain1Path = "src/templates/some.domain1.com";
-const domain2Path = "src/templates/some.domain2.com";
+const rootPath = path.join("src", "templates");
+const domain1Path = path.join("src", "templates", "some.domain1.com");
+const domain2Path = path.join("src", "templates", "some.domain2.com");
 jest.mock("glob", () => {
   return {
     globSync: (glob: string) => {
       const filepaths = [
-        convertToOSPath(`${domain1Path}/brand1.tsx`),
-        convertToOSPath(`${domain1Path}/test.tsx`),
-        convertToOSPath(`${domain2Path}/brand2.tsx`),
-        convertToOSPath(`${domain2Path}/test.tsx`),
-        convertToOSPath(`${rootPath}/share.tsx`),
-        convertToOSPath(`${rootPath}/test.tsx`),
+        path.join(domain1Path, "brand1.tsx"),
+        path.join(domain1Path, "test.tsx"),
+        path.join(domain2Path, "brand2.tsx"),
+        path.join(domain2Path, "test.tsx"),
+        path.join(rootPath, "share.tsx"),
+        path.join(rootPath, "test.tsx"),
       ];
       return filepaths.filter((f) => minimatch(path.resolve(f), glob));
     },
@@ -26,13 +25,10 @@ jest.mock("glob", () => {
 describe("getTemplateFilepaths", () => {
   it("collects all template files from root folder path", () => {
     const templatesFilepath = getTemplateFilepaths([
-      new Path(convertToOSPath(path.join(process.cwd(), rootPath))),
+      new Path(path.join(process.cwd(), rootPath)),
     ]);
     expect(templatesFilepath.sort()).toEqual(
-      [
-        convertToOSPath(`${rootPath}/share.tsx`),
-        convertToOSPath(`${rootPath}/test.tsx`),
-      ].sort()
+      [path.join(rootPath, "share.tsx"), path.join(rootPath, "test.tsx")].sort()
     );
   });
 
@@ -43,9 +39,9 @@ describe("getTemplateFilepaths", () => {
     ]);
     expect(templatesFilepath.sort()).toEqual(
       [
-        convertToOSPath(`${rootPath}/share.tsx`),
-        convertToOSPath(`${domain1Path}/test.tsx`),
-        convertToOSPath(`${domain1Path}/brand1.tsx`),
+        path.join(rootPath, "share.tsx"),
+        path.join(domain1Path, "test.tsx"),
+        path.join(domain1Path, "brand1.tsx"),
       ].sort()
     );
   });

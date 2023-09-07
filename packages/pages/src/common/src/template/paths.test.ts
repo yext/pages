@@ -1,5 +1,4 @@
 import {
-  convertToOSPath,
   convertToPosixPath,
   getRelativePrefixToRootFromPath,
 } from "../../src/template/paths.js";
@@ -29,20 +28,6 @@ describe("getRelativePrefixToRootFromPath", () => {
     expect(getRelativePrefixToRootFromPath(p)).toEqual(
       expectedRelativePathPrefix
     );
-  });
-
-  it("convert to OS path", async () => {
-    if (path.sep === path.posix.sep) {
-      expect(convertToOSPath(relativePath)).toEqual(relativePath);
-      expect(convertToOSPath(relativeWinPath)).toEqual(relativePath);
-      expect(convertToOSPath(absolutePath)).toEqual(absolutePath);
-      expect(convertToOSPath(absoluteWinPath)).toEqual(absolutePath);
-    } else {
-      expect(convertToOSPath(relativePath)).toEqual("spaghetti\\meatballs");
-      expect(convertToOSPath(relativeWinPath)).toEqual(relativeWinPath);
-      expect(convertToOSPath(absolutePath)).toEqual(absoluteWinPath);
-      expect(convertToOSPath(absoluteWinPath)).toEqual(absoluteWinPath);
-    }
   });
 
   it("convert to posix path", async () => {

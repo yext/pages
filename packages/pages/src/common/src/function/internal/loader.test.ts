@@ -1,7 +1,8 @@
 import path from "path";
 import { loadFunctionModules, FunctionModuleCollection } from "./loader.js";
 import { ProjectStructure } from "../../project/structure.js";
-import { convertToOSPath } from "../../template/paths.js";
+
+const httpPath = path.join("tests", "fixtures", "src", "functions", "http");
 
 // our jest configuration doesn't support file urls so update pathToFileURL to do nothing during
 // this test.
@@ -27,9 +28,7 @@ describe("loadTemplateModules", () => {
 
   it("loads and transpiles raw templates", async () => {
     const functionFile: path.ParsedPath[] = [
-      path.parse(
-        convertToOSPath("tests/fixtures/src/functions/http/[param].ts")
-      ),
+      path.parse(path.join(httpPath, "[param].ts")),
     ];
 
     const functionModules = await loadFunctionModules(
@@ -42,7 +41,7 @@ describe("loadTemplateModules", () => {
 
   it("loads transpiled templates", async () => {
     const functionFile: path.ParsedPath[] = [
-      path.parse(path.resolve("tests/fixtures/src/functions/http/[param].js")),
+      path.parse(path.resolve(path.join(httpPath, "[param].js"))),
     ];
     const functionModules = await loadFunctionModules(
       functionFile,
