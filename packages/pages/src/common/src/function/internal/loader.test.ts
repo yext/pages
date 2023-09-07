@@ -36,7 +36,11 @@ describe("loadTemplateModules", () => {
       true,
       projectStructure
     );
-    commonTests(functionModules, "param-19926");
+    if (path.sep === path.posix.sep) {
+      commonTests(functionModules, "param-47543");
+    } else {
+      commonTests(functionModules, "param-19926");
+    }
   });
 
   it("loads transpiled templates", async () => {
@@ -48,7 +52,11 @@ describe("loadTemplateModules", () => {
       false,
       projectStructure
     );
-    commonTests(functionModules, "param-19616");
+    if (path.sep === path.posix.sep) {
+      commonTests(functionModules, "param-47853");
+    } else {
+      commonTests(functionModules, "param-19616");
+    }
   });
 
   const commonTests = (

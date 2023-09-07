@@ -69,7 +69,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "example-23673",
+        name: "example-01535",
         functionName: "default",
         event: "API",
       },
@@ -86,6 +86,9 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         production: path.join("api", "example"),
       },
     };
+    if (path.sep !== path.posix.sep) {
+      expected.config.name = "example-23673";
+    }
     expect(JSON.stringify(functionModuleInternal)).toEqual(
       JSON.stringify(expected)
     );
@@ -113,7 +116,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "example-11807",
+        name: "example-55662",
         functionName: "default",
         event: "ON_URL_CHANGE",
       },
@@ -130,6 +133,9 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         production: "example",
       },
     };
+    if (path.sep !== path.posix.sep) {
+      expected.config.name = "example-11807";
+    }
     expect(JSON.stringify(functionModuleInternal)).toEqual(
       JSON.stringify(expected)
     );
@@ -157,7 +163,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       );
     const expected = {
       config: {
-        name: "testParam-61704",
+        name: "testParam-00975",
         functionName: "default",
         event: "API",
       },
@@ -181,6 +187,9 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         production: path.join("api", "example", "{{testParam}}"),
       },
     };
+    if (path.sep !== path.posix.sep) {
+      expected.config.name = "testParam-61704";
+    }
     expect(JSON.stringify(functionModuleInternal)).toEqual(
       JSON.stringify(expected)
     );
