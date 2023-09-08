@@ -21,5 +21,5 @@ export const getRelativePrefixToRootFromPath = (path: string): string => {
  * paths are supported with import.
  */
 export const convertToPosixPath = (p: string) => {
-  return p.split("\\").join(path.posix.sep);
+  return p.split(path.sep).join(path.posix.sep);
 };

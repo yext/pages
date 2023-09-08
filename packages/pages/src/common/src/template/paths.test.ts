@@ -5,10 +5,10 @@ import {
 import path from "node:path";
 
 describe("getRelativePrefixToRootFromPath", () => {
-  const relativePath = "spaghetti/meatballs";
-  const relativeWinPath = "spaghetti\\meatballs";
-  const absolutePath = "/enchilada/burrito/taco";
-  const absoluteWinPath = "\\enchilada\\burrito\\taco";
+  const relativePosixPath = "spaghetti/meatballs";
+  const relativeOSPath = `spaghetti${path.sep}meatballs`;
+  const absolutePosixPath = "/enchilada/burrito/taco";
+  const absoluteOSPath = `${path.sep}enchilada${path.sep}burrito${path.sep}taco`;
 
   it("properly returns the empty string when on root level", async () => {
     const path = "foobar.txt";
@@ -31,9 +31,9 @@ describe("getRelativePrefixToRootFromPath", () => {
   });
 
   it("convert to posix path", async () => {
-    expect(convertToPosixPath(relativePath)).toEqual(relativePath);
-    expect(convertToPosixPath(relativeWinPath)).toEqual(relativePath);
-    expect(convertToPosixPath(absolutePath)).toEqual(absolutePath);
-    expect(convertToPosixPath(absoluteWinPath)).toEqual(absolutePath);
+    expect(convertToPosixPath(relativePosixPath)).toEqual(relativePosixPath);
+    expect(convertToPosixPath(relativeOSPath)).toEqual(relativePosixPath);
+    expect(convertToPosixPath(absolutePosixPath)).toEqual(absolutePosixPath);
+    expect(convertToPosixPath(absoluteOSPath)).toEqual(absolutePosixPath);
   });
 });
