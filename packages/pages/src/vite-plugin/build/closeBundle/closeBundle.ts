@@ -10,7 +10,6 @@ import {
   loadTemplateModules,
   TemplateModuleCollection,
 } from "../../../common/src/template/internal/loader.js";
-import { createFeaturesJson } from "../../../generate/features/createFeaturesJson.js";
 import {
   generateFunctionMetadataFile,
   shouldGenerateFunctionMetadata,
@@ -21,6 +20,7 @@ import {
   bundleServerlessFunctions,
   shouldBundleServerlessFunctions,
 } from "./serverlessFunctions.js";
+import { createFeaturesJson } from "../../../generate/templates/createTemplatesJsonFromModule.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {

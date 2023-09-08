@@ -10,7 +10,6 @@ import {
 import path from "path";
 import fs from "fs";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
-import { getFeaturesConfig } from "../../../generate/features/createFeaturesJson.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import {
   convertTemplateModuleToTemplateModuleInternal,
@@ -20,6 +19,7 @@ import { ViteDevServer } from "vite";
 import { loadViteModule } from "./loadViteModule.js";
 import { TemplateModuleCollection } from "../../../common/src/template/internal/loader.js";
 import { TemplateModule } from "../../../common/src/template/types.js";
+import { getFeaturesConfig } from "../../../generate/templates/createTemplatesJsonFromModule.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in

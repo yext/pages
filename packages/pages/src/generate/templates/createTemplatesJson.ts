@@ -5,22 +5,102 @@ import {
   FeatureConfig,
   convertTemplateConfigToFeatureConfig,
 } from "../../common/src/feature/features.js";
-import { TemplateModuleCollection } from "../../common/src/template/internal/loader.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import {
   StreamConfig,
   convertTemplateConfigToStreamConfig,
 } from "../../common/src/feature/stream.js";
+import SourceFileParser, {
+  createTsMorphProject,
+} from "../../common/src/parsers/sourceFileParser.js";
+import TemplateConfigParser from "../../common/src/parsers/templateConfigParser.js";
+import {
+  convertTemplateConfigToTemplateConfigInternal,
+  parse,
+} from "../../common/src/template/internal/types.js";
 
-export const getTemplatesConfig = (
-  templateModules: TemplateModuleCollection
-): FeaturesConfig => {
+/**
+ * Generates a templates.json or features.json from the templates.
+ */
+export const createTemplatesJson = (
+  templateFilepaths: string[],
+  projectStructure: ProjectStructure,
+  type: "FEATURES" | "TEMPLATES"
+): void => {
+  // Note: the object used to be known as "features" but it's been changed to "templates".
+  // We're allowing the generation of a features.json file still for backwards compatibility,
+  // which is why all of the types have not yet been renamed.
+  const { features, streams } = getTemplatesConfig(templateFilepaths);
+  let templatesAbsolutePath;
+
+  switch (type) {
+    case "FEATURES":
+      templatesAbsolutePath = path.resolve(
+        projectStructure.getSitesConfigPath().path,
+        projectStructure.config.sitesConfigFiles.features
+      );
+      break;
+    case "TEMPLATES":
+      templatesAbsolutePath = path.resolve(
+        projectStructure.config.rootFolders.dist,
+        projectStructure.config.distConfigFiles.templates
+      );
+      break;
+  }
+
+  const templatesDir = path.dirname(templatesAbsolutePath);
+  if (!fs.existsSync(templatesDir)) {
+    fs.mkdirSync(templatesDir);
+  }
+
+  // features.json is merged with the existing data a user can set. For templates.json the extra
+  // data is defined in config.yaml, so the merging is unncessary there.
+  let templatesJson;
+  switch (type) {
+    case "FEATURES":
+      templatesJson = mergeFeatureJson(
+        templatesAbsolutePath,
+        features,
+        streams
+      );
+      break;
+    case "TEMPLATES":
+      templatesJson = { features, streams };
+      break;
+  }
+
+  fs.writeFileSync(
+    templatesAbsolutePath,
+    JSON.stringify(templatesJson, null, "  ")
+  );
+};
+
+/**
+ * Uses ts-morph to parse out the config function of each template.
+ */
+const getTemplatesConfig = (templateFilepaths: string[]): FeaturesConfig => {
   const features: FeatureConfig[] = [];
   const streams: StreamConfig[] = [];
-  for (const module of templateModules.values()) {
-    const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
+  for (const templateFilepath of templateFilepaths) {
+    const sfp = new SourceFileParser(templateFilepath, createTsMorphProject());
+    const tcp = new TemplateConfigParser(sfp);
+
+    const templateConfig = tcp.getTemplateConfig();
+    const templatePath = parse(templateFilepath, false);
+
+    const templateConfigInternal =
+      convertTemplateConfigToTemplateConfigInternal(
+        templatePath.name,
+        templateConfig
+      );
+
+    const featureConfig = convertTemplateConfigToFeatureConfig(
+      templateConfigInternal
+    );
     features.push(featureConfig);
-    const streamConfig = convertTemplateConfigToStreamConfig(module.config);
+    const streamConfig = convertTemplateConfigToStreamConfig(
+      templateConfigInternal
+    );
     if (streamConfig) {
       streams.push(streamConfig);
     }
@@ -30,28 +110,22 @@ export const getTemplatesConfig = (
 };
 
 /**
- * Generates a templates.json from the templates.
+ * Overwrites the "features" and "streams" fields in the feature.json while keeping other fields
+ * if the feature.json already exists.
  */
-export const createTemplatesJson = (
-  templateModules: TemplateModuleCollection,
-  projectStructure: ProjectStructure
-): void => {
-  // Note: the object used to be known as "features" but it's been changed to "templates".
-  // We're allowing the generation of a features.json file still for backwards compatibility,
-  // which is why all of the types have not yet been renamed.
-  const { features, streams } = getTemplatesConfig(templateModules);
-  const templatesAbsolutePath = path.resolve(
-    projectStructure.config.rootFolders.dist,
-    projectStructure.config.distConfigFiles.templates
-  );
-
-  const templatesDir = path.dirname(templatesAbsolutePath);
-  if (!fs.existsSync(templatesDir)) {
-    fs.mkdirSync(templatesDir);
+export const mergeFeatureJson = (
+  featurePath: string,
+  features: FeatureConfig[],
+  streams: any
+): FeaturesConfig => {
+  let originalFeaturesJson = {} as any;
+  if (fs.existsSync(featurePath)) {
+    originalFeaturesJson = JSON.parse(fs.readFileSync(featurePath).toString());
   }
 
-  fs.writeFileSync(
-    templatesAbsolutePath,
-    JSON.stringify({ features, streams }, null, "  ")
-  );
+  return {
+    ...originalFeaturesJson,
+    features,
+    streams,
+  };
 };
