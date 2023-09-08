@@ -1,6 +1,5 @@
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { getTemplateFilepaths } from "../../common/src/template/internal/getTemplateFilepaths.js";
-import { loadTemplateModules } from "../../common/src/template/internal/loader.js";
 import { createTemplatesJson } from "./createTemplatesJson.js";
 import { Command } from "commander";
 
@@ -9,13 +8,8 @@ const handler = async ({ scope }: { scope: string }): Promise<void> => {
   const templateFilepaths = getTemplateFilepaths(
     projectStructure.getTemplatePaths()
   );
-  const templateModules = await loadTemplateModules(
-    templateFilepaths,
-    true,
-    false
-  );
 
-  createTemplatesJson(templateModules, projectStructure);
+  createTemplatesJson(templateFilepaths, projectStructure, "TEMPLATES");
 };
 
 export const templatesCommand = (program: Command) => {

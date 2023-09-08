@@ -146,7 +146,7 @@ export const convertTemplateModuleToTemplateModuleInternal = (
   return templateModuleInternal;
 };
 
-const convertTemplateConfigToTemplateConfigInternal = (
+export const convertTemplateConfigToTemplateConfigInternal = (
   templateName: string,
   templateConfig: TemplateConfig | undefined
 ): TemplateConfigInternal => {
