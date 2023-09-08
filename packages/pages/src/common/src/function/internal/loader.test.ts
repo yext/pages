@@ -2,8 +2,6 @@ import path from "path";
 import { loadFunctionModules, FunctionModuleCollection } from "./loader.js";
 import { ProjectStructure } from "../../project/structure.js";
 
-const httpPath = path.join("tests", "fixtures", "src", "functions", "http");
-
 // our jest configuration doesn't support file urls so update pathToFileURL to do nothing during
 // this test.
 jest.mock("url", () => {
@@ -28,7 +26,7 @@ describe("loadTemplateModules", () => {
 
   it("loads and transpiles raw templates", async () => {
     const functionFile: path.ParsedPath[] = [
-      path.parse(path.join(httpPath, "[param].ts")),
+      path.parse(path.resolve("tests/fixtures/src/functions/http/[param].ts")),
     ];
 
     const functionModules = await loadFunctionModules(
@@ -36,27 +34,19 @@ describe("loadTemplateModules", () => {
       true,
       projectStructure
     );
-    if (path.sep === path.posix.sep) {
-      commonTests(functionModules, "param-47543");
-    } else {
-      commonTests(functionModules, "param-19926");
-    }
+    commonTests(functionModules, "param-47543");
   });
 
   it("loads transpiled templates", async () => {
     const functionFile: path.ParsedPath[] = [
-      path.parse(path.resolve(path.join(httpPath, "[param].js"))),
+      path.parse(path.resolve("tests/fixtures/src/functions/http/[param].js")),
     ];
     const functionModules = await loadFunctionModules(
       functionFile,
       false,
       projectStructure
     );
-    if (path.sep === path.posix.sep) {
-      commonTests(functionModules, "param-47853");
-    } else {
-      commonTests(functionModules, "param-19616");
-    }
+    commonTests(functionModules, "param-47853");
   });
 
   const commonTests = (

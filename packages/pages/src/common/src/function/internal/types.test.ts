@@ -86,9 +86,6 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         production: path.join("api", "example"),
       },
     };
-    if (path.sep !== path.posix.sep) {
-      expected.config.name = "example-23673";
-    }
     expect(JSON.stringify(functionModuleInternal)).toEqual(
       JSON.stringify(expected)
     );
@@ -133,9 +130,6 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         production: "example",
       },
     };
-    if (path.sep !== path.posix.sep) {
-      expected.config.name = "example-11807";
-    }
     expect(JSON.stringify(functionModuleInternal)).toEqual(
       JSON.stringify(expected)
     );
@@ -187,9 +181,6 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         production: path.join("api", "example", "{{testParam}}"),
       },
     };
-    if (path.sep !== path.posix.sep) {
-      expected.config.name = "testParam-61704";
-    }
     expect(JSON.stringify(functionModuleInternal)).toEqual(
       JSON.stringify(expected)
     );

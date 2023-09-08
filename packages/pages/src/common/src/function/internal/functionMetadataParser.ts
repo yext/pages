@@ -1,5 +1,6 @@
 import { ProjectStructure } from "../../project/structure.js";
 import path from "node:path";
+import { convertToPosixPath } from "../../template/paths.js";
 
 // type functionType = typeof validFunctionTypes[number];
 const validFunctionTypes = ["onUrlChange", "http"];
@@ -113,9 +114,10 @@ export class FunctionMetadataParser {
  * @returns A five-character string of the hash.
  */
 const unsecureHashPluginName = (input: string): string => {
+  const posixPath = convertToPosixPath(input);
   let hash = 0;
-  for (let i = 0; i < input.length; i++) {
-    const code = input.charCodeAt(i);
+  for (let i = 0; i < posixPath.length; i++) {
+    const code = posixPath.charCodeAt(i);
     hash = (hash << 5) - hash + code;
     hash = hash & hash; // Convert to 32bit integer
   }
