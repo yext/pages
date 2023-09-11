@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { PluginContext, EmitFile } from "rollup";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { Path } from "../../../common/src/project/path.js";
+import { convertToPosixPath } from "../../../common/src/template/paths.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async function (this: PluginContext): Promise<void> {
@@ -43,7 +44,7 @@ const copyPluginFiles = (fileEmitter: EmitFile) => {
 
   // We must use path.resolve to reconcile filepaths on Windows as glob returns filepaths with forward slashes by default.
   const pluginFiles = glob
-    .sync(`${pathToPluginsDir}/*.ts`)
+    .sync(convertToPosixPath(`${pathToPluginsDir}/*.ts`))
     .map((f) => path.resolve(f));
 
   if (pluginFiles.length == 0) {
@@ -52,7 +53,7 @@ const copyPluginFiles = (fileEmitter: EmitFile) => {
   }
 
   pluginFiles.forEach((filepath) => {
-    const filename = path.join("plugin", path.basename(filepath));
+    const filename = path.posix.join("plugin", path.basename(filepath));
     fileEmitter({
       type: "asset",
       fileName: filename,

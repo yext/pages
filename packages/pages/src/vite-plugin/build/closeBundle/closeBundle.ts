@@ -21,6 +21,7 @@ import {
   shouldBundleServerlessFunctions,
 } from "./serverlessFunctions.js";
 import { createFeaturesJson } from "../../../generate/templates/createTemplatesJsonFromModule.js";
+import { convertToPosixPath } from "../../../common/src/template/paths.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -31,13 +32,15 @@ export default (projectStructure: ProjectStructure) => {
 
     try {
       const serverBundles = glob.sync(
-        path.join(
-          path.resolve(
-            rootFolders.dist,
-            subfolders.assets,
-            subfolders.serverBundle
-          ),
-          "**/*.js"
+        convertToPosixPath(
+          path.join(
+            path.resolve(
+              rootFolders.dist,
+              subfolders.assets,
+              subfolders.serverBundle
+            ),
+            "**/*.js"
+          )
         ),
         {
           ignore: path.join(
@@ -68,7 +71,9 @@ export default (projectStructure: ProjectStructure) => {
     if (shouldGenerateFunctionMetadata(projectStructure)) {
       finisher = logger.timedLog({ startLog: "Validating functions" });
       try {
-        const functionFilepaths = getFunctionFilepaths("dist/functions");
+        const functionFilepaths = getFunctionFilepaths(
+          path.join("dist", "functions")
+        );
         await Promise.all(
           functionFilepaths.map(async (filepath) => {
             const jsFilepath = path.format(filepath).replace(".ts", ".js");
