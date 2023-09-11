@@ -29,11 +29,13 @@ export const generateManifestFile = (
 
   // Add the renderPaths to the manifest. This defines the _client and _server entries.
   const renderPaths = glob.sync(
-    path.resolve(
-      projectStructure.config.rootFolders.dist,
-      projectStructure.config.subfolders.assets,
-      projectStructure.config.subfolders.renderBundle,
-      "**/*.js"
+    convertToPosixPath(
+      path.resolve(
+        projectStructure.config.rootFolders.dist,
+        projectStructure.config.subfolders.assets,
+        projectStructure.config.subfolders.renderBundle,
+        "**/*.js"
+      )
     )
   );
 

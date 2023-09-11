@@ -1,4 +1,3 @@
-import { WriteStream } from "tty";
 import { generateTestDataForPage } from "./generateTestData.js";
 import { EventEmitter } from "stream";
 import {
@@ -18,7 +17,7 @@ import {
 import { Socket } from "net";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 
-const mockParentProcessStdout = jest.mocked(new WriteStream(0));
+const mockParentProcessStdout = jest.mocked(process.stdout);
 mockParentProcessStdout.write = jest.fn();
 
 const mockChildProcessEventEmitter = new EventEmitter();

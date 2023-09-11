@@ -3,6 +3,9 @@ import {
   TemplateModuleInternal,
 } from "./types.js";
 import { Template, TemplateModule } from "../types.js";
+import path from "path";
+
+const myTemplateNamePath = path.join("src", "templates", "myTemplateName.tsx");
 
 describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () => {
   it("uses the filename as the config name when not set", async () => {
@@ -22,7 +25,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
-        "src/templates/myTemplateName.tsx",
+        myTemplateNamePath,
         templateModule,
         false
       );
@@ -40,7 +43,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         hydrate: false,
         streamId: "$id",
       },
-      path: "src/templates/myTemplateName.tsx",
+      path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
     };
@@ -63,7 +66,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
-        "src/templates/myTemplateName.tsx",
+        myTemplateNamePath,
         templateModule,
         false
       );
@@ -76,7 +79,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         hydrate: false,
         streamId: "$id",
       },
-      path: "src/templates/myTemplateName.tsx",
+      path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
     };
@@ -98,7 +101,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
-        "src/templates/myTemplateName.0ab33d.tsx",
+        path.join("src", "templates", "myTemplateName.0ab33d.tsx"),
         templateModule,
         true
       );
@@ -111,7 +114,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         hydrate: false,
         streamId: "$id",
       },
-      path: "src/templates/myTemplateName.0ab33d.tsx",
+      path: path.join("src", "templates", "myTemplateName.0ab33d.tsx"),
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
     };
@@ -137,7 +140,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
-        "src/templates/myTemplateName.tsx",
+        myTemplateNamePath,
         templateModule,
         false
       );
@@ -155,7 +158,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         hydrate: true,
         streamId: "$id",
       },
-      path: "src/templates/myTemplateName.tsx",
+      path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
     };
@@ -182,7 +185,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
 
     const templateConfigInternal =
       convertTemplateModuleToTemplateModuleInternal(
-        "src/templates/myTemplateName.tsx",
+        myTemplateNamePath,
         templateModule,
         false
       );
@@ -200,7 +203,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         hydrate: false,
         streamId: "$id",
       },
-      path: "src/templates/myTemplateName.tsx",
+      path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
     };

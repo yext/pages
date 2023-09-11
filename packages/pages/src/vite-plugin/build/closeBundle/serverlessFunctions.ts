@@ -6,6 +6,7 @@ import { COMMON_ESBUILD_LOADERS } from "../../../common/src/loader/esbuild.js";
 import { processEnvVariables } from "../../../util/processEnvVariables.js";
 import { FunctionMetadataParser } from "../../../common/src/function/internal/functionMetadataParser.js";
 import fs from "fs";
+import { convertToPosixPath } from "../../../common/src/template/paths.js";
 
 /**
  * Returns a mapping of file path (relative to the repo root) to the metadata
@@ -20,10 +21,12 @@ export const bundleServerlessFunctions = async (
 
   const filepaths = glob
     .sync(
-      path.join(
-        rootFolders.source,
-        subfolders.serverlessFunctions,
-        "**/*.{js,ts}"
+      convertToPosixPath(
+        path.join(
+          rootFolders.source,
+          subfolders.serverlessFunctions,
+          "**/*.{js,ts}"
+        )
       ),
       { nodir: true }
     )

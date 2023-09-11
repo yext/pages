@@ -6,6 +6,7 @@ import { glob } from "glob";
 import chalk from "chalk";
 import os from "os";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { convertToPosixPath } from "../../../common/src/template/paths.js";
 
 const TEMP_DIR = os.tmpdir();
 
@@ -26,7 +27,9 @@ const getFunctionMetadataMap = async (
 ): Promise<Record<string, FunctionMetadata>> => {
   const filepaths = glob
     .sync(
-      path.join(projectStructure.config.rootFolders.functions, "**/*.{js,ts}"),
+      convertToPosixPath(
+        path.join(projectStructure.config.rootFolders.functions, "**/*.{js,ts}")
+      ),
       { nodir: true }
     )
     .map((f) => path.resolve(f));

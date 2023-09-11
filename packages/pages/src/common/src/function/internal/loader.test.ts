@@ -26,7 +26,7 @@ describe("loadTemplateModules", () => {
 
   it("loads and transpiles raw templates", async () => {
     const functionFile: path.ParsedPath[] = [
-      path.parse("tests/fixtures/src/functions/http/[param].ts"),
+      path.parse(path.resolve("tests/fixtures/src/functions/http/[param].ts")),
     ];
 
     const functionModules = await loadFunctionModules(
