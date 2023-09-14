@@ -1,4 +1,5 @@
 import { IAPI, BaseEntity, Meta } from "./api.ts";
+
 interface ProfileUpdate {
   meta: Meta;
   isAlternateProfile: boolean;
@@ -59,6 +60,7 @@ export function createManager(config: InternalSlugManagerConfig) {
           $in: entitiesResponse.entities.map((entity) => entity.meta.id),
         },
       }),
+      rendered: "true",
     });
     const response = await api.listLanguageProfiles(profileParams);
 
