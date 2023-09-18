@@ -25,9 +25,9 @@ export const determineAssetsFilepath = async (
   if (fs.existsSync(configYamlPath)) {
     const configYaml = yaml.load(
       fs.readFileSync(configYamlPath, "utf-8")
-    ) as ConfigYaml;
+    ) as ConfigYaml | null;
 
-    if (configYaml.assetsDir && configYaml.assetsDir !== "") {
+    if (configYaml?.assetsDir && configYaml.assetsDir !== "") {
       return configYaml.assetsDir;
     }
   }
