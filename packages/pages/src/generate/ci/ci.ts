@@ -84,9 +84,17 @@ export const getUpdatedCiConfig = async (
   const ciConfigCopy = structuredClone(ciConfig);
 
   ciConfigCopy.artifactStructure.assets = [];
+
+  // assets from the plugin
   ciConfigCopy.artifactStructure.assets.push({
     root: projectStructure.config.rootFolders.dist,
     pattern: `${projectStructure.config.subfolders.assets}/**/*`,
+  });
+
+  // static assets based on the Vite publicDir
+  ciConfigCopy.artifactStructure.assets.push({
+    root: projectStructure.config.rootFolders.dist,
+    pattern: "*",
   });
 
   ciConfigCopy.artifactStructure.plugins = [];
