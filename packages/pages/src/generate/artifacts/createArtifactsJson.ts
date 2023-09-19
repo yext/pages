@@ -38,9 +38,15 @@ export const getArtifactsConfig = async (
   const artifactConfig: ArtifactsConfig = {
     artifactStructure: {
       assets: [
+        // assets from the plugin
         {
           root: projectStructure.config.rootFolders.dist,
           pattern: `${projectStructure.config.subfolders.assets}/**/*`,
+        },
+        // static assets based on the Vite publicDir
+        {
+          root: projectStructure.config.rootFolders.dist,
+          pattern: "*",
         },
       ],
       plugins: [getGeneratorPlugin(projectStructure)],
