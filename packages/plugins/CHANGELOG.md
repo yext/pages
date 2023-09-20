@@ -3,10 +3,6 @@
 ##### Bug Fixes
 
 * **pages-plugins:**  add rendered = true to include all fields in the lang profiles (#388) (92637531)
-* **dev:**
-  *  fix dev and tests on Windows (#386) (16ee235d)
-  *  use ts-morph to parse template configs (#387) (bc51b803)
-  *  serverless functions body format consistency (#385) (a2ad104a)
 
 #### 1.0.0-beta.4 (2023-05-10)
 
