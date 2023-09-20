@@ -1,3 +1,13 @@
+#### 1.0.0-rc.3 (2023-09-20)
+
+##### New Features
+
+* **plugin:**  include static assets in platform (#392) (5932e264)
+
+##### Bug Fixes
+
+*  empty yaml leads to parse error (#391) (a1632ce8)
+
 #### 1.0.0-rc.2 (2023-09-01)
 
 ##### Chores
