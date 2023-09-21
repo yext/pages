@@ -1,3 +1,13 @@
+#### 1.0.0-rc.4 (2023-09-20)
+
+##### Chores
+
+*  fix changelogs (c0d3aa07)
+
+##### Bug Fixes
+
+* **dev:**  env vars through ts-morph double quoted (#394) (dc5032c8)
+
 #### 1.0.0-rc.3 (2023-09-20)
 
 ##### New Features

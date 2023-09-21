@@ -22,4 +22,11 @@ describe("processEnvVariables", () => {
     expect(Object.keys(env).length).toEqual(1);
     expect(env.YEXT_PUBLIC_KEY).toEqual(`"pk.0123456789"`);
   });
+
+  it("does not stringify values", () => {
+    const env = processEnvVariables("YEXT_PUBLIC", false);
+
+    expect(Object.keys(env).length).toEqual(1);
+    expect(env.YEXT_PUBLIC_KEY).toEqual("pk.0123456789");
+  });
 });

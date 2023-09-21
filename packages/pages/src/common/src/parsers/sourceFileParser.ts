@@ -107,7 +107,7 @@ export default class SourceFileParser {
   getCompiledObjectLiteral<T>(objectLiteralExp: ObjectLiteralExpression): T {
     return vm.runInNewContext(
       "(" + objectLiteralExp.getText() + ")",
-      processEnvVariables("YEXT_PUBLIC")
+      processEnvVariables("YEXT_PUBLIC", false)
     );
   }
 }
