@@ -179,6 +179,9 @@ importers:
       vite-plugin-node-polyfills:
         specifier: ^0.11.0
         version: 0.11.0(rollup@3.28.0)(vite@4.4.9)
+      yaml:
+        specifier: ^2.3.1
+        version: 2.3.1
     devDependencies:
       '@babel/core':
         specifier: ^7.22.10
@@ -8565,7 +8568,6 @@ packages:
   /yaml@2.3.1:
     resolution: {integrity: sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==}
     engines: {node: '>= 14'}
-    dev: true
 
   /yargs-parser@21.1.1:
     resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==}
