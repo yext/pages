@@ -1,4 +1,3 @@
-import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
 
@@ -7,15 +6,19 @@ const replacementText = '"@yext/sites-components"';
 
 // Function to install npm packages
 const installPackages = (targetDirectory: string) => {
+  const packagePath = path.resolve(targetDirectory, "package.json");
+  if (!fs.existsSync(packagePath)) {
+    console.error("Could not find package.json, unable to upgrade packages");
+    process.exit(1);
+  }
   try {
-    execSync(
-      `npm install @yext/sites-components@latest @vitejs/plugin-react@4.0.4 vite@latest --prefix ${targetDirectory}`,
-      {
-        stdio: "inherit",
-      }
-    );
+    const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
+    packageJson.dependencies["@yext/sites-components"] = "^1.0.0-rc.4";
+    packageJson.devDependencies["@vitejs/plugin-react"] = "^4.0.4";
+    packageJson.devDependencies["vite"] = "4.4.9";
+    fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
   } catch (e) {
-    console.error("Error installing packages: ", (e as Error).message);
+    console.error("Error updating package.json: ", (e as Error).message);
     process.exit(1);
   }
 };
@@ -75,9 +78,13 @@ const updatePackageScripts = (targetDirectory: string) => {
   }
 };
 
+/**
+ * @param target the root directory to run on
+ * Install packages, recursively process imports (excluding .git and node_modules directories),
+ * and update package.json scripts in the specified directory
+ */
 export const updatePages = async (target: string) => {
-  // Install packages, recursively process imports (excluding .git and node_modules directories), and update package.json scripts in the specified directory
   installPackages(target);
-  processDirectoryRecursively(target);
+  processDirectoryRecursively(path.resolve(target, "src"));
   updatePackageScripts(target);
 };

@@ -68,7 +68,6 @@
     "get-port": "^7.0.0",
     "glob": "^10.3.3",
     "handlebars": "^4.7.8",
-    "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "mime-types": "^2.1.35",
     "module-from-string": "^3.3.0",

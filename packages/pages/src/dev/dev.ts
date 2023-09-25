@@ -4,6 +4,7 @@ import runSubProcess from "../util/runSubprocess.js";
 import { autoYextInit } from "./server/autoInit.js";
 import open from "open";
 import getPort, { portNumbers } from "get-port";
+import fs from "fs";
 
 interface DevArgs {
   local?: boolean;
@@ -25,6 +26,12 @@ const handler = async ({
   noGenFeatures,
   port,
 }: DevArgs) => {
+  if (!fs.existsSync("config.yaml")) {
+    console.warn(
+      "config.yaml not found. Please run 'npx pages upgrade' to create it."
+    );
+  }
+
   if (!noInit) {
     await autoYextInit();
   }
