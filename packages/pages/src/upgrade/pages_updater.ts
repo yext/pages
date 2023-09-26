@@ -1,11 +1,13 @@
 import fs from "fs";
 import path from "path";
+import { ProjectStructure } from "../common/src/project/structure.js";
+import latestVersion from "latest-version";
 
 const pagesImportRegex = /"@yext\/pages\/components"/g;
 const replacementText = '"@yext/sites-components"';
 
 // Function to install npm packages
-const installPackages = (targetDirectory: string) => {
+const installPackages = async (targetDirectory: string) => {
   const packagePath = path.resolve(targetDirectory, "package.json");
   if (!fs.existsSync(packagePath)) {
     console.error("Could not find package.json, unable to upgrade packages");
@@ -13,7 +15,9 @@ const installPackages = (targetDirectory: string) => {
   }
   try {
     const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
-    packageJson.dependencies["@yext/sites-components"] = "^1.0.0-rc.4";
+    packageJson.dependencies["@yext/sites-components"] = await latestVersion(
+      "@yext/sites-components"
+    );
     packageJson.devDependencies["@vitejs/plugin-react"] = "^4.0.4";
     packageJson.devDependencies["vite"] = "4.4.9";
     fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
@@ -79,12 +83,15 @@ const updatePackageScripts = (targetDirectory: string) => {
 };
 
 /**
- * @param target the root directory to run on
+ * @param projectStructure the structure of the project
  * Install packages, recursively process imports (excluding .git and node_modules directories),
  * and update package.json scripts in the specified directory
  */
-export const updatePages = async (target: string) => {
-  installPackages(target);
-  processDirectoryRecursively(path.resolve(target, "src"));
-  updatePackageScripts(target);
+export const updatePages = async (projectStructure: ProjectStructure) => {
+  const rootPath = path.resolve("");
+  await installPackages(rootPath);
+  processDirectoryRecursively(
+    path.resolve(projectStructure.config.rootFolders.source)
+  );
+  updatePackageScripts(rootPath);
 };

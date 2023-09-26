@@ -28,7 +28,7 @@ export const determineAssetsFilepath = async (
     );
     if (configYaml !== null) {
       const assetsDir = configYaml.get("assetsDir");
-      if (assetsDir !== null && assetsDir !== "") {
+      if (assetsDir) {
         return assetsDir as string;
       }
     }

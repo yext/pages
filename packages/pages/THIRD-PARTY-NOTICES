@@ -67,6 +67,7 @@ The following npm packages may be included in this product:
  - chalk@5.3.0
  - cli-spinners@2.9.0
  - get-port@7.0.0
+ - latest-version@7.0.0
  - open@9.1.0
  - ora@7.0.1
  - pretty-ms@8.0.0

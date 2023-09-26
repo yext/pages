@@ -28,7 +28,9 @@ const handler = async ({
 }: DevArgs) => {
   if (!fs.existsSync("config.yaml")) {
     console.warn(
-      "config.yaml not found. Please run 'npx pages upgrade' to create it."
+      "It looks like you’re using an older setup of a Pages repo. Please run ‘npx pages upgrade’" +
+        " to upgrade to the latest format. This will setup a new configuration file config.yaml" +
+        " and install some new required dependencies."
     );
   }
 
