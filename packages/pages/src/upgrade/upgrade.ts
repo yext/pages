@@ -4,6 +4,7 @@ import { migrateConfigs } from "./migrate_config.js";
 import { ProjectStructure } from "../common/src/project/structure.js";
 import { templatesHandler } from "../generate/templates/templates.js";
 import { artifactsHandler } from "../generate/artifacts/artifacts.js";
+import { cleanConfigs } from "./clean_configs.js";
 
 const handler = async ({ scope }: { scope: string }) => {
   const scoped = { scope: scope };
@@ -12,6 +13,7 @@ const handler = async ({ scope }: { scope: string }) => {
   await migrateConfigs(projectStructure);
   await templatesHandler(scoped);
   await artifactsHandler(scoped);
+  await cleanConfigs(projectStructure);
 };
 
 export const upgradeCommand = (program: Command) => {
