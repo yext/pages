@@ -10,27 +10,29 @@ import {
   StreamConfig,
   convertTemplateConfigToStreamConfig,
 } from "../../common/src/feature/stream.js";
-import SourceFileParser, {
-  createTsMorphProject,
-} from "../../common/src/parsers/sourceFileParser.js";
-import TemplateConfigParser from "../../common/src/parsers/templateConfigParser.js";
 import {
-  convertTemplateConfigToTemplateConfigInternal,
-  parse,
-} from "../../common/src/template/internal/types.js";
+  TemplateModuleCollection,
+  loadTemplateModules,
+} from "../../common/src/template/loader/loader.js";
 
 /**
  * Generates a templates.json or features.json from the templates.
  */
-export const createTemplatesJson = (
+export const createTemplatesJson = async (
   templateFilepaths: string[],
   projectStructure: ProjectStructure,
   type: "FEATURES" | "TEMPLATES"
-): void => {
+): Promise<void> => {
+  const templateModules = await loadTemplateModules(
+    templateFilepaths,
+    true,
+    false
+  );
+
   // Note: the object used to be known as "features" but it's been changed to "templates".
   // We're allowing the generation of a features.json file still for backwards compatibility,
   // which is why all of the types have not yet been renamed.
-  const { features, streams } = getTemplatesConfig(templateFilepaths);
+  const { features, streams } = getTemplatesConfig(templateModules);
   let templatesAbsolutePath;
 
   switch (type) {
@@ -75,32 +77,15 @@ export const createTemplatesJson = (
   );
 };
 
-/**
- * Uses ts-morph to parse out the config function of each template.
- */
-const getTemplatesConfig = (templateFilepaths: string[]): FeaturesConfig => {
+export const getTemplatesConfig = (
+  templateModules: TemplateModuleCollection
+): FeaturesConfig => {
   const features: FeatureConfig[] = [];
   const streams: StreamConfig[] = [];
-  for (const templateFilepath of templateFilepaths) {
-    const sfp = new SourceFileParser(templateFilepath, createTsMorphProject());
-    const tcp = new TemplateConfigParser(sfp);
-
-    const templateConfig = tcp.getTemplateConfig();
-    const templatePath = parse(templateFilepath, false);
-
-    const templateConfigInternal =
-      convertTemplateConfigToTemplateConfigInternal(
-        templatePath.name,
-        templateConfig
-      );
-
-    const featureConfig = convertTemplateConfigToFeatureConfig(
-      templateConfigInternal
-    );
+  for (const module of templateModules.values()) {
+    const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
     features.push(featureConfig);
-    const streamConfig = convertTemplateConfigToStreamConfig(
-      templateConfigInternal
-    );
+    const streamConfig = convertTemplateConfigToStreamConfig(module.config);
     if (streamConfig) {
       streams.push(streamConfig);
     }

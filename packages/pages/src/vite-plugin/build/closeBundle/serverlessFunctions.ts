@@ -2,11 +2,11 @@ import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "path";
 import esbuild from "esbuild";
-import { COMMON_ESBUILD_LOADERS } from "../../../common/src/loader/esbuild.js";
 import { processEnvVariables } from "../../../util/processEnvVariables.js";
 import { FunctionMetadataParser } from "../../../common/src/function/internal/functionMetadataParser.js";
 import fs from "fs";
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
+import { COMMON_ESBUILD_LOADERS } from "../../../common/src/loader/esbuild.js";
 
 /**
  * Returns a mapping of file path (relative to the repo root) to the metadata
