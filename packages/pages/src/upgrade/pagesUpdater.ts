@@ -2,12 +2,15 @@ import fs from "fs";
 import path from "path";
 import { ProjectStructure } from "../common/src/project/structure.js";
 import latestVersion from "latest-version";
+import { execSync } from "child_process";
+import { readJsonSync } from "./migrateConfig.js";
 
 const pagesImportRegex = /"@yext\/pages\/components"/g;
 const replacementText = '"@yext/sites-components"';
+const markdownRegex = 'Markdown.{1,10}from "@yext\\/react-components';
 
-// Function to install npm packages
-const installPackages = async (targetDirectory: string) => {
+// Function to add packages to package.json
+const updatePackageDependencies = async (targetDirectory: string) => {
   const packagePath = path.resolve(targetDirectory, "package.json");
   if (!fs.existsSync(packagePath)) {
     console.error("Could not find package.json, unable to upgrade packages");
@@ -57,6 +60,12 @@ const replaceImports = (filePath: string) => {
       pagesImportRegex,
       replacementText
     );
+    if (fileContent.match(markdownRegex)) {
+      console.log(
+        `Legacy Markdown import from react-components detected in ${filePath}.` +
+          `\n Please update to use react-markdown. See https://hitchhikers.yext.com/docs/pages/rich-text-markdown`
+      );
+    }
     fs.writeFileSync(filePath, modifiedContent, "utf8"); // Update the file content
     console.log(`Imports replaced in: ${filePath}`);
   } catch (e) {
@@ -82,16 +91,51 @@ const updatePackageScripts = (targetDirectory: string) => {
   }
 };
 
+//Function to install dependencies
+const installDependencies = async (
+  targetDirectory: string,
+  ciJsonPath: string
+) => {
+  try {
+    const ciJson = readJsonSync(ciJsonPath);
+    const installDepsCmd = ciJson.dependencies.installDepsCmd;
+    console.log(`installing dependencies using '${installDepsCmd}'`);
+    execSync(installDepsCmd);
+  } catch (ignored) {
+    // if we cant find the installation command, determine it from existence of lock files
+    if (fs.existsSync(path.resolve(targetDirectory, "package-lock.json"))) {
+      console.log("package-lock detected, installing npm packages");
+      execSync("npm install");
+    }
+    if (fs.existsSync(path.resolve(targetDirectory, "pnpm-lock.json"))) {
+      console.log("pnpm-lock detected, installing pnpm packages");
+      execSync("pnpm install");
+    }
+    if (fs.existsSync(path.resolve(targetDirectory, "yarn.lock"))) {
+      console.log("yarn.lock detected, installing yarn packages");
+      execSync("yarn install");
+    }
+  }
+};
+
 /**
- * @param projectStructure the structure of the project
+ * @param scope
  * Install packages, recursively process imports (excluding .git and node_modules directories),
  * and update package.json scripts in the specified directory
  */
-export const updatePages = async (projectStructure: ProjectStructure) => {
+export const updatePages = async (scope: string) => {
+  const projectStructure = await ProjectStructure.init({ scope: scope });
   const rootPath = path.resolve("");
-  await installPackages(rootPath);
+  await updatePackageDependencies(rootPath);
   processDirectoryRecursively(
     path.resolve(projectStructure.config.rootFolders.source)
   );
   updatePackageScripts(rootPath);
+  await installDependencies(
+    rootPath,
+    path.resolve(
+      projectStructure.getSitesConfigPath().getAbsolutePath(),
+      projectStructure.config.sitesConfigFiles.ci
+    )
+  );
 };

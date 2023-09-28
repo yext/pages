@@ -1,19 +1,14 @@
 import { Command } from "commander";
-import { updatePages } from "./pages_updater.js";
-import { migrateConfigs } from "./migrate_config.js";
-import { ProjectStructure } from "../common/src/project/structure.js";
+import { updatePages } from "./pagesUpdater.js";
+import { migrateConfigs } from "./migrateConfig.js";
 import { templatesHandler } from "../generate/templates/templates.js";
 import { artifactsHandler } from "../generate/artifacts/artifacts.js";
-import { cleanConfigs } from "./clean_configs.js";
 
 const handler = async ({ scope }: { scope: string }) => {
-  const scoped = { scope: scope };
-  const projectStructure = await ProjectStructure.init(scoped);
-  await updatePages(projectStructure);
-  await migrateConfigs(projectStructure);
-  await templatesHandler(scoped);
-  await artifactsHandler(scoped);
-  await cleanConfigs(projectStructure);
+  await updatePages(scope);
+  await migrateConfigs(scope);
+  await templatesHandler({ scope: scope });
+  await artifactsHandler({ scope: scope });
 };
 
 export const upgradeCommand = (program: Command) => {
