@@ -5,9 +5,9 @@ import {
   FeatureConfig,
   convertTemplateConfigToFeatureConfig,
 } from "../../common/src/feature/features.js";
-import { TemplateModuleCollection } from "../../common/src/template/internal/loader.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { StreamConfig } from "../../common/src/feature/stream.js";
+import { TemplateModuleCollection } from "../../common/src/template/loader/loader.js";
 
 // TODO: rename functions in this file once there is a migration flow and checks for it
 // TODO: mergeFeatureJson will no longer be necessary

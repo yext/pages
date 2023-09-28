@@ -17,9 +17,9 @@ import {
 } from "../../../common/src/template/internal/types.js";
 import { ViteDevServer } from "vite";
 import { loadViteModule } from "./loadViteModule.js";
-import { TemplateModuleCollection } from "../../../common/src/template/internal/loader.js";
 import { TemplateModule } from "../../../common/src/template/types.js";
 import { getFeaturesConfig } from "../../../generate/templates/createTemplatesJsonFromModule.js";
+import { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
