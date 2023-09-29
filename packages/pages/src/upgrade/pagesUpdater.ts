@@ -91,7 +91,7 @@ const updatePackageScripts = (targetDirectory: string) => {
   }
 };
 
-//Function to install dependencies
+// Function to install dependencies
 const installDependencies = async (
   targetDirectory: string,
   ciJsonPath: string
@@ -119,12 +119,11 @@ const installDependencies = async (
 };
 
 /**
- * @param scope
  * Install packages, recursively process imports (excluding .git and node_modules directories),
  * and update package.json scripts in the specified directory
+ * @param projectStructure
  */
-export const updatePages = async (scope: string) => {
-  const projectStructure = await ProjectStructure.init({ scope: scope });
+export const updatePages = async (projectStructure: ProjectStructure) => {
   const rootPath = path.resolve("");
   await updatePackageDependencies(rootPath);
   processDirectoryRecursively(

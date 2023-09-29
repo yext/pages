@@ -94,11 +94,10 @@ const migrateAuth = async (configYamlPath: string, authPath: string) => {
 
 /**
  * Migrates configuration files from sites-config to config.yaml
- * @param scope
+ * @param projectStructure
  */
-export const migrateConfigs = async (scope: string) => {
-  scope = scope || "";
-  const projectStructure = await ProjectStructure.init({ scope: scope });
+export const migrateConfigs = async (projectStructure: ProjectStructure) => {
+  const scope = projectStructure.config.scope || "";
   const sitesConfigPath = projectStructure
     .getSitesConfigPath()
     .getAbsolutePath();
@@ -111,7 +110,11 @@ export const migrateConfigs = async (scope: string) => {
   for (const file of files) {
     const filePath = path.resolve(sitesConfigPath, file.toString());
     if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
-      await migrateConfigs(path.join(scope, file.toString()));
+      await migrateConfigs(
+        await ProjectStructure.init({
+          scope: path.join(scope, file.toString()),
+        })
+      );
     }
   }
   const sitesConfigFiles = projectStructure.config.sitesConfigFiles;

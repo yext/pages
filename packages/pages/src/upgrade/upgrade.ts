@@ -3,12 +3,15 @@ import { updatePages } from "./pagesUpdater.js";
 import { migrateConfigs } from "./migrateConfig.js";
 import { templatesHandler } from "../generate/templates/templates.js";
 import { artifactsHandler } from "../generate/artifacts/artifacts.js";
+import { ProjectStructure } from "../common/src/project/structure.js";
 
 const handler = async ({ scope }: { scope: string }) => {
-  await updatePages(scope);
-  await migrateConfigs(scope);
-  await templatesHandler({ scope: scope });
-  await artifactsHandler({ scope: scope });
+  const scoped = { scope: scope };
+  const projectStructure = await ProjectStructure.init(scoped);
+  await updatePages(projectStructure);
+  await migrateConfigs(projectStructure);
+  await templatesHandler(scoped);
+  await artifactsHandler(scoped);
 };
 
 export const upgradeCommand = (program: Command) => {
