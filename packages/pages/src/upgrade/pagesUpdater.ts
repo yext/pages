@@ -79,11 +79,11 @@ const updatePackageScripts = (targetDirectory: string) => {
 
   try {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
-    packageJson.scripts = {
-      dev: "pages dev",
-      prod: "pages prod",
-      "build:local": "pages build",
-    };
+    const scripts = packageJson.scripts;
+    scripts.dev = "pages dev";
+    scripts.prod = "pages prod";
+    scripts["build:local"] = "pages build";
+    packageJson.scripts = scripts;
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     console.log("package.json scripts updated.");
   } catch (e) {
