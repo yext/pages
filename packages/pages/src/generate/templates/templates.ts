@@ -9,7 +9,7 @@ const handler = async ({ scope }: { scope: string }): Promise<void> => {
     projectStructure.getTemplatePaths()
   );
 
-  createTemplatesJson(templateFilepaths, projectStructure, "TEMPLATES");
+  await createTemplatesJson(templateFilepaths, projectStructure, "TEMPLATES");
 };
 
 export const templatesCommand = (program: Command) => {
