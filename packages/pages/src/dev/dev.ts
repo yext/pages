@@ -26,7 +26,7 @@ const handler = async ({
   port,
 }: DevArgs) => {
   if (!noInit) {
-    await autoYextInit();
+    await autoYextInit(scope);
   }
   if (!noGenFeatures)
     await runSubProcess(
