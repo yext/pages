@@ -3,6 +3,20 @@ import fs from "fs";
 import yaml from "yaml";
 import { ProjectStructure } from "../common/src/project/structure.js";
 
+type BuildConfiguration = {
+  buildCommand: string;
+  installDependenciesStep?: {
+    command: string;
+    requiredFiles: string[];
+  };
+};
+
+type LivePreviewConfiguration = {
+  setupCommand: string;
+  serveCommand: string;
+  watchCommand: string;
+};
+
 export const readJsonSync = (jsonPath: string): any => {
   if (!fs.existsSync(jsonPath)) {
     return null;
@@ -24,9 +38,40 @@ const writeYamlSync = (configYamlPath: string, target: string, data: any) => {
 const migrateCiJson = async (configYamlPath: string, ciPath: string) => {
   const ciJson = readJsonSync(ciPath);
   if (ciJson !== null) {
-    ciJson.artifactStructure = undefined;
-    console.info(`migrating site config from ${ciPath} to ${configYamlPath}`);
-    writeYamlSync(configYamlPath, "ciConfig", ciJson);
+    const buildArtifacts = ciJson.buildArtifacts;
+    if (buildArtifacts) {
+      console.info(
+        `migrating buildArtifacts from ${ciPath} to ${configYamlPath}`
+      );
+      const buildConfiguration: BuildConfiguration = {
+        buildCommand: buildArtifacts.buildCmd,
+      };
+      const dependencies = ciJson.dependencies;
+      if (dependencies) {
+        console.info(
+          `migrating dependencies from ${ciPath} to ${configYamlPath}`
+        );
+        buildConfiguration.installDependenciesStep = {
+          command: dependencies.installDepsCmd,
+          requiredFiles: dependencies.requiredFiles,
+        };
+      }
+      writeYamlSync(configYamlPath, "buildConfiguration", buildConfiguration);
+    }
+    const livePreview = ciJson.livePreview;
+    if (livePreview) {
+      console.info(`migrating livePreview from ${ciPath} to ${configYamlPath}`);
+      const livePreviewConfiguration: LivePreviewConfiguration = {
+        setupCommand: livePreview.serveSetupCmd,
+        serveCommand: livePreview.serveCmd,
+        watchCommand: livePreview.watchCmd,
+      };
+      writeYamlSync(
+        configYamlPath,
+        "livePreviewConfiguration",
+        livePreviewConfiguration
+      );
+    }
   }
 };
 
