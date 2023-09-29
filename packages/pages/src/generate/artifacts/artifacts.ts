@@ -4,7 +4,7 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { Command } from "commander";
 import { createArtifactsJson } from "./createArtifactsJson.js";
 
-const handler = async ({ scope }: { scope: string }) => {
+export const artifactsHandler = async ({ scope }: { scope: string }) => {
   const projectStructure = await ProjectStructure.init({ scope });
 
   const artifactPath = new Path(
@@ -25,5 +25,5 @@ export const artifactsCommand = (program: Command) => {
       "--scope <string>",
       "The subfolder to scope the served templates from"
     )
-    .action(handler);
+    .action(artifactsHandler);
 };
