@@ -7,10 +7,6 @@ import { generateManifestFile } from "./manifest.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { validateBundles } from "./bundleValidator.js";
 import {
-  loadTemplateModules,
-  TemplateModuleCollection,
-} from "../../../common/src/template/internal/loader.js";
-import {
   generateFunctionMetadataFile,
   shouldGenerateFunctionMetadata,
 } from "./functionMetadata.js";
@@ -22,6 +18,10 @@ import {
 } from "./serverlessFunctions.js";
 import { createFeaturesJson } from "../../../generate/templates/createTemplatesJsonFromModule.js";
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
+import {
+  TemplateModuleCollection,
+  loadTemplateModules,
+} from "../../../common/src/template/loader/loader.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {

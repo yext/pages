@@ -13,7 +13,7 @@ export const templatesHandler = async ({
     projectStructure.getTemplatePaths()
   );
 
-  createTemplatesJson(templateFilepaths, projectStructure, "TEMPLATES");
+  await createTemplatesJson(templateFilepaths, projectStructure, "TEMPLATES");
 };
 
 export const templatesCommand = (program: Command) => {
