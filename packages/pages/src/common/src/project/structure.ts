@@ -51,6 +51,12 @@ export interface SitesConfigFiles {
   siteStream: string;
   /** the name of the serving.json file */
   serving: string;
+  /** the name of the sitemap.json file */
+  sitemap: string;
+  /** the name of the redirects.csv file */
+  redirects: string;
+  /** the name of the auth.json file */
+  auth: string;
 }
 
 export interface DistConfigFiles {
@@ -141,6 +147,9 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
     features: "features.json",
     siteStream: "site-stream.json",
     serving: "serving.json",
+    sitemap: "sitemap.json",
+    redirects: "redirects.csv",
+    auth: "auth.json",
   },
   distConfigFiles: {
     templates: "templates.json",

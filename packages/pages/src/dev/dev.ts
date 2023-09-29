@@ -4,6 +4,7 @@ import runSubProcess from "../util/runSubprocess.js";
 import { autoYextInit } from "./server/autoInit.js";
 import open from "open";
 import getPort, { portNumbers } from "get-port";
+import fs from "fs";
 
 interface DevArgs {
   local?: boolean;
@@ -25,6 +26,14 @@ const handler = async ({
   noGenFeatures,
   port,
 }: DevArgs) => {
+  if (!fs.existsSync("config.yaml")) {
+    console.warn(
+      "It looks like you’re using an older setup of a Pages repo. Please run ‘npx pages upgrade’" +
+        " to upgrade to the latest format. This will setup a new configuration file config.yaml" +
+        " and install some new required dependencies."
+    );
+  }
+
   if (!noInit) {
     await autoYextInit();
   }

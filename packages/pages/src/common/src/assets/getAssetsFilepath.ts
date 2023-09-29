@@ -2,33 +2,35 @@ import fs from "node:fs";
 import { pathToFileURL } from "url";
 import { UserConfig } from "vite";
 import { import_ } from "./import.js";
-import yaml from "js-yaml";
-import { ConfigYaml } from "../config/types.js";
+import yaml from "yaml";
 
 /**
  * Determines the assets directory to use by checking the following, in order:
  * 1. config.yaml
  * 2. vite.config.json assetDir
  * 3. default to "assets"
- * @param servingJsonPath the path to sites-config/serving.json - make sure to take scope into account
+ * @param defaultAssetsDir the default directory for assets
+ * @param configYamlPath the path to config.yaml
  * @param viteConfigPath the path to vite.config.js
  */
 export const determineAssetsFilepath = async (
   defaultAssetsDir: string,
   configYamlPath: string,
   viteConfigPath: string
-) => {
+): Promise<string> => {
   if (configYamlPath === "" || viteConfigPath === "") {
     return defaultAssetsDir;
   }
 
   if (fs.existsSync(configYamlPath)) {
-    const configYaml = yaml.load(
+    const configYaml = yaml.parseDocument(
       fs.readFileSync(configYamlPath, "utf-8")
-    ) as ConfigYaml | null;
-
-    if (configYaml?.assetsDir && configYaml.assetsDir !== "") {
-      return configYaml.assetsDir;
+    );
+    if (configYaml !== null) {
+      const assetsDir = configYaml.get("assetsDir");
+      if (assetsDir) {
+        return assetsDir as string;
+      }
     }
   }
 

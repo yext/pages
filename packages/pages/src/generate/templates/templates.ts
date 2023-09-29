@@ -3,7 +3,11 @@ import { getTemplateFilepaths } from "../../common/src/template/internal/getTemp
 import { createTemplatesJson } from "./createTemplatesJson.js";
 import { Command } from "commander";
 
-const handler = async ({ scope }: { scope: string }): Promise<void> => {
+export const templatesHandler = async ({
+  scope,
+}: {
+  scope: string;
+}): Promise<void> => {
   const projectStructure = await ProjectStructure.init({ scope });
   const templateFilepaths = getTemplateFilepaths(
     projectStructure.getTemplatePaths()
@@ -20,5 +24,5 @@ export const templatesCommand = (program: Command) => {
       "--scope <string>",
       "The subfolder to scope the served templates from"
     )
-    .action(handler);
+    .action(templatesHandler);
 };
