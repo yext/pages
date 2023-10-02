@@ -7,7 +7,7 @@ import { logErrorAndExit } from "../../util/logError.js";
 
 export const autoYextInit = async (scope: string | undefined) => {
   if (!fs.existsSync(".yextrc")) {
-    createYextrc();
+    fs.writeFileSync(".yextrc", "");
   }
   await autoYextInitWithYextrc(scope);
 };
@@ -24,10 +24,6 @@ const autoYextInitWithYextrc = async (scope: string | undefined) => {
         process.exit(1);
       });
   }
-};
-
-const createYextrc = () => {
-  fs.writeFileSync(".yextrc", "");
 };
 
 // Add new yext account to .yextrc
