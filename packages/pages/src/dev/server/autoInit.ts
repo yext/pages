@@ -5,20 +5,17 @@ import chalk from "chalk";
 import { parseYextrcContents } from "../../util/yextrcContents.js";
 import { logErrorAndExit } from "../../util/logError.js";
 
-export const autoYextInit = async () => {
+export const autoYextInit = async (scope: string | undefined) => {
   if (!fs.existsSync(".yextrc")) {
-    await autoYextInitWithoutYextrc();
-  } else {
-    await autoYextInitWithYextrc();
+    fs.writeFileSync(".yextrc", "");
   }
+  await autoYextInitWithYextrc(scope);
 };
 
-const autoYextInitWithYextrc = async () => {
-  const { accountId, universe } = parseYextrcContents();
+const autoYextInitWithYextrc = async (scope: string | undefined) => {
+  const { accountId, universe } = parseYextrcContents(scope);
   if (accountId === undefined || universe === undefined) {
-    logErrorAndExit(
-      "Unable to parse Account ID and Universe from .yextrc file."
-    );
+    await autoYextInitUpdateYextrc(scope);
   } else {
     await runCommand("yext", ["init", accountId, "-u", universe])
       .then((output) => console.log(output))
@@ -29,7 +26,8 @@ const autoYextInitWithYextrc = async () => {
   }
 };
 
-const autoYextInitWithoutYextrc = async () => {
+// Add new yext account to .yextrc
+const autoYextInitUpdateYextrc = async (scope: string | undefined) => {
   try {
     console.log(
       `\n\n*******************************************************
@@ -45,10 +43,19 @@ Let's connect to your Yext Account
         console.log(error.message);
         process.exit(1);
       });
-    fs.writeFileSync(
-      ".yextrc",
-      `accountId: ${accountId}\nuniverse: ${universe}`
-    );
+    if (scope) {
+      fs.appendFileSync(
+        ".yextrc",
+        `"${scope}":\n` +
+          `  accountId: ${accountId}\n` +
+          `  universe: ${universe}\n\n`
+      );
+    } else {
+      fs.appendFileSync(
+        ".yextrc",
+        `accountId: ${accountId}\n` + `universe: ${universe}\n\n`
+      );
+    }
     console.log(
       `*******************************************************
 Congrats! You've successfully connected to your Yext Account.

@@ -35,7 +35,7 @@ const handler = async ({
   }
 
   if (!noInit) {
-    await autoYextInit();
+    await autoYextInit(scope);
   }
   if (!noGenFeatures)
     await runSubProcess(
