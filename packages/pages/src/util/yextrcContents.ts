@@ -14,7 +14,6 @@ const validUniverses = ["sandbox", "production", "sbx", "prod", "qa", "dev"];
 export const parseYextrcContents = (scope: string | undefined = undefined) => {
   let accountId: string | undefined;
   let universe: string | undefined;
-  let shouldUpdate = false;
   try {
     const yextrcContents: string = fs.readFileSync(".yextrc", "utf8");
     const parsedContents = YAML.parse(yextrcContents);
@@ -26,19 +25,16 @@ export const parseYextrcContents = (scope: string | undefined = undefined) => {
       universe = validUniverses.includes(scopedContents.universe)
         ? scopedContents.universe
         : undefined;
-    } else if (scope) {
-      shouldUpdate = true;
     } else if (
+      !scope &&
       !isNaN(Number(parsedContents.accountId)) &&
       validUniverses.includes(parsedContents.universe)
     ) {
       accountId = parsedContents.accountId;
       universe = parsedContents.universe;
-    } else {
-      shouldUpdate = true;
     }
   } catch (e: any) {
     // Return undefined for both fields if .yextrc cannot be read
   }
-  return { accountId, universe, shouldUpdate };
+  return { accountId, universe };
 };

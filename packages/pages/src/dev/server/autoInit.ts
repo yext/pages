@@ -7,20 +7,15 @@ import { logErrorAndExit } from "../../util/logError.js";
 
 export const autoYextInit = async (scope: string | undefined) => {
   if (!fs.existsSync(".yextrc")) {
-    await autoYextInitUpdateYextrc(scope);
-  } else {
-    await autoYextInitWithYextrc(scope);
+    await createYextrc(scope);
   }
+  await autoYextInitWithYextrc(scope);
 };
 
 const autoYextInitWithYextrc = async (scope: string | undefined) => {
-  const { accountId, universe, shouldUpdate } = parseYextrcContents(scope);
-  if (shouldUpdate) {
+  const { accountId, universe } = parseYextrcContents(scope);
+  if (accountId === undefined || universe === undefined) {
     await autoYextInitUpdateYextrc(scope);
-  } else if (accountId === undefined || universe === undefined) {
-    logErrorAndExit(
-      "Unable to parse Account ID and Universe from .yextrc file."
-    );
   } else {
     await runCommand("yext", ["init", accountId, "-u", universe])
       .then((output) => console.log(output))
@@ -31,7 +26,11 @@ const autoYextInitWithYextrc = async (scope: string | undefined) => {
   }
 };
 
-// Can either create a new .yextrc or append new data to .yextrc
+const createYextrc = async (scope: string | undefined) => {
+  fs.writeFileSync(".yextrc", "");
+};
+
+// Add new yext account to .yextrc
 const autoYextInitUpdateYextrc = async (scope: string | undefined) => {
   try {
     console.log(
