@@ -4,7 +4,7 @@ import {
   assertNotEquals,
 } from "https://deno.land/std@0.154.0/testing/asserts.ts";
 import { createManager, getUpdates } from "./manager.ts";
-import { IAPI } from "./api.ts";
+import { BaseEntity, IAPI } from "./api.ts";
 
 const profiles = [
   {
@@ -14,14 +14,16 @@ const profiles = [
       language: "en",
       entityType: "location",
     },
+    c_customField: "customValue",
   },
   {
     name: "1",
     meta: {
       id: "1",
-      language: "es-US",
+      language: "fr",
       entityType: "location",
     },
+    c_customField: "customValue",
   },
   {
     name: "2",
@@ -30,6 +32,7 @@ const profiles = [
       language: "en",
       entityType: "location",
     },
+    c_customField: "",
   },
 ];
 
@@ -38,9 +41,17 @@ const idToPrimaryLanguage: Record<string, string> = {
   "2": "en",
 };
 const slugField = "c_slug";
-const slugFormat = "[[localeCode]]/[[address.line1]]/hardcodedPath";
-const slugFormatLocaleOverrides: Record<string, string> = {
-  en: "[[localeCode]]/[[address.line1]]/hardcodedPath",
+const slugFormatStringType = "[[localeCode]]/[[address.line1]]/hardcodedPath";
+const slugFormatFuncType = {
+  generatorFn: (lang: string, profile: BaseEntity) => {
+    const { c_customField } = profile;
+    if (c_customField) {
+      return `[[localeCode]]/[[address.line1]]/${c_customField}`;
+    }
+
+    return `[[localeCode]]/[[address.line1]]/hardcodedPath`;
+  },
+  fields: ["c_customField"],
 };
 
 Deno.test("getUpdates returns correct number of updates", () => {
@@ -48,8 +59,7 @@ Deno.test("getUpdates returns correct number of updates", () => {
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormat,
-    slugFormatLocaleOverrides
+    slugFormatStringType
   );
 
   assertEquals(updates.length, 3);
@@ -60,8 +70,7 @@ Deno.test("getUpdates correctly sets isAlternateProfile", () => {
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormat,
-    slugFormatLocaleOverrides
+    slugFormatStringType
   );
 
   for (const update of updates) {
@@ -77,8 +86,7 @@ Deno.test("getUpdates sets correct slug field", () => {
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormat,
-    slugFormatLocaleOverrides
+    slugFormatStringType
   );
 
   updates.forEach((update) => assertExists(update[slugField]));
@@ -89,19 +97,19 @@ Deno.test("getUpdates respects slug format", () => {
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormat,
-    slugFormatLocaleOverrides
+    slugFormatFuncType
   );
 
-  updates.forEach((update) => {
-    const expectedSlug =
-      slugFormatLocaleOverrides[update.meta.language] || slugFormat;
+  updates.forEach((update, idx) => {
+    const expectedSlug = slugFormatFuncType.generatorFn(
+      update.meta.language,
+      profiles[idx]
+    );
     assertEquals(update[slugField], expectedSlug);
   });
 });
 
 const baseMockAPI: IAPI = {
-  savedSearchesIncludeEntity: () => Promise.resolve(true),
   updateField: <T>(
     id: string,
     locale: string,
@@ -185,9 +193,6 @@ Deno.test("webhook skips entities with incorrect type", () => {
 Deno.test("webhook skips entities outside of saved search", () => {
   let updateFieldWasCalled = false;
   const mockApi: IAPI = Object.assign({}, baseMockAPI, {
-    savedSearchesIncludeEntity: () => {
-      return false;
-    },
     updateField: (id: string, locale: string, field: string, value: string) => {
       updateFieldWasCalled = true;
       return baseMockAPI.updateField(id, locale, field, value);
@@ -207,14 +212,15 @@ Deno.test("webhook skips entities outside of saved search", () => {
     primaryProfile: {
       meta: { id: "id", language: "en", entityType: "location" },
       name: "name",
+      savedFilters: ["not-search-id"],
     },
-    changedFields: { language: "en", fieldNames: [] },
+    changedFields: { language: "en", fieldNames: ["savedFilters"] },
   });
 
   assertEquals(updateFieldWasCalled, false);
 });
 
-Deno.test("webhook makes update when appropriate", () => {
+Deno.test("webhook skips updates for non-relevant fields", () => {
   let updateFieldWasCalled = false;
   const mockApi: IAPI = Object.assign({}, baseMockAPI, {
     updateField: (id: string, locale: string, field: string, value: string) => {
@@ -230,13 +236,102 @@ Deno.test("webhook makes update when appropriate", () => {
 
   webhook({
     entityId: "",
+    meta: { eventType: "ENTITY_UPDATES" },
+    languageProfiles: [],
+    primaryProfile: {
+      meta: { id: "id", language: "en", entityType: "location" },
+      name: "name",
+      c_non_relavent_field: "value",
+    },
+    changedFields: { language: "en", fieldNames: ["c_non_relavent_field"] },
+  });
+
+  assertEquals(updateFieldWasCalled, false);
+});
+
+Deno.test("webhook makes update when entityType is correct", () => {
+  let updateFieldWasCalled = false;
+  const mockApi: IAPI = Object.assign({}, baseMockAPI, {
+    updateField: (id: string, locale: string, field: string, value: string) => {
+      updateFieldWasCalled = true;
+      return baseMockAPI.updateField(id, locale, field, value);
+    },
+  });
+
+  const { webhook } = createManager({
+    slugFormat: "[[embedded]]/hardcodedPath",
+    entityTypes: ["hotel", "restaurant"],
+    api: mockApi,
+  });
+
+  webhook({
+    entityId: "",
+    meta: { eventType: "ENTITY_CREATED" },
+    languageProfiles: [],
+    primaryProfile: {
+      meta: { id: "id", language: "en", entityType: "hotel" },
+      name: "name",
+    },
+    changedFields: { language: "en", fieldNames: [] },
+  });
+
+  assertEquals(updateFieldWasCalled, true);
+});
+
+Deno.test("webhook makes update when savedFilters is correct", () => {
+  let updateFieldWasCalled = false;
+  const mockApi: IAPI = Object.assign({}, baseMockAPI, {
+    updateField: (id: string, locale: string, field: string, value: string) => {
+      updateFieldWasCalled = true;
+      return baseMockAPI.updateField(id, locale, field, value);
+    },
+  });
+
+  const { webhook } = createManager({
+    slugFormat: "[[embedded]]/hardcodedPath",
+    searchIds: ["id-1", "id-2", "id-3"],
+    api: mockApi,
+  });
+
+  webhook({
+    entityId: "",
+    meta: { eventType: "ENTITY_CREATED" },
+    languageProfiles: [],
+    primaryProfile: {
+      meta: { id: "id", language: "en", entityType: "hotel" },
+      name: "name",
+      savedFilters: ["id-2"],
+    },
+    changedFields: { language: "en", fieldNames: ["savedFilters"] },
+  });
+
+  assertEquals(updateFieldWasCalled, true);
+});
+
+Deno.test("webhook makes update for relavent fields", () => {
+  let updateFieldWasCalled = false;
+  const mockApi: IAPI = Object.assign({}, baseMockAPI, {
+    updateField: (id: string, locale: string, field: string, value: string) => {
+      updateFieldWasCalled = true;
+      return baseMockAPI.updateField(id, locale, field, value);
+    },
+  });
+
+  const { webhook } = createManager({
+    slugFormat: slugFormatFuncType,
+    api: mockApi,
+  });
+
+  webhook({
+    entityId: "",
     meta: { eventType: "ENTITY_CREATED" },
     languageProfiles: [],
     primaryProfile: {
       meta: { id: "id", language: "en", entityType: "location" },
       name: "name",
+      c_customField: "newCustomValue",
     },
-    changedFields: { language: "en", fieldNames: [] },
+    changedFields: { language: "en", fieldNames: ["c_customField"] },
   });
 
   assertEquals(updateFieldWasCalled, true);
