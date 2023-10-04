@@ -126,6 +126,8 @@ const getLocalData = async (
           )
           .toString()
       );
+      data.siteInternalHostName = process.env.YEXT_PAGES_SCOPE;
+
       if (criterion(data)) {
         return data;
       }
