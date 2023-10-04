@@ -6,20 +6,22 @@ interface ProfileUpdate {
   [key: string]: string | boolean | Meta;
 }
 
-export type SlugFormatType =
-  | string
-  | {
-      generatorFn: (lang: string, profile: BaseEntity) => string;
-      fields?: string[];
-    };
+interface SlugFormatString {
+  slugFormat: string;
+  fields?: never;
+}
 
-export interface InternalSlugManagerConfig {
-  slugFormat: SlugFormatType;
+interface SlugFormatFunc {
+  slugFormat: (lang: string, profile: BaseEntity) => string;
+  fields: string[];
+}
+
+export type InternalSlugManagerConfig = {
   searchIds?: string[];
   entityTypes?: string[];
   slugField?: string;
   api: Pick<IAPI, "updateField" | "listLanguageProfiles" | "listEntities">;
-}
+} & (SlugFormatString | SlugFormatFunc);
 
 export function createManager(config: InternalSlugManagerConfig) {
   const {
@@ -28,12 +30,10 @@ export function createManager(config: InternalSlugManagerConfig) {
     entityTypes = [],
     slugFormat,
     api,
+    fields,
   } = config;
 
-  const slugGeneratorFnFields =
-    typeof slugFormat == "string" || !slugFormat.fields
-      ? []
-      : slugFormat.fields;
+  const slugGeneratorFnFields = fields || [];
 
   async function connector(inputString: string | undefined) {
     const input = JSON.parse(inputString || "{}");
@@ -54,7 +54,7 @@ export function createManager(config: InternalSlugManagerConfig) {
     const entitiesResponse = await api.listEntities(params);
 
     const profileParams = new URLSearchParams({
-      fields: ["meta", slugField, ...slugGeneratorFnFields].join(","),
+      fields: ["meta", ...slugGeneratorFnFields].join(","),
       filter: JSON.stringify({
         "meta.id": {
           $in: entitiesResponse.entities.map((entity) => entity.meta.id),
@@ -106,10 +106,15 @@ export function createManager(config: InternalSlugManagerConfig) {
         : event.languageProfiles.find(
             (profile) => profile.meta.language == lang
           );
+
+    if (!profile) {
+      throw new Error(
+        `Could not find profile for language ${lang} for entity ${event.entityId}`
+      );
+    }
+
     const slug =
-      typeof slugFormat == "string"
-        ? slugFormat
-        : slugFormat.generatorFn(lang, profile!);
+      typeof slugFormat == "string" ? slugFormat : slugFormat(lang, profile);
     return api.updateField(event.entityId, lang, slugField, slug);
   }
 
@@ -120,15 +125,13 @@ export function getUpdates(
   profiles: BaseEntity[],
   idToPrimaryLanguage: Record<string, string>,
   slugField: string,
-  slugFormat: SlugFormatType
+  slugFormat: string | ((lang: string, profile: BaseEntity) => string)
 ) {
   const updates: ProfileUpdate[] = [];
   for (const profile of profiles) {
     const lang = profile.meta.language;
     const desiredSlug =
-      typeof slugFormat == "string"
-        ? slugFormat
-        : slugFormat.generatorFn(lang, profile);
+      typeof slugFormat == "string" ? slugFormat : slugFormat(lang, profile);
 
     updates.push({
       [slugField]: desiredSlug,

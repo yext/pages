@@ -17,7 +17,6 @@ export interface BaseEntity {
     entityType: string;
   };
   name: string;
-  slug?: string;
   savedFilters?: string[];
   [key: string]: any;
 }

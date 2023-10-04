@@ -41,25 +41,23 @@ const idToPrimaryLanguage: Record<string, string> = {
   "2": "en",
 };
 const slugField = "c_slug";
-const slugFormatStringType = "[[localeCode]]/[[address.line1]]/hardcodedPath";
-const slugFormatFuncType = {
-  generatorFn: (lang: string, profile: BaseEntity) => {
-    const { c_customField } = profile;
-    if (c_customField) {
-      return `[[localeCode]]/[[address.line1]]/${c_customField}`;
-    }
+const slugFormatString = "[[localeCode]]/[[address.line1]]/hardcodedPath";
+const slugFormatFunc = (lang: string, profile: BaseEntity) => {
+  const { c_customField } = profile;
+  if (c_customField) {
+    return `[[localeCode]]/[[address.line1]]/${c_customField}`;
+  }
 
-    return `[[localeCode]]/[[address.line1]]/hardcodedPath`;
-  },
-  fields: ["c_customField"],
+  return `[[localeCode]]/[[address.line1]]/hardcodedPath`;
 };
+const slugFormatFuncFields = ["c_customField"];
 
 Deno.test("getUpdates returns correct number of updates", () => {
   const updates = getUpdates(
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormatStringType
+    slugFormatString
   );
 
   assertEquals(updates.length, 3);
@@ -70,7 +68,7 @@ Deno.test("getUpdates correctly sets isAlternateProfile", () => {
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormatStringType
+    slugFormatString
   );
 
   for (const update of updates) {
@@ -86,7 +84,7 @@ Deno.test("getUpdates sets correct slug field", () => {
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormatStringType
+    slugFormatString
   );
 
   updates.forEach((update) => assertExists(update[slugField]));
@@ -97,14 +95,11 @@ Deno.test("getUpdates respects slug format", () => {
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormatFuncType
+    slugFormatFunc
   );
 
   updates.forEach((update, idx) => {
-    const expectedSlug = slugFormatFuncType.generatorFn(
-      update.meta.language,
-      profiles[idx]
-    );
+    const expectedSlug = slugFormatFunc(update.meta.language, profiles[idx]);
     assertEquals(update[slugField], expectedSlug);
   });
 });
@@ -318,7 +313,8 @@ Deno.test("webhook makes update for relavent fields", () => {
   });
 
   const { webhook } = createManager({
-    slugFormat: slugFormatFuncType,
+    slugFormat: slugFormatFunc,
+    fields: slugFormatFuncFields,
     api: mockApi,
   });
 
