@@ -17,7 +17,8 @@ export interface BaseEntity {
     entityType: string;
   };
   name: string;
-  slug?: string;
+  savedFilters?: string[];
+  [key: string]: any;
 }
 
 export interface Meta {
@@ -50,10 +51,6 @@ export interface ListLanguageProfilesResponse<EntityType> {
 }
 
 export interface IAPI {
-  savedSearchesIncludeEntity: (
-    searchIds: string[],
-    entityId: string
-  ) => Promise<boolean>;
   updateField: <EntityType = BaseEntity>(
     id: string,
     locale: string,
@@ -102,19 +99,6 @@ export class API implements IAPI {
     }
 
     return `${this.baseUrl}${path}?${params.toString()}`;
-  }
-
-  async savedSearchesIncludeEntity(searchIds: string[], entityId: string) {
-    const params = new URLSearchParams({
-      searchIds: searchIds.join(","),
-      filter: JSON.stringify({ "meta.id": entityId }),
-    });
-
-    const req = new Request(this.constructRequestUrl("entities", params), {
-      headers,
-    });
-    const resp = await wrappedFetch<ListEntitiesResponse<BaseEntity>>(req);
-    return resp.count === 1;
   }
 
   async updateField<EntityType = BaseEntity>(
