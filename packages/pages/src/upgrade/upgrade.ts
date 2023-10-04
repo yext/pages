@@ -5,11 +5,18 @@ import { templatesHandler } from "../generate/templates/templates.js";
 import { artifactsHandler } from "../generate/artifacts/artifacts.js";
 import { ProjectStructure } from "../common/src/project/structure.js";
 
-const handler = async ({ scope }: { scope: string }) => {
-  const scoped = { scope: scope };
+interface UpgradeArgs {
+  noMigration?: boolean;
+  scope?: string;
+}
+
+const handler = async (args: UpgradeArgs) => {
+  const scoped = { scope: args.scope || "" };
   const projectStructure = await ProjectStructure.init(scoped);
   await updatePages(projectStructure);
-  await migrateConfigs(projectStructure);
+  if (!args.noMigration) {
+    await migrateConfigs(projectStructure);
+  }
   await templatesHandler(scoped);
   await artifactsHandler(scoped);
 };
@@ -21,6 +28,10 @@ export const upgradeCommand = (program: Command) => {
     .option(
       "--scope <string>",
       "The subfolder to scope the served templates from"
+    )
+    .option(
+      "--noMigration",
+      "Skip the migration to config.yaml and deletion of sites-config"
     )
     .action(handler);
 };
