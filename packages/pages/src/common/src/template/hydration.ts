@@ -62,16 +62,11 @@ export const getHydrationTemplate = (
   templateModulePath: string,
   props: TemplateRenderProps
 ): string => {
+  const posixModulePath = convertToPosixPath(templateModulePath);
+  const posixRenderPath = convertToPosixPath(clientRenderTemplatePath);
   return `
-        const componentUrl = import.meta.resolve("/${convertToPosixPath(
-          templateModulePath
-        )}");
-        const renderUrl = import.meta.resolve("/${convertToPosixPath(
-          clientRenderTemplatePath
-        )}");
-        
-        const component = await import(componentUrl);
-        const render = await import(renderUrl);
+        const component = await import("/${posixModulePath}");
+        const render = await import("/${posixRenderPath}");
 
         render.render(
         {
