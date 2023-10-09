@@ -65,11 +65,8 @@ export const getHydrationTemplate = (
   const posixModulePath = convertToPosixPath(templateModulePath);
   const posixRenderPath = convertToPosixPath(clientRenderTemplatePath);
   return `
-        const componentURL = new URL("/${posixModulePath}", import.meta.url)
-        const component = await import(componentURL);
-
-        const renderURL = new URL("/${posixRenderPath}", import.meta.url)
-        const render = await import(renderURL);
+        const component = await import("/${posixModulePath}");
+        const render = await import("/${posixRenderPath}");
 
         render.render(
         {
@@ -78,13 +75,6 @@ export const getHydrationTemplate = (
         }
         );
     `;
-};
-
-const makeAbsolute = (path: string): string => {
-  if (!path.startsWith("/")) {
-    return "/" + path;
-  }
-  return path;
 };
 
 /**
