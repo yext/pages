@@ -66,9 +66,11 @@ export const getHydrationTemplate = (
   const posixRenderPath = convertToPosixPath(clientRenderTemplatePath);
   return `
         const componentURL = new URL("/${posixModulePath}", import.meta.url)
+        console.log("DEBUG", componentURLs, import.meta.url);
         const component = await import(componentURL);
 
         const renderURL = new URL("/${posixRenderPath}", import.meta.url)
+        console.log("DEBUG", renderURL, import.meta.url);
         const render = await import(renderURL);
 
         render.render(
