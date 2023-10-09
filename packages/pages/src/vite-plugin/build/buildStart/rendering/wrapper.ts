@@ -27,9 +27,10 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
     ? templateModuleInternal.getHeadConfig(props)
     : undefined;
 
-  const templateFilepath = `${projectStructure.getTemplatePaths()[0].path}/${
-    templateModuleInternal.templateName
-  }.tsx`;
+  const templateFilepath = path.join(
+    projectStructure.getTemplatePaths()[0].path,
+    `${templateModuleInternal.templateName}.tsx`
+  );
 
   const serverHtml = await pluginRenderTemplates.server.render({
     Page: templateModuleInternal.default!,

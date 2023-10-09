@@ -5,18 +5,28 @@ import {
   FeatureConfig,
   convertTemplateConfigToFeatureConfig,
 } from "../../common/src/feature/features.js";
-import { TemplateModuleCollection } from "../../common/src/template/internal/loader.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
+import { StreamConfig } from "../../common/src/feature/stream.js";
+import { TemplateModuleCollection } from "../../common/src/template/loader/loader.js";
+
+// TODO: rename functions in this file once there is a migration flow and checks for it
+// TODO: mergeFeatureJson will no longer be necessary
+// TODO: write to dist/templates.json
 
 export const getFeaturesConfig = (
   templateModules: TemplateModuleCollection
 ): FeaturesConfig => {
   const features: FeatureConfig[] = [];
-  const streams: any[] = [];
+  const streams: StreamConfig[] = [];
   for (const module of templateModules.values()) {
     const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
     features.push(featureConfig);
-    module.config.stream && streams.push({ ...module.config.stream });
+    module.config.stream &&
+      streams.push({
+        ...module.config.stream,
+        source: "knowledgeGraph",
+        destination: "pages",
+      });
   }
 
   return { features, streams };
@@ -54,7 +64,7 @@ export const createFeaturesJson = (
  * Overwrites the "features" and "streams" fields in the feature.json while keeping other fields
  * if the feature.json already exists.
  */
-const mergeFeatureJson = (
+export const mergeFeatureJson = (
   featurePath: string,
   features: FeatureConfig[],
   streams: any

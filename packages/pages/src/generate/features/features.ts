@@ -1,21 +1,15 @@
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { getTemplateFilepaths } from "../../common/src/template/internal/getTemplateFilepaths.js";
-import { loadTemplateModules } from "../../common/src/template/internal/loader.js";
-import { createFeaturesJson } from "./createFeaturesJson.js";
 import { Command } from "commander";
+import { createTemplatesJson } from "../templates/createTemplatesJson.js";
 
 const handler = async ({ scope }: { scope: string }): Promise<void> => {
   const projectStructure = await ProjectStructure.init({ scope });
   const templateFilepaths = getTemplateFilepaths(
     projectStructure.getTemplatePaths()
   );
-  const templateModules = await loadTemplateModules(
-    templateFilepaths,
-    true,
-    false
-  );
 
-  createFeaturesJson(templateModules, projectStructure);
+  await createTemplatesJson(templateFilepaths, projectStructure, "FEATURES");
 };
 
 export const featureCommand = (program: Command) => {

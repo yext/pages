@@ -11,13 +11,22 @@ const validUniverses = ["sandbox", "production", "sbx", "prod", "qa", "dev"];
  *
  * @public
  */
-export const parseYextrcContents = () => {
+export const parseYextrcContents = (scope: string | undefined = undefined) => {
   let accountId: string | undefined;
   let universe: string | undefined;
   try {
     const yextrcContents: string = fs.readFileSync(".yextrc", "utf8");
     const parsedContents = YAML.parse(yextrcContents);
-    if (
+    if (scope && parsedContents[scope]) {
+      const scopedContents = parsedContents[scope];
+      accountId = !isNaN(Number(scopedContents.accountId))
+        ? scopedContents.accountId
+        : undefined;
+      universe = validUniverses.includes(scopedContents.universe)
+        ? scopedContents.universe
+        : undefined;
+    } else if (
+      !scope &&
       !isNaN(Number(parsedContents.accountId)) &&
       validUniverses.includes(parsedContents.universe)
     ) {

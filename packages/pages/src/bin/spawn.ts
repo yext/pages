@@ -6,9 +6,9 @@ import path from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const filePrefix = path.sep === path.win32.sep ? "file:\\\\" : "";
 const pathToPagesScript = path.resolve(__dirname, "./pages.js");
-
-const pathToLoader = path.resolve(__dirname, "./loader.js");
+const pathToLoader = filePrefix + path.resolve(__dirname, "./loader.js");
 
 const nodeVersion = Number(
   spawnSync("node", ["-v"], { encoding: "utf-8" })

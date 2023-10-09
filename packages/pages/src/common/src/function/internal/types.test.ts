@@ -51,7 +51,7 @@ const exampleOnUrlChangeArgument: SitesOnUrlChangeRequest = {
 };
 
 const createMockFilePath = (filepath: string): path.ParsedPath => {
-  return path.parse(path.resolve(path.join("src/functions/", filepath)));
+  return path.parse(path.resolve(path.join("src", "functions", filepath)));
 };
 
 describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () => {
@@ -63,7 +63,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath("http/api/example.ts"),
+        createMockFilePath(path.join("http", "api", "example.ts")),
         functionModule,
         projectStructure
       );
@@ -74,16 +74,16 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         event: "API",
       },
       filePath: {
-        root: "/",
-        dir: process.cwd() + "/src/functions/http/api",
+        root: path.resolve("/"),
+        dir: path.join(process.cwd(), "src", "functions", "http", "api"),
         base: "example.ts",
         ext: ".ts",
         name: "example",
       },
       slug: {
-        original: "api/example",
-        dev: "api/example",
-        production: "api/example",
+        original: path.join("api", "example"),
+        dev: path.join("api", "example"),
+        production: path.join("api", "example"),
       },
     };
     expect(JSON.stringify(functionModuleInternal)).toEqual(
@@ -107,7 +107,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath("onUrlChange/example.ts"),
+        createMockFilePath(path.join("onUrlChange", "example.ts")),
         functionModule,
         projectStructure
       );
@@ -118,8 +118,8 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         event: "ON_URL_CHANGE",
       },
       filePath: {
-        root: "/",
-        dir: process.cwd() + "/src/functions/onUrlChange",
+        root: path.resolve("/"),
+        dir: path.join(process.cwd(), "src", "functions", "onUrlChange"),
         base: "example.ts",
         ext: ".ts",
         name: "example",
@@ -149,7 +149,9 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     };
     const functionModuleInternal =
       convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath("http/api/example/[testParam].ts"),
+        createMockFilePath(
+          path.join("http", "api", "example", "[testParam].ts")
+        ),
         functionModule,
         projectStructure
       );
@@ -160,16 +162,23 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         event: "API",
       },
       filePath: {
-        root: "/",
-        dir: process.cwd() + "/src/functions/http/api/example",
+        root: path.resolve("/"),
+        dir: path.join(
+          process.cwd(),
+          "src",
+          "functions",
+          "http",
+          "api",
+          "example"
+        ),
         base: "[testParam].ts",
         ext: ".ts",
         name: "[testParam]",
       },
       slug: {
-        original: "api/example/[testParam]",
-        dev: "api/example/:testParam",
-        production: "api/example/{{testParam}}",
+        original: path.join("api", "example", "[testParam]"),
+        dev: path.join("api", "example", ":testParam"),
+        production: path.join("api", "example", "{{testParam}}"),
       },
     };
     expect(JSON.stringify(functionModuleInternal)).toEqual(

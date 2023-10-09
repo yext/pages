@@ -1,11 +1,11 @@
 import fs from "fs-extra";
 import path from "path";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
-import { TemplateModuleCollection } from "../../../common/src/template/internal/loader.js";
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
 import { Manifest } from "../../../common/src/template/types.js";
 import { glob } from "glob";
 import { Path } from "../../../common/src/project/path.js";
+import { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
 
 /**
  * Creates a manifest.json for use with the Pages vite-plugin
@@ -29,11 +29,13 @@ export const generateManifestFile = (
 
   // Add the renderPaths to the manifest. This defines the _client and _server entries.
   const renderPaths = glob.sync(
-    path.resolve(
-      projectStructure.config.rootFolders.dist,
-      projectStructure.config.subfolders.assets,
-      projectStructure.config.subfolders.renderBundle,
-      "**/*.js"
+    convertToPosixPath(
+      path.resolve(
+        projectStructure.config.rootFolders.dist,
+        projectStructure.config.subfolders.assets,
+        projectStructure.config.subfolders.renderBundle,
+        "**/*.js"
+      )
     )
   );
 

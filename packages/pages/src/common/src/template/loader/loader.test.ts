@@ -1,6 +1,7 @@
 import { glob } from "glob";
 import path from "path";
 import { loadTemplateModules } from "./loader.js";
+import { convertToPosixPath } from "../paths.js";
 
 // our jest configuration doesn't support file urls so update pathToFileURL to do nothing during
 // this test.
@@ -23,7 +24,9 @@ afterAll(() => jest.unmock("url"));
 describe("loadTemplateModules", () => {
   it("loads and transpiles raw templates", async () => {
     const templateFile = glob.sync(
-      path.join(process.cwd(), "tests/fixtures/template.tsx")
+      convertToPosixPath(
+        path.join(process.cwd(), "tests/fixtures/template.tsx")
+      )
     );
     const templateModules = await loadTemplateModules(
       templateFile,
@@ -36,7 +39,7 @@ describe("loadTemplateModules", () => {
 
   it("loads transpiled templates", async () => {
     const templateFile = glob.sync(
-      path.join(process.cwd(), "tests/fixtures/template.js")
+      convertToPosixPath(path.join(process.cwd(), "tests/fixtures/template.js"))
     );
     const templateModules = await loadTemplateModules(
       templateFile,

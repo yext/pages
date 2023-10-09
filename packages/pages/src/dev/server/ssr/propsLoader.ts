@@ -25,6 +25,7 @@ export const propsLoader = async ({
       `Could not find document data for entityId and locale: ${entityId} ${locale}`
     );
   }
+  document.siteInternalHostName = process.env.YEXT_PAGES_SCOPE;
 
   let templateProps: TemplateProps = {
     document: document,

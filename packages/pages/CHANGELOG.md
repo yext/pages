@@ -1,3 +1,27 @@
+#### 1.0.0-rc.4 (2023-09-20)
+
+##### Chores
+
+*  fix changelogs (c0d3aa07)
+
+##### Bug Fixes
+
+* **dev:**  env vars through ts-morph double quoted (#394) (dc5032c8)
+
+#### 1.0.0-rc.3 (2023-09-20)
+
+##### New Features
+
+* **plugin:**  include static assets in platform (#392) (5932e264)
+
+##### Bug Fixes
+
+*  empty yaml leads to parse error (#391) (a1632ce8)
+* **dev:**
+  *  fix dev and tests on Windows (#386) (16ee235d)
+  *  use ts-morph to parse template configs (#387) (bc51b803)
+  *  serverless functions body format consistency (#385) (a2ad104a)
+
 #### 1.0.0-rc.2 (2023-09-01)
 
 ##### Chores

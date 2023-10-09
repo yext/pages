@@ -1,3 +1,9 @@
+#### 1.0.0-beta.5 (2023-09-14)
+
+##### Bug Fixes
+
+* **pages-plugins:**  add rendered = true to include all fields in the lang profiles (#388) (92637531)
+
 #### 1.0.0-beta.4 (2023-05-10)
 
 ##### New Features
