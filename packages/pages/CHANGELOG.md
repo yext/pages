@@ -1,3 +1,9 @@
+#### 1.0.0-rc.2.1 (2023-10-09)
+
+##### Bug Fixes
+
+* **plugin:**  remove import.meta.resolve dependency (#402) (6db33672)
+
 #### 1.0.0-rc.2 (2023-09-01)
 
 ##### Chores
