@@ -1,0 +1,39 @@
+on: workflow_call
+  
+jobs:
+  jstest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "./packages/pages"
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+
+      - name: Build with NodeJS 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+
+      - name: Install deps
+        run: pnpm i
+
+      - name: Pack
+        run: pnpm pack --pack-destination latest
+
+      - name: Checkout JSTEST
+        uses: actions/checkout@v4
+        with:
+          repository: yext/jstest
+          path: jstest
+          ssh-key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
+
+
+
+
+        
+        
