@@ -30,8 +30,6 @@ jobs:
         with:
           repository: yext/jstest
           ssh-key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
-          path: jstest
-
 
 
         
