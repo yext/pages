@@ -28,7 +28,6 @@ jobs:
       - name: Checkout JSTEST
         uses: actions/checkout@v4
         with:
-          submodules: true
           ref: "main"
           repository: yext/jstest
           ssh-key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
