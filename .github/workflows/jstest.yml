@@ -6,9 +6,9 @@ jobs:
     defaults:
       run:
         working-directory: "./packages/pages"
+    env:
+      SSH_PRIVATEKEY: ${{secrets.JSTEST_PRIVATE_SSH_KEY }}
     steps:
-      - env:
-          SSH_PRIVATE_KEY: ${{secrets.JSTEST_PRIVATE_SSH_KEY }}
       - name: "Checkout"
         uses: actions/checkout@v4
 
