@@ -1,6 +1,10 @@
-on: workflow_call
+on:
+  workflow_call:
+    secrets:
+      JSTEST_PRIVATE_SSH_KEY:
+        description: 'Private key to access the jstest repo'
+        required: true
 
-  
 jobs:
   jstest:
     runs-on: ubuntu-latest
