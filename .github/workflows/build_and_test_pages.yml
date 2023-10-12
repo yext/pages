@@ -22,4 +22,4 @@ jobs:
     needs: call_build
     uses: ./.github/workflows/jstest.yml
     with:
-      jstest-private-key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
+      jstest_key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
