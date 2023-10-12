@@ -1,9 +1,4 @@
-on: 
-  workflow_call:
-    inputs:
-      jstest_key:
-        description: 'Key to access jstest repo'
-        required: true
+on: workflow_call
 
   
 jobs:
@@ -17,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: "Print key (this is unsecure)"
-        run: echo KeyHere ${{inputs.jstest_key}} KeyEnd
+        run: echo KeyHere ${{ secrets.JSTEST_PRIVATE_SSH_KEY }} KeyEnd
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
@@ -39,7 +34,7 @@ jobs:
         with:
           ref: "main"
           repository: yext/jstest
-          ssh-key: ${{ inputs.jstest_key }}
+          ssh-key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
 
 
         
