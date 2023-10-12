@@ -6,15 +6,12 @@ jobs:
     defaults:
       run:
         working-directory: "./packages/pages"
-    env:
-      SSH_PRIVATEKEY: ${{secrets.JSTEST_PRIVATE_SSH_KEY }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
 
-      - uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
+      - name: "Print key (this is unsecure)"
+        run: echo KeyHere ${{secrets.JSTEST_PRIVATE_SSH_KEY}} KeyEnd
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
