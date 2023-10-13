@@ -1,1 +1,4 @@
-exit 1
+cd ../jstest
+ls
+pwd
+exit 3
