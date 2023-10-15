@@ -38,6 +38,12 @@ jobs:
           ssh-key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
           path: jstest
 
+      - name: ls github workspace
+        run: ls $GITHUB_WORKSPACE
+
+      - name: ls github workspace jstest
+        run: ls $GITHUB_WORKSPACE/jstest
+
 #      - name: Shell test
 #        run: chmod +x ./scripts/install_and_test.sh && ./scripts/install_and_test.sh
       - name: Node test
