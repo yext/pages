@@ -38,8 +38,10 @@ jobs:
           ssh-key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
           path: jstest
 
-      - name: Shell test
-        run: chmod +x ./scripts/install_and_test.sh && ./scripts/install_and_test.sh
+#      - name: Shell test
+#        run: chmod +x ./scripts/install_and_test.sh && ./scripts/install_and_test.sh
+      - name: Node test
+        run: node ./scripts/install_and_test.js
 
 
         
