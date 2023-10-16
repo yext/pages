@@ -39,6 +39,15 @@ jobs:
           path: jstest
 
       - name: Test chat-ui-react
-        run: cd $GITHUB_WORKSPACE/jstest/sdks/chat-ui-react && npm i && npx playwright install && npm install @yext/pages $GITHUB_WORKSPACE/packages/pages/latest/* && npm run playwright
-#      - name: Install and test
-#        run: node ./scripts/install_and_test.js
+        run: | 
+         cd $GITHUB_WORKSPACE/jstest/sdks/chat-ui-react \
+          && npm i && npx playwright install \
+          && npm install @yext/pages $GITHUB_WORKSPACE/packages/pages/latest/* \
+          && npm run playwright
+
+      - name: Test search-ui-react
+        run: |
+          cd $GITHUB_WORKSPACE/jstest/sdks/search-ui-react \
+           && npm i && npx playwright install \
+           && npm install @yext/pages $GITHUB_WORKSPACE/packages/pages/latest/* \
+           && npm run playwright

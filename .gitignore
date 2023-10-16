@@ -6,6 +6,7 @@ node_modules/
 .eslintcache
 storybook-static
 jstest
+packages/pages/latest
 
 # Logs
 logs
