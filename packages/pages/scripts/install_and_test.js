@@ -16,6 +16,7 @@ sdks.forEach((sdk) => {
   const cwd = {
     cwd: `../../jstest/sdks/${sdk}`,
   };
+  console.log(`npm install @yext/pages ${packagePath}`);
   child_process.execSync(`npm install @yext/pages ${packagePath}`, cwd);
   child_process.execSync(`npm install`, cwd);
   child_process.execSync("npm run playwright", cwd);
