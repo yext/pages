@@ -1,4 +1,5 @@
 import fs from "fs-extra";
+import isEqual from "lodash/isEqual";
 import path from "path";
 import {
   FeaturesConfig,
@@ -86,8 +87,20 @@ export const getTemplatesConfig = (
     const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
     features.push(featureConfig);
     const streamConfig = convertTemplateConfigToStreamConfig(module.config);
-    if (streamConfig) {
+    if (!streamConfig) {
+      continue;
+    }
+    const matchingStreamConfig = streams.find(
+      (stream) => stream.$id === streamConfig.$id
+    );
+    if (!matchingStreamConfig) {
       streams.push(streamConfig);
+      continue;
+    }
+    if (!isEqual(matchingStreamConfig, streamConfig)) {
+      throw new Error(
+        "Conflicting configurations found for stream ID ${streamConfig.$id}"
+      );
     }
   }
 
