@@ -38,11 +38,13 @@ const handler = async ({
     console.log("Running autoYextInit");
     await autoYextInit(scope);
   }
-  if (!noGenFeatures) console.log("Running generate features");
-  await runSubProcess(
-    "pages generate features",
-    scope ? ["--scope" + " " + scope] : []
-  );
+  if (!noGenFeatures) {
+    console.log("Running generate features");
+    await runSubProcess(
+      "pages generate features",
+      scope ? ["--scope" + " " + scope] : []
+    );
+  }
 
   const devServerPort =
     port ??
