@@ -33,6 +33,7 @@ const handler = async ({
         " and install some new required dependencies."
     );
   }
+  console.log("Testing testing testing...");
 
   if (!noInit) {
     console.log("Running autoYextInit");
