@@ -27,6 +27,7 @@ export const createServer = async (
   devServerPort: number,
   scope?: string
 ) => {
+  console.warn("Creating express app");
   // creates a standard express app
   const app = express();
 
@@ -40,6 +41,8 @@ export const createServer = async (
   const defaultLocale = getDefaultLocale(projectStructure);
 
   // create vite using ssr mode
+  console.warn("About to create vite dev server");
+  console.warn(`projStructure: ${JSON.stringify(projectStructure)}`);
   const vite = await createViteServer({
     server: {
       middlewareMode: true,
