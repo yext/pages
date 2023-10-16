@@ -37,6 +37,9 @@ jobs:
           repository: yext/jstest
           ssh-key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
           path: jstest
+          
+      - name: check versions
+        run: node -v && npm -v
 
       - name: Install and test
         run: node ./scripts/install_and_test.js
