@@ -1,6 +1,6 @@
-import path from "path";
-import fs from "fs";
-import * as child_process from "child_process";
+import path from "node:path";
+import fs from "node:fs";
+import * as child_process from "node:child_process";
 
 // Gets the path to the packaged version of PagesJS
 const latestPath = path.resolve("latest");
@@ -10,11 +10,11 @@ const packagePath = path.resolve(
 );
 
 // Iterate through sdks, install local pages package, and run playwright
-const sdks = fs.readdirSync(`../../jstest/sdks`);
+const sdks = fs.readdirSync(path.resolve(`../../jstest/sdks`));
 sdks.forEach((sdk) => {
   console.log(`Testing ${sdk}..`);
   const cwd = {
-    cwd: `../../jstest/sdks/${sdk}`,
+    cwd: path.resolve(`../../jstest/sdks/${sdk}`),
   };
   console.log(`npm install @yext/pages ${packagePath}`);
   console.log(child_process.execSync("npm -v && node -v"));
