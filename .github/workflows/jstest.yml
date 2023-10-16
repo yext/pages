@@ -41,6 +41,9 @@ jobs:
       - name: check versions
         run: node -v && npm -v
 
+      - name: Install playwright browsers
+        run: pnpm exec playwright install
+
       - name: Just run the test
         run: cd $GITHUB_WORKSPACE/jstest/sdks/chat-ui-react && npm i && npm run playwright
 #      - name: Install and test
