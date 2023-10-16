@@ -33,14 +33,14 @@ const handler = async ({
         " and install some new required dependencies."
     );
   }
-  console.log("Testing testing testing...");
+  console.warn("Testing testing testing...");
 
   if (!noInit) {
-    console.log("Running autoYextInit");
+    console.warn("Running autoYextInit");
     await autoYextInit(scope);
   }
   if (!noGenFeatures) {
-    console.log("Running generate features");
+    console.warn("Running generate features");
     await runSubProcess(
       "pages generate features",
       scope ? ["--scope" + " " + scope] : []
@@ -52,7 +52,7 @@ const handler = async ({
     (await getPort({
       port: portNumbers(5173, 6000),
     }));
-  console.log(
+  console.warn(
     `Creating server: Local: ${local} ProdUrl: ${prodUrl} DevServerPort: ${devServerPort}` +
       `Scope: ${scope} OpenBrowser: ${openBrowser} noInit: ${noInit} noGenFeatures: ${noGenFeatures}`
   );
