@@ -51,7 +51,7 @@ export const createServer = async (
       projectStructure.config.envVarConfig.envVarPrefix
     ),
     optimizeDeps: {
-      include: ["react-dom", "react-dom/client"],
+      include: ["react-dom"],
     },
   });
 
