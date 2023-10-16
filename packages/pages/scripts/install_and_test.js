@@ -20,5 +20,5 @@ sdks.forEach((sdk) => {
   console.log(child_process.execSync("npm -v && node -v"));
   child_process.execSync(`npm ci`, cwd);
   child_process.execSync(`npm install @yext/pages ${packagePath}`, cwd);
-  child_process.execSync("npm run playwright", cwd);
+  child_process.execSync("npx playwright test", cwd);
 });

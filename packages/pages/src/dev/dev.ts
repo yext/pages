@@ -35,19 +35,24 @@ const handler = async ({
   }
 
   if (!noInit) {
+    console.log("Running autoYextInit");
     await autoYextInit(scope);
   }
-  if (!noGenFeatures)
-    await runSubProcess(
-      "pages generate features",
-      scope ? ["--scope" + " " + scope] : []
-    );
+  if (!noGenFeatures) console.log("Running generate features");
+  await runSubProcess(
+    "pages generate features",
+    scope ? ["--scope" + " " + scope] : []
+  );
 
   const devServerPort =
     port ??
     (await getPort({
       port: portNumbers(5173, 6000),
     }));
+  console.log(
+    `Creating server: Local: ${local} ProdUrl: ${prodUrl} DevServerPort: ${devServerPort}` +
+      `Scope: ${scope} OpenBrowser: ${openBrowser} noInit: ${noInit} noGenFeatures: ${noGenFeatures}`
+  );
   await createServer(!local, !!prodUrl, devServerPort, scope);
 
   if (openBrowser) await open(`http://localhost:${devServerPort}/`);
