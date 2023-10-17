@@ -27,6 +27,8 @@ export interface Subfolders {
   serverlessFunctions: string; // Node functions
   /** Where to output the bundled static assets */
   assets: string;
+  /** Where to output the client bundles */
+  clientBundle: string;
   /** Where to output the server bundles */
   serverBundle: string;
   /** Where to output the render bundles */
@@ -114,6 +116,7 @@ export interface ProjectStructureConfig {
   rootFiles: RootFiles;
   /** Defines how environment variables will be declared and processed */
   envVarConfig: EnvVar;
+
   /**
    * This is used for the case of multibrand setup within a single repo.
    *
@@ -136,6 +139,7 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
     templates: "templates",
     serverlessFunctions: "functions",
     assets: DEFAULT_ASSETS_DIR,
+    clientBundle: "client",
     serverBundle: "server",
     renderBundle: "render",
     renderer: "renderer",
@@ -223,6 +227,32 @@ export class ProjectStructure {
     }
 
     return [new Path(templatesRoot)];
+  };
+
+  /**
+   * @returns the list of /dist/assets/client paths, taking scope into account.
+   */
+  getClientPaths = () => {
+    // dist/assets/client
+    const root = pathLib.join(
+      this.config.rootFolders.dist,
+      this.config.subfolders.assets,
+      this.config.subfolders.clientBundle
+    );
+
+    if (this.config.scope) {
+      return [new Path(pathLib.join(root, this.config.scope)), new Path(root)];
+    }
+
+    return [new Path(root)];
+  };
+
+  /**
+   * @returns list of src/templates and dist/assets/clients, taking scope into account.
+   */
+  getAllTemplatePaths = () => {
+    const paths = this.getTemplatePaths();
+    return paths.concat(this.getClientPaths());
   };
 
   /**

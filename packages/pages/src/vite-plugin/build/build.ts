@@ -37,7 +37,7 @@ export const build = (projectStructure: ProjectStructure): Plugin => {
           rollupOptions: {
             preserveEntrySignatures: "strict",
             input: await discoverInputs(
-              projectStructure.getTemplatePaths(),
+              projectStructure.getAllTemplatePaths(),
               projectStructure
             ),
             output: {
@@ -91,8 +91,15 @@ const discoverInputs = async (
           f !== "_client17.tsx" && f !== "_client.tsx" && f !== "_server.tsx"
       )
       .forEach((template) => {
+        console.log("template: " + dir + " " + template);
+
         const parsedPath = parse(template);
-        const outputPath = `${projectStructure.config.subfolders.serverBundle}/${parsedPath.name}`;
+        const bundlePath = dir.endsWith(
+          projectStructure.config.subfolders.templates
+        )
+          ? projectStructure.config.subfolders.serverBundle
+          : projectStructure.config.subfolders.clientBundle;
+        const outputPath = `${bundlePath}/${parsedPath.name}`;
         if (entryPoints[outputPath]) {
           return;
         }
