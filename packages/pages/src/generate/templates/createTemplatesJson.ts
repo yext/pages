@@ -15,10 +15,6 @@ import {
   TemplateModuleCollection,
   loadTemplateModules,
 } from "../../common/src/template/loader/loader.js";
-import SourceFileParser, {
-  createTsMorphProject,
-} from "../../common/src/parsers/sourceFileParser.js";
-import TemplateParser from "../../common/src/parsers/templateParser.js";
 
 /**
  * Generates a templates.json or features.json from the templates.
@@ -95,9 +91,6 @@ export const getTemplatesConfig = (
     if (streamConfig) {
       pushStreamConfigIfValid(streams, streamConfig);
     }
-
-    // const sfp = new SourceFileParser(module.path, createTsMorphProject());
-    // const tp = new TemplateParser(sfp).makeClientTemplate("/Users/asanehisa/pages-test-local/alexis-test/src/foo/")
   }
 
   return { features, streams };
