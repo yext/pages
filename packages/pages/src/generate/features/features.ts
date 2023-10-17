@@ -2,6 +2,7 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { getTemplateFilepaths } from "../../common/src/template/internal/getTemplateFilepaths.js";
 import { Command } from "commander";
 import { createTemplatesJson } from "../templates/createTemplatesJson.js";
+import { logErrorAndExit } from "../../util/logError.js";
 
 const handler = async ({ scope }: { scope: string }): Promise<void> => {
   const projectStructure = await ProjectStructure.init({ scope });
@@ -12,7 +13,7 @@ const handler = async ({ scope }: { scope: string }): Promise<void> => {
   try {
     await createTemplatesJson(templateFilepaths, projectStructure, "FEATURES");
   } catch (error) {
-    console.error(error);
+    logErrorAndExit(error);
   }
 };
 

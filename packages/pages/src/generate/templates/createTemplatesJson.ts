@@ -87,20 +87,9 @@ export const getTemplatesConfig = (
     const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
     features.push(featureConfig);
     const streamConfig = convertTemplateConfigToStreamConfig(module.config);
-    if (!streamConfig) {
-      continue;
+    if (streamConfig) {
+      pushStreamConfigIfValid(streams, streamConfig);
     }
-    const matchingStreamConfig = streams.find(
-      (stream) => stream.$id === streamConfig.$id
-    );
-    if (!matchingStreamConfig) {
-      streams.push(streamConfig);
-      continue;
-    }
-    if (isEqual(matchingStreamConfig, streamConfig)) {
-      continue;
-    }
-    throw `Conflicting configurations found for stream ID: ${streamConfig.$id}`;
   }
 
   return { features, streams };
@@ -125,4 +114,21 @@ export const mergeFeatureJson = (
     features,
     streams,
   };
+};
+
+export const pushStreamConfigIfValid = (
+  streams: StreamConfig[],
+  streamConfig: StreamConfig
+): void => {
+  const matchingStreamConfig = streams.find(
+    (stream) => stream.$id === streamConfig.$id
+  );
+  if (!matchingStreamConfig) {
+    streams.push(streamConfig);
+    return;
+  }
+  if (isEqual(matchingStreamConfig, streamConfig)) {
+    return;
+  }
+  throw `Conflicting configurations found for stream ID: ${streamConfig.$id}`;
 };
