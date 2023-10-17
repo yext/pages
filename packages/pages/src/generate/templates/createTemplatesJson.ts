@@ -1,4 +1,5 @@
 import fs from "fs-extra";
+import isEqual from "lodash/isEqual.js";
 import path from "path";
 import {
   FeaturesConfig,
@@ -87,7 +88,7 @@ export const getTemplatesConfig = (
     features.push(featureConfig);
     const streamConfig = convertTemplateConfigToStreamConfig(module.config);
     if (streamConfig) {
-      streams.push(streamConfig);
+      pushStreamConfigIfValid(streams, streamConfig);
     }
   }
 
@@ -113,4 +114,21 @@ export const mergeFeatureJson = (
     features,
     streams,
   };
+};
+
+export const pushStreamConfigIfValid = (
+  streams: StreamConfig[],
+  streamConfig: StreamConfig
+): void => {
+  const matchingStreamConfig = streams.find(
+    (stream) => stream.$id === streamConfig.$id
+  );
+  if (!matchingStreamConfig) {
+    streams.push(streamConfig);
+    return;
+  }
+  if (isEqual(matchingStreamConfig, streamConfig)) {
+    return;
+  }
+  throw `Conflicting configurations found for stream ID: ${streamConfig.$id}`;
 };
