@@ -22,6 +22,7 @@ import {
   TemplateModuleCollection,
   loadTemplateModules,
 } from "../../../common/src/template/loader/loader.js";
+import { logErrorAndExit } from "../../../util/logError.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -97,7 +98,7 @@ export default (projectStructure: ProjectStructure) => {
         finisher.succeed("Validated functions");
       } catch (e) {
         finisher.fail("One or more functions failed validation");
-        throw e;
+        logErrorAndExit(e);
       }
 
       finisher = logger.timedLog({ startLog: "Writing functionMetadata.json" });
@@ -106,7 +107,7 @@ export default (projectStructure: ProjectStructure) => {
         finisher.succeed("Successfully wrote functionMetadata.json");
       } catch (e: any) {
         finisher.fail("Failed to write functionMetadata.json");
-        throw new Error(e);
+        logErrorAndExit(e);
       }
     }
 
@@ -117,7 +118,7 @@ export default (projectStructure: ProjectStructure) => {
         finisher.succeed("Successfully bundled serverless functions");
       } catch (e: any) {
         finisher.fail("Failed to bundle serverless functions");
-        throw new Error(e);
+        logErrorAndExit(e);
       }
     }
 
@@ -127,7 +128,7 @@ export default (projectStructure: ProjectStructure) => {
       finisher.succeed("Successfully wrote features.json");
     } catch (e: any) {
       finisher.fail("Failed to write features.json");
-      throw new Error(e);
+      logErrorAndExit(e);
     }
 
     finisher = logger.timedLog({ startLog: "Writing manifest.json" });
@@ -136,7 +137,7 @@ export default (projectStructure: ProjectStructure) => {
       finisher.succeed("Successfully wrote manifest.json");
     } catch (e: any) {
       finisher.fail("Failed to write manifest.json");
-      throw new Error(e);
+      logErrorAndExit(e);
     }
 
     finisher = logger.timedLog({ startLog: "Updating ci.json" });
@@ -155,7 +156,7 @@ export default (projectStructure: ProjectStructure) => {
       finisher.succeed("Successfully updated ci.json");
     } catch (e: any) {
       finisher.fail("Failed to update ci.json");
-      throw new Error(e);
+      logErrorAndExit(e);
     }
   };
 };
