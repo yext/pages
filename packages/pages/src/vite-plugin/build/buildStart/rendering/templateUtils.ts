@@ -13,7 +13,7 @@ import {
 } from "../../../../common/src/template/internal/types.js";
 import { ProjectStructure } from "../../../../common/src/project/structure.js";
 
-const pathToModule = new Map();
+const pathToModule = new Map<string, TemplateModule<any, any>>();
 
 /**
  * @returns an array of template modules matching the document's feature.
@@ -33,6 +33,7 @@ export const readTemplateModules = async (
   let importedModule = pathToModule.get(path) as TemplateModule<any, any>;
   if (!importedModule) {
     importedModule = await import(path);
+    pathToModule.set(path, importedModule);
   }
 
   const templateModuleInternal = convertTemplateModuleToTemplateModuleInternal(
@@ -40,8 +41,6 @@ export const readTemplateModules = async (
     importedModule,
     true
   );
-
-  pathToModule.set(path, templateModuleInternal);
 
   return templateModuleInternal;
 };
