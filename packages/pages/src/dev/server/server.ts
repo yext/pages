@@ -10,7 +10,6 @@ import { generateTestData } from "./ssr/generateTestData.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
-import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { FunctionModuleCollection } from "../../common/src/function/internal/loader.js";
 import { serveHttpFunction } from "./middleware/serveHttpFunction.js";
 import { fileURLToPath } from "url";
@@ -19,6 +18,7 @@ import { getFunctionFilepaths } from "../../common/src/function/internal/getFunc
 import { convertFunctionModuleToFunctionModuleInternal } from "../../common/src/function/internal/types.js";
 import { loadViteModule } from "./ssr/loadViteModule.js";
 import { FunctionModule } from "../../common/src/function/types.js";
+import { getViteServerConfig } from "../../common/src/loader/vite.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const createServer = async (
@@ -40,20 +40,7 @@ export const createServer = async (
   const defaultLocale = getDefaultLocale(projectStructure);
 
   // create vite using ssr mode
-  const vite = await createViteServer({
-    server: {
-      middlewareMode: true,
-    },
-    appType: "custom",
-    envDir: projectStructure.config.envVarConfig.envVarDir,
-    envPrefix: projectStructure.config.envVarConfig.envVarPrefix,
-    define: processEnvVariables(
-      projectStructure.config.envVarConfig.envVarPrefix
-    ),
-    optimizeDeps: {
-      include: ["react-dom", "react-dom/client"],
-    },
-  });
+  const vite = await createViteServer(getViteServerConfig(projectStructure));
 
   // register vite's middleware
   app.use(vite.middlewares);

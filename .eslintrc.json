@@ -23,7 +23,8 @@
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-extra-semi": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "import/extensions": ["error", "ignorePackages"]
+    "import/extensions": ["error", "ignorePackages"],
+    "react/no-deprecated": "off"
   },
   "settings": {
     "react": {

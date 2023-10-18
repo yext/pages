@@ -43,7 +43,7 @@
     "lint": "eslint --cache --fix src/**",
     "api-extractor": "api-extractor run --local --verbose",
     "generate-docs": "api-documenter markdown --input-folder temp --output-folder docs/api && rm -rf temp",
-    "test": "jest",
+    "test": "vitest run --threads=false",
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
     "prepare": "pnpm build"
   },
@@ -61,6 +61,7 @@
     "cli-spinners": "^2.9.0",
     "commander": "^11.0.0",
     "cross-fetch": "^4.0.0",
+    "dotenv": "^16.3.1",
     "escape-html": "^1.0.3",
     "esm-module-paths": "^1.1.1",
     "express": "^4.18.2",
@@ -95,7 +96,6 @@
     "@types/express-serve-static-core": "^4.17.35",
     "@types/fs-extra": "^11.0.1",
     "@types/glob": "^8.1.0",
-    "@types/jest": "^29.5.3",
     "@types/js-yaml": "4.0.5",
     "@types/lodash": "^4.14.197",
     "@types/mime-types": "^2.1.1",
@@ -110,61 +110,12 @@
     "generate-license-file": "^2.0.0",
     "glob": "^10.3.3",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
     "minimatch": "^9.0.3",
-    "ts-jest": "^29.1.1",
-    "ts-jest-mock-import-meta": "^1.1.0"
+    "vitest": "^0.34.6"
   },
   "peerDependencies": {
     "react": "^17.0.2 || ^18.2.0",
     "react-dom": "^17.0.2 || ^18.2.0"
-  },
-  "jest": {
-    "rootDir": "..",
-    "collectCoverageFrom": [
-      "<rootDir>/pages/src/**/*.{ts,tsx,js}"
-    ],
-    "verbose": true,
-    "testMatch": [
-      "<rootDir>/pages/src/**/*.test.{ts,tsx,js}"
-    ],
-    "transform": {
-      "\\.[jt]sx?$": [
-        "ts-jest",
-        {
-          "tsconfig": {
-            "allowSyntheticDefaultImports": true,
-            "esModuleInterop": true,
-            "allowJs": true,
-            "target": "ESNext",
-            "jsx": "react"
-          },
-          "diagnostics": {
-            "ignoreCodes": [
-              1343
-            ]
-          },
-          "astTransformers": {
-            "before": [
-              {
-                "path": "ts-jest-mock-import-meta",
-                "options": {
-                  "metaObjectReplacement": {
-                    "url": "JEST"
-                  }
-                }
-              }
-            ]
-          }
-        }
-      ]
-    },
-    "moduleNameMapper": {
-      "^(.+)\\.js$": "$1",
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
-      "\\.(css)$": "identity-obj-proxy"
-    }
   },
   "overrides": {
     "webpack": "^5.52.0"

@@ -5,7 +5,7 @@ import {
 } from "./types.js";
 import { getFunctionFilepaths } from "./getFunctionFilepaths.js";
 import { ProjectStructure } from "../../project/structure.js";
-import { loadModules } from "../../loader/esbuild.js";
+import { loadModules } from "../../loader/vite.js";
 
 /**
  * Loads all functions in the project.
@@ -23,7 +23,11 @@ export const loadFunctionModules = async (
     path.format(functionPath)
   );
 
-  const importedModules = await loadModules(functionPathStrings, transpile);
+  const importedModules = await loadModules(
+    functionPathStrings,
+    transpile,
+    projectStructure
+  );
 
   const importedFunctionModules = [] as FunctionModuleInternal[];
   for (const importedModule of importedModules) {

@@ -192,14 +192,12 @@ export class ProjectStructure {
   ) => {
     const config = merge(defaultProjectStructureConfig, projectStructureConfig);
 
-    const assetsDir =
-      process.env.JEST_WORKER_ID !== undefined // vite.config.js cannot be resolved during tests
-        ? DEFAULT_ASSETS_DIR
-        : await determineAssetsFilepath(
-            DEFAULT_ASSETS_DIR,
-            pathLib.resolve(config.rootFiles.config),
-            pathLib.resolve("vite.config.js")
-          ); // TODO: handle other extensions
+    // TODO: handle other extensions
+    const assetsDir = await determineAssetsFilepath(
+      DEFAULT_ASSETS_DIR,
+      pathLib.resolve(config.rootFiles.config),
+      pathLib.resolve("vite.config.js")
+    );
 
     config.subfolders.assets = assetsDir;
 

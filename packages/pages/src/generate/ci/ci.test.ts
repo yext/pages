@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { CiConfig } from "../../common/src/ci/ci.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { getUpdatedCiConfig } from "./ci.js";

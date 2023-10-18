@@ -1,25 +1,7 @@
+import { describe, it, expect } from "vitest";
 import path from "path";
 import { loadFunctionModules, FunctionModuleCollection } from "./loader.js";
 import { ProjectStructure } from "../../project/structure.js";
-
-// our jest configuration doesn't support file urls so update pathToFileURL to do nothing during
-// this test.
-jest.mock("url", () => {
-  const original = jest.requireActual("url");
-  return {
-    __esModule: true,
-    ...original,
-    pathToFileURL: (s: string) => s,
-  };
-});
-
-jest.mock("vite", () => {
-  return {
-    loadEnv: () => [],
-  };
-});
-
-afterAll(() => jest.unmock("url"));
 
 describe("loadTemplateModules", () => {
   const projectStructure = new ProjectStructure();

@@ -106,20 +106,8 @@ const findGlobalRenderFile = (
     return [pathToGlobalFile, true];
   }
 
-  let curDirectory = import.meta.url;
-  // Jest doesn't like import.meta.url, so we use ts-jest-mock-import-meta to statically replace
-  // it during tests. Then we need to dynmamically get the path to the default client/server render
-  // files.
-  if (curDirectory === "JEST") {
-    curDirectory = path.join(
-      "file://",
-      process.cwd(),
-      "src/common/src/template/internal"
-    );
-  }
-
   // Use the built-in default rendering templates if none defined by the user
-  const __filename = fileURLToPath(curDirectory);
+  const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
   // Need to replace .tsx with .js since the file is compiled to the node_modules dist folder

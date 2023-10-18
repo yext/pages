@@ -1,3 +1,4 @@
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { generateTestDataForPage } from "./generateTestData.js";
 import { EventEmitter } from "stream";
 import {
@@ -17,8 +18,8 @@ import {
 import { Socket } from "net";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 
-const mockParentProcessStdout = jest.mocked(process.stdout);
-mockParentProcessStdout.write = jest.fn();
+const mockParentProcessStdout = vi.mocked(process.stdout) as any;
+mockParentProcessStdout.write = vi.fn();
 
 const mockChildProcessEventEmitter = new EventEmitter();
 
@@ -41,7 +42,7 @@ afterEach(() => {
   mockChildProcessEventEmitter.removeAllListeners();
 
   // Reset the mockParentProcessStdout's write function.
-  mockParentProcessStdout.write = jest.fn();
+  mockParentProcessStdout.write = vi.fn();
 
   mockChildProcess = {
     stdin: new Socket(),
@@ -54,11 +55,11 @@ afterEach(() => {
   };
 });
 
-jest.mock("child_process", () => ({
+vi.mock("child_process", () => ({
   // this pattern allows us to only override the method we want to mock in the
   // child_process module while leaving the rest of the module's functionality intact.
-  ...(jest.requireActual("child_process") as object),
-  spawn: jest.fn((): any => {
+  // ...(vi.requireActual("child_process") as object),
+  spawn: vi.fn((): any => {
     return mockChildProcess;
   }),
 }));

@@ -13,7 +13,7 @@
     "moduleResolution": "Node",
     "outDir": "./dist/types/",
     "target": "ESNext",
-    "types": ["vite/client", "jest", "node"]
+    "types": ["vite/client", "node"]
   },
   "include": ["src", "index.d.ts"],
   "exclude": ["src/bundler.js", "node_modules", "tests/fixtures"]

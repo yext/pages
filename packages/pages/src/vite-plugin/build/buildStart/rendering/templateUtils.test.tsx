@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from "vitest";
 import React from "react";
 import { TemplateModuleInternal } from "../../../../common/src/template/internal/types.js";
 import {
@@ -55,7 +56,7 @@ describe("generateResponses", () => {
   const projectStructure = new ProjectStructure();
 
   it("calls transformProps when transformProps is defined", async () => {
-    const fn = jest.fn((props) => props);
+    const fn = vi.fn((props) => props);
     await generateResponses(
       { ...baseTemplateModule, transformProps: fn },
       baseProps,
@@ -73,7 +74,7 @@ describe("generateResponses", () => {
   });
 
   it("calls getRedirects when getRedirects is defined", async () => {
-    const fn = jest.fn();
+    const fn = vi.fn();
     await generateResponses(
       { ...baseTemplateModule, getRedirects: fn },
       baseProps,

@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { getYextUrlForPartition } from "./url.js";
 
 describe("getYextUrlForPartition", () => {
