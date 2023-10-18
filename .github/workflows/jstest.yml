@@ -38,16 +38,6 @@ jobs:
           ssh-key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
           path: jstest
 
-      - name: Test chat-ui-react
-        run: | 
-         cd $GITHUB_WORKSPACE/jstest/sdks/chat-ui-react \
-          && npm i && npx playwright install \
-          && npm install @yext/pages $GITHUB_WORKSPACE/packages/pages/latest/* \
-          && npm run test
+      - name: Install and test Pages
+        run: $GITHUB_WORKSPACE/scripts/install_and_test.sh $GITHUB_WORKSPACE
 
-      - name: Test search-ui-react
-        run: |
-          cd $GITHUB_WORKSPACE/jstest/sdks/search-ui-react \
-           && npm i && npx playwright install \
-           && npm install @yext/pages $GITHUB_WORKSPACE/packages/pages/latest/* \
-           && npm run test
