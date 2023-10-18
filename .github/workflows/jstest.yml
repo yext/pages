@@ -40,4 +40,3 @@ jobs:
 
       - name: Install and test Pages
         run: $GITHUB_WORKSPACE/scripts/install_and_test.sh $GITHUB_WORKSPACE
-
