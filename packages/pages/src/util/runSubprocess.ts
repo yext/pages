@@ -1,5 +1,6 @@
 import { spawn } from "child_process";
 import process from "process";
+import checkInstalled from "./checkInstalled.js";
 
 /**
  * Creates a child process and writes to stdout and stderr in real time
@@ -8,6 +9,7 @@ import process from "process";
  * @return {Promise<number>} the process's exit code
  */
 function runSubProcess(command: string, args: ReadonlyArray<string>) {
+  checkInstalled(command);
   process.stdout.write("> " + command + " " + args.join(" ") + "\n");
   const childProcess = spawn(command, args, {
     stdio: ["inherit", "pipe", "pipe"],
