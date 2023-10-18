@@ -14,6 +14,7 @@ describe("checkInstalled", () => {
   it("checks if yext is installed", () => {
     expect(() => checkInstalled("yext version")).not.toThrowError();
   });
+
   it("throws error when yext is not installed", () => {
     mockExec = () => {
       throw new Error("Yext CLI not installed");
