@@ -58,7 +58,7 @@ afterEach(() => {
 vi.mock("child_process", () => ({
   // this pattern allows us to only override the method we want to mock in the
   // child_process module while leaving the rest of the module's functionality intact.
-  // ...(vi.requireActual("child_process") as object),
+  ...vi.importActual("child_process"),
   spawn: vi.fn((): any => {
     return mockChildProcess;
   }),
