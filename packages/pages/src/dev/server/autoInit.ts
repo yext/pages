@@ -4,6 +4,7 @@ import prompts from "prompts";
 import chalk from "chalk";
 import { parseYextrcContents } from "../../util/yextrcContents.js";
 import { logErrorAndExit } from "../../util/logError.js";
+import checkInstalled from "../../util/checkInstalled.js";
 
 export const autoYextInit = async (scope: string | undefined) => {
   if (!fs.existsSync(".yextrc")) {
@@ -69,6 +70,7 @@ To change your account details, modify the \`.yextrc\` at the root of your proje
 };
 
 const runCommand = (command: string, args: string[]) => {
+  checkInstalled(command);
   return new Promise((resolve, reject) => {
     const childProcess = spawn(command, args);
 
