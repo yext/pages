@@ -16,10 +16,6 @@ export function createTsMorphProject() {
   });
 }
 
-interface importDeclaration extends OptionalKind<ImportDeclarationStructure> {
-  sourceFile?: SourceFile;
-}
-
 export default class SourceFileParser {
   private sourceFile: SourceFile;
 
@@ -81,11 +77,22 @@ export default class SourceFileParser {
   }
 
   getDefaultExport(): string {
-    const expression = this.sourceFile.getExportAssignment(
-      (d) => !d.isExportEquals()
-    );
-    const defaultName = expression?.getChildAtIndex(2).getText();
-    return defaultName ?? "";
+    const defaultExportSymbol = this.sourceFile.getDefaultExportSymbol();
+    if (!defaultExportSymbol) {
+      return "";
+    }
+    const declarations = defaultExportSymbol.getDeclarations();
+    const exportDeclaration = declarations[0];
+    if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
+      return exportDeclaration.getName() ?? "";
+    } else if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
+      const expression = this.sourceFile.getExportAssignment(
+        (d) => !d.isExportEquals()
+      );
+      const defaultName = expression?.getChildAtIndex(2).getText();
+      return defaultName ?? "";
+    }
+    return "";
   }
 
   addDefaultExport(defaultName: string) {
@@ -96,10 +103,17 @@ export default class SourceFileParser {
   }
 
   getAllImports() {
-    const allImports: importDeclaration[] = [];
+    const allImports: OptionalKind<ImportDeclarationStructure>[] = [];
     const imports = this.sourceFile.getImportDeclarations();
     imports.forEach((importDec) => {
-      const sourceFile = importDec.getModuleSpecifierSourceFile();
+      let moduleSpecifier: string = importDec.getModuleSpecifierValue();
+      if (importDec.isModuleSpecifierRelative()) {
+        const absolutePath = this.getAbsolutePath(
+          this.sourceFile.getFilePath(),
+          importDec.getModuleSpecifierValue()
+        );
+        moduleSpecifier = absolutePath;
+      }
       const namedImportsAsString: string[] = [];
       importDec.getNamedImports()?.forEach((namedImport) => {
         namedImportsAsString.push(namedImport.getName());
@@ -119,24 +133,18 @@ export default class SourceFileParser {
         defaultImport: importDec.getDefaultImport()?.getText(),
         namedImports: namedImportsAsString,
         namespaceImport: importDec.getNamespaceImport()?.getText(),
-        moduleSpecifier: importDec.getModuleSpecifier().getText(),
-        assertElements: assertElements,
-        sourceFile: sourceFile,
+        moduleSpecifier: moduleSpecifier,
+        assertElements:
+          assertElements.length === 0 ? undefined : assertElements,
       });
     });
 
     return allImports;
   }
 
-  setAllImports(allImports: importDeclaration[]) {
+  setAllImports(allImports: OptionalKind<ImportDeclarationStructure>[]) {
     allImports.forEach((importDec) => {
       let moduleSpecifier: string | undefined;
-      if (importDec.sourceFile) {
-        // change moduleSpecifier to relative path
-        moduleSpecifier = this.sourceFile.getRelativePathAsModuleSpecifierTo(
-          importDec.sourceFile
-        );
-      }
       this.sourceFile.addImportDeclaration({
         isTypeOnly: importDec.isTypeOnly,
         defaultImport: importDec.defaultImport,
@@ -150,21 +158,25 @@ export default class SourceFileParser {
       .fixMissingImports()
       .organizeImports()
       .fixUnusedIdentifiers();
-    this.sourceFile.addStatements('import * as React from "react";');
   }
 
   getFileName(): string {
     return this.sourceFile.getBaseName();
   }
 
-  clearAll() {
-    this.sourceFile.removeText(
-      this.sourceFile.getPos(),
-      this.sourceFile.getEnd()
-    );
-  }
-
   async save() {
     await this.sourceFile.save();
   }
+
+  private getAbsolutePath = (base: string, relative: string): string => {
+    const stack = base.split("/"),
+      parts = relative.split("/");
+    stack.pop();
+    for (let i = 0; i < parts.length; i++) {
+      if (parts[i] == ".") continue;
+      if (parts[i] == "..") stack.pop();
+      else stack.push(parts[i]);
+    }
+    return stack.join("/");
+  };
 }

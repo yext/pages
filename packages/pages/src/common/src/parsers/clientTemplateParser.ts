@@ -1,9 +1,9 @@
 import SourceFileParser, { createTsMorphProject } from "./sourceFileParser.js";
 
 /**
- * TemplateParser is a class for parsing the template.
+ * ClientTemplateParser is a class for parsing the client template.
  */
-export default class TemplateParser {
+export default class ClientTemplateParser {
   constructor(private originalSfp: SourceFileParser) {}
 
   async makeClientTemplate(path: string) {
@@ -11,7 +11,6 @@ export default class TemplateParser {
       path + this.originalSfp.getFileName(),
       createTsMorphProject()
     );
-    newSfp.clearAll();
     const defaultExportName = this.originalSfp.getDefaultExport();
     const childExpressionNames: string[] = [defaultExportName];
     this.originalSfp.getChildExpressions(
