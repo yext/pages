@@ -66,18 +66,12 @@ describe("isProduction", () => {
   });
 
   it("returns false when browser and staging domain and multiple allowed prod domains", async () => {
-    const runtimeSpy = jest.spyOn(runTime, "getRuntime") as jest.MockInstance<
-      any,
-      any
-    >;
+    const runtimeSpy = vi.spyOn(runTime, "getRuntime") as unknown as any;
     runtimeSpy.mockImplementation(() => ({
       name: "browser",
     }));
 
-    const windowSpy = jest.spyOn(window, "window", "get") as jest.MockInstance<
-      any,
-      any
-    >;
+    const windowSpy = vi.spyOn(window, "window", "get") as unknown as any;
     windowSpy.mockImplementation(() => ({
       location: {
         hostname: "staging.com",
@@ -91,18 +85,12 @@ describe("isProduction", () => {
   });
 
   it("returns true when browser and prod domain and multiple allowed prod domains", async () => {
-    const runtimeSpy = jest.spyOn(runTime, "getRuntime") as jest.MockInstance<
-      any,
-      any
-    >;
+    const runtimeSpy = vi.spyOn(runTime, "getRuntime") as unknown as any;
     runtimeSpy.mockImplementation(() => ({
       name: "browser",
     }));
 
-    const windowSpy = jest.spyOn(window, "window", "get") as jest.MockInstance<
-      any,
-      any
-    >;
+    const windowSpy = vi.spyOn(window, "window", "get") as unknown as any;
     windowSpy.mockImplementation(() => ({
       location: {
         hostname: "prod1.com",
@@ -116,18 +104,12 @@ describe("isProduction", () => {
   });
 
   it("returns true when browser and prod domain and no prod domains specified", async () => {
-    const runtimeSpy = jest.spyOn(runTime, "getRuntime") as jest.MockInstance<
-      any,
-      any
-    >;
+    const runtimeSpy = vi.spyOn(runTime, "getRuntime") as unknown as any;
     runtimeSpy.mockImplementation(() => ({
       name: "browser",
     }));
 
-    const windowSpy = jest.spyOn(window, "window", "get") as jest.MockInstance<
-      any,
-      any
-    >;
+    const windowSpy = vi.spyOn(window, "window", "get") as unknown as any;
     windowSpy.mockImplementation(() => ({
       location: {
         hostname: "prod.com",
@@ -141,18 +123,12 @@ describe("isProduction", () => {
   });
 
   it("returns false when browser and localhost and no prod domains specified", async () => {
-    const runtimeSpy = jest.spyOn(runTime, "getRuntime") as jest.MockInstance<
-      any,
-      any
-    >;
+    const runtimeSpy = vi.spyOn(runTime, "getRuntime") as unknown as any;
     runtimeSpy.mockImplementation(() => ({
       name: "browser",
     }));
 
-    const windowSpy = jest.spyOn(window, "window", "get") as jest.MockInstance<
-      any,
-      any
-    >;
+    const windowSpy = vi.spyOn(window, "window", "get") as unknown as any;
     windowSpy.mockImplementation(() => ({
       location: {
         hostname: "localhost",
@@ -166,18 +142,12 @@ describe("isProduction", () => {
   });
 
   it("returns false when browser and preview domain and no prod domains specified", async () => {
-    const runtimeSpy = jest.spyOn(runTime, "getRuntime") as jest.MockInstance<
-      any,
-      any
-    >;
+    const runtimeSpy = vi.spyOn(runTime, "getRuntime") as unknown as any;
     runtimeSpy.mockImplementation(() => ({
       name: "browser",
     }));
 
-    const windowSpy = jest.spyOn(window, "window", "get") as jest.MockInstance<
-      any,
-      any
-    >;
+    const windowSpy = vi.spyOn(window, "window", "get") as unknown as any;
     windowSpy.mockImplementation(() => ({
       location: {
         hostname: "test.preview.pagescdn.com",
