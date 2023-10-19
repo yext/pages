@@ -55,11 +55,136 @@ describe("isProduction", () => {
     const windowSpy = vi.spyOn(window, "window", "get") as unknown as any;
     windowSpy.mockImplementation(() => ({
       location: {
+        hostname: "staging.com",
+      },
+    }));
+
+    expect(isProduction("prod.com")).toBeFalsy();
+
+    windowSpy.mockRestore();
+    runtimeSpy.mockRestore();
+  });
+
+  it("returns false when browser and staging domain and multiple allowed prod domains", async () => {
+    const runtimeSpy = jest.spyOn(runTime, "getRuntime") as jest.MockInstance<
+      any,
+      any
+    >;
+    runtimeSpy.mockImplementation(() => ({
+      name: "browser",
+    }));
+
+    const windowSpy = jest.spyOn(window, "window", "get") as jest.MockInstance<
+      any,
+      any
+    >;
+    windowSpy.mockImplementation(() => ({
+      location: {
+        hostname: "staging.com",
+      },
+    }));
+
+    expect(isProduction("prod1.com", "prod2.com")).toBeFalsy();
+
+    windowSpy.mockRestore();
+    runtimeSpy.mockRestore();
+  });
+
+  it("returns true when browser and prod domain and multiple allowed prod domains", async () => {
+    const runtimeSpy = jest.spyOn(runTime, "getRuntime") as jest.MockInstance<
+      any,
+      any
+    >;
+    runtimeSpy.mockImplementation(() => ({
+      name: "browser",
+    }));
+
+    const windowSpy = jest.spyOn(window, "window", "get") as jest.MockInstance<
+      any,
+      any
+    >;
+    windowSpy.mockImplementation(() => ({
+      location: {
+        hostname: "prod1.com",
+      },
+    }));
+
+    expect(isProduction("prod1.com", "prod2.com")).toBeTruthy();
+
+    windowSpy.mockRestore();
+    runtimeSpy.mockRestore();
+  });
+
+  it("returns true when browser and prod domain and no prod domains specified", async () => {
+    const runtimeSpy = jest.spyOn(runTime, "getRuntime") as jest.MockInstance<
+      any,
+      any
+    >;
+    runtimeSpy.mockImplementation(() => ({
+      name: "browser",
+    }));
+
+    const windowSpy = jest.spyOn(window, "window", "get") as jest.MockInstance<
+      any,
+      any
+    >;
+    windowSpy.mockImplementation(() => ({
+      location: {
         hostname: "prod.com",
       },
     }));
 
-    expect(isProduction("staging.com")).toBeFalsy();
+    expect(isProduction()).toBeTruthy();
+
+    windowSpy.mockRestore();
+    runtimeSpy.mockRestore();
+  });
+
+  it("returns false when browser and localhost and no prod domains specified", async () => {
+    const runtimeSpy = jest.spyOn(runTime, "getRuntime") as jest.MockInstance<
+      any,
+      any
+    >;
+    runtimeSpy.mockImplementation(() => ({
+      name: "browser",
+    }));
+
+    const windowSpy = jest.spyOn(window, "window", "get") as jest.MockInstance<
+      any,
+      any
+    >;
+    windowSpy.mockImplementation(() => ({
+      location: {
+        hostname: "localhost",
+      },
+    }));
+
+    expect(isProduction()).toBeFalsy();
+
+    windowSpy.mockRestore();
+    runtimeSpy.mockRestore();
+  });
+
+  it("returns false when browser and preview domain and no prod domains specified", async () => {
+    const runtimeSpy = jest.spyOn(runTime, "getRuntime") as jest.MockInstance<
+      any,
+      any
+    >;
+    runtimeSpy.mockImplementation(() => ({
+      name: "browser",
+    }));
+
+    const windowSpy = jest.spyOn(window, "window", "get") as jest.MockInstance<
+      any,
+      any
+    >;
+    windowSpy.mockImplementation(() => ({
+      location: {
+        hostname: "test.preview.pagescdn.com",
+      },
+    }));
+
+    expect(isProduction()).toBeFalsy();
 
     windowSpy.mockRestore();
     runtimeSpy.mockRestore();
