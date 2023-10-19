@@ -43,6 +43,8 @@ export const loadModules = async (
   const importedModules: ImportedModule[] = [];
 
   if (transpile) {
+    // Note that this will log inconsequential errors
+    // See https://github.com/vitejs/vite/issues/14328
     const vite = await createServer(getViteServerConfig(projectStructure));
 
     for (const modulePath of modulePaths) {
