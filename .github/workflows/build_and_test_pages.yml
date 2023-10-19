@@ -17,3 +17,9 @@ jobs:
   call_playwright:
     needs: call_build
     uses: ./.github/workflows/playwright.yml
+    
+  call_jstest:
+    needs: call_build
+    uses: ./.github/workflows/jstest.yml
+    secrets:
+      JSTEST_PRIVATE_SSH_KEY: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
