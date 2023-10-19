@@ -37,11 +37,12 @@ const handler = async ({
   if (!noInit) {
     await autoYextInit(scope);
   }
-  if (!noGenFeatures)
+  if (!noGenFeatures) {
     await runSubProcess(
       "pages generate features",
       scope ? ["--scope" + " " + scope] : []
     );
+  }
 
   const devServerPort =
     port ??
