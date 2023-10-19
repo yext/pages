@@ -47,14 +47,11 @@ export const loadModules = async (
     const vite = await createServer({
       ...getViteServerConfig(projectStructure),
       server: {
-        port: 0,
+        hmr: false,
       },
     });
 
     for (const modulePath of modulePaths) {
-      if (modulePath.includes("legacy")) {
-        continue;
-      }
       const functionModule = await loadViteModule(vite, modulePath);
 
       importedModules.push({
@@ -66,9 +63,6 @@ export const loadModules = async (
     await vite.close();
   } else {
     for (const modulePath of modulePaths) {
-      if (modulePath.includes("legacy")) {
-        continue;
-      }
       importedModules.push({
         path: modulePath,
         module: await import(pathToFileURL(modulePath).toString()),
