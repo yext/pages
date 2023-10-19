@@ -43,13 +43,7 @@ export const loadModules = async (
   const importedModules: ImportedModule[] = [];
 
   if (transpile) {
-    // create vite using ssr mode
-    const vite = await createServer({
-      ...getViteServerConfig(projectStructure),
-      server: {
-        hmr: false,
-      },
-    });
+    const vite = await createServer(getViteServerConfig(projectStructure));
 
     for (const modulePath of modulePaths) {
       const functionModule = await loadViteModule(vite, modulePath);
