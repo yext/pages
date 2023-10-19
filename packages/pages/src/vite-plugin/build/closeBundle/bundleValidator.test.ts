@@ -1,5 +1,5 @@
-import { glob } from "glob";
-import fs, { Stats } from "fs";
+import { describe, it, expect, vi } from "vitest";
+import { Stats } from "fs";
 import { validateBundles } from "./bundleValidator.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 
@@ -7,8 +7,14 @@ describe("bundleValidator", () => {
   const projectStructure = new ProjectStructure();
 
   it("throws an error when a single file is over the max filesize limit", async () => {
-    jest.spyOn(glob, "sync").mockImplementation(() => ["file1.js", "file2.js"]);
-    jest.spyOn(fs, "statSync").mockImplementation((input) => {
+    const bundleValidatorHelper = await import("./bundleValidatorHelper.js");
+
+    vi.spyOn(bundleValidatorHelper, "getBundlePaths").mockImplementation(() => [
+      "file1.js",
+      "file2.js",
+    ]);
+
+    vi.spyOn(bundleValidatorHelper, "statSync").mockImplementation((input) => {
       if (input == "file1.js") {
         return getStats(10.1);
       }
@@ -18,52 +24,47 @@ describe("bundleValidator", () => {
     expect(() => validateBundles(projectStructure)).toThrowError(
       "Bundled file file1.js exceeds max size of 10 MB"
     );
-
-    jest.restoreAllMocks();
   });
 
   it("throws an error when the total sizes exceed the max limit", async () => {
-    jest
-      .spyOn(glob, "sync")
-      .mockImplementation(() => [
-        "file1.js",
-        "file2.js",
-        "file3.js",
-        "file4.js",
-        "file5.js",
-        "file6.js",
-        "file7.js",
-      ]);
-    jest.spyOn(fs, "statSync").mockImplementation(() => {
-      return getStats(1.5);
-    });
+    const bundleValidatorHelper = await import("./bundleValidatorHelper.js");
+
+    vi.spyOn(bundleValidatorHelper, "getBundlePaths").mockImplementation(() => [
+      "file1.js",
+      "file2.js",
+      "file3.js",
+      "file4.js",
+      "file5.js",
+      "file6.js",
+      "file7.js",
+    ]);
+
+    vi.spyOn(bundleValidatorHelper, "statSync").mockImplementation(() =>
+      getStats(1.5)
+    );
 
     expect(() => validateBundles(projectStructure)).toThrowError(
       "The total size of all bundles exceeds the max size of 10 MB"
     );
-
-    jest.restoreAllMocks();
   });
 
   it("does not throw an error when all individual file sizes and total are under the limits", async () => {
-    jest
-      .spyOn(glob, "sync")
-      .mockImplementation(() => [
-        "file1.js",
-        "file2.js",
-        "file3.js",
-        "file4.js",
-        "file5.js",
-        "file6.js",
-        "file7.js",
-      ]);
-    jest.spyOn(fs, "statSync").mockImplementation(() => {
-      return getStats(0.5);
-    });
+    const bundleValidatorHelper = await import("./bundleValidatorHelper.js");
+
+    vi.spyOn(bundleValidatorHelper, "getBundlePaths").mockImplementation(() => [
+      "file1.js",
+      "file2.js",
+      "file3.js",
+      "file4.js",
+      "file5.js",
+      "file6.js",
+      "file7.js",
+    ]);
+    vi.spyOn(bundleValidatorHelper, "statSync").mockImplementation(() =>
+      getStats(0.5)
+    );
 
     expect(() => validateBundles(projectStructure)).not.toThrowError();
-
-    jest.restoreAllMocks();
   });
 });
 

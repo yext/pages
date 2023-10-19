@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeAll } from "vitest";
 import { processEnvVariables } from "./processEnvVariables.js";
 
 describe("processEnvVariables", () => {

@@ -50,7 +50,13 @@ export default (projectStructure: ProjectStructure) => {
           ),
         }
       );
-      templateModules = await loadTemplateModules(serverBundles, false, true);
+      templateModules = await loadTemplateModules(
+        serverBundles,
+        false,
+        true,
+        projectStructure
+      );
+
       validateUniqueFeatureName(templateModules);
       validateBundles(projectStructure);
       finisher.succeed("Validated template modules");

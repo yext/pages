@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from "vitest";
 import { determineAssetsFilepath } from "./getAssetsFilepath.js";
 import * as importHelper from "./import.js";
 
@@ -28,7 +29,7 @@ describe("getAssetsFilepath - determineAssetsFilepath", () => {
       },
     };
 
-    const importSpy = jest.spyOn(importHelper, "import_");
+    const importSpy = vi.spyOn(importHelper, "import_");
     importSpy.mockImplementation(async () => viteConfig);
 
     const actual = await determineAssetsFilepath(

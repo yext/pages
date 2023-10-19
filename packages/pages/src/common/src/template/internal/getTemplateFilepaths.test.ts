@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from "vitest";
 import path from "path";
 import { getTemplateFilepaths } from "./getTemplateFilepaths.js";
 import { minimatch } from "minimatch";
@@ -6,21 +7,19 @@ import { Path } from "../../project/path.js";
 const rootPath = path.join("src", "templates");
 const domain1Path = path.join("src", "templates", "some.domain1.com");
 const domain2Path = path.join("src", "templates", "some.domain2.com");
-jest.mock("glob", () => {
-  return {
-    globSync: (glob: string) => {
-      const filepaths = [
-        path.join(domain1Path, "brand1.tsx"),
-        path.join(domain1Path, "test.tsx"),
-        path.join(domain2Path, "brand2.tsx"),
-        path.join(domain2Path, "test.tsx"),
-        path.join(rootPath, "share.tsx"),
-        path.join(rootPath, "test.tsx"),
-      ];
-      return filepaths.filter((f) => minimatch(path.resolve(f), glob));
-    },
-  };
-});
+vi.mock("glob", () => ({
+  globSync: (glob: string) => {
+    const filepaths = [
+      path.join(domain1Path, "brand1.tsx"),
+      path.join(domain1Path, "test.tsx"),
+      path.join(domain2Path, "brand2.tsx"),
+      path.join(domain2Path, "test.tsx"),
+      path.join(rootPath, "share.tsx"),
+      path.join(rootPath, "test.tsx"),
+    ];
+    return filepaths.filter((f) => minimatch(path.resolve(f), glob));
+  },
+}));
 
 describe("getTemplateFilepaths", () => {
   it("collects all template files from root folder path", () => {

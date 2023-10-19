@@ -2,7 +2,8 @@ import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../internal/types.js";
-import { loadModules } from "../../loader/esbuild.js";
+import { ProjectStructure } from "../../project/structure.js";
+import { loadModules } from "../../loader/vite.js";
 
 /**
  * Loads all templates in the project.
@@ -15,9 +16,14 @@ import { loadModules } from "../../loader/esbuild.js";
 export const loadTemplateModules = async (
   templateModulePaths: string[],
   transpile: boolean,
-  adjustForFingerprintedAsset: boolean
+  adjustForFingerprintedAsset: boolean,
+  projectStructure: ProjectStructure
 ): Promise<TemplateModuleCollection> => {
-  const importedModules = await loadModules(templateModulePaths, transpile);
+  const importedModules = await loadModules(
+    templateModulePaths,
+    transpile,
+    projectStructure
+  );
 
   const importedTemplateModules = [] as TemplateModuleInternal<any, any>[];
   for (const importedModule of importedModules) {

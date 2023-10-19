@@ -74,6 +74,7 @@ export const serverRenderRoute =
         locale,
         projectStructure
       );
+
       const props = await propsLoader({
         templateModuleInternal,
         entityId,

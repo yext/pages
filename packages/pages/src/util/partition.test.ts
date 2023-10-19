@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { getPartition } from "./partition.js";
 
 describe("getPartition", () => {

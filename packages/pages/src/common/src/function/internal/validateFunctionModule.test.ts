@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { HttpFunction } from "../types.js";
 import { validateFunctionModule } from "./validateFunctionModule.js";
 
