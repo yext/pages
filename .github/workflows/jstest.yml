@@ -1,0 +1,42 @@
+on:
+  workflow_call:
+    secrets:
+      JSTEST_PRIVATE_SSH_KEY:
+        description: 'Private key to access the jstest repo'
+        required: true
+
+jobs:
+  jstest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "./packages/pages"
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+
+      - name: Build with NodeJS 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+
+      - name: Install deps
+        run: pnpm i
+
+      - name: Pack
+        run: pnpm pack --pack-destination latest
+
+      - name: Checkout JSTEST
+        uses: actions/checkout@v4
+        with:
+          ref: "main"
+          repository: yext/jstest
+          ssh-key: ${{ secrets.JSTEST_PRIVATE_SSH_KEY }}
+          path: jstest
+
+      - name: Install and test Pages
+        run: $GITHUB_WORKSPACE/scripts/install_and_test.sh $GITHUB_WORKSPACE

@@ -5,6 +5,8 @@ node_modules/
 .npm/
 .eslintcache
 storybook-static
+jstest
+packages/pages/latest
 
 # Logs
 logs

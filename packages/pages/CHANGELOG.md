@@ -1,3 +1,45 @@
+#### 1.0.0-rc.5 (2023-10-10)
+
+##### New Features
+
+* **dev:**
+  *  set siteInternalHostName locally (#401) (07d77e97)
+  *  add noMigration flag for upgrade (#400) (62670993)
+  *  add scope to yextrc (#397) (609e471a)
+  *  add upgrade command (#395) (41e21259)
+* **plugin:**  move urlWriteback into pagesJS (#393) (b6b040d7)
+
+##### Bug Fixes
+
+* **plugin:**  remove import meta resolve (#403) (f5afbeaf)
+* **pages-plugins:**  slugManager searchIds not working on webhook update (#399) (9ae11b06)
+
+##### Other Changes
+
+*  pages@1.0.0-rc.5 (391ea0cf)
+
+##### Reverts
+
+* **dev:**  use esbuild instead of ts-morph to parse template configs (#396) (c5c2d656)
+
+##### New Features
+
+* **dev:**
+  *  set siteInternalHostName locally (#401) (07d77e97)
+  *  add noMigration flag for upgrade (#400) (62670993)
+  *  add scope to yextrc (#397) (609e471a)
+  *  add upgrade command (#395) (41e21259)
+* **plugin:**  move urlWriteback into pagesJS (#393) (b6b040d7)
+
+##### Bug Fixes
+
+* **plugin:**  remove import meta resolve (#403) (f5afbeaf)
+* **pages-plugins:**  slugManager searchIds not working on webhook update (#399) (9ae11b06)
+
+##### Reverts
+
+* **dev:**  use esbuild instead of ts-morph to parse template configs (#396) (c5c2d656)
+
 #### 1.0.0-rc.4 (2023-09-20)
 
 ##### Chores

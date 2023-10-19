@@ -552,7 +552,7 @@ SOFTWARE.
 
 The following npm package may be included in this product:
 
- - rollup@3.28.0
+ - rollup@3.29.4
 
 This package contains the following license and notice below:
 
@@ -1350,7 +1350,7 @@ END OF TERMS AND CONDITIONS
 
 The following npm package may be included in this product:
 
- - vite-plugin-node-polyfills@0.11.0
+ - vite-plugin-node-polyfills@0.11.3
 
 This package contains the following license and notice below:
 
@@ -1380,7 +1380,7 @@ SOFTWARE.
 
 The following npm package may be included in this product:
 
- - vite@4.4.9
+ - vite@4.4.11
 
 This package contains the following license and notice below:
 
