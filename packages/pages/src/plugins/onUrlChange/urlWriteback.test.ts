@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { buildApiUrl } from "./yext.js";
 
 describe("buildApiUrl", () => {

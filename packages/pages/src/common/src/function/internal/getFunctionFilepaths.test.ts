@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from "vitest";
 import path from "path";
 import { getFunctionFilepaths } from "./getFunctionFilepaths.js";
 import { minimatch } from "minimatch";
@@ -43,13 +44,11 @@ const expected = [
   },
 ];
 
-jest.mock("glob", () => {
-  return {
-    globSync: (glob: string) => {
-      return filepaths.filter((f) => minimatch(path.resolve(f), glob));
-    },
-  };
-});
+vi.mock("glob", () => ({
+  globSync: (glob: string) => {
+    return filepaths.filter((f) => minimatch(path.resolve(f), glob));
+  },
+}));
 
 describe("getFunctionFilepaths", () => {
   it("collects all function files under the src/functions path", () => {

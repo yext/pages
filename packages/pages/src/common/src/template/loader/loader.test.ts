@@ -1,26 +1,10 @@
+import { describe, it, expect } from "vitest";
 import { glob } from "glob";
 import path from "path";
 import { loadTemplateModules } from "./loader.js";
 import { convertToPosixPath } from "../paths.js";
+import { ProjectStructure } from "../../project/structure.js";
 
-// our jest configuration doesn't support file urls so update pathToFileURL to do nothing during
-// this test.
-jest.mock("url", () => {
-  const original = jest.requireActual("url");
-  return {
-    __esModule: true,
-    ...original,
-    pathToFileURL: (s: string) => s,
-  };
-});
-
-jest.mock("vite", () => {
-  return {
-    loadEnv: () => [],
-  };
-});
-
-afterAll(() => jest.unmock("url"));
 describe("loadTemplateModules", () => {
   it("loads and transpiles raw templates", async () => {
     const templateFile = glob.sync(
@@ -31,7 +15,8 @@ describe("loadTemplateModules", () => {
     const templateModules = await loadTemplateModules(
       templateFile,
       true,
-      false
+      false,
+      new ProjectStructure()
     );
 
     expect(templateModules.get("template")?.config.name).toEqual("template");
@@ -44,7 +29,8 @@ describe("loadTemplateModules", () => {
     const templateModules = await loadTemplateModules(
       templateFile,
       false,
-      false
+      false,
+      new ProjectStructure()
     );
 
     expect(templateModules.get("template")?.config.name).toEqual("template");

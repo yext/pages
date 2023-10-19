@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { ArtifactsConfig } from "../../common/src/artifacts/internal/types.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { getArtifactsConfig } from "./createArtifactsJson.js";

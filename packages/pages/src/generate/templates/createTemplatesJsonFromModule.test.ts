@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { FeaturesConfig } from "../../common/src/feature/features.js";
 import { TemplateModuleCollection } from "../../common/src/template/loader/loader.js";
 import { getFeaturesConfig } from "./createTemplatesJsonFromModule.js";

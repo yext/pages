@@ -106,7 +106,7 @@ This command will run the same build as the `docs:build` command and it will the
 pnpm test
 ```
 
-This command will run all the tests in the package using Jest as the test runner.
+This command will run all the tests in the package using Vitest as the test runner.
 
 ## Commands to Use in a Starter
 

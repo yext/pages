@@ -27,7 +27,8 @@ export const createTemplatesJson = async (
   const templateModules = await loadTemplateModules(
     templateFilepaths,
     true,
-    false
+    false,
+    projectStructure
   );
 
   // Note: the object used to be known as "features" but it's been changed to "templates".

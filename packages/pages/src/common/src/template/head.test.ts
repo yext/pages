@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from "vitest";
 import { HeadConfig, renderHeadConfigToString, getLang } from "./head.js";
 import { TemplateRenderProps } from "./types.js";
 import pc from "picocolors";
@@ -150,8 +151,8 @@ describe("renderHeadConfigToString", () => {
         `Please use "other" to render this tag.`
     );
 
-    jest.clearAllMocks();
-    const logMock = jest
+    vi.clearAllMocks();
+    const logMock = vi
       .spyOn(console, "log")
       .mockImplementation(() => undefined);
 
@@ -160,7 +161,7 @@ describe("renderHeadConfigToString", () => {
     expect(logMock.mock.calls.length).toBe(1);
     expect(logMock.mock.calls[0][0]).toBe(expectedLog);
 
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 });
 

@@ -1,10 +1,11 @@
+import { describe, it, expect, vi } from "vitest";
 import checkInstalled from "./checkInstalled.js";
 
 let mockExec = (): string => {
   return "Yext CLI is installed";
 };
 
-jest.mock("child_process", () => {
+vi.mock("child_process", () => {
   return {
     execSync: () => mockExec(),
   };

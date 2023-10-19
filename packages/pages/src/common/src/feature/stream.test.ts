@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
 import { TemplateConfigInternal } from "../template/internal/types.js";
 

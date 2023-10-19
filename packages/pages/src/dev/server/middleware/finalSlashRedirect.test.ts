@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from "vitest";
 import { finalSlashRedirect } from "./finalSlashRedirect.js";
 
 describe("finalSlashRedirect", () => {
@@ -9,9 +10,9 @@ describe("finalSlashRedirect", () => {
       path: canonicalUrl + "/",
     };
     const res = {
-      redirect: jest.fn(),
+      redirect: vi.fn(),
     };
-    const next = jest.fn();
+    const next = vi.fn();
 
     finalSlashRedirect(req, res, next);
 
@@ -28,9 +29,9 @@ describe("finalSlashRedirect", () => {
       path: canonicalUrl + "/",
     };
     const res = {
-      redirect: jest.fn(),
+      redirect: vi.fn(),
     };
-    const next = jest.fn();
+    const next = vi.fn();
 
     finalSlashRedirect(req, res, next);
 
@@ -46,9 +47,9 @@ describe("finalSlashRedirect", () => {
       path: canonicalUrl,
     };
     const res = {
-      redirect: jest.fn(),
+      redirect: vi.fn(),
     };
-    const next = jest.fn();
+    const next = vi.fn();
 
     finalSlashRedirect(req, res, next);
 
