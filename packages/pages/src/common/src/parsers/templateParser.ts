@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import SourceFileParser, { createTsMorphProject } from "./sourceFileParser.js";
 
 /**
@@ -12,13 +14,14 @@ export default class TemplateParser {
    * For example, if path is /src/templates/client then the parsed
    * code will be saved into an existing file such as
    * /src/templates/client/location.tsx.
-   * @param path to directory where client template files exist.
+   * @param filepath to directory where client template files exist.
    */
-  async makeClientTemplate(path: string) {
-    const newSfp = new SourceFileParser(
-      path + this.originalSfp.getFileName(),
-      createTsMorphProject()
-    );
+  async makeClientTemplate(filepath: string) {
+    const clientPath = path.join(filepath, this.originalSfp.getFileName());
+    if (!fs.existsSync(clientPath)) {
+      return;
+    }
+    const newSfp = new SourceFileParser(clientPath, createTsMorphProject());
     const defaultExportName = this.originalSfp.getDefaultExport();
     const childExpressionNames: string[] = [defaultExportName];
     this.originalSfp.getChildExpressions(
