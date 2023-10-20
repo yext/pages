@@ -1,5 +1,10 @@
 import { Project } from "ts-morph";
 
+/**
+ * @param code to insert into test file
+ * @param filepath
+ * @returns a sourceFile and Project for ts-morph testing
+ */
 export default function createTestSourceFile(
   code: string,
   filepath = "test.tsx"

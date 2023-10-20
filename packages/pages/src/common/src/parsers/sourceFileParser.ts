@@ -15,7 +15,9 @@ export function createTsMorphProject() {
     },
   });
 }
-
+/**
+ * Creates a SourceFileParser to use ts-morph functions.
+ */
 export default class SourceFileParser {
   private sourceFile: SourceFile;
 
@@ -33,6 +35,11 @@ export default class SourceFileParser {
     return this.sourceFile.getFunctions();
   }
 
+  /**
+   * getChildExpressions looks for expressions called within a parent expression.
+   * @param parentExpressionName the expression to parse through
+   * @param allChildExpressions an array to save parsed expression names into
+   */
   getChildExpressions(
     parentExpressionName: string,
     allChildExpressions: string[]
@@ -53,7 +60,11 @@ export default class SourceFileParser {
     });
   }
 
-  getExpressionsByName(names: string[]) {
+  /**
+   * @param names the names of the expressions
+   * @returns string[] containing code of each expression
+   */
+  getExpressionsByName(names: string[]): string[] {
     const expressions: string[] = [];
     names.forEach((name) => {
       expressions.push(this.getExpressionByName(name));
@@ -61,6 +72,12 @@ export default class SourceFileParser {
     return expressions;
   }
 
+  /**
+   * Ex. source file contains const foo = 5;
+   * getExpressionByName("foo") returns "const foo = 5;"
+   * @param name of expression
+   * @returns string containing expression's code
+   */
   getExpressionByName(name: string) {
     if (this.sourceFile.getImportDeclaration(name)) {
       return "";
@@ -72,10 +89,18 @@ export default class SourceFileParser {
     return expression ?? "";
   }
 
+  /**
+   * Adds any strings into source file.
+   * @param expressions the strings to add
+   */
   addExpressions(expressions: string[]) {
     this.sourceFile.addStatements(expressions);
   }
 
+  /**
+   * getDefaultExport parses the source file for a default export.
+   * @returns the default export's name
+   */
   getDefaultExport(): string {
     const defaultExportSymbol = this.sourceFile.getDefaultExportSymbol();
     if (!defaultExportSymbol) {
@@ -95,6 +120,10 @@ export default class SourceFileParser {
     return "";
   }
 
+  /**
+   * Adds the default export to source file.
+   * @param defaultName the default export's name
+   */
   addDefaultExport(defaultName: string) {
     this.sourceFile.addExportAssignment({
       expression: defaultName,
@@ -102,13 +131,16 @@ export default class SourceFileParser {
     });
   }
 
-  getAllImports() {
+  /**
+   * @returns all imports from source file
+   */
+  getAllImports(): OptionalKind<ImportDeclarationStructure>[] {
     const allImports: OptionalKind<ImportDeclarationStructure>[] = [];
     const imports = this.sourceFile.getImportDeclarations();
     imports.forEach((importDec) => {
       let moduleSpecifier: string = importDec.getModuleSpecifierValue();
       if (importDec.isModuleSpecifierRelative()) {
-        const absolutePath = this.getAbsolutePath(
+        const absolutePath = getAbsolutePath(
           this.sourceFile.getFilePath(),
           importDec.getModuleSpecifierValue()
         );
@@ -142,6 +174,10 @@ export default class SourceFileParser {
     return allImports;
   }
 
+  /**
+   * Adds the imports into source file.
+   * @param allImports
+   */
   setAllImports(allImports: OptionalKind<ImportDeclarationStructure>[]) {
     allImports.forEach((importDec) => {
       let moduleSpecifier: string | undefined;
@@ -164,19 +200,27 @@ export default class SourceFileParser {
     return this.sourceFile.getBaseName();
   }
 
+  /**
+   * Saves all changes made to source file.
+   */
   async save() {
     await this.sourceFile.save();
   }
-
-  private getAbsolutePath = (base: string, relative: string): string => {
-    const stack = base.split("/"),
-      parts = relative.split("/");
-    stack.pop();
-    for (let i = 0; i < parts.length; i++) {
-      if (parts[i] == ".") continue;
-      if (parts[i] == "..") stack.pop();
-      else stack.push(parts[i]);
-    }
-    return stack.join("/");
-  };
 }
+
+/**
+ * @param base the file path
+ * @param relative the relative file path
+ * @returns an absolute file path
+ */
+const getAbsolutePath = (base: string, relative: string): string => {
+  const stack = base.split("/"),
+    parts = relative.split("/");
+  stack.pop();
+  for (let i = 0; i < parts.length; i++) {
+    if (parts[i] == ".") continue;
+    if (parts[i] == "..") stack.pop();
+    else stack.push(parts[i]);
+  }
+  return stack.join("/");
+};

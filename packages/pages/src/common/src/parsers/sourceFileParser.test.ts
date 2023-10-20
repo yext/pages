@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import path from "path";
 import createTestSourceFile from "../../../util/createTestSourceFile.js";
 import SourceFileParser from "./sourceFileParser.js";
@@ -10,6 +11,7 @@ describe("getDefaultExport", () => {
     const defaultExport = parser.getDefaultExport();
     expect(defaultExport).toBe("test");
   });
+
   it("correctly gets default export's name when variable", () => {
     const parser = createParser(`const test = 5; export default test`);
     const defaultExport = parser.getDefaultExport();
@@ -31,11 +33,13 @@ describe("getExpressionByName", () => {
     const expression = parser.getExpressionByName("foo");
     expect(expression).toBe("const foo = 5;");
   });
+
   it("correctly returns function expression when given name", () => {
     const parser = createParser(`function foo(){} const bar = 7;`);
     const expression = parser.getExpressionByName("foo");
     expect(expression).toBe("function foo(){}");
   });
+
   it("correctly returns empty string when expression doesn't exist", () => {
     const parser = createParser(`const test = 5;`);
     const expression = parser.getExpressionByName("foo");
@@ -60,11 +64,13 @@ describe("getAllImports", () => {
     expect(imports[0].moduleSpecifier).toBe("react");
     expect(imports[1].moduleSpecifier).toBe("@yext/pages");
   });
+
   it("handles file having no imports", () => {
     const parser = createParser(`const test = 5;`);
     const imports = parser.getAllImports();
     expect(imports).toEqual([]);
   });
+
   it("handles multiple named imports from one path", () => {
     const parser = createParser(
       `import {Template, TemplateConfig, TemplateProps} from "@yext/pages";`
@@ -75,6 +81,19 @@ describe("getAllImports", () => {
       "TemplateConfig",
       "TemplateProps",
     ]);
+  });
+
+  it("handles named imports and default imports from one path", () => {
+    const parser = createParser(
+      `import Foo, {Template, TemplateConfig, TemplateProps} from "@yext/pages";`
+    );
+    const imports = parser.getAllImports();
+    expect(imports[0].namedImports).toEqual([
+      "Template",
+      "TemplateConfig",
+      "TemplateProps",
+    ]);
+    expect(imports[0].defaultImport).toBe("Foo");
   });
 });
 
@@ -90,6 +109,7 @@ describe("setAllImports", () => {
     expect(imports.length).toEqual(1);
     expect(imports[0].moduleSpecifier).toBe("index.css");
   });
+
   it("handles having no imports to set", () => {
     const parser = createParser(``);
     parser.setAllImports([]);
@@ -105,6 +125,7 @@ describe("getChildExpressions", () => {
     parser.getChildExpressions("bar", childExpressions);
     expect(childExpressions).toEqual(["bar", "foo"]);
   });
+
   it("correctly gets a child function", () => {
     const parser = createParser(
       `function foo(){ return 4;} const bar = foo() + 3;`
@@ -113,12 +134,14 @@ describe("getChildExpressions", () => {
     parser.getChildExpressions("bar", childExpressions);
     expect(childExpressions).toEqual(["bar", "foo"]);
   });
+
   it("handles having no child expressions", () => {
     const parser = createParser(`const foo = 4; const bar = 3;`);
     const childExpressions = ["bar"];
     parser.getChildExpressions("bar", childExpressions);
     expect(childExpressions).toEqual(["bar"]);
   });
+
   it("handles getting invalid expression name", () => {
     const parser = createParser(`const foo = 4;`);
     const childExpressions: string[] = [];
