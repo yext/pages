@@ -17,7 +17,8 @@ import {
 } from "../../common/src/template/loader/loader.js";
 
 /**
- * Generates a templates.json or features.json from the templates.
+ * Loads the templates as modules and generates a templates.json or
+ * features.json from the templates.
  */
 export const createTemplatesJson = async (
   templateFilepaths: string[],
@@ -31,6 +32,17 @@ export const createTemplatesJson = async (
     projectStructure
   );
 
+  return createTemplatesJsonFromModule(templateModules, projectStructure, type);
+};
+
+/**
+ * Generates a templates.json or features.json from the templates.
+ */
+export const createTemplatesJsonFromModule = async (
+  templateModules: TemplateModuleCollection,
+  projectStructure: ProjectStructure,
+  type: "FEATURES" | "TEMPLATES"
+): Promise<void> => {
   // Note: the object used to be known as "features" but it's been changed to "templates".
   // We're allowing the generation of a features.json file still for backwards compatibility,
   // which is why all of the types have not yet been renamed.

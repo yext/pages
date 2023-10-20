@@ -4,7 +4,8 @@ import runSubProcess from "../util/runSubprocess.js";
 import { autoYextInit } from "./server/autoInit.js";
 import open from "open";
 import getPort, { portNumbers } from "get-port";
-import fs from "fs";
+import { isUsingConfig } from "../util/config.js";
+import { logWarning } from "../util/logError.js";
 
 interface DevArgs {
   local?: boolean;
@@ -26,11 +27,12 @@ const handler = async ({
   noGenFeatures,
   port,
 }: DevArgs) => {
-  if (!fs.existsSync("config.yaml")) {
-    console.warn(
-      "It looks like you’re using an older setup of a Pages repo. Please run ‘npx pages upgrade’" +
-        " to upgrade to the latest format. This will setup a new configuration file config.yaml" +
-        " and install some new required dependencies."
+  if (!isUsingConfig()) {
+    logWarning(
+      "It looks like you're using an older setup of a Pages repo. Please run `npx pages upgrade`" +
+        " to upgrade to the latest format. This will setup a new configuration file, config.yaml," +
+        " and install some new required dependencies.\n" +
+        "If you'd like to upgrade without using the new config, run `npx pages upgrade --noMigration`."
     );
   }
 
@@ -38,10 +40,17 @@ const handler = async ({
     await autoYextInit(scope);
   }
   if (!noGenFeatures) {
-    await runSubProcess(
-      "pages generate features",
-      scope ? ["--scope" + " " + scope] : []
-    );
+    if (isUsingConfig()) {
+      await runSubProcess(
+        "pages generate templates",
+        scope ? [`--scope ${scope}`] : []
+      );
+    } else {
+      await runSubProcess(
+        "pages generate features",
+        scope ? [`--scope ${scope}`] : []
+      );
+    }
   }
 
   const devServerPort =

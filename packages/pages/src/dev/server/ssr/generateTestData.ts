@@ -18,7 +18,7 @@ import {
 import { ViteDevServer } from "vite";
 import { loadViteModule } from "./loadViteModule.js";
 import { TemplateModule } from "../../../common/src/template/types.js";
-import { getFeaturesConfig } from "../../../generate/templates/createTemplatesJsonFromModule.js";
+import { getTemplatesConfig } from "../../../generate/templates/createTemplatesJson.js";
 import { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
 
 /**
@@ -59,7 +59,7 @@ export const generateTestDataForSlug = async (
     vite,
     templateFilepaths
   );
-  const featuresConfig = getFeaturesConfig(templateModuleCollection);
+  const featuresConfig = getTemplatesConfig(templateModuleCollection);
   const featuresConfigForEntityPages: FeaturesConfig = {
     features: featuresConfig.features.filter((f) => "entityPageSet" in f),
     streams: featuresConfig.streams,
