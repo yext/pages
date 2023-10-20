@@ -1,3 +1,4 @@
+import path from "path";
 import {
   Project,
   SourceFile,
@@ -214,13 +215,6 @@ export default class SourceFileParser {
  * @returns an absolute file path
  */
 const getAbsolutePath = (base: string, relative: string): string => {
-  const stack = base.split("/"),
-    parts = relative.split("/");
-  stack.pop();
-  for (let i = 0; i < parts.length; i++) {
-    if (parts[i] == ".") continue;
-    if (parts[i] == "..") stack.pop();
-    else stack.push(parts[i]);
-  }
-  return stack.join("/");
+  const directory = path.dirname(base);
+  return path.resolve(directory, relative);
 };
