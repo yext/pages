@@ -1,8 +1,12 @@
 import manifest from "./manifest.json" assert { type: "json" };
 
 export type Manifest = {
-  /** A map of feature name to the bundle path of the feature */
-  bundlePaths: {
+  /** A map of feature name to the server path of the feature */
+  serverPaths: {
+    [key: string]: string;
+  };
+  /** A map of feature name to the client path of the feature */
+  clientPaths: {
     [key: string]: string;
   };
   /** A map of render template to its bundle path */
@@ -45,6 +49,8 @@ export interface Subfolders {
   serverlessFunctions: string; // Node functions
   /** Where to output the bundled static assets */
   assets: string;
+  /** Where to output the client bundles */
+  clientBundle: string;
   /** Where to output the server bundles */
   serverBundle: string;
   /** Where to output the render bundles */

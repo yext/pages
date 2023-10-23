@@ -25,7 +25,8 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
 };
 
 const manifest: Manifest = {
-  bundlePaths: {},
+  serverPaths: {},
+  clientPaths: {},
   renderPaths: {},
   projectStructure: new ProjectStructure().config,
   bundlerManifest: {},

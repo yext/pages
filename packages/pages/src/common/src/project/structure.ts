@@ -1,4 +1,5 @@
-import pathLib from "path";
+import fs from "node:fs";
+import pathLib from "node:path";
 import merge from "lodash/merge.js";
 import { Path } from "./path.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
@@ -230,16 +231,21 @@ export class ProjectStructure {
   };
 
   /**
-   * @returns the list of /dist/assets/client paths, taking scope into account.
+<<<<<<< Updated upstream
+=======
+   * @returns the list of /src/templates/client paths, taking scope into account.
    */
   getClientPaths = () => {
-    // dist/assets/client
+    // src/templates/client
     const root = pathLib.join(
-      this.config.rootFolders.dist,
-      this.config.subfolders.assets,
+      this.config.rootFolders.source,
+      this.config.subfolders.templates,
       this.config.subfolders.clientBundle
     );
 
+    if (!fs.existsSync(root)) {
+      return [];
+    }
     if (this.config.scope) {
       return [new Path(pathLib.join(root, this.config.scope)), new Path(root)];
     }
@@ -248,7 +254,7 @@ export class ProjectStructure {
   };
 
   /**
-   * @returns list of src/templates and dist/assets/clients, taking scope into account.
+   * @returns list of src/templates and /src/templates/client, taking scope into account.
    */
   getAllTemplatePaths = () => {
     const paths = this.getTemplatePaths();
