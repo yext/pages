@@ -29,10 +29,10 @@ const handler = async ({
 }: DevArgs) => {
   if (!isUsingConfig()) {
     logWarning(
-      "It looks like you're using an older setup of a Pages repo. Please run `npx pages upgrade`" +
+      "It looks like you are using an older setup of a Pages repo. Please run `npx pages upgrade`" +
         " to upgrade to the latest format. This will setup a new configuration file, config.yaml," +
         " and install some new required dependencies.\n" +
-        "If you'd like to upgrade without using the new config, run `npx pages upgrade --noMigration`."
+        "If you would like to upgrade without using the new config, run `npx pages upgrade --noMigration`."
     );
   }
 
