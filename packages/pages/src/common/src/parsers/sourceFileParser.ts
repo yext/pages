@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 import {
   Project,
   SourceFile,
@@ -141,10 +141,11 @@ export default class SourceFileParser {
     imports.forEach((importDec) => {
       let moduleSpecifier: string = importDec.getModuleSpecifierValue();
       if (importDec.isModuleSpecifierRelative()) {
-        const absolutePath = getAbsolutePath(
-          this.sourceFile.getFilePath(),
+        const absolutePath = path.resolve(
+          path.dirname(this.sourceFile.getFilePath()),
           importDec.getModuleSpecifierValue()
         );
+
         moduleSpecifier = absolutePath;
       }
       const namedImportsAsString: string[] = [];
@@ -207,14 +208,8 @@ export default class SourceFileParser {
   async save() {
     await this.sourceFile.save();
   }
-}
 
-/**
- * @param base the file path
- * @param relative the relative file path
- * @returns an absolute file path
- */
-const getAbsolutePath = (base: string, relative: string): string => {
-  const directory = path.dirname(base);
-  return path.resolve(directory, relative);
-};
+  getAllText(): string {
+    return this.sourceFile.getFullText();
+  }
+}

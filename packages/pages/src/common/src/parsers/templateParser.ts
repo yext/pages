@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import SourceFileParser, { createTsMorphProject } from "./sourceFileParser.js";
 
 /**
@@ -9,19 +9,29 @@ export default class TemplateParser {
   constructor(private originalSfp: SourceFileParser) {}
 
   /**
-   * Parses through originalSfp for essential client side code.
-   * Then saves the parsed code into files depending on path.
-   * For example, if path is /src/templates/client then the parsed
-   * code will be saved into an existing file such as
-   * /src/templates/client/location.tsx.
+   * Creates newSourceFileParser, newSfp, to pass through
+   * makeClientTemplateFromSfp when given a valid filepath.
+   * Ex filepath: /src/templares/client
    * @param filepath to directory where client template files exist.
+   * @return output and newSfp.
    */
-  async makeClientTemplate(filepath: string) {
+  makeClientTemplateFromPath(filepath: string) {
     const clientPath = path.join(filepath, this.originalSfp.getFileName());
     if (!fs.existsSync(clientPath)) {
-      return;
+      throw new Error(`Filepath "${filepath}" is invalid.`);
     }
     const newSfp = new SourceFileParser(clientPath, createTsMorphProject());
+    return this.makeClientTemplateFromSfp(newSfp);
+  }
+
+  /**
+   * Parses through originalSfp for essential client side code.
+   * Then returns the parsed code as well as the sourceFileParser.
+   * sourceFileParser.save() must be called to save changes to file.
+   * @param newSfp the new sourceFileParser.
+   * @return output and newSfp.
+   */
+  makeClientTemplateFromSfp(newSfp: SourceFileParser) {
     const defaultExportName = this.originalSfp.getDefaultExport();
     const childExpressionNames: string[] = [defaultExportName];
     this.originalSfp.getChildExpressions(
@@ -37,6 +47,9 @@ export default class TemplateParser {
       newSfp.addDefaultExport(defaultExportName);
       newSfp.setAllImports(imports);
     }
-    newSfp.save();
+    return {
+      fileContents: newSfp.getAllText(),
+      sourceFile: newSfp,
+    };
   }
 }

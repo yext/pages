@@ -1,9 +1,10 @@
 import { Project } from "ts-morph";
 
 /**
+ * Creates a test sourceFile and Project for ts-morph testing purposes.
  * @param code to insert into test file
  * @param filepath
- * @returns a sourceFile and Project for ts-morph testing
+ * @returns a sourceFile and Project
  */
 export default function createTestSourceFile(
   code: string,
