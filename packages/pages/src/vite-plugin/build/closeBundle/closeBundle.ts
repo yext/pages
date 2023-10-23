@@ -83,7 +83,10 @@ export default (projectStructure: ProjectStructure) => {
       finisher = logger.timedLog({ startLog: "Validating functions" });
       try {
         const functionFilepaths = getFunctionFilepaths(
-          path.join("dist", "functions")
+          path.join(
+            projectStructure.config.rootFolders.dist,
+            projectStructure.config.subfolders.serverlessFunctions
+          )
         );
         await Promise.all(
           functionFilepaths.map(async (filepath) => {
@@ -132,7 +135,9 @@ export default (projectStructure: ProjectStructure) => {
       }
     }
 
-    if (isUsingConfig()) {
+    const configYamlName = projectStructure.config.rootFiles.config;
+
+    if (isUsingConfig(configYamlName, projectStructure.config.scope)) {
       finisher = logger.timedLog({ startLog: "Writing templates.json" });
       try {
         createTemplatesJsonFromModule(
@@ -169,12 +174,12 @@ export default (projectStructure: ProjectStructure) => {
       logErrorAndExit(e);
     }
 
-    if (isUsingConfig()) {
+    if (isUsingConfig(configYamlName, projectStructure.config.scope)) {
       finisher = logger.timedLog({ startLog: "Writing artifacts.json" });
       try {
         const artifactPath = new Path(
           path.join(
-            projectStructure.config.rootFolders.dist,
+            projectStructure.getScopedDistPath().path,
             projectStructure.config.distConfigFiles.artifacts
           )
         );

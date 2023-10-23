@@ -21,7 +21,7 @@ export const createArtifactsJson = async (
 ) => {
   const artifactsDir = path.dirname(artifactPath);
   if (!fs.existsSync(artifactsDir)) {
-    fs.mkdirSync(artifactsDir);
+    fs.mkdirSync(artifactsDir, { recursive: true });
   }
 
   const artifactsConfig = await getArtifactsConfig(projectStructure);

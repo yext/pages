@@ -6,6 +6,7 @@ import open from "open";
 import getPort, { portNumbers } from "get-port";
 import { isUsingConfig } from "../util/config.js";
 import { logWarning } from "../util/logError.js";
+import { ProjectStructure } from "../common/src/project/structure.js";
 
 interface DevArgs {
   local?: boolean;
@@ -27,7 +28,9 @@ const handler = async ({
   noGenFeatures,
   port,
 }: DevArgs) => {
-  if (!isUsingConfig()) {
+  const { config } = (await ProjectStructure.init({ scope })).config.rootFiles;
+
+  if (!isUsingConfig(config, scope)) {
     logWarning(
       "It looks like you are using an older setup of a Pages repo. Please run `npx pages upgrade`" +
         " to upgrade to the latest format. This will setup a new configuration file, config.yaml," +
@@ -40,7 +43,7 @@ const handler = async ({
     await autoYextInit(scope);
   }
   if (!noGenFeatures) {
-    if (isUsingConfig()) {
+    if (isUsingConfig(config, scope)) {
       await runSubProcess(
         "pages generate templates",
         scope ? [`--scope ${scope}`] : []

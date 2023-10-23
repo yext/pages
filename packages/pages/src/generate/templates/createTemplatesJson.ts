@@ -58,7 +58,7 @@ export const createTemplatesJsonFromModule = async (
       break;
     case "TEMPLATES":
       templatesAbsolutePath = path.resolve(
-        projectStructure.config.rootFolders.dist,
+        projectStructure.getScopedDistPath().path,
         projectStructure.config.distConfigFiles.templates
       );
       break;
@@ -66,7 +66,7 @@ export const createTemplatesJsonFromModule = async (
 
   const templatesDir = path.dirname(templatesAbsolutePath);
   if (!fs.existsSync(templatesDir)) {
-    fs.mkdirSync(templatesDir);
+    fs.mkdirSync(templatesDir, { recursive: true });
   }
 
   // features.json is merged with the existing data a user can set. For templates.json the extra
