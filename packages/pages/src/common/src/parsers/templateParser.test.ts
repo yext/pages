@@ -87,7 +87,7 @@ describe("simple makeClientTemplate usages", () => {
 });
 
 describe("complex makeClientTemplate usages", () => {
-  it("correctly returns expected file contents", () => {
+  it("correctly returns expected file contents for static template", () => {
     const sourceParser = new SourceFileParser(
       "./tests/fixtures/sourceFileTemplates/static.tsx",
       createTsMorphProject()
@@ -103,7 +103,7 @@ describe("complex makeClientTemplate usages", () => {
     expect(templateParser.fileContents).toEqual(expectedContents);
   });
 
-  it("correctly returns expected file contents with function from import", () => {
+  it("correctly returns expected file contents for entity template", () => {
     const sourceParser = new SourceFileParser(
       "./tests/fixtures/sourceFileTemplates/state.tsx",
       createTsMorphProject()
@@ -112,7 +112,6 @@ describe("complex makeClientTemplate usages", () => {
     const templateParser = new TemplateParser(
       sourceParser
     ).makeClientTemplateFromSfp(testParser);
-    console.log(templateParser.fileContents);
     const expectedContents = fs.readFileSync(
       "./tests/fixtures/sourceFileTemplates/clientState.tsx",
       "utf-8"

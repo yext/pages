@@ -6,6 +6,7 @@ import DirectoryStateGrid from "../components/DirectoryStateGrid";
 import EditTool from "../components/EditTool";
 import PageLayout from "../components/PageLayout";
 import "../index.css";
+import { addition } from "./functions";
 
 const State: Template<TemplateRenderProps> = ({
   relativePrefixToRoot,
@@ -26,7 +27,7 @@ const State: Template<TemplateRenderProps> = ({
         <Banner
           name={c_addressRegionDisplayName ? c_addressRegionDisplayName : name}
         />
-        <div className="centered-container">
+        <div className={"centered-container" + addition(1, 2)}>
           <Breadcrumbs
             breadcrumbs={dm_directoryParents}
             baseUrl={relativePrefixToRoot}
