@@ -1,3 +1,3 @@
-export function addition(a: number, b: number) {
-  return a + b;
+export function dedupe(arr: string[]) {
+  return arr.filter((item, index) => arr.indexOf(item) === index);
 }

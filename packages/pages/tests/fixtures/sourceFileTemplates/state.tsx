@@ -18,7 +18,7 @@ import DirectoryStateGrid from "../components/DirectoryStateGrid";
 import PageLayout from "../components/PageLayout";
 import EditTool from "../components/EditTool";
 import Breadcrumbs from "../components/Breadcrumbs";
-import { addition } from "./functions";
+import { dedupe } from "./functions";
 
 export const config: TemplateConfig = {
   stream: {
@@ -110,7 +110,9 @@ const State: Template<TemplateRenderProps> = ({
         <Banner
           name={c_addressRegionDisplayName ? c_addressRegionDisplayName : name}
         />
-        <div className={"centered-container" + addition(1, 2)}>
+        <div
+          className={dedupe(["centered-container", "centered-container"])[0]}
+        >
           <Breadcrumbs
             breadcrumbs={dm_directoryParents}
             baseUrl={relativePrefixToRoot}
