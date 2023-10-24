@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import fs from "node:fs";
 import path from "node:path";
 import createTestSourceFile from "../../../util/createTestSourceFile.js";
 import SourceFileParser, { createTsMorphProject } from "./sourceFileParser.js";
@@ -91,15 +92,32 @@ describe("complex makeClientTemplate usages", () => {
       "./tests/fixtures/sourceFileTemplates/static.tsx",
       createTsMorphProject()
     );
-    const expectedParser = new SourceFileParser(
+    const testParser = createParser(``);
+    const templateParser = new TemplateParser(
+      sourceParser
+    ).makeClientTemplateFromSfp(testParser);
+    const expectedContents = fs.readFileSync(
       "./tests/fixtures/sourceFileTemplates/clientStatic.tsx",
+      "utf-8"
+    );
+    expect(templateParser.fileContents).toEqual(expectedContents);
+  });
+
+  it("correctly returns expected file contents with function from import", () => {
+    const sourceParser = new SourceFileParser(
+      "./tests/fixtures/sourceFileTemplates/state.tsx",
       createTsMorphProject()
     );
     const testParser = createParser(``);
     const templateParser = new TemplateParser(
       sourceParser
     ).makeClientTemplateFromSfp(testParser);
-    expect(templateParser.fileContents).toEqual(expectedParser.getAllText());
+    console.log(templateParser.fileContents);
+    const expectedContents = fs.readFileSync(
+      "./tests/fixtures/sourceFileTemplates/clientState.tsx",
+      "utf-8"
+    );
+    expect(templateParser.fileContents).toEqual(expectedContents);
   });
 
   it("correctly returns nothing for templates without default export", () => {
