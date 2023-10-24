@@ -11,7 +11,7 @@ export default class TemplateParser {
   /**
    * Creates newSourceFileParser, newSfp, to pass through
    * makeClientTemplateFromSfp when given a valid filepath.
-   * Ex filepath: /src/templares/client
+   * Ex filepath: .sites
    * @param filepath to directory where client template files exist.
    * @return output and newSfp.
    */
@@ -26,8 +26,8 @@ export default class TemplateParser {
 
   /**
    * Parses through originalSfp for essential client side code.
-   * Then returns the parsed code as well as the sourceFileParser.
-   * sourceFileParser.save() must be called to save changes to file.
+   * Then returns the parsed code as well as the SourceFileParser.
+   * SourceFileParser.save() must be called to save changes to file.
    * @param newSfp the new sourceFileParser.
    * @return output and newSfp.
    */
