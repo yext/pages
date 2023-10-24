@@ -15,7 +15,7 @@ const CLIENT_TEMPLATE_PATH = ".sites";
  * @param projectStructure
  */
 export const makeClientFiles = async (projectStructure: ProjectStructure) => {
-  cleanClient(projectStructure);
+  cleanClient();
   const templatePaths = projectStructure.getTemplatePaths();
   for (const templatePath of templatePaths) {
     (await readdir(templatePath.getAbsolutePath(), { withFileTypes: true }))
