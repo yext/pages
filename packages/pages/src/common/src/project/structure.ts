@@ -231,17 +231,10 @@ export class ProjectStructure {
   };
 
   /**
-<<<<<<< Updated upstream
-=======
-   * @returns the list of /src/templates/client paths, taking scope into account.
+   * @returns the list of .sites paths, taking scope into account.
    */
   getClientPaths = () => {
-    // src/templates/client
-    const root = pathLib.join(
-      this.config.rootFolders.source,
-      this.config.subfolders.templates,
-      this.config.subfolders.clientBundle
-    );
+    const root = ".sites";
 
     if (!fs.existsSync(root)) {
       return [];
@@ -254,7 +247,7 @@ export class ProjectStructure {
   };
 
   /**
-   * @returns list of src/templates and /src/templates/client, taking scope into account.
+   * @returns list of src/templates and .sites/, taking scope into account.
    */
   getAllTemplatePaths = () => {
     const paths = this.getTemplatePaths();

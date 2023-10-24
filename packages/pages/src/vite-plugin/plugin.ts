@@ -8,12 +8,10 @@ const plugin = async (): Promise<PluginOption[]> => {
     scope: process.env.YEXT_PAGES_SCOPE,
   });
 
-  // make ts-morph files here...?
   const buildPlugin = build(projectStructure);
-  // remove them here...?
 
   return [
-    buildPlugin,
+    await buildPlugin,
     nodePolyfills({
       globals: {
         Buffer: "build",

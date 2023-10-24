@@ -5,7 +5,9 @@ import SourceFileParser, {
 } from "../parsers/sourceFileParser.js";
 import TemplateParser from "../parsers/templateParser.js";
 import { ProjectStructure } from "../project/structure.js";
-import { readdir } from "fs/promises";
+import { readdir } from "node:fs/promises";
+
+const CLIENT_TEMPLATE_PATH = ".sites";
 
 /**
  * Creates directory as well as files for each template
@@ -24,15 +26,10 @@ export const makeClientFiles = async (projectStructure: ProjectStructure) => {
           f !== "_client17.tsx" && f !== "_client.tsx" && f !== "_server.tsx"
       )
       .forEach((template) => {
-        const clientDir = path.join(
-          projectStructure.config.rootFolders.source,
-          projectStructure.config.subfolders.templates,
-          projectStructure.config.subfolders.clientBundle
-        );
-        if (!fs.existsSync(clientDir)) {
-          fs.mkdirSync(clientDir);
+        if (!fs.existsSync(CLIENT_TEMPLATE_PATH)) {
+          fs.mkdirSync(CLIENT_TEMPLATE_PATH);
         }
-        fs.openSync(path.join(clientDir, template), "w");
+        fs.openSync(path.join(CLIENT_TEMPLATE_PATH, template), "w");
         loadClient(projectStructure, template);
       });
   }
@@ -47,11 +44,6 @@ const loadClient = (
   projectStructure: ProjectStructure,
   templateName: string
 ) => {
-  const clientPath = path.join(
-    projectStructure.config.rootFolders.source,
-    projectStructure.config.subfolders.templates,
-    projectStructure.config.subfolders.clientBundle
-  );
   const templatePath = path.join(
     projectStructure.config.rootFolders.source,
     projectStructure.config.subfolders.templates
@@ -60,20 +52,14 @@ const loadClient = (
     path.join(templatePath, templateName),
     createTsMorphProject()
   );
-  new TemplateParser(sfp).makeClientTemplate(clientPath);
+  new TemplateParser(sfp).makeClientTemplate(CLIENT_TEMPLATE_PATH);
 };
 
 /**
- * Deletes /src/templates/client directory and files within it.
- * @param projectStructure
- */
-export const cleanClient = (projectStructure: ProjectStructure) => {
-  const clientPath = path.join(
-    projectStructure.config.rootFolders.source,
-    projectStructure.config.subfolders.templates,
-    projectStructure.config.subfolders.clientBundle
-  );
-  if (fs.existsSync(clientPath)) {
-    fs.rmSync(clientPath, { recursive: true, force: true });
+ * Removes .sites directory and files within.
+ *  */
+const cleanClient = () => {
+  if (fs.existsSync(CLIENT_TEMPLATE_PATH)) {
+    fs.rmSync(CLIENT_TEMPLATE_PATH, { recursive: true, force: true });
   }
 };

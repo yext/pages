@@ -167,7 +167,7 @@ export default (projectStructure: ProjectStructure) => {
 
     finisher = logger.timedLog({ startLog: "Writing manifest.json" });
     try {
-      generateManifestFile(templateModules, projectStructure);
+      await generateManifestFile(templateModules, projectStructure);
       finisher.succeed("Successfully wrote manifest.json");
     } catch (e: any) {
       finisher.fail("Failed to write manifest.json");

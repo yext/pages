@@ -8,6 +8,7 @@ import { readdir } from "fs/promises";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { getGlobalClientServerRenderTemplates } from "../../common/src/template/internal/getTemplateFilepaths.js";
 import { Path } from "../../common/src/project/path.js";
+import { makeClientFiles } from "../../common/src/template/client.js";
 
 const intro = `
 var global = globalThis;
@@ -18,8 +19,11 @@ var global = globalThis;
  * assets, copies Yext plugin files that execute the bundled assets in a Deno
  * environment, and puts them all in an output directory.
  */
-export const build = (projectStructure: ProjectStructure): Plugin => {
+export const build = async (
+  projectStructure: ProjectStructure
+): Promise<Plugin> => {
   const { envVarConfig, subfolders } = projectStructure.config;
+  await makeClientFiles(projectStructure);
 
   return {
     name: "vite-plugin:build",
@@ -91,8 +95,6 @@ const discoverInputs = async (
           f !== "_client17.tsx" && f !== "_client.tsx" && f !== "_server.tsx"
       )
       .forEach((template) => {
-        console.log("template: " + dir + " " + template);
-
         const parsedPath = parse(template);
         const bundlePath = dir.endsWith(
           projectStructure.config.subfolders.templates
