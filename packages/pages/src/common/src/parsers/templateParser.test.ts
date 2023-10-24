@@ -99,13 +99,7 @@ describe("complex makeClientTemplate usages", () => {
     const templateParser = new TemplateParser(
       sourceParser
     ).makeClientTemplateFromSfp(testParser);
-    expectedStaticImports.forEach((expectedImport) => {
-      expect(templateParser.fileContents).toContain(expectedImport);
-    });
-    unnecessaryStaticStrings.forEach((unnecessaryString) => {
-      expect(templateParser.fileContents).not.toContain(unnecessaryString);
-    });
-    expect(templateParser.fileContents).toContain(expectedParser.getAllText());
+    expect(templateParser.fileContents).toEqual(expectedParser.getAllText());
   });
 
   it("correctly returns nothing for templates without default export", () => {
@@ -126,25 +120,3 @@ function createParser(sourceCode: string) {
   const { project } = createTestSourceFile(sourceCode, filepath);
   return new SourceFileParser(filepath, project);
 }
-
-const expectedStaticImports = [
-  `import { Template, TemplateRenderProps } from "@yext/pages";`,
-  `import Banner from `,
-  `import Card from `,
-  `import PageLayout from `,
-  `import { ExternalImage } `,
-];
-
-const unnecessaryStaticStrings = [
-  `import { fetch } from "@yext/pages/util";`,
-  `Favicon`,
-  `GetPath`,
-  `GetHeadConfig`,
-  `HeadConfig`,
-  `TransformProps`,
-  `TemplateConfig`,
-  `export const config: TemplateConfig`,
-  `export const transformProps: TransformProps<ExternalImageData>`,
-  `export const getPath: GetPath<ExternalImageData>`,
-  `export const getHeadConfig`,
-];

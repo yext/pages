@@ -1,3 +1,10 @@
+import { Template, TemplateRenderProps } from "@yext/pages";
+import Banner from "../components/Banner";
+import Card from "../components/Card";
+import PageLayout from "../components/PageLayout";
+import "../index.css";
+import { ExternalImage } from "../types/ExternalImage";
+
 const Static: Template<ExternalImageRenderData> = ({ externalImage }) => {
   return (
     <>

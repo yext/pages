@@ -139,15 +139,7 @@ export default class SourceFileParser {
     const allImports: OptionalKind<ImportDeclarationStructure>[] = [];
     const imports = this.sourceFile.getImportDeclarations();
     imports.forEach((importDec) => {
-      let moduleSpecifier: string = importDec.getModuleSpecifierValue();
-      if (importDec.isModuleSpecifierRelative()) {
-        const absolutePath = path.resolve(
-          path.dirname(this.sourceFile.getFilePath()),
-          importDec.getModuleSpecifierValue()
-        );
-
-        moduleSpecifier = absolutePath;
-      }
+      const moduleSpecifier: string = importDec.getModuleSpecifierValue();
       const namedImportsAsString: string[] = [];
       importDec.getNamedImports()?.forEach((namedImport) => {
         namedImportsAsString.push(namedImport.getName());
