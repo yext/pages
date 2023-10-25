@@ -140,7 +140,7 @@ export function getUpdates(
       meta: {
         id: profile.meta.id,
         language: profile.meta.language,
-        entityType: profile.meta.entityType
+        entityType: profile.meta.entityType,
       },
     });
   }
