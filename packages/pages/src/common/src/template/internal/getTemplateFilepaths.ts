@@ -1,12 +1,10 @@
-import React from "react";
-import { globSync } from "glob";
-import path from "path";
+import path from "node:path";
 import { Path } from "../../project/path.js";
 import { ProjectStructure } from "../../project/structure.js";
 import { ClientServerRenderTemplates } from "../types.js";
-import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { convertToPosixPath } from "../paths.js";
+import { existsSync, getReactVersion, globSync } from "./util.js";
 
 /**
  * Get all the template files in the provided template folder path(s).
@@ -67,16 +65,18 @@ const globalServerRenderFilename = "_server.tsx";
 export const getGlobalClientServerRenderTemplates = (
   templatePaths: Path[]
 ): ClientServerRenderTemplates => {
-  const shouldUseReactRoot = parseInt(React.version) >= 18;
+  const shouldUseReactRoot = getReactVersion() >= 18;
 
   const [clientRenderTemplatePath, usingCustomClient] = findGlobalRenderFile(
     templatePaths,
+    globalClientRenderFilename,
     shouldUseReactRoot
       ? globalClientRenderFilename
       : globalClientRenderFilename17
   );
   const [serverRenderTemplatePath, usingCustomServer] = findGlobalRenderFile(
     templatePaths,
+    globalServerRenderFilename,
     globalServerRenderFilename
   );
 
@@ -91,18 +91,20 @@ export const getGlobalClientServerRenderTemplates = (
  * @param templatesRootPath the path where the templates live, typically src/templates
  * @param scopedTemplatePath the subfolder path inside templatesRoot to scope to - used in multibrand setups
  * @param globalFilename the file to find
+ * @param defaultFilename the name of the provided file if globalFilename cannot be found - necessary for _client.js vs _client17.js
  * @returns the path to the appropriate file along with a boolean denoting if the path returned is a custom render template
  */
 const findGlobalRenderFile = (
   templatePaths: Path[],
-  globalFilename: string
+  globalFilename: string,
+  defaultFilename: string
 ): [string, boolean] => {
   const pathToGlobalFile = path.join(
     templatePaths[0].getAbsolutePath(),
     globalFilename
   );
 
-  if (fs.existsSync(pathToGlobalFile)) {
+  if (existsSync(pathToGlobalFile)) {
     return [pathToGlobalFile, true];
   }
 
@@ -111,5 +113,5 @@ const findGlobalRenderFile = (
   const __dirname = path.dirname(__filename);
 
   // Need to replace .tsx with .js since the file is compiled to the node_modules dist folder
-  return [path.join(__dirname, globalFilename.split(".")[0] + ".js"), false];
+  return [path.join(__dirname, defaultFilename.split(".")[0] + ".js"), false];
 };
