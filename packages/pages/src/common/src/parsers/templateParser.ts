@@ -11,7 +11,6 @@ export default class TemplateParser {
   /**
    * Creates newSourceFileParser, newSfp, to pass through
    * makeClientTemplateFromSfp when given a valid filepath.
-   * Ex filepath: .sites
    * @param filepath to directory where client template files exist.
    * @return output and newSfp.
    */

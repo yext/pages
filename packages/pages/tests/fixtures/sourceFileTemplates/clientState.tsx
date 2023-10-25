@@ -6,7 +6,7 @@ import DirectoryStateGrid from "../components/DirectoryStateGrid";
 import EditTool from "../components/EditTool";
 import PageLayout from "../components/PageLayout";
 import "../index.css";
-import { dedupe } from "./functions";
+import { dedupe } from "./utils";
 
 const State: Template<TemplateRenderProps> = ({
   relativePrefixToRoot,

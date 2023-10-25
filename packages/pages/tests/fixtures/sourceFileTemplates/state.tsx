@@ -18,7 +18,7 @@ import DirectoryStateGrid from "../components/DirectoryStateGrid";
 import PageLayout from "../components/PageLayout";
 import EditTool from "../components/EditTool";
 import Breadcrumbs from "../components/Breadcrumbs";
-import { dedupe } from "./functions";
+import { dedupe } from "./utils";
 
 export const config: TemplateConfig = {
   stream: {
