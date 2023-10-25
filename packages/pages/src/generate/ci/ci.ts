@@ -55,10 +55,10 @@ export const updateCiConfig = async (
     originalCiConfigJson = JSON.parse(fs.readFileSync(ciConfigPath).toString());
   } else {
     if (calledViaCommand) {
-      console.error(colors.red("sites-config/ci.json is missing"));
+      console.error(colors.red(`${ciConfigPath} is missing`));
       return;
     } else {
-      throw new Error("sites-config/ci.json is missing");
+      throw new Error(`${ciConfigPath} is missing`);
     }
   }
 

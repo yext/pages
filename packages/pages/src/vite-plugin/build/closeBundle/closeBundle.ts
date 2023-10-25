@@ -16,13 +16,16 @@ import {
   bundleServerlessFunctions,
   shouldBundleServerlessFunctions,
 } from "./serverlessFunctions.js";
-import { createFeaturesJson } from "../../../generate/templates/createTemplatesJsonFromModule.js";
+import { createTemplatesJsonFromModule } from "../../../generate/templates/createTemplatesJson.js";
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
 import {
   TemplateModuleCollection,
   loadTemplateModules,
 } from "../../../common/src/template/loader/loader.js";
 import { logErrorAndExit } from "../../../util/logError.js";
+import { isUsingConfig } from "../../../util/config.js";
+import { createArtifactsJson } from "../../../generate/artifacts/createArtifactsJson.js";
+import { Path } from "../../../common/src/project/path.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -62,7 +65,8 @@ export default (projectStructure: ProjectStructure) => {
       finisher.succeed("Validated template modules");
     } catch (e: any) {
       finisher.fail("One or more template modules failed validation");
-      throw new Error(e);
+      logErrorAndExit(e);
+      return;
     }
 
     /*
@@ -79,7 +83,10 @@ export default (projectStructure: ProjectStructure) => {
       finisher = logger.timedLog({ startLog: "Validating functions" });
       try {
         const functionFilepaths = getFunctionFilepaths(
-          path.join("dist", "functions")
+          path.join(
+            projectStructure.config.rootFolders.dist,
+            projectStructure.config.subfolders.serverlessFunctions
+          )
         );
         await Promise.all(
           functionFilepaths.map(async (filepath) => {
@@ -128,13 +135,34 @@ export default (projectStructure: ProjectStructure) => {
       }
     }
 
-    finisher = logger.timedLog({ startLog: "Writing features.json" });
-    try {
-      createFeaturesJson(templateModules, projectStructure);
-      finisher.succeed("Successfully wrote features.json");
-    } catch (e: any) {
-      finisher.fail("Failed to write features.json");
-      logErrorAndExit(e);
+    const configYamlName = projectStructure.config.rootFiles.config;
+
+    if (isUsingConfig(configYamlName, projectStructure.config.scope)) {
+      finisher = logger.timedLog({ startLog: "Writing templates.json" });
+      try {
+        createTemplatesJsonFromModule(
+          templateModules,
+          projectStructure,
+          "TEMPLATES"
+        );
+        finisher.succeed("Successfully wrote templates.json");
+      } catch (e: any) {
+        finisher.fail("Failed to write templates.json");
+        logErrorAndExit(e);
+      }
+    } else {
+      finisher = logger.timedLog({ startLog: "Writing features.json" });
+      try {
+        createTemplatesJsonFromModule(
+          templateModules,
+          projectStructure,
+          "FEATURES"
+        );
+        finisher.succeed("Successfully wrote features.json");
+      } catch (e: any) {
+        finisher.fail("Failed to write features.json");
+        logErrorAndExit(e);
+      }
     }
 
     finisher = logger.timedLog({ startLog: "Writing manifest.json" });
@@ -146,23 +174,45 @@ export default (projectStructure: ProjectStructure) => {
       logErrorAndExit(e);
     }
 
-    finisher = logger.timedLog({ startLog: "Updating ci.json" });
-    try {
-      const sitesConfigAbsolutePath = projectStructure
-        .getSitesConfigPath()
-        .getAbsolutePath();
-      await updateCiConfig(
-        path.join(
-          sitesConfigAbsolutePath,
-          projectStructure.config.sitesConfigFiles.ci
-        ),
-        false,
-        projectStructure
-      );
-      finisher.succeed("Successfully updated ci.json");
-    } catch (e: any) {
-      finisher.fail("Failed to update ci.json");
-      logErrorAndExit(e);
+    if (isUsingConfig(configYamlName, projectStructure.config.scope)) {
+      finisher = logger.timedLog({ startLog: "Writing artifacts.json" });
+      try {
+        const artifactPath = new Path(
+          path.join(
+            projectStructure.getScopedDistPath().path,
+            projectStructure.config.distConfigFiles.artifacts
+          )
+        );
+
+        await createArtifactsJson(
+          artifactPath.getAbsolutePath(),
+          projectStructure
+        );
+
+        finisher.succeed("Successfully wrote artifacts.json");
+      } catch (e: any) {
+        finisher.fail("Failed to update artifacts.json");
+        logErrorAndExit(e);
+      }
+    } else {
+      finisher = logger.timedLog({ startLog: "Updating ci.json" });
+      try {
+        const sitesConfigAbsolutePath = projectStructure
+          .getSitesConfigPath()
+          .getAbsolutePath();
+        await updateCiConfig(
+          path.join(
+            sitesConfigAbsolutePath,
+            projectStructure.config.sitesConfigFiles.ci
+          ),
+          false,
+          projectStructure
+        );
+        finisher.succeed("Successfully updated ci.json");
+      } catch (e: any) {
+        finisher.fail("Failed to update ci.json");
+        logErrorAndExit(e);
+      }
     }
   };
 };
@@ -177,9 +227,7 @@ const validateUniqueFeatureName = (
   const featureNames = new Set<string>();
   [...templateModuleCollection.keys()].forEach((featureName) => {
     if (featureNames.has(featureName)) {
-      throw new Error(
-        `Templates must have unique feature names. Found multiple modules with "${featureName}"`
-      );
+      throw `Templates must have unique feature names. Found multiple modules with "${featureName}"`;
     }
     featureNames.add(featureName);
   });

@@ -19,6 +19,9 @@ import { convertFunctionModuleToFunctionModuleInternal } from "../../common/src/
 import { loadViteModule } from "./ssr/loadViteModule.js";
 import { FunctionModule } from "../../common/src/function/types.js";
 import { getViteServerConfig } from "../../common/src/loader/vite.js";
+import { logWarning } from "../../util/logError.js";
+import { isUsingConfig } from "../../util/config.js";
+import yaml from "yaml";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const createServer = async (
@@ -183,24 +186,35 @@ export const createServer = async (
  * Default to en if features.json cannot be read or there is no locales entry
  */
 const getDefaultLocale = (projectStructure: ProjectStructure) => {
-  // Read features.json and set the default locale to the first locale listed
-  // Default to en if features.json cannot be read or there is no locales entry
+  // Read features.json or config.yaml and set the default locale to the first locale listed.
+  // Default to en if features.json cannot be read or there is no locales entry.
   try {
-    const featuresJson = JSON.parse(
-      fs.readFileSync(
-        path.resolve(
-          projectStructure.getSitesConfigPath().path,
-          projectStructure.config.sitesConfigFiles.features
-        ),
-        "utf-8"
-      )
-    );
-    if (featuresJson.locales && featuresJson.locales.length > 0) {
-      return featuresJson.locales[0];
+    let parsedConfigfile;
+    const { config } = projectStructure;
+    if (isUsingConfig(config.rootFiles.config, config.scope)) {
+      parsedConfigfile = yaml.parseDocument(
+        fs.readFileSync(
+          path.join(config.scope ?? "", config.rootFiles.config),
+          "utf-8"
+        )
+      );
+    } else {
+      parsedConfigfile = JSON.parse(
+        fs.readFileSync(
+          path.resolve(
+            projectStructure.getSitesConfigPath().path,
+            projectStructure.config.sitesConfigFiles.features
+          ),
+          "utf-8"
+        )
+      );
     }
-  } catch (e) {
+    if (parsedConfigfile.locales && parsedConfigfile.locales.length > 0) {
+      return parsedConfigfile.locales[0];
+    }
+  } catch (e: any) {
     if (e !== "Error: ENOENT: no such file or directory") {
-      console.warn(e);
+      logWarning(e);
     }
   }
 
