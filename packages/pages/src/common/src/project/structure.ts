@@ -195,7 +195,7 @@ export class ProjectStructure {
     // TODO: handle other extensions
     const assetsDir = await determineAssetsFilepath(
       DEFAULT_ASSETS_DIR,
-      pathLib.resolve(config.rootFiles.config),
+      pathLib.resolve(config.scope ?? "", config.rootFiles.config),
       pathLib.resolve("vite.config.js")
     );
 
@@ -231,6 +231,15 @@ export class ProjectStructure {
   getSitesConfigPath = () => {
     return new Path(
       pathLib.join(this.config.rootFolders.sitesConfig, this.config.scope ?? "")
+    );
+  };
+
+  /**
+   * @returns the {@link Path} to the dist folder, taking scope into account.
+   */
+  getScopedDistPath = () => {
+    return new Path(
+      pathLib.join(this.config.rootFolders.dist, this.config.scope ?? "")
     );
   };
 }

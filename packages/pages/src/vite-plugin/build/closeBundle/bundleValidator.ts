@@ -24,9 +24,7 @@ const validateFilesize = (serverBundlePath: string): number => {
   const stats = statSync(serverBundlePath);
 
   if (stats.size / (1024 * 1024) > PLUGIN_FILESIZE_LIMIT) {
-    throw new Error(
-      `Bundled file ${serverBundlePath} exceeds max size of ${PLUGIN_FILESIZE_LIMIT} MB`
-    );
+    throw `Bundled file ${serverBundlePath} exceeds max size of ${PLUGIN_FILESIZE_LIMIT} MB`;
   }
 
   return stats.size;
@@ -38,8 +36,6 @@ const validateFilesize = (serverBundlePath: string): number => {
  */
 const validateTotalSourceSize = (totalSizeInBytes: number) => {
   if (totalSizeInBytes / (1024 * 1024) > PLUGIN_TOTAL_FILESIZE_LIMIT) {
-    throw new Error(
-      `The total size of all bundles exceeds the max size of ${PLUGIN_TOTAL_FILESIZE_LIMIT} MB`
-    );
+    throw `The total size of all bundles exceeds the max size of ${PLUGIN_TOTAL_FILESIZE_LIMIT} MB`;
   }
 };

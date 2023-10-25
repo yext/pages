@@ -9,7 +9,7 @@ export const artifactsHandler = async ({ scope }: { scope: string }) => {
 
   const artifactPath = new Path(
     path.join(
-      projectStructure.config.rootFolders.dist,
+      projectStructure.getScopedDistPath().path,
       projectStructure.config.distConfigFiles.artifacts
     )
   );

@@ -18,32 +18,25 @@ import {
 import { ViteDevServer } from "vite";
 import { loadViteModule } from "./loadViteModule.js";
 import { TemplateModule } from "../../../common/src/template/types.js";
-import { getFeaturesConfig } from "../../../generate/templates/createTemplatesJsonFromModule.js";
+import { getTemplatesConfig } from "../../../generate/templates/createTemplatesJson.js";
 import { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
+import runSubprocess from "../../../util/runSubprocess.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
  * the event of a successful run and false in the event of a failure.
  *
- * @param hostname The hostname of the site
+ * @param scope The scope of the site
  * @returns a boolean on whether test data generation was successful
  */
-export const generateTestData = async (hostname?: string): Promise<boolean> => {
-  const command = "yext";
-  let args = ["pages", "generate-test-data"];
-  if (hostname) {
-    args = args.concat("--hostname", hostname);
+export const generateTestData = async (scope?: string): Promise<unknown> => {
+  const command = "yext pages";
+  let args = ["generate-test-data"];
+  if (scope) {
+    args = args.concat("--scope", scope);
   }
 
-  async function generate() {
-    const childProcess = spawn(command, args);
-    const exitCode = await new Promise((resolve) => {
-      childProcess.on("close", resolve);
-    });
-    return !!exitCode;
-  }
-
-  return generate();
+  return runSubprocess(command, args);
 };
 
 export const generateTestDataForSlug = async (
@@ -59,7 +52,7 @@ export const generateTestDataForSlug = async (
     vite,
     templateFilepaths
   );
-  const featuresConfig = getFeaturesConfig(templateModuleCollection);
+  const featuresConfig = getTemplatesConfig(templateModuleCollection);
   const featuresConfigForEntityPages: FeaturesConfig = {
     features: featuresConfig.features.filter((f) => "entityPageSet" in f),
     streams: featuresConfig.streams,

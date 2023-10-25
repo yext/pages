@@ -7,10 +7,15 @@ interface ProdArgs {
   scope?: string;
 }
 
-const handler = async (args: ProdArgs) => {
+const handler = async ({ noBuild, noRender, scope }: ProdArgs) => {
   const command = "yext pages";
-  if (!args.noBuild) await runSubprocess(command, ["build"]);
-  if (!args.noRender) await runSubprocess(command, ["render"]);
+
+  if (!noBuild) {
+    await runSubprocess(command, ["build", scope ? `--scope ${scope}` : ""]);
+  }
+  if (!noRender) {
+    await runSubprocess(command, ["render", scope ? `--scope ${scope}` : ""]);
+  }
   await runSubprocess(command, ["serve"]);
 };
 
@@ -20,5 +25,9 @@ export const prodCommand = (program: Command) => {
     .description("Runs a custom local production server")
     .option("--noBuild", "Disable build step")
     .option("--noRender", "Disable render step")
+    .option(
+      "--scope  <string>",
+      "The subfolder to scope the served templates from"
+    )
     .action(handler);
 };
