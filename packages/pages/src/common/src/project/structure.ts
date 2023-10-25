@@ -1,4 +1,3 @@
-import fs from "node:fs";
 import pathLib from "node:path";
 import merge from "lodash/merge.js";
 import { Path } from "./path.js";
@@ -228,30 +227,6 @@ export class ProjectStructure {
     }
 
     return [new Path(templatesRoot)];
-  };
-
-  /**
-   * @returns the list of .sites paths, taking scope into account.
-   */
-  getClientPaths = () => {
-    const root = ".sites";
-
-    if (!fs.existsSync(root)) {
-      return [];
-    }
-    if (this.config.scope) {
-      return [new Path(pathLib.join(root, this.config.scope)), new Path(root)];
-    }
-
-    return [new Path(root)];
-  };
-
-  /**
-   * @returns list of src/templates and .sites/, taking scope into account.
-   */
-  getAllTemplatePaths = () => {
-    const paths = this.getTemplatePaths();
-    return paths.concat(this.getClientPaths());
   };
 
   /**

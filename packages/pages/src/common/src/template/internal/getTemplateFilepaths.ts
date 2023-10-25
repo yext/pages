@@ -28,7 +28,8 @@ export const getTemplateFilepaths = (paths: Path[]): string[] => {
       .filter(
         (f) =>
           f.indexOf(globalClientRenderFilename) === -1 &&
-          f.indexOf(globalServerRenderFilename) === -1
+          f.indexOf(globalServerRenderFilename) === -1 &&
+          f.indexOf("client.tsx") === -1
       )
       .forEach((f) => {
         const fileName = path.basename(f);

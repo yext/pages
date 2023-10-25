@@ -7,7 +7,6 @@ node_modules/
 storybook-static
 jstest
 packages/pages/latest
-.sites/
 
 # Logs
 logs

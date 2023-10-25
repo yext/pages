@@ -26,10 +26,20 @@ import { logErrorAndExit } from "../../../util/logError.js";
 import { isUsingConfig } from "../../../util/config.js";
 import { createArtifactsJson } from "../../../generate/artifacts/createArtifactsJson.js";
 import { Path } from "../../../common/src/project/path.js";
+import { cleanClient } from "../../../common/src/template/client.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
-    let finisher = logger.timedLog({ startLog: "Validating template modules" });
+    let finisher = logger.timedLog({ startLog: "Cleaning client templates." });
+    try {
+      cleanClient(projectStructure);
+      finisher.succeed("Successfully cleaned client templates.");
+    } catch (e: any) {
+      finisher.fail("Failed to clean clients templates.");
+      logErrorAndExit(e);
+    }
+
+    finisher = logger.timedLog({ startLog: "Validating template modules" });
     let templateModules: TemplateModuleCollection;
 
     const { rootFolders, subfolders } = projectStructure.config;

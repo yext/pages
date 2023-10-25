@@ -12,7 +12,6 @@ export default (projectStructure: ProjectStructure) => {
   return async function (this: PluginContext): Promise<void> {
     console.log(yextBanner);
     clean(new Path(projectStructure.config.rootFolders.dist).getAbsolutePath());
-
     copyPluginFiles(this.emitFile);
 
     await injectRenderer(this.emitFile, projectStructure);

@@ -8,7 +8,6 @@ import { readdir } from "fs/promises";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { getGlobalClientServerRenderTemplates } from "../../common/src/template/internal/getTemplateFilepaths.js";
 import { Path } from "../../common/src/project/path.js";
-import { makeClientFiles } from "../../common/src/template/client.js";
 
 const intro = `
 var global = globalThis;
@@ -23,7 +22,6 @@ export const build = async (
   projectStructure: ProjectStructure
 ): Promise<Plugin> => {
   const { envVarConfig, subfolders } = projectStructure.config;
-  await makeClientFiles(projectStructure);
 
   return {
     name: "vite-plugin:build",
@@ -41,7 +39,7 @@ export const build = async (
           rollupOptions: {
             preserveEntrySignatures: "strict",
             input: await discoverInputs(
-              projectStructure.getAllTemplatePaths(),
+              projectStructure.getTemplatePaths(),
               projectStructure
             ),
             output: {
@@ -96,12 +94,13 @@ const discoverInputs = async (
       )
       .forEach((template) => {
         const parsedPath = parse(template);
-        const bundlePath = dir.endsWith(
-          projectStructure.config.subfolders.templates
-        )
-          ? projectStructure.config.subfolders.serverBundle
-          : projectStructure.config.subfolders.clientBundle;
-        const outputPath = `${bundlePath}/${parsedPath.name}`;
+        const bundlePath = template.endsWith("client.tsx")
+          ? projectStructure.config.subfolders.clientBundle
+          : projectStructure.config.subfolders.serverBundle;
+        const outputPath = `${bundlePath}/${parsedPath.name.replace(
+          ".client",
+          ""
+        )}`;
         if (entryPoints[outputPath]) {
           return;
         }

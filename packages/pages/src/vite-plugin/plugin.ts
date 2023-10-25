@@ -8,10 +8,8 @@ const plugin = async (): Promise<PluginOption[]> => {
     scope: process.env.YEXT_PAGES_SCOPE,
   });
 
-  const buildPlugin = build(projectStructure);
-
   return [
-    await buildPlugin,
+    build(projectStructure),
     nodePolyfills({
       globals: {
         Buffer: "build",
