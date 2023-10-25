@@ -197,8 +197,8 @@ export default class SourceFileParser {
   /**
    * Saves all changes made to source file.
    */
-  async save() {
-    await this.sourceFile.save();
+  save() {
+    this.sourceFile.saveSync();
   }
 
   getAllText(): string {
