@@ -1,3 +1,24 @@
+#### 1.0.0-beta.6 (2023-10-25)
+
+##### New Features
+
+* **plugin:**
+  *  add ts-morph for client templates (#414) (cb9f5980)
+  *  generate templates/artifacts during build (#418) (17971e70)
+* **util:**
+  *  pass optional list of domains into isProduction (#417) (dd0820b6)
+  *  added jstest workflow (#405) (9d125fae)
+* **dev:**  better error message for CLI not installed (#413) (b73cb1c6)
+* **pages-plugins:**  add entity type to slug manager default field (#407) (2d1da1cb)
+
+##### Bug Fixes
+
+* **dev/plugin:**  custom _client not working with React 17 (#419) (c0f2c7be)
+* **dev:**
+  *  use Vite instead of esbuild, also Vitest (#416) (67f29ebe)
+  *  prevent duplicate stream definitions (#408) (72302ae2)
+* **plugin:**  templateModule cache incorrect type (#411) (2f60f4d0)
+
 #### 1.0.0-beta.5 (2023-09-14)
 
 ##### Bug Fixes
