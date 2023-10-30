@@ -6,11 +6,10 @@ import SourceFileParser, {
 import TemplateParser from "../parsers/templateParser.js";
 import { ProjectStructure } from "../project/structure.js";
 import { readdir } from "node:fs/promises";
-import { glob } from "glob";
-import { convertToPosixPath } from "./paths.js";
+import { logErrorAndExit } from "../../../util/logError.js";
 
 /**
- * Creates files for and loads each template if they don't already exist.
+ * Creates a corresponding template.client.tsx for each template.tsx.
  * @param projectStructure
  */
 export const makeClientFiles = async (projectStructure: ProjectStructure) => {
@@ -25,49 +24,29 @@ export const makeClientFiles = async (projectStructure: ProjectStructure) => {
             f !== "_client17.tsx" &&
             f !== "_client.tsx" &&
             f !== "_server.tsx" &&
-            f.indexOf("client.tsx") === -1
+            !f.includes(".client.")
         )
         .forEach(async (template) => {
-          const templatePath = path.join(
-            projectStructure.config.rootFolders.source,
-            projectStructure.config.subfolders.templates
-          );
-          const clientPath = path.join(
-            templatePath,
-            formatTemplateName(template)
-          );
-          if (fs.existsSync(clientPath)) {
-            return;
-          }
-          fs.openSync(clientPath, "w");
-          await loadClient(projectStructure, template);
+          const relativePath = path.join(templatePath.path, template);
+          fs.writeFileSync(formatClientPath(relativePath), "");
+          await generateAndSaveClientHydrationTemplates(relativePath);
         });
     }
   } catch (err) {
-    console.error("Failed to make client templates.");
-    cleanClient(projectStructure);
+    logErrorAndExit("Failed to make client templates.");
+    await removeHydrationClientFiles(projectStructure);
   }
 };
 
 /**
- * Adds code to each client file by parsing template file.
- * @param projectStructure
- * @param templateName
+ * Reads template file and parses code for the hydration client file.
+ * Saves parsed code into file at path.
+ * @param path src/templates/<templateName>.tsx
  */
-const loadClient = async (
-  projectStructure: ProjectStructure,
-  templateName: string
-) => {
-  const templatePath = path.join(
-    projectStructure.config.rootFolders.source,
-    projectStructure.config.subfolders.templates
-  );
-  const sfp = new SourceFileParser(
-    path.join(templatePath, templateName),
-    createTsMorphProject()
-  );
+const generateAndSaveClientHydrationTemplates = async (path: string) => {
+  const sfp = new SourceFileParser(path, createTsMorphProject());
   const newSfp = new SourceFileParser(
-    path.join(templatePath, formatTemplateName(templateName)),
+    formatClientPath(path),
     createTsMorphProject()
   );
   const templateParser = new TemplateParser(sfp).makeClientTemplateFromSfp(
@@ -76,27 +55,40 @@ const loadClient = async (
   templateParser.sourceFile.save();
 };
 
-const formatTemplateName = (templateName: string): string => {
-  return templateName.replace(".tsx", ".client.tsx");
+const formatClientPath = (clientPath: string): string => {
+  const templatePath = path.parse(clientPath);
+  return path.join(
+    templatePath.dir,
+    templatePath.name + ".client" + templatePath.ext
+  );
 };
 
 /**
- * Removes client.tsx files
+ * Removes any generated [template].client files.
  * @param projectStructure
  */
-export const cleanClient = (projectStructure: ProjectStructure) => {
-  const files = glob.sync(
-    convertToPosixPath(
-      path.join(
-        path.resolve(
-          projectStructure.config.rootFolders.source,
-          projectStructure.config.subfolders.templates
-        ),
-        "**/*.client.tsx"
+export const removeHydrationClientFiles = async (
+  projectStructure: ProjectStructure
+) => {
+  const templatePaths = projectStructure.getTemplatePaths();
+  for (const templatePath of templatePaths) {
+    (await readdir(templatePath.getAbsolutePath(), { withFileTypes: true }))
+      .filter((dirent) => !dirent.isDirectory())
+      .map((file) => file.name)
+      .filter(
+        (f) =>
+          f !== "_client17.tsx" &&
+          f !== "_client.tsx" &&
+          f !== "_server.tsx" &&
+          f.includes(".client.")
       )
-    )
-  );
-  files.forEach((file) => {
-    fs.rmSync(file);
-  });
+      .forEach(async (template) => {
+        const clientPath = path.join(
+          projectStructure.config.rootFolders.source,
+          projectStructure.config.subfolders.templates,
+          template
+        );
+        fs.rmSync(clientPath);
+      });
+  }
 };

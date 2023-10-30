@@ -6,7 +6,6 @@ import { Manifest } from "../../../common/src/template/types.js";
 import { glob } from "glob";
 import { Path } from "../../../common/src/project/path.js";
 import { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
-import { parse } from "../../../common/src/template/internal/types.js";
 
 /**
  * Creates a manifest.json for use with the Pages vite-plugin
@@ -76,38 +75,20 @@ export const generateManifestFile = async (
 const getClientPaths = async (
   projectStructure: ProjectStructure
 ): Promise<string[][]> => {
-  const clientBundle = glob.sync(
+  const distPath = new Path(projectStructure.config.rootFolders.dist);
+  const filePaths = glob.sync(
     convertToPosixPath(
-      path.join(
-        path.resolve(
-          projectStructure.config.rootFolders.dist,
-          projectStructure.config.subfolders.assets,
-          projectStructure.config.subfolders.clientBundle
-        ),
+      path.resolve(
+        projectStructure.config.rootFolders.dist,
+        projectStructure.config.subfolders.assets,
+        projectStructure.config.subfolders.clientBundle,
         "**/*.js"
       )
-    ),
-    {
-      ignore: path.join(
-        path.resolve(
-          projectStructure.config.rootFolders.dist,
-          projectStructure.config.subfolders.serverlessFunctions
-        ),
-        "**"
-      ),
-    }
+    )
   );
-
-  const featureNameToBundlePath = new Map();
-  clientBundle.forEach((client) => {
-    const templatePath = parse(client, true);
-    featureNameToBundlePath.set(templatePath.name, client);
-  });
-  const distPath = new Path(projectStructure.config.rootFolders.dist);
-
-  return Array.from(featureNameToBundlePath.entries()).map(([name, path]) => [
-    name,
-    convertToPosixPath(distPath.getRelativePath(path)),
+  return filePaths.map((filepath) => [
+    path.parse(filepath).name.split(".")[0],
+    convertToPosixPath(distPath.getRelativePath(filepath)),
   ]);
 };
 

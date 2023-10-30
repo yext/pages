@@ -29,7 +29,7 @@ export const getTemplateFilepaths = (paths: Path[]): string[] => {
         (f) =>
           f.indexOf(globalClientRenderFilename) === -1 &&
           f.indexOf(globalServerRenderFilename) === -1 &&
-          f.indexOf("client.tsx") === -1
+          f.indexOf(globalHydrationClientFilename) === -1
       )
       .forEach((f) => {
         const fileName = path.basename(f);
@@ -52,6 +52,7 @@ export const getTemplateFilepathsFromProjectStructure = (
 const globalClientRenderFilename17 = "_client17.tsx";
 const globalClientRenderFilename = "_client.tsx";
 const globalServerRenderFilename = "_server.tsx";
+const globalHydrationClientFilename = ".client.";
 
 /**
  * Determines the client and server rendering templates to use. It first looks for a _client/server.tsx file in the scoped

@@ -26,16 +26,18 @@ import { logErrorAndExit } from "../../../util/logError.js";
 import { isUsingConfig } from "../../../util/config.js";
 import { createArtifactsJson } from "../../../generate/artifacts/createArtifactsJson.js";
 import { Path } from "../../../common/src/project/path.js";
-import { cleanClient } from "../../../common/src/template/client.js";
+import { removeHydrationClientFiles } from "../../../common/src/template/client.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
-    let finisher = logger.timedLog({ startLog: "Cleaning client templates." });
+    let finisher = logger.timedLog({
+      startLog: "Removing client hydration templates",
+    });
     try {
-      cleanClient(projectStructure);
-      finisher.succeed("Successfully cleaned client templates.");
+      await removeHydrationClientFiles(projectStructure);
+      finisher.succeed("Successfully removed client hydration templates");
     } catch (e: any) {
-      finisher.fail("Failed to clean clients templates.");
+      finisher.fail("Failed to remove client hydration templates");
       logErrorAndExit(e);
     }
 
