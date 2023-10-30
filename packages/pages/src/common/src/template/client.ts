@@ -88,7 +88,9 @@ export const removeHydrationClientFiles = async (
           projectStructure.config.subfolders.templates,
           template
         );
-        fs.rmSync(clientPath);
+        if (fs.existsSync(clientPath)) {
+          fs.rmSync(clientPath);
+        }
       });
   }
 };
