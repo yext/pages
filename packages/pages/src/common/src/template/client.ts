@@ -24,12 +24,11 @@ export const makeClientFiles = async (projectStructure: ProjectStructure) => {
             f !== "_client17.tsx" &&
             f !== "_client.tsx" &&
             f !== "_server.tsx" &&
-            !f.includes(".client.")
+            !f.includes("client.tsx")
         )
         .forEach(async (template) => {
-          const relativePath = path.join(templatePath.path, template);
-          fs.writeFileSync(formatClientPath(relativePath), "");
-          await generateAndSaveClientHydrationTemplates(relativePath);
+          const templeFilePath = path.join(templatePath.path, template);
+          await generateAndSaveClientHydrationTemplates(templeFilePath);
         });
     }
   } catch (err) {
@@ -44,22 +43,25 @@ export const makeClientFiles = async (projectStructure: ProjectStructure) => {
  * @param path src/templates/<templateName>.tsx
  */
 const generateAndSaveClientHydrationTemplates = async (path: string) => {
+  const newPath = getClientPath(path);
+  fs.writeFileSync(newPath, "");
   const sfp = new SourceFileParser(path, createTsMorphProject());
-  const newSfp = new SourceFileParser(
-    formatClientPath(path),
-    createTsMorphProject()
-  );
+  const newSfp = new SourceFileParser(newPath, createTsMorphProject());
   const templateParser = new TemplateParser(sfp).makeClientTemplateFromSfp(
     newSfp
   );
   templateParser.sourceFile.save();
 };
 
-const formatClientPath = (clientPath: string): string => {
-  const templatePath = path.parse(clientPath);
+/**
+ * @param templatePath /src/templates/location.tsx
+ * @returns clientPath /src/templates/location.client.tsx
+ */
+const getClientPath = (templatePath: string): string => {
+  const parsedPath = path.parse(templatePath);
   return path.join(
-    templatePath.dir,
-    templatePath.name + ".client" + templatePath.ext
+    parsedPath.dir,
+    parsedPath.name + ".client" + parsedPath.ext
   );
 };
 

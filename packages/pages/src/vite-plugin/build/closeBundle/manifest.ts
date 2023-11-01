@@ -1,5 +1,5 @@
 import fs from "fs-extra";
-import path from "path";
+import path from "node:path";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
 import { Manifest } from "../../../common/src/template/types.js";
@@ -27,22 +27,24 @@ export const generateManifestFile = async (
     ([name, path]) => [name, convertToPosixPath(distPath.getRelativePath(path))]
   );
 
-  // Add the renderPaths to the manifest. This defines the _client and _server entries.
-  const renderPaths = glob.sync(
-    convertToPosixPath(
-      path.resolve(
-        projectStructure.config.rootFolders.dist,
-        projectStructure.config.subfolders.assets,
-        projectStructure.config.subfolders.renderBundle,
-        "**/*.js"
+  //Scans for paths in dist/assets/<assetPath> and finds the paths and file names.
+  async function getAssetBundlePaths(assetPath: string): Promise<string[][]> {
+    const distPath = new Path(projectStructure.config.rootFolders.dist);
+    const filePaths = glob.sync(
+      convertToPosixPath(
+        path.resolve(
+          projectStructure.config.rootFolders.dist,
+          projectStructure.config.subfolders.assets,
+          assetPath,
+          "**/*.js"
+        )
       )
-    )
-  );
-
-  const relativeRenderPaths = renderPaths.map((filepath) => [
-    path.parse(filepath).name.split(".")[0], // get the name of the file without the hash or extension
-    convertToPosixPath(distPath.getRelativePath(filepath)),
-  ]);
+    );
+    return filePaths.map((filepath) => [
+      path.parse(filepath).name.split(".")[0],
+      convertToPosixPath(distPath.getRelativePath(filepath)),
+    ]);
+  }
 
   let bundlerManifest = Buffer.from("{}");
   if (fs.existsSync(path.join(distPath.path, "manifest.json"))) {
@@ -52,8 +54,12 @@ export const generateManifestFile = async (
   }
   const manifest: Manifest = {
     serverPaths: Object.fromEntries(relativeBundlePaths),
-    clientPaths: Object.fromEntries(await getClientPaths(projectStructure)),
-    renderPaths: Object.fromEntries(relativeRenderPaths),
+    clientPaths: Object.fromEntries(
+      await getAssetBundlePaths(projectStructure.config.subfolders.clientBundle)
+    ),
+    renderPaths: Object.fromEntries(
+      await getAssetBundlePaths(projectStructure.config.subfolders.renderBundle)
+    ),
     projectStructure: projectStructure.config,
     bundlerManifest: JSON.parse(bundlerManifest.toString()),
   };
@@ -64,32 +70,6 @@ export const generateManifestFile = async (
   );
 
   fs.remove(path.resolve(distPath.path, "manifest.json"));
-};
-
-/**
- * Scans for paths in dist/assets/client/ and finds the client template's
- * path and feature name.
- * @param projectStructure
- * @returns Promise<string[][]> with the feature name and path
- */
-const getClientPaths = async (
-  projectStructure: ProjectStructure
-): Promise<string[][]> => {
-  const distPath = new Path(projectStructure.config.rootFolders.dist);
-  const filePaths = glob.sync(
-    convertToPosixPath(
-      path.resolve(
-        projectStructure.config.rootFolders.dist,
-        projectStructure.config.subfolders.assets,
-        projectStructure.config.subfolders.clientBundle,
-        "**/*.js"
-      )
-    )
-  );
-  return filePaths.map((filepath) => [
-    path.parse(filepath).name.split(".")[0],
-    convertToPosixPath(distPath.getRelativePath(filepath)),
-  ]);
 };
 
 // writeFile ensures that the directory of the filepath exists before writing the file.

@@ -16,7 +16,7 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
   templateName: "template",
   config: {
     name: "name",
-    hydrate: true,
+    hydrate: false,
   },
   getPath: () => {
     return "path";
