@@ -31,18 +31,26 @@ export const serverRenderRoute =
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
-      const { feature, entityId, locale, staticURL } = urlToFeature(url);
+      const { feature, entityId, locale, staticURL } = urlToFeature(
+        url,
+        defaultLocale
+      );
 
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
       const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
-        await findMatchingStaticTemplate(vite, staticURL, templateFilepaths);
+        await findMatchingStaticTemplate(
+          vite,
+          staticURL,
+          templateFilepaths,
+          locale
+        );
       if (matchingStaticTemplate) {
         await sendStaticPage(
           res,
           vite,
           matchingStaticTemplate,
-          locale ?? defaultLocale,
+          locale,
           url.pathname,
           projectStructure
         );
@@ -57,7 +65,7 @@ export const serverRenderRoute =
 
       const templateModuleInternal = await findTemplateModuleInternal(
         vite,
-        (t) => feature === t.config.name,
+        async (t) => feature === t.config.name,
         templateFilepaths
       );
       if (!templateModuleInternal) {

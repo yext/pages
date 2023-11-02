@@ -1,5 +1,6 @@
 export const urlToFeature = (
-  url: URL
+  url: URL,
+  defaultLocale: string
 ): { feature: string; entityId: string; locale: string; staticURL: string } => {
   // URI decode and remove leading slash: /foo/123
   const uriSegments = decodeURI(url.pathname).substring(1).split("/");
@@ -7,7 +8,7 @@ export const urlToFeature = (
   const entityId = uriSegments[1];
   const staticURL = decodeURI(url.pathname).substring(1);
 
-  const locale = url.searchParams.get("locale") || "en";
+  const locale = url.searchParams.get("locale") || defaultLocale;
 
   return {
     feature,
