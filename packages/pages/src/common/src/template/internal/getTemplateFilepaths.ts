@@ -52,7 +52,7 @@ export const getTemplateFilepathsFromProjectStructure = (
 const globalClientRenderFilename17 = "_client17.tsx";
 const globalClientRenderFilename = "_client.tsx";
 const globalServerRenderFilename = "_server.tsx";
-const globalHydrationClientFilename = "client.tsx";
+const globalHydrationClientFilename = ".client.";
 
 /**
  * Determines the client and server rendering templates to use. It first looks for a _client/server.tsx file in the scoped

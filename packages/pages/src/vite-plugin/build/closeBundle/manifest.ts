@@ -29,7 +29,6 @@ export const generateManifestFile = async (
 
   //Scans for paths in dist/assets/<assetPath> and finds the paths and file names.
   async function getAssetBundlePaths(assetPath: string): Promise<string[][]> {
-    const distPath = new Path(projectStructure.config.rootFolders.dist);
     const filePaths = glob.sync(
       convertToPosixPath(
         path.resolve(

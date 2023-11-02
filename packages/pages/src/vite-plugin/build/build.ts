@@ -94,7 +94,7 @@ const discoverInputs = async (
       )
       .forEach((template) => {
         const parsedPath = parse(template);
-        const bundlePath = template.includes("client.tsx")
+        const bundlePath = template.includes(".client.")
           ? projectStructure.config.subfolders.clientBundle
           : projectStructure.config.subfolders.serverBundle;
         const outputPath = `${bundlePath}/${parsedPath.name.replace(
