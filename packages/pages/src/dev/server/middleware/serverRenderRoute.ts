@@ -5,7 +5,7 @@ import {
   parseAsStaticUrl,
   parseAsEntityUrl,
   getLocaleFromUrl,
-} from "../ssr/parseUrl.js";
+} from "../ssr/parseNonProdUrl.js";
 import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
