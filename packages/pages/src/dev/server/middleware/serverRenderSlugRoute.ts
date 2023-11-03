@@ -36,7 +36,7 @@ export const serverRenderSlugRoute =
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
       const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
-        await findMatchingStaticTemplate(vite, slug, templateFilepaths);
+        await findMatchingStaticTemplate(vite, slug, templateFilepaths, locale);
       if (matchingStaticTemplate) {
         await sendStaticPage(
           res,
@@ -65,7 +65,7 @@ export const serverRenderSlugRoute =
       const entityId = document.id;
       const templateModuleInternal = await findTemplateModuleInternal(
         vite,
-        (t) => feature === t.config.name,
+        async (t) => feature === t.config.name,
         templateFilepaths
       );
       if (!templateModuleInternal) {
