@@ -146,15 +146,15 @@ export const getLocalDataForEntityOrStaticPage = async ({
 }: {
   locale: string;
   featureName: string;
-  entityId?: string;
+  entityId: string;
 }) => {
   const localData = await getLocalData((data) => {
-    const isEntityPage = !!entityId;
+    const isStatic = entityId === "";
+    const isMatchingEntity = !isStatic && entityId === data.id;
     const matchesNameAndLocale =
       data.locale === locale && data.__.name === featureName;
-    return isEntityPage
-      ? matchesNameAndLocale && data.id === entityId
-      : matchesNameAndLocale;
+
+    return (isStatic || isMatchingEntity) && matchesNameAndLocale;
   });
   if (!localData) {
     throw new Error(
