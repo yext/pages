@@ -13,9 +13,8 @@ export function parseAsEntityUrl(url: URL): {
 }
 
 export function parseAsStaticUrl(url: URL): { staticURL: string } {
-  const staticURL = decodeURI(url.pathname).substring(1);
   return {
-    staticURL,
+    staticURL: decodeURI(url.pathname).substring(1),
   };
 }
 
