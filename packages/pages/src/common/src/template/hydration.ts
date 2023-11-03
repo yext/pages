@@ -36,7 +36,7 @@ export const getHydrationTemplateDev = (
     render(
     {
         Page: Component,
-        pageProps: ${JSON.stringify(props)},
+        pageProps: ${getPagePropsString(props)},
     }
     );
   `;
@@ -76,10 +76,16 @@ export const getHydrationTemplate = (
         render.render(
         {
             Page: component.default,
-            pageProps: ${JSON.stringify(props)},
+            pageProps: ${getPagePropsString(props)},
         }
         );
     `;
+};
+
+const getPagePropsString = (props: TemplateRenderProps) => {
+  return `JSON.parse(decodeURIComponent("${encodeURIComponent(
+    JSON.stringify(props)
+  )}"))`;
 };
 
 const makeAbsolute = (path: string): string => {
