@@ -12,6 +12,7 @@ import {
   TemplateModuleInternal,
 } from "../../../../common/src/template/internal/types.js";
 import { ProjectStructure } from "../../../../common/src/project/structure.js";
+import { validateGetPathValue } from "../../../../common/src/template/internal/validateGetPathValue.js";
 
 const pathToModule = new Map<string, TemplateModule<any, any>>();
 
@@ -118,11 +119,7 @@ export const generateResponses = async (
   }
 
   const path = templateModuleInternal.getPath(templateProps);
-  if (!path) {
-    throw new Error(
-      `getPath does not return a valid string in template '${templateModuleInternal.templateName}'`
-    );
-  }
+  validateGetPathValue(path, templateModuleInternal.templateName);
 
   const templateRenderProps: TemplateRenderProps = {
     ...templateProps,
