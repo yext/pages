@@ -72,9 +72,9 @@ async function generateFunctionMetadata(
     )[0];
     if (!exportIdenfitier) {
       throw new Error(
-        `${relativePath} contains a default export assignment that is improperly ` +
-          "formatted. It may have an anonymous arrow function as the default " +
-          "export which is not supported."
+        `${relativePath} contains an improper default export assignment. ` +
+          "The default export must be a function, and it must be formatted " +
+          "as `export default foo;` for function `foo`."
       );
     }
     return [relativePath, { entrypoint: exportIdenfitier.getText() }];
@@ -82,9 +82,9 @@ async function generateFunctionMetadata(
     const entrypoint = defaultExportDeclaration.getName();
     if (!entrypoint) {
       throw new Error(
-        `${relativePath} contains a default function declaration that is improperly ` +
-          "formatted. It may have an anonymous function as the default export " +
-          "which is not supported."
+        `${relativePath} contains an improper default function declaration. ` +
+          "The default export function must be a named function, exported as " +
+          "`export default function foo(){}` for function `foo`"
       );
     }
     return [relativePath, { entrypoint }];
