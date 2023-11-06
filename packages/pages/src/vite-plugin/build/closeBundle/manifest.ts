@@ -27,8 +27,10 @@ export const generateManifestFile = async (
     ([name, path]) => [name, convertToPosixPath(distPath.getRelativePath(path))]
   );
 
-  //Scans for paths in dist/assets/<assetPath> and finds the paths and file names.
-  async function getAssetBundlePaths(assetPath: string): Promise<string[][]> {
+  // Scans for paths in dist/assets/<assetPath> and finds the paths and file names.
+  const getAssetBundlePaths = async (
+    assetPath: string
+  ): Promise<string[][]> => {
     const filePaths = glob.sync(
       convertToPosixPath(
         path.resolve(
@@ -43,7 +45,7 @@ export const generateManifestFile = async (
       path.parse(filepath).name.split(".")[0],
       convertToPosixPath(distPath.getRelativePath(filepath)),
     ]);
-  }
+  };
 
   let bundlerManifest = Buffer.from("{}");
   if (fs.existsSync(path.join(distPath.path, "manifest.json"))) {
