@@ -72,9 +72,9 @@ async function generateFunctionMetadata(
     )[0];
     if (!exportIdenfitier) {
       throw new Error(
-        `${relativePath} contains a default export assignment that is ` +
-          "improperly formatted. It may have an anonymous function as the default export " +
-          "which is not supported."
+        `${relativePath} contains a default export assignment that is improperly ` +
+          "formatted. It may have an anonymous arrow function as the default " +
+          "export which is not supported."
       );
     }
     return [relativePath, { entrypoint: exportIdenfitier.getText() }];
@@ -82,8 +82,9 @@ async function generateFunctionMetadata(
     const entrypoint = defaultExportDeclaration.getName();
     if (!entrypoint) {
       throw new Error(
-        `${relativePath} contains a default export function ` +
-          "whose name cannot be parsed."
+        `${relativePath} contains a default export assignment that is improperly ` +
+          "formatted. It may have an anonymous function as the default export " +
+          "which is not supported."
       );
     }
     return [relativePath, { entrypoint }];
