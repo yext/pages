@@ -82,7 +82,7 @@ async function generateFunctionMetadata(
     const entrypoint = defaultExportDeclaration.getName();
     if (!entrypoint) {
       throw new Error(
-        `${relativePath} contains a default export assignment that is improperly ` +
+        `${relativePath} contains a default function declaration that is improperly ` +
           "formatted. It may have an anonymous function as the default export " +
           "which is not supported."
       );
