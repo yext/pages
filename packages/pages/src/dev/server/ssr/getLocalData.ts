@@ -86,7 +86,7 @@ export const getLocalDataManifest = async (
       // The lack of an entityId signifies that this is a static template.
       const templateModuleInternal = await findTemplateModuleInternal(
         vite,
-        (t) => featureName === t.config.name,
+        async (t) => featureName === t.config.name,
         templateFilepaths
       );
       if (!templateModuleInternal) {
@@ -102,7 +102,7 @@ export const getLocalDataManifest = async (
       } else {
         localDataManifest.static.set(featureName, {
           featureName,
-          staticURL: templateModuleInternal.getPath({}),
+          staticURL: templateModuleInternal.getPath({ document: data }),
           locales: [data.meta.locale],
         });
       }
@@ -149,10 +149,12 @@ export const getLocalDataForEntityOrStaticPage = async ({
   entityId: string;
 }) => {
   const localData = await getLocalData((data) => {
-    if (entityId !== "" && data.id !== entityId) {
-      return false;
-    }
-    return data.locale === locale && data.__.name === featureName;
+    const isStatic = entityId === "";
+    const isMatchingEntity = !isStatic && entityId === data.id;
+    const matchesNameAndLocale =
+      data.locale === locale && data.__.name === featureName;
+
+    return (isStatic || isMatchingEntity) && matchesNameAndLocale;
   });
   if (!localData) {
     throw new Error(

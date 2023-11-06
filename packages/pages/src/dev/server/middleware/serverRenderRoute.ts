@@ -1,7 +1,11 @@
 import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
 import { propsLoader } from "../ssr/propsLoader.js";
-import { urlToFeature } from "../ssr/urlToFeature.js";
+import {
+  parseAsStaticUrl,
+  parseAsEntityUrl,
+  getLocaleFromUrl,
+} from "../ssr/parseNonProdUrl.js";
 import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
@@ -31,33 +35,39 @@ export const serverRenderRoute =
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
-      const { feature, entityId, locale, staticURL } = urlToFeature(url);
-
+      const locale = getLocaleFromUrl(url) ?? defaultLocale;
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
+
+      const { staticURL } = parseAsStaticUrl(url);
       const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
-        await findMatchingStaticTemplate(vite, staticURL, templateFilepaths);
+        await findMatchingStaticTemplate(
+          vite,
+          staticURL,
+          templateFilepaths,
+          locale
+        );
       if (matchingStaticTemplate) {
         await sendStaticPage(
           res,
           vite,
           matchingStaticTemplate,
-          locale ?? defaultLocale,
+          locale,
           url.pathname,
           projectStructure
         );
         return;
-      } else if (!entityId) {
-        send404(
-          res,
-          `Cannot find static template with getPath() equal to "${staticURL}"`
-        );
+      }
+
+      const { feature, entityId } = parseAsEntityUrl(url);
+      if (!entityId || !feature) {
+        send404(res, `Cannot find template with URL "${url}"`);
         return;
       }
 
       const templateModuleInternal = await findTemplateModuleInternal(
         vite,
-        (t) => feature === t.config.name,
+        async (t) => feature === t.config.name,
         templateFilepaths
       );
       if (!templateModuleInternal) {
