@@ -3,6 +3,7 @@ import fs from "fs";
 import { readdir } from "fs/promises";
 import { findTemplateModuleInternal } from "./findTemplateModuleInternal.js";
 import { ViteDevServer } from "vite";
+import { validateGetPathValue } from "../../../common/src/template/internal/validateGetPathValue.js";
 
 const LOCAL_DATA_PATH = "localData";
 
@@ -100,9 +101,16 @@ export const getLocalDataManifest = async (
           .get(featureName)
           ?.locales.push(data.meta.locale);
       } else {
+        const staticURL = templateModuleInternal.getPath({ document: data });
+        try {
+          validateGetPathValue(staticURL, templateModuleInternal.path);
+        } catch (e) {
+          console.error(`${(e as Error).message}, skipping"`);
+          continue;
+        }
         localDataManifest.static.set(featureName, {
           featureName,
-          staticURL: templateModuleInternal.getPath({ document: data }),
+          staticURL,
           locales: [data.meta.locale],
         });
       }

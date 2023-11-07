@@ -4,6 +4,7 @@ import {
 } from "../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../common/src/template/paths.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
+import { validateGetPathValue } from "../../../common/src/template/internal/validateGetPathValue.js";
 
 type PageLoaderValues = {
   templateModuleInternal: TemplateModuleInternal<any, any>;
@@ -37,11 +38,7 @@ export const propsLoader = async ({
   }
 
   const path = getPath(templateProps);
-  if (!path) {
-    throw new Error(
-      `getPath does not return a valid string in template '${templateModuleInternal.path}'`
-    );
-  }
+  validateGetPathValue(path, templateModuleInternal.path);
 
   return {
     ...templateProps,
