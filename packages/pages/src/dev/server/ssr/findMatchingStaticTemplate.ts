@@ -12,14 +12,14 @@ export default async function findMatchingStaticTemplate(
   return findTemplateModuleInternal(
     vite,
     async (t) => {
+      if (!isStaticTemplateConfig(t.config)) {
+        return false;
+      }
       const document = await getLocalDataForEntityOrStaticPage({
         entityId: "",
         locale,
         featureName: t.config.name,
       });
-      if (!isStaticTemplateConfig(t.config)) {
-        return false;
-      }
       return slug === t.getPath({ document });
     },
     templateFilepaths
