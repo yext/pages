@@ -23,6 +23,7 @@ import { parseYextrcContents } from "../../../util/yextrcContents.js";
 import { getPartition } from "../../../util/partition.js";
 import { getYextUrlForPartition } from "../../../util/url.js";
 import path from "node:path";
+import { logWarning } from "../../../util/logError.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -261,7 +262,7 @@ const createEntityPageListItems = (
   const entities = localDataManifest.entity.get(templateName) || [];
   return entities.reduce((entityAccumulator, { uid, entityId, slug }) => {
     if (useProdURLs && !slug) {
-      console.error(
+      logWarning(
         `No document.slug found for entityId "${entityId}", no link will be rendered in the index page.`
       );
       return entityAccumulator;

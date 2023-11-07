@@ -4,6 +4,7 @@ import { readdir } from "fs/promises";
 import { findTemplateModuleInternal } from "./findTemplateModuleInternal.js";
 import { ViteDevServer } from "vite";
 import { validateGetPathValue } from "../../../common/src/template/internal/validateGetPathValue.js";
+import { logWarning } from "../../../util/logError.js";
 
 const LOCAL_DATA_PATH = "localData";
 
@@ -91,7 +92,7 @@ export const getLocalDataManifest = async (
         templateFilepaths
       );
       if (!templateModuleInternal) {
-        console.error(
+        logWarning(
           `Could not find a static template for feature "${featureName}", skipping.`
         );
         continue;
@@ -105,7 +106,7 @@ export const getLocalDataManifest = async (
         try {
           validateGetPathValue(staticURL, templateModuleInternal.path);
         } catch (e) {
-          console.error(`${(e as Error).message}, skipping"`);
+          logWarning(`${(e as Error).message}, skipping."`);
           continue;
         }
         localDataManifest.static.set(featureName, {
