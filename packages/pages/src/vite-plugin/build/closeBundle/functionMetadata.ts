@@ -1,20 +1,19 @@
 import fs from "fs";
 import path from "path";
-import esbuild from "esbuild";
-import { importFromString } from "module-from-string";
+import { Project, Node, SyntaxKind } from "ts-morph";
 import { glob } from "glob";
 import chalk from "chalk";
-import os from "os";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
-
-const TEMP_DIR = os.tmpdir();
 
 /** Metadata for a serverless function. */
 type FunctionMetadata = {
   /** Name of the function. */
   entrypoint: string;
 };
+
+/** ts-morph project for parsing function metadata */
+const project = new Project();
 
 /**
  * Returns a mapping of file path (relative to the repo root) to the metadata
@@ -34,6 +33,7 @@ const getFunctionMetadataMap = async (
     )
     .map((f) => path.resolve(f));
 
+  project.addSourceFilesAtPaths(filepaths);
   const results = await Promise.allSettled(
     filepaths.map(generateFunctionMetadata)
   );
@@ -61,21 +61,39 @@ const getFunctionMetadataMap = async (
 async function generateFunctionMetadata(
   filepath: string
 ): Promise<[string, FunctionMetadata]> {
-  const buildResult = await esbuild.build({
-    entryPoints: [filepath],
-    outdir: TEMP_DIR,
-    write: false,
-    format: "esm",
-    bundle: true,
-  });
-  const importedFile = await importFromString(buildResult.outputFiles[0].text);
+  const defaultExportDeclaration = project
+    .getSourceFile(filepath)
+    ?.getDefaultExportSymbol()
+    ?.getDeclarations()[0];
   const relativePath = path.relative(process.cwd(), filepath);
-
-  if (!importedFile.default) {
-    throw new Error(`${relativePath} does not contain a default export.`);
+  if (Node.isExportAssignment(defaultExportDeclaration)) {
+    const entrypoint = defaultExportDeclaration
+      .getChildrenOfKind(SyntaxKind.Identifier)[0]
+      ?.getText();
+    if (!entrypoint) {
+      throw new Error(
+        `${relativePath} contains an unsupported default export assignment. ` +
+          "The default export must be a function, and it must be formatted " +
+          "as `export default foo;` for function `foo`."
+      );
+    }
+    return [relativePath, { entrypoint }];
+  } else if (Node.isFunctionDeclaration(defaultExportDeclaration)) {
+    const entrypoint = defaultExportDeclaration.getName();
+    if (!entrypoint) {
+      throw new Error(
+        `${relativePath} contains an unsupported default function declaration. ` +
+          "The default export function must be a named function, exported as " +
+          "`export default function foo(){}` for function `foo`"
+      );
+    }
+    return [relativePath, { entrypoint }];
   }
-
-  return [relativePath, { entrypoint: importedFile.default.name }];
+  throw new Error(
+    `${relativePath} does not contain a properly formatted default export. ` +
+      "The default export must be named and declared either in the function declaration " +
+      "or in an `export default ...;` expression."
+  );
 }
 
 /** Generates a functionMetadata.json file from the functions directory. */
