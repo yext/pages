@@ -33,6 +33,7 @@ const getFunctionMetadataMap = async (
     )
     .map((f) => path.resolve(f));
 
+  project.addSourceFilesAtPaths(filepaths);
   const results = await Promise.allSettled(
     filepaths.map(generateFunctionMetadata)
   );
@@ -60,7 +61,6 @@ const getFunctionMetadataMap = async (
 async function generateFunctionMetadata(
   filepath: string
 ): Promise<[string, FunctionMetadata]> {
-  project.addSourceFileAtPath(filepath);
   const defaultExportDeclaration = project
     .getSourceFile(filepath)
     ?.getDefaultExportSymbol()
