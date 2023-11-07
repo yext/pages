@@ -72,7 +72,7 @@ async function generateFunctionMetadata(
       ?.getText();
     if (!entrypoint) {
       throw new Error(
-        `${relativePath} contains an improper default export assignment. ` +
+        `${relativePath} contains an unsupported default export assignment. ` +
           "The default export must be a function, and it must be formatted " +
           "as `export default foo;` for function `foo`."
       );
@@ -82,7 +82,7 @@ async function generateFunctionMetadata(
     const entrypoint = defaultExportDeclaration.getName();
     if (!entrypoint) {
       throw new Error(
-        `${relativePath} contains an improper default function declaration. ` +
+        `${relativePath} contains an unsupported default function declaration. ` +
           "The default export function must be a named function, exported as " +
           "`export default function foo(){}` for function `foo`"
       );
@@ -92,7 +92,7 @@ async function generateFunctionMetadata(
   throw new Error(
     `${relativePath} does not contain a properly formatted default export. ` +
       "The default export must be named and declared either in the function declaration " +
-      "or in an `export default ...;` expresion."
+      "or in an `export default ...;` expression."
   );
 }
 
