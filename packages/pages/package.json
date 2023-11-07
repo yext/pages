@@ -32,7 +32,7 @@
     }
   },
   "engines": {
-    "node": "^17 || ^18 || ^19"
+    "node": "^18 || ^19 || ^20"
   },
   "scripts": {
     "watch": "node src/bundler --watch",
