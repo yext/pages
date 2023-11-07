@@ -39,7 +39,7 @@ const commonBuildOpts = {
     ".ico": "copy",
   },
   tsconfig: "tsconfig.json",
-  logLevel: "error",
+  logLevel: "info",
   platform: "node",
 };
 
@@ -58,7 +58,7 @@ pluginFiles.map((filepath) =>
 );
 
 try {
-  const ctx = await esbuild.build({
+  const ctx = await esbuild.context({
     ...commonBuildOpts,
     outdir: "dist",
     format: "esm",
@@ -66,6 +66,9 @@ try {
 
   if (watch) {
     await ctx.watch();
+  } else {
+    await ctx.rebuild();
+    await ctx.dispose();
   }
 } catch (e) {
   console.error(e);
