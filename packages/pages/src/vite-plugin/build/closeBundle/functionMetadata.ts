@@ -67,17 +67,17 @@ async function generateFunctionMetadata(
     ?.getDeclarations()[0];
   const relativePath = path.relative(process.cwd(), filepath);
   if (Node.isExportAssignment(defaultExportDeclaration)) {
-    const exportIdenfitier = defaultExportDeclaration.getChildrenOfKind(
-      SyntaxKind.Identifier
-    )[0];
-    if (!exportIdenfitier) {
+    const entrypoint = defaultExportDeclaration
+      .getChildrenOfKind(SyntaxKind.Identifier)[0]
+      ?.getText();
+    if (!entrypoint) {
       throw new Error(
         `${relativePath} contains an improper default export assignment. ` +
           "The default export must be a function, and it must be formatted " +
           "as `export default foo;` for function `foo`."
       );
     }
-    return [relativePath, { entrypoint: exportIdenfitier.getText() }];
+    return [relativePath, { entrypoint }];
   } else if (Node.isFunctionDeclaration(defaultExportDeclaration)) {
     const entrypoint = defaultExportDeclaration.getName();
     if (!entrypoint) {
