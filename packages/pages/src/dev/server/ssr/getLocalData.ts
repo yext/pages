@@ -18,10 +18,12 @@ export interface LocalDataManifest {
     {
       // The featureName for a specific static template
       featureName: string;
-      // The return value of the template's getPath()
-      staticURL: string;
-      // The locale codes
-      locales: string[];
+      staticPages: {
+        // The return value of the template's getPath()
+        staticURL: string;
+        // The locale code
+        locale: string;
+      }[];
     }
   >;
   entity: Map<
@@ -97,12 +99,15 @@ export const getLocalDataManifest = async (
         );
         continue;
       }
+      const staticURL = templateModuleInternal.getPath({ document: data });
       if (localDataManifest.static.has(featureName)) {
-        localDataManifest.static
-          .get(featureName)
-          ?.locales.push(data.meta.locale);
+        const staticData = localDataManifest.static.get(featureName);
+        const staticPage = {
+          staticURL,
+          locale: data.meta.locale,
+        };
+        staticData?.staticPages.push(staticPage);
       } else {
-        const staticURL = templateModuleInternal.getPath({ document: data });
         try {
           validateGetPathValue(staticURL, templateModuleInternal.path);
         } catch (e) {
@@ -111,8 +116,12 @@ export const getLocalDataManifest = async (
         }
         localDataManifest.static.set(featureName, {
           featureName,
-          staticURL,
-          locales: [data.meta.locale],
+          staticPages: [
+            {
+              staticURL,
+              locale: data.meta.locale,
+            },
+          ],
         });
       }
     }

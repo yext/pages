@@ -192,40 +192,47 @@ const createStaticPageListItems = (
   devServerPort: number
 ) => {
   return Array.from(localDataManifest.static).reduce(
-    (templateAccumulator, [, { featureName, staticURL, locales }]) =>
-      templateAccumulator +
-      `<h4>${featureName} pages (${locales.length}):</h4>` +
-      `<table>
-        <thead>
-          <tr>
-            <td>URL</td>
-            ${locales.length > 1 ? "<td>Locale</td>" : ""}
-          </tr>
-        </thead>
-        <tbody>
-          ${locales
-            .map(
-              (locale) => `<tr>
-            ${
-              locales.length > 1
-                ? `<td>
-                <a href="http://localhost:${devServerPort}/${staticURL}?locale=${locale}">
-                  ${staticURL}?locale=${locale}
-                </a>
-              </td>`
-                : `<td>
-                <a href="http://localhost:${devServerPort}/${staticURL}">
-                  ${staticURL}
-                </a>
-              </td>`
-            }
-            ${locales.length > 1 ? `<td>${locale}</td>` : ""}`
-            )
-            .join("")}
-          </tr>
-        </tbody>
-      </table>
-`,
+    (templateAccumulator, [, { featureName, staticPages }]) => {
+      const locales = staticPages.reduce(
+        (locales, { locale }) => locales.add(locale),
+        new Set<string>()
+      );
+      return (
+        templateAccumulator +
+        `<h4>${featureName} pages (${locales.size}):</h4>` +
+        `<table>
+          <thead>
+            <tr>
+              <td>URL</td>
+              ${locales.size > 1 ? "<td>Locale</td>" : ""}
+            </tr>
+          </thead>
+          <tbody>
+            ${staticPages
+              .map(
+                ({ staticURL, locale }) => `<tr>
+              ${
+                locales.size > 1
+                  ? `<td>
+                  <a href="http://localhost:${devServerPort}/${staticURL}?locale=${locale}">
+                    ${staticURL}?locale=${locale}
+                  </a>
+                </td>`
+                  : `<td>
+                  <a href="http://localhost:${devServerPort}/${staticURL}">
+                    ${staticURL}
+                  </a>
+                </td>`
+              }
+              ${locales.size > 1 ? `<td>${locale}</td>` : ""}`
+              )
+              .join("")}
+            </tr>
+          </tbody>
+        </table>
+      `
+      );
+    },
     ""
   );
 };
