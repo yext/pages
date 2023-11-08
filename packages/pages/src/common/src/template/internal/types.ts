@@ -63,6 +63,8 @@ export interface TemplateConfigInternal {
   alternateLanguageFields?: string[];
   /** The name of the onUrlChange function to use. */
   onUrlChange?: string;
+  /** Locales for a Static Page */
+  locales?: string[];
 }
 
 /**
