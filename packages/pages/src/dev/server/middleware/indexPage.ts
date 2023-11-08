@@ -196,36 +196,36 @@ const createStaticPageListItems = (
       templateAccumulator +
       `<h4>${featureName} pages (${staticPages.length}):</h4>` +
       `<table>
-          <thead>
-            <tr>
-              <td>URL</td>
-              ${staticPages.length > 1 ? "<td>Locale</td>" : ""}
-            </tr>
-          </thead>
-          <tbody>
-            ${staticPages
-              .map(
-                ({ staticURL, locale }) => `<tr>
-              ${
-                staticPages.length > 1
-                  ? `<td>
-                  <a href="http://localhost:${devServerPort}/${staticURL}?locale=${locale}">
-                    ${staticURL}?locale=${locale}
-                  </a>
-                </td>`
-                  : `<td>
-                  <a href="http://localhost:${devServerPort}/${staticURL}">
-                    ${staticURL}
-                  </a>
-                </td>`
-              }
-              ${staticPages.length > 1 ? `<td>${locale}</td>` : ""}`
-              )
-              .join("")}
-            </tr>
-          </tbody>
-        </table>
-      `,
+        <thead>
+          <tr>
+            <td>URL</td>
+            ${staticPages.length > 1 ? "<td>Locale</td>" : ""}
+          </tr>
+        </thead>
+        <tbody>
+          ${staticPages
+            .map(
+              ({ staticURL, locale }) => `<tr>
+            ${
+              staticPages.length > 1
+                ? `<td>
+                <a href="http://localhost:${devServerPort}/${staticURL}?locale=${locale}">
+                  ${staticURL}?locale=${locale}
+                </a>
+              </td>`
+                : `<td>
+                <a href="http://localhost:${devServerPort}/${staticURL}">
+                  ${staticURL}
+                </a>
+              </td>`
+            }
+            ${staticPages.length > 1 ? `<td>${locale}</td>` : ""}`
+            )
+            .join("")}
+          </tr>
+        </tbody>
+      </table>
+    `,
     ""
   );
 };
