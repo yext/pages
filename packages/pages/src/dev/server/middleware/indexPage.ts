@@ -192,11 +192,10 @@ const createStaticPageListItems = (
   devServerPort: number
 ) => {
   return Array.from(localDataManifest.static).reduce(
-    (templateAccumulator, [, { featureName, staticPages }]) => {
-      return (
-        templateAccumulator +
-        `<h4>${featureName} pages (${staticPages.length}):</h4>` +
-        `<table>
+    (templateAccumulator, [, { featureName, staticPages }]) =>
+      templateAccumulator +
+      `<h4>${featureName} pages (${staticPages.length}):</h4>` +
+      `<table>
           <thead>
             <tr>
               <td>URL</td>
@@ -226,9 +225,7 @@ const createStaticPageListItems = (
             </tr>
           </tbody>
         </table>
-      `
-      );
-    },
+      `,
     ""
   );
 };
