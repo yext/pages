@@ -17,7 +17,7 @@ const nodeVersion = Number(
 );
 
 const experimentalFlags = ["--experimental-vm-modules"];
-if (nodeVersion === 17 || nodeVersion === 18) {
+if (nodeVersion === 18) {
   experimentalFlags.push("--experimental-specifier-resolution=node");
 } else {
   experimentalFlags.push("--experimental-loader");
