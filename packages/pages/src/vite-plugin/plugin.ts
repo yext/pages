@@ -1,7 +1,11 @@
-import { PluginOption } from "vite";
+import { PluginOption, Plugin } from "vite";
 import { ProjectStructure } from "../common/src/project/structure.js";
 import { build } from "./build/build.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
+import {
+  makeClientFiles,
+  removeHydrationClientFiles,
+} from "../common/src/template/client.js";
 
 const plugin = async (): Promise<PluginOption[]> => {
   const projectStructure = await ProjectStructure.init({
@@ -9,6 +13,7 @@ const plugin = async (): Promise<PluginOption[]> => {
   });
 
   return [
+    clientHydration(projectStructure),
     build(projectStructure),
     nodePolyfills({
       globals: {
@@ -17,7 +22,37 @@ const plugin = async (): Promise<PluginOption[]> => {
         process: "build",
       },
     }),
+    cleanup(projectStructure),
   ];
+};
+
+const clientHydration = async (
+  projectStructure: ProjectStructure
+): Promise<Plugin> => {
+  return {
+    name: "client-hydration:build",
+    apply: "build",
+    buildStart: {
+      sequential: true,
+      order: "pre",
+      async handler() {
+        await makeClientFiles(projectStructure);
+      },
+    },
+  };
+};
+
+const cleanup = async (projectStructure: ProjectStructure): Promise<Plugin> => {
+  return {
+    name: "client-hydration:cleanup",
+    apply: "build",
+    closeBundle: {
+      order: "post",
+      handler() {
+        removeHydrationClientFiles(projectStructure);
+      },
+    },
+  };
 };
 
 export default plugin;

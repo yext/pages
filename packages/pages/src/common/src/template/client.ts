@@ -24,7 +24,7 @@ export const makeClientFiles = async (projectStructure: ProjectStructure) => {
             f !== "_client17.tsx" &&
             f !== "_client.tsx" &&
             f !== "_server.tsx" &&
-            !f.includes(".client.")
+            !f.includes(".client")
         )
         .forEach(async (template) => {
           const templeFilePath = path.join(templatePath.path, template);
@@ -84,7 +84,7 @@ export const removeHydrationClientFiles = async (
           f !== "_client17.tsx" &&
           f !== "_client.tsx" &&
           f !== "_server.tsx" &&
-          f.includes(".client.")
+          f.includes(".client")
       )
       .forEach(async (template) => {
         const clientPath = path.join(

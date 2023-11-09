@@ -1,4 +1,4 @@
-import * as path from "path";
+import path, { parse } from "node:path";
 import { glob } from "glob";
 import logger from "../../log.js";
 import fs from "fs";
@@ -7,9 +7,19 @@ import { PluginContext, EmitFile } from "rollup";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { Path } from "../../../common/src/project/path.js";
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
+import { getGlobalClientServerRenderTemplates } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { readdir } from "fs/promises";
+import { NormalizedInputOptions } from "rollup";
 
 export default (projectStructure: ProjectStructure) => {
-  return async function (this: PluginContext): Promise<void> {
+  return async function (
+    this: PluginContext,
+    inputOptions: NormalizedInputOptions
+  ): Promise<void> {
+    inputOptions.input = await discoverInputs(
+      projectStructure.getTemplatePaths(),
+      projectStructure
+    );
     console.log(yextBanner);
     clean(new Path(projectStructure.config.rootFolders.dist).getAbsolutePath());
     copyPluginFiles(this.emitFile);
@@ -111,3 +121,79 @@ const yextBanner = `
 
       Built with the Yext SSG Plugin
 `;
+
+/**
+ * Produces a {@link InputOption} by adding all templates at {@link rootTemplateDir} and
+ * {@link scopedTemplateDir} to be output at {@code server/}. If there are two files
+ * that share the same name between the two provided template folders, only the file
+ * in scoped template folder path is included. Also adds an additional entry-point
+ * for all templates ending in tsx to be used to hydrate the bundle.
+ *
+ * @param rootTemplateDir the directory where all templates are stored.
+ * @param scopedTemplateDir the directory where a subset of templates use for the build are stored.
+ * @param projectStructure
+ * @returns
+ */
+const discoverInputs = async (
+  templatePaths: Path[],
+  projectStructure: ProjectStructure
+): Promise<{ [entryAlias: string]: string }> => {
+  const entryPoints: Record<string, string> = {};
+  const updateEntryPoints = async (dir: string) =>
+    (await readdir(dir, { withFileTypes: true }))
+      .filter((dirent) => !dirent.isDirectory())
+      .map((file) => file.name)
+      .filter(
+        (f) =>
+          f !== "_client17.tsx" && f !== "_client.tsx" && f !== "_server.tsx"
+      )
+      .forEach((template) => {
+        const parsedPath = parse(template);
+        const bundlePath = template.includes(".client")
+          ? projectStructure.config.subfolders.clientBundle
+          : projectStructure.config.subfolders.serverBundle;
+        const outputPath = `${bundlePath}/${parsedPath.name.replace(
+          ".client",
+          ""
+        )}`;
+        if (entryPoints[outputPath]) {
+          return;
+        }
+        entryPoints[outputPath] = path.join(dir, template);
+      });
+
+  for (const templatePath of templatePaths) {
+    await updateEntryPoints(templatePath.getAbsolutePath());
+  }
+
+  return { ...entryPoints, ...discoverRenderTemplates(projectStructure) };
+};
+
+/**x
+ * Produces the entry points for the client and server render templates to be output at
+ * {@code render/}.
+ *
+ * @param projectStructure
+ */
+const discoverRenderTemplates = (
+  projectStructure: ProjectStructure
+): Record<string, string> => {
+  const entryPoints: Record<string, string> = {};
+
+  // Move the [compiled] _server.ts and _client.ts render template to /assets/render
+  const clientServerRenderTemplates = getGlobalClientServerRenderTemplates(
+    projectStructure.getTemplatePaths()
+  );
+
+  const { renderBundle } = projectStructure.config.subfolders;
+
+  // server
+  entryPoints[`${renderBundle}/_server`] =
+    clientServerRenderTemplates.serverRenderTemplatePath;
+
+  // client
+  entryPoints[`${renderBundle}/_client`] =
+    clientServerRenderTemplates.clientRenderTemplatePath;
+
+  return entryPoints;
+};
