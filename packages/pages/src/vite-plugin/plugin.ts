@@ -47,7 +47,6 @@ const cleanup = async (projectStructure: ProjectStructure): Promise<Plugin> => {
     name: "client-hydration:cleanup",
     apply: "build",
     closeBundle: {
-      order: "post",
       handler() {
         removeHydrationClientFiles(projectStructure);
       },
