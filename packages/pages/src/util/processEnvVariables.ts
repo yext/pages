@@ -12,7 +12,7 @@ export const processEnvVariables = (
 ): Record<string, string> => {
   const mode = process.env.NODE_ENV || "development";
 
-  // If we're development, return all env var keys, otherwise use Vite's default
+  // If we're development return all env var keys, otherwise use Vite's default
   // way of loading env vars in prod.
   // For prod, only public env vars are loaded since they are statically replaced in code.
   // Cog makes the non-public env vars available as global vars in the Deno
