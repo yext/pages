@@ -103,7 +103,7 @@ export interface TemplateConfig {
 }
 
 /**
- * Shape of TemlateConfig for Static Pages
+ * Shape of TemplateConfig for Static Pages
  *
  * @public
  */
