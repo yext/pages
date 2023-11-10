@@ -53,7 +53,7 @@ describe("ci - getUpdatedCiConfig", () => {
               {
                 root: "dist",
                 pattern:
-                  "assets/{server,static,renderer,render}/**/*{.js,.css}",
+                  "assets/{server,static,renderer,render,client}/**/*{.js,.css}",
               },
             ],
             event: "ON_PAGE_GENERATE",
@@ -142,7 +142,7 @@ describe("ci - getUpdatedCiConfig", () => {
               {
                 root: "dist",
                 pattern:
-                  "assets/{server,static,renderer,render}/**/*{.js,.css}",
+                  "assets/{server,static,renderer,render,client}/**/*{.js,.css}",
               },
             ],
             event: "ON_PAGE_GENERATE",

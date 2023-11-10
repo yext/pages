@@ -162,8 +162,12 @@ export interface Stream {
  * @public
  */
 export type Manifest = {
-  /** A map of feature name to the bundle path of the feature */
-  bundlePaths: {
+  /** A map of feature name to the server path of the feature */
+  serverPaths: {
+    [key: string]: string;
+  };
+  /** A map of feature name to the client path of the feature */
+  clientPaths: {
     [key: string]: string;
   };
   /** A map of render template to its bundle path */

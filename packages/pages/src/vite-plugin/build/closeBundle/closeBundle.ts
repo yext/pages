@@ -22,7 +22,7 @@ import {
   TemplateModuleCollection,
   loadTemplateModules,
 } from "../../../common/src/template/loader/loader.js";
-import { logErrorAndExit } from "../../../util/logError.js";
+import { logErrorAndClean } from "../../../util/logError.js";
 import { isUsingConfig } from "../../../util/config.js";
 import { createArtifactsJson } from "../../../generate/artifacts/createArtifactsJson.js";
 import { Path } from "../../../common/src/project/path.js";
@@ -67,7 +67,7 @@ export default (projectStructure: ProjectStructure) => {
       finisher.succeed("Validated template modules");
     } catch (e: any) {
       finisher.fail("One or more template modules failed validation");
-      logErrorAndExit(e);
+      await logErrorAndClean(e, projectStructure);
       return;
     }
 
@@ -113,7 +113,7 @@ export default (projectStructure: ProjectStructure) => {
         finisher.succeed("Validated functions");
       } catch (e) {
         finisher.fail("One or more functions failed validation");
-        logErrorAndExit(e);
+        await logErrorAndClean(e, projectStructure);
       }
 
       finisher = logger.timedLog({ startLog: "Writing functionMetadata.json" });
@@ -122,7 +122,7 @@ export default (projectStructure: ProjectStructure) => {
         finisher.succeed("Successfully wrote functionMetadata.json");
       } catch (e: any) {
         finisher.fail("Failed to write functionMetadata.json");
-        logErrorAndExit(e);
+        await logErrorAndClean(e, projectStructure);
       }
     }
 
@@ -133,7 +133,7 @@ export default (projectStructure: ProjectStructure) => {
         finisher.succeed("Successfully bundled serverless functions");
       } catch (e: any) {
         finisher.fail("Failed to bundle serverless functions");
-        logErrorAndExit(e);
+        await logErrorAndClean(e, projectStructure);
       }
     }
 
@@ -150,7 +150,7 @@ export default (projectStructure: ProjectStructure) => {
         finisher.succeed("Successfully wrote templates.json");
       } catch (e: any) {
         finisher.fail("Failed to write templates.json");
-        logErrorAndExit(e);
+        await logErrorAndClean(e, projectStructure);
       }
     } else {
       finisher = logger.timedLog({ startLog: "Writing features.json" });
@@ -163,17 +163,17 @@ export default (projectStructure: ProjectStructure) => {
         finisher.succeed("Successfully wrote features.json");
       } catch (e: any) {
         finisher.fail("Failed to write features.json");
-        logErrorAndExit(e);
+        await logErrorAndClean(e, projectStructure);
       }
     }
 
     finisher = logger.timedLog({ startLog: "Writing manifest.json" });
     try {
-      generateManifestFile(templateModules, projectStructure);
+      await generateManifestFile(templateModules, projectStructure);
       finisher.succeed("Successfully wrote manifest.json");
     } catch (e: any) {
       finisher.fail("Failed to write manifest.json");
-      logErrorAndExit(e);
+      await logErrorAndClean(e, projectStructure);
     }
 
     if (isUsingConfig(configYamlName, projectStructure.config.scope)) {
@@ -194,7 +194,7 @@ export default (projectStructure: ProjectStructure) => {
         finisher.succeed("Successfully wrote artifacts.json");
       } catch (e: any) {
         finisher.fail("Failed to update artifacts.json");
-        logErrorAndExit(e);
+        await logErrorAndClean(e, projectStructure);
       }
     } else {
       finisher = logger.timedLog({ startLog: "Updating ci.json" });
@@ -213,7 +213,7 @@ export default (projectStructure: ProjectStructure) => {
         finisher.succeed("Successfully updated ci.json");
       } catch (e: any) {
         finisher.fail("Failed to update ci.json");
-        logErrorAndExit(e);
+        await logErrorAndClean(e, projectStructure);
       }
     }
   };
