@@ -62,7 +62,7 @@ export default (projectStructure: ProjectStructure) => {
       );
 
       validateUniqueFeatureName(templateModules);
-      await validateUniqueStaticSlugs(templateModules);
+      await validateUniqueStaticPaths(templateModules);
       validateBundles(projectStructure);
       finisher.succeed("Validated template modules");
     } catch (e: any) {
@@ -235,11 +235,11 @@ const validateUniqueFeatureName = (
   });
 };
 
-const validateUniqueStaticSlugs = (
+const validateUniqueStaticPaths = (
   templateModuleCollection: TemplateModuleCollection
 ) => {
-  const slugs = new Set<string>();
-  const slugPromises = [...templateModuleCollection.values()].map(
+  const paths = new Set<string>();
+  const pathPromises = [...templateModuleCollection.values()].map(
     async (module) => {
       if (!module.config.locales) {
         return;
@@ -251,18 +251,18 @@ const validateUniqueStaticSlugs = (
           locale,
           featureName: module.config.name,
         });
-        const slug = module.getPath({ document });
-        if (slugs.has(slug)) {
+        const path = module.getPath({ document });
+        if (paths.has(path)) {
           throw (
-            `Slug "${slug}" is used by multiple static pages.  Check that ` +
+            `Path "${path}" is used by multiple static pages.  Check that ` +
             `the getPath() function in the template "${module.templateName}" ` +
-            "returns a unique slug for each locale."
+            "returns a unique path for each locale."
           );
         } else {
-          slugs.add(slug);
+          paths.add(path);
         }
       }
     }
   );
-  return Promise.all(slugPromises);
+  return Promise.all(pathPromises);
 };

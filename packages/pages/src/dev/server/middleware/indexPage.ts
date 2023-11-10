@@ -192,34 +192,34 @@ const createStaticPageListItems = (
   devServerPort: number
 ) => {
   return Array.from(localDataManifest.static).reduce(
-    (templateAccumulator, [, { featureName, slugToLocaleMap }]) =>
+    (templateAccumulator, [, { featureName, pathToLocaleMap }]) =>
       templateAccumulator +
-      `<h4>${featureName} pages (${slugToLocaleMap.size}):</h4>` +
+      `<h4>${featureName} pages (${pathToLocaleMap.size}):</h4>` +
       `<table>
         <thead>
           <tr>
             <td>URL</td>
-            ${slugToLocaleMap.size > 1 ? "<td>Locale</td>" : ""}
+            ${pathToLocaleMap.size > 1 ? "<td>Locale</td>" : ""}
           </tr>
         </thead>
         <tbody>
-          ${[...slugToLocaleMap]
+          ${[...pathToLocaleMap]
             .map(
-              ([staticURL, locale]) => `<tr>
+              ([path, locale]) => `<tr>
             ${
-              slugToLocaleMap.size > 1
+              pathToLocaleMap.size > 1
                 ? `<td>
-                <a href="http://localhost:${devServerPort}/${staticURL}?locale=${locale}">
-                  ${staticURL}?locale=${locale}
+                <a href="http://localhost:${devServerPort}/${path}?locale=${locale}">
+                  ${path}?locale=${locale}
                 </a>
               </td>`
                 : `<td>
-                <a href="http://localhost:${devServerPort}/${staticURL}">
-                  ${staticURL}
+                <a href="http://localhost:${devServerPort}/${path}">
+                  ${path}
                 </a>
               </td>`
             }
-            ${slugToLocaleMap.size > 1 ? `<td>${locale}</td>` : ""}`
+            ${pathToLocaleMap.size > 1 ? `<td>${locale}</td>` : ""}`
             )
             .join("")}
           </tr>

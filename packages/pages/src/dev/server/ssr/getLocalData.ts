@@ -18,8 +18,8 @@ export interface LocalDataManifest {
     {
       // The featureName for a specific static template
       featureName: string;
-      // A map from static page slug to a single locale
-      slugToLocaleMap: Map<string, string>;
+      // A map from static page path to a single locale
+      pathToLocaleMap: Map<string, string>;
     }
   >;
   entity: Map<
@@ -99,15 +99,15 @@ export const getLocalDataManifest = async (
       const staticPath = templateModuleInternal.getPath({ document: data });
       const currentManifestData = localDataManifest.static.get(featureName);
       if (currentManifestData) {
-        const occupiedSlugs = currentManifestData.slugToLocaleMap;
-        if (occupiedSlugs.has(staticPath)) {
+        const occupiedPaths = currentManifestData.pathToLocaleMap;
+        if (occupiedPaths.has(staticPath)) {
           throw new Error(
-            `Slug "${staticPath}" is used by multiple static pages.  Check that ` +
+            `Path "${staticPath}" is used by multiple static pages.  Check that ` +
               `the getPath() function in the template "${templateModuleInternal.templateName}" ` +
-              "returns a unique slug for each locale."
+              "returns a unique path for each locale."
           );
         }
-        occupiedSlugs.set(staticPath, data.meta.locale);
+        occupiedPaths.set(staticPath, data.meta.locale);
       } else {
         try {
           validateGetPathValue(staticPath, templateModuleInternal.path);
@@ -115,11 +115,11 @@ export const getLocalDataManifest = async (
           logWarning(`${(e as Error).message}, skipping."`);
           continue;
         }
-        const slugToLocaleMap = new Map();
-        slugToLocaleMap.set(staticPath, data.meta.locale);
+        const pathToLocaleMap = new Map();
+        pathToLocaleMap.set(staticPath, data.meta.locale);
         localDataManifest.static.set(featureName, {
           featureName,
-          slugToLocaleMap,
+          pathToLocaleMap,
         });
       }
     }
