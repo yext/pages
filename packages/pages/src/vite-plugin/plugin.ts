@@ -34,7 +34,6 @@ const clientHydration = async (
     apply: "build",
     buildStart: {
       sequential: true,
-      order: "pre",
       async handler() {
         await makeClientFiles(projectStructure);
       },
