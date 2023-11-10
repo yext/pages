@@ -24,7 +24,7 @@ export const readTemplateModules = async (
   manifest: Manifest,
   projectStructure: ProjectStructure
 ): Promise<TemplateModuleInternal<any, any>> => {
-  const path = manifest.bundlePaths[feature].replace(
+  const path = manifest.serverPaths[feature].replace(
     projectStructure.config.subfolders.assets,
     ".."
   );

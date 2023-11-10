@@ -1,4 +1,4 @@
-import pathLib from "path";
+import pathLib from "node:path";
 import merge from "lodash/merge.js";
 import { Path } from "./path.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
@@ -27,6 +27,8 @@ export interface Subfolders {
   serverlessFunctions: string; // Node functions
   /** Where to output the bundled static assets */
   assets: string;
+  /** Where to output the client bundles */
+  clientBundle: string;
   /** Where to output the server bundles */
   serverBundle: string;
   /** Where to output the render bundles */
@@ -114,6 +116,7 @@ export interface ProjectStructureConfig {
   rootFiles: RootFiles;
   /** Defines how environment variables will be declared and processed */
   envVarConfig: EnvVar;
+
   /**
    * This is used for the case of multibrand setup within a single repo.
    *
@@ -136,6 +139,7 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
     templates: "templates",
     serverlessFunctions: "functions",
     assets: DEFAULT_ASSETS_DIR,
+    clientBundle: "client",
     serverBundle: "server",
     renderBundle: "render",
     renderer: "renderer",

@@ -16,7 +16,7 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
   templateName: "template",
   config: {
     name: "name",
-    hydrate: true,
+    hydrate: false,
   },
   getPath: () => {
     return "path";
@@ -25,7 +25,8 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
 };
 
 const manifest: Manifest = {
-  bundlePaths: {},
+  serverPaths: {},
+  clientPaths: {},
   renderPaths: {},
   projectStructure: new ProjectStructure().config,
   bundlerManifest: {},
