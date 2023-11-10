@@ -101,6 +101,22 @@ export interface TemplateConfig {
 }
 
 /**
+ * Shape of TemplateConfig for Static Pages
+ *
+ * @public
+ */
+export interface StaticTemplateConfig {
+  /** The name of the template feature. If not defined uses the template filename (without extension) */
+  name?: string;
+  /** Determines if hydration is allowed or not for webpages */
+  hydrate?: boolean;
+  /** The name of the onUrlChange function to use. */
+  onUrlChange?: string;
+  /** Locales for a static page */
+  locales?: string[];
+}
+
+/**
  * The stream config defined in {@link TemplateConfig.stream}.
  *
  * @public

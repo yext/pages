@@ -45,6 +45,7 @@ interface StaticPageConfig extends FeatureConfigBase {
   staticPage: {
     urlTemplate?: string;
     htmlTemplate?: string;
+    locales?: string[];
   };
 }
 
@@ -85,7 +86,9 @@ export const convertTemplateConfigToFeatureConfig = (
   if (isStaticTemplateConfig(config)) {
     featureConfig = {
       ...featureConfigBase,
-      staticPage: {},
+      staticPage: {
+        locales: config.locales,
+      },
     };
   } else {
     featureConfig = {
