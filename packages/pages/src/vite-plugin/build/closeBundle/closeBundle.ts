@@ -26,6 +26,7 @@ import { logErrorAndExit } from "../../../util/logError.js";
 import { isUsingConfig } from "../../../util/config.js";
 import { createArtifactsJson } from "../../../generate/artifacts/createArtifactsJson.js";
 import { Path } from "../../../common/src/project/path.js";
+import { getLocalDataForEntityOrStaticPage } from "../../../dev/server/ssr/getLocalData.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async () => {
@@ -61,6 +62,7 @@ export default (projectStructure: ProjectStructure) => {
       );
 
       validateUniqueFeatureName(templateModules);
+      await validateUniqueStaticSlugs(templateModules);
       validateBundles(projectStructure);
       finisher.succeed("Validated template modules");
     } catch (e: any) {
@@ -231,4 +233,36 @@ const validateUniqueFeatureName = (
     }
     featureNames.add(featureName);
   });
+};
+
+const validateUniqueStaticSlugs = (
+  templateModuleCollection: TemplateModuleCollection
+) => {
+  const slugs = new Set<string>();
+  const slugPromises = [...templateModuleCollection.values()].map(
+    async (module) => {
+      if (!module.config.locales) {
+        return;
+      }
+
+      for (const locale of module.config.locales) {
+        const document = await getLocalDataForEntityOrStaticPage({
+          entityId: "",
+          locale,
+          featureName: module.config.name,
+        });
+        const slug = module.getPath({ document });
+        if (slugs.has(slug)) {
+          throw (
+            `Slug "${slug}" is used by multiple static pages.  Check that ` +
+            `the getPath() function in the template "${module.templateName}" ` +
+            "returns a unique slug for each locale."
+          );
+        } else {
+          slugs.add(slug);
+        }
+      }
+    }
+  );
+  return Promise.all(slugPromises);
 };
