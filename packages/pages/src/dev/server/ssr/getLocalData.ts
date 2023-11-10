@@ -18,12 +18,8 @@ export interface LocalDataManifest {
     {
       // The featureName for a specific static template
       featureName: string;
-      staticPages: {
-        // The return value of the template's getPath()
-        staticURL: string;
-        // The locale code
-        locale: string;
-      }[];
+      // a map from static page slug to a single locale
+      slugToLocaleMap: Map<string, string>;
     }
   >;
   entity: Map<
@@ -99,34 +95,35 @@ export const getLocalDataManifest = async (
         );
         continue;
       }
-      const staticURL = templateModuleInternal.getPath({ document: data });
-      if (localDataManifest.static.has(featureName)) {
-        const staticData = localDataManifest.static.get(featureName);
-        const staticPage = {
-          staticURL,
-          locale: data.meta.locale,
-        };
-        staticData?.staticPages.push(staticPage);
+
+      const staticPath = templateModuleInternal.getPath({ document: data });
+      const currentManifestData = localDataManifest.static.get(featureName);
+      if (currentManifestData) {
+        const occupiedSlugs = currentManifestData.slugToLocaleMap;
+        if (occupiedSlugs.has(staticPath)) {
+          throw new Error(
+            `Slug "${staticPath}" is used by multiple static pages.  Check that ` +
+              `the getPath() function in the template "${templateModuleInternal.templateName}" ` +
+              "returns a unique slug for each locale."
+          );
+        }
+        occupiedSlugs.set(staticPath, data.meta.locale);
       } else {
         try {
-          validateGetPathValue(staticURL, templateModuleInternal.path);
+          validateGetPathValue(staticPath, templateModuleInternal.path);
         } catch (e) {
           logWarning(`${(e as Error).message}, skipping."`);
           continue;
         }
+        const slugToLocaleMap = new Map();
+        slugToLocaleMap.set(staticPath, data.meta.locale);
         localDataManifest.static.set(featureName, {
           featureName,
-          staticPages: [
-            {
-              staticURL,
-              locale: data.meta.locale,
-            },
-          ],
+          slugToLocaleMap,
         });
       }
     }
   }
-
   return localDataManifest;
 };
 
