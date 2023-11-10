@@ -18,7 +18,7 @@ export interface LocalDataManifest {
     {
       // The featureName for a specific static template
       featureName: string;
-      // a map from static page slug to a single locale
+      // A map from static page slug to a single locale
       slugToLocaleMap: Map<string, string>;
     }
   >;
