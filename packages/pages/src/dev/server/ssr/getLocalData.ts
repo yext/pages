@@ -18,10 +18,8 @@ export interface LocalDataManifest {
     {
       // The featureName for a specific static template
       featureName: string;
-      // The return value of the template's getPath()
-      staticURL: string;
-      // The locale codes
-      locales: string[];
+      // A map from static page path to a single locale
+      pathToLocaleMap: Map<string, string>;
     }
   >;
   entity: Map<
@@ -97,27 +95,35 @@ export const getLocalDataManifest = async (
         );
         continue;
       }
-      if (localDataManifest.static.has(featureName)) {
-        localDataManifest.static
-          .get(featureName)
-          ?.locales.push(data.meta.locale);
+
+      const staticPath = templateModuleInternal.getPath({ document: data });
+      const currentManifestData = localDataManifest.static.get(featureName);
+      if (currentManifestData) {
+        const occupiedPaths = currentManifestData.pathToLocaleMap;
+        if (occupiedPaths.has(staticPath)) {
+          throw new Error(
+            `Path "${staticPath}" is used by multiple static pages.  Check that ` +
+              `the getPath() function in the template "${templateModuleInternal.templateName}" ` +
+              "returns a unique path for each locale."
+          );
+        }
+        occupiedPaths.set(staticPath, data.meta.locale);
       } else {
-        const staticURL = templateModuleInternal.getPath({ document: data });
         try {
-          validateGetPathValue(staticURL, templateModuleInternal.path);
+          validateGetPathValue(staticPath, templateModuleInternal.path);
         } catch (e) {
           logWarning(`${(e as Error).message}, skipping."`);
           continue;
         }
+        const pathToLocaleMap = new Map();
+        pathToLocaleMap.set(staticPath, data.meta.locale);
         localDataManifest.static.set(featureName, {
           featureName,
-          staticURL,
-          locales: [data.meta.locale],
+          pathToLocaleMap,
         });
       }
     }
   }
-
   return localDataManifest;
 };
 

@@ -41,10 +41,7 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
   if (hydrate) {
     clientHydrationString = getHydrationTemplate(
       pluginRenderTemplates.client,
-      path.join(
-        projectStructure.config.subfolders.assets,
-        templateModuleInternal.path.replace("..", "")
-      ),
+      manifest.clientPaths[templateModuleInternal.templateName],
       props
     );
   }

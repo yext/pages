@@ -1,5 +1,5 @@
 import fs from "fs-extra";
-import path from "path";
+import path from "node:path";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
 import { Manifest } from "../../../common/src/template/types.js";
@@ -12,10 +12,10 @@ import { TemplateModuleCollection } from "../../../common/src/template/loader/lo
  * @param featureNameToBundlePath a mapping of featureName to bundle paths registered to that
  * feature.
  */
-export const generateManifestFile = (
+export const generateManifestFile = async (
   templateModules: TemplateModuleCollection,
   projectStructure: ProjectStructure
-): void => {
+): Promise<void> => {
   const featureNameToBundlePath = new Map();
   for (const [featureName, module] of templateModules.entries()) {
     featureNameToBundlePath.set(featureName, module.path);
@@ -27,22 +27,25 @@ export const generateManifestFile = (
     ([name, path]) => [name, convertToPosixPath(distPath.getRelativePath(path))]
   );
 
-  // Add the renderPaths to the manifest. This defines the _client and _server entries.
-  const renderPaths = glob.sync(
-    convertToPosixPath(
-      path.resolve(
-        projectStructure.config.rootFolders.dist,
-        projectStructure.config.subfolders.assets,
-        projectStructure.config.subfolders.renderBundle,
-        "**/*.js"
+  // Scans for paths in dist/assets/<assetPath> and finds the paths and file names.
+  const getAssetBundlePaths = async (
+    assetPath: string
+  ): Promise<string[][]> => {
+    const filePaths = glob.sync(
+      convertToPosixPath(
+        path.resolve(
+          projectStructure.config.rootFolders.dist,
+          projectStructure.config.subfolders.assets,
+          assetPath,
+          "**/*.js"
+        )
       )
-    )
-  );
-
-  const relativeRenderPaths = renderPaths.map((filepath) => [
-    path.parse(filepath).name.split(".")[0], // get the name of the file without the hash or extension
-    convertToPosixPath(distPath.getRelativePath(filepath)),
-  ]);
+    );
+    return filePaths.map((filepath) => [
+      path.parse(filepath).name.split(".")[0],
+      convertToPosixPath(distPath.getRelativePath(filepath)),
+    ]);
+  };
 
   let bundlerManifest = Buffer.from("{}");
   if (fs.existsSync(path.join(distPath.path, "manifest.json"))) {
@@ -51,8 +54,13 @@ export const generateManifestFile = (
     );
   }
   const manifest: Manifest = {
-    bundlePaths: Object.fromEntries(relativeBundlePaths),
-    renderPaths: Object.fromEntries(relativeRenderPaths),
+    serverPaths: Object.fromEntries(relativeBundlePaths),
+    clientPaths: Object.fromEntries(
+      await getAssetBundlePaths(projectStructure.config.subfolders.clientBundle)
+    ),
+    renderPaths: Object.fromEntries(
+      await getAssetBundlePaths(projectStructure.config.subfolders.renderBundle)
+    ),
     projectStructure: projectStructure.config,
     bundlerManifest: JSON.parse(bundlerManifest.toString()),
   };

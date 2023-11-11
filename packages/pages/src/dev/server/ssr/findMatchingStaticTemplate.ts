@@ -15,12 +15,16 @@ export default async function findMatchingStaticTemplate(
       if (!isStaticTemplateConfig(t.config)) {
         return false;
       }
-      const document = await getLocalDataForEntityOrStaticPage({
-        entityId: "",
-        locale,
-        featureName: t.config.name,
-      });
-      return slug === t.getPath({ document });
+      try {
+        const document = await getLocalDataForEntityOrStaticPage({
+          entityId: "",
+          locale,
+          featureName: t.config.name,
+        });
+        return slug === t.getPath({ document });
+      } catch {
+        return false;
+      }
     },
     templateFilepaths
   );
