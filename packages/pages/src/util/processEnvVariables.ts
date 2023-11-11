@@ -20,9 +20,11 @@ export const processEnvVariables = (
   prefix = mode === "development" ? "" : prefix;
 
   return Object.fromEntries(
-    Object.entries(loadEnv(mode, process.cwd(), prefix)).map(([key, value]) => [
-      key,
-      JSON.stringify(value),
-    ])
+    Object.entries(loadEnv(mode, process.cwd(), prefix))
+      // For some reason this env var is automatically set and causes issues so
+      // we filter it out specifically.
+      .filter(([env]) => env !== "_")
+      // The value must be stringified: https://vitejs.dev/config/shared-options.html#define
+      .map(([key, value]) => [key, JSON.stringify(value)])
   );
 };
