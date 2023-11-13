@@ -6,6 +6,7 @@ import { execSync } from "child_process";
 import { readJsonSync } from "./migrateConfig.js";
 
 const pagesImportRegex = /"@yext\/pages\/components"/g;
+const fetchImportRegex = /\nimport { fetch } from "@yext\/pages\/util";/g;
 const replacementText = '"@yext/sites-components"';
 const markdownRegex = 'Markdown.{1,10}from "@yext\\/react-components';
 
@@ -56,10 +57,9 @@ const processDirectoryRecursively = (currentPath: string) => {
 const replaceImports = (filePath: string) => {
   try {
     const fileContent = fs.readFileSync(filePath, "utf8");
-    const modifiedContent = fileContent.replace(
-      pagesImportRegex,
-      replacementText
-    );
+    const modifiedContent = fileContent
+      .replace(pagesImportRegex, replacementText)
+      .replace(fetchImportRegex, "");
     if (fileContent.match(markdownRegex)) {
       console.log(
         `Legacy Markdown import from react-components detected in ${filePath}.` +
