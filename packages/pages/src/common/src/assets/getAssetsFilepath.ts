@@ -7,7 +7,6 @@ import yaml from "yaml";
 /**
  * Determines the assets directory to use by checking
  * vite.config.json's assetDir or default to "assets".
- * Assets directory is not supported for config.yaml.
  * @param defaultAssetsDir the default directory for assets
  * @param viteConfigPath the path to vite.config.js
  */
