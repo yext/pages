@@ -199,7 +199,6 @@ export class ProjectStructure {
     // TODO: handle other extensions
     const assetsDir = await determineAssetsFilepath(
       DEFAULT_ASSETS_DIR,
-      pathLib.resolve(config.scope ?? "", config.rootFiles.config),
       pathLib.resolve("vite.config.js")
     );
 

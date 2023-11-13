@@ -4,22 +4,12 @@ import * as importHelper from "./import.js";
 
 describe("getAssetsFilepath - determineAssetsFilepath", () => {
   it("returns assets when no files defined", async () => {
-    const actual = await determineAssetsFilepath("assets", "", "");
+    const actual = await determineAssetsFilepath("assets", "");
 
     expect(actual).toEqual("assets");
   });
 
-  it("returns custom assetsDir from config.yaml", async () => {
-    const actual = await determineAssetsFilepath(
-      "assets",
-      "tests/fixtures/config.yaml",
-      "tests/fixtures/vite.config.js"
-    );
-
-    expect(actual).toEqual("subpath/assets");
-  });
-
-  it("returns custom assets from vite config when no config.yaml", async () => {
+  it("returns custom assets from vite config", async () => {
     const viteConfig = {
       default: {
         plugins: [],
@@ -34,7 +24,6 @@ describe("getAssetsFilepath - determineAssetsFilepath", () => {
 
     const actual = await determineAssetsFilepath(
       "assets",
-      "tests/fixtures/invalid.yaml",
       "does not matter since mocked"
     );
 
