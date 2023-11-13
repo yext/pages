@@ -46,7 +46,7 @@ const bundleServerlessFunction = async (
   projectStructure: ProjectStructure
 ): Promise<void> => {
   const fmp = new FunctionMetadataParser(filepath, projectStructure);
-  const { rootFolders, subfolders } = projectStructure.config;
+  const { rootFolders, subfolders, envVarConfig } = projectStructure.config;
   const outdir = path.join(rootFolders.dist, subfolders.serverlessFunctions);
   const { name } = fmp.functionMetadata;
 
@@ -59,7 +59,7 @@ const bundleServerlessFunction = async (
     format: "esm",
     bundle: true,
     loader: COMMON_ESBUILD_LOADERS,
-    define: processEnvVariables("YEXT_PUBLIC"),
+    define: processEnvVariables(envVarConfig.envVarPrefix),
   });
 };
 

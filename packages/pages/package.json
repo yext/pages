@@ -61,7 +61,6 @@
     "cli-spinners": "^2.9.0",
     "commander": "^11.0.0",
     "cross-fetch": "^4.0.0",
-    "dotenv": "^16.3.1",
     "escape-html": "^1.0.3",
     "esm-module-paths": "^1.1.1",
     "express": "^4.18.2",
@@ -117,8 +116,5 @@
   },
   "overrides": {
     "webpack": "^5.52.0"
-  },
-  "setupFiles": [
-    "dotenv/config"
-  ]
+  }
 }

@@ -8,20 +8,23 @@ import { loadEnv } from "vite";
  * @param prefix string specifying the beginning of the keys to match
  */
 export const processEnvVariables = (
-  prefix = "VITE",
-  // needed for templates and functions, but sourceFileParser double stringifies
-  stringifyValues = true
+  prefix = "VITE"
 ): Record<string, string> => {
   const mode = process.env.NODE_ENV || "development";
-  let processEnv = loadEnv(mode, process.cwd(), "");
-  processEnv = Object.fromEntries(
-    Object.entries(processEnv)
-      .filter(([env]) => env.startsWith(prefix))
-      .map(([key, value]) => [
-        key,
-        stringifyValues ? JSON.stringify(value) : value,
-      ])
-  );
 
-  return processEnv;
+  // If we're development return all env var keys, otherwise use Vite's default
+  // way of loading env vars in prod.
+  // For prod, only public env vars are loaded since they are statically replaced in code.
+  // Cog makes the non-public env vars available as global vars in the Deno
+  // runtime context.
+  prefix = mode === "development" ? "" : prefix;
+
+  return Object.fromEntries(
+    Object.entries(loadEnv(mode, process.cwd(), prefix))
+      // For some reason this env var is automatically set and causes issues so
+      // we filter it out specifically.
+      .filter(([env]) => env !== "_")
+      // The value must be stringified: https://vitejs.dev/config/shared-options.html#define
+      .map(([key, value]) => [key, JSON.stringify(value)])
+  );
 };

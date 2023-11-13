@@ -110,9 +110,6 @@ importers:
       cross-fetch:
         specifier: ^4.0.0
         version: 4.0.0
-      dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
       escape-html:
         specifier: ^1.0.3
         version: 1.0.3
@@ -2992,11 +2989,6 @@ packages:
   /domain-browser@4.22.0:
     resolution: {integrity: sha512-IGBwjF7tNk3cwypFNH/7bfzBcgSCbaMOD3GsaY1AU/JRrnHnYgEM0+9kQt52iZxjNsjBtJYtao146V+f8jFZNw==}
     engines: {node: '>=10'}
-    dev: false
-
-  /dotenv@16.3.1:
-    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
-    engines: {node: '>=12'}
     dev: false
 
   /eastasianwidth@0.2.0:

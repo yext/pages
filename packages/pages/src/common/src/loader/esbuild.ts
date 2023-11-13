@@ -5,6 +5,7 @@ import { pathToFileURL } from "url";
 import path from "node:path";
 import { processEnvVariables } from "../../../util/processEnvVariables.js";
 import { anyFileLoader } from "./anyFileLoader.js";
+import { ProjectStructure } from "../project/structure.js";
 
 export const COMMON_ESBUILD_LOADERS: { [ext: string]: Loader } = {
   ".css": "css",
@@ -50,7 +51,8 @@ export type ImportedModule = {
  */
 export const loadModules = async (
   modulePaths: string[],
-  transpile: boolean
+  transpile: boolean,
+  projectStructure: ProjectStructure
 ): Promise<ImportedModule[]> => {
   const importedModules: ImportedModule[] = [];
   for (const modulePath of modulePaths) {
@@ -63,7 +65,9 @@ export const loadModules = async (
           format: "esm",
           bundle: true,
           loader: COMMON_ESBUILD_LOADERS,
-          define: processEnvVariables("YEXT_PUBLIC"),
+          define: processEnvVariables(
+            projectStructure.config.envVarConfig.envVarPrefix
+          ),
           plugins: [anyFileLoader()],
         });
 

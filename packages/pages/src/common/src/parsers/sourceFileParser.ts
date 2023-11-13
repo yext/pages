@@ -1,4 +1,3 @@
-import path from "node:path";
 import {
   Project,
   SourceFile,
