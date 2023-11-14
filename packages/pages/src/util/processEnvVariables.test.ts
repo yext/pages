@@ -34,4 +34,15 @@ describe("processEnvVariables", () => {
     expect(env.SECRET).toEqual(`"secret"`);
     expect(env.NODE_ENV).toEqual(`"development"`);
   });
+
+  it("filters out the _ env var", () => {
+    global.process.env._ = "foo";
+    const env = processEnvVariables("YEXT_PUBLIC");
+
+    expect(Object.keys(env).length).toEqual(4);
+    expect(env.VITE_KEY).toEqual(`"pk.abcdefghij"`);
+    expect(env.YEXT_PUBLIC_KEY).toEqual(`"pk.0123456789"`);
+    expect(env.SECRET).toEqual(`"secret"`);
+    expect(env.NODE_ENV).toEqual(`"development"`);
+  });
 });
