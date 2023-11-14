@@ -92,14 +92,38 @@ const migrateSiteStream = async (
     console.info(
       `migrating global data from ${siteStreamPath} to ${configYamlPath}`
     );
-    // this logic replaces $id with id and keeps id in the first position
-    const newSiteStream = {
-      id: sitesJson.$id,
-      ...sitesJson,
-    };
-    newSiteStream.$id = undefined;
+    const newSiteStream = formatSiteStream(sitesJson, siteStreamPath);
+    if (!newSiteStream) {
+      return null;
+    }
     writeYamlSync(configYamlPath, "siteStream", newSiteStream);
   }
+};
+
+const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
+  let entityId: string | undefined = undefined;
+  if (sitesJson.filter?.entityIds && sitesJson.filter?.entityIds.length === 1) {
+    entityId = sitesJson.filter.entityIds[0];
+  } else if (sitesJson.filter?.entityIds) {
+    console.error(
+      `unable to migrate ${siteStreamPath} due to multiple entityIds`
+    );
+    return null;
+  }
+
+  const siteStream = {
+    id: sitesJson.$id,
+    entityId: entityId,
+    serving: {
+      reverseProxyPrefix: sitesJson.reverseProxy?.displayUrlPrefix,
+    },
+    ...sitesJson,
+  };
+  siteStream.$id = undefined;
+  siteStream.reverseProxy = undefined;
+  siteStream.filter = undefined;
+
+  return siteStream;
 };
 
 const migrateRedirects = async (source: string, dest: string) => {
