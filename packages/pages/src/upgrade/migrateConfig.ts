@@ -108,6 +108,7 @@ const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
     );
   }
 
+  // Keep id in the first position
   const siteStream = {
     id: sitesJson.$id,
     ...sitesJson,
@@ -118,9 +119,9 @@ const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
       reverseProxyPrefix: sitesJson.reverseProxy?.displayUrlPrefix,
     };
   }
-  siteStream.$id = undefined;
-  siteStream.reverseProxy = undefined;
-  siteStream.filter = undefined;
+  delete siteStream.$id;
+  delete siteStream.reverseProxy;
+  delete siteStream.filter;
 
   return siteStream;
 };
