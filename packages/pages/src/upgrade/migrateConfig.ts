@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import yaml from "yaml";
 import { ProjectStructure } from "../common/src/project/structure.js";
+import { logErrorAndExit } from "../util/logError.js";
 
 type BuildConfiguration = {
   buildCommand: string;
@@ -93,32 +94,30 @@ const migrateSiteStream = async (
       `migrating global data from ${siteStreamPath} to ${configYamlPath}`
     );
     const newSiteStream = formatSiteStream(sitesJson, siteStreamPath);
-    if (!newSiteStream) {
-      return null;
-    }
     writeYamlSync(configYamlPath, "siteStream", newSiteStream);
   }
 };
 
 const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
-  let entityId: string | undefined = undefined;
+  let entityId;
   if (sitesJson.filter?.entityIds && sitesJson.filter?.entityIds.length === 1) {
     entityId = sitesJson.filter.entityIds[0];
   } else if (sitesJson.filter?.entityIds) {
-    console.error(
-      `unable to migrate ${siteStreamPath} due to multiple entityIds`
+    logErrorAndExit(
+      `Unable to migrate ${siteStreamPath} due to multiple entityIds`
     );
-    return null;
   }
 
   const siteStream = {
     id: sitesJson.$id,
-    entityId: entityId,
-    serving: {
-      reverseProxyPrefix: sitesJson.reverseProxy?.displayUrlPrefix,
-    },
     ...sitesJson,
+    entityId: entityId,
   };
+  if (siteStream.reverseProxy?.displayUrlPrefix) {
+    siteStream.serving = {
+      reverseProxyPrefix: sitesJson.reverseProxy?.displayUrlPrefix,
+    };
+  }
   siteStream.$id = undefined;
   siteStream.reverseProxy = undefined;
   siteStream.filter = undefined;
