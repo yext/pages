@@ -108,7 +108,7 @@ const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
     );
   }
 
-  // Keep id in the first position
+  // Replace $id with id and keeps id in the first position
   const siteStream = {
     id: sitesJson.$id,
     ...sitesJson,
