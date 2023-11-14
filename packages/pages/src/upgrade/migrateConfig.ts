@@ -98,7 +98,7 @@ const migrateSiteStream = async (
   }
 };
 
-const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
+export const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
   let entityId;
   if (sitesJson.filter?.entityIds && sitesJson.filter?.entityIds.length === 1) {
     entityId = sitesJson.filter.entityIds[0];
