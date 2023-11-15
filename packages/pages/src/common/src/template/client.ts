@@ -27,8 +27,8 @@ export const makeClientFiles = async (projectStructure: ProjectStructure) => {
             !f.includes(".client")
         )
         .forEach(async (template) => {
-          const templeFilePath = path.join(templatePath.path, template);
-          generateAndSaveClientHydrationTemplates(templeFilePath);
+          const templateFilePath = path.join(templatePath.path, template);
+          generateAndSaveClientHydrationTemplates(templateFilePath);
         });
     }
   } catch (err) {
@@ -87,11 +87,7 @@ export const removeHydrationClientFiles = async (
           f.includes(".client")
       )
       .forEach(async (template) => {
-        const clientPath = path.join(
-          projectStructure.config.rootFolders.source,
-          projectStructure.config.subfolders.templates,
-          template
-        );
+        const clientPath = path.join(templatePath.getAbsolutePath(), template);
         if (fs.existsSync(clientPath)) {
           fs.rmSync(clientPath);
         }
