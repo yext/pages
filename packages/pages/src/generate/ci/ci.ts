@@ -91,10 +91,16 @@ export const getUpdatedCiConfig = async (
     pattern: `${projectStructure.config.subfolders.assets}/**/*`,
   });
 
-  // static assets based on the Vite publicDir
+  // static assets based on the Vite publicDir //change here
   ciConfigCopy.artifactStructure.assets.push({
     root: projectStructure.config.rootFolders.dist,
     pattern: "*",
+  });
+
+  // assets from the Vite publicDir
+  ciConfigCopy.artifactStructure.assets.push({
+    root: projectStructure.config.rootFolders.dist,
+    pattern: `${projectStructure.config.subfolders.public}/**/*`,
   });
 
   ciConfigCopy.artifactStructure.plugins = [];
