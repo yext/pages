@@ -1,0 +1,16 @@
+name: Generate markdown files
+
+on: push 
+
+jobs: 
+  generate: 
+    runs-on: ubuntu-latest
+    steps:    
+      - name: "Checkout"
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+      - name: Install deps
+        run: pnpm i
+      - name: generate-docs
+        run: pnpm -r run api-extractor && pnpm -r run generate-docs && pnpm run fmt

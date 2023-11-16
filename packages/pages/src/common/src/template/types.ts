@@ -1,5 +1,6 @@
 import { ProjectStructureConfig } from "../project/structure.js";
 import { HeadConfig } from "./head.js";
+import React from "react";
 
 /**
  * The type to include in any template file. It defines the available functions and fields that are available
@@ -78,7 +79,9 @@ export type Render<T extends TemplateRenderProps<T>> = (props: T) => string;
  *
  * @public
  */
-export type Template<T extends TemplateRenderProps> = (props: T) => JSX.Element;
+export type Template<T extends TemplateRenderProps> = (
+  props: T
+) => React.JSX.Element;
 
 /**
  * The exported `config` function's definition.
@@ -221,6 +224,8 @@ export interface TemplateRenderProps<T = any> extends TemplateProps<T> {
  * Defines the paths of the _client and _server render templates. During execution
  * it will use the paths of the user's custom render templates if they exist,
  * otherwise it falls back to the ones built-in to PagesJS.
+ *
+ * @public
  */
 export interface ClientServerRenderTemplates {
   /** The path to _client.tsx */
@@ -233,6 +238,8 @@ export interface ClientServerRenderTemplates {
 
 /**
  * The type of the client/server render templates.
+ *
+ * @public
  */
 export interface RenderTemplate {
   /** The render function required by the render templates */
@@ -241,6 +248,8 @@ export interface RenderTemplate {
 
 /**
  * Context of a page, which defines the template itself and its props.
+ *
+ * @public
  */
 export interface PageContext<T extends TemplateRenderProps<T>> {
   /** The props injected into the template */
