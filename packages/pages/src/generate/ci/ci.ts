@@ -97,6 +97,12 @@ export const getUpdatedCiConfig = async (
     pattern: "*",
   });
 
+  // public assets from the plugin
+  ciConfigCopy.artifactStructure.assets.push({
+    root: `${projectStructure.config.rootFolders.dist}/public_assets`,
+    pattern: "**/*",
+  });
+
   ciConfigCopy.artifactStructure.plugins = [];
 
   const generatorPluginIndex = ciConfigCopy.artifactStructure.plugins.findIndex(
