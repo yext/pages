@@ -1,6 +1,10 @@
 name: Check and Update Third Party Notices
 
-on: pull_request
+on:
+  workflow_call:
+    secrets:
+      BOT_REPO_SCOPED_TOKEN:
+        required: true
 
 jobs:
   license-check-setup:
@@ -9,6 +13,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
+          token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x

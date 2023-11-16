@@ -1,13 +1,20 @@
 name: Generate markdown files
 
-on: push 
-
+on:
+  workflow_call:
+    secrets:
+      BOT_REPO_SCOPED_TOKEN:
+        required: true
+        
 jobs: 
   generate: 
     runs-on: ubuntu-latest
     steps:    
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
       - name: Install deps
@@ -18,7 +25,7 @@ jobs:
         id: generate-markdown
         uses: EndBug/add-and-commit@v9
         with:
-          message: "Auto generate markdown files and push"
+          message: "Auto generated documentation"
           add: "*"
           push: true
           pull: --rebase --autostash
