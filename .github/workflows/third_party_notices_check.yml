@@ -1,10 +1,6 @@
 name: Check and Update Third Party Notices
 
-on:
-  workflow_call:
-    secrets:
-      BOT_REPO_SCOPED_TOKEN:
-        required: true
+on: push
 
 jobs:
   license-check-setup:

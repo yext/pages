@@ -1,10 +1,6 @@
 name: Generate markdown files
 
-on:
-  workflow_call:
-    secrets:
-      BOT_REPO_SCOPED_TOKEN:
-        required: true
+on: push
         
 jobs: 
   generate: 
