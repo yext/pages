@@ -25,7 +25,7 @@ import yaml from "yaml";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
- * @public
+ * @internal
  */
 export const createServer = async (
   dynamicGenerateData: boolean,
