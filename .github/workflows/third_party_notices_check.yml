@@ -1,6 +1,6 @@
 name: Check and Update Third Party Notices
 
-on: push
+on: pull_request
 
 jobs:
   license-check-setup:
