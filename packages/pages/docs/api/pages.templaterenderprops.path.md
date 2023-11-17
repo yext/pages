@@ -6,7 +6,7 @@
 
 The path that the generated file will live at on the site, as defined by the [GetPath](./pages.getpath.md) function.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 path: string;

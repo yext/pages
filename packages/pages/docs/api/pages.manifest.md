@@ -6,19 +6,20 @@
 
 A manifest of bundled files present during a production build.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-export declare type Manifest = {
-  bundlePaths: {
+export type Manifest = {
+  serverPaths: {
     [key: string]: string;
   };
-  projectFilepaths: {
-    templatesRoot: string;
-    distRoot: string;
-    hydrationBundleOutputRoot: string;
-    serverBundleOutputRoot: string;
+  clientPaths: {
+    [key: string]: string;
   };
+  renderPaths: {
+    [key: string]: string;
+  };
+  projectStructure: ProjectStructureConfig;
   bundlerManifest?: any;
 };
 ```

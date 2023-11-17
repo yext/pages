@@ -6,7 +6,7 @@
 
 Title of the page. Will default to 'Yext Pages Site' if omitted.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 title?: string;

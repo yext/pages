@@ -6,7 +6,7 @@
 
 The stream configuration used by the template
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 stream?: Stream;

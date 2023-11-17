@@ -4,13 +4,16 @@
 
 ## Stream.localization property
 
-The localization used by the filter
+The localization used by the filter. Either set primary: true or specify a locales array.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 localization: {
-        locales?: string[];
-        primary: boolean;
+        locales: string[];
+        primary?: never;
+    } | {
+        primary: true;
+        locales?: never;
     };
 ```

@@ -6,7 +6,7 @@
 
 Well-defined interface for adding HTML tags (such as meta tags)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 tags?: Tag[];

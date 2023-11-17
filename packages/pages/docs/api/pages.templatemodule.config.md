@@ -6,7 +6,7 @@
 
 The exported config function
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 config?: TemplateConfig;

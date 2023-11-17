@@ -6,8 +6,8 @@
 
 Custom type for specifying HTML element attributes in the [Tag](./pages.tag.md) interface.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-export declare type Attributes = Record<string, string>;
+export type Attributes = Record<string, string>;
 ```

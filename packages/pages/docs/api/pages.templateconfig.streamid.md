@@ -6,7 +6,7 @@
 
 The stream that this template uses. If a stream is defined the streamId is not required.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 streamId?: string;

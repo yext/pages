@@ -6,11 +6,10 @@
 
 Additional metadata added by the toolchain
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 __meta: {
-        mode: "development" | "production";
-        manifest?: Manifest;
-    };
+  mode: "development" | "production";
+}
 ```

@@ -6,15 +6,15 @@
 
 The shape of the data passed directly to the different template functions with the exception of the render function (getPath, getHeadConfig, etc).
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-export interface TemplateProps
+export interface TemplateProps<T = Record<string, any>>
 ```
 
 ## Properties
 
-| Property                                      | Modifiers | Type                                                                                         | Description                                                               |
-| --------------------------------------------- | --------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [\_\_meta](./pages.templateprops.__meta.md)   |           | { mode: "development" \| "production"; manifest?: [Manifest](./pages.manifest.md)<!-- -->; } | Additional metadata added by the toolchain                                |
-| [document](./pages.templateprops.document.md) |           | Record&lt;string, any&gt;                                                                    | The entire document returned after applying the stream to a single entity |
+| Property                                      | Modifiers | Type                                     | Description                                                               |
+| --------------------------------------------- | --------- | ---------------------------------------- | ------------------------------------------------------------------------- |
+| [\_\_meta](./pages.templateprops.__meta.md)   |           | { mode: "development" \| "production"; } | Additional metadata added by the toolchain                                |
+| [document](./pages.templateprops.document.md) |           | T                                        | The entire document returned after applying the stream to a single entity |

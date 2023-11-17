@@ -6,7 +6,7 @@
 
 The exported render function
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 render?: Render<U>;

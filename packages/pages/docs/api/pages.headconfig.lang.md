@@ -6,7 +6,7 @@
 
 Lang of the page. Will be set to the document's locale if omitted.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 lang?: string;

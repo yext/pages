@@ -6,7 +6,7 @@
 
 The exported, optional headFunction
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getHeadConfig?: GetHeadConfig<U>;

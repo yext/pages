@@ -6,7 +6,7 @@
 
 The type of the element to create (i.e. meta, script, link, etc.)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 type: TagType;

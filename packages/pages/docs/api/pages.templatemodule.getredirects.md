@@ -6,7 +6,7 @@
 
 The exported, optional, function which returns a list of redirects
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getRedirects?: GetRedirects<U>;

@@ -6,8 +6,8 @@
 
 The entire document returned after applying the stream to a single entity
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-document: Record<string, any>;
+document: T;
 ```

@@ -6,7 +6,7 @@
 
 The name of the template feature. If not defined uses the template filename (without extension)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 name?: string;

@@ -6,10 +6,10 @@
 
 The type definition for the template's getPath function.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-export declare type GetPath<T extends TemplateProps> = (props: T) => string;
+export type GetPath<T extends TemplateProps> = (props: T) => string;
 ```
 
-<b>References:</b> [TemplateProps](./pages.templateprops.md)
+**References:** [TemplateProps](./pages.templateprops.md)

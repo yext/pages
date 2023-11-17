@@ -6,7 +6,7 @@
 
 The transformation to apply to the stream
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 transform?: {
