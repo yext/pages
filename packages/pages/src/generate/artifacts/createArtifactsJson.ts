@@ -45,11 +45,6 @@ export const getArtifactsConfig = async (
         },
         // static assets based on the Vite publicDir
         {
-          root: projectStructure.config.rootFolders.dist,
-          pattern: "*",
-        },
-        // public assets from the plugin
-        {
           root: `${projectStructure.config.rootFolders.dist}/public_assets`,
           pattern: "**/*",
         },
