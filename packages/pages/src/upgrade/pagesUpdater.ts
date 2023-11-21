@@ -119,16 +119,18 @@ const installDependencies = async (
 };
 
 // Function to update package.json engines
+const NODE_ENGINES = "^18.0.0 || >=20.0.0";
 const updatePackageEngines = (targetDirectory: string) => {
   const packageJsonPath = path.resolve(targetDirectory, "package.json");
 
   try {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
     let engines = packageJson.engines;
-    if (!engines) {
-      engines = { node: "" };
+    if (engines) {
+      engines.node = NODE_ENGINES;
+    } else {
+      engines = { node: NODE_ENGINES };
     }
-    engines.node = "^18.0.0 || >=20.0.0";
     packageJson.engines = engines;
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     console.log("package.json engines updated.");
