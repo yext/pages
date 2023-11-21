@@ -9,15 +9,24 @@
 ##### New Features
 
 *  add node engines to upgrade script (#444) (205db3e5)
-* **dev:**  replace fetch imports in upgrade command (#435) (4483dd93)
+* **dev:**  
+  *  better error message for CLI not installed (#413) (b73cb1c6)
+  *  replace fetch imports in upgrade command (#435) (4483dd93)
 * **dev/plugin:**
   *  support secrets (#433) (2df1478a)
   *  add localization to static pages (#430) (9d241f86)
-* **plugin:**  create and bundle client templates (#420) (ba4647aa)
+* **plugin:**  
+  *  add ts-morph for client templates (#414) (cb9f5980)
+  *  create and bundle client templates (#420) (ba4647aa)
+* **util:**
+  *  added jstest workflow (#405) (9d125fae)
+  *  pass optional list of domains into isProduction (#417) (dd0820b6)
 
 ##### Bug Fixes
 
 * **plugin:**
+  *  generate templates/artifacts during build (#418) (17971e70)
+  *  templateModule cache incorrect type (#411) (2f60f4d0)
   *  remove old artifactStructure assets (#443) (7568568d)
   *  add plugin to support subfoldered public assets (#431) (#442) (79dab524)
   *  client template cleanup works with scope (#439) (f1ef96f0)
@@ -26,9 +35,13 @@
 *  remove assetsDir support for config.yaml (#434) (bd592c51)
 *  fix watch command (#428) (46a9454d)
 * **dev/plugin:**
+  *  custom _client not working with React 17 (#419) (c0f2c7be)
   *  clearer error for non-string getPath value (#425) (8e0646bc)
   *  support HTML in Content fields (#422) (8a7a60d1)
-* **dev:**  include document support for static page `getPath` functions. (#421) (c7ae21a9)
+* **dev:**  
+  *  prevent duplicate stream definitions (#408) (72302ae2)
+  *  use Vite instead of esbuild, also Vitest (#416) (67f29ebe)
+  *  include document support for static page `getPath` functions. (#421) (c7ae21a9)
 
 ##### Refactors
 
