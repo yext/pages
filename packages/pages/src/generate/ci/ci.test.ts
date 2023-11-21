@@ -37,8 +37,8 @@ describe("ci - getUpdatedCiConfig", () => {
             pattern: "assets/**/*",
           },
           {
-            root: "dist",
-            pattern: "*",
+            root: "dist/public_assets",
+            pattern: "**/*",
           },
         ],
         features: "sites-config/features.json",
@@ -126,8 +126,8 @@ describe("ci - getUpdatedCiConfig", () => {
             pattern: "assets/**/*",
           },
           {
-            root: "dist",
-            pattern: "*",
+            root: "dist/public_assets",
+            pattern: "**/*",
           },
         ],
         features: "sites-config/features.json",

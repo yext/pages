@@ -11,6 +11,10 @@ export const determinePublicFilepath = async (
   defaultPublicDir: string,
   viteConfigPath: string
 ): Promise<string> => {
+  if (viteConfigPath === "") {
+    return defaultPublicDir;
+  }
+
   const viteConfig = await import_(pathToFileURL(viteConfigPath).toString());
   const userConfig = viteConfig.default as UserConfig;
 

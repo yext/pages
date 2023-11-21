@@ -7,6 +7,7 @@ import {
   removeHydrationClientFiles,
 } from "../common/src/template/client.js";
 import fs from "node:fs";
+import path from "path";
 
 const plugin = async (): Promise<PluginOption[]> => {
   const projectStructure = await ProjectStructure.init({
@@ -27,7 +28,7 @@ const plugin = async (): Promise<PluginOption[]> => {
         process: "build",
       },
     }),
-    ...(hasPublicAssets ? [copyPublicAssets(projectStructure)] : []),
+    hasPublicAssets ? copyPublicAssets(projectStructure) : null,
     cleanup(projectStructure),
   ];
 };
@@ -66,9 +67,13 @@ const copyPublicAssets = async (
   return {
     name: "copy-public-assets",
     buildEnd: () => {
-      fs.cpSync(subfolders.public, `${rootFolders.dist}/public_assets`, {
-        recursive: true,
-      });
+      fs.cpSync(
+        subfolders.public,
+        path.join(`${rootFolders.dist}/public_assets`),
+        {
+          recursive: true,
+        }
+      );
     },
   };
 };
