@@ -15,10 +15,6 @@ describe("createArtifactsJson - getArtifactsConfig", () => {
             pattern: "assets/**/*",
           },
           {
-            root: "dist",
-            pattern: "*",
-          },
-          {
             root: "dist/public_assets",
             pattern: "**/*",
           },
