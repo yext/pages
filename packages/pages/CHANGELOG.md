@@ -1,3 +1,39 @@
+#### 1.0.0-rc.6 (2023-11-21)
+
+##### Chores
+
+*  add env var test (#438) (3ebe6b50)
+*  remove babel (#427) (7188a1eb)
+* **dev:**  use logWarning for index page messages (#426) (70f4d14f)
+
+##### New Features
+
+*  add node engines to upgrade script (#444) (205db3e5)
+* **dev:**  replace fetch imports in upgrade command (#435) (4483dd93)
+* **dev/plugin:**
+  *  support secrets (#433) (2df1478a)
+  *  add localization to static pages (#430) (9d241f86)
+* **plugin:**  create and bundle client templates (#420) (ba4647aa)
+
+##### Bug Fixes
+
+* **plugin:**
+  *  remove old artifactStructure assets (#443) (7568568d)
+  *  add plugin to support subfoldered public assets (#431) (#442) (79dab524)
+  *  client template cleanup works with scope (#439) (f1ef96f0)
+  *  address "Cannot find module" for deno module imports (#424) (12fac105)
+*  adjust how site-stream.json is migrated  (#436) (b912ea39)
+*  remove assetsDir support for config.yaml (#434) (bd592c51)
+*  fix watch command (#428) (46a9454d)
+* **dev/plugin:**
+  *  clearer error for non-string getPath value (#425) (8e0646bc)
+  *  support HTML in Content fields (#422) (8a7a60d1)
+* **dev:**  include document support for static page `getPath` functions. (#421) (c7ae21a9)
+
+##### Refactors
+
+*  remove duplicate makeClientFiles (#437) (11fb8ada)
+
 #### 1.0.0-rc.5 (2023-10-10)
 
 ##### New Features
