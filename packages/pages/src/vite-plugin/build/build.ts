@@ -28,6 +28,7 @@ export const build = async (
         resolve: {
           conditions: ["worker", "webworker"],
         },
+        publicDir: false,
         build: {
           outDir: projectStructure.config.rootFolders.dist,
           manifest: true,
