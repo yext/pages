@@ -6,7 +6,7 @@
 
 For any content that can't be fully encapsulted by our Tag interface, (i.e. template or style) an arbitrary, user-defined string can be provided.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 other?: string;

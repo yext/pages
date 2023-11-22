@@ -6,12 +6,10 @@
 
 The type definiton for the template's getRedirects function.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-export declare type GetRedirects<T extends TemplateProps> = (
-  props: T
-) => string[];
+export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
 ```
 
-<b>References:</b> [TemplateProps](./pages.templateprops.md)
+**References:** [TemplateProps](./pages.templateprops.md)

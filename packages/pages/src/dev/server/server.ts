@@ -24,6 +24,9 @@ import { isUsingConfig } from "../../util/config.js";
 import yaml from "yaml";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+/**
+ * @internal
+ */
 export const createServer = async (
   dynamicGenerateData: boolean,
   useProdURLs: boolean,

@@ -6,7 +6,7 @@
 
 Function that takes a [HeadConfig](./pages.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the head tags.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 renderHeadConfigToString: (headConfig: HeadConfig) => string;

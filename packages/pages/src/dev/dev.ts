@@ -66,6 +66,9 @@ const handler = async ({
   if (openBrowser) await open(`http://localhost:${devServerPort}/`);
 };
 
+/**
+ * @internal
+ */
 export const devCommand = (program: Command) => {
   program
     .command("dev")

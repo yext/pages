@@ -6,12 +6,12 @@
 
 The type definition for the template's getHeadConfig function. getHeadConfig takes in the provided data and will output a HeadConfig object which will be used to generate the tags inside the head tag of the generated HTML document.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-export declare type GetHeadConfig<T extends TemplateRenderProps> = (
+export type GetHeadConfig<T extends TemplateRenderProps> = (
   props: T
 ) => HeadConfig;
 ```
 
-<b>References:</b> [TemplateRenderProps](./pages.templaterenderprops.md)<!-- -->, [HeadConfig](./pages.headconfig.md)
+**References:** [TemplateRenderProps](./pages.templaterenderprops.md)<!-- -->, [HeadConfig](./pages.headconfig.md)

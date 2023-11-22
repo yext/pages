@@ -6,13 +6,13 @@
 
 The shape of the data passed directly to the template's render function. Extends the [TemplateProps](./pages.templateprops.md) interface and has the additions of a path and a relativePrefixToRoot field.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-export interface TemplateRenderProps extends TemplateProps
+export interface TemplateRenderProps<T = any> extends TemplateProps<T>
 ```
 
-<b>Extends:</b> [TemplateProps](./pages.templateprops.md)
+**Extends:** [TemplateProps](./pages.templateprops.md)<!-- -->&lt;T&gt;
 
 ## Properties
 

@@ -6,7 +6,7 @@
 
 The type to include in any template file. It defines the available functions and fields that are available to the template.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface TemplateModule<T extends TemplateProps, U extends TemplateRenderProps>
@@ -14,12 +14,12 @@ export interface TemplateModule<T extends TemplateProps, U extends TemplateRende
 
 ## Properties
 
-| Property                                                    | Modifiers | Type                                                         | Description                                                                                                                                                      |
-| ----------------------------------------------------------- | --------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [config?](./pages.templatemodule.config.md)                 |           | [TemplateConfig](./pages.templateconfig.md)                  | <i>(Optional)</i> The exported config function                                                                                                                   |
-| [default?](./pages.templatemodule.default.md)               |           | [Template](./pages.template.md)<!-- -->&lt;U&gt;             | <i>(Optional)</i> The exported default template function. This is expected to be a React Component. If undefined then will be used to generate the HTML instead. |
-| [getHeadConfig?](./pages.templatemodule.getheadconfig.md)   |           | [GetHeadConfig](./pages.getheadconfig.md)<!-- -->&lt;U&gt;   | <i>(Optional)</i> The exported, optional headFunction                                                                                                            |
-| [getPath](./pages.templatemodule.getpath.md)                |           | [GetPath](./pages.getpath.md)<!-- -->&lt;T&gt;               | The exported getPath function                                                                                                                                    |
-| [getRedirects?](./pages.templatemodule.getredirects.md)     |           | [GetRedirects](./pages.getredirects.md)<!-- -->&lt;U&gt;     | <i>(Optional)</i> The exported, optional, function which returns a list of redirects                                                                             |
-| [render?](./pages.templatemodule.render.md)                 |           | [Render](./pages.render.md)<!-- -->&lt;U&gt;                 | <i>(Optional)</i> The exported render function                                                                                                                   |
-| [transformProps?](./pages.templatemodule.transformprops.md) |           | [TransformProps](./pages.transformprops.md)<!-- -->&lt;T&gt; | <i>(Optional)</i> The optional exported transformProps function                                                                                                  |
+| Property                                                    | Modifiers | Type                                                         | Description                                                                                                                                                 |
+| ----------------------------------------------------------- | --------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [config?](./pages.templatemodule.config.md)                 |           | [TemplateConfig](./pages.templateconfig.md)                  | _(Optional)_ The exported config function                                                                                                                   |
+| [default?](./pages.templatemodule.default.md)               |           | [Template](./pages.template.md)<!-- -->&lt;U&gt;             | _(Optional)_ The exported default template function. This is expected to be a React Component. If undefined then will be used to generate the HTML instead. |
+| [getHeadConfig?](./pages.templatemodule.getheadconfig.md)   |           | [GetHeadConfig](./pages.getheadconfig.md)<!-- -->&lt;U&gt;   | _(Optional)_ The exported, optional headFunction                                                                                                            |
+| [getPath](./pages.templatemodule.getpath.md)                |           | [GetPath](./pages.getpath.md)<!-- -->&lt;T&gt;               | The exported getPath function                                                                                                                               |
+| [getRedirects?](./pages.templatemodule.getredirects.md)     |           | [GetRedirects](./pages.getredirects.md)<!-- -->&lt;U&gt;     | _(Optional)_ The exported, optional, function which returns a list of redirects                                                                             |
+| [render?](./pages.templatemodule.render.md)                 |           | [Render](./pages.render.md)<!-- -->&lt;U&gt;                 | _(Optional)_ The exported render function                                                                                                                   |
+| [transformProps?](./pages.templatemodule.transformprops.md) |           | [TransformProps](./pages.transformprops.md)<!-- -->&lt;T&gt; | _(Optional)_ The optional exported transformProps function                                                                                                  |

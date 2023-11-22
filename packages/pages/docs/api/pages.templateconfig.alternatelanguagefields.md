@@ -6,7 +6,7 @@
 
 The specific fields to add additional language options to based on the stream's localization
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 alternateLanguageFields?: string[];

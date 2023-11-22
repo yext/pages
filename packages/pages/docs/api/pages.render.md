@@ -6,12 +6,10 @@
 
 The type definition for the template's render function.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-export declare type Render<T extends TemplateRenderProps> = (
-  props: T
-) => string;
+export type Render<T extends TemplateRenderProps<T>> = (props: T) => string;
 ```
 
-<b>References:</b> [TemplateRenderProps](./pages.templaterenderprops.md)
+**References:** [TemplateRenderProps](./pages.templaterenderprops.md)

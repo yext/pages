@@ -6,10 +6,10 @@
 
 Type that enumerates the allowed types of HTML elements in the document header.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-export declare type TagType =
+export type TagType =
   | "base"
   | "link"
   | "style"

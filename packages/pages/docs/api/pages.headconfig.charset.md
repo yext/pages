@@ -6,7 +6,7 @@
 
 Declares the document's encoding. Will default to 'UTF-8' if omitted.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 charset?: string;

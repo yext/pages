@@ -11,7 +11,6 @@
   },
   "dtsRollup": {
     "enabled": true,
-    "untrimmedFilePath": "",
     "publicTrimmedFilePath": "<projectFolder>/dist/types/<unscopedPackageName>.d.ts"
   },
   "tsdocMetadata": {},
@@ -28,6 +27,10 @@
       "ae-unresolved-link": {
         "logLevel": "none",
         "addToApiReportFile": true
+      },
+      "ae-internal-missing-underscore": {
+        "logLevel": "none",
+        "addToApiReportFile": false
       }
     },
     "tsdocMessageReporting": {

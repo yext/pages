@@ -6,7 +6,7 @@
 
 Interface for an HTML tag. Can set attributes on the tag, but if a body needs to be defined, use the other field of the [HeadConfig](./pages.headconfig.md) interface.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface Tag

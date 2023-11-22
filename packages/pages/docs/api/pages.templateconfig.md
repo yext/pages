@@ -6,7 +6,7 @@
 
 The exported `config` function's definition.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface TemplateConfig
@@ -14,9 +14,11 @@ export interface TemplateConfig
 
 ## Properties
 
-| Property                                                                      | Modifiers | Type                        | Description                                                                                                       |
-| ----------------------------------------------------------------------------- | --------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| [alternateLanguageFields?](./pages.templateconfig.alternatelanguagefields.md) |           | string\[\]                  | <i>(Optional)</i> The specific fields to add additional language options to based on the stream's localization    |
-| [name?](./pages.templateconfig.name.md)                                       |           | string                      | <i>(Optional)</i> The name of the template feature. If not defined uses the template filename (without extension) |
-| [stream?](./pages.templateconfig.stream.md)                                   |           | [Stream](./pages.stream.md) | <i>(Optional)</i> The stream configuration used by the template                                                   |
-| [streamId?](./pages.templateconfig.streamid.md)                               |           | string                      | <i>(Optional)</i> The stream that this template uses. If a stream is defined the streamId is not required.        |
+| Property                                                                      | Modifiers | Type                        | Description                                                                                                  |
+| ----------------------------------------------------------------------------- | --------- | --------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [alternateLanguageFields?](./pages.templateconfig.alternatelanguagefields.md) |           | string\[\]                  | _(Optional)_ The specific fields to add additional language options to based on the stream's localization    |
+| [hydrate?](./pages.templateconfig.hydrate.md)                                 |           | boolean                     | _(Optional)_ Determines if hydration is allowed or not for webpages                                          |
+| [name?](./pages.templateconfig.name.md)                                       |           | string                      | _(Optional)_ The name of the template feature. If not defined uses the template filename (without extension) |
+| [onUrlChange?](./pages.templateconfig.onurlchange.md)                         |           | string                      | _(Optional)_ The name of the onUrlChange function to use.                                                    |
+| [stream?](./pages.templateconfig.stream.md)                                   |           | [Stream](./pages.stream.md) | _(Optional)_ The stream configuration used by the template                                                   |
+| [streamId?](./pages.templateconfig.streamid.md)                               |           | string                      | _(Optional)_ The stream that this template uses. If a stream is defined the streamId is not required.        |

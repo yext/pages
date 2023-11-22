@@ -6,7 +6,7 @@
 
 The filter to apply to the stream
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 filter: {

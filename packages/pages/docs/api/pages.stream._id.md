@@ -6,7 +6,7 @@
 
 The identifier of the stream
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 $id: string;

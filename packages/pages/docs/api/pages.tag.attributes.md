@@ -6,7 +6,7 @@
 
 The attributes to add to the element. Each attribute will be added in the form 'key="value"' and attributes will be seperated by a space
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 attributes: Attributes;

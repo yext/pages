@@ -6,12 +6,12 @@
 
 The type definition for the template's default function.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-export declare type Template<T extends TemplateRenderProps> = (
+export type Template<T extends TemplateRenderProps> = (
   props: T
-) => JSX.Element;
+) => React.JSX.Element;
 ```
 
-<b>References:</b> [TemplateRenderProps](./pages.templaterenderprops.md)
+**References:** [TemplateRenderProps](./pages.templaterenderprops.md)

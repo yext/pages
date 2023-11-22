@@ -6,12 +6,10 @@
 
 The type definition for the template's transformProps function. Can be used to alter and/or augement the props (which include the data document) passed into the template at render time.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-export declare type TransformProps<T extends TemplateProps> = (
-  props: T
-) => Promise<T>;
+export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 ```
 
-<b>References:</b> [TemplateProps](./pages.templateprops.md)
+**References:** [TemplateProps](./pages.templateprops.md)

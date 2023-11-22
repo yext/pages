@@ -6,7 +6,7 @@
 
 The relative path from the generated page to the root of the site. i.e. The path example/path/foo would have the relativePrefixToRoot of '../../'.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 relativePrefixToRoot: string;

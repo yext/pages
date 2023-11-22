@@ -6,7 +6,7 @@
 
 Function that takes a path to a generated template and returns the relative path to the root of the site. Will return the empty string if already at the root level.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getRelativePrefixToRootFromPath: (path: string) => string;

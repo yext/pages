@@ -6,10 +6,10 @@
 
 Function that takes in a [HeadConfig](./pages.headconfig.md) interface and a props, and returns the lang value that will be set on the HTML tag.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
-getLang: <T extends TemplateRenderProps>(
+getLang: <T extends TemplateRenderProps<any>>(
   headConfig: HeadConfig | undefined,
   props: T
 ) => string;

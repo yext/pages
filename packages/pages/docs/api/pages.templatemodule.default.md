@@ -6,7 +6,7 @@
 
 The exported default template function. This is expected to be a React Component. If undefined then will be used to generate the HTML instead.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 default?: Template<U>;

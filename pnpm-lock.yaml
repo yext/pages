@@ -184,11 +184,11 @@ importers:
         version: 2.3.1
     devDependencies:
       '@microsoft/api-documenter':
-        specifier: ^7.22.33
-        version: 7.23.9(@types/node@20.8.2)
+        specifier: ^7.23.12
+        version: 7.23.12(@types/node@20.8.2)
       '@microsoft/api-extractor':
-        specifier: ^7.36.4
-        version: 7.38.0(@types/node@20.8.2)
+        specifier: ^7.38.3
+        version: 7.38.3(@types/node@20.8.2)
       '@testing-library/react':
         specifier: ^14.0.0
         version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
@@ -1323,14 +1323,14 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@microsoft/api-documenter@7.23.9(@types/node@20.8.2):
-    resolution: {integrity: sha512-CvOy3JF0oCDm3GDqce3uFS9QGO72lfOEgVbvpje32O+ug/WoL8ITOg2jZszMtowuClasPbpEcEoVsHJJLePirg==}
+  /@microsoft/api-documenter@7.23.12(@types/node@20.8.2):
+    resolution: {integrity: sha512-ZFQGHNs8fSe3KoSCNa+jt/HLTN8IdTRGd0TZqmSeHpz2cSvUYHJeyQKhv8s7yi2flr1LezBq5/ig65ITZPSSqw==}
     hasBin: true
     dependencies:
       '@microsoft/api-extractor-model': 7.28.2(@types/node@20.8.2)
       '@microsoft/tsdoc': 0.14.2
       '@rushstack/node-core-library': 3.61.0(@types/node@20.8.2)
-      '@rushstack/ts-command-line': 4.16.1
+      '@rushstack/ts-command-line': 4.17.1
       colors: 1.2.5
       js-yaml: 3.13.1
       resolve: 1.22.3
@@ -1348,8 +1348,8 @@ packages:
       - '@types/node'
     dev: true
 
-  /@microsoft/api-extractor@7.38.0(@types/node@20.8.2):
-    resolution: {integrity: sha512-e1LhZYnfw+JEebuY2bzhw0imDCl1nwjSThTrQqBXl40hrVo6xm3j/1EpUr89QyzgjqmAwek2ZkIVZbrhaR+cqg==}
+  /@microsoft/api-extractor@7.38.3(@types/node@20.8.2):
+    resolution: {integrity: sha512-xt9iYyC5f39281j77JTA9C3ISJpW1XWkCcnw+2vM78CPnro6KhPfwQdPDfwS5JCPNuq0grm8cMdPUOPvrchDWw==}
     hasBin: true
     dependencies:
       '@microsoft/api-extractor-model': 7.28.2(@types/node@20.8.2)
@@ -1357,7 +1357,7 @@ packages:
       '@microsoft/tsdoc-config': 0.16.1
       '@rushstack/node-core-library': 3.61.0(@types/node@20.8.2)
       '@rushstack/rig-package': 0.5.1
-      '@rushstack/ts-command-line': 4.16.1
+      '@rushstack/ts-command-line': 4.17.1
       colors: 1.2.5
       lodash: 4.17.21
       resolve: 1.22.3
@@ -1509,8 +1509,8 @@ packages:
       strip-json-comments: 3.1.1
     dev: true
 
-  /@rushstack/ts-command-line@4.16.1:
-    resolution: {integrity: sha512-+OCsD553GYVLEmz12yiFjMOzuPeCiZ3f8wTiFHL30ZVXexTyPmgjwXEhg2K2P0a2lVf+8YBy7WtPoflB2Fp8/A==}
+  /@rushstack/ts-command-line@4.17.1:
+    resolution: {integrity: sha512-2jweO1O57BYP5qdBGl6apJLB+aRIn5ccIRTPDyULh0KMwVzFqWtw6IZWt1qtUoZD/pD2RNkIOosH6Cq45rIYeg==}
     dependencies:
       '@types/argparse': 1.0.38
       argparse: 1.0.10

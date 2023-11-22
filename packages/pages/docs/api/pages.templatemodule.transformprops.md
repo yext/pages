@@ -6,7 +6,7 @@
 
 The optional exported transformProps function
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 transformProps?: TransformProps<T>;

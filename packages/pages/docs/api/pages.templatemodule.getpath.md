@@ -6,7 +6,7 @@
 
 The exported getPath function
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getPath: GetPath<T>;

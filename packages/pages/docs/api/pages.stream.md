@@ -6,7 +6,7 @@
 
 The stream config defined in [TemplateConfig.stream](./pages.templateconfig.stream.md)<!-- -->.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface Stream
@@ -14,10 +14,10 @@ export interface Stream
 
 ## Properties
 
-| Property                                       | Modifiers | Type                                                                                   | Description                                                 |
-| ---------------------------------------------- | --------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| [$id](./pages.stream._id.md)                   |           | string                                                                                 | The identifier of the stream                                |
-| [fields](./pages.stream.fields.md)             |           | string\[\]                                                                             | The fields to apply to the stream                           |
-| [filter](./pages.stream.filter.md)             |           | { entityIds?: string\[\]; entityTypes?: string\[\]; savedFilterIds?: string\[\]; }     | The filter to apply to the stream                           |
-| [localization](./pages.stream.localization.md) |           | { locales?: string\[\]; primary: boolean; }                                            | The localization used by the filter                         |
-| [transform?](./pages.stream.transform.md)      |           | { expandOptionFields?: string\[\]; replaceOptionValuesWithDisplayNames?: string\[\]; } | <i>(Optional)</i> The transformation to apply to the stream |
+| Property                                       | Modifiers | Type                                                                                   | Description                                                                               |
+| ---------------------------------------------- | --------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| [$id](./pages.stream._id.md)                   |           | string                                                                                 | The identifier of the stream                                                              |
+| [fields](./pages.stream.fields.md)             |           | string\[\]                                                                             | The fields to apply to the stream                                                         |
+| [filter](./pages.stream.filter.md)             |           | { entityIds?: string\[\]; entityTypes?: string\[\]; savedFilterIds?: string\[\]; }     | The filter to apply to the stream                                                         |
+| [localization](./pages.stream.localization.md) |           | { locales: string\[\]; primary?: never; } \| { primary: true; locales?: never; }       | The localization used by the filter. Either set primary: true or specify a locales array. |
+| [transform?](./pages.stream.transform.md)      |           | { expandOptionFields?: string\[\]; replaceOptionValuesWithDisplayNames?: string\[\]; } | _(Optional)_ The transformation to apply to the stream                                    |
