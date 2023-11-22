@@ -93,8 +93,8 @@ export const getUpdatedCiConfig = async (
 
   // static assets based on the Vite publicDir
   ciConfigCopy.artifactStructure.assets.push({
-    root: projectStructure.config.rootFolders.dist,
-    pattern: "*",
+    root: `${projectStructure.config.rootFolders.dist}/public_assets`,
+    pattern: "**/*",
   });
 
   ciConfigCopy.artifactStructure.plugins = [];

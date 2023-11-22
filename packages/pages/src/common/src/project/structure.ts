@@ -2,6 +2,7 @@ import pathLib from "node:path";
 import merge from "lodash/merge.js";
 import { Path } from "./path.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
+import { determinePublicFilepath } from "../assets/getPublicFilepath.js";
 
 /**
  * All important folders defined at the root of the project.
@@ -27,6 +28,8 @@ export interface Subfolders {
   serverlessFunctions: string; // Node functions
   /** Where to output the bundled static assets */
   assets: string;
+  /** Where to output the bundled public assets */
+  public: string;
   /** Where to output the client bundles */
   clientBundle: string;
   /** Where to output the server bundles */
@@ -128,6 +131,8 @@ export interface ProjectStructureConfig {
 
 const DEFAULT_ASSETS_DIR = "assets";
 
+const DEFAULT_PUBLIC_DIR = "public";
+
 const defaultProjectStructureConfig: ProjectStructureConfig = {
   rootFolders: {
     source: "src",
@@ -139,6 +144,7 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
     templates: "templates",
     serverlessFunctions: "functions",
     assets: DEFAULT_ASSETS_DIR,
+    public: DEFAULT_PUBLIC_DIR,
     clientBundle: "client",
     serverBundle: "server",
     renderBundle: "render",
@@ -203,6 +209,13 @@ export class ProjectStructure {
     );
 
     config.subfolders.assets = assetsDir;
+
+    const publicDir = await determinePublicFilepath(
+      DEFAULT_PUBLIC_DIR,
+      pathLib.resolve("vite.config.js")
+    );
+
+    config.subfolders.public = publicDir;
 
     return new ProjectStructure(config);
   };

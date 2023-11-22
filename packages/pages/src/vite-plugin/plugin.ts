@@ -6,11 +6,17 @@ import {
   makeClientFiles,
   removeHydrationClientFiles,
 } from "../common/src/template/client.js";
+import fs from "node:fs";
+import path from "path";
 
 const plugin = async (): Promise<PluginOption[]> => {
   const projectStructure = await ProjectStructure.init({
     scope: process.env.YEXT_PAGES_SCOPE,
   });
+
+  const hasPublicAssets = fs.existsSync(
+    projectStructure.config.subfolders.public
+  );
 
   return [
     clientHydration(projectStructure),
@@ -22,6 +28,7 @@ const plugin = async (): Promise<PluginOption[]> => {
         process: "build",
       },
     }),
+    hasPublicAssets ? copyPublicAssets(projectStructure) : null,
     cleanup(projectStructure),
   ];
 };
@@ -49,6 +56,24 @@ const cleanup = async (projectStructure: ProjectStructure): Promise<Plugin> => {
       handler() {
         removeHydrationClientFiles(projectStructure);
       },
+    },
+  };
+};
+
+const copyPublicAssets = async (
+  projectStructure: ProjectStructure
+): Promise<Plugin> => {
+  const { rootFolders, subfolders } = projectStructure.config;
+  return {
+    name: "copy-public-assets",
+    buildEnd: () => {
+      fs.cpSync(
+        subfolders.public,
+        path.join(`${rootFolders.dist}/public_assets`),
+        {
+          recursive: true,
+        }
+      );
     },
   };
 };
