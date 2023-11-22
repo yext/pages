@@ -9,8 +9,6 @@ import { default as React_2 } from "react";
 // @public
 export type Attributes = Record<string, string>;
 
-// Warning: (ae-internal-missing-underscore) The name "ClientServerRenderTemplates" should be prefixed with an underscore because the declaration is marked as @internal
-//
 // @internal
 export interface ClientServerRenderTemplates {
   clientRenderTemplatePath: string;
@@ -18,13 +16,9 @@ export interface ClientServerRenderTemplates {
   serverRenderTemplatePath: string;
 }
 
-// Warning: (ae-internal-missing-underscore) The name "convertToPosixPath" should be prefixed with an underscore because the declaration is marked as @internal
-//
 // @internal
 export const convertToPosixPath: (p: string) => string;
 
-// Warning: (ae-internal-missing-underscore) The name "createDevServer" should be prefixed with an underscore because the declaration is marked as @internal
-//
 // @internal (undocumented)
 export const createDevServer: (
   dynamicGenerateData: boolean,
@@ -33,8 +27,6 @@ export const createDevServer: (
   scope?: string
 ) => Promise<void>;
 
-// Warning: (ae-internal-missing-underscore) The name "devCommand" should be prefixed with an underscore because the declaration is marked as @internal
-//
 // @internal (undocumented)
 export const devCommand: (program: Command) => void;
 
@@ -99,8 +91,6 @@ export type OnUrlChangeFunction = (
   arg: SitesOnUrlChangeRequest
 ) => SitesOnUrlChangeResponse;
 
-// Warning: (ae-internal-missing-underscore) The name "PageContext" should be prefixed with an underscore because the declaration is marked as @internal
-//
 // @internal
 export interface PageContext<T extends TemplateRenderProps<T>> {
   Page: Template<T>;
@@ -113,8 +103,6 @@ export type Render<T extends TemplateRenderProps<T>> = (props: T) => string;
 // @public
 export const renderHeadConfigToString: (headConfig: HeadConfig) => string;
 
-// Warning: (ae-internal-missing-underscore) The name "RenderTemplate" should be prefixed with an underscore because the declaration is marked as @internal
-//
 // @internal
 export interface RenderTemplate {
   render(pageContext: PageContext<any>): Promise<string>;
