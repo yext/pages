@@ -1,8 +1,6 @@
-import fs from "node:fs";
 import { pathToFileURL } from "url";
 import { UserConfig } from "vite";
 import { import_ } from "./import.js";
-import yaml from "yaml";
 
 /**
  * Determines the assets directory to use by checking
