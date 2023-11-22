@@ -65,7 +65,7 @@ SOFTWARE.
 The following npm packages may be included in this product:
 
  - chalk@5.3.0
- - cli-spinners@2.9.0
+ - cli-spinners@2.9.1
  - get-port@7.0.0
  - latest-version@7.0.0
  - open@9.1.0
@@ -88,7 +88,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 The following npm package may be included in this product:
 
- - commander@11.0.0
+ - commander@11.1.0
 
 This package contains the following license and notice below:
 
@@ -297,7 +297,7 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHE
 
 The following npm package may be included in this product:
 
- - glob@10.3.3
+ - glob@10.3.10
 
 This package contains the following license and notice below:
 
@@ -1256,7 +1256,7 @@ Repository: https://github.com/yargs/yargs-parser.git
 
 The following npm package may be included in this product:
 
- - ts-morph@19.0.0
+ - ts-morph@20.0.0
 
 This package contains the following license and notice below:
 
@@ -1286,7 +1286,7 @@ SOFTWARE.
 
 The following npm package may be included in this product:
 
- - typescript@5.1.6
+ - typescript@5.3.2
 
 This package contains the following license and notice below:
 
@@ -1350,7 +1350,7 @@ END OF TERMS AND CONDITIONS
 
 The following npm package may be included in this product:
 
- - vite-plugin-node-polyfills@0.11.3
+ - vite-plugin-node-polyfills@0.16.0
 
 This package contains the following license and notice below:
 
@@ -4785,7 +4785,7 @@ Repository: github:eemeli/yaml
 
 The following npm package may be included in this product:
 
- - yaml@2.3.1
+ - yaml@2.3.4
 
 This package contains the following license and notice below:
 
