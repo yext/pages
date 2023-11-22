@@ -26,8 +26,8 @@ jobs:
           scopes: |
             deps
             dev
-            prod
-            dev/prod
+            build
+            dev/build
             pages-plugins
             playground
             util
