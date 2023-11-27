@@ -68,9 +68,8 @@ export const getPluginRenderTemplates = async (
     ".."
   );
 
-  const serverRenderTemplateModule = await importRenderTemplate(
-    serverRenderPath
-  );
+  const serverRenderTemplateModule =
+    await importRenderTemplate(serverRenderPath);
 
   return {
     server: serverRenderTemplateModule,

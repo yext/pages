@@ -24,9 +24,10 @@ jobs:
             doesn't start with an uppercase character.
           wip: true
           scopes: |
+            deps
             dev
             plugin
-            util
             dev/plugin
             pages-plugins
             playground
+            util
