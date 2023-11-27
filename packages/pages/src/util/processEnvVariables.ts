@@ -27,8 +27,37 @@ export const processEnvVariables = (
       // Filter out function keys as they cause problems with esbuild. For example, the
       // key `'BASH_FUNC_protosearch%%'`, which is an exported function, results in the error:
       // The define key "BASH_FUNC_protosearch%%" must be a valid identifier
-      .filter(([env]) => !env.includes("BASH_FUNC_"))
+      .filter(([env]) => isIdentifier(env))
       // The value must be stringified: https://vitejs.dev/config/shared-options.html#define
       .map(([key, value]) => [key, JSON.stringify(value)])
   );
+};
+
+const startRunes = "_$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const continueRunes =
+  "_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+// Partially translated from https://github.com/evanw/esbuild which is ultimately
+// what's used to validate define keys. The difference with this function is that
+// it does not handle unicode characters and does some basic rune comparisons.
+const isIdentifier = (text: string): boolean => {
+  if (text.length === 0) {
+    return false;
+  }
+
+  let i = 0;
+  for (const rune of text) {
+    if (i === 0) {
+      if (!startRunes.includes(rune)) {
+        return false;
+      }
+    } else {
+      if (!continueRunes.includes(rune)) {
+        return false;
+      }
+    }
+    i++;
+  }
+
+  return true;
 };
