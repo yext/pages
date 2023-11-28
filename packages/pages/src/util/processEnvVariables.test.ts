@@ -45,4 +45,24 @@ describe("processEnvVariables", () => {
     expect(env.SECRET).toEqual(`"secret"`);
     expect(env.NODE_ENV).toEqual(`"development"`);
   });
+
+  it("filters out the invalid keys", () => {
+    global.process.env = {
+      NODE_ENV: "development",
+      VITE_KEY: "pk.abcdefghij",
+      YEXT_PUBLIC_KEY: "pk.0123456789",
+      SECRET: "secret",
+      "THIS_IS_(BAD)": "secret",
+    };
+
+    const env = processEnvVariables();
+
+    expect(Object.keys(env).length).toEqual(4);
+    expect(env).toEqual({
+      NODE_ENV: `"development"`,
+      VITE_KEY: `"pk.abcdefghij"`,
+      YEXT_PUBLIC_KEY: `"pk.0123456789"`,
+      SECRET: `"secret"`,
+    });
+  });
 });
