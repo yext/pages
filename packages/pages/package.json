@@ -43,7 +43,7 @@
     "lint": "eslint --cache --fix src/**",
     "api-extractor": "api-extractor run --local --verbose",
     "generate-docs": "api-documenter markdown --input-folder temp --output-folder docs/api && rm -rf temp",
-    "test": "vitest run --threads=false",
+    "test": "vitest run",
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
     "prepare": "pnpm build"
   },
@@ -107,6 +107,7 @@
     "generate-license-file": "^3.0.0",
     "glob": "^10.3.10",
     "identity-obj-proxy": "^3.0.0",
+    "jsdom": "23.0.1",
     "minimatch": "^9.0.3",
     "vitest": "^1.0.2"
   },
