@@ -4,7 +4,7 @@ import {
   SyntaxKind,
   ImportDeclarationStructure,
   OptionalKind,
-  AssertEntryStructure,
+  ImportAttributeStructure,
 } from "ts-morph";
 import typescript from "typescript";
 
@@ -143,12 +143,12 @@ export default class SourceFileParser {
       importDec.getNamedImports()?.forEach((namedImport) => {
         namedImportsAsString.push(namedImport.getName());
       });
-      const assertElements: OptionalKind<AssertEntryStructure>[] = [];
+      const attributes: OptionalKind<ImportAttributeStructure>[] = [];
       importDec
-        .getAssertClause()
+        .getAttributes()
         ?.getElements()
         ?.forEach((element) => {
-          assertElements.push({
+          attributes.push({
             value: element.getValue().getText(),
             name: element.getName(),
           });
@@ -159,8 +159,7 @@ export default class SourceFileParser {
         namedImports: namedImportsAsString,
         namespaceImport: importDec.getNamespaceImport()?.getText(),
         moduleSpecifier: moduleSpecifier,
-        assertElements:
-          assertElements.length === 0 ? undefined : assertElements,
+        attributes: attributes.length === 0 ? undefined : attributes,
       });
     });
 
@@ -180,7 +179,7 @@ export default class SourceFileParser {
         namedImports: importDec.namedImports,
         namespaceImport: importDec.namespaceImport,
         moduleSpecifier: moduleSpecifier ?? importDec.moduleSpecifier,
-        assertElements: importDec.assertElements,
+        attributes: importDec.attributes,
       });
     });
     this.sourceFile
