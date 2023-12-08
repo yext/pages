@@ -48,9 +48,9 @@ export const generateManifestFile = async (
   };
 
   let bundlerManifest = Buffer.from("{}");
-  if (fs.existsSync(path.join(distPath.path, "manifest.json"))) {
+  if (fs.existsSync(path.join(distPath.path, ".vite", "manifest.json"))) {
     bundlerManifest = fs.readFileSync(
-      path.join(distPath.path, "manifest.json")
+      path.join(distPath.path, ".vite", "manifest.json")
     );
   }
   const manifest: Manifest = {
