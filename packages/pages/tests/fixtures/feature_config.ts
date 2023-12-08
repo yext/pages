@@ -1,4 +1,4 @@
-import { FeaturesConfig } from "../../src/common/src/feature/features";
+import { FeaturesConfig } from "../../src/common/src/feature/features.js";
 
 export const FEATURE_CONFIG: FeaturesConfig = {
   features: [
