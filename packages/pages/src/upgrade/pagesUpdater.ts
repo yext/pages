@@ -81,7 +81,7 @@ function processDirectoryRecursively(
  * sites-components.
  * @param targetDirectory
  */
-export const updateSitesComponents = async (targetDirectory: string) => {
+export const updateToUseSitesComponents = async (targetDirectory: string) => {
   await updatePackageDependency(
     targetDirectory,
     "@yext/sites-components",
@@ -96,12 +96,14 @@ export const updateSitesComponents = async (targetDirectory: string) => {
  * pages-components.
  * @param targetDirectory
  */
-export const updatePagesComponents = async (targetDirectory: string) => {
+export const updateToUsePagesComponents = async (targetDirectory: string) => {
   await updatePackageDependency(
     targetDirectory,
     "@yext/pages-components",
     null
   );
+  // update imports from pages/components to sites-components
+  replacePagesSlashComponentsImports(targetDirectory);
   // update imports from sites-components to pages-components
   replaceSitesComponentsImports(targetDirectory);
 };

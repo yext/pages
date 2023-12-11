@@ -8,7 +8,7 @@ import {
   updatePackageEngines,
   updatePackageScripts,
   updatePagesJSToCurrentVersion,
-  updateSitesComponents,
+  updateToUseSitesComponents,
 } from "./pagesUpdater.js";
 import { migrateConfigs } from "./migrateConfig.js";
 import { templatesHandler } from "../generate/templates/templates.js";
@@ -25,7 +25,7 @@ const handler = async (args: UpgradeArgs) => {
   const scoped = { scope: args.scope || "" };
   const source = path.resolve(scoped.scope);
   const projectStructure = await ProjectStructure.init(scoped);
-  await updateSitesComponents(source);
+  await updateToUseSitesComponents(source);
   await updateDevDependencies(source);
   checkLegacyMarkdown(source);
   removeFetchImport(source);
@@ -33,7 +33,7 @@ const handler = async (args: UpgradeArgs) => {
   updatePackageEngines(source);
   checkNodeVersion();
   await updatePagesJSToCurrentVersion(source);
-  // await updatePagesComponents(source);
+  // await updateToUsePagesComponents(source);
   await installDependencies(source, projectStructure);
   if (!args.noMigration) {
     await migrateConfigs(projectStructure);
