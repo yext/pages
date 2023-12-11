@@ -4,12 +4,10 @@ import {
   checkNodeVersion,
   installDependencies,
   removeFetchImport,
-  replacePagesSlashComponentsImport,
-  replaceSitesComponentsImports,
   updateDevDependencies,
   updatePackageEngines,
   updatePackageScripts,
-  updatePages,
+  updatePagesJSToCurrentVersion,
   updateSitesComponents,
 } from "./pagesUpdater.js";
 import { migrateConfigs } from "./migrateConfig.js";
@@ -30,13 +28,11 @@ const handler = async (args: UpgradeArgs) => {
   await updateSitesComponents(source);
   await updateDevDependencies(source);
   checkLegacyMarkdown(source);
-  replacePagesSlashComponentsImport(source);
-  replaceSitesComponentsImports(source);
   removeFetchImport(source);
   updatePackageScripts(source);
   updatePackageEngines(source);
   checkNodeVersion();
-  await updatePages(source);
+  await updatePagesJSToCurrentVersion(source);
   // await updatePagesComponents(source);
   await installDependencies(source, projectStructure);
   if (!args.noMigration) {

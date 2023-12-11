@@ -77,7 +77,8 @@ function processDirectoryRecursively(
 }
 
 /**
- * Update sitesComponents to the latest version
+ * Update sites-components to the latest version and replace pages/components imports with
+ * sites-components.
  * @param targetDirectory
  */
 export const updateSitesComponents = async (targetDirectory: string) => {
@@ -86,10 +87,13 @@ export const updateSitesComponents = async (targetDirectory: string) => {
     "@yext/sites-components",
     null
   );
+  // update imports from pages/components to sites-components
+  replacePagesSlashComponentsImports(targetDirectory);
 };
 
 /**
- * Update pagesComponents to the latest version
+ * Update pages-components to the latest version and replace sites-components imports with
+ * pages-components.
  * @param targetDirectory
  */
 export const updatePagesComponents = async (targetDirectory: string) => {
@@ -98,13 +102,17 @@ export const updatePagesComponents = async (targetDirectory: string) => {
     "@yext/pages-components",
     null
   );
+  // update imports from sites-components to pages-components
+  replaceSitesComponentsImports(targetDirectory);
 };
 
 /**
  * Update yext/pages to the version that is running
  * @param targetDirectory
  */
-export const updatePages = async (targetDirectory: string) => {
+export const updatePagesJSToCurrentVersion = async (
+  targetDirectory: string
+) => {
   const filePath = "/dist/upgrade";
   try {
     const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -158,7 +166,7 @@ export const checkLegacyMarkdown = (source: string) => {
  * Replaces imports for pages/components with sites-components
  * @param source
  */
-export const replacePagesSlashComponentsImport = (source: string) => {
+export const replacePagesSlashComponentsImports = (source: string) => {
   const operation = async (filePath: string) => {
     const fileContent = fs.readFileSync(filePath, "utf8");
     if (fileContent.match(pagesSlashComponentsRegex)) {
@@ -287,6 +295,9 @@ export const updatePackageEngines = (targetDirectory: string) => {
   }
 };
 
+/**
+ * Checks the version of node that is currently installed and logs an error if it is unsupported.
+ */
 export const checkNodeVersion = () => {
   const ERR_MSG =
     "Could not determine node version. " +
@@ -299,7 +310,7 @@ export const checkNodeVersion = () => {
     }
     const version = parseInt(nodeVersion.toString().split(".")[0].substring(1));
     if (version != 18 && version != 20) {
-      console.warn(
+      console.error(
         `You are currently using an unsupported node version ${nodeVersion}. Please install node ${NODE_ENGINES}.`
       );
     }
