@@ -1,9 +1,22 @@
 import { Command } from "commander";
-import { updatePages } from "./pagesUpdater.js";
+import {
+  checkLegacyMarkdown,
+  checkNodeVersion,
+  installDependencies,
+  removeFetchImport,
+  replacePagesSlashComponentsImport,
+  replaceSitesComponentsImports,
+  updateDevDependencies,
+  updatePackageEngines,
+  updatePackageScripts,
+  updatePages,
+  updateSitesComponents,
+} from "./pagesUpdater.js";
 import { migrateConfigs } from "./migrateConfig.js";
 import { templatesHandler } from "../generate/templates/templates.js";
 import { artifactsHandler } from "../generate/artifacts/artifacts.js";
 import { ProjectStructure } from "../common/src/project/structure.js";
+import path from "path";
 
 interface UpgradeArgs {
   noMigration?: boolean;
@@ -12,8 +25,20 @@ interface UpgradeArgs {
 
 const handler = async (args: UpgradeArgs) => {
   const scoped = { scope: args.scope || "" };
+  const source = path.resolve(scoped.scope);
   const projectStructure = await ProjectStructure.init(scoped);
-  await updatePages(projectStructure);
+  await updateSitesComponents(source);
+  await updateDevDependencies(source);
+  checkLegacyMarkdown(source);
+  replacePagesSlashComponentsImport(source);
+  replaceSitesComponentsImports(source);
+  removeFetchImport(source);
+  updatePackageScripts(source);
+  updatePackageEngines(source);
+  checkNodeVersion();
+  await updatePages(source);
+  // await updatePagesComponents(source);
+  await installDependencies(source, projectStructure);
   if (!args.noMigration) {
     await migrateConfigs(projectStructure);
   }

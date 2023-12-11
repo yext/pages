@@ -4,37 +4,56 @@ import { ProjectStructure } from "../common/src/project/structure.js";
 import latestVersion from "latest-version";
 import { execSync } from "child_process";
 import { readJsonSync } from "./migrateConfig.js";
+import { fileURLToPath } from "url";
 
-const pagesImportRegex = /"@yext\/pages\/components"/g;
+const pagesSlashComponentsRegex = /"@yext\/pages\/components"/g;
+const sitesComponentsRegex = /"@yext\/sites-components"/g;
+const sitesComponentsReplacement = '"@yext/sites-components"';
+const pagesComponentsReplacement = '"@yext/pages-components"';
 const fetchImportRegex = /\nimport { fetch } from "@yext\/pages\/util";/g;
-const replacementText = '"@yext/sites-components"';
 const markdownRegex = 'Markdown.{1,10}from "@yext\\/react-components';
 
-// Function to add packages to package.json
-const updatePackageDependencies = async (targetDirectory: string) => {
+/**
+ * Helper function to update a package dependency in package.json
+ * @param targetDirectory directory of the site
+ * @param packageName name of the package to update
+ * @param version version to update to, if not supplied uses @latest
+ */
+async function updatePackageDependency(
+  targetDirectory: string,
+  packageName: string,
+  version: string | null
+) {
   const packagePath = path.resolve(targetDirectory, "package.json");
   if (!fs.existsSync(packagePath)) {
-    console.error("Could not find package.json, unable to upgrade packages");
+    console.error(
+      `Could not find package.json, unable to update ${packageName}`
+    );
     process.exit(1);
   }
   try {
     const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
-    packageJson.dependencies["@yext/sites-components"] = await latestVersion(
-      "@yext/sites-components"
-    );
-    packageJson.devDependencies["@vitejs/plugin-react"] = "^4.0.4";
-    packageJson.devDependencies["vite"] = "4.4.9";
+    const toVersion = version || (await latestVersion(packageName));
+    console.log(`Upgrading ${packageName} to ${toVersion}`);
+    packageJson.dependencies[packageName] = toVersion;
     fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
   } catch (e) {
-    console.error("Error updating package.json: ", (e as Error).message);
+    console.error(`Error updating ${packageName}: `, (e as Error).message);
     process.exit(1);
   }
-};
+}
 
-// Function to recursively process and replace imports in files
-const processDirectoryRecursively = (currentPath: string) => {
+/**
+ * Helper function to recurse through a directory and perform operation on each .js, .ts, or .tsx file found.
+ * Ignores node_modules and .git directories.
+ * @param currentPath
+ * @param operation
+ */
+function processDirectoryRecursively(
+  currentPath: string,
+  operation: (filePath: string) => void
+) {
   const files = fs.readdirSync(currentPath);
-
   files.forEach((file) => {
     const filePath = path.join(currentPath, file);
     const isDirectory = fs.statSync(filePath).isDirectory();
@@ -43,38 +62,156 @@ const processDirectoryRecursively = (currentPath: string) => {
     const fileExtension = path.extname(filePath);
 
     if (isDirectory && !isGitDirectory && !isNodeModulesDirectory) {
-      processDirectoryRecursively(filePath);
+      processDirectoryRecursively(filePath, operation);
     } else if (
       [".js", ".ts", ".tsx"].includes(fileExtension) &&
       !isNodeModulesDirectory
     ) {
-      replaceImports(filePath);
+      try {
+        operation(filePath);
+      } catch (e) {
+        console.error(`Error processing ${filePath}: `, (e as Error).message);
+      }
     }
   });
+}
+
+/**
+ * Update sitesComponents to the latest version
+ * @param targetDirectory
+ */
+export const updateSitesComponents = async (targetDirectory: string) => {
+  await updatePackageDependency(
+    targetDirectory,
+    "@yext/sites-components",
+    null
+  );
 };
 
-// Function to replace imports in a file
-const replaceImports = (filePath: string) => {
+/**
+ * Update pagesComponents to the latest version
+ * @param targetDirectory
+ */
+export const updatePagesComponents = async (targetDirectory: string) => {
+  await updatePackageDependency(
+    targetDirectory,
+    "@yext/pages-components",
+    null
+  );
+};
+
+/**
+ * Update yext/pages to the version that is running
+ * @param targetDirectory
+ */
+export const updatePages = async (targetDirectory: string) => {
+  const filePath = "/dist/upgrade";
   try {
+    const dirname = path.dirname(fileURLToPath(import.meta.url));
+    const packagePath = path.join(
+      dirname.substring(0, dirname.length - filePath.length),
+      "package.json"
+    );
+    const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
+    await updatePackageDependency(
+      targetDirectory,
+      "@yext/pages",
+      packageJson.version
+    );
+  } catch (e) {
+    console.error("Failed to upgrade pages version: ", (e as Error).message);
+    process.exit(1);
+  }
+};
+
+/**
+ * Updates vitejs/plugin-react and vite to specified versions
+ * @param targetDirectory
+ */
+export const updateDevDependencies = async (targetDirectory: string) => {
+  await updatePackageDependency(
+    targetDirectory,
+    "@vitejs/plugin-react",
+    "^4.04"
+  );
+  await updatePackageDependency(targetDirectory, "vite", "4.4.9");
+};
+
+/**
+ * Checks for legacy markdown and logs a warning if it is found
+ * @param source the root, src folder
+ */
+export const checkLegacyMarkdown = (source: string) => {
+  const operation = async (filePath: string) => {
     const fileContent = fs.readFileSync(filePath, "utf8");
-    const modifiedContent = fileContent
-      .replace(pagesImportRegex, replacementText)
-      .replace(fetchImportRegex, "");
     if (fileContent.match(markdownRegex)) {
       console.log(
         `Legacy Markdown import from react-components detected in ${filePath}.` +
           `\n Please update to use react-markdown. See https://hitchhikers.yext.com/docs/pages/rich-text-markdown`
       );
     }
-    fs.writeFileSync(filePath, modifiedContent, "utf8"); // Update the file content
-    console.log(`Imports replaced in: ${filePath}`);
-  } catch (e) {
-    console.error("Error processing file: ", (e as Error).message);
-  }
+  };
+  processDirectoryRecursively(source, operation);
 };
 
-// Function to update package.json scripts
-const updatePackageScripts = (targetDirectory: string) => {
+/**
+ * Replaces imports for pages/components with sites-components
+ * @param source
+ */
+export const replacePagesSlashComponentsImport = (source: string) => {
+  const operation = async (filePath: string) => {
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    if (fileContent.match(pagesSlashComponentsRegex)) {
+      const modifiedContent = fileContent.replace(
+        pagesSlashComponentsRegex,
+        sitesComponentsReplacement
+      );
+      fs.writeFileSync(filePath, modifiedContent, "utf8");
+      console.log(`pages/components imports replaced in: ${filePath}`);
+    }
+  };
+  processDirectoryRecursively(source, operation);
+};
+/**
+ * Replaces imports for sites-components with pages-components
+ * @param source
+ */
+export const replaceSitesComponentsImports = (source: string) => {
+  const operation = async (filePath: string) => {
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    if (fileContent.match(sitesComponentsRegex)) {
+      const modifiedContent = fileContent.replace(
+        sitesComponentsRegex,
+        pagesComponentsReplacement
+      );
+      fs.writeFileSync(filePath, modifiedContent, "utf8");
+      console.log(`sites-components imports replaced in: ${filePath}`);
+    }
+  };
+  processDirectoryRecursively(source, operation);
+};
+
+/**
+ * Removes old fetch import that is no longer used
+ * @param source
+ */
+export const removeFetchImport = (source: string) => {
+  const operation = async (filePath: string) => {
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    if (fileContent.match(fetchImportRegex)) {
+      const modifiedContent = fileContent.replace(fetchImportRegex, "");
+      fs.writeFileSync(filePath, modifiedContent, "utf8"); // Update the file content
+      console.log(`Removed legacy fetch import in: ${filePath}`);
+    }
+  };
+  processDirectoryRecursively(source, operation);
+};
+
+/**
+ * Updates package scripts to include dev, prod, and build:local commands
+ * @param targetDirectory
+ */
+export const updatePackageScripts = (targetDirectory: string) => {
   const packageJsonPath = path.resolve(targetDirectory, "package.json");
 
   try {
@@ -91,11 +228,20 @@ const updatePackageScripts = (targetDirectory: string) => {
   }
 };
 
-// Function to install dependencies
-const installDependencies = async (
+/**
+ * Install dependencies using install command or npm, pnpm, or yarn install.
+ * @param targetDirectory
+ * @param projectStructure
+ */
+export const installDependencies = async (
   targetDirectory: string,
-  ciJsonPath: string
+  projectStructure: ProjectStructure
 ) => {
+  const ciJsonPath = path.resolve(
+    projectStructure.getSitesConfigPath().getAbsolutePath(),
+    projectStructure.config.sitesConfigFiles.ci
+  );
+
   try {
     const ciJson = readJsonSync(ciJsonPath);
     const installDepsCmd = ciJson.dependencies.installDepsCmd;
@@ -118,11 +264,13 @@ const installDependencies = async (
   }
 };
 
-// Function to update package.json engines
 const NODE_ENGINES = "^18.0.0 || >=20.0.0";
-const updatePackageEngines = (targetDirectory: string) => {
+/**
+ * Update package engines to latest supported node versions.
+ * @param targetDirectory
+ */
+export const updatePackageEngines = (targetDirectory: string) => {
   const packageJsonPath = path.resolve(targetDirectory, "package.json");
-
   try {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
     let engines = packageJson.engines;
@@ -135,28 +283,27 @@ const updatePackageEngines = (targetDirectory: string) => {
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     console.log("package.json engines updated.");
   } catch (e) {
-    console.error("Error updating package.json: ", (e as Error).message);
+    console.error("Error updating package engines: ", (e as Error).message);
   }
 };
 
-/**
- * Install packages, recursively process imports (excluding .git and node_modules directories),
- * and update package.json scripts in the specified directory
- * @param projectStructure
- */
-export const updatePages = async (projectStructure: ProjectStructure) => {
-  const rootPath = path.resolve("");
-  await updatePackageDependencies(rootPath);
-  processDirectoryRecursively(
-    path.resolve(projectStructure.config.rootFolders.source)
-  );
-  updatePackageScripts(rootPath);
-  updatePackageEngines(rootPath);
-  await installDependencies(
-    rootPath,
-    path.resolve(
-      projectStructure.getSitesConfigPath().getAbsolutePath(),
-      projectStructure.config.sitesConfigFiles.ci
-    )
-  );
+export const checkNodeVersion = () => {
+  const ERR_MSG =
+    "Could not determine node version. " +
+    `Please install node ${NODE_ENGINES}.`;
+  try {
+    const nodeVersion = execSync("node -v");
+    if (!nodeVersion || nodeVersion.length < 4) {
+      console.log(ERR_MSG);
+      return;
+    }
+    const version = parseInt(nodeVersion.toString().split(".")[0].substring(1));
+    if (version != 18 && version != 20) {
+      console.warn(
+        `You are currently using an unsupported node version ${nodeVersion}. Please install node ${NODE_ENGINES}.`
+      );
+    }
+  } catch (e) {
+    console.log(ERR_MSG);
+  }
 };
