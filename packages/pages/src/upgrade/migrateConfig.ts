@@ -45,7 +45,7 @@ const migrateCiJson = async (configYamlPath: string, ciPath: string) => {
         `migrating buildArtifacts from ${ciPath} to ${configYamlPath}`
       );
       const buildConfiguration: BuildConfiguration = {
-        buildCommand: buildArtifacts.buildCmd,
+        buildCommand: buildArtifacts.buildCmd?.replace("build:local", "build"),
       };
       const dependencies = ciJson.dependencies;
       if (dependencies) {
