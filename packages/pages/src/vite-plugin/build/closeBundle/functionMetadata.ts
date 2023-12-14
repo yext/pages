@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 import { Project, Node, SyntaxKind } from "ts-morph";
 import { glob } from "glob";
-import chalk from "chalk";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { convertToPosixPath } from "../../../common/src/template/paths.js";
 
@@ -37,62 +36,71 @@ const getFunctionMetadataMap = async (
   const results = await Promise.allSettled(
     filepaths.map(generateFunctionMetadata)
   );
-  const functionMetadataArray: [string, FunctionMetadata][] = results
-    .filter((result) => {
-      if (result.status === "fulfilled") {
-        return true;
-      } else {
-        console.error(chalk.red(result.reason));
-        return false;
+
+  const functionMetadataArray: [string, FunctionMetadata][] = [];
+
+  results.forEach((result) => {
+    if (result.status === "fulfilled") {
+      if (result.value) {
+        functionMetadataArray.push(result.value);
       }
-    })
-    .map((result) => {
-      return (result as PromiseFulfilledResult<[string, FunctionMetadata]>)
-        .value;
-    });
+    } else {
+      throw result.reason;
+    }
+  });
 
   return Object.fromEntries(functionMetadataArray);
 };
 
 /**
  * Generates a tuple containing the relative path of the file and its {@link FunctionMetadata}.
- * If the file does not contain a default export, a rejected {@link Promise} will be returned.
+ * If the file does not contain a default export or the legacy "main",
+ * a rejected {@link Promise} will be returned.
  */
 async function generateFunctionMetadata(
   filepath: string
-): Promise<[string, FunctionMetadata]> {
+): Promise<[string, FunctionMetadata] | undefined> {
+  const relativePath = path.relative(process.cwd(), filepath);
+  const hasMainExport = project
+    .getSourceFile(filepath)
+    ?.getExportedDeclarations()
+    .has("main");
+
+  if (hasMainExport) {
+    return;
+  }
+
   const defaultExportDeclaration = project
     .getSourceFile(filepath)
     ?.getDefaultExportSymbol()
     ?.getDeclarations()[0];
-  const relativePath = path.relative(process.cwd(), filepath);
   if (Node.isExportAssignment(defaultExportDeclaration)) {
     const entrypoint = defaultExportDeclaration
       .getChildrenOfKind(SyntaxKind.Identifier)[0]
       ?.getText();
     if (!entrypoint) {
-      throw new Error(
+      throw (
         `${relativePath} contains an unsupported default export assignment. ` +
-          "The default export must be a function, and it must be formatted " +
-          "as `export default foo;` for function `foo`."
+        "The default export must be a function, and it must be formatted " +
+        "as `export default foo;` for function `foo`."
       );
     }
     return [relativePath, { entrypoint }];
   } else if (Node.isFunctionDeclaration(defaultExportDeclaration)) {
     const entrypoint = defaultExportDeclaration.getName();
     if (!entrypoint) {
-      throw new Error(
+      throw (
         `${relativePath} contains an unsupported default function declaration. ` +
-          "The default export function must be a named function, exported as " +
-          "`export default function foo(){}` for function `foo`"
+        "The default export function must be a named function, exported as " +
+        "`export default function foo(){}` for function `foo`"
       );
     }
     return [relativePath, { entrypoint }];
   }
-  throw new Error(
+  throw (
     `${relativePath} does not contain a properly formatted default export. ` +
-      "The default export must be named and declared either in the function declaration " +
-      "or in an `export default ...;` expression."
+    "The default export must be named and declared either in the function declaration " +
+    "or in an `export default ...;` expression."
   );
 }
 
