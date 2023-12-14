@@ -92,7 +92,7 @@ async function generateFunctionMetadata(
       throw (
         `${relativePath} contains an unsupported default function declaration. ` +
         "The default export function must be a named function, exported as " +
-        "`export default function foo(){}` for function `foo`"
+        "`export default function foo(){}` for function `foo`."
       );
     }
     return [relativePath, { entrypoint }];
