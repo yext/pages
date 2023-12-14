@@ -82,7 +82,7 @@ const updatePackageScripts = (targetDirectory: string) => {
     const scripts = packageJson.scripts;
     scripts.dev = "pages dev";
     scripts.prod = "pages prod";
-    scripts["build:local"] = "pages build";
+    scripts["build"] = "pages build";
     packageJson.scripts = scripts;
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     console.log("package.json scripts updated.");
