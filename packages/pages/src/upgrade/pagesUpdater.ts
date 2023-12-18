@@ -10,6 +10,7 @@ const pagesSlashComponentsRegex = /"@yext\/pages\/components"/g;
 const sitesComponentsRegex = /"@yext\/sites-components"/g;
 const sitesComponentsReplacement = '"@yext/sites-components"';
 const pagesComponentsReplacement = '"@yext/pages-components"';
+const reactComponentsRegex = /"@yext\/react-components"/g;
 const fetchImportRegex = /\nimport { fetch } from "@yext\/pages\/util";/g;
 const markdownRegex = 'Markdown.{1,10}from "@yext\\/react-components';
 
@@ -106,6 +107,8 @@ export const updateToUsePagesComponents = async (targetDirectory: string) => {
   replacePagesSlashComponentsImports(targetDirectory);
   // update imports from sites-components to pages-components
   replaceSitesComponentsImports(targetDirectory);
+  // update imports from react-components to pages-components
+  replaceReactComponentsImports(targetDirectory);
 };
 
 /**
@@ -182,6 +185,7 @@ export const replacePagesSlashComponentsImports = (source: string) => {
   };
   processDirectoryRecursively(source, operation);
 };
+
 /**
  * Replaces imports for sites-components with pages-components
  * @param source
@@ -196,6 +200,25 @@ export const replaceSitesComponentsImports = (source: string) => {
       );
       fs.writeFileSync(filePath, modifiedContent, "utf8");
       console.log(`sites-components imports replaced in: ${filePath}`);
+    }
+  };
+  processDirectoryRecursively(source, operation);
+};
+
+/**
+ * Replaces imports for react-components with pages-components
+ * @param source
+ */
+export const replaceReactComponentsImports = (source: string) => {
+  const operation = async (filePath: string) => {
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    if (fileContent.match(reactComponentsRegex)) {
+      const modifiedContent = fileContent.replace(
+        reactComponentsRegex,
+        pagesComponentsReplacement
+      );
+      fs.writeFileSync(filePath, modifiedContent, "utf8");
+      console.log(`react-components imports replaced in: ${filePath}`);
     }
   };
   processDirectoryRecursively(source, operation);
