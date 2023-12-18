@@ -19,11 +19,13 @@ const markdownRegex = 'Markdown.{1,10}from "@yext\\/react-components';
  * @param targetDirectory directory of the site
  * @param packageName name of the package to update
  * @param version version to update to, if not supplied uses @latest
+ * @param devDependency whether it is a devDependency or regular dependency
  */
 async function updatePackageDependency(
   targetDirectory: string,
   packageName: string,
-  version: string | null
+  version: string | null,
+  devDependency: boolean
 ) {
   const packagePath = path.resolve(targetDirectory, "package.json");
   if (!fs.existsSync(packagePath)) {
@@ -33,13 +35,54 @@ async function updatePackageDependency(
     process.exit(1);
   }
   try {
+    const dependencyType = devDependency ? "devDependencies" : "dependencies";
     const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
     const toVersion = version || (await latestVersion(packageName));
-    console.log(`Upgrading ${packageName} to ${toVersion}`);
-    packageJson.dependencies[packageName] = toVersion;
+    const currentVersion = packageJson[dependencyType][packageName];
+    if (currentVersion === toVersion) {
+      return;
+    }
+    if (!currentVersion) {
+      console.log(`Installing ${packageName} at ${toVersion}`);
+    } else {
+      console.log(`Upgrading ${packageName} to ${toVersion}`);
+    }
+    packageJson[dependencyType][packageName] = toVersion;
     fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
   } catch (e) {
     console.error(`Error updating ${packageName}: `, (e as Error).message);
+    process.exit(1);
+  }
+}
+
+/**
+ * Helper function to remove a package dependency in package.json
+ * @param targetDirectory directory of the site
+ * @param packageName name of the package to remove
+ * @param devDependency whether the dependency is a devDevdepency or not
+ */
+async function removePackageDependency(
+  targetDirectory: string,
+  packageName: string,
+  devDependency: boolean = false
+) {
+  const packagePath = path.resolve(targetDirectory, "package.json");
+  if (!fs.existsSync(packagePath)) {
+    console.error(
+      `Could not find package.json, unable to remove ${packageName}`
+    );
+    process.exit(1);
+  }
+  try {
+    const dependencyType = devDependency ? "devDependencies" : "dependencies";
+    const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
+    if (packageJson[dependencyType][packageName]) {
+      console.log(`Removing ${packageName} from package.json`);
+      packageJson[dependencyType][packageName] = undefined;
+      fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
+    }
+  } catch (e) {
+    console.error(`Error removing ${packageName}: `, (e as Error).message);
     process.exit(1);
   }
 }
@@ -78,21 +121,6 @@ function processDirectoryRecursively(
 }
 
 /**
- * Update sites-components to the latest version and replace pages/components imports with
- * sites-components.
- * @param targetDirectory
- */
-export const updateToUseSitesComponents = async (targetDirectory: string) => {
-  await updatePackageDependency(
-    targetDirectory,
-    "@yext/sites-components",
-    null
-  );
-  // update imports from pages/components to sites-components
-  replacePagesSlashComponentsImports(targetDirectory);
-};
-
-/**
  * Update pages-components to the latest version and replace sites-components imports with
  * pages-components.
  * @param targetDirectory
@@ -101,8 +129,11 @@ export const updateToUsePagesComponents = async (targetDirectory: string) => {
   await updatePackageDependency(
     targetDirectory,
     "@yext/pages-components",
-    null
+    null,
+    true
   );
+  await removePackageDependency(targetDirectory, "@yext/sites-components");
+  await removePackageDependency(targetDirectory, "@yext/react-components");
   // update imports from pages/components to sites-components
   replacePagesSlashComponentsImports(targetDirectory);
   // update imports from sites-components to pages-components
@@ -129,7 +160,8 @@ export const updatePagesJSToCurrentVersion = async (
     await updatePackageDependency(
       targetDirectory,
       "@yext/pages",
-      packageJson.version
+      packageJson.version,
+      true
     );
   } catch (e) {
     console.error("Failed to upgrade pages version: ", (e as Error).message);
@@ -145,9 +177,10 @@ export const updateDevDependencies = async (targetDirectory: string) => {
   await updatePackageDependency(
     targetDirectory,
     "@vitejs/plugin-react",
-    "^4.04"
+    "^4.0.4",
+    true
   );
-  await updatePackageDependency(targetDirectory, "vite", "4.4.9");
+  await updatePackageDependency(targetDirectory, "vite", "4.4.9", true);
 };
 
 /**
@@ -253,6 +286,7 @@ export const updatePackageScripts = (targetDirectory: string) => {
     scripts.dev = "pages dev";
     scripts.prod = "pages prod";
     scripts["build"] = "pages build";
+    scripts["build:local"] = undefined;
     packageJson.scripts = scripts;
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     console.log("package.json scripts updated.");
