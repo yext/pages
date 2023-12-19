@@ -6,13 +6,13 @@ import { execSync } from "child_process";
 import { readJsonSync } from "./migrateConfig.js";
 import { fileURLToPath } from "url";
 
-const pagesSlashComponentsRegex = /"@yext\/pages\/components"/g;
-const sitesComponentsRegex = /"@yext\/sites-components"/g;
-const sitesComponentsReplacement = '"@yext/sites-components"';
-const pagesComponentsReplacement = '"@yext/pages-components"';
-const reactComponentsRegex = /"@yext\/react-components"/g;
-const fetchImportRegex = /\nimport { fetch } from "@yext\/pages\/util";/g;
-const markdownRegex = 'Markdown.{1,10}from "@yext\\/react-components';
+const pagesSlashComponentsRegex = /@yext\/pages\/components/g;
+const sitesComponentsRegex = /@yext\/sites-components/g;
+const reactComponentsRegex = /@yext\/react-components/g;
+const fetchImportRegex = /\nimport { fetch } from ["']@yext\/pages\/util["'];/g;
+const markdownRegex = /Markdown.{1,10}from ["']@yext\/react-components/g;
+
+const pagesComponentsReplacement = "@yext/pages-components";
 
 const DEPENDENCIES = "dependencies";
 const DEV_DEPENDENCIES = "devDependencies";
@@ -226,7 +226,7 @@ export const checkLegacyMarkdown = (source: string) => {
 };
 
 /**
- * Replaces imports for pages/components with sites-components
+ * Replaces imports for pages/components with pages-components
  * @param source
  * @return hasReplaced
  */
@@ -237,7 +237,7 @@ export const replacePagesSlashComponentsImports = (source: string): boolean => {
     if (fileContent.match(pagesSlashComponentsRegex)) {
       const modifiedContent = fileContent.replace(
         pagesSlashComponentsRegex,
-        sitesComponentsReplacement
+        pagesComponentsReplacement
       );
       hasReplaced = true;
       fs.writeFileSync(filePath, modifiedContent, "utf8");
