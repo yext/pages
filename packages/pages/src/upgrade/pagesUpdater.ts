@@ -22,12 +22,13 @@ const DEV_DEPENDENCIES = "devDependencies";
  * @param targetDirectory directory of the site
  * @param packageName name of the package to update
  * @param version version to update to, if not supplied uses @latest
- * @param devDependency whether it is a devDependency or regular dependency
+ * @param install whether to install the package if it does not exist
  */
 async function updatePackageDependency(
   targetDirectory: string,
   packageName: string,
-  version: string | null
+  version: string | null,
+  install: boolean = false
 ) {
   const packagePath = path.resolve(targetDirectory, "package.json");
   if (!fs.existsSync(packagePath)) {
@@ -48,6 +49,9 @@ async function updatePackageDependency(
       return;
     }
     if (!currentVersion) {
+      if (!install) {
+        return;
+      }
       console.log(`Installing ${packageName} at ${toVersion}`);
     } else {
       console.log(`Upgrading ${packageName} to ${toVersion}`);
@@ -64,11 +68,12 @@ async function updatePackageDependency(
  * Helper function to remove a package dependency in package.json
  * @param targetDirectory directory of the site
  * @param packageName name of the package to remove
+ * @return hasRemoved whether the package was removed
  */
 async function removePackageDependency(
   targetDirectory: string,
   packageName: string
-) {
+): Promise<boolean> {
   const packagePath = path.resolve(targetDirectory, "package.json");
   if (!fs.existsSync(packagePath)) {
     console.error(
@@ -86,11 +91,13 @@ async function removePackageDependency(
       console.log(`Removing ${packageName} from package.json`);
       packageJson[dependencyType][packageName] = undefined;
       fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
+      return true;
     }
   } catch (e) {
     console.error(`Error removing ${packageName}: `, (e as Error).message);
     process.exit(1);
   }
+  return false;
 }
 
 /**
@@ -132,19 +139,34 @@ function processDirectoryRecursively(
  * @param targetDirectory
  */
 export const updateToUsePagesComponents = async (targetDirectory: string) => {
+  const hasSitesComponents = await removePackageDependency(
+    targetDirectory,
+    "@yext/sites-components"
+  );
+  const hasReactComponents = await removePackageDependency(
+    targetDirectory,
+    "@yext/react-components"
+  );
+  // update imports from pages/components to sites-components
+  const hasPagesSlashComponentsImports =
+    replacePagesSlashComponentsImports(targetDirectory);
+  // update imports from sites-components to pages-components
+  const hasSitesComponentsImports =
+    replaceSitesComponentsImports(targetDirectory);
+  // update imports from react-components to pages-components
+  const hasReactComponentsImports =
+    replaceReactComponentsImports(targetDirectory);
+
   await updatePackageDependency(
     targetDirectory,
     "@yext/pages-components",
-    null
+    null,
+    hasSitesComponents ||
+      hasReactComponents ||
+      hasPagesSlashComponentsImports ||
+      hasSitesComponentsImports ||
+      hasReactComponentsImports
   );
-  await removePackageDependency(targetDirectory, "@yext/sites-components");
-  await removePackageDependency(targetDirectory, "@yext/react-components");
-  // update imports from pages/components to sites-components
-  replacePagesSlashComponentsImports(targetDirectory);
-  // update imports from sites-components to pages-components
-  replaceSitesComponentsImports(targetDirectory);
-  // update imports from react-components to pages-components
-  replaceReactComponentsImports(targetDirectory);
 };
 
 /**
@@ -206,8 +228,10 @@ export const checkLegacyMarkdown = (source: string) => {
 /**
  * Replaces imports for pages/components with sites-components
  * @param source
+ * @return hasReplaced
  */
-export const replacePagesSlashComponentsImports = (source: string) => {
+export const replacePagesSlashComponentsImports = (source: string): boolean => {
+  let hasReplaced = false;
   const operation = async (filePath: string) => {
     const fileContent = fs.readFileSync(filePath, "utf8");
     if (fileContent.match(pagesSlashComponentsRegex)) {
@@ -215,18 +239,22 @@ export const replacePagesSlashComponentsImports = (source: string) => {
         pagesSlashComponentsRegex,
         sitesComponentsReplacement
       );
+      hasReplaced = true;
       fs.writeFileSync(filePath, modifiedContent, "utf8");
       console.log(`pages/components imports replaced in: ${filePath}`);
     }
   };
   processDirectoryRecursively(source, operation);
+  return hasReplaced;
 };
 
 /**
  * Replaces imports for sites-components with pages-components
  * @param source
+ * @return hasReplaced
  */
-export const replaceSitesComponentsImports = (source: string) => {
+export const replaceSitesComponentsImports = (source: string): boolean => {
+  let hasReplaced = false;
   const operation = async (filePath: string) => {
     const fileContent = fs.readFileSync(filePath, "utf8");
     if (fileContent.match(sitesComponentsRegex)) {
@@ -235,17 +263,21 @@ export const replaceSitesComponentsImports = (source: string) => {
         pagesComponentsReplacement
       );
       fs.writeFileSync(filePath, modifiedContent, "utf8");
+      hasReplaced = true;
       console.log(`sites-components imports replaced in: ${filePath}`);
     }
   };
   processDirectoryRecursively(source, operation);
+  return hasReplaced;
 };
 
 /**
  * Replaces imports for react-components with pages-components
  * @param source
+ * @return hasReplaced
  */
-export const replaceReactComponentsImports = (source: string) => {
+export const replaceReactComponentsImports = (source: string): boolean => {
+  let hasReplaced = false;
   const operation = async (filePath: string) => {
     const fileContent = fs.readFileSync(filePath, "utf8");
     if (fileContent.match(reactComponentsRegex)) {
@@ -254,10 +286,12 @@ export const replaceReactComponentsImports = (source: string) => {
         pagesComponentsReplacement
       );
       fs.writeFileSync(filePath, modifiedContent, "utf8");
+      hasReplaced = true;
       console.log(`react-components imports replaced in: ${filePath}`);
     }
   };
   processDirectoryRecursively(source, operation);
+  return hasReplaced;
 };
 
 /**
@@ -315,7 +349,7 @@ export const installDependencies = async (
   try {
     const ciJson = readJsonSync(ciJsonPath);
     const installDepsCmd = ciJson.dependencies.installDepsCmd;
-    console.log(`installing dependencies using '${installDepsCmd}'`);
+    console.log(`Installing dependencies using '${installDepsCmd}'`);
     execSync(installDepsCmd);
   } catch (ignored) {
     // if we cant find the installation command, determine it from existence of lock files
