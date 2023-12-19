@@ -23,17 +23,18 @@ interface UpgradeArgs {
 
 const handler = async (args: UpgradeArgs) => {
   const scoped = { scope: args.scope || "" };
-  const source = path.resolve(scoped.scope);
+  const root = path.resolve(scoped.scope);
+  const source = path.resolve(root, "src");
   const projectStructure = await ProjectStructure.init(scoped);
-  await updateDevDependencies(source);
+  await updateDevDependencies(root);
   checkLegacyMarkdown(source);
   removeFetchImport(source);
-  updatePackageScripts(source);
-  updatePackageEngines(source);
+  updatePackageScripts(root);
+  updatePackageEngines(root);
   checkNodeVersion();
-  await updatePagesJSToCurrentVersion(source);
-  await updateToUsePagesComponents(source);
-  await installDependencies(source, projectStructure);
+  await updatePagesJSToCurrentVersion(root);
+  await updateToUsePagesComponents(root, source);
+  await installDependencies(root, projectStructure);
   if (!args.noMigration) {
     await migrateConfigs(projectStructure);
   }

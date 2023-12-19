@@ -9,7 +9,6 @@ import { fileURLToPath } from "url";
 const pagesSlashComponentsRegex = /@yext\/pages\/components/g;
 const sitesComponentsRegex = /@yext\/sites-components/g;
 const reactComponentsRegex = /@yext\/react-components/g;
-const fetchImportRegex = /\nimport { fetch } from ["']@yext\/pages\/util["'];/g;
 const markdownRegex = /Markdown.{1,10}from ["']@yext\/react-components/g;
 
 const pagesComponentsReplacement = "@yext/pages-components";
@@ -19,18 +18,18 @@ const DEV_DEPENDENCIES = "devDependencies";
 
 /**
  * Helper function to update a package dependency in package.json
- * @param targetDirectory directory of the site
+ * @param root folder that contains package.json
  * @param packageName name of the package to update
  * @param version version to update to, if not supplied uses @latest
  * @param install whether to install the package if it does not exist
  */
 async function updatePackageDependency(
-  targetDirectory: string,
+  root: string,
   packageName: string,
   version: string | null,
   install: boolean = false
 ) {
-  const packagePath = path.resolve(targetDirectory, "package.json");
+  const packagePath = path.resolve(root, "package.json");
   if (!fs.existsSync(packagePath)) {
     console.error(
       `Could not find package.json, unable to update ${packageName}`
@@ -66,15 +65,15 @@ async function updatePackageDependency(
 
 /**
  * Helper function to remove a package dependency in package.json
- * @param targetDirectory directory of the site
+ * @param root folder that contains package.json
  * @param packageName name of the package to remove
  * @return hasRemoved whether the package was removed
  */
 async function removePackageDependency(
-  targetDirectory: string,
+  root: string,
   packageName: string
 ): Promise<boolean> {
-  const packagePath = path.resolve(targetDirectory, "package.json");
+  const packagePath = path.resolve(root, "package.json");
   if (!fs.existsSync(packagePath)) {
     console.error(
       `Could not find package.json, unable to remove ${packageName}`
@@ -136,23 +135,25 @@ function processDirectoryRecursively(
 /**
  * Update pages-components to the latest version and replace sites-components imports with
  * pages-components.
- * @param targetDirectory
+ * @param root folder that contains package.json
+ * @param source the src folder
  */
-export const updateToUsePagesComponents = async (targetDirectory: string) => {
-  await removePackageDependency(targetDirectory, "@yext/sites-components");
-  await removePackageDependency(targetDirectory, "@yext/react-components");
+export const updateToUsePagesComponents = async (
+  root: string,
+  source: string
+) => {
+  await removePackageDependency(root, "@yext/sites-components");
+  await removePackageDependency(root, "@yext/react-components");
   // update imports from pages/components to sites-components
   const hasPagesSlashComponentsImports =
-    replacePagesSlashComponentsImports(targetDirectory);
+    replacePagesSlashComponentsImports(source);
   // update imports from sites-components to pages-components
-  const hasSitesComponentsImports =
-    replaceSitesComponentsImports(targetDirectory);
+  const hasSitesComponentsImports = replaceSitesComponentsImports(source);
   // update imports from react-components to pages-components
-  const hasReactComponentsImports =
-    replaceReactComponentsImports(targetDirectory);
+  const hasReactComponentsImports = replaceReactComponentsImports(source);
 
   await updatePackageDependency(
-    targetDirectory,
+    root,
     "@yext/pages-components",
     null,
     hasPagesSlashComponentsImports ||
@@ -163,11 +164,9 @@ export const updateToUsePagesComponents = async (targetDirectory: string) => {
 
 /**
  * Update yext/pages to the version that is running
- * @param targetDirectory
+ * @param root folder that contains package.json
  */
-export const updatePagesJSToCurrentVersion = async (
-  targetDirectory: string
-) => {
+export const updatePagesJSToCurrentVersion = async (root: string) => {
   const filePath = "/dist/upgrade";
   try {
     const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -176,11 +175,7 @@ export const updatePagesJSToCurrentVersion = async (
       "package.json"
     );
     const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
-    await updatePackageDependency(
-      targetDirectory,
-      "@yext/pages",
-      packageJson.version
-    );
+    await updatePackageDependency(root, "@yext/pages", packageJson.version);
   } catch (e) {
     console.error("Failed to upgrade pages version: ", (e as Error).message);
     process.exit(1);
@@ -189,20 +184,16 @@ export const updatePagesJSToCurrentVersion = async (
 
 /**
  * Updates vitejs/plugin-react and vite to specified versions
- * @param targetDirectory
+ * @param root folder that contains package.json
  */
-export const updateDevDependencies = async (targetDirectory: string) => {
-  await updatePackageDependency(
-    targetDirectory,
-    "@vitejs/plugin-react",
-    "^4.0.4"
-  );
-  await updatePackageDependency(targetDirectory, "vite", "4.4.9");
+export const updateDevDependencies = async (root: string) => {
+  await updatePackageDependency(root, "@vitejs/plugin-react", "^4.0.4");
+  await updatePackageDependency(root, "vite", "4.4.9");
 };
 
 /**
  * Checks for legacy markdown and logs a warning if it is found
- * @param source the root, src folder
+ * @param source the src folder
  */
 export const checkLegacyMarkdown = (source: string) => {
   const operation = async (filePath: string) => {
@@ -219,7 +210,7 @@ export const checkLegacyMarkdown = (source: string) => {
 
 /**
  * Replaces imports for pages/components with pages-components
- * @param source
+ * @param source the src folder
  * @return hasReplaced
  */
 export const replacePagesSlashComponentsImports = (source: string): boolean => {
@@ -242,7 +233,7 @@ export const replacePagesSlashComponentsImports = (source: string): boolean => {
 
 /**
  * Replaces imports for sites-components with pages-components
- * @param source
+ * @param source the src folder
  * @return hasReplaced
  */
 export const replaceSitesComponentsImports = (source: string): boolean => {
@@ -265,7 +256,7 @@ export const replaceSitesComponentsImports = (source: string): boolean => {
 
 /**
  * Replaces imports for react-components with pages-components
- * @param source
+ * @param source the src folder
  * @return hasReplaced
  */
 export const replaceReactComponentsImports = (source: string): boolean => {
@@ -288,14 +279,32 @@ export const replaceReactComponentsImports = (source: string): boolean => {
 
 /**
  * Removes old fetch import that is no longer used
- * @param source
+ * @param source the src folder
  */
 export const removeFetchImport = (source: string) => {
   const operation = async (filePath: string) => {
+    let hasReplaced = false;
     const fileContent = fs.readFileSync(filePath, "utf8");
-    if (fileContent.match(fetchImportRegex)) {
-      const modifiedContent = fileContent.replace(fetchImportRegex, "");
-      fs.writeFileSync(filePath, modifiedContent, "utf8"); // Update the file content
+    let lines = fileContent.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      if (
+        lines[i].substring(0, 7).includes("import") &&
+        lines[i].includes("fetch")
+      ) {
+        if (!lines[i].includes(",")) {
+          lines = lines.slice(0, i).concat(lines.slice(i + 1, lines.length));
+        } else {
+          lines[i] = lines[i]
+            .replace(",fetch", "")
+            .replace(", fetch", "")
+            .replace("fetch, ", "")
+            .replace("fetch,", "");
+        }
+        hasReplaced = true;
+      }
+    }
+    if (hasReplaced) {
+      fs.writeFileSync(filePath, lines.join("\n"), "utf-8");
       console.log(`Removed legacy fetch import in: ${filePath}`);
     }
   };
@@ -304,10 +313,10 @@ export const removeFetchImport = (source: string) => {
 
 /**
  * Updates package scripts to include dev, prod, and build:local commands
- * @param targetDirectory
+ * @param root folder that includes package.json
  */
-export const updatePackageScripts = (targetDirectory: string) => {
-  const packageJsonPath = path.resolve(targetDirectory, "package.json");
+export const updatePackageScripts = (root: string) => {
+  const packageJsonPath = path.resolve(root, "package.json");
 
   try {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
@@ -326,11 +335,11 @@ export const updatePackageScripts = (targetDirectory: string) => {
 
 /**
  * Install dependencies using install command or npm, pnpm, or yarn install.
- * @param targetDirectory
+ * @param root folder that contains package.json
  * @param projectStructure
  */
 export const installDependencies = async (
-  targetDirectory: string,
+  root: string,
   projectStructure: ProjectStructure
 ) => {
   const ciJsonPath = path.resolve(
@@ -345,15 +354,15 @@ export const installDependencies = async (
     execSync(installDepsCmd);
   } catch (ignored) {
     // if we cant find the installation command, determine it from existence of lock files
-    if (fs.existsSync(path.resolve(targetDirectory, "package-lock.json"))) {
+    if (fs.existsSync(path.resolve(root, "package-lock.json"))) {
       console.log("package-lock detected, installing npm packages");
       execSync("npm install");
     }
-    if (fs.existsSync(path.resolve(targetDirectory, "pnpm-lock.json"))) {
+    if (fs.existsSync(path.resolve(root, "pnpm-lock.json"))) {
       console.log("pnpm-lock detected, installing pnpm packages");
       execSync("pnpm install");
     }
-    if (fs.existsSync(path.resolve(targetDirectory, "yarn.lock"))) {
+    if (fs.existsSync(path.resolve(root, "yarn.lock"))) {
       console.log("yarn.lock detected, installing yarn packages");
       execSync("yarn install");
     }
@@ -363,10 +372,10 @@ export const installDependencies = async (
 const NODE_ENGINES = "^18.0.0 || >=20.0.0";
 /**
  * Update package engines to latest supported node versions.
- * @param targetDirectory
+ * @param root folder that contains package.json
  */
-export const updatePackageEngines = (targetDirectory: string) => {
-  const packageJsonPath = path.resolve(targetDirectory, "package.json");
+export const updatePackageEngines = (root: string) => {
+  const packageJsonPath = path.resolve(root, "package.json");
   try {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
     let engines = packageJson.engines;
