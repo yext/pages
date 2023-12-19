@@ -44,14 +44,14 @@ async function updatePackageDependency(
       dependencyType = DEPENDENCIES;
     }
     const currentVersion = packageJson[dependencyType][packageName];
+    if (!install && !currentVersion) {
+      return;
+    }
     const toVersion = version || (await latestVersion(packageName));
     if (currentVersion === toVersion) {
       return;
     }
     if (!currentVersion) {
-      if (!install) {
-        return;
-      }
       console.log(`Installing ${packageName} at ${toVersion}`);
     } else {
       console.log(`Upgrading ${packageName} to ${toVersion}`);
@@ -139,14 +139,8 @@ function processDirectoryRecursively(
  * @param targetDirectory
  */
 export const updateToUsePagesComponents = async (targetDirectory: string) => {
-  const hasSitesComponents = await removePackageDependency(
-    targetDirectory,
-    "@yext/sites-components"
-  );
-  const hasReactComponents = await removePackageDependency(
-    targetDirectory,
-    "@yext/react-components"
-  );
+  await removePackageDependency(targetDirectory, "@yext/sites-components");
+  await removePackageDependency(targetDirectory, "@yext/react-components");
   // update imports from pages/components to sites-components
   const hasPagesSlashComponentsImports =
     replacePagesSlashComponentsImports(targetDirectory);
@@ -161,9 +155,7 @@ export const updateToUsePagesComponents = async (targetDirectory: string) => {
     targetDirectory,
     "@yext/pages-components",
     null,
-    hasSitesComponents ||
-      hasReactComponents ||
-      hasPagesSlashComponentsImports ||
+    hasPagesSlashComponentsImports ||
       hasSitesComponentsImports ||
       hasReactComponentsImports
   );
