@@ -1,57 +1,52 @@
 import { describe, it, expect } from "vitest";
 import { removeFetchImport } from "./pagesUpdater.js";
-import { Project } from "ts-morph";
 import path from "path";
 import fs from "fs";
-import typescript from "typescript";
+
+const source = path.resolve("src/upgrade/test/src");
+
+function testFetchRemoval(
+  fileName: string,
+  beforeContent: string,
+  expected: string
+): boolean {
+  const filePath = path.resolve(source, "templates", fileName);
+  fs.writeFileSync(filePath, beforeContent);
+  removeFetchImport(source);
+  const afterContent = fs.readFileSync(filePath, "utf-8");
+  fs.rmSync(filePath);
+  return afterContent === expected;
+}
 
 describe("test pages updater steps", () => {
-  it("removes fetch imports", () => {
-    const expectedBefore =
-      'import { fetch, tacos } from "@yext/pages/util";\n' +
-      'import fetch from "@fetch/fetcher";\n';
-    const expectedAfter =
-      'import { tacos } from "@yext/pages/util";\n' +
-      'import fetch from "@fetch/fetcher";\n';
-
-    // generate test file
-    const testFilePath = "src/upgrade/test/src/templates/location.tsx";
-    const source = path.resolve("src/upgrade/test/src");
-    const testProject = new Project({
-      compilerOptions: {
-        jsx: typescript.JsxEmit.ReactJSX,
-        sourceRoot: source,
-      },
-    });
-    testProject.addSourceFilesAtPaths([
-      `${source}/**/*.ts`,
-      `${source}/**/*.tsx`,
-      `${source}/**/*.js`,
-      `${source}/**/*.jsx`,
-    ]);
-    let sourceFile = testProject.addSourceFileAtPathIfExists(testFilePath);
-    if (!sourceFile) {
-      sourceFile = testProject.createSourceFile(testFilePath);
-    }
-    sourceFile.addImportDeclaration({
-      namedImports: ["fetch", "tacos"],
-      moduleSpecifier: "@yext/pages/util",
-    });
-    sourceFile.addImportDeclaration({
-      defaultImport: "fetch",
-      moduleSpecifier: "@fetch/fetcher",
-    });
-    testProject.saveSync();
-    const beforeContent = fs.readFileSync(path.resolve(testFilePath), "utf-8");
-
-    // modify test file
-    removeFetchImport(source);
-
-    // validate changes
-    const afterContent = fs.readFileSync(path.resolve(testFilePath), "utf-8");
-    expect(beforeContent).toEqual(expectedBefore);
-    expect(afterContent).toEqual(expectedAfter);
-    sourceFile.delete();
-    testProject.saveSync();
+  it("removes fetch import", () => {
+    const beforeContent = 'import { fetch } from "@yext/pages/util";';
+    expect(testFetchRemoval("location.tsx", beforeContent, "")).toEqual(true);
+  });
+  it("removes fetch import multi-line", () => {
+    const beforeContent =
+      "import {\n" +
+      "  fetch,\n" +
+      "  tacos,\n" +
+      "  burritos,\n" +
+      "  quesadillas,\n" +
+      "  chimichangas,\n" +
+      '} from "@yext/pages/util";';
+    const expected =
+      "import {\n" +
+      "  tacos,\n" +
+      "  burritos,\n" +
+      "  quesadillas,\n" +
+      "  chimichangas,\n" +
+      '} from "@yext/pages/util";';
+    expect(testFetchRemoval("multiLine.tsx", beforeContent, expected)).toEqual(
+      true
+    );
+  });
+  it("does not remove fetch import from other sources", () => {
+    const beforeContent = 'import { fetch } from "@yext/papers/utilities";';
+    expect(testFetchRemoval("other.tsx", beforeContent, beforeContent)).toEqual(
+      true
+    );
   });
 });
