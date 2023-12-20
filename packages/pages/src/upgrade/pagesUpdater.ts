@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { Project } from "ts-morph";
 import { ProjectStructure } from "../common/src/project/structure.js";
 import latestVersion from "latest-version";
 import { execSync } from "child_process";
@@ -187,8 +188,8 @@ export const updatePagesJSToCurrentVersion = async (root: string) => {
  * @param root folder that contains package.json
  */
 export const updateDevDependencies = async (root: string) => {
-  await updatePackageDependency(root, "@vitejs/plugin-react", "^4.0.4");
-  await updatePackageDependency(root, "vite", "4.4.9");
+  await updatePackageDependency(root, "@vitejs/plugin-react", null);
+  await updatePackageDependency(root, "vite", "^5.0.10");
 };
 
 /**
@@ -279,36 +280,40 @@ export const replaceReactComponentsImports = (source: string): boolean => {
 
 /**
  * Removes old fetch import that is no longer used
- * @param source the src folder
+ * @param root folder that contains package.json and tsconfig.json
  */
-export const removeFetchImport = (source: string) => {
-  const operation = async (filePath: string) => {
-    let hasReplaced = false;
-    const fileContent = fs.readFileSync(filePath, "utf8");
-    let lines = fileContent.split("\n");
-    for (let i = 0; i < lines.length; i++) {
-      if (
-        lines[i].substring(0, 7).includes("import") &&
-        lines[i].includes("fetch")
-      ) {
-        if (!lines[i].includes(",")) {
-          lines = lines.slice(0, i).concat(lines.slice(i + 1, lines.length));
-        } else {
-          lines[i] = lines[i]
-            .replace(",fetch", "")
-            .replace(", fetch", "")
-            .replace("fetch, ", "")
-            .replace("fetch,", "");
+export const removeFetchImport = (root: string) => {
+  let hasRemoved = false;
+  const project = new Project({
+    tsConfigFilePath: path.resolve(root, "tsconfig.json"),
+  });
+  const sourceFiles = project.getSourceFiles();
+  for (let i = 0; i < sourceFiles.length; i++) {
+    const sourceFile = sourceFiles[i];
+    const importDeclarations = sourceFile.getImportDeclarations();
+    for (let j = 0; j < importDeclarations.length; j++) {
+      const importDeclaration = importDeclarations[j];
+      const namedImports = importDeclaration.getNamedImports();
+      for (let k = 0; k < namedImports.length; k++) {
+        const namedImport = namedImports[k];
+        if (namedImport.getName() === "fetch") {
+          if (namedImports.length == 1) {
+            importDeclaration.remove();
+          } else {
+            namedImport.remove();
+          }
+          hasRemoved = true;
+          console.log(
+            `Removed legacy fetch import in: ${sourceFile.getFilePath()}`
+          );
+          break;
         }
-        hasReplaced = true;
       }
     }
-    if (hasReplaced) {
-      fs.writeFileSync(filePath, lines.join("\n"), "utf-8");
-      console.log(`Removed legacy fetch import in: ${filePath}`);
-    }
-  };
-  processDirectoryRecursively(source, operation);
+  }
+  if (hasRemoved) {
+    project.saveSync();
+  }
 };
 
 /**
