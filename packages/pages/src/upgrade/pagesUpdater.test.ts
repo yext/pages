@@ -3,18 +3,22 @@ import { removeFetchImport } from "./pagesUpdater.js";
 import path from "path";
 import fs from "fs";
 
-const source = path.resolve("src/upgrade/test/src");
-
 function testFetchRemoval(
   fileName: string,
   beforeContent: string,
   expected: string
 ): boolean {
-  const filePath = path.resolve(source, "templates", fileName);
+  const testFolder = path.resolve("src/upgrade/test");
+  const source = path.resolve(testFolder, "src");
+  const templates = path.resolve(source, "templates");
+  fs.mkdirSync(templates, {
+    recursive: true,
+  });
+  const filePath = path.resolve(templates, fileName);
   fs.writeFileSync(filePath, beforeContent);
   removeFetchImport(source);
   const afterContent = fs.readFileSync(filePath, "utf-8");
-  fs.rmSync(filePath);
+  fs.rmSync(testFolder, { recursive: true });
   return afterContent === expected;
 }
 
