@@ -6,6 +6,7 @@ import latestVersion from "latest-version";
 import { execSync } from "child_process";
 import { readJsonSync } from "./migrateConfig.js";
 import { fileURLToPath } from "url";
+import typescript from "typescript";
 
 const pagesSlashComponentsRegex = /@yext\/pages\/components/g;
 const sitesComponentsRegex = /@yext\/sites-components/g;
@@ -280,19 +281,31 @@ export const replaceReactComponentsImports = (source: string): boolean => {
 
 /**
  * Removes old fetch import that is no longer used
- * @param root folder that contains package.json and tsconfig.json
+ * @param source the src folder
  */
-export const removeFetchImport = (root: string) => {
+export const removeFetchImport = (source: string) => {
   let hasRemoved = false;
   const project = new Project({
-    tsConfigFilePath: path.resolve(root, "tsconfig.json"),
+    compilerOptions: {
+      jsx: typescript.JsxEmit.ReactJSX,
+      sourceRoot: source,
+    },
   });
+  project.addSourceFilesAtPaths([
+    `${source}/**/*.ts`,
+    `${source}/**/*.tsx`,
+    `${source}/**/*.js`,
+    `${source}/**/*.jsx`,
+  ]);
   const sourceFiles = project.getSourceFiles();
   for (let i = 0; i < sourceFiles.length; i++) {
     const sourceFile = sourceFiles[i];
     const importDeclarations = sourceFile.getImportDeclarations();
     for (let j = 0; j < importDeclarations.length; j++) {
       const importDeclaration = importDeclarations[j];
+      if (importDeclaration.getModuleSpecifierValue() != "@yext/pages/util") {
+        continue;
+      }
       const namedImports = importDeclaration.getNamedImports();
       for (let k = 0; k < namedImports.length; k++) {
         const namedImport = namedImports[k];

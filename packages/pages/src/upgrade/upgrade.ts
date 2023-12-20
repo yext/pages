@@ -28,7 +28,7 @@ const handler = async (args: UpgradeArgs) => {
   const projectStructure = await ProjectStructure.init(scoped);
   await updateDevDependencies(root);
   checkLegacyMarkdown(source);
-  removeFetchImport(root);
+  removeFetchImport(source);
   updatePackageScripts(root);
   updatePackageEngines(root);
   checkNodeVersion();
