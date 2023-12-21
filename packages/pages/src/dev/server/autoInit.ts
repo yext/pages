@@ -121,7 +121,7 @@ const askForUniverse = async (): Promise<string> => {
         value: "sandbox",
       },
     ],
-    initial: 1,
+    initial: 0,
   });
 
   return response.universe;
