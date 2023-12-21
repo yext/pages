@@ -27,6 +27,7 @@ describe("test pages updater steps", () => {
     const beforeContent = 'import { fetch } from "@yext/pages/util";';
     expect(testFetchRemoval("location.tsx", beforeContent, "")).toEqual(true);
   });
+
   it("removes fetch import multi-line", () => {
     const beforeContent =
       "import {\n" +
@@ -47,6 +48,7 @@ describe("test pages updater steps", () => {
       true
     );
   });
+
   it("does not remove fetch import from other sources", () => {
     const beforeContent = 'import { fetch } from "@yext/papers/utilities";';
     expect(testFetchRemoval("other.tsx", beforeContent, beforeContent)).toEqual(
