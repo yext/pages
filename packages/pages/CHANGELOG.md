@@ -1,3 +1,31 @@
+#### 1.0.0-rc.7 (2023-12-21)
+
+##### Chores
+
+* **deps:**
+  *  remove Vite as a dependency (b0eb12c4)
+  *  updates all dependencies (#449) (2abc8594)
+  *  update most dependencies (#445) (e003894f)
+*  fix changelog (91d666af)
+
+##### Documentation Changes
+
+*  auto generate markdown files  (#441) (70a25bea)
+
+##### New Features
+
+* **dev:**
+  *  upgrade script updates Pages version (#451) (4dd2b42e)
+  *  upgrade script replaces build:local with build (#452) (c3f4019e)
+* **deps:**  update to Vite 5 (#446) (9bc25aae)
+
+##### Bug Fixes
+
+* **dev:**  make production the default for yextrc (#455) (7a59db19)
+* **plugin:**
+  *  allow "main" function exports and actually fail the build (#453) (c9156163)
+  *  manifest not created correctly (#450) (4d97390f)
+
 #### 1.0.0-rc.6 (2023-11-21)
 
 ##### Chores
