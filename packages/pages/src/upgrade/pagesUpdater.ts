@@ -380,19 +380,23 @@ export const installDependencies = async (
     const installDepsCmd = ciJson.dependencies.installDepsCmd;
     console.log(`Installing dependencies using '${installDepsCmd}'`);
     execSync(installDepsCmd);
+    return;
   } catch (ignored) {
     // if we cant find the installation command, determine it from existence of lock files
     if (fs.existsSync(path.resolve(root, "package-lock.json"))) {
       console.log("package-lock detected, installing npm packages");
       execSync("npm install");
+      return;
     }
     if (fs.existsSync(path.resolve(root, "pnpm-lock.json"))) {
       console.log("pnpm-lock detected, installing pnpm packages");
       execSync("pnpm install");
+      return;
     }
     if (fs.existsSync(path.resolve(root, "yarn.lock"))) {
       console.log("yarn.lock detected, installing yarn packages");
       execSync("yarn install");
+      return;
     }
   }
 };
