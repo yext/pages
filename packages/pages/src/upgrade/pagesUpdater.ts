@@ -48,7 +48,15 @@ async function updatePackageDependency(
     if (!install && !currentVersion) {
       return;
     }
-    const toVersion = version || (await latestVersion(packageName));
+    let toVersion = version || (await latestVersion(packageName));
+    if (!toVersion) {
+      console.error(`Failed to get version for ${packageName}`);
+      return;
+    }
+    // if getting the latest version, add a caret
+    if (!version && toVersion.charAt(0) != "^") {
+      toVersion = "^" + toVersion;
+    }
     if (currentVersion === toVersion) {
       return;
     }
@@ -191,6 +199,8 @@ export const updatePagesJSToCurrentVersion = async (root: string) => {
 export const updateDevDependencies = async (root: string) => {
   await updatePackageDependency(root, "@vitejs/plugin-react", null);
   await updatePackageDependency(root, "vite", "^5.0.10");
+  await updatePackageDependency(root, "@yext/search-headless-react", null);
+  await updatePackageDependency(root, "@yext/search-ui-react", null);
 };
 
 /**
@@ -370,19 +380,23 @@ export const installDependencies = async (
     const installDepsCmd = ciJson.dependencies.installDepsCmd;
     console.log(`Installing dependencies using '${installDepsCmd}'`);
     execSync(installDepsCmd);
+    return;
   } catch (ignored) {
     // if we cant find the installation command, determine it from existence of lock files
     if (fs.existsSync(path.resolve(root, "package-lock.json"))) {
       console.log("package-lock detected, installing npm packages");
       execSync("npm install");
+      return;
     }
     if (fs.existsSync(path.resolve(root, "pnpm-lock.json"))) {
       console.log("pnpm-lock detected, installing pnpm packages");
       execSync("pnpm install");
+      return;
     }
     if (fs.existsSync(path.resolve(root, "yarn.lock"))) {
       console.log("yarn.lock detected, installing yarn packages");
       execSync("yarn install");
+      return;
     }
   }
 };
