@@ -10,10 +10,8 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
 
 export const buildServerlessFunctions = async (
-  scope: string
+  projectStructure: ProjectStructure
 ): Promise<void> => {
-  const projectStructure = await ProjectStructure.init({ scope });
-
   if (!shouldBundleServerlessFunctions(projectStructure)) {
     return;
   }
