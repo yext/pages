@@ -101,6 +101,8 @@ export interface TemplateConfig {
   alternateLanguageFields?: string[];
   /** The name of the onUrlChange function to use. */
   onUrlChange?: string;
+  /** The field to be used as the custom writeback URL for the template */
+  pageUrlField?: string;
 }
 
 /**
