@@ -240,6 +240,7 @@ export interface TemplateConfig {
   name?: string;
   onUrlChange?: string;
   pageUrlField?: string;
+  slugField?: string;
   stream?: Stream;
   streamId?: string;
 }
@@ -278,7 +279,7 @@ export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 // Warnings were encountered during analysis:
 //
-// dist/types/src/common/src/template/types.d.ts:163:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
+// dist/types/src/common/src/template/types.d.ts:165:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 ```
