@@ -94,9 +94,9 @@ export const convertTemplateConfigToFeatureConfig = (
   } else {
     featureConfig = {
       ...featureConfigBase,
-      entityPageSet: config.pageUrlField
-        ? { pageUrlField: config.pageUrlField }
-        : {},
+      entityPageSet: {
+        pageUrlField: config.pageUrlField,
+      },
     };
   }
 
