@@ -39,6 +39,7 @@ interface EntityPageSetConfig extends FeatureConfigBase {
     urlTemplate?: string;
     htmlTemplate?: string;
     linkedEntities?: { entityListField: string; templateField: string }[];
+    pageUrlField?: string;
   };
 }
 interface StaticPageConfig extends FeatureConfigBase {
@@ -93,7 +94,9 @@ export const convertTemplateConfigToFeatureConfig = (
   } else {
     featureConfig = {
       ...featureConfigBase,
-      entityPageSet: {},
+      entityPageSet: {
+        pageUrlField: config.pageUrlField,
+      },
     };
   }
 

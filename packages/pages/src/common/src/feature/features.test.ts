@@ -96,6 +96,28 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
     expect(featureConfig).toEqual(expected);
   });
 
+  it("return an EntityPageSetConfig with an entityPageSet.pageUrlField property when both streamId and pageUrlField are defined", async () => {
+    const templateConfig: TemplateConfigInternal = {
+      name: "myTemplateConfig",
+      hydrate: true,
+      streamId: "$id",
+      pageUrlField: "myPageUrlField",
+    };
+
+    const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
+
+    const expected: FeatureConfig = {
+      name: "myTemplateConfig",
+      streamId: "$id",
+      templateType: "JS",
+      entityPageSet: {
+        pageUrlField: "myPageUrlField",
+      },
+    };
+
+    expect(featureConfig).toEqual(expected);
+  });
+
   it("uses the stream if defined and returns an EntityPageSetConfig", async () => {
     const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
