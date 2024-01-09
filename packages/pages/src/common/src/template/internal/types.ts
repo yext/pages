@@ -67,6 +67,8 @@ export interface TemplateConfigInternal {
   locales?: string[];
   /** The field to be used as the custom writeback URL for the template */
   pageUrlField?: string;
+  /** The field to use as the slug for dynamic dev mode */
+  slugField?: string;
 }
 
 /**
