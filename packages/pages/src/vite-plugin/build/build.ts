@@ -3,6 +3,7 @@ import buildStart from "./buildStart/buildStart.js";
 import closeBundle from "./closeBundle/closeBundle.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
+import { buildServerlessFunctions } from "../serverless-functions/plugin.js";
 
 const intro = `
 var global = globalThis;
@@ -21,6 +22,19 @@ export const build = async (
   return {
     name: "vite-plugin:build",
     apply: "build",
+    /**
+     * Vite builds a single bundle. We need multiple bundles: GenerationPlugin (server), renderer, client,
+     * serverless functions. The user's package.json scripts will invoke the Vite CLI to execute the server
+     * build. We then use this hook to kick off builds for the other bundles.
+     *
+     * Note that writeBundle executes before the main server plugin is bundled.
+     */
+    writeBundle: {
+      sequential: true,
+      handler: async (): Promise<void> => {
+        await buildServerlessFunctions(projectStructure);
+      },
+    },
     config: async (): Promise<UserConfig> => {
       return {
         envDir: envVarConfig.envVarDir,
