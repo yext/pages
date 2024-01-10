@@ -277,6 +277,37 @@ export interface TemplateRenderProps<T = any> extends TemplateProps<T> {
 // @public
 export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
+// @public
+export type Widget<T extends WidgetRenderProps> = (
+  props: T
+) => React_2.JSX.Element;
+
+// @public
+export interface WidgetConfig {
+  name?: string;
+}
+
+// @public
+export interface WidgetModule<U extends WidgetRenderProps> {
+  config?: WidgetConfig;
+  // Warning: (ae-unresolved-link) The @link reference could not be resolved: The package "@yext/pages" does not have an export "render"
+  default?: Widget<U>;
+}
+
+// @public
+export interface WidgetProps<T = Record<string, any>> {
+  __meta: {
+    mode: "development" | "production";
+  };
+  document: T;
+}
+
+// @public
+export interface WidgetRenderProps<T = any> extends WidgetProps<T> {
+  path: string;
+  relativePrefixToRoot: string;
+}
+
 // Warnings were encountered during analysis:
 //
 // dist/types/src/common/src/template/types.d.ts:165:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts

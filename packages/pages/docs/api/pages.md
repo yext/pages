@@ -21,6 +21,10 @@
 | [TemplateModule](./pages.templatemodule.md)                   | The type to include in any template file. It defines the available functions and fields that are available to the template.                                                                                |
 | [TemplateProps](./pages.templateprops.md)                     | The shape of the data passed directly to the different template functions with the exception of the render function (getPath, getHeadConfig, etc).                                                         |
 | [TemplateRenderProps](./pages.templaterenderprops.md)         | The shape of the data passed directly to the template's render function. Extends the [TemplateProps](./pages.templateprops.md) interface and has the additions of a path and a relativePrefixToRoot field. |
+| [WidgetConfig](./pages.widgetconfig.md)                       | The exported <code>config</code> function's definition.                                                                                                                                                    |
+| [WidgetModule](./pages.widgetmodule.md)                       | The type to include in any widget file. It defines the available functions and fields that are available to the template.                                                                                  |
+| [WidgetProps](./pages.widgetprops.md)                         | The shape of the data passed directly to the different template functions                                                                                                                                  |
+| [WidgetRenderProps](./pages.widgetrenderprops.md)             | The shape of the data passed directly to the template's render function. Extends the [TemplateProps](./pages.templateprops.md) interface and has the additions of a path and a relativePrefixToRoot field. |
 
 ## Variables
 
@@ -47,3 +51,4 @@
 | [TagType](./pages.tagtype.md)                                   | Type that enumerates the allowed types of HTML elements in the document header.                                                                                                                                                         |
 | [Template](./pages.template.md)                                 | The type definition for the template's default function.                                                                                                                                                                                |
 | [TransformProps](./pages.transformprops.md)                     | The type definition for the template's transformProps function. Can be used to alter and/or augement the props (which include the data document) passed into the template at render time.                                               |
+| [Widget](./pages.widget.md)                                     | The type definition for the widget's default function.                                                                                                                                                                                  |
