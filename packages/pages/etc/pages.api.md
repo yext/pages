@@ -293,11 +293,10 @@ export interface WidgetModule {
 }
 
 // @public
-export interface WidgetProps<T = Record<string, any>> {
+export interface WidgetProps {
   __meta: {
     mode: "development" | "production";
   };
-  document: T;
 }
 
 // Warnings were encountered during analysis:

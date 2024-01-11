@@ -9,12 +9,11 @@ The shape of the data passed directly to the different widget functions
 **Signature:**
 
 ```typescript
-export interface WidgetProps<T = Record<string, any>>
+export interface WidgetProps
 ```
 
 ## Properties
 
-| Property                                    | Modifiers | Type                                     | Description                                                               |
-| ------------------------------------------- | --------- | ---------------------------------------- | ------------------------------------------------------------------------- |
-| [\_\_meta](./pages.widgetprops.__meta.md)   |           | { mode: "development" \| "production"; } | Additional metadata added by the toolchain                                |
-| [document](./pages.widgetprops.document.md) |           | T                                        | The entire document returned after applying the stream to a single entity |
+| Property                                  | Modifiers | Type                                     | Description                                |
+| ----------------------------------------- | --------- | ---------------------------------------- | ------------------------------------------ |
+| [\_\_meta](./pages.widgetprops.__meta.md) |           | { mode: "development" \| "production"; } | Additional metadata added by the toolchain |
