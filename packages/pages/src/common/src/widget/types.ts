@@ -38,9 +38,7 @@ export interface WidgetConfig {
  *
  * @public
  */
-export interface WidgetProps<T = Record<string, any>> {
-  /** The entire document returned after applying the stream to a single entity */
-  document: T;
+export interface WidgetProps {
   /** Additional metadata added by the toolchain */
   __meta: {
     /** Specifies if the data is returned in development or production mode */
