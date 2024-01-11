@@ -1,8 +1,5 @@
 import { spawn } from "child_process";
-import {
-  FeaturesConfig,
-  convertTemplateConfigToFeatureConfig,
-} from "../../../common/src/feature/features.js";
+import { FeaturesConfig } from "../../../common/src/feature/features.js";
 import {
   CLI_BOILERPLATE_BETA_MESSAGE,
   STREAM_DATA_CHUNK_BEGIN,
@@ -21,9 +18,9 @@ import {
 import { ViteDevServer } from "vite";
 import { loadViteModule } from "./loadViteModule.js";
 import { TemplateModule } from "../../../common/src/template/types.js";
+import { getTemplatesConfig } from "../../../generate/templates/createTemplatesJson.js";
 import { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
 import runSubprocess from "../../../util/runSubprocess.js";
-import { convertTemplateConfigToStreamConfig } from "../../../common/src/feature/stream.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
@@ -55,30 +52,16 @@ export const generateTestDataForSlug = async (
     vite,
     templateFilepaths
   );
+  const featuresConfig = getTemplatesConfig(templateModuleCollection);
+  const featuresConfigForEntityPages: FeaturesConfig = {
+    features: featuresConfig.features.filter((f) => "entityPageSet" in f),
+    streams: featuresConfig.streams,
+  };
+  const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
+  args.push("--slug", slug);
 
-  const allParsedData: any[] = [];
-  templateModuleCollection.forEach(async (templateModuleInternal) => {
-    const featureConfig = convertTemplateConfigToFeatureConfig(
-      templateModuleInternal.config
-    );
-    const streamConfig = convertTemplateConfigToStreamConfig(
-      templateModuleInternal.config
-    );
-    const featuresConfigForEntityPages: FeaturesConfig = {
-      features: "entityPageSet" in featureConfig ? [featureConfig] : [],
-      streams: streamConfig ? [streamConfig] : [],
-    };
-    const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
-    args.push("--slug", templateModuleInternal.config.slugField ?? slug);
-    const parsedData = await spawnTestDataCommand(stdout, "yext", args);
-    if (Array.isArray(parsedData)) {
-      allParsedData.push(...parsedData);
-    } else {
-      allParsedData.push(parsedData);
-    }
-  });
-
-  return getDocumentByLocale(allParsedData, locale);
+  const parsedData = await spawnTestDataCommand(stdout, "yext", args);
+  return getDocumentByLocale(parsedData, locale);
 };
 
 const loadTemplateModuleCollectionUsingVite = async (
