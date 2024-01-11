@@ -278,9 +278,7 @@ export interface TemplateRenderProps<T = any> extends TemplateProps<T> {
 export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 // @public
-export type Widget<T extends WidgetRenderProps> = (
-  props: T
-) => React_2.JSX.Element;
+export type Widget = () => React_2.JSX.Element;
 
 // @public
 export interface WidgetConfig {
@@ -288,10 +286,10 @@ export interface WidgetConfig {
 }
 
 // @public
-export interface WidgetModule<U extends WidgetRenderProps> {
+export interface WidgetModule {
   config?: WidgetConfig;
   // Warning: (ae-unresolved-link) The @link reference could not be resolved: The package "@yext/pages" does not have an export "render"
-  default?: Widget<U>;
+  default?: Widget;
 }
 
 // @public
@@ -300,12 +298,6 @@ export interface WidgetProps<T = Record<string, any>> {
     mode: "development" | "production";
   };
   document: T;
-}
-
-// @public
-export interface WidgetRenderProps<T = any> extends WidgetProps<T> {
-  path: string;
-  relativePrefixToRoot: string;
 }
 
 // Warnings were encountered during analysis:

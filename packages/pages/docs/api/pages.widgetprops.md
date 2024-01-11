@@ -4,7 +4,7 @@
 
 ## WidgetProps interface
 
-The shape of the data passed directly to the different template functions
+The shape of the data passed directly to the different widget functions
 
 **Signature:**
 

@@ -22,9 +22,8 @@
 | [TemplateProps](./pages.templateprops.md)                     | The shape of the data passed directly to the different template functions with the exception of the render function (getPath, getHeadConfig, etc).                                                         |
 | [TemplateRenderProps](./pages.templaterenderprops.md)         | The shape of the data passed directly to the template's render function. Extends the [TemplateProps](./pages.templateprops.md) interface and has the additions of a path and a relativePrefixToRoot field. |
 | [WidgetConfig](./pages.widgetconfig.md)                       | The exported <code>config</code> function's definition.                                                                                                                                                    |
-| [WidgetModule](./pages.widgetmodule.md)                       | The type to include in any widget file. It defines the available functions and fields that are available to the template.                                                                                  |
-| [WidgetProps](./pages.widgetprops.md)                         | The shape of the data passed directly to the different template functions                                                                                                                                  |
-| [WidgetRenderProps](./pages.widgetrenderprops.md)             | The shape of the data passed directly to the template's render function. Extends the [TemplateProps](./pages.templateprops.md) interface and has the additions of a path and a relativePrefixToRoot field. |
+| [WidgetModule](./pages.widgetmodule.md)                       | The type to include in any widget file. It defines the available functions and fields that are available to the widget.                                                                                    |
+| [WidgetProps](./pages.widgetprops.md)                         | The shape of the data passed directly to the different widget functions                                                                                                                                    |
 
 ## Variables
 

@@ -9,5 +9,5 @@ The exported default widget function. This is expected to be a React Component. 
 **Signature:**
 
 ```typescript
-default?: Widget<U>;
+default?: Widget;
 ```

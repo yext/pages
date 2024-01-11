@@ -4,17 +4,17 @@
 
 ## WidgetModule interface
 
-The type to include in any widget file. It defines the available functions and fields that are available to the template.
+The type to include in any widget file. It defines the available functions and fields that are available to the widget.
 
 **Signature:**
 
 ```typescript
-export interface WidgetModule<U extends WidgetRenderProps>
+export interface WidgetModule
 ```
 
 ## Properties
 
-| Property                                    | Modifiers | Type                                         | Description                                                                                                                                               |
-| ------------------------------------------- | --------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [config?](./pages.widgetmodule.config.md)   |           | [WidgetConfig](./pages.widgetconfig.md)      | _(Optional)_ The exported config function                                                                                                                 |
-| [default?](./pages.widgetmodule.default.md) |           | [Widget](./pages.widget.md)<!-- -->&lt;U&gt; | _(Optional)_ The exported default widget function. This is expected to be a React Component. If undefined then will be used to generate the HTML instead. |
+| Property                                    | Modifiers | Type                                    | Description                                                                                                                                               |
+| ------------------------------------------- | --------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [config?](./pages.widgetmodule.config.md)   |           | [WidgetConfig](./pages.widgetconfig.md) | _(Optional)_ The exported config function                                                                                                                 |
+| [default?](./pages.widgetmodule.default.md) |           | [Widget](./pages.widget.md)             | _(Optional)_ The exported default widget function. This is expected to be a React Component. If undefined then will be used to generate the HTML instead. |

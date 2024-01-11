@@ -9,9 +9,5 @@ The type definition for the widget's default function.
 **Signature:**
 
 ```typescript
-export type Widget<T extends WidgetRenderProps> = (
-  props: T
-) => React.JSX.Element;
+export type Widget = () => React.JSX.Element;
 ```
-
-**References:** [WidgetRenderProps](./pages.widgetrenderprops.md)
