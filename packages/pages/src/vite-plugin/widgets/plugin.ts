@@ -8,7 +8,7 @@ import { convertToPosixPath } from "../../common/src/template/paths.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
-import { convertWidgetConfigToWidgetConfigInternal } from "../../common/src/template/internal/types.js";
+import { convertWidgetConfigToWidgetConfigInternal } from "../../common/src/widget/internal/types.js";
 import { WidgetModule } from "../../index.js";
 
 export const buildWidgets = async (
@@ -41,6 +41,7 @@ export const buildWidgets = async (
 
   const logger = createLogger();
   const loggerInfo = logger.info;
+  console.log("object %o", filePathsIndexedByName);
 
   logger.info = (msg, options) => {
     if (msg.includes("building for production")) {
@@ -102,18 +103,12 @@ const getWidgetNames = async (
 
   for (let i = 0; i < widgetModules.length; i++) {
     const widgetModule = widgetModules[i].module as WidgetModule;
-    const widgetName = getFileName(filepaths[i]);
+    const widgetName = path.parse(filepaths[i]);
     const widgetConfigInternal = convertWidgetConfigToWidgetConfigInternal(
-      widgetName,
+      widgetName.name,
       widgetModule.config
     );
     widgetNamesIndexedByName[widgetConfigInternal.name] = filepaths[i];
   }
   return widgetNamesIndexedByName;
-};
-
-const getFileName = (path: string) => {
-  const pathList = path.split("/");
-  const fileNameWithExt = pathList[pathList.length - 1];
-  return fileNameWithExt.substring(0, fileNameWithExt.indexOf("."));
 };

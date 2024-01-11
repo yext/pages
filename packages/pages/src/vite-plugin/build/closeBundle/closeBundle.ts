@@ -45,12 +45,19 @@ export default (projectStructure: ProjectStructure) => {
             )
           ),
           {
-            ignore: path.join(
-              path.resolve(rootFolders.dist, subfolders.serverlessFunctions),
-              "**"
-            ),
+            ignore: [
+              path.join(
+                path.resolve(rootFolders.dist, subfolders.serverlessFunctions),
+                "**"
+              ),
+              path.join(
+                path.resolve(rootFolders.dist, subfolders.widgets),
+                "**"
+              ),
+            ],
           }
         );
+        console.log("server bundles: %o", serverBundles);
         templateModules = await loadTemplateModules(
           serverBundles,
           false,
