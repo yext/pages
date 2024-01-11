@@ -1,4 +1,5 @@
 import { build, createLogger } from "vite";
+import { loadModules } from "../../common/src/loader/vite.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -7,6 +8,8 @@ import { convertToPosixPath } from "../../common/src/template/paths.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
+import { convertWidgetConfigToWidgetConfigInternal } from "../../common/src/template/internal/types.js";
+import { WidgetModule } from "../../index.js";
 
 export const buildWidgets = async (
   projectStructure: ProjectStructure
@@ -18,7 +21,7 @@ export const buildWidgets = async (
   const { rootFolders, subfolders, envVarConfig } = projectStructure.config;
   const outdir = path.join(rootFolders.dist, subfolders.widgets);
 
-  const filepaths: { [entryAlias: string]: string } = {};
+  const filepaths: string[] = [];
   glob
     .sync(
       convertToPosixPath(
@@ -26,11 +29,15 @@ export const buildWidgets = async (
       ),
       { nodir: true }
     )
-    .forEach((f) => {
+    .forEach(async (f) => {
       const filepath = path.resolve(f);
-      const name = getFilePathName(filepath);
-      filepaths[name] = filepath;
+      filepaths.push(filepath);
     });
+
+  const filePathsIndexedByName = await getWidgetNames(
+    filepaths,
+    projectStructure
+  );
 
   const logger = createLogger();
   const loggerInfo = logger.info;
@@ -57,13 +64,13 @@ export const buildWidgets = async (
       outDir: outdir,
       minify: false,
       lib: {
-        entry: filepaths,
+        entry: filePathsIndexedByName,
         formats: ["es"],
       },
       rollupOptions: {
         output: {
           format: "umd",
-          entryFileNames: `[name]/search.umd.js`,
+          entryFileNames: `[name].umd.js`,
         },
       },
       reportCompressedSize: false,
@@ -86,8 +93,27 @@ export const shouldBundleWidgets = (projectStructure: ProjectStructure) => {
   return fs.existsSync(path.join(rootFolders.source, subfolders.widgets));
 };
 
-const getFilePathName = (filepath: string) => {
-  const paths = filepath.split("/");
-  const lastElement = paths.length - 1;
-  return paths[lastElement];
+const getWidgetNames = async (
+  filepaths: string[],
+  projectStructure: ProjectStructure
+) => {
+  const widgetNamesIndexedByName: { [entryAlias: string]: string } = {};
+  const widgetModules = await loadModules(filepaths, true, projectStructure);
+
+  for (let i = 0; i < widgetModules.length; i++) {
+    const widgetModule = widgetModules[i].module as WidgetModule;
+    const widgetName = getFileName(filepaths[i]);
+    const widgetConfigInternal = convertWidgetConfigToWidgetConfigInternal(
+      widgetName,
+      widgetModule.config
+    );
+    widgetNamesIndexedByName[widgetConfigInternal.name] = filepaths[i];
+  }
+  return widgetNamesIndexedByName;
+};
+
+const getFileName = (path: string) => {
+  const pathList = path.split("/");
+  const fileNameWithExt = pathList[pathList.length - 1];
+  return fileNameWithExt.substring(0, fileNameWithExt.indexOf("."));
 };

@@ -13,6 +13,7 @@ import {
 } from "../types.js";
 import path from "node:path";
 import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal.js";
+import { WidgetConfig } from "../../widget/types.js";
 
 /**
  * A domain representation of a template module. Contains all fields from an imported module as well
@@ -69,6 +70,14 @@ export interface TemplateConfigInternal {
   pageUrlField?: string;
   /** The field to use as the slug for dynamic dev mode */
   slugField?: string;
+}
+
+/**
+ * The exported `config` function's definition.
+ */
+export interface WidgetConfigInternal {
+  /** The name of the widget feature. If not defined uses the widget filename (without extension) */
+  name: string;
 }
 
 /**
@@ -162,6 +171,15 @@ export const convertTemplateConfigToTemplateConfigInternal = (
     hydrate: templateConfig?.hydrate ?? true,
     ...templateConfig,
     stream: convertStreamToStreamInternal(templateConfig?.stream),
+  };
+};
+
+export const convertWidgetConfigToWidgetConfigInternal = (
+  widgetName: string,
+  widgetConfig: WidgetConfig | undefined
+): WidgetConfigInternal => {
+  return {
+    name: widgetConfig?.name ?? widgetName,
   };
 };
 
