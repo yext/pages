@@ -407,3 +407,138 @@ export const checkNodeVersion = () => {
     console.log(ERR_MSG);
   }
 };
+
+const oldServerlessFunctionRequestTypes = [
+  "SitesHttpRequest",
+  "SitesOnUrlChangeRequest",
+];
+
+const oldServerlessFunctionResponseTypes = [
+  "SitesHttpResponse",
+  "Promise<SitesHttpResponse>",
+  "SitesOnUrlChangeResponse",
+  "Promise<SitesOnUrlChangeResponse>",
+];
+
+const oldServerlessFunctionTypes = [
+  ...oldServerlessFunctionRequestTypes,
+  ...oldServerlessFunctionResponseTypes,
+];
+
+/**
+ * Updates the imports and usages of e.g. SitesHttpRequest to PagessHttpRequest.
+ * @param serverlessFunctionsPath the path to the serverless functions folder
+ */
+export const updateServerlessFunctionTypeReferences = (
+  serverlessFunctionsPath: string
+) => {
+  let updated = false;
+  const project = new Project({
+    compilerOptions: {
+      jsx: typescript.JsxEmit.ReactJSX,
+      sourceRoot: serverlessFunctionsPath,
+    },
+  });
+  project.addSourceFilesAtPaths(
+    `${serverlessFunctionsPath}/**/*.{ts,tsx,js,jsx}`
+  );
+  const sourceFiles = project.getSourceFiles();
+  for (let i = 0; i < sourceFiles.length; i++) {
+    let fileUpdated = false;
+    const sourceFile = sourceFiles[i];
+    const importDeclarations = sourceFile.getImportDeclarations();
+    for (let j = 0; j < importDeclarations.length; j++) {
+      const importDeclaration = importDeclarations[j];
+      if (importDeclaration.getModuleSpecifierValue() !== "@yext/pages/*") {
+        continue;
+      }
+      const namedImports = importDeclaration.getNamedImports();
+      for (let k = 0; k < namedImports.length; k++) {
+        const namedImport = namedImports[k];
+        if (!oldServerlessFunctionTypes.includes(namedImport.getName())) {
+          continue;
+        }
+
+        switch (namedImport.getName()) {
+          case "SitesHttpRequest":
+            importDeclaration.addNamedImport("PagesHttpRequest");
+            break;
+          case "SitesHttpResponse":
+            importDeclaration.addNamedImport("PagesHttpResponse");
+            break;
+          case "SitesOnUrlChangeRequest":
+            importDeclaration.addNamedImport("PagesOnUrlChangeRequest");
+            break;
+          case "SitesOnUrlChangeResponse":
+            importDeclaration.addNamedImport("PagesOnUrlChangeResponse");
+            break;
+        }
+
+        namedImport.remove();
+        fileUpdated = true;
+      }
+      if (fileUpdated) {
+        updated = true;
+        console.log(
+          `Updated serverless function types imported in: ${sourceFile.getFilePath()}`
+        );
+      }
+    }
+
+    if (!updated) {
+      return;
+    }
+
+    const functions = sourceFile.getFunctions();
+    for (let j = 0; j < functions.length; j++) {
+      // update parameter types
+      functions[j].getParameters().forEach((param) => {
+        const paramType = param.getType().getText();
+        if (oldServerlessFunctionRequestTypes.includes(paramType)) {
+          param.removeType();
+
+          switch (paramType) {
+            case "SitesHttpRequest":
+              param.setType("PagesHttpRequest");
+              break;
+
+            case "SitesOnUrlChangeRequest":
+              param.setType("PagesOnUrlChangeRequest");
+              break;
+          }
+
+          console.log(
+            `Updated serverless function type params in: ${sourceFile.getFilePath()}`
+          );
+        }
+      });
+
+      // update return types
+      const returnType = functions[j].getReturnType().getText();
+      if (oldServerlessFunctionResponseTypes.includes(returnType)) {
+        functions[j].removeReturnType();
+
+        switch (returnType) {
+          case "Promise<SitesHttpResponse>":
+            functions[j].setReturnType("Promise<PagesHttpResponse>");
+            break;
+          case "SitesHttpResponse":
+            functions[j].setReturnType("PagesHttpResponse");
+            break;
+          case "Promise<SitesOnUrlChangeResponse>":
+            functions[j].setReturnType("Promise<PagesOnUrlChangeResponse>");
+            break;
+          case "SitesOnUrlChangeResponse":
+            functions[j].setReturnType("PagesOnUrlChangeResponse");
+            break;
+        }
+
+        console.log(
+          `Updated serverless function return type in: ${sourceFile.getFilePath()}`
+        );
+      }
+    }
+  }
+
+  project.saveSync();
+};
