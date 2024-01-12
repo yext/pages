@@ -60,21 +60,13 @@ export const generateTestDataForSlug = async (
   const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
   args.push("--slug", slug);
 
-  const nonStaticFeatureNames = new Set<string>(
-    featuresConfig.features
-      .filter((f) => "entityPageSet" in f)
-      .map((f) => f.name)
-  );
   const slugFields = new Set<string>();
   templateModuleCollection.forEach((templateModule) => {
     const slugField = templateModule?.config?.slugField;
     if (slugField) {
       slugFields.add(`entity.${slugField}`);
-      return;
-    }
-    if (nonStaticFeatureNames.has(templateModule?.config?.name)) {
+    } else {
       slugFields.add("entity.slug");
-      return;
     }
   });
   args.push("--slugFields", Array.from(slugFields).toString());
