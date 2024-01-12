@@ -57,7 +57,7 @@ export default (projectStructure: ProjectStructure) => {
             ],
           }
         );
-        console.log("server bundles: %o", serverBundles);
+
         templateModules = await loadTemplateModules(
           serverBundles,
           false,

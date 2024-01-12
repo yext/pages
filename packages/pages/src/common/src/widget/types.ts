@@ -34,7 +34,7 @@ export interface WidgetConfig {
 }
 
 /**
- * The shape of the data passed directly to the different widget functions
+ * The shape of the data passed directly to the different widget functions.
  *
  * @public
  */

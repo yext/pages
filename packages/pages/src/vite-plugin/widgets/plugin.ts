@@ -29,7 +29,7 @@ export const buildWidgets = async (
       ),
       { nodir: true }
     )
-    .forEach(async (f) => {
+    .forEach((f) => {
       const filepath = path.resolve(f);
       filepaths.push(filepath);
     });
@@ -41,7 +41,6 @@ export const buildWidgets = async (
 
   const logger = createLogger();
   const loggerInfo = logger.info;
-  console.log("object %o", filePathsIndexedByName);
 
   logger.info = (msg, options) => {
     if (msg.includes("building for production")) {
