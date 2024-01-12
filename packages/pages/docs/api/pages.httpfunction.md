@@ -9,7 +9,7 @@ A function that runs when a specific path is visited on the site.
 **Signature:**
 
 ```typescript
-export type HttpFunction = (arg: SitesHttpRequest) => SitesHttpResponse;
+export type HttpFunction = (arg: PagesHttpRequest) => PagesHttpResponse;
 ```
 
-**References:** [SitesHttpRequest](./pages.siteshttprequest.md)<!-- -->, [SitesHttpResponse](./pages.siteshttpresponse.md)
+**References:** [PagesHttpRequest](./pages.pageshttprequest.md)<!-- -->, [PagesHttpResponse](./pages.pageshttpresponse.md)

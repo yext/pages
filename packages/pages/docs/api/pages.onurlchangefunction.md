@@ -10,8 +10,8 @@ A function that runs when the path of a production page changes.
 
 ```typescript
 export type OnUrlChangeFunction = (
-  arg: SitesOnUrlChangeRequest
-) => SitesOnUrlChangeResponse;
+  arg: PagesOnUrlChangeRequest
+) => PagesOnUrlChangeResponse;
 ```
 
-**References:** [SitesOnUrlChangeRequest](./pages.sitesonurlchangerequest.md)<!-- -->, [SitesOnUrlChangeResponse](./pages.sitesonurlchangeresponse.md)
+**References:** [PagesOnUrlChangeRequest](./pages.pagesonurlchangerequest.md)<!-- -->, [PagesOnUrlChangeResponse](./pages.pagesonurlchangeresponse.md)
