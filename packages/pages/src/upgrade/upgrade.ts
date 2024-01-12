@@ -11,8 +11,6 @@ import {
   updateToUsePagesComponents,
 } from "./pagesUpdater.js";
 import { migrateConfigs } from "./migrateConfig.js";
-import { templatesHandler } from "../generate/templates/templates.js";
-import { artifactsHandler } from "../generate/artifacts/artifacts.js";
 import { ProjectStructure } from "../common/src/project/structure.js";
 import path from "path";
 
@@ -23,23 +21,32 @@ interface UpgradeArgs {
 
 const handler = async (args: UpgradeArgs) => {
   const scoped = { scope: args.scope || "" };
-  const root = path.resolve(scoped.scope);
-  const source = path.resolve(root, "src");
   const projectStructure = await ProjectStructure.init(scoped);
-  await updateDevDependencies(root);
-  checkLegacyMarkdown(source);
-  removeFetchImport(source);
-  updatePackageScripts(root);
-  updatePackageEngines(root);
+  const source = path.resolve(projectStructure.config.rootFolders.source);
+
+  // check proper Node version first
   checkNodeVersion();
-  await updatePagesJSToCurrentVersion(root);
-  await updateToUsePagesComponents(root, source);
-  await installDependencies(root, projectStructure);
+
+  // update deps, scripts, engines
+  await updateDevDependencies();
+  updatePackageScripts();
+  updatePackageEngines();
+  await updatePagesJSToCurrentVersion();
+
+  // update code usages
+  removeFetchImport(source);
+  await updateToUsePagesComponents(source);
+
+  // log warnings
+  checkLegacyMarkdown(source);
+
+  // install deps
+  await installDependencies();
+
+  // migrate to consolidated configs (for all scopes)
   if (!args.noMigration) {
     await migrateConfigs(projectStructure);
   }
-  await templatesHandler(scoped);
-  await artifactsHandler(scoped);
 };
 
 export const upgradeCommand = (program: Command) => {
