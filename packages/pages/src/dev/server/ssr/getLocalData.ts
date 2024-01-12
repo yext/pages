@@ -74,9 +74,16 @@ export const getLocalDataManifest = async (
       continue;
     }
 
+    const templateModuleInternal = await findTemplateModuleInternal(
+      vite,
+      async (t) => featureName === t.config.name,
+      templateFilepaths
+    );
+
     const uid = data.uid?.toString();
     const entityId = data.id?.toString();
-    const slug = getSlug(data);
+    const slugField = templateModuleInternal?.config?.slugField;
+    const slug = slugField ? data[slugField] : data.slug?.toString();
     if (entityId) {
       localDataManifest.entity.set(featureName, [
         ...(localDataManifest.entity.get(featureName) || []),
@@ -84,11 +91,6 @@ export const getLocalDataManifest = async (
       ]);
     } else {
       // The lack of an entityId signifies that this is a static template.
-      const templateModuleInternal = await findTemplateModuleInternal(
-        vite,
-        async (t) => featureName === t.config.name,
-        templateFilepaths
-      );
       if (!templateModuleInternal) {
         logWarning(
           `Could not find a static template for feature "${featureName}", skipping.`
@@ -125,21 +127,6 @@ export const getLocalDataManifest = async (
     }
   }
   return localDataManifest;
-};
-
-const getSlug = (data: any) => {
-  const slugField = data?.__?.entityPageSet?.slugField;
-  if (!slugField) {
-    return data.slug?.toString();
-  }
-  const slug = data[slugField];
-  if (!slug) {
-    logWarning(
-      `Specified slug field "${slugField}" not provided in stream definition. Default slug field will be used.`
-    );
-    return data.slug?.toString();
-  }
-  return slug;
 };
 
 const getLocalData = async (
