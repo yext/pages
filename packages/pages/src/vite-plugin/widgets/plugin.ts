@@ -42,50 +42,54 @@ export const buildWidgets = async (
   const logger = createLogger();
   const loggerInfo = logger.info;
 
-  logger.info = (msg, options) => {
-    if (msg.includes("building for production")) {
-      loggerInfo(pc.green("\nBuilding widgets..."), options);
-      return;
-    }
-    loggerInfo(msg, options);
-  };
+  for (const [widgetName, widgetPath] of Object.entries(
+    filePathsIndexedByName
+  )) {
+    logger.info = (msg, options) => {
+      if (msg.includes("building for production")) {
+        loggerInfo(pc.green(`\nBuilding ${widgetName} widget...`));
+        return;
+      }
+      loggerInfo(msg, options);
+    };
 
-  await build({
-    customLogger: logger,
-    configFile: false,
-    envDir: envVarConfig.envVarDir,
-    envPrefix: envVarConfig.envVarPrefix,
-    resolve: {
-      conditions: ["worker", "webworker"],
-    },
-    publicDir: false,
-    build: {
-      emptyOutDir: false,
-      outDir: outdir,
-      minify: false,
-      lib: {
-        entry: filePathsIndexedByName,
-        formats: ["es"],
+    await build({
+      customLogger: logger,
+      configFile: false,
+      envDir: envVarConfig.envVarDir,
+      envPrefix: envVarConfig.envVarPrefix,
+      resolve: {
+        conditions: ["worker", "webworker"],
       },
-      rollupOptions: {
-        output: {
-          format: "umd",
-          entryFileNames: `[name].umd.js`,
+      publicDir: false,
+      build: {
+        emptyOutDir: false,
+        outDir: outdir,
+        minify: false,
+        lib: {
+          entry: widgetPath,
+          formats: ["es"],
         },
+        rollupOptions: {
+          output: {
+            format: "umd",
+            entryFileNames: `${widgetName}.umd.js`,
+          },
+        },
+        reportCompressedSize: false,
       },
-      reportCompressedSize: false,
-    },
-    define: processEnvVariables(envVarConfig.envVarPrefix),
-    plugins: [
-      nodePolyfills({
-        globals: {
-          Buffer: "build",
-          global: "build",
-          process: "build",
-        },
-      }),
-    ],
-  });
+      define: processEnvVariables(envVarConfig.envVarPrefix),
+      plugins: [
+        nodePolyfills({
+          globals: {
+            Buffer: "build",
+            global: "build",
+            process: "build",
+          },
+        }),
+      ],
+    });
+  }
 };
 
 export const shouldBundleWidgets = (projectStructure: ProjectStructure) => {
