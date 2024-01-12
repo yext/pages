@@ -408,22 +408,14 @@ export const checkNodeVersion = () => {
   }
 };
 
-const oldServerlessFunctionRequestTypes = [
-  "SitesHttpRequest",
-  "SitesOnUrlChangeRequest",
-];
-
-const oldServerlessFunctionResponseTypes = [
-  "SitesHttpResponse",
-  "Promise<SitesHttpResponse>",
-  "SitesOnUrlChangeResponse",
-  "Promise<SitesOnUrlChangeResponse>",
-];
-
-const oldServerlessFunctionTypes = [
-  ...oldServerlessFunctionRequestTypes,
-  ...oldServerlessFunctionResponseTypes,
-];
+const serverlessFunctionTypes: { [key: string]: string } = {
+  SitesHttpRequest: "PagesHttpRequest",
+  SitesOnUrlChangeRequest: "PagesOnUrlChangeRequest",
+  SitesHttpResponse: "PagesHttpResponse",
+  "Promise<SitesHttpResponse>": "Promise<PagesHttpResponse>",
+  SitesOnUrlChangeResponse: "PagesOnUrlChangeResponse",
+  "Promise<SitesOnUrlChangeResponse>": "Promise<PagesOnUrlChangeResponse>",
+};
 
 /**
  * Updates the imports and usages of e.g. SitesHttpRequest to PagessHttpRequest.
@@ -455,26 +447,17 @@ export const updateServerlessFunctionTypeReferences = (
       const namedImports = importDeclaration.getNamedImports();
       for (let k = 0; k < namedImports.length; k++) {
         const namedImport = namedImports[k];
-        if (!oldServerlessFunctionTypes.includes(namedImport.getName())) {
+        if (
+          !Object.keys(serverlessFunctionTypes).includes(namedImport.getName())
+        ) {
           continue;
         }
 
-        switch (namedImport.getName()) {
-          case "SitesHttpRequest":
-            importDeclaration.addNamedImport("PagesHttpRequest");
-            break;
-          case "SitesHttpResponse":
-            importDeclaration.addNamedImport("PagesHttpResponse");
-            break;
-          case "SitesOnUrlChangeRequest":
-            importDeclaration.addNamedImport("PagesOnUrlChangeRequest");
-            break;
-          case "SitesOnUrlChangeResponse":
-            importDeclaration.addNamedImport("PagesOnUrlChangeResponse");
-            break;
-        }
-
+        importDeclaration.addNamedImport(
+          serverlessFunctionTypes[namedImport.getName()]
+        );
         namedImport.remove();
+
         fileUpdated = true;
       }
       if (fileUpdated) {
@@ -494,18 +477,9 @@ export const updateServerlessFunctionTypeReferences = (
       // update parameter types
       functions[j].getParameters().forEach((param) => {
         const paramType = param.getType().getText();
-        if (oldServerlessFunctionRequestTypes.includes(paramType)) {
+        if (Object.keys(serverlessFunctionTypes).includes(paramType)) {
           param.removeType();
-
-          switch (paramType) {
-            case "SitesHttpRequest":
-              param.setType("PagesHttpRequest");
-              break;
-
-            case "SitesOnUrlChangeRequest":
-              param.setType("PagesOnUrlChangeRequest");
-              break;
-          }
+          param.setType(serverlessFunctionTypes[paramType]);
 
           console.log(
             `Updated serverless function type params in: ${sourceFile.getFilePath()}`
@@ -515,23 +489,9 @@ export const updateServerlessFunctionTypeReferences = (
 
       // update return types
       const returnType = functions[j].getReturnType().getText();
-      if (oldServerlessFunctionResponseTypes.includes(returnType)) {
+      if (Object.keys(serverlessFunctionTypes).includes(returnType)) {
         functions[j].removeReturnType();
-
-        switch (returnType) {
-          case "Promise<SitesHttpResponse>":
-            functions[j].setReturnType("Promise<PagesHttpResponse>");
-            break;
-          case "SitesHttpResponse":
-            functions[j].setReturnType("PagesHttpResponse");
-            break;
-          case "Promise<SitesOnUrlChangeResponse>":
-            functions[j].setReturnType("Promise<PagesOnUrlChangeResponse>");
-            break;
-          case "SitesOnUrlChangeResponse":
-            functions[j].setReturnType("PagesOnUrlChangeResponse");
-            break;
-        }
+        functions[j].setReturnType(serverlessFunctionTypes[returnType]);
 
         console.log(
           `Updated serverless function return type in: ${sourceFile.getFilePath()}`
