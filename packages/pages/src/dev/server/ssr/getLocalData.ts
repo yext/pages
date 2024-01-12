@@ -76,7 +76,7 @@ export const getLocalDataManifest = async (
 
     const uid = data.uid?.toString();
     const entityId = data.id?.toString();
-    const slug = data.slug?.toString();
+    const slug = getSlug(data);
     if (entityId) {
       localDataManifest.entity.set(featureName, [
         ...(localDataManifest.entity.get(featureName) || []),
@@ -125,6 +125,21 @@ export const getLocalDataManifest = async (
     }
   }
   return localDataManifest;
+};
+
+const getSlug = (data: any) => {
+  const slugField = data?.__?.entityPageSet?.slugField;
+  if (!slugField) {
+    return data.slug?.toString();
+  }
+  const slug = data[slugField];
+  if (!slug) {
+    logWarning(
+      `Specified slug field "${slugField}" not provided in stream definition. Default slug field will be used.`
+    );
+    return data.slug?.toString();
+  }
+  return slug;
 };
 
 const getLocalData = async (
