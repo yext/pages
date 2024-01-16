@@ -43,7 +43,7 @@ export const serverRenderSlugRoute =
           vite,
           matchingStaticTemplate,
           locale,
-          url.pathname,
+          req.originalUrl,
           projectStructure
         );
         return;
@@ -87,7 +87,7 @@ export const serverRenderSlugRoute =
         templateModuleInternal,
         props,
         vite,
-        `/${slug}`,
+        req.originalUrl,
         projectStructure
       );
     } catch (e: any) {
