@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { FunctionModuleInternal } from "../../../common/src/function/internal/types.js";
 import {
-  SitesHttpRequest,
+  PagesHttpRequest,
   Site,
   HttpFunction,
 } from "../../../common/src/function/types.js";
@@ -12,7 +12,7 @@ export const serveHttpFunction = async (
   next: NextFunction,
   serverlessFunction: FunctionModuleInternal
 ) => {
-  const argument: SitesHttpRequest = {
+  const argument: PagesHttpRequest = {
     queryParams: req.query as { [p: string]: string },
     pathParams: req.params,
     method: req.method,
