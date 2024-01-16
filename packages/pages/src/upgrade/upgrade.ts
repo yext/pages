@@ -8,6 +8,7 @@ import {
   updatePackageEngines,
   updatePackageScripts,
   updatePagesJSToCurrentVersion,
+  updateServerlessFunctionTypeReferences,
   updateToUsePagesComponents,
 } from "./pagesUpdater.js";
 import { migrateConfigs } from "./migrateConfig.js";
@@ -36,6 +37,9 @@ const handler = async (args: UpgradeArgs) => {
   // update code usages
   removeFetchImport(source);
   await updateToUsePagesComponents(source);
+  updateServerlessFunctionTypeReferences(
+    path.resolve(source, projectStructure.config.subfolders.serverlessFunctions)
+  );
 
   // log warnings
   checkLegacyMarkdown(source);

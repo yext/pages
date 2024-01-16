@@ -407,3 +407,98 @@ export const checkNodeVersion = () => {
     console.log(ERR_MSG);
   }
 };
+
+const serverlessFunctionTypes: { [key: string]: string } = {
+  SitesHttpRequest: "PagesHttpRequest",
+  SitesOnUrlChangeRequest: "PagesOnUrlChangeRequest",
+  SitesHttpResponse: "PagesHttpResponse",
+  "Promise<SitesHttpResponse>": "Promise<PagesHttpResponse>",
+  SitesOnUrlChangeResponse: "PagesOnUrlChangeResponse",
+  "Promise<SitesOnUrlChangeResponse>": "Promise<PagesOnUrlChangeResponse>",
+};
+
+/**
+ * Updates the imports and usages of e.g. SitesHttpRequest to PagessHttpRequest.
+ * @param serverlessFunctionsPath the path to the serverless functions folder
+ */
+export const updateServerlessFunctionTypeReferences = (
+  serverlessFunctionsPath: string
+) => {
+  let updated = false;
+  const project = new Project({
+    compilerOptions: {
+      jsx: typescript.JsxEmit.ReactJSX,
+      sourceRoot: serverlessFunctionsPath,
+    },
+  });
+  project.addSourceFilesAtPaths(
+    `${serverlessFunctionsPath}/**/*.{ts,tsx,js,jsx}`
+  );
+  const sourceFiles = project.getSourceFiles();
+  for (let i = 0; i < sourceFiles.length; i++) {
+    let fileUpdated = false;
+    const sourceFile = sourceFiles[i];
+    const importDeclarations = sourceFile.getImportDeclarations();
+    for (let j = 0; j < importDeclarations.length; j++) {
+      const importDeclaration = importDeclarations[j];
+      if (importDeclaration.getModuleSpecifierValue() !== "@yext/pages/*") {
+        continue;
+      }
+      const namedImports = importDeclaration.getNamedImports();
+      for (let k = 0; k < namedImports.length; k++) {
+        const namedImport = namedImports[k];
+        if (
+          !Object.keys(serverlessFunctionTypes).includes(namedImport.getName())
+        ) {
+          continue;
+        }
+
+        importDeclaration.addNamedImport(
+          serverlessFunctionTypes[namedImport.getName()]
+        );
+        namedImport.remove();
+
+        fileUpdated = true;
+      }
+      if (fileUpdated) {
+        updated = true;
+        console.log(
+          `Updated serverless function types imported in: ${sourceFile.getFilePath()}`
+        );
+      }
+    }
+
+    if (!updated) {
+      return;
+    }
+
+    const functions = sourceFile.getFunctions();
+    for (let j = 0; j < functions.length; j++) {
+      // update parameter types
+      functions[j].getParameters().forEach((param) => {
+        const paramType = param.getType().getText();
+        if (Object.keys(serverlessFunctionTypes).includes(paramType)) {
+          param.removeType();
+          param.setType(serverlessFunctionTypes[paramType]);
+
+          console.log(
+            `Updated serverless function type params in: ${sourceFile.getFilePath()}`
+          );
+        }
+      });
+
+      // update return types
+      const returnType = functions[j].getReturnType().getText();
+      if (Object.keys(serverlessFunctionTypes).includes(returnType)) {
+        functions[j].removeReturnType();
+        functions[j].setReturnType(serverlessFunctionTypes[returnType]);
+
+        console.log(
+          `Updated serverless function return type in: ${sourceFile.getFilePath()}`
+        );
+      }
+    }
+  }
+
+  project.saveSync();
+};
