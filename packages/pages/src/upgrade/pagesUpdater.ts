@@ -1,10 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { Project } from "ts-morph";
-import { ProjectStructure } from "../common/src/project/structure.js";
 import latestVersion from "latest-version";
 import { execSync } from "child_process";
-import { readJsonSync } from "./migrateConfig.js";
 import { fileURLToPath } from "url";
 import typescript from "typescript";
 
@@ -20,18 +18,16 @@ const DEV_DEPENDENCIES = "devDependencies";
 
 /**
  * Helper function to update a package dependency in package.json
- * @param root folder that contains package.json
  * @param packageName name of the package to update
  * @param version version to update to, if not supplied uses @latest
  * @param install whether to install the package if it does not exist
  */
 async function updatePackageDependency(
-  root: string,
   packageName: string,
   version: string | null,
   install: boolean = false
 ) {
-  const packagePath = path.resolve(root, "package.json");
+  const packagePath = path.resolve("package.json");
   if (!fs.existsSync(packagePath)) {
     console.error(
       `Could not find package.json, unable to update ${packageName}`
@@ -54,7 +50,7 @@ async function updatePackageDependency(
       return;
     }
     // if getting the latest version, add a caret
-    if (!version && toVersion.charAt(0) != "^") {
+    if (!version && toVersion.charAt(0) !== "^") {
       toVersion = "^" + toVersion;
     }
     if (currentVersion === toVersion) {
@@ -79,11 +75,8 @@ async function updatePackageDependency(
  * @param packageName name of the package to remove
  * @return hasRemoved whether the package was removed
  */
-async function removePackageDependency(
-  root: string,
-  packageName: string
-): Promise<boolean> {
-  const packagePath = path.resolve(root, "package.json");
+async function removePackageDependency(packageName: string): Promise<boolean> {
+  const packagePath = path.resolve("package.json");
   if (!fs.existsSync(packagePath)) {
     console.error(
       `Could not find package.json, unable to remove ${packageName}`
@@ -145,15 +138,11 @@ function processDirectoryRecursively(
 /**
  * Update pages-components to the latest version and replace sites-components imports with
  * pages-components.
- * @param root folder that contains package.json
  * @param source the src folder
  */
-export const updateToUsePagesComponents = async (
-  root: string,
-  source: string
-) => {
-  await removePackageDependency(root, "@yext/sites-components");
-  await removePackageDependency(root, "@yext/react-components");
+export const updateToUsePagesComponents = async (source: string) => {
+  await removePackageDependency("@yext/sites-components");
+  await removePackageDependency("@yext/react-components");
   // update imports from pages/components to sites-components
   const hasPagesSlashComponentsImports =
     replacePagesSlashComponentsImports(source);
@@ -163,7 +152,6 @@ export const updateToUsePagesComponents = async (
   const hasReactComponentsImports = replaceReactComponentsImports(source);
 
   await updatePackageDependency(
-    root,
     "@yext/pages-components",
     null,
     hasPagesSlashComponentsImports ||
@@ -174,9 +162,8 @@ export const updateToUsePagesComponents = async (
 
 /**
  * Update yext/pages to the version that is running
- * @param root folder that contains package.json
  */
-export const updatePagesJSToCurrentVersion = async (root: string) => {
+export const updatePagesJSToCurrentVersion = async () => {
   const filePath = "/dist/upgrade";
   try {
     const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -185,7 +172,7 @@ export const updatePagesJSToCurrentVersion = async (root: string) => {
       "package.json"
     );
     const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
-    await updatePackageDependency(root, "@yext/pages", packageJson.version);
+    await updatePackageDependency("@yext/pages", packageJson.version);
   } catch (e) {
     console.error("Failed to upgrade pages version: ", (e as Error).message);
     process.exit(1);
@@ -194,13 +181,12 @@ export const updatePagesJSToCurrentVersion = async (root: string) => {
 
 /**
  * Updates vitejs/plugin-react and vite to specified versions
- * @param root folder that contains package.json
  */
-export const updateDevDependencies = async (root: string) => {
-  await updatePackageDependency(root, "@vitejs/plugin-react", null);
-  await updatePackageDependency(root, "vite", "^5.0.10");
-  await updatePackageDependency(root, "@yext/search-headless-react", null);
-  await updatePackageDependency(root, "@yext/search-ui-react", null);
+export const updateDevDependencies = async () => {
+  await updatePackageDependency("@vitejs/plugin-react", null);
+  await updatePackageDependency("vite", "^5.0.10");
+  await updatePackageDependency("@yext/search-headless-react", null);
+  await updatePackageDependency("@yext/search-ui-react", null);
 };
 
 /**
@@ -301,19 +287,14 @@ export const removeFetchImport = (source: string) => {
       sourceRoot: source,
     },
   });
-  project.addSourceFilesAtPaths([
-    `${source}/**/*.ts`,
-    `${source}/**/*.tsx`,
-    `${source}/**/*.js`,
-    `${source}/**/*.jsx`,
-  ]);
+  project.addSourceFilesAtPaths(`${source}/**/*.{ts,tsx,js,jsx}`);
   const sourceFiles = project.getSourceFiles();
   for (let i = 0; i < sourceFiles.length; i++) {
     const sourceFile = sourceFiles[i];
     const importDeclarations = sourceFile.getImportDeclarations();
     for (let j = 0; j < importDeclarations.length; j++) {
       const importDeclaration = importDeclarations[j];
-      if (importDeclaration.getModuleSpecifierValue() != "@yext/pages/util") {
+      if (importDeclaration.getModuleSpecifierValue() !== "@yext/pages/util") {
         continue;
       }
       const namedImports = importDeclaration.getNamedImports();
@@ -341,10 +322,9 @@ export const removeFetchImport = (source: string) => {
 
 /**
  * Updates package scripts to include dev, prod, and build:local commands
- * @param root folder that includes package.json
  */
-export const updatePackageScripts = (root: string) => {
-  const packageJsonPath = path.resolve(root, "package.json");
+export const updatePackageScripts = () => {
+  const packageJsonPath = path.resolve("package.json");
 
   try {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
@@ -363,51 +343,31 @@ export const updatePackageScripts = (root: string) => {
 
 /**
  * Install dependencies using install command or npm, pnpm, or yarn install.
- * @param root folder that contains package.json
- * @param projectStructure
  */
-export const installDependencies = async (
-  root: string,
-  projectStructure: ProjectStructure
-) => {
-  const ciJsonPath = path.resolve(
-    projectStructure.getSitesConfigPath().getAbsolutePath(),
-    projectStructure.config.sitesConfigFiles.ci
-  );
-
-  try {
-    const ciJson = readJsonSync(ciJsonPath);
-    const installDepsCmd = ciJson.dependencies.installDepsCmd;
-    console.log(`Installing dependencies using '${installDepsCmd}'`);
-    execSync(installDepsCmd);
+export const installDependencies = async () => {
+  if (fs.existsSync(path.resolve("package-lock.json"))) {
+    console.log("package-lock detected, installing npm packages");
+    execSync("npm install");
     return;
-  } catch (ignored) {
-    // if we cant find the installation command, determine it from existence of lock files
-    if (fs.existsSync(path.resolve(root, "package-lock.json"))) {
-      console.log("package-lock detected, installing npm packages");
-      execSync("npm install");
-      return;
-    }
-    if (fs.existsSync(path.resolve(root, "pnpm-lock.json"))) {
-      console.log("pnpm-lock detected, installing pnpm packages");
-      execSync("pnpm install");
-      return;
-    }
-    if (fs.existsSync(path.resolve(root, "yarn.lock"))) {
-      console.log("yarn.lock detected, installing yarn packages");
-      execSync("yarn install");
-      return;
-    }
+  }
+  if (fs.existsSync(path.resolve("pnpm-lock.json"))) {
+    console.log("pnpm-lock detected, installing pnpm packages");
+    execSync("pnpm install");
+    return;
+  }
+  if (fs.existsSync(path.resolve("yarn.lock"))) {
+    console.log("yarn.lock detected, installing yarn packages");
+    execSync("yarn install");
+    return;
   }
 };
 
 const NODE_ENGINES = "^18.0.0 || >=20.0.0";
 /**
  * Update package engines to latest supported node versions.
- * @param root folder that contains package.json
  */
-export const updatePackageEngines = (root: string) => {
-  const packageJsonPath = path.resolve(root, "package.json");
+export const updatePackageEngines = () => {
+  const packageJsonPath = path.resolve("package.json");
   try {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
     let engines = packageJson.engines;
@@ -438,7 +398,7 @@ export const checkNodeVersion = () => {
       return;
     }
     const version = parseInt(nodeVersion.toString().split(".")[0].substring(1));
-    if (version != 18 && version != 20) {
+    if (version !== 18 && version !== 20) {
       console.error(
         `You are currently using an unsupported node version ${nodeVersion}. Please install node ${NODE_ENGINES}.`
       );
@@ -446,4 +406,99 @@ export const checkNodeVersion = () => {
   } catch (e) {
     console.log(ERR_MSG);
   }
+};
+
+const serverlessFunctionTypes: { [key: string]: string } = {
+  SitesHttpRequest: "PagesHttpRequest",
+  SitesOnUrlChangeRequest: "PagesOnUrlChangeRequest",
+  SitesHttpResponse: "PagesHttpResponse",
+  "Promise<SitesHttpResponse>": "Promise<PagesHttpResponse>",
+  SitesOnUrlChangeResponse: "PagesOnUrlChangeResponse",
+  "Promise<SitesOnUrlChangeResponse>": "Promise<PagesOnUrlChangeResponse>",
+};
+
+/**
+ * Updates the imports and usages of e.g. SitesHttpRequest to PagessHttpRequest.
+ * @param serverlessFunctionsPath the path to the serverless functions folder
+ */
+export const updateServerlessFunctionTypeReferences = (
+  serverlessFunctionsPath: string
+) => {
+  let updated = false;
+  const project = new Project({
+    compilerOptions: {
+      jsx: typescript.JsxEmit.ReactJSX,
+      sourceRoot: serverlessFunctionsPath,
+    },
+  });
+  project.addSourceFilesAtPaths(
+    `${serverlessFunctionsPath}/**/*.{ts,tsx,js,jsx}`
+  );
+  const sourceFiles = project.getSourceFiles();
+  for (let i = 0; i < sourceFiles.length; i++) {
+    let fileUpdated = false;
+    const sourceFile = sourceFiles[i];
+    const importDeclarations = sourceFile.getImportDeclarations();
+    for (let j = 0; j < importDeclarations.length; j++) {
+      const importDeclaration = importDeclarations[j];
+      if (importDeclaration.getModuleSpecifierValue() !== "@yext/pages/*") {
+        continue;
+      }
+      const namedImports = importDeclaration.getNamedImports();
+      for (let k = 0; k < namedImports.length; k++) {
+        const namedImport = namedImports[k];
+        if (
+          !Object.keys(serverlessFunctionTypes).includes(namedImport.getName())
+        ) {
+          continue;
+        }
+
+        importDeclaration.addNamedImport(
+          serverlessFunctionTypes[namedImport.getName()]
+        );
+        namedImport.remove();
+
+        fileUpdated = true;
+      }
+      if (fileUpdated) {
+        updated = true;
+        console.log(
+          `Updated serverless function types imported in: ${sourceFile.getFilePath()}`
+        );
+      }
+    }
+
+    if (!updated) {
+      return;
+    }
+
+    const functions = sourceFile.getFunctions();
+    for (let j = 0; j < functions.length; j++) {
+      // update parameter types
+      functions[j].getParameters().forEach((param) => {
+        const paramType = param.getType().getText();
+        if (Object.keys(serverlessFunctionTypes).includes(paramType)) {
+          param.removeType();
+          param.setType(serverlessFunctionTypes[paramType]);
+
+          console.log(
+            `Updated serverless function type params in: ${sourceFile.getFilePath()}`
+          );
+        }
+      });
+
+      // update return types
+      const returnType = functions[j].getReturnType().getText();
+      if (Object.keys(serverlessFunctionTypes).includes(returnType)) {
+        functions[j].removeReturnType();
+        functions[j].setReturnType(serverlessFunctionTypes[returnType]);
+
+        console.log(
+          `Updated serverless function return type in: ${sourceFile.getFilePath()}`
+        );
+      }
+    }
+  }
+
+  project.saveSync();
 };

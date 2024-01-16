@@ -17,21 +17,21 @@ export type FunctionType = HttpFunction | OnUrlChangeFunction;
  * A function that runs when a specific path is visited on the site.
  * @public
  */
-export type HttpFunction = (arg: SitesHttpRequest) => SitesHttpResponse;
+export type HttpFunction = (arg: PagesHttpRequest) => PagesHttpResponse;
 
 /**
  * A function that runs when the path of a production page changes.
  * @public
  */
 export type OnUrlChangeFunction = (
-  arg: SitesOnUrlChangeRequest
-) => SitesOnUrlChangeResponse;
+  arg: PagesOnUrlChangeRequest
+) => PagesOnUrlChangeResponse;
 
 /**
  * The argument passed to a http/api type function.
  * @public
  */
-export interface SitesHttpRequest {
+export interface PagesHttpRequest {
   /** Object containing each query parameter. */
   queryParams: { [key: string]: string };
   /** Object containing each path parameter. */
@@ -50,7 +50,7 @@ export interface SitesHttpRequest {
  * The return value for a http/api serverless function.
  * @public
  */
-export interface SitesHttpResponse {
+export interface PagesHttpResponse {
   /** HTTP response body (refer to MDN Web Docs). */
   body: string;
   /** HTTP response status code (refer to MDN Web Docs). */
@@ -63,7 +63,7 @@ export interface SitesHttpResponse {
  * The argument passed to an onUrlChange type plugin.
  * @public
  */
-export interface SitesOnUrlChangeRequest {
+export interface PagesOnUrlChangeRequest {
   /** The domains the site is hosted on. */
   domainMap: {
     /** The production domain. */
@@ -95,7 +95,7 @@ export interface SitesOnUrlChangeRequest {
  * onUrlUpdate plugins return void.
  * @public
  */
-export type SitesOnUrlChangeResponse = void;
+export type PagesOnUrlChangeResponse = void;
 
 /**
  * The site information passed to a serverless function by the Yext system.

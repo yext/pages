@@ -69,7 +69,7 @@ export interface HeadConfig {
 }
 
 // @public
-export type HttpFunction = (arg: SitesHttpRequest) => SitesHttpResponse;
+export type HttpFunction = (arg: PagesHttpRequest) => PagesHttpResponse;
 
 // @public
 export type Manifest = {
@@ -88,14 +88,63 @@ export type Manifest = {
 
 // @public
 export type OnUrlChangeFunction = (
-  arg: SitesOnUrlChangeRequest
-) => SitesOnUrlChangeResponse;
+  arg: PagesOnUrlChangeRequest
+) => PagesOnUrlChangeResponse;
 
 // @internal
 export interface PageContext<T extends TemplateRenderProps<T>> {
   Page: Template<T>;
   pageProps: T;
 }
+
+// @public
+export interface PagesHttpRequest {
+  body: string;
+  headers: {
+    [key: string]: string[];
+  };
+  method: string;
+  pathParams: {
+    [key: string]: string;
+  };
+  queryParams: {
+    [key: string]: string;
+  };
+  site: Site;
+}
+
+// @public
+export interface PagesHttpResponse {
+  body: string;
+  headers:
+    | {
+        [key: string]: string;
+      }
+    | {
+        [key: string]: [string];
+      };
+  statusCode: number;
+}
+
+// @public
+export interface PagesOnUrlChangeRequest {
+  domainMap: {
+    production: string;
+    staging: string;
+    deployPreview: string;
+    displayUrlPrefix: string;
+  };
+  entityId: string;
+  feature: string;
+  locale: string;
+  path: string;
+  previousUrl: string;
+  site: Site;
+  url: string;
+}
+
+// @public
+export type PagesOnUrlChangeResponse = void;
 
 // @public
 export type Render<T extends TemplateRenderProps<T>> = (props: T) => string;
@@ -130,55 +179,6 @@ export interface Site {
   stagingDomain: string;
   yextUniverse: "development" | "qa" | "sandbox" | "production" | null;
 }
-
-// @public
-export interface SitesHttpRequest {
-  body: string;
-  headers: {
-    [key: string]: string[];
-  };
-  method: string;
-  pathParams: {
-    [key: string]: string;
-  };
-  queryParams: {
-    [key: string]: string;
-  };
-  site: Site;
-}
-
-// @public
-export interface SitesHttpResponse {
-  body: string;
-  headers:
-    | {
-        [key: string]: string;
-      }
-    | {
-        [key: string]: [string];
-      };
-  statusCode: number;
-}
-
-// @public
-export interface SitesOnUrlChangeRequest {
-  domainMap: {
-    production: string;
-    staging: string;
-    deployPreview: string;
-    displayUrlPrefix: string;
-  };
-  entityId: string;
-  feature: string;
-  locale: string;
-  path: string;
-  previousUrl: string;
-  site: Site;
-  url: string;
-}
-
-// @public
-export type SitesOnUrlChangeResponse = void;
 
 // @public
 export interface StaticTemplateConfig {
