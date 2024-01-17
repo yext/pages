@@ -30,6 +30,7 @@ interface FeatureConfigBase {
   name: string;
   streamId?: string;
   templateType: "JS";
+  /** @deprecated field will be unsupported in the future */
   alternateLanguageFields?: string[];
   onUrlChange?: PluginFunctionSelector;
 }
