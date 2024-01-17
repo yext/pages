@@ -230,22 +230,29 @@ const createStaticPageListItems = (
   );
 };
 
+const formatLink = (
+  useProdUrls: boolean,
+  templateName: string,
+  entityId: string,
+  locale: string,
+  slug?: string
+) => {
+  if (useProdUrls) {
+    return slug;
+  }
+
+  // Default language is en. Only add a query param if not en.
+  const localeQuery = locale === "en" ? "" : `?locale=${locale}`;
+
+  return `${templateName}/${entityId}${localeQuery}`;
+};
+
 const createEntityPageListItems = (
   localDataManifest: LocalDataManifest,
   templateName: string,
   useProdURLs: boolean,
   devServerPort: number
 ) => {
-  const formatLink = (entityId: string, slug: string | undefined) => {
-    if (useProdURLs) {
-      return `http://localhost:${devServerPort}/${slug}`;
-    }
-
-    return `http://localhost:${devServerPort}/${encodeURIComponent(
-      templateName
-    )}/${entityId}`;
-  };
-
   const { accountId, universe } = parseYextrcContents();
   const partition = getPartition(Number(accountId));
   // Content is knowledge graph
@@ -260,19 +267,29 @@ const createEntityPageListItems = (
   };
 
   const entities = localDataManifest.entity.get(templateName) || [];
-  return entities.reduce((entityAccumulator, { uid, entityId, slug }) => {
-    if (useProdURLs && !slug) {
-      logWarning(
-        `No document.slug found for entityId "${entityId}", no link will be rendered in the index page.`
+  return entities.reduce(
+    (entityAccumulator, { uid, entityId, slug, locale }) => {
+      if (useProdURLs && !slug) {
+        logWarning(
+          `No document.slug found for entityId "${entityId}", no link will be rendered in the index page.`
+        );
+        return entityAccumulator;
+      }
+
+      const link = formatLink(
+        useProdURLs,
+        templateName,
+        entityId,
+        locale,
+        slug
       );
-      return entityAccumulator;
-    }
-    return (
-      entityAccumulator +
-      `<tr>
+
+      return (
+        entityAccumulator +
+        `<tr>
         <td>
-          <a href="${formatLink(entityId, slug)}">
-            ${slug ?? entityId}
+          <a href="http://localhost:${devServerPort}/${link}">
+            ${link}
            </a>
         </td>
         <td>
@@ -283,8 +300,10 @@ const createEntityPageListItems = (
           }
         </td>
     </tr>`
-    );
-  }, "");
+      );
+    },
+    ""
+  );
 };
 
 const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
