@@ -60,6 +60,23 @@ export const generateTestDataForSlug = async (
   const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
   args.push("--slug", slug);
 
+  const slugFields = new Set<string>();
+  let shouldAddDefaultSlugField = false;
+  templateModuleCollection.forEach((templateModule) => {
+    const slugField = templateModule?.config?.slugField;
+    if (slugField) {
+      slugFields.add(`entity.${slugField}`);
+    } else {
+      shouldAddDefaultSlugField = true;
+    }
+  });
+  if (slugFields.size !== 0) {
+    if (shouldAddDefaultSlugField) {
+      slugFields.add("entity.slug");
+    }
+    args.push("--slugFields", Array.from(slugFields).toString());
+  }
+
   const parsedData = await spawnTestDataCommand(stdout, "yext", args);
   return getDocumentByLocale(parsedData, locale);
 };
