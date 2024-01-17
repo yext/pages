@@ -25,11 +25,14 @@ export interface LocalDataManifest {
   entity: Map<
     string,
     {
+      // The entity's document.uid (internal id)
       uid: string;
-      // The entity's document.id
+      // The entity's document.id (external id)
       entityId: string;
       // The entity's document.slug
-      slug: string | undefined;
+      slug?: string;
+      // The entity profile's locale
+      locale: string;
     }[]
   >;
 }
@@ -84,10 +87,11 @@ export const getLocalDataManifest = async (
     const entityId = data.id?.toString();
     const slugField = templateModuleInternal?.config?.slugField;
     const slug = slugField ? data[slugField] : data.slug?.toString();
+    const locale = data.locale?.toString();
     if (entityId) {
       localDataManifest.entity.set(featureName, [
         ...(localDataManifest.entity.get(featureName) || []),
-        { uid, entityId, slug },
+        { uid, entityId, slug, locale },
       ]);
     } else {
       // The lack of an entityId signifies that this is a static template.
