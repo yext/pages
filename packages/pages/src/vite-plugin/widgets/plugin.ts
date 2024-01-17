@@ -62,6 +62,13 @@ export const buildWidgets = async (
         conditions: ["worker", "webworker"],
       },
       publicDir: false,
+      css: {
+        postcss: path.join(
+          rootFolders.source,
+          subfolders.widgets,
+          `${widgetName}/postcss.config.cjs`
+        ),
+      },
       build: {
         emptyOutDir: false,
         outDir: outdir,
