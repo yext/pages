@@ -45,8 +45,6 @@ export interface TemplateModuleInternal<
   render?: Render<U>;
   /** The exported default template function */
   default?: Template<U>;
-  /** The type of template */
-  templateType: "entity" | "static";
 }
 
 /**
@@ -74,6 +72,8 @@ export interface TemplateConfigInternal {
   pageUrlField?: string;
   /** The field to use as the slug for dynamic dev mode */
   slugField?: string;
+  /** The type of template */
+  templateType: "entity" | "static";
 }
 
 /**
@@ -136,10 +136,10 @@ export const parse = (
 };
 
 export const isStaticTemplateConfig = (
-  config: TemplateConfigInternal
+  streamId: string | undefined,
+  streamConfig: StreamInternal | undefined
 ): boolean => {
-  const streamConfig = config.stream || null;
-  return !config.streamId && (!streamConfig || !streamConfig.$id);
+  return !streamId && (!streamConfig || !streamConfig.$id);
 };
 
 export const convertTemplateModuleToTemplateModuleInternal = (
@@ -149,20 +149,15 @@ export const convertTemplateModuleToTemplateModuleInternal = (
 ): TemplateModuleInternal<any, any> => {
   const templatePath = parse(templateFilepath, adjustForFingerprintedAsset);
 
-  const templateConfigInternal = convertTemplateConfigToTemplateConfigInternal(
-    templatePath.name,
-    templateModule.config
-  );
-
   const templateModuleInternal = {
     ...templateModule,
-    config: templateConfigInternal,
+    config: convertTemplateConfigToTemplateConfigInternal(
+      templatePath.name,
+      templateModule.config
+    ),
     path: templateFilepath,
     filename: templatePath.base,
     templateName: templatePath.name,
-    templateType: isStaticTemplateConfig(templateConfigInternal)
-      ? "static"
-      : "entity",
   } as TemplateModuleInternal<any, any>;
 
   validateTemplateModuleInternal(templateModuleInternal);
@@ -174,11 +169,16 @@ export const convertTemplateConfigToTemplateConfigInternal = (
   templateName: string,
   templateConfig: TemplateConfig | undefined
 ): TemplateConfigInternal => {
+  const stream = convertStreamToStreamInternal(templateConfig?.stream);
+
   return {
     name: templateConfig?.name ?? templateName,
     hydrate: templateConfig?.hydrate ?? true,
     ...templateConfig,
-    stream: convertStreamToStreamInternal(templateConfig?.stream),
+    stream: stream,
+    templateType: isStaticTemplateConfig(templateConfig?.streamId, stream)
+      ? "static"
+      : "entity",
   };
 };
 

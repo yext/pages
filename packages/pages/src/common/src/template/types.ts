@@ -97,10 +97,7 @@ export interface TemplateConfig {
   streamId?: string;
   /** The stream configuration used by the template */
   stream?: Stream;
-  /**
-   * The specific fields to add additional language options to based on the stream's localization.
-   * @deprecated field will be unsupported in the future
-   */
+  /** The specific fields to add additional language options to based on the stream's localization */
   alternateLanguageFields?: string[];
   /** The name of the onUrlChange function to use. */
   onUrlChange?: string;

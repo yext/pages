@@ -43,11 +43,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         name: "myTemplateName",
         hydrate: false,
         streamId: "$id",
+        templateType: "entity",
       },
       path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
-      templateType: "entity",
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
@@ -80,11 +80,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         name: "myOverriddenName",
         hydrate: false,
         streamId: "$id",
+        templateType: "entity",
       },
       path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
-      templateType: "entity",
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
@@ -116,11 +116,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         name: "myTemplateName",
         hydrate: false,
         streamId: "$id",
+        templateType: "entity",
       },
       path: path.join("src", "templates", "myTemplateName.0ab33d.tsx"),
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
-      templateType: "entity",
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
@@ -161,11 +161,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         name: "myTemplateName",
         hydrate: true,
         streamId: "$id",
+        templateType: "entity",
       },
       path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
-      templateType: "entity",
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
@@ -207,11 +207,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
         name: "myTemplateName",
         hydrate: false,
         streamId: "$id",
+        templateType: "entity",
       },
       path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
-      templateType: "entity",
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(

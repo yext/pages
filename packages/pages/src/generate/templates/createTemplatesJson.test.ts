@@ -13,11 +13,11 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
       config: {
         name: "turtlehead-tacos",
         hydrate: true,
+        templateType: "static",
       },
       getPath: () => {
         return "";
       },
-      templateType: "static",
     });
     templateModules.set("location", {
       path: "src/templates/location.tsx",
@@ -41,11 +41,11 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
             replaceOptionValuesWithDisplayNames: ["paymentOptions"],
           },
         },
+        templateType: "entity",
       },
       getPath: () => {
         return "";
       },
-      templateType: "entity",
     });
 
     const expected: FeaturesConfig = {

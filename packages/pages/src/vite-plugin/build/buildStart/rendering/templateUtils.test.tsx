@@ -17,12 +17,12 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
   config: {
     name: "name",
     hydrate: false,
+    templateType: "entity",
   },
   getPath: () => {
     return "path";
   },
   default: () => <div></div>,
-  templateType: "entity",
 };
 
 const manifest: Manifest = {

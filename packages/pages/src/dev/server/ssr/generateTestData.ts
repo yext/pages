@@ -48,13 +48,15 @@ export const generateTestDataForSlug = async (
 ): Promise<any> => {
   const templateFilepaths =
     getTemplateFilepathsFromProjectStructure(projectStructure);
+
   const templateModuleCollection = await loadTemplateModuleCollectionUsingVite(
     vite,
     templateFilepaths
   );
 
+  // get only the entity templates
   for (const [key, templateModule] of templateModuleCollection.entries()) {
-    if (templateModule.templateType !== "entity") {
+    if (templateModule.config.templateType !== "entity") {
       templateModuleCollection.delete(key);
     }
   }
