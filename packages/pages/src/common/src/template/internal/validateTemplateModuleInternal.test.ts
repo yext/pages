@@ -113,6 +113,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
         hydrate: true,
         streamId: "$id",
       },
+      templateType: "entity",
     };
 
     const validateTemplateModuleInternalFunc = () =>

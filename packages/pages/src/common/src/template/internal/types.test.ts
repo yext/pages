@@ -47,6 +47,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
+      templateType: "entity",
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
@@ -83,6 +84,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
+      templateType: "entity",
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
@@ -118,6 +120,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       path: path.join("src", "templates", "myTemplateName.0ab33d.tsx"),
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
+      templateType: "entity",
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
@@ -162,6 +165,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
+      templateType: "entity",
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(
@@ -207,6 +211,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       path: myTemplateNamePath,
       filename: "myTemplateName.tsx",
       templateName: "myTemplateName",
+      templateType: "entity",
     };
 
     expect(JSON.stringify(templateConfigInternal)).toEqual(

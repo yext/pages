@@ -17,6 +17,7 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
       getPath: () => {
         return "";
       },
+      templateType: "static",
     });
     templateModules.set("location", {
       path: "src/templates/location.tsx",
@@ -44,6 +45,7 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
       getPath: () => {
         return "";
       },
+      templateType: "entity",
     });
 
     const expected: FeaturesConfig = {

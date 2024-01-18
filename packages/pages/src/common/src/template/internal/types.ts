@@ -45,6 +45,8 @@ export interface TemplateModuleInternal<
   render?: Render<U>;
   /** The exported default template function */
   default?: Template<U>;
+  /** The type of template */
+  templateType: "entity" | "static";
 }
 
 /**
@@ -133,6 +135,13 @@ export const parse = (
   };
 };
 
+export const isStaticTemplateConfig = (
+  config: TemplateConfigInternal
+): boolean => {
+  const streamConfig = config.stream || null;
+  return !config.streamId && (!streamConfig || !streamConfig.$id);
+};
+
 export const convertTemplateModuleToTemplateModuleInternal = (
   templateFilepath: string,
   templateModule: TemplateModule<any, any>,
@@ -140,16 +149,21 @@ export const convertTemplateModuleToTemplateModuleInternal = (
 ): TemplateModuleInternal<any, any> => {
   const templatePath = parse(templateFilepath, adjustForFingerprintedAsset);
 
+  const templateConfigInternal = convertTemplateConfigToTemplateConfigInternal(
+    templatePath.name,
+    templateModule.config
+  );
+
   const templateModuleInternal = {
     ...templateModule,
-    config: convertTemplateConfigToTemplateConfigInternal(
-      templatePath.name,
-      templateModule.config
-    ),
+    config: templateConfigInternal,
     path: templateFilepath,
     filename: templatePath.base,
     templateName: templatePath.name,
-  };
+    templateType: isStaticTemplateConfig(templateConfigInternal)
+      ? "static"
+      : "entity",
+  } as TemplateModuleInternal<any, any>;
 
   validateTemplateModuleInternal(templateModuleInternal);
 

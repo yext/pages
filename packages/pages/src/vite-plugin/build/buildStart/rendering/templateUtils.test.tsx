@@ -22,6 +22,7 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
     return "path";
   },
   default: () => <div></div>,
+  templateType: "entity",
 };
 
 const manifest: Manifest = {

@@ -52,6 +52,13 @@ export const generateTestDataForSlug = async (
     vite,
     templateFilepaths
   );
+
+  for (const [key, templateModule] of templateModuleCollection.entries()) {
+    if (templateModule.templateType !== "entity") {
+      templateModuleCollection.delete(key);
+    }
+  }
+
   const featuresConfig = getTemplatesConfig(templateModuleCollection);
   const featuresConfigForEntityPages: FeaturesConfig = {
     features: featuresConfig.features.filter((f) => "entityPageSet" in f),
@@ -70,6 +77,7 @@ export const generateTestDataForSlug = async (
       shouldAddDefaultSlugField = true;
     }
   });
+
   if (slugFields.size !== 0) {
     if (shouldAddDefaultSlugField) {
       slugFields.add("entity.slug");
