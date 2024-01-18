@@ -61,13 +61,6 @@ interface PluginFunctionSelector {
  */
 export type FeatureConfig = EntityPageSetConfig | StaticPageConfig;
 
-export const isStaticTemplateConfig = (
-  config: TemplateConfigInternal
-): boolean => {
-  const streamConfig = config.stream || null;
-  return !config.streamId && (!streamConfig || !streamConfig.$id);
-};
-
 /**
  * Converts a {@link TemplateConfigInternal} into a valid single {@link FeatureConfig}.
  */
@@ -85,7 +78,7 @@ export const convertTemplateConfigToFeatureConfig = (
 
   let featureConfig: FeatureConfig;
   // If the templateConfig does not reference a stream, assume it's a static feature.
-  if (isStaticTemplateConfig(config)) {
+  if (config.templateType === "static") {
     featureConfig = {
       ...featureConfigBase,
       staticPage: {
