@@ -13,6 +13,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
       name: "myTemplateConfig",
       streamId: "$id",
       hydrate: true,
+      templateType: "entity",
     };
 
     const featuresConfig =
@@ -44,6 +45,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
           primary: true,
         },
       },
+      templateType: "entity",
     };
 
     const featuresConfig =
@@ -82,6 +84,7 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
       name: "myTemplateConfig",
       hydrate: true,
       streamId: "$id",
+      templateType: "entity",
     };
 
     const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
@@ -102,6 +105,7 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
       hydrate: true,
       streamId: "$id",
       pageUrlField: "myPageUrlField",
+      templateType: "entity",
     };
 
     const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
@@ -130,6 +134,7 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
           primary: true,
         },
       },
+      templateType: "entity",
     };
 
     const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
@@ -148,6 +153,7 @@ describe("features - convertTemplateConfigToFeatureConfig", () => {
     const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
       hydrate: true,
+      templateType: "static",
     };
     const featureConfig = convertTemplateConfigToFeatureConfig(templateConfig);
 
