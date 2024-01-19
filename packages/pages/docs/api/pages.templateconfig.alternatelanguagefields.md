@@ -4,11 +4,7 @@
 
 ## TemplateConfig.alternateLanguageFields property
 
-> Warning: This API is now obsolete.
->
-> field will be unsupported in the future
-
-The specific fields to add additional language options to based on the stream's localization.
+The specific fields to add additional language options to based on the stream's localization
 
 **Signature:**
 

@@ -13,6 +13,7 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
       config: {
         name: "turtlehead-tacos",
         hydrate: true,
+        templateType: "static",
       },
       getPath: () => {
         return "";
@@ -40,6 +41,7 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
             replaceOptionValuesWithDisplayNames: ["paymentOptions"],
           },
         },
+        templateType: "entity",
       },
       getPath: () => {
         return "";

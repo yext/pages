@@ -14,6 +14,7 @@ describe("validateTemplateModuleInternal - validateConfig", () => {
     const templateConfigInternal: TemplateConfigInternal = {
       name: "",
       hydrate: true,
+      templateType: "static",
     };
 
     const validateConfigFunc = () =>
@@ -37,6 +38,7 @@ describe("validateTemplateModuleInternal - validateConfig", () => {
           primary: true,
         },
       },
+      templateType: "entity",
     };
 
     const validateConfigFunc = () =>
@@ -61,6 +63,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
         name: "foo",
         hydrate: true,
         streamId: "$id",
+        templateType: "entity",
       },
     };
 
@@ -86,6 +89,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
         name: "foo",
         hydrate: true,
         streamId: "$id",
+        templateType: "entity",
       },
     };
 
@@ -112,6 +116,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
         name: "foo",
         hydrate: true,
         streamId: "$id",
+        templateType: "entity",
       },
     };
 

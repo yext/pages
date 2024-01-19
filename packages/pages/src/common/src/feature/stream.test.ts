@@ -7,6 +7,7 @@ describe("stream", () => {
     const templateConfig: TemplateConfigInternal = {
       name: "myTemplateConfig",
       hydrate: false,
+      templateType: "static",
     };
 
     const streamConfig = convertTemplateConfigToStreamConfig(templateConfig);
@@ -26,6 +27,7 @@ describe("stream", () => {
           primary: true,
         },
       },
+      templateType: "entity",
     };
 
     const streamConfig = convertTemplateConfigToStreamConfig(templateConfig);

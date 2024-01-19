@@ -1,5 +1,4 @@
 import { ViteDevServer } from "vite";
-import { isStaticTemplateConfig } from "../../../common/src/feature/features.js";
 import { findTemplateModuleInternal } from "./findTemplateModuleInternal.js";
 import { getLocalDataForEntityOrStaticPage } from "./getLocalData.js";
 
@@ -12,7 +11,7 @@ export default async function findMatchingStaticTemplate(
   return findTemplateModuleInternal(
     vite,
     async (t) => {
-      if (!isStaticTemplateConfig(t.config)) {
+      if (t.config.templateType !== "static") {
         return false;
       }
       try {

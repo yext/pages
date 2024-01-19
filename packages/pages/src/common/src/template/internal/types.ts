@@ -72,6 +72,8 @@ export interface TemplateConfigInternal {
   pageUrlField?: string;
   /** The field to use as the slug for dynamic dev mode */
   slugField?: string;
+  /** The type of template */
+  templateType: "entity" | "static";
 }
 
 /**
@@ -133,6 +135,13 @@ export const parse = (
   };
 };
 
+export const isStaticTemplateConfig = (
+  streamId: string | undefined,
+  streamConfig: StreamInternal | undefined
+): boolean => {
+  return !streamId && (!streamConfig || !streamConfig.$id);
+};
+
 export const convertTemplateModuleToTemplateModuleInternal = (
   templateFilepath: string,
   templateModule: TemplateModule<any, any>,
@@ -149,7 +158,7 @@ export const convertTemplateModuleToTemplateModuleInternal = (
     path: templateFilepath,
     filename: templatePath.base,
     templateName: templatePath.name,
-  };
+  } as TemplateModuleInternal<any, any>;
 
   validateTemplateModuleInternal(templateModuleInternal);
 
@@ -160,11 +169,16 @@ export const convertTemplateConfigToTemplateConfigInternal = (
   templateName: string,
   templateConfig: TemplateConfig | undefined
 ): TemplateConfigInternal => {
+  const stream = convertStreamToStreamInternal(templateConfig?.stream);
+
   return {
     name: templateConfig?.name ?? templateName,
     hydrate: templateConfig?.hydrate ?? true,
     ...templateConfig,
-    stream: convertStreamToStreamInternal(templateConfig?.stream),
+    stream: stream,
+    templateType: isStaticTemplateConfig(templateConfig?.streamId, stream)
+      ? "static"
+      : "entity",
   };
 };
 
