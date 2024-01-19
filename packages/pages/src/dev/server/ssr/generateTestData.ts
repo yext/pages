@@ -58,7 +58,7 @@ export const generateTestDataForSlug = async (
     streams: featuresConfig.streams,
   };
   const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
-  args.push("--slug", slug);
+  args.push("--slug", `"${slug}"`);
 
   const slugFields = new Set<string>();
   let shouldAddDefaultSlugField = false;
