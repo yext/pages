@@ -1,4 +1,4 @@
-import { InlineConfig, createServer } from "vite";
+import { InlineConfig, createLogger, createServer } from "vite";
 import { ProjectStructure } from "../project/structure.js";
 import { processEnvVariables } from "../../../util/processEnvVariables.js";
 import { pathToFileURL } from "node:url";
@@ -43,9 +43,20 @@ export const loadModules = async (
   const importedModules: ImportedModule[] = [];
 
   if (transpile) {
-    // Note that this will log inconsequential errors
-    // See https://github.com/vitejs/vite/issues/14328
-    const vite = await createServer(getViteServerConfig(projectStructure));
+    const customLogger = createLogger();
+    const customLoggerError = customLogger.error;
+    customLogger.error = (msg, options) => {
+      // See https://github.com/vitejs/vite/issues/14328
+      if (msg.includes("WebSocket server error: Port is already in use")) {
+        return;
+      }
+      customLoggerError(msg, options);
+    };
+
+    const vite = await createServer({
+      ...getViteServerConfig(projectStructure),
+      customLogger: customLogger,
+    });
 
     for (const modulePath of modulePaths) {
       const functionModule = await loadViteModule(vite, modulePath);
