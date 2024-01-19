@@ -67,14 +67,14 @@ export const generateTestDataForSlug = async (
     streams: featuresConfig.streams,
   };
   const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
-  args.push("--slug", slug);
+  args.push("--slug", `"${slug}"`);
 
   const slugFields = new Set<string>();
   let shouldAddDefaultSlugField = false;
   templateModuleCollection.forEach((templateModule) => {
     const slugField = templateModule?.config?.slugField;
     if (slugField) {
-      slugFields.add(`entity.${slugField}`);
+      slugFields.add(slugField);
     } else {
       shouldAddDefaultSlugField = true;
     }
@@ -82,7 +82,7 @@ export const generateTestDataForSlug = async (
 
   if (slugFields.size !== 0) {
     if (shouldAddDefaultSlugField) {
-      slugFields.add("entity.slug");
+      slugFields.add("slug");
     }
     args.push("--slugFields", Array.from(slugFields).toString());
   }
