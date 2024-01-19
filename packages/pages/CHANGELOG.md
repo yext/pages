@@ -1,3 +1,34 @@
+#### 1.0.0-rc.8 (2024-01-19)
+
+##### Chores
+
+*  remove binaries (a6ccbf28)
+* **dev:**  deprecate alternateLanguageFields (#470) (f7ff7bf9)
+
+##### New Features
+
+* **dev:**
+  *  pass slug field stream name(s) to the cli (#472) (912787a3)
+  *  pass slugField to generate-test-data if provided (#463) (090022d4)
+  *  update serverless function types in upgrade script (#465) (292bdb3c)
+  *  add slugField to TemplateConfig (#460) (58644df4)
+  *  add pageUrlField to generated configs (#459) (d5784e02)
+  *  add pageUrlField to TemplateConfig (#458) (5deaf543)
+  *  upgrade search-ui-react and search-headless-react (#456) (767a8194)
+* **util:**  add dynamic function (#461) (d521e236)
+
+##### Bug Fixes
+
+* **dev:**
+  *  remove websocket error (#473) (c4b708ec)
+  *  filter out static templates when determining slug fields (#471) (f4024645)
+  *  index page urls using `--no-prod-url` (#469) (fc684885)
+  *  locale query params not part of request (#468) (04beac56)
+  *  upgrade script when using scope (#464) (76c2ad21)
+* **plugin:**
+  *  make min Node 20 version 20.2.0 (#467) (3c762ac8)
+  *  polyfill node for serverless functions (#457) (4bb76530)
+
 #### 1.0.0-rc.7 (2023-12-21)
 
 ##### Chores
