@@ -13,46 +13,41 @@ import sendAppHTML from "./sendAppHTML.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { convertTemplateConfigInternalToFeaturesConfig } from "../../../common/src/feature/features.js";
 import { generateTestDataForPage } from "../ssr/generateTestData.js";
-import { getLocalDataForEntityOrStaticPage } from "../ssr/getLocalData.js";
-import sendStaticPage from "./sendStaticPage.js";
-import findMatchingStaticTemplate from "../ssr/findMatchingStaticTemplate.js";
+import { entityPageCriterion, getLocalData } from "../ssr/getLocalData.js";
+import { findStaticTemplateModuleAndDocByTemplateName } from "../ssr/findMatchingStaticTemplate.js";
 import send404 from "./send404.js";
 
 type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
   projectStructure: ProjectStructure;
-  defaultLocale: string;
 };
 
 export const serverRenderRoute =
-  ({
-    vite,
-    dynamicGenerateData,
-    projectStructure,
-    defaultLocale,
-  }: Props): RequestHandler =>
+  ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
-      const locale = getLocaleFromUrl(url) ?? defaultLocale;
+      const locale = getLocaleFromUrl(url) ?? "en";
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
 
       const { staticURL } = parseAsStaticUrl(url);
-      const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
-        await findMatchingStaticTemplate(
+
+      const staticTemplateAndProps =
+        await findStaticTemplateModuleAndDocByTemplateName(
           vite,
-          staticURL,
           templateFilepaths,
+          staticURL,
           locale
         );
-      if (matchingStaticTemplate) {
-        await sendStaticPage(
+
+      if (staticTemplateAndProps) {
+        await sendAppHTML(
           res,
+          staticTemplateAndProps.staticTemplateModuleInternal,
+          staticTemplateAndProps.props,
           vite,
-          matchingStaticTemplate,
-          locale,
           req.originalUrl,
           projectStructure
         );
@@ -77,6 +72,7 @@ export const serverRenderRoute =
         );
         return;
       }
+
       const document = await getDocument(
         dynamicGenerateData,
         templateModuleInternal,
@@ -84,11 +80,16 @@ export const serverRenderRoute =
         locale,
         projectStructure
       );
+      if (!document) {
+        send404(
+          res,
+          `Cannot find document document data for entityId and locale: ${entityId} ${locale}`
+        );
+        return;
+      }
 
       const props = await propsLoader({
         templateModuleInternal,
-        entityId,
-        locale,
         document,
       });
       await sendAppHTML(
@@ -126,9 +127,8 @@ const getDocument = async (
       projectStructure
     );
   }
-  return getLocalDataForEntityOrStaticPage({
-    entityId,
-    locale,
-    featureName: templateModuleInternal.config.name,
-  });
+
+  return getLocalData(
+    entityPageCriterion(entityId, templateModuleInternal.config.name, locale)
+  );
 };

@@ -19,7 +19,6 @@ import { logErrorAndClean } from "../../../util/logError.js";
 import { isUsingConfig } from "../../../util/config.js";
 import { createArtifactsJson } from "../../../generate/artifacts/createArtifactsJson.js";
 import { Path } from "../../../common/src/project/path.js";
-import { getLocalDataForEntityOrStaticPage } from "../../../dev/server/ssr/getLocalData.js";
 
 export default (projectStructure: ProjectStructure) => {
   return {
@@ -59,7 +58,6 @@ export default (projectStructure: ProjectStructure) => {
         );
 
         validateUniqueFeatureName(templateModules);
-        await validateUniqueStaticPaths(templateModules);
         validateBundles(projectStructure);
         finisher.succeed("Validated template modules");
       } catch (e: any) {
@@ -182,36 +180,4 @@ const validateUniqueFeatureName = (
     }
     featureNames.add(featureName);
   });
-};
-
-const validateUniqueStaticPaths = (
-  templateModuleCollection: TemplateModuleCollection
-) => {
-  const paths = new Set<string>();
-  const pathPromises = [...templateModuleCollection.values()].map(
-    async (module) => {
-      if (!module.config.locales) {
-        return;
-      }
-
-      for (const locale of module.config.locales) {
-        const document = await getLocalDataForEntityOrStaticPage({
-          entityId: "",
-          locale,
-          featureName: module.config.name,
-        });
-        const path = module.getPath({ document });
-        if (paths.has(path)) {
-          throw (
-            `Path "${path}" is used by multiple static pages.  Check that ` +
-            `the getPath() function in the template "${module.templateName}" ` +
-            "returns a unique path for each locale."
-          );
-        } else {
-          paths.add(path);
-        }
-      }
-    }
-  );
-  return Promise.all(pathPromises);
 };

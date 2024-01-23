@@ -7,42 +7,39 @@ import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/te
 import { TemplateRenderProps } from "../../../common/src/template/types.js";
 import sendAppHTML from "./sendAppHTML.js";
 import { generateTestDataForSlug } from "../ssr/generateTestData.js";
-import { getLocalDataForSlug } from "../ssr/getLocalData.js";
-import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
-import sendStaticPage from "./sendStaticPage.js";
-import findMatchingStaticTemplate from "../ssr/findMatchingStaticTemplate.js";
+import { getLocalEntityPageDataForSlug } from "../ssr/getLocalData.js";
+import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
 import send404 from "./send404.js";
 
 type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
   projectStructure: ProjectStructure;
-  defaultLocale: string;
 };
 
 export const serverRenderSlugRoute =
-  ({
-    vite,
-    dynamicGenerateData,
-    projectStructure,
-    defaultLocale,
-  }: Props): RequestHandler =>
+  ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
-      const locale = req.query.locale?.toString() ?? defaultLocale;
+
       const slug = decodeURIComponent(url.pathname.substring(1));
 
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
-      const matchingStaticTemplate: TemplateModuleInternal<any, any> | null =
-        await findMatchingStaticTemplate(vite, slug, templateFilepaths, locale);
-      if (matchingStaticTemplate) {
-        await sendStaticPage(
+
+      const staticTemplateAndProps = await findStaticTemplateModuleAndDocBySlug(
+        vite,
+        templateFilepaths,
+        slug
+      );
+
+      if (staticTemplateAndProps) {
+        await sendAppHTML(
           res,
+          staticTemplateAndProps.staticTemplateModuleInternal,
+          staticTemplateAndProps.props,
           vite,
-          matchingStaticTemplate,
-          locale,
           req.originalUrl,
           projectStructure
         );
@@ -53,7 +50,6 @@ export const serverRenderSlugRoute =
         dynamicGenerateData,
         vite,
         slug,
-        locale,
         projectStructure
       );
       if (!document) {
@@ -62,7 +58,6 @@ export const serverRenderSlugRoute =
       }
 
       const feature = document.__.name;
-      const entityId = document.id;
       const templateModuleInternal = await findTemplateModuleInternal(
         vite,
         async (t) => feature === t.config.name,
@@ -78,8 +73,6 @@ export const serverRenderSlugRoute =
 
       const props: TemplateRenderProps = await propsLoader({
         templateModuleInternal,
-        entityId,
-        locale,
         document,
       });
       await sendAppHTML(
@@ -101,7 +94,6 @@ const getDocument = async (
   dynamicGenerateData: boolean,
   vite: ViteDevServer,
   slug: string,
-  locale: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
   if (dynamicGenerateData) {
@@ -109,9 +101,8 @@ const getDocument = async (
       process.stdout,
       vite,
       slug,
-      locale,
       projectStructure
     );
   }
-  return getLocalDataForSlug({ slug, locale });
+  return getLocalEntityPageDataForSlug(slug);
 };
