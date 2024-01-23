@@ -21,13 +21,25 @@
     {
       "$id": "location-stream",
       "filter": {
-        "entityTypes": ["location"]
+        "entityTypes": [
+          "location"
+        ]
       },
-      "fields": ["id", "uid", "meta", "address", "slug"],
+      "fields": [
+        "id",
+        "uid",
+        "meta",
+        "address",
+        "slug"
+      ],
       "localization": {
-        "locales": ["en"],
+        "locales": [
+          "en"
+        ],
         "primary": false
-      }
+      },
+      "source": "knowledgeGraph",
+      "destination": "pages"
     }
   ]
 }
