@@ -18,8 +18,8 @@ export interface LocalDataManifest {
     {
       // The featureName for a specific static template
       featureName: string;
-      // A map from static page path to a single locale
-      pathToLocaleMap: Map<string, string>;
+      // A map from static page path to a set of locales
+      pathToLocalesMap: Map<string, string[]>;
     }
   >;
   entity: Map<
@@ -61,6 +61,7 @@ export const getLocalDataManifest = async (
     }
   }
 
+  const staticPaths: string[] = [];
   for (const fileName of dir) {
     const data = JSON.parse(
       fs
@@ -103,29 +104,34 @@ export const getLocalDataManifest = async (
       }
 
       const staticPath = templateModuleInternal.getPath({ document: data });
-      const currentManifestData = localDataManifest.static.get(featureName);
-      if (currentManifestData) {
-        const occupiedPaths = currentManifestData.pathToLocaleMap;
-        if (occupiedPaths.has(staticPath)) {
-          throw new Error(
-            `Path "${staticPath}" is used by multiple static pages.  Check that ` +
-              `the getPath() function in the template "${templateModuleInternal.templateName}" ` +
-              "returns a unique path for each locale."
-          );
-        }
-        occupiedPaths.set(staticPath, data.meta.locale);
+      if (staticPaths.includes(staticPath)) {
+        throw new Error(
+          `Path "${staticPath}" is used by multiple static pages.  Check that ` +
+            `the getPath() function in the template "${templateModuleInternal.templateName}" ` +
+            "returns a unique path for each locale."
+        );
       } else {
         try {
+          staticPaths.push(staticPath);
           validateGetPathValue(staticPath, templateModuleInternal.path);
         } catch (e) {
           logWarning(`${(e as Error).message}, skipping."`);
           continue;
         }
-        const pathToLocaleMap = new Map();
-        pathToLocaleMap.set(staticPath, data.meta.locale);
+        let pathToLocalesMap =
+          localDataManifest.static.get(featureName)?.pathToLocalesMap;
+        if (!pathToLocalesMap) {
+          pathToLocalesMap = new Map();
+          pathToLocalesMap.set(staticPath, [data.meta.locale]);
+        } else {
+          const existingLocales = pathToLocalesMap.get(staticPath) || [];
+          existingLocales?.push(data.meta.locale);
+          pathToLocalesMap.set(staticPath, existingLocales);
+        }
+
         localDataManifest.static.set(featureName, {
           featureName,
-          pathToLocaleMap,
+          pathToLocalesMap,
         });
       }
     }
@@ -133,7 +139,10 @@ export const getLocalDataManifest = async (
   return localDataManifest;
 };
 
-const getLocalData = async (
+/**
+ * Reads through all localData and returns the first document that matches criterion.
+ */
+export const getLocalData = async (
   criterion: (data: any) => boolean
 ): Promise<Record<string, any> | undefined> => {
   try {
@@ -160,66 +169,28 @@ const getLocalData = async (
   }
 };
 
-export const getLocalDataForEntityOrStaticPage = async ({
-  locale,
-  featureName,
-  entityId,
-}: {
-  locale: string;
-  featureName: string;
-  entityId: string;
-}) => {
-  const localData = await getLocalData((data) => {
-    const isStatic = entityId === "";
-    const isMatchingEntity = !isStatic && entityId === data.id;
-    const matchesNameAndLocale =
-      data.locale === locale && data.__.name === featureName;
-
-    return (isStatic || isMatchingEntity) && matchesNameAndLocale;
-  });
-  if (!localData) {
-    throw new Error(
-      `No localData files match entityId, featureName, and locale: ${entityId}, ${featureName}, ${locale}`
-    );
-  }
-  return localData;
-};
-
-export const getLocalDataForSlug = async ({
-  locale,
-  slug,
-}: {
-  locale: string;
-  slug: string;
-}) => {
-  const localDataForSlug: Record<string, any>[] = (
-    await getAllLocalData()
-  ).filter((d) => d.slug === slug);
-  if (localDataForSlug.length === 0) {
-    throw new Error(
-      `No localData files match slug and locale: ${slug} ${locale}`
-    );
-  } else if (localDataForSlug.length > 1) {
-    throw new Error(
-      `Multiple localData files match slug and locale: ${slug} ${locale}, expected only a single file`
-    );
-  }
-  return localDataForSlug[0];
-};
-
-const getAllLocalData = async (): Promise<Record<string, any>[]> => {
+/**
+ * Reads through all localData and returns all documents that match criterion.
+ */
+export const getAllLocalData = async (
+  criterion: (data: any) => boolean
+): Promise<Record<string, any>[]> => {
   try {
     const dir = await readdir(LOCAL_DATA_PATH);
-    return dir.map((fileName) => {
-      const data = JSON.parse(
-        fs
-          .readFileSync(
-            path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${fileName}`)
-          )
-          .toString()
-      );
-      return data;
-    });
+    return dir
+      .map((fileName) => {
+        const data = JSON.parse(
+          fs
+            .readFileSync(
+              path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${fileName}`)
+            )
+            .toString()
+        );
+        if (criterion(data)) {
+          return data;
+        }
+      })
+      .filter((data) => data !== undefined);
   } catch (err: any) {
     if (err.code === "ENOENT") {
       throw "No localData exists. Please run `yext pages generate-test-data`";
@@ -227,4 +198,71 @@ const getAllLocalData = async (): Promise<Record<string, any>[]> => {
       throw err;
     }
   }
+};
+
+/**
+ * A filter for finding localData for static templates. Can be used for both dynamic and
+ * non-dynamic mode since static template data always comes from localData.
+ *
+ * @param featureName - the static template name
+ * @param locale  - optional locale, required for non-dynamic mode
+ * @returns
+ */
+export const staticPageCriterion = (
+  featureName: string,
+  locale?: string
+): ((data: any) => boolean) => {
+  {
+    return (data: any) => {
+      if (!data.__) {
+        return false;
+      }
+      return (
+        "staticPage" in data.__ &&
+        data.__.name === featureName &&
+        (locale ? data.locale === locale : true)
+      );
+    };
+  }
+};
+
+/**
+ * A filter for finding localData for entity templates. Should only be used for non-dynamic
+ * mode.
+ */
+export const entityPageCriterion = (
+  entityId: string,
+  featureName: string,
+  locale: string
+): ((data: any) => boolean) => {
+  {
+    return (data: any) => {
+      if (!data.__) {
+        return false;
+      }
+      return (
+        "entityPageSet" in data.__ &&
+        data.id === entityId &&
+        data.__.name === featureName &&
+        data.locale === locale
+      );
+    };
+  }
+};
+
+export const getLocalEntityPageDataForSlug = async (slug: string) => {
+  const localDataForSlug = await getAllLocalData((data) => {
+    if (!data.__) {
+      return false;
+    }
+    return "entityPageSet" in data.__ && "id" in data && data.slug === slug;
+  });
+  if (localDataForSlug.length === 0) {
+    throw new Error(`No localData files match slug: ${slug}`);
+  } else if (localDataForSlug.length > 1) {
+    throw new Error(
+      `Multiple localData files match slug: ${slug}, expected only a single file`
+    );
+  }
+  return localDataForSlug[0];
 };

@@ -105,7 +105,11 @@ export const indexPage =
           indexPageHtml = indexPageHtml.replace(
             `<!--static-pages-html-->`,
             `<h3>Static Pages</h3>
-            ${createStaticPageListItems(localDataManifest, devServerPort)}`
+            ${createStaticPageListItems(
+              localDataManifest,
+              useProdURLs,
+              devServerPort
+            )}`
           );
         }
 
@@ -187,50 +191,69 @@ export const indexPage =
     }
   };
 
+const formatStaticLink = (
+  useProdUrls: boolean,
+  templateName: string,
+  locale: string,
+  slug?: string
+) => {
+  if (useProdUrls) {
+    return slug;
+  }
+
+  // Default language is en. Only add a query param if not en.
+  const localeQuery = locale === "en" ? "" : `?locale=${locale}`;
+
+  return templateName + localeQuery;
+};
+
 const createStaticPageListItems = (
   localDataManifest: LocalDataManifest,
+  useProdURLs: boolean,
   devServerPort: number
 ) => {
   return Array.from(localDataManifest.static).reduce(
-    (templateAccumulator, [, { featureName, pathToLocaleMap }]) =>
-      templateAccumulator +
-      `<h4>${featureName} pages (${pathToLocaleMap.size}):</h4>` +
-      `<table>
-        <thead>
-          <tr>
-            <td>URL</td>
-            ${pathToLocaleMap.size > 1 ? "<td>Locale</td>" : ""}
-          </tr>
-        </thead>
-        <tbody>
-          ${[...pathToLocaleMap]
-            .map(
-              ([path, locale]) => `<tr>
-            ${
-              pathToLocaleMap.size > 1
-                ? `<td>
-                <a href="http://localhost:${devServerPort}/${path}?locale=${locale}">
-                  ${path}?locale=${locale}
-                </a>
-              </td>`
-                : `<td>
-                <a href="http://localhost:${devServerPort}/${path}">
-                  ${path}
-                </a>
-              </td>`
-            }
-            ${pathToLocaleMap.size > 1 ? `<td>${locale}</td>` : ""}`
-            )
-            .join("")}
-          </tr>
-        </tbody>
-      </table>
-    `,
+    (templateAccumulator, [, { featureName, pathToLocalesMap }]) => {
+      return (
+        templateAccumulator +
+        `<h4>${featureName} pages (${pathToLocalesMap.values.length}):</h4>` +
+        `<table>
+          <thead>
+            <tr>
+              <td>URL</td>
+              <td>Locale</td>
+            </tr>
+          </thead>
+          <tbody>
+            ${[...pathToLocalesMap].map(([path, locales]) =>
+              locales.map((locale) => {
+                const link = formatStaticLink(
+                  useProdURLs,
+                  featureName,
+                  locale,
+                  path
+                );
+
+                return `
+                  <tr>
+                    <td>
+                      <a href="http://localhost:${devServerPort}/${link}">
+                        ${link}
+                      </a>
+                    </td>
+                    <td>${locale}</td>
+                  </tr>`;
+              })
+            )}
+          </tbody>
+        </table>`
+      );
+    },
     ""
   );
 };
 
-const formatLink = (
+const formatEntityLink = (
   useProdUrls: boolean,
   templateName: string,
   entityId: string,
@@ -276,7 +299,7 @@ const createEntityPageListItems = (
         return entityAccumulator;
       }
 
-      const link = formatLink(
+      const link = formatEntityLink(
         useProdURLs,
         templateName,
         entityId,

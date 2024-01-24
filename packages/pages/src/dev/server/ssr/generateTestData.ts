@@ -43,7 +43,6 @@ export const generateTestDataForSlug = async (
   stdout: NodeJS.WriteStream,
   vite: ViteDevServer,
   slug: string,
-  locale: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
   const templateFilepaths =
@@ -88,7 +87,9 @@ export const generateTestDataForSlug = async (
   }
 
   const parsedData = await spawnTestDataCommand(stdout, "yext", args);
-  return getDocumentByLocale(parsedData, locale);
+
+  // handle documents coming back as an array just in case
+  return parsedData?.length > 0 ? parsedData[0] : parsedData;
 };
 
 const loadTemplateModuleCollectionUsingVite = async (
