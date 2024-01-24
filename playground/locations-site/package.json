@@ -6,7 +6,7 @@
   "license": "BSD-3-Clause",
   "type": "module",
   "scripts": {
-    "dev": "pages dev --local --no-prod-url",
+    "dev": "pages dev --local --no-prod-url --noInit",
     "playwright": "playwright test",
     "fmt": "prettier -w .",
     "build-test-site": "pages build"
