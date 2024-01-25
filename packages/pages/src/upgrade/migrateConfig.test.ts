@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { formatSiteStream } from "./migrateConfig.js";
+import { formatServing, formatSiteStream } from "./migrateConfig.js";
 
 const siteStreamPath = "foo/bar";
 
@@ -29,5 +29,18 @@ describe("formatSiteStream", () => {
     const testJson = { fields: ["meta", "name"], $id: "123" };
     const expectedJson = { id: "123", fields: ["meta", "name"] };
     expect(formatSiteStream(testJson, siteStreamPath)).toEqual(expectedJson);
+  });
+});
+
+describe("formatServing", () => {
+  it("returns expected reverseProxyPrefix", () => {
+    const testJson = { displayUrlPrefix: "www.foo.com" };
+    const expectedJson = { reverseProxyPrefix: "www.foo.com" };
+    expect(formatServing(testJson)).toEqual(expectedJson);
+  });
+
+  it("returns nothing when displayUrlPrefix not present", () => {
+    const testJson = {};
+    expect(formatServing(testJson)).toBeUndefined();
   });
 });
