@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  moveTsxMapsImportsToPagesComponents,
   removeFetchImport,
   updateServerlessFunctionTypeReferences,
 } from "./pagesUpdater.js";
@@ -120,6 +121,38 @@ describe("test pages updater serverless function types", () => {
         expected,
         updateServerlessFunctionTypeReferences
       )
+    ).toBeTruthy();
+  });
+});
+
+describe("test pages updater moveTsxMapsImportsToPagesComponents", () => {
+  it("moves GoogleMaps/Coordinate to existing pages-components import", () => {
+    const beforeContent = `
+      import { Maps } from "@yext/pages-components";
+      import { GoogleMaps } from "@yext/components-tsx-maps";
+      import { Coordinate } from "@yext/components-tsx-geo";
+    `;
+
+    const expected = `
+      import { Maps, GoogleMaps, Coordinate } from "@yext/pages-components";
+    `;
+
+    expect(
+      testUpdater(beforeContent, expected, moveTsxMapsImportsToPagesComponents)
+    ).toBeTruthy();
+  });
+
+  it("adds GoogleMaps to new pages-components import", () => {
+    const beforeContent = `
+      import { GoogleMaps } from "@yext/components-tsx-maps";
+    `;
+
+    const expected = `
+      import { GoogleMaps } from "@yext/pages-components";
+    `;
+
+    expect(
+      testUpdater(beforeContent, expected, moveTsxMapsImportsToPagesComponents)
     ).toBeTruthy();
   });
 });
