@@ -108,22 +108,12 @@ export const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
     );
   }
 
-  // Replace $id with id and keeps id in the first position
-  const siteStream = {
-    id: sitesJson.$id,
-    ...sitesJson,
+  return {
+    id: sitesJson.$id, // Replace $id with id and keeps id in the first position
     entityId: entityId,
+    localization: sitesJson.localization,
+    fields: sitesJson.fields,
   };
-  if (siteStream.reverseProxy?.displayUrlPrefix) {
-    siteStream.serving = {
-      reverseProxyPrefix: sitesJson.reverseProxy?.displayUrlPrefix,
-    };
-  }
-  delete siteStream.$id;
-  delete siteStream.reverseProxy;
-  delete siteStream.filter;
-
-  return siteStream;
 };
 
 const migrateRedirects = async (source: string, dest: string) => {
