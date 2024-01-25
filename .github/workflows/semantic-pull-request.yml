@@ -30,4 +30,5 @@ jobs:
             dev/plugin
             pages-plugins
             playground
+            upgrade
             util
