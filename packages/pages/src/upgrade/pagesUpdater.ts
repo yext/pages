@@ -143,6 +143,8 @@ function processDirectoryRecursively(
 export const updateToUsePagesComponents = async (source: string) => {
   await removePackageDependency("@yext/sites-components");
   await removePackageDependency("@yext/react-components");
+  await removePackageDependency("@yext/components-tsx-maps");
+  await removePackageDependency("@yext/components-tsx-geo");
   // update imports from pages/components to sites-components
   const hasPagesSlashComponentsImports =
     replacePagesSlashComponentsImports(source);
@@ -150,13 +152,15 @@ export const updateToUsePagesComponents = async (source: string) => {
   const hasSitesComponentsImports = replaceSitesComponentsImports(source);
   // update imports from react-components to pages-components
   const hasReactComponentsImports = replaceReactComponentsImports(source);
+  const movedTsxMapsImports = moveTsxMapsImportsToPagesComponents(source);
 
   await updatePackageDependency(
     "@yext/pages-components",
     null,
     hasPagesSlashComponentsImports ||
       hasSitesComponentsImports ||
-      hasReactComponentsImports
+      hasReactComponentsImports ||
+      movedTsxMapsImports
   );
 };
 
@@ -184,7 +188,7 @@ export const updatePagesJSToCurrentVersion = async () => {
  */
 export const updateDevDependencies = async () => {
   await updatePackageDependency("@vitejs/plugin-react", null);
-  await updatePackageDependency("vite", "^5.0.10");
+  await updatePackageDependency("vite", null);
   await updatePackageDependency("@yext/search-headless-react", null);
   await updatePackageDependency("@yext/search-ui-react", null);
 };
@@ -273,6 +277,79 @@ export const replaceReactComponentsImports = (source: string): boolean => {
   };
   processDirectoryRecursively(source, operation);
   return hasReplaced;
+};
+
+/**
+ * Moves imports likes `import { GoogleMaps } from "@yext/components-tsx-maps";` to
+ * `import { Map, GoogleMaps } from "@yext/pages-components";`.
+ * Does the same for "@yext/components-tsx-geo".
+ * @param source the src folder
+ */
+export const moveTsxMapsImportsToPagesComponents = (source: string) => {
+  let updated = false;
+  const project = new Project({
+    compilerOptions: {
+      jsx: typescript.JsxEmit.ReactJSX,
+      sourceRoot: source,
+    },
+  });
+  project.addSourceFilesAtPaths(`${source}/**/*.{ts,tsx,js,jsx}`);
+  const sourceFiles = project.getSourceFiles();
+  for (let i = 0; i < sourceFiles.length; i++) {
+    const sourceFile = sourceFiles[i];
+    const importDeclarations = sourceFile.getImportDeclarations();
+
+    // Check if pages-components already an import
+    let pagesComponentsImportDeclaration;
+    for (let j = 0; j < importDeclarations.length; j++) {
+      const importDeclaration = importDeclarations[j];
+      if (
+        importDeclaration.getModuleSpecifierValue() === "@yext/pages-components"
+      ) {
+        pagesComponentsImportDeclaration = importDeclaration;
+        break;
+      }
+    }
+
+    for (let j = 0; j < importDeclarations.length; j++) {
+      const importDeclaration = importDeclarations[j];
+      if (
+        importDeclaration.getModuleSpecifierValue() !==
+          "@yext/components-tsx-maps" &&
+        importDeclaration.getModuleSpecifierValue() !==
+          "@yext/components-tsx-geo"
+      ) {
+        continue;
+      }
+      const namedImports = importDeclaration.getNamedImports();
+
+      // Add components-tsx-maps/geo imports to pages-components
+      if (pagesComponentsImportDeclaration) {
+        for (let k = 0; k < namedImports.length; k++) {
+          const namedImport = namedImports[k];
+          pagesComponentsImportDeclaration.addNamedImport(
+            namedImport.getName()
+          );
+        }
+        importDeclaration.remove();
+        updated = true;
+      } else {
+        // Otherwise add pages-components as an import
+        sourceFile.addImportDeclaration({
+          namedImports: namedImports.map((namedImport) =>
+            namedImport.getName()
+          ),
+          moduleSpecifier: "@yext/pages-components",
+        });
+        importDeclaration.remove();
+        updated = true;
+      }
+    }
+  }
+  if (updated) {
+    project.saveSync();
+  }
+  return updated;
 };
 
 /**
