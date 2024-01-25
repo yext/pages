@@ -139,8 +139,8 @@ const migrateServing = async (configYamlPath: string, servingPath: string) => {
     console.info(
       `migrating reverse proxy info from ${servingPath} to ${configYamlPath}`
     );
-    writeYamlSync(configYamlPath, "reverseProxy", {
-      displayUrlPrefix: servingJson.displayUrlPrefix,
+    writeYamlSync(configYamlPath, "serving", {
+      reverseProxyPrefix: servingJson.displayUrlPrefix,
     });
   }
 };
