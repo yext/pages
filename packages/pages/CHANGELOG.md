@@ -1,3 +1,18 @@
+#### 1.0.0-rc.9 (2024-01-26)
+
+##### New Features
+
+* **upgrade:**  move imports from components-tsx-maps/geo (#478) (5c08fe8f)
+
+##### Bug Fixes
+
+* **upgrade:**
+  *  check for Markdown before updating imports (#480) (02dd7120)
+  *  siteStream conversion now sets specific fields (#479) (26c193d6)
+  *  name of serving config in config.yaml (#477) (325d5d90)
+* **plugin:**  serverless function shared components (#476) (6b7c38ca)
+* **dev/plugin:**  static templates not working for alternate locales (#475) (ba12f1a6)
+
 #### 1.0.0-rc.8 (2024-01-19)
 
 ##### Chores
