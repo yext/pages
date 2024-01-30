@@ -120,10 +120,14 @@ export const generateResponses = async (
   const path = templateModuleInternal.getPath(templateProps);
   validateGetPathValue(path, templateModuleInternal.templateName);
 
+  const pathForRelativePrefixToRoot = templateProps.pathOverride ?? path;
+
   const templateRenderProps: TemplateRenderProps = {
     ...templateProps,
     path: path,
-    relativePrefixToRoot: getRelativePrefixToRootFromPath(path),
+    relativePrefixToRoot: getRelativePrefixToRootFromPath(
+      pathForRelativePrefixToRoot
+    ),
   };
 
   const content = await renderHtml(
