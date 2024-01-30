@@ -201,6 +201,12 @@ export interface TemplateProps<T = Record<string, any>> {
     /** Specifies if the data is returned in development or production mode */
     mode: "development" | "production";
   };
+  /**
+   * Set in the preview context of the generatepagecontent API endpoint. Since
+   * the preview domain is different (occurs in the context of a serverless function)
+   * the relativePrefixToRoot needs to be updated.
+   */
+  pathOverride?: string;
 }
 
 /**

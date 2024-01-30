@@ -266,6 +266,7 @@ export interface TemplateProps<T = Record<string, any>> {
     mode: "development" | "production";
   };
   document: T;
+  pathOverride?: string;
 }
 
 // @public
