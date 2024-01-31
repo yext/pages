@@ -83,6 +83,21 @@ describe("getAllImports", () => {
     ]);
   });
 
+  it("handles types", () => {
+    const parser = createParser(`import { type Template } from "@yext/pages";`);
+    const imports = parser.getAllImports();
+    console.log(imports);
+    expect(imports[0].namedImports).toEqual(["Template"]);
+  });
+
+  it("handles aliases", () => {
+    const parser = createParser(
+      `import {Template as Template2} from "@yext/pages";`
+    );
+    const imports = parser.getAllImports();
+    expect(imports[0].namedImports).toEqual(["Template as Template2"]);
+  });
+
   it("handles named imports and default imports from one path", () => {
     const parser = createParser(
       `import Foo, {Template, TemplateConfig, TemplateProps} from "@yext/pages";`

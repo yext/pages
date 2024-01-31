@@ -141,7 +141,12 @@ export default class SourceFileParser {
       const moduleSpecifier: string = importDec.getModuleSpecifierValue();
       const namedImportsAsString: string[] = [];
       importDec.getNamedImports()?.forEach((namedImport) => {
-        namedImportsAsString.push(namedImport.getName());
+        const alias = namedImport.getAliasNode()?.getText();
+        if (alias) {
+          namedImportsAsString.push(`${namedImport.getName()} as ${alias}`);
+        } else {
+          namedImportsAsString.push(namedImport.getName());
+        }
       });
       const attributes: OptionalKind<ImportAttributeStructure>[] = [];
       importDec
