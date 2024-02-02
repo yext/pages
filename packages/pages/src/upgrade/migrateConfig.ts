@@ -125,12 +125,14 @@ const migrateRedirects = async (source: string, dest: string) => {
 
 const migrateServing = async (configYamlPath: string, servingPath: string) => {
   const servingJson = readJsonSync(servingPath);
-  const newServingJson = formatServing(servingJson);
-  if (newServingJson) {
-    console.info(
-      `migrating reverse proxy info from ${servingPath} to ${configYamlPath}`
-    );
-    writeYamlSync(configYamlPath, "serving", newServingJson);
+  if (servingJson !== null) {
+    const newServingJson = formatServing(servingJson);
+    if (newServingJson) {
+      console.info(
+        `migrating reverse proxy info from ${servingPath} to ${configYamlPath}`
+      );
+      writeYamlSync(configYamlPath, "serving", newServingJson);
+    }
   }
 };
 
