@@ -1,7 +1,7 @@
 import { ViteDevServer } from "vite";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import {
-  RenderTemplate,
+  ServerRenderTemplate,
   TemplateRenderProps,
 } from "../../../common/src/template/types.js";
 import { getLang } from "../../../common/src/template/head.js";
@@ -11,7 +11,7 @@ import { getGlobalClientServerRenderTemplates } from "../../../common/src/templa
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import {
   getHydrationTemplateDev,
-  getServerTemplateDev,
+  getIndexTemplateDev,
 } from "../../../common/src/template/hydration.js";
 
 /**
@@ -38,19 +38,6 @@ export default async function sendAppHTML(
     projectStructure.getTemplatePaths()
   );
 
-  const serverRenderTemplateModule = (await vite.ssrLoadModule(
-    clientServerRenderTemplates.serverRenderTemplatePath
-  )) as RenderTemplate;
-
-  const getServerHtml = async () => {
-    // using this wrapper function prevents SRR client-server mistmatches if
-    // the template modifies props
-    return await serverRenderTemplateModule.render({
-      Page: templateModuleInternal.default!,
-      pageProps: props,
-    });
-  };
-
   const headConfig = templateModuleInternal.getHeadConfig
     ? templateModuleInternal.getHeadConfig(props)
     : undefined;
@@ -62,18 +49,36 @@ export default async function sendAppHTML(
     templateModuleInternal.config.hydrate
   );
 
-  const clientInjectedServerHtml = getServerTemplateDev(
+  const serverRenderTemplateModule = (await vite.ssrLoadModule(
+    clientServerRenderTemplates.serverRenderTemplatePath
+  )) as ServerRenderTemplate;
+
+  const transformedIndexHtml = await vite.transformIndexHtml(
+    // vite decodes request urls when caching proxy requests so we have to
+    // load the transform request with a decoded uri
+    decodeURIComponent(pathname),
+    serverRenderTemplateModule.indexHtml
+  );
+
+  const clientInjectedIndexHtml = getIndexTemplateDev(
     clientHydrationString,
-    await getServerHtml(),
+    transformedIndexHtml,
     getLang(headConfig, props),
     headConfig
   );
 
-  const html = await vite.transformIndexHtml(
-    // vite decodes request urls when caching proxy requests so we have to
-    // load the transform request with a decoded uri
-    decodeURIComponent(pathname),
-    clientInjectedServerHtml
+  const getServerHtml = async () => {
+    // using this wrapper function prevents SSR client-server mistmatches if
+    // the template modifies props
+    return await serverRenderTemplateModule.render({
+      Page: templateModuleInternal.default!,
+      pageProps: props,
+    });
+  };
+
+  const html = clientInjectedIndexHtml.replace(
+    serverRenderTemplateModule.replacementTag,
+    await getServerHtml()
   );
 
   // Send the rendered HTML back.

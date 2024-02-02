@@ -247,11 +247,27 @@ export interface ClientServerRenderTemplates {
 }
 
 /**
- * The type of the client/server render templates.
+ * The type of the server render template.
  *
  * @internal
  */
-export interface RenderTemplate {
+export interface ServerRenderTemplate {
+  /** The render function required by the render templates */
+  render(pageContext: PageContext<any>): Promise<string>;
+
+  /** The index.html entrypoint for your template */
+  indexHtml: string;
+
+  /** The tag in indexHtml to replace with the contents of render */
+  replacementTag: string;
+}
+
+/**
+ * The type of the client render template.
+ *
+ * @internal
+ */
+export interface ClientRenderTemplate {
   /** The render function required by the render templates */
   render(pageContext: PageContext<any>): Promise<string>;
 }

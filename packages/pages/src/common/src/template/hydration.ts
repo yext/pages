@@ -100,55 +100,52 @@ const makeAbsolute = (path: string): string => {
  * For the most part, injects data into the <head> tag. It also provides validation.
  *
  * @param clientHydrationString if this is undefined then hydration is skipped
- * @param serverHtml
+ * @param indexHtml
  * @param appLanguage
  * @param headConfig
  * @returns the server template with injected html
  */
-const getCommonInjectedServerHtml = (
+const getCommonInjectedIndexHtml = (
   clientHydrationString: string | undefined,
-  serverHtml: string,
+  indexHtml: string,
   appLanguage: string,
   headConfig?: HeadConfig
 ): string => {
   // Add the language to the <html> tag if it exists
-  serverHtml = serverHtml.replace("<!--app-lang-->", appLanguage);
+  indexHtml = indexHtml.replace("<!--app-lang-->", appLanguage);
 
   if (clientHydrationString) {
-    serverHtml = injectIntoHead(
-      serverHtml,
+    indexHtml = injectIntoEndOfHead(
+      indexHtml,
       `<script type="module">${clientHydrationString}</script>`
     );
   }
 
   if (headConfig) {
-    serverHtml = injectIntoHead(
-      serverHtml,
-      renderHeadConfigToString(headConfig)
-    );
+    indexHtml = injectIntoHead(indexHtml, renderHeadConfigToString(headConfig));
   }
 
-  return serverHtml;
+  return indexHtml;
 };
 
 /**
  * Use for the Vite dev server.
  *
  * @param clientHydrationString
- * @param serverHtml
+ * @param indexHtml
  * @param appLanguage
  * @param headConfig
  * @returns the server template to render in the Vite dev environment
  */
-export const getServerTemplateDev = (
+export const getIndexTemplateDev = (
   clientHydrationString: string | undefined,
-  serverHtml: string,
+  indexHtml: string,
   appLanguage: string,
   headConfig?: HeadConfig
 ): string => {
-  return getCommonInjectedServerHtml(
+  return getCommonInjectedIndexHtml(
     clientHydrationString,
-    serverHtml,
+    indexHtml,
     appLanguage,
     headConfig
   );
@@ -156,7 +153,7 @@ export const getServerTemplateDev = (
 
 /**
  * Used for the Deno plugin execution context. The major difference between this function
- * and {@link getServerTemplateDev} is that it also injects the CSS import tags which is
+ * and {@link getIndexTemplateDev} is that it also injects the CSS import tags which is
  * not required by Vite since those are injected automatically by the Vite dev server.
  *
  * @param clientHydrationString
@@ -176,7 +173,7 @@ export const getServerTemplatePlugin = (
   appLanguage: string,
   headConfig?: HeadConfig
 ) => {
-  let html = getCommonInjectedServerHtml(
+  let html = getCommonInjectedIndexHtml(
     clientHydrationString,
     serverHtml,
     appLanguage,
@@ -247,5 +244,25 @@ const injectIntoHead = (html: string, stringToInject: string): string => {
     html.slice(0, openingHeadIndex) +
     stringToInject +
     html.slice(openingHeadIndex)
+  );
+};
+
+const closingHeadTag = "</head>";
+
+/**
+ * Finds the ending </head> tag and injects the input string into it.
+ * @param html
+ */
+const injectIntoEndOfHead = (html: string, stringToInject: string): string => {
+  const closingHeadIndex = html.indexOf(closingHeadTag);
+
+  if (closingHeadIndex === -1) {
+    throw new Error("_server.tsx: No head tag is defined");
+  }
+
+  return (
+    html.slice(0, closingHeadIndex) +
+    stringToInject +
+    html.slice(closingHeadIndex)
   );
 };
