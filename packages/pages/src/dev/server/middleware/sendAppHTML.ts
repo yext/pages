@@ -53,18 +53,18 @@ export default async function sendAppHTML(
     clientServerRenderTemplates.serverRenderTemplatePath
   )) as ServerRenderTemplate;
 
+  const clientInjectedIndexHtml = getIndexTemplateDev(
+    clientHydrationString,
+    serverRenderTemplateModule.indexHtml,
+    getLang(headConfig, props),
+    headConfig
+  );
+
   const transformedIndexHtml = await vite.transformIndexHtml(
     // vite decodes request urls when caching proxy requests so we have to
     // load the transform request with a decoded uri
     decodeURIComponent(pathname),
-    serverRenderTemplateModule.indexHtml
-  );
-
-  const clientInjectedIndexHtml = getIndexTemplateDev(
-    clientHydrationString,
-    transformedIndexHtml,
-    getLang(headConfig, props),
-    headConfig
+    clientInjectedIndexHtml
   );
 
   const getServerHtml = async () => {
@@ -76,7 +76,7 @@ export default async function sendAppHTML(
     });
   };
 
-  const html = clientInjectedIndexHtml.replace(
+  const html = transformedIndexHtml.replace(
     serverRenderTemplateModule.replacementTag,
     await getServerHtml()
   );
