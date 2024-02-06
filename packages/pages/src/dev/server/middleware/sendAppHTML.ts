@@ -61,9 +61,11 @@ export default async function sendAppHTML(
   );
 
   const transformedIndexHtml = await vite.transformIndexHtml(
-    // vite decodes request urls when caching proxy requests so we have to
-    // load the transform request with a decoded uri
-    decodeURIComponent(pathname),
+    // Vite decodes request urls when caching proxy requests so we have to
+    // load the transform request with a decoded uri. Additionally we add
+    // a date to cache bust the module path so that props are updated upon
+    // page refresh, otherwise Vite caches it.
+    decodeURIComponent(pathname) + Date.now(),
     clientInjectedIndexHtml
   );
 
