@@ -10,6 +10,11 @@ import { default as React_2 } from "react";
 export type Attributes = Record<string, string>;
 
 // @internal
+export interface ClientRenderTemplate {
+  render(pageContext: PageContext<any>): Promise<string>;
+}
+
+// @internal
 export interface ClientServerRenderTemplates {
   clientRenderTemplatePath: string;
   isCustomRenderTemplate: boolean;
@@ -153,8 +158,10 @@ export type Render<T extends TemplateRenderProps<T>> = (props: T) => string;
 export const renderHeadConfigToString: (headConfig: HeadConfig) => string;
 
 // @internal
-export interface RenderTemplate {
+export interface ServerRenderTemplate {
+  indexHtml: string;
   render(pageContext: PageContext<any>): Promise<string>;
+  replacementTag: string;
 }
 
 // @public

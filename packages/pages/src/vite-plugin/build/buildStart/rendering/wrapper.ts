@@ -32,11 +32,6 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
     `${templateModuleInternal.templateName}.tsx`
   );
 
-  const serverHtml = await pluginRenderTemplates.server.render({
-    Page: templateModuleInternal.default!,
-    pageProps: props,
-  });
-
   let clientHydrationString;
   if (hydrate) {
     clientHydrationString = getHydrationTemplate(
@@ -46,9 +41,19 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
     );
   }
 
+  const serverHtml = await pluginRenderTemplates.server.render({
+    Page: templateModuleInternal.default!,
+    pageProps: props,
+  });
+
+  const html = pluginRenderTemplates.server.indexHtml.replace(
+    pluginRenderTemplates.server.replacementTag,
+    serverHtml
+  );
+
   const clientInjectedServerHtml = getServerTemplatePlugin(
     clientHydrationString,
-    serverHtml,
+    html,
     templateFilepath,
     manifest.bundlerManifest,
     getLang(headConfig, props),

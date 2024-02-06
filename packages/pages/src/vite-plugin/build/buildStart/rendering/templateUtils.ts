@@ -3,7 +3,7 @@ import {
   TemplateRenderProps,
   Manifest,
   TemplateModule,
-  RenderTemplate,
+  ServerRenderTemplate,
 } from "../../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../../common/src/template/paths.js";
 import { reactWrapper } from "./wrapper.js";
@@ -49,7 +49,7 @@ export const readTemplateModules = async (
 /** The render template information needed by the plugin execution */
 export interface PluginRenderTemplates {
   /** The server render module */
-  server: RenderTemplate;
+  server: ServerRenderTemplate;
   /** The client render relative path */
   client: string;
 }
@@ -80,12 +80,14 @@ export const getPluginRenderTemplates = async (
 // caches dynamically imported plugin render template modules. Without this, dynamically imported
 // modules will leak some memory during generation. This can cause issues on a publish with a large
 // number of generations.
-const pluginRenderTemplatesCache = new Map<string, RenderTemplate>();
+const pluginRenderTemplatesCache = new Map<string, ServerRenderTemplate>();
 
-const importRenderTemplate = async (path: string): Promise<RenderTemplate> => {
+const importRenderTemplate = async (
+  path: string
+): Promise<ServerRenderTemplate> => {
   let module = pluginRenderTemplatesCache.get(path);
   if (!module) {
-    module = (await import(path)) as RenderTemplate;
+    module = (await import(path)) as ServerRenderTemplate;
     pluginRenderTemplatesCache.set(path, module);
   }
   return module;
