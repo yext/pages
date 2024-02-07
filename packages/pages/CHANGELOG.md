@@ -1,3 +1,22 @@
+#### 1.0.0 (2024-02-07)
+
+##### Chores
+
+*  delete binary (79737e25)
+
+##### New Features
+
+* **plugin:**  pathOverride used for relativePrefixToRoot (#482) (f852b8b6)
+*  add bot to playwright workflow (#481) (1ab63275)
+
+##### Bug Fixes
+
+* **dev:**
+  *  include siteStream from config.yaml in GTD (#488) (348fff31)
+  *  cache bust client (#487) (dac67b3a)
+* **upgrade:**  guard servingJson not existing (#485) (ea737049)
+* **plugin:**  alias imports not output in hydration files (#484) (0d2dd10e)
+
 #### 1.0.0-rc.9 (2024-01-26)
 
 ##### New Features
