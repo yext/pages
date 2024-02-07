@@ -258,4 +258,13 @@ export class ProjectStructure {
       pathLib.join(this.config.rootFolders.dist, this.config.scope ?? "")
     );
   };
+
+  /**
+   * @returns the {@link Path} to the config.yaml file, taking scope into account.
+   */
+  getConfigYamlPath = () => {
+    return new Path(
+      pathLib.join(this.config.scope ?? "", this.config.rootFiles.config)
+    );
+  };
 }

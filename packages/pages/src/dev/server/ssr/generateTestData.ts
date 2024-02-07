@@ -21,6 +21,7 @@ import { TemplateModule } from "../../../common/src/template/types.js";
 import { getTemplatesConfig } from "../../../generate/templates/createTemplatesJson.js";
 import { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
 import runSubprocess from "../../../util/runSubprocess.js";
+import YAML from "yaml";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
@@ -229,6 +230,27 @@ async function spawnTestDataCommand(
   });
 }
 
+const getSiteStream = (projectStructure: ProjectStructure) => {
+  const siteStreamPath = path.resolve(
+    projectStructure.getSitesConfigPath().path,
+    projectStructure.config.sitesConfigFiles.siteStream
+  );
+
+  if (fs.existsSync(siteStreamPath)) {
+    return prepareJsonForCmd(
+      JSON.parse(fs.readFileSync(siteStreamPath).toString())
+    );
+  }
+
+  const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
+  if (fs.existsSync(configYamlPath)) {
+    const yamlDoc = YAML.parse(fs.readFileSync(configYamlPath, "utf-8"));
+    if (yamlDoc.siteStream) {
+      return prepareJsonForCmd(yamlDoc.siteStream);
+    }
+  }
+};
+
 const getCommonArgs = (
   featuresConfig: FeaturesConfig,
   projectStructure: ProjectStructure
@@ -237,16 +259,11 @@ const getCommonArgs = (
 
   args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
 
-  const siteStreamPath = path.resolve(
-    projectStructure.getSitesConfigPath().path,
-    projectStructure.config.sitesConfigFiles.siteStream
-  );
-  if (fs.existsSync(siteStreamPath)) {
-    const siteStream = prepareJsonForCmd(
-      JSON.parse(fs.readFileSync(siteStreamPath).toString())
-    );
+  const siteStream = getSiteStream(projectStructure);
+  if (siteStream) {
     args.push("--siteStreamConfig", siteStream);
   }
+
   if (projectStructure.config.scope) {
     args.push("--hostname", projectStructure.config.scope);
   }

@@ -191,10 +191,7 @@ export const migrateConfigs = async (projectStructure: ProjectStructure) => {
       fs.mkdirSync(scopeFolder, { recursive: true });
     }
   }
-  const configYamlPath = path.resolve(
-    scopeFolder,
-    projectStructure.config.rootFiles.config
-  );
+  const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
   if (!fs.existsSync(configYamlPath)) {
     console.info(`${configYamlPath} does not exist, creating it`);
     fs.writeFileSync(configYamlPath, "");
