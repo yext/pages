@@ -1,5 +1,4 @@
 import { build, createLogger } from "vite";
-import { loadModules } from "../../common/src/loader/vite.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -8,8 +7,6 @@ import { convertToPosixPath } from "../../common/src/template/paths.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
-import { convertWidgetConfigToWidgetConfigInternal } from "../../common/src/widget/internal/types.js";
-import { WidgetModule } from "../../index.js";
 
 export const buildWidgets = async (
   projectStructure: ProjectStructure
@@ -21,7 +18,8 @@ export const buildWidgets = async (
   const { rootFolders, subfolders, envVarConfig } = projectStructure.config;
   const outdir = path.join(rootFolders.dist, subfolders.widgets);
 
-  const filepaths: string[] = [];
+  // TODO use config name rather than file name
+  const filepaths: { [s: string]: string } = {};
   glob
     .sync(
       convertToPosixPath(
@@ -31,20 +29,14 @@ export const buildWidgets = async (
     )
     .forEach((f) => {
       const filepath = path.resolve(f);
-      filepaths.push(filepath);
+      const { name } = path.parse(filepath);
+      filepaths[name] = filepath;
     });
-
-  const filePathsIndexedByName = await getWidgetNames(
-    filepaths,
-    projectStructure
-  );
 
   const logger = createLogger();
   const loggerInfo = logger.info;
 
-  for (const [widgetName, widgetPath] of Object.entries(
-    filePathsIndexedByName
-  )) {
+  for (const [widgetName, widgetPath] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
         loggerInfo(pc.green(`\nBuilding ${widgetName} widget...`));
@@ -103,23 +95,4 @@ export const buildWidgets = async (
 export const shouldBundleWidgets = (projectStructure: ProjectStructure) => {
   const { rootFolders, subfolders } = projectStructure.config;
   return fs.existsSync(path.join(rootFolders.source, subfolders.widgets));
-};
-
-const getWidgetNames = async (
-  filepaths: string[],
-  projectStructure: ProjectStructure
-) => {
-  const widgetNamesIndexedByName: { [entryAlias: string]: string } = {};
-  const widgetModules = await loadModules(filepaths, true, projectStructure);
-
-  for (let i = 0; i < widgetModules.length; i++) {
-    const widgetModule = widgetModules[i].module as WidgetModule;
-    const widgetName = path.parse(filepaths[i]);
-    const widgetConfigInternal = convertWidgetConfigToWidgetConfigInternal(
-      widgetName.name,
-      widgetModule.config
-    );
-    widgetNamesIndexedByName[widgetConfigInternal.name] = filepaths[i];
-  }
-  return widgetNamesIndexedByName;
 };

@@ -181,9 +181,6 @@ export type Manifest = {
   renderPaths: {
     [key: string]: string;
   };
-  widgetPaths: {
-    [key: string]: string;
-  };
   /** The configuration structure of a project */
   projectStructure: ProjectStructureConfig;
   /** If the bundler used generates a manifest.json then this field will contain that json object */

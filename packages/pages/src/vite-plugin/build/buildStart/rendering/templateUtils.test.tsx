@@ -28,7 +28,6 @@ const manifest: Manifest = {
   serverPaths: {},
   clientPaths: {},
   renderPaths: {},
-  widgetPaths: {},
   projectStructure: new ProjectStructure().config,
   bundlerManifest: {},
 };

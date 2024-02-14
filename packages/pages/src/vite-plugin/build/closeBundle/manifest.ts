@@ -47,23 +47,6 @@ export const generateManifestFile = async (
     ]);
   };
 
-  // Scans for widgets
-  const getWidgetsUmdPaths = async (): Promise<string[][]> => {
-    const filePaths = glob.sync(
-      convertToPosixPath(
-        path.resolve(
-          projectStructure.config.rootFolders.dist,
-          projectStructure.config.subfolders.widgets,
-          "**/*.js"
-        )
-      )
-    );
-    return filePaths.map((filepath) => [
-      path.parse(filepath).name.split(".")[0],
-      convertToPosixPath(distPath.getRelativePath(filepath)),
-    ]);
-  };
-
   let bundlerManifest = Buffer.from("{}");
   if (fs.existsSync(path.join(distPath.path, ".vite", "manifest.json"))) {
     bundlerManifest = fs.readFileSync(
@@ -78,7 +61,6 @@ export const generateManifestFile = async (
     renderPaths: Object.fromEntries(
       await getAssetBundlePaths(projectStructure.config.subfolders.renderBundle)
     ),
-    widgetPaths: Object.fromEntries(await getWidgetsUmdPaths()),
     projectStructure: projectStructure.config,
     bundlerManifest: JSON.parse(bundlerManifest.toString()),
   };
