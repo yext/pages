@@ -19,9 +19,6 @@ export type Manifest = {
   renderPaths: {
     [key: string]: string;
   };
-  widgetPaths: {
-    [key: string]: string;
-  };
   projectStructure: ProjectStructureConfig;
   bundlerManifest?: any;
 };

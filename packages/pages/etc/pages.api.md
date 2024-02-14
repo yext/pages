@@ -87,9 +87,6 @@ export type Manifest = {
   renderPaths: {
     [key: string]: string;
   };
-  widgetPaths: {
-    [key: string]: string;
-  };
   projectStructure: ProjectStructureConfig;
   bundlerManifest?: any;
 };
@@ -312,7 +309,7 @@ export interface WidgetProps {
 
 // Warnings were encountered during analysis:
 //
-// dist/types/src/common/src/template/types.d.ts:168:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
+// dist/types/src/common/src/template/types.d.ts:165:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 ```
