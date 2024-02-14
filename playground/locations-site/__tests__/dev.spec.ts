@@ -18,14 +18,14 @@ test("index page loads", async ({ page }) => {
 });
 
 test("robots page loads", async ({ page }) => {
-  await page.goto("/robots.txt");
+  await page.goto("/robots");
   await waitForStyling();
   expect(page.locator("pre")).toHaveText("robots");
   await expect(page).toHaveScreenshot();
 });
 
 test("static page loads", async ({ page }) => {
-  await page.goto("/index.html");
+  await page.goto("/turtlehead-tacos");
   await waitForStyling();
   await expect(page.locator("body > div")).toHaveText("Static Page");
   await expect(page).toHaveScreenshot();

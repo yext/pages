@@ -6,7 +6,7 @@
   "license": "BSD-3-Clause",
   "type": "module",
   "scripts": {
-    "dev:oakley": "pages dev --local --no-prod-url --scope sunglasses.oakley.com",
+    "dev:oakley": "pages dev --local --no-prod-url  --noInit --scope sunglasses.oakley.com",
     "playwright": "playwright test",
     "fmt": "prettier -w .",
     "build-test-site": "pages build --scope sunglasses.rayban.com"

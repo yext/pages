@@ -1,6 +1,6 @@
 {
   "name": "@yext/pages",
-  "version": "1.0.0-rc.7",
+  "version": "1.0.0",
   "description": "The default React development toolchain provided by Yext",
   "author": "sumo@yext.com",
   "license": "BSD-3-Clause",
@@ -32,7 +32,7 @@
     }
   },
   "engines": {
-    "node": "^18 || ^20"
+    "node": "^18 || ^20.2.0"
   },
   "scripts": {
     "watch": "node src/bundler --watch",
@@ -84,8 +84,8 @@
     "yaml": "^2.3.4"
   },
   "devDependencies": {
-    "@microsoft/api-documenter": "^7.23.14",
-    "@microsoft/api-extractor": "^7.38.5",
+    "@microsoft/api-documenter": "^7.23.17",
+    "@microsoft/api-extractor": "^7.39.1",
     "@testing-library/react": "^14.1.2",
     "@testing-library/user-event": "^14.5.1",
     "@types/escape-html": "^1.0.4",

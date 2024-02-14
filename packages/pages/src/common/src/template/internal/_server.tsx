@@ -4,17 +4,18 @@ import * as ReactDOMServer from "react-dom/server";
 import * as React from "react";
 import { PageContext } from "../types.js";
 
-export { render };
-
-const render = async (pageContext: PageContext<any>) => {
+export const render = async (pageContext: PageContext<any>) => {
   const { Page, pageProps } = pageContext;
-  const viewHtml = ReactDOMServer.renderToString(<Page {...pageProps} />);
 
-  return `<!DOCTYPE html>
+  return ReactDOMServer.renderToString(<Page {...pageProps} />);
+};
+
+export const replacementTag = "<!--YEXT-SERVER-->";
+
+export const indexHtml = `<!DOCTYPE html>
     <html lang="<!--app-lang-->">
       <head></head>
       <body>
-        <div id="reactele">${viewHtml}</div>
+        <div id="reactele">${replacementTag}</div>
       </body>
     </html>`;
-};

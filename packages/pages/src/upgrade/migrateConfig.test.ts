@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { formatSiteStream } from "./migrateConfig.js";
+import { formatServing, formatSiteStream } from "./migrateConfig.js";
 
 const siteStreamPath = "foo/bar";
 
@@ -19,15 +19,39 @@ describe("formatSiteStream", () => {
     expect(formatSiteStream(testJson, siteStreamPath)).toEqual(expectedJson);
   });
 
-  it("returns expected reverseProxyPrefix", () => {
-    const testJson = { reverseProxy: { displayUrlPrefix: "foo" } };
-    const expectedJson = { serving: { reverseProxyPrefix: "foo" } };
-    expect(formatSiteStream(testJson, siteStreamPath)).toEqual(expectedJson);
-  });
-
   it("returns expected id with id first", () => {
     const testJson = { fields: ["meta", "name"], $id: "123" };
     const expectedJson = { id: "123", fields: ["meta", "name"] };
     expect(formatSiteStream(testJson, siteStreamPath)).toEqual(expectedJson);
+  });
+
+  it("returns expected full config", () => {
+    const testJson = {
+      $id: "123",
+      fields: ["meta", "name"],
+      filter: { entityIds: ["1234"] },
+      source: "foo",
+      localization: ["en"],
+    };
+    const expectedJson = {
+      id: "123",
+      entityId: "1234",
+      fields: ["meta", "name"],
+      localization: ["en"],
+    };
+    expect(formatSiteStream(testJson, siteStreamPath)).toEqual(expectedJson);
+  });
+});
+
+describe("formatServing", () => {
+  it("returns expected reverseProxyPrefix", () => {
+    const testJson = { displayUrlPrefix: "www.foo.com" };
+    const expectedJson = { reverseProxyPrefix: "www.foo.com" };
+    expect(formatServing(testJson)).toEqual(expectedJson);
+  });
+
+  it("returns nothing when displayUrlPrefix not present", () => {
+    const testJson = {};
+    expect(formatServing(testJson)).toBeUndefined();
   });
 });

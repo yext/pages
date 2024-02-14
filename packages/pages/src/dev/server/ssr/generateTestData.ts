@@ -21,6 +21,7 @@ import { TemplateModule } from "../../../common/src/template/types.js";
 import { getTemplatesConfig } from "../../../generate/templates/createTemplatesJson.js";
 import { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
 import runSubprocess from "../../../util/runSubprocess.js";
+import YAML from "yaml";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
@@ -43,25 +44,53 @@ export const generateTestDataForSlug = async (
   stdout: NodeJS.WriteStream,
   vite: ViteDevServer,
   slug: string,
-  locale: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
   const templateFilepaths =
     getTemplateFilepathsFromProjectStructure(projectStructure);
+
   const templateModuleCollection = await loadTemplateModuleCollectionUsingVite(
     vite,
     templateFilepaths
   );
+
+  // get only the entity templates
+  for (const [key, templateModule] of templateModuleCollection.entries()) {
+    if (templateModule.config.templateType !== "entity") {
+      templateModuleCollection.delete(key);
+    }
+  }
+
   const featuresConfig = getTemplatesConfig(templateModuleCollection);
   const featuresConfigForEntityPages: FeaturesConfig = {
     features: featuresConfig.features.filter((f) => "entityPageSet" in f),
     streams: featuresConfig.streams,
   };
   const args = getCommonArgs(featuresConfigForEntityPages, projectStructure);
-  args.push("--slug", slug);
+  args.push("--slug", `"${slug}"`);
+
+  const slugFields = new Set<string>();
+  let shouldAddDefaultSlugField = false;
+  templateModuleCollection.forEach((templateModule) => {
+    const slugField = templateModule?.config?.slugField;
+    if (slugField) {
+      slugFields.add(slugField);
+    } else {
+      shouldAddDefaultSlugField = true;
+    }
+  });
+
+  if (slugFields.size !== 0) {
+    if (shouldAddDefaultSlugField) {
+      slugFields.add("slug");
+    }
+    args.push("--slugFields", Array.from(slugFields).toString());
+  }
 
   const parsedData = await spawnTestDataCommand(stdout, "yext", args);
-  return getDocumentByLocale(parsedData, locale);
+
+  // handle documents coming back as an array just in case
+  return parsedData?.length > 0 ? parsedData[0] : parsedData;
 };
 
 const loadTemplateModuleCollectionUsingVite = async (
@@ -201,6 +230,27 @@ async function spawnTestDataCommand(
   });
 }
 
+const getSiteStream = (projectStructure: ProjectStructure) => {
+  const siteStreamPath = path.resolve(
+    projectStructure.getSitesConfigPath().path,
+    projectStructure.config.sitesConfigFiles.siteStream
+  );
+
+  if (fs.existsSync(siteStreamPath)) {
+    return prepareJsonForCmd(
+      JSON.parse(fs.readFileSync(siteStreamPath).toString())
+    );
+  }
+
+  const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
+  if (fs.existsSync(configYamlPath)) {
+    const yamlDoc = YAML.parse(fs.readFileSync(configYamlPath, "utf-8"));
+    if (yamlDoc.siteStream) {
+      return prepareJsonForCmd(yamlDoc.siteStream);
+    }
+  }
+};
+
 const getCommonArgs = (
   featuresConfig: FeaturesConfig,
   projectStructure: ProjectStructure
@@ -209,16 +259,11 @@ const getCommonArgs = (
 
   args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
 
-  const siteStreamPath = path.resolve(
-    projectStructure.getSitesConfigPath().path,
-    projectStructure.config.sitesConfigFiles.siteStream
-  );
-  if (fs.existsSync(siteStreamPath)) {
-    const siteStream = prepareJsonForCmd(
-      JSON.parse(fs.readFileSync(siteStreamPath).toString())
-    );
+  const siteStream = getSiteStream(projectStructure);
+  if (siteStream) {
     args.push("--siteStreamConfig", siteStream);
   }
+
   if (projectStructure.config.scope) {
     args.push("--hostname", projectStructure.config.scope);
   }

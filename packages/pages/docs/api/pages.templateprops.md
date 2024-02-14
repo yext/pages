@@ -14,7 +14,8 @@ export interface TemplateProps<T = Record<string, any>>
 
 ## Properties
 
-| Property                                      | Modifiers | Type                                     | Description                                                               |
-| --------------------------------------------- | --------- | ---------------------------------------- | ------------------------------------------------------------------------- |
-| [\_\_meta](./pages.templateprops.__meta.md)   |           | { mode: "development" \| "production"; } | Additional metadata added by the toolchain                                |
-| [document](./pages.templateprops.document.md) |           | T                                        | The entire document returned after applying the stream to a single entity |
+| Property                                               | Modifiers | Type                                     | Description                                                                                                                                                                                                           |
+| ------------------------------------------------------ | --------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [\_\_meta](./pages.templateprops.__meta.md)            |           | { mode: "development" \| "production"; } | Additional metadata added by the toolchain                                                                                                                                                                            |
+| [document](./pages.templateprops.document.md)          |           | T                                        | The entire document returned after applying the stream to a single entity                                                                                                                                             |
+| [pathOverride?](./pages.templateprops.pathoverride.md) |           | string                                   | _(Optional)_ Set in the preview context of the generatepagecontent API endpoint. Since the preview domain is different (occurs in the context of a serverless function) the relativePrefixToRoot needs to be updated. |

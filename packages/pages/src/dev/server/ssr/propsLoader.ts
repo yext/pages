@@ -8,24 +8,15 @@ import { validateGetPathValue } from "../../../common/src/template/internal/vali
 
 type PageLoaderValues = {
   templateModuleInternal: TemplateModuleInternal<any, any>;
-  entityId?: string;
-  locale: string;
   document: any;
 };
 
 export const propsLoader = async ({
   templateModuleInternal,
-  entityId,
-  locale,
   document,
 }: PageLoaderValues): Promise<TemplateRenderProps> => {
   const { transformProps, getPath } = templateModuleInternal;
 
-  if (entityId && !document) {
-    throw new Error(
-      `Could not find document data for entityId and locale: ${entityId} ${locale}`
-    );
-  }
   document.siteInternalHostName = process.env.YEXT_PAGES_SCOPE;
 
   let templateProps: TemplateProps = {

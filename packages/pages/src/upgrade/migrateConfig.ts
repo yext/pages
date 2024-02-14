@@ -108,22 +108,12 @@ export const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
     );
   }
 
-  // Replace $id with id and keeps id in the first position
-  const siteStream = {
-    id: sitesJson.$id,
-    ...sitesJson,
+  return {
+    id: sitesJson.$id, // Replace $id with id and keeps id in the first position
     entityId: entityId,
+    localization: sitesJson.localization,
+    fields: sitesJson.fields,
   };
-  if (siteStream.reverseProxy?.displayUrlPrefix) {
-    siteStream.serving = {
-      reverseProxyPrefix: sitesJson.reverseProxy?.displayUrlPrefix,
-    };
-  }
-  delete siteStream.$id;
-  delete siteStream.reverseProxy;
-  delete siteStream.filter;
-
-  return siteStream;
 };
 
 const migrateRedirects = async (source: string, dest: string) => {
@@ -135,13 +125,20 @@ const migrateRedirects = async (source: string, dest: string) => {
 
 const migrateServing = async (configYamlPath: string, servingPath: string) => {
   const servingJson = readJsonSync(servingPath);
-  if (!!servingJson && !!servingJson.displayUrlPrefix) {
-    console.info(
-      `migrating reverse proxy info from ${servingPath} to ${configYamlPath}`
-    );
-    writeYamlSync(configYamlPath, "reverseProxy", {
-      displayUrlPrefix: servingJson.displayUrlPrefix,
-    });
+  if (servingJson !== null) {
+    const newServingJson = formatServing(servingJson);
+    if (newServingJson) {
+      console.info(
+        `migrating reverse proxy info from ${servingPath} to ${configYamlPath}`
+      );
+      writeYamlSync(configYamlPath, "serving", newServingJson);
+    }
+  }
+};
+
+export const formatServing = (servingJson: any) => {
+  if (servingJson.displayUrlPrefix) {
+    return { reverseProxyPrefix: servingJson.displayUrlPrefix };
   }
 };
 
@@ -194,10 +191,7 @@ export const migrateConfigs = async (projectStructure: ProjectStructure) => {
       fs.mkdirSync(scopeFolder, { recursive: true });
     }
   }
-  const configYamlPath = path.resolve(
-    scopeFolder,
-    projectStructure.config.rootFiles.config
-  );
+  const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
   if (!fs.existsSync(configYamlPath)) {
     console.info(`${configYamlPath} does not exist, creating it`);
     fs.writeFileSync(configYamlPath, "");

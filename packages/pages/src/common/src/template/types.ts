@@ -201,6 +201,12 @@ export interface TemplateProps<T = Record<string, any>> {
     /** Specifies if the data is returned in development or production mode */
     mode: "development" | "production";
   };
+  /**
+   * Set in the preview context of the generatepagecontent API endpoint. Since
+   * the preview domain is different (occurs in the context of a serverless function)
+   * the relativePrefixToRoot needs to be updated.
+   */
+  pathOverride?: string;
 }
 
 /**
@@ -241,11 +247,27 @@ export interface ClientServerRenderTemplates {
 }
 
 /**
- * The type of the client/server render templates.
+ * The type of the server render template.
  *
  * @internal
  */
-export interface RenderTemplate {
+export interface ServerRenderTemplate {
+  /** The render function required by the render templates */
+  render(pageContext: PageContext<any>): Promise<string>;
+
+  /** The index.html entrypoint for your template */
+  indexHtml: string;
+
+  /** The tag in indexHtml to replace with the contents of render */
+  replacementTag: string;
+}
+
+/**
+ * The type of the client render template.
+ *
+ * @internal
+ */
+export interface ClientRenderTemplate {
   /** The render function required by the render templates */
   render(pageContext: PageContext<any>): Promise<string>;
 }

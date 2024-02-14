@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import React from "react";
 import { TemplateModuleInternal } from "../../../../common/src/template/internal/types.js";
 import {
-  RenderTemplate,
+  ServerRenderTemplate,
   TemplateProps,
   Manifest,
 } from "../../../../common/src/template/types.js";
@@ -17,6 +17,7 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
   config: {
     name: "name",
     hydrate: false,
+    templateType: "entity",
   },
   getPath: () => {
     return "path";
@@ -39,18 +40,18 @@ const baseProps: TemplateProps = {
   },
 };
 
-const serverRenderTemplate: RenderTemplate = {
+const serverRenderTemplate: ServerRenderTemplate = {
   render: () => {
-    return Promise.resolve(
-      `<!DOCTYPE html>
-        <html lang="<!--app-lang-->">
-          <head></head>
-          <body>
-            <div id="reactele"></div>
-          </body>
-        </html>`
-    );
+    return Promise.resolve("");
   },
+  indexHtml: `<!DOCTYPE html>
+  <html lang="<!--app-lang-->">
+    <head></head>
+    <body>
+      <div id="reactele"><!--REPLACE-ME></div>
+    </body>
+  </html>`,
+  replacementTag: "<!--REPLACE-ME>",
 };
 
 describe("generateResponses", () => {

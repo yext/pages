@@ -41,50 +41,55 @@ export const buildServerlessFunctions = async (
   const logger = createLogger();
   const loggerInfo = logger.info;
 
-  logger.info = (msg, options) => {
-    if (msg.includes("building for production")) {
-      loggerInfo(pc.green("\nBuilding serverless functions..."), options);
-      return;
-    }
-    loggerInfo(msg, options);
-  };
+  for (const [name, filepath] of Object.entries(filepaths)) {
+    logger.info = (msg, options) => {
+      if (msg.includes("building for production")) {
+        loggerInfo(
+          pc.green(`\nBuilding serverless function ${name}...`),
+          options
+        );
+        return;
+      }
+      loggerInfo(msg, options);
+    };
 
-  await build({
-    customLogger: logger,
-    configFile: false,
-    envDir: envVarConfig.envVarDir,
-    envPrefix: envVarConfig.envVarPrefix,
-    resolve: {
-      conditions: ["worker", "webworker"],
-    },
-    publicDir: false,
-    build: {
-      emptyOutDir: false,
-      outDir: outdir,
-      minify: false,
-      lib: {
-        entry: filepaths,
-        formats: ["es"],
+    await build({
+      customLogger: logger,
+      configFile: false,
+      envDir: envVarConfig.envVarDir,
+      envPrefix: envVarConfig.envVarPrefix,
+      resolve: {
+        conditions: ["worker", "webworker"],
       },
-      rollupOptions: {
-        output: {
-          // must use this over lib.fileName otherwise it always ends in .js
-          entryFileNames: `[name]/mod.ts`,
+      publicDir: false,
+      build: {
+        emptyOutDir: false,
+        outDir: outdir,
+        minify: false,
+        lib: {
+          entry: { [name]: filepath },
+          formats: ["es"],
         },
+        rollupOptions: {
+          output: {
+            // must use this over lib.fileName otherwise it always ends in .js
+            entryFileNames: `[name]/mod.ts`,
+          },
+        },
+        reportCompressedSize: false,
       },
-      reportCompressedSize: false,
-    },
-    define: processEnvVariables(envVarConfig.envVarPrefix),
-    plugins: [
-      nodePolyfills({
-        globals: {
-          Buffer: "build",
-          global: "build",
-          process: "build",
-        },
-      }),
-    ],
-  });
+      define: processEnvVariables(envVarConfig.envVarPrefix),
+      plugins: [
+        nodePolyfills({
+          globals: {
+            Buffer: "build",
+            global: "build",
+            process: "build",
+          },
+        }),
+      ],
+    });
+  }
 };
 
 export const shouldBundleServerlessFunctions = (

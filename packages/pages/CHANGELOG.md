@@ -1,3 +1,68 @@
+#### 1.0.0 (2024-02-07)
+
+##### Chores
+
+*  delete binary (79737e25)
+
+##### New Features
+
+* **plugin:**  pathOverride used for relativePrefixToRoot (#482) (f852b8b6)
+*  add bot to playwright workflow (#481) (1ab63275)
+
+##### Bug Fixes
+
+* **dev:**
+  *  include siteStream from config.yaml in GTD (#488) (348fff31)
+  *  cache bust client (#487) (dac67b3a)
+* **upgrade:**  guard servingJson not existing (#485) (ea737049)
+* **plugin:**  alias imports not output in hydration files (#484) (0d2dd10e)
+
+#### 1.0.0-rc.9 (2024-01-26)
+
+##### New Features
+
+* **upgrade:**  move imports from components-tsx-maps/geo (#478) (5c08fe8f)
+
+##### Bug Fixes
+
+* **upgrade:**
+  *  check for Markdown before updating imports (#480) (02dd7120)
+  *  siteStream conversion now sets specific fields (#479) (26c193d6)
+  *  name of serving config in config.yaml (#477) (325d5d90)
+* **plugin:**  serverless function shared components (#476) (6b7c38ca)
+* **dev/plugin:**  static templates not working for alternate locales (#475) (ba12f1a6)
+
+#### 1.0.0-rc.8 (2024-01-19)
+
+##### Chores
+
+*  remove binaries (a6ccbf28)
+* **dev:**  deprecate alternateLanguageFields (#470) (f7ff7bf9)
+
+##### New Features
+
+* **dev:**
+  *  pass slug field stream name(s) to the cli (#472) (912787a3)
+  *  pass slugField to generate-test-data if provided (#463) (090022d4)
+  *  update serverless function types in upgrade script (#465) (292bdb3c)
+  *  add slugField to TemplateConfig (#460) (58644df4)
+  *  add pageUrlField to generated configs (#459) (d5784e02)
+  *  add pageUrlField to TemplateConfig (#458) (5deaf543)
+  *  upgrade search-ui-react and search-headless-react (#456) (767a8194)
+* **util:**  add dynamic function (#461) (d521e236)
+
+##### Bug Fixes
+
+* **dev:**
+  *  remove websocket error (#473) (c4b708ec)
+  *  filter out static templates when determining slug fields (#471) (f4024645)
+  *  index page urls using `--no-prod-url` (#469) (fc684885)
+  *  locale query params not part of request (#468) (04beac56)
+  *  upgrade script when using scope (#464) (76c2ad21)
+* **plugin:**
+  *  make min Node 20 version 20.2.0 (#467) (3c762ac8)
+  *  polyfill node for serverless functions (#457) (4bb76530)
+
 #### 1.0.0-rc.7 (2023-12-21)
 
 ##### Chores

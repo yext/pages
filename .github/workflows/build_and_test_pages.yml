@@ -17,6 +17,7 @@ jobs:
   call_playwright:
     needs: call_build
     uses: ./.github/workflows/playwright.yml
+    secrets: inherit
     
   call_jstest:
     needs: call_build

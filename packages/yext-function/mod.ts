@@ -22,6 +22,7 @@ export const PagesGenerator = async (data): Promise<Record<any, any>> => {
       __meta: {
         mode: "production",
       },
+      pathOverride: data.pathOverride,
     },
     manifest
   );

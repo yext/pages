@@ -28,6 +28,9 @@ const handler = async (args: UpgradeArgs) => {
   // check proper Node version first
   checkNodeVersion();
 
+  // log warnings
+  checkLegacyMarkdown(source);
+
   // update deps, scripts, engines
   await updateDevDependencies();
   updatePackageScripts();
@@ -40,9 +43,6 @@ const handler = async (args: UpgradeArgs) => {
   updateServerlessFunctionTypeReferences(
     path.resolve(source, projectStructure.config.subfolders.serverlessFunctions)
   );
-
-  // log warnings
-  checkLegacyMarkdown(source);
 
   // install deps
   await installDependencies();
