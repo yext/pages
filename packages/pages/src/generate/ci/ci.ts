@@ -91,6 +91,12 @@ export const getUpdatedCiConfig = async (
     pattern: `${projectStructure.config.subfolders.assets}/**/*`,
   });
 
+  // todo rename as widgets?
+  ciConfigCopy.artifactStructure.assets.push({
+    root: projectStructure.config.rootFolders.dist,
+    pattern: `${projectStructure.config.subfolders.widgets}/**/*`,
+  });
+
   // static assets based on the Vite publicDir
   ciConfigCopy.artifactStructure.assets.push({
     root: `${projectStructure.config.rootFolders.dist}/public_assets`,
@@ -171,6 +177,7 @@ const getGeneratorPlugin = (projectStructure: ProjectStructure): Plugin => {
     static: _static,
     renderBundle,
     plugin,
+    widgets,
   } = subfolders;
 
   return {
@@ -183,6 +190,10 @@ const getGeneratorPlugin = (projectStructure: ProjectStructure): Plugin => {
       {
         root: `${rootFolders.dist}`,
         pattern: `${assets}/{${serverBundle},${_static},${renderer},${renderBundle},${clientBundle}}/**/*{.js,.css}`,
+      },
+      {
+        root: `${rootFolders.dist}/${widgets}`,
+        pattern: "*{.js}",
       },
     ],
     event: "ON_PAGE_GENERATE",

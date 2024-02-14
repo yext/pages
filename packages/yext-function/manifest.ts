@@ -13,6 +13,9 @@ export type Manifest = {
   renderPaths: {
     [key: string]: string;
   };
+  widgetPaths: {
+    [key: string]: string;
+  };
   /** The configuration structure of a project */
   projectStructure: ProjectStructureConfig;
   /** If the bundler used generates a manifest.json then this field will contain that json object */
@@ -45,6 +48,8 @@ export interface RootFolders {
 export interface Subfolders {
   /** The templates folder */
   templates: string;
+  /** The widgets folder */
+  widgets: string;
   /** The Node functions folder */
   serverlessFunctions: string; // Node functions
   /** Where to output the bundled static assets */
