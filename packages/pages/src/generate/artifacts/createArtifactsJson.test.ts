@@ -18,6 +18,10 @@ describe("createArtifactsJson - getArtifactsConfig", () => {
             root: "dist/public_assets",
             pattern: "**/*",
           },
+          {
+            root: "dist",
+            pattern: "widgets/**/*",
+          },
         ],
         plugins: [
           {
@@ -31,6 +35,10 @@ describe("createArtifactsJson - getArtifactsConfig", () => {
                 root: "dist",
                 pattern:
                   "assets/{server,static,renderer,render,client}/**/*{.js,.css}",
+              },
+              {
+                root: "dist/widgets",
+                pattern: "*{.js}",
               },
             ],
             event: "ON_PAGE_GENERATE",

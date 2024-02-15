@@ -37,6 +37,10 @@ describe("ci - getUpdatedCiConfig", () => {
             pattern: "assets/**/*",
           },
           {
+            root: "dist",
+            pattern: "widgets/**/*",
+          },
+          {
             root: "dist/public_assets",
             pattern: "**/*",
           },
@@ -54,6 +58,10 @@ describe("ci - getUpdatedCiConfig", () => {
                 root: "dist",
                 pattern:
                   "assets/{server,static,renderer,render,client}/**/*{.js,.css}",
+              },
+              {
+                root: "dist/widgets",
+                pattern: "*{.js}",
               },
             ],
             event: "ON_PAGE_GENERATE",
@@ -126,6 +134,10 @@ describe("ci - getUpdatedCiConfig", () => {
             pattern: "assets/**/*",
           },
           {
+            root: "dist",
+            pattern: "widgets/**/*",
+          },
+          {
             root: "dist/public_assets",
             pattern: "**/*",
           },
@@ -143,6 +155,10 @@ describe("ci - getUpdatedCiConfig", () => {
                 root: "dist",
                 pattern:
                   "assets/{server,static,renderer,render,client}/**/*{.js,.css}",
+              },
+              {
+                root: "dist/widgets",
+                pattern: "*{.js}",
               },
             ],
             event: "ON_PAGE_GENERATE",

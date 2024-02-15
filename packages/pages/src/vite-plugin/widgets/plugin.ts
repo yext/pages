@@ -65,10 +65,6 @@ export const buildWidgets = async (
         emptyOutDir: false,
         outDir: outdir,
         minify: false,
-        // lib: {
-        //   entry: widgetPath,
-        //   formats: ["es"],
-        // },
         rollupOptions: {
           input: widgetPath,
           output: {
