@@ -8,6 +8,30 @@ import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
 import { addResponseHeadersToConfigYaml } from "../../util/editConfigYaml.js";
+import SourceFileParser, {
+  createTsMorphProject,
+} from "../../common/src/parsers/sourceFileParser.js";
+
+const wrappedCode = (widgetName: string, containerName: string): string => {
+  return `const container = document.getElementById(${containerName});
+if (!container) {
+  throw new Error('could not find ' + containerName + ' element');
+}
+
+ReactDOM.render(
+  <React.StrictMode>
+    <${widgetName}/>
+  </React.StrictMode>,
+  container
+);
+  `;
+};
+
+const widgetResponseHeader = {
+  pathPattern: "^widgets/.*",
+  headerKey: "Access-Control-Allow-Origin",
+  headerValues: ["*"],
+};
 
 export const buildWidgets = async (
   projectStructure: ProjectStructure
@@ -16,17 +40,11 @@ export const buildWidgets = async (
     return;
   }
 
-  // wrap widget in code here
-  addResponseHeadersToConfigYaml(projectStructure, {
-    pathPattern: "^widgets/.*",
-    headerKey: "Access-Control-Allow-Origin",
-    headerValues: ["*"],
-  });
+  addResponseHeadersToConfigYaml(projectStructure, widgetResponseHeader);
 
   const { rootFolders, subfolders, envVarConfig } = projectStructure.config;
   const outdir = path.join(rootFolders.dist, subfolders.widgets);
 
-  // TODO use config name rather than file name
   const filepaths: { [s: string]: string } = {};
   glob
     .sync(
@@ -37,14 +55,15 @@ export const buildWidgets = async (
     )
     .forEach((f) => {
       const filepath = path.resolve(f);
-      const { name } = path.parse(filepath);
-      filepaths[name] = filepath;
+      const widgetName = getWidgetName(filepath);
+      filepaths[widgetName] = filepath;
     });
 
   const logger = createLogger();
   const loggerInfo = logger.info;
 
   for (const [widgetName, widgetPath] of Object.entries(filepaths)) {
+    const index = addExtraWidgetCode(widgetPath, widgetName);
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
         loggerInfo(pc.green(`\nBuilding ${widgetName} widget...`));
@@ -72,7 +91,7 @@ export const buildWidgets = async (
       build: {
         emptyOutDir: false,
         outDir: outdir,
-        minify: false,
+        minify: true,
         rollupOptions: {
           input: widgetPath,
           output: {
@@ -93,10 +112,62 @@ export const buildWidgets = async (
         }),
       ],
     });
+    removeAddedWidgetCode(widgetPath, index);
   }
 };
 
 const shouldBundleWidgets = (projectStructure: ProjectStructure) => {
   const { rootFolders, subfolders } = projectStructure.config;
   return fs.existsSync(path.join(rootFolders.source, subfolders.widgets));
+};
+
+/**
+ *
+ * @param widgetPath
+ * @returns name of widget if set by user, else uses file name
+ */
+const getWidgetName = (widgetPath: string): string => {
+  const sfp = new SourceFileParser(widgetPath, createTsMorphProject());
+  const { name } = path.parse(widgetPath);
+  return (
+    sfp
+      .getVariablePropertyByType("WidgetConfig", "name")
+      .replace(/['"`]/g, "") ?? name
+  );
+};
+
+/**
+ * Adds custom code to widget such that it works when bundled into umd.js.
+ *
+ * @param widgetPath
+ * @param name
+ * @returns number of added index
+ */
+const addExtraWidgetCode = (widgetPath: string, name: string): number => {
+  const sfp = new SourceFileParser(widgetPath, createTsMorphProject());
+  const declaration = sfp.getVariableDeclarationByType("Widget");
+  if (declaration === undefined) {
+    throw new Error(`Cannot find variable Widget in ${widgetPath}`);
+  }
+  const widgetName = declaration.getName();
+  const insertIndex = sfp.getEndPos();
+  const afterInsertIndex = sfp.insertStatement(
+    wrappedCode(widgetName, name),
+    insertIndex
+  );
+  sfp.addReactImports();
+  sfp.save();
+  return afterInsertIndex - insertIndex;
+};
+
+/**
+ * Removes the custom code we added after bundling is done.
+ * @param widgetPath
+ * @param index index added (such as via addExtraWidgetCode)
+ */
+const removeAddedWidgetCode = (widgetPath: string, index: number) => {
+  const sfp = new SourceFileParser(widgetPath, createTsMorphProject());
+  sfp.removeStatement(sfp.getEndPos() - index, sfp.getEndPos());
+  sfp.removeUnusedImports();
+  sfp.save();
 };

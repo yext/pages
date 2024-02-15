@@ -5,6 +5,7 @@ import {
   ImportDeclarationStructure,
   OptionalKind,
   ImportAttributeStructure,
+  VariableDeclaration,
 } from "ts-morph";
 import typescript from "typescript";
 
@@ -206,5 +207,113 @@ export default class SourceFileParser {
 
   getAllText(): string {
     return this.sourceFile.getFullText();
+  }
+
+  /**
+   * For example, we can do getVariablePropertyByType("WidgetConfig", "name")
+   * and recieve the string value that the user set as name for their
+   * variable of type WidgetConfig
+   *
+   * @param type of the variable
+   * @param property of the variable
+   * @returns property of the variable as any
+   */
+  getVariablePropertyByType(type: string, property: string): any {
+    const declaration = this.getVariableDeclarationByType(type);
+    if (declaration === undefined) {
+      return;
+    }
+    const variableType = declaration.getType();
+    if (variableType.getText().includes(type)) {
+      const initializer = declaration.getInitializer();
+      if (
+        initializer &&
+        initializer.getKind() === SyntaxKind.ObjectLiteralExpression
+      ) {
+        const objectLiteral = initializer as any;
+        const variableProperty = objectLiteral
+          .getProperties()
+          .find(
+            (prop: { getName: () => string }) => prop.getName() === property
+          );
+        if (variableProperty) {
+          const value = variableProperty
+            .getFirstChildByKind(SyntaxKind.StringLiteral)
+            ?.getText();
+          if (value) {
+            return value;
+          } else {
+            return variableProperty;
+          }
+        } else {
+          console.log(type + " does not have a '" + property + "' property.");
+          return;
+        }
+      } else {
+        console.log(
+          "Initializer for " + type + "variable is not an object literal."
+        );
+        return;
+      }
+    }
+  }
+
+  getVariableDeclarationByType(type: string): VariableDeclaration | undefined {
+    const declaration =
+      this.sourceFile.getVariableDeclaration(
+        (v) => v.getType().getText() === type
+      ) ??
+      this.sourceFile.getVariableDeclaration((v) =>
+        v
+          .getType()
+          .getText()
+          .endsWith("." + type)
+      );
+    if (declaration === undefined) {
+      console.log("Type " + type + "cannot be found.");
+      return;
+    }
+    return declaration;
+  }
+
+  insertStatement(code: string, index = 0) {
+    this.sourceFile.insertText(index, code);
+    return this.getEndPos();
+  }
+
+  removeStatement(startIndex: number, endIndex: number) {
+    this.sourceFile.removeText(startIndex, endIndex);
+  }
+
+  getEndPos() {
+    return this.sourceFile.getEnd();
+  }
+
+  addReactImports() {
+    const existingReactImport = this.sourceFile.getImportDeclaration(
+      (i) => i.getModuleSpecifierValue() === "react"
+    );
+    if (!existingReactImport) {
+      this.sourceFile.addImportDeclaration({
+        moduleSpecifier: "react",
+        namespaceImport: "React",
+        isTypeOnly: false,
+      });
+    }
+
+    const existingReactDOMImport = this.sourceFile.getImportDeclaration(
+      (i) => i.getModuleSpecifierValue() === "react-dom"
+    );
+    if (!existingReactDOMImport) {
+      this.sourceFile.addImportDeclaration({
+        moduleSpecifier: "react-dom",
+        namespaceImport: "ReactDOM",
+        isTypeOnly: false,
+      });
+    }
+  }
+
+  removeUnusedImports() {
+    this.sourceFile.fixUnusedIdentifiers();
   }
 }
