@@ -13,9 +13,9 @@ import SourceFileParser, {
 } from "../../common/src/parsers/sourceFileParser.js";
 
 const wrappedCode = (widgetName: string, containerName: string): string => {
-  return `const container = document.getElementById(${containerName});
-if (!container) {
-  throw new Error('could not find ' + containerName + ' element');
+  return `const widgetContainerForBuildUseOnly = document.getElementById('${containerName}');
+if (!widgetContainerForBuildUseOnly) {
+  throw new Error('could not find ${containerName} element');
 }
 
 ReactDOM.render(
