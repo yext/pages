@@ -7,6 +7,7 @@ import { convertToPosixPath } from "../../common/src/template/paths.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
+import { addResponseHeadersToConfigYaml } from "../../util/editConfigYaml.js";
 
 export const buildWidgets = async (
   projectStructure: ProjectStructure
@@ -14,6 +15,13 @@ export const buildWidgets = async (
   if (!shouldBundleWidgets(projectStructure)) {
     return;
   }
+
+  // wrap widget in code here
+  addResponseHeadersToConfigYaml(projectStructure, {
+    pathPattern: "^widgets/.*",
+    headerKey: "Access-Control-Allow-Origin",
+    headerValues: ["*"],
+  });
 
   const { rootFolders, subfolders, envVarConfig } = projectStructure.config;
   const outdir = path.join(rootFolders.dist, subfolders.widgets);
@@ -88,7 +96,7 @@ export const buildWidgets = async (
   }
 };
 
-export const shouldBundleWidgets = (projectStructure: ProjectStructure) => {
+const shouldBundleWidgets = (projectStructure: ProjectStructure) => {
   const { rootFolders, subfolders } = projectStructure.config;
   return fs.existsSync(path.join(rootFolders.source, subfolders.widgets));
 };
