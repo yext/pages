@@ -8,6 +8,12 @@ export interface ResponseHeaderProps {
   headerValues: Array<string>;
 }
 
+/**
+ * Only adds response header if they don't already exist with the same pathPattern
+ *
+ * @param projectStructure
+ * @param responseHeaderProps
+ */
 export const addResponseHeadersToConfigYaml = (
   projectStructure: ProjectStructure,
   responseHeaderProps: ResponseHeaderProps
@@ -33,4 +39,11 @@ export const addResponseHeadersToConfigYaml = (
   }
 
   fs.writeFileSync(configYamlPath, YAML.stringify(yamlDoc));
+
+  const yaml = YAML.parseDocument(fs.readFileSync(configYamlPath, "utf-8"));
+  const responseHeader: any = yaml.get("responseHeaders");
+  responseHeader.comment =
+    " This response header allows access to your modules from other sites";
+
+  fs.writeFileSync(configYamlPath, YAML.stringify(yaml));
 };

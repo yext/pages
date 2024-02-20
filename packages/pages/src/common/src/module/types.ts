@@ -1,5 +1,3 @@
-import React from "react";
-
 /**
  * The type definition for the module's default function.
  *
@@ -8,17 +6,17 @@ import React from "react";
 export type Module = () => React.JSX.Element;
 
 /**
- * The exported `config` function's definition.
+ * The configuration options for a Module.
  *
  * @public
  */
 export interface ModuleConfig {
-  /** The name of the module feature. If not defined uses the module filename (without extension) */
+  /** Name of the module. If not defined uses the module filename (without extension) */
   name?: string;
 }
 
 /**
- * The shape of the data passed directly to the different module functions.
+ * The shape of the data passed directly to the module's default export.
  *
  * @public
  */

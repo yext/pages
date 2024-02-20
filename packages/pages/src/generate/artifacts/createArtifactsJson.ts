@@ -113,7 +113,6 @@ const getGeneratorPlugin = (projectStructure: ProjectStructure): Plugin => {
     static: _static,
     renderBundle,
     plugin,
-    modules,
   } = subfolders;
 
   return {
@@ -126,10 +125,6 @@ const getGeneratorPlugin = (projectStructure: ProjectStructure): Plugin => {
       {
         root: `${rootFolders.dist}`,
         pattern: `${assets}/{${serverBundle},${_static},${renderer},${renderBundle},${clientBundle}}/**/*{.js,.css}`,
-      },
-      {
-        root: `${rootFolders.dist}/${modules}`,
-        pattern: "*{.js}",
       },
     ],
     event: "ON_PAGE_GENERATE",

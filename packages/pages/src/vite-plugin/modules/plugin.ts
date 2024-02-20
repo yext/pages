@@ -85,7 +85,7 @@ export const buildModules = async (
         postcss: path.join(
           rootFolders.source,
           subfolders.modules,
-          `${moduleName}/postcss.config.cjs`
+          `${moduleName}/postcss.config.js`
         ),
       },
       build: {
