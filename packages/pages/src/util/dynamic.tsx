@@ -14,7 +14,7 @@ export type DynamicOptions = {
  *
  * Example usage
  * ```
- * const MyMarkdown = asyncComponent(() => import("@yext/pages-components"), {componentName: "Markdown"});
+ * const MyMarkdown = dynamic(() => import("@yext/pages-components"), {componentName: "Markdown"});
  * <MyMarkdown content="my content" />
  *
  * const SliderComponent = dynamic(() => import("react-slick"), {
