@@ -4,7 +4,7 @@
 
 ## ModuleConfig.name property
 
-The name of the module feature. If not defined uses the module filename (without extension)
+Name of the module. If not defined uses the module filename (without extension)
 
 **Signature:**
 

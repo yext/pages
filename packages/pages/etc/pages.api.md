@@ -92,7 +92,7 @@ export type Manifest = {
 };
 
 // @public
-export type Module = () => React_2.JSX.Element;
+export type Module = () => React.JSX.Element;
 
 // @public
 export interface ModuleConfig {

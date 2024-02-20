@@ -4,7 +4,7 @@
 
 ## ModuleProps interface
 
-The shape of the data passed directly to the different module functions.
+The shape of the data passed directly to the module's default export.
 
 **Signature:**
 

@@ -4,7 +4,7 @@
 
 ## ModuleConfig interface
 
-The exported `config` function's definition.
+The configuration options for a Module.
 
 **Signature:**
 
@@ -14,6 +14,6 @@ export interface ModuleConfig
 
 ## Properties
 
-| Property                              | Modifiers | Type   | Description                                                                                              |
-| ------------------------------------- | --------- | ------ | -------------------------------------------------------------------------------------------------------- |
-| [name?](./pages.moduleconfig.name.md) |           | string | _(Optional)_ The name of the module feature. If not defined uses the module filename (without extension) |
+| Property                              | Modifiers | Type   | Description                                                                                  |
+| ------------------------------------- | --------- | ------ | -------------------------------------------------------------------------------------------- |
+| [name?](./pages.moduleconfig.name.md) |           | string | _(Optional)_ Name of the module. If not defined uses the module filename (without extension) |
