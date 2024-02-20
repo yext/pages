@@ -92,6 +92,21 @@ export type Manifest = {
 };
 
 // @public
+export type Module = () => React_2.JSX.Element;
+
+// @public
+export interface ModuleConfig {
+  name?: string;
+}
+
+// @public
+export interface ModuleProps {
+  __meta: {
+    mode: "development" | "production";
+  };
+}
+
+// @public
 export type OnUrlChangeFunction = (
   arg: PagesOnUrlChangeRequest
 ) => PagesOnUrlChangeResponse;
@@ -284,28 +299,6 @@ export interface TemplateRenderProps<T = any> extends TemplateProps<T> {
 
 // @public
 export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
-
-// @public
-export type Widget = () => React_2.JSX.Element;
-
-// @public
-export interface WidgetConfig {
-  name?: string;
-}
-
-// @public
-export interface WidgetModule {
-  config?: WidgetConfig;
-  // Warning: (ae-unresolved-link) The @link reference could not be resolved: The package "@yext/pages" does not have an export "render"
-  default?: Widget;
-}
-
-// @public
-export interface WidgetProps {
-  __meta: {
-    mode: "development" | "production";
-  };
-}
 
 // Warnings were encountered during analysis:
 //
