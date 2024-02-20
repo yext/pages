@@ -137,7 +137,7 @@ const getWidgetName = (widgetPath: string): string => {
 };
 
 /**
- * Adds custom code to widget such that it works when bundled into umd.js.
+ * Adds custom code to widget such that it works for user when bundled into umd.js.
  *
  * @param widgetPath
  * @param name
