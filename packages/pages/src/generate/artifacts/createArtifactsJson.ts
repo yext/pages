@@ -50,7 +50,7 @@ export const getArtifactsConfig = async (
         },
         {
           root: projectStructure.config.rootFolders.dist,
-          pattern: `${projectStructure.config.subfolders.widgets}/**/*`,
+          pattern: `${projectStructure.config.subfolders.modules}/**/*`,
         },
       ],
       plugins: [getGeneratorPlugin(projectStructure)],
@@ -113,7 +113,7 @@ const getGeneratorPlugin = (projectStructure: ProjectStructure): Plugin => {
     static: _static,
     renderBundle,
     plugin,
-    widgets,
+    modules,
   } = subfolders;
 
   return {
@@ -128,7 +128,7 @@ const getGeneratorPlugin = (projectStructure: ProjectStructure): Plugin => {
         pattern: `${assets}/{${serverBundle},${_static},${renderer},${renderBundle},${clientBundle}}/**/*{.js,.css}`,
       },
       {
-        root: `${rootFolders.dist}/${widgets}`,
+        root: `${rootFolders.dist}/${modules}`,
         pattern: "*{.js}",
       },
     ],

@@ -12,61 +12,61 @@ import SourceFileParser, {
   createTsMorphProject,
 } from "../../common/src/parsers/sourceFileParser.js";
 
-const wrappedCode = (widgetName: string, containerName: string): string => {
-  return `\nconst widgetContainerForBuildUseOnly = document.getElementById('${containerName}');
-if (!widgetContainerForBuildUseOnly) {
+const wrappedCode = (moduleName: string, containerName: string): string => {
+  return `\nconst moduleContainerForBuildUseOnly = document.getElementById('${containerName}');
+if (!moduleContainerForBuildUseOnly) {
   throw new Error('could not find ${containerName} element');
 }
 
 ReactDOM.render(
   <React.StrictMode>
-    <${widgetName}/>
+    <${moduleName}/>
   </React.StrictMode>,
-  widgetContainerForBuildUseOnly
+  moduleContainerForBuildUseOnly
 );
   `;
 };
 
-const widgetResponseHeader = {
-  pathPattern: "^widgets/.*",
+const moduleResponseHeader = {
+  pathPattern: "^modules/.*",
   headerKey: "Access-Control-Allow-Origin",
   headerValues: ["*"],
 };
 
-export const buildWidgets = async (
+export const buildModules = async (
   projectStructure: ProjectStructure
 ): Promise<void> => {
-  if (!shouldBundleWidgets(projectStructure)) {
+  if (!shouldBundleModules(projectStructure)) {
     return;
   }
 
-  addResponseHeadersToConfigYaml(projectStructure, widgetResponseHeader);
+  addResponseHeadersToConfigYaml(projectStructure, moduleResponseHeader);
 
   const { rootFolders, subfolders, envVarConfig } = projectStructure.config;
-  const outdir = path.join(rootFolders.dist, subfolders.widgets);
+  const outdir = path.join(rootFolders.dist, subfolders.modules);
 
   const filepaths: { [s: string]: string } = {};
   glob
     .sync(
       convertToPosixPath(
-        path.join(rootFolders.source, subfolders.widgets, "**/*.{jsx,tsx}")
+        path.join(rootFolders.source, subfolders.modules, "**/*.{jsx,tsx}")
       ),
       { nodir: true }
     )
     .forEach((f) => {
       const filepath = path.resolve(f);
-      const widgetName = getWidgetName(filepath);
-      filepaths[widgetName] = filepath;
+      const moduleName = getModuleName(filepath);
+      filepaths[moduleName] = filepath;
     });
 
   const logger = createLogger();
   const loggerInfo = logger.info;
 
-  for (const [widgetName, widgetPath] of Object.entries(filepaths)) {
-    const index = addExtraWidgetCode(widgetPath, widgetName);
+  for (const [moduleName, modulePath] of Object.entries(filepaths)) {
+    const index = addExtraModuleCode(modulePath, moduleName);
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
-        loggerInfo(pc.green(`\nBuilding ${widgetName} widget...`));
+        loggerInfo(pc.green(`\nBuilding ${moduleName} module...`));
         return;
       }
       loggerInfo(msg, options);
@@ -84,8 +84,8 @@ export const buildWidgets = async (
       css: {
         postcss: path.join(
           rootFolders.source,
-          subfolders.widgets,
-          `${widgetName}/postcss.config.cjs`
+          subfolders.modules,
+          `${moduleName}/postcss.config.cjs`
         ),
       },
       build: {
@@ -93,10 +93,10 @@ export const buildWidgets = async (
         outDir: outdir,
         minify: true,
         rollupOptions: {
-          input: widgetPath,
+          input: modulePath,
           output: {
             format: "umd",
-            entryFileNames: `${widgetName}.umd.js`,
+            entryFileNames: `${moduleName}.umd.js`,
           },
         },
         reportCompressedSize: false,
@@ -112,47 +112,47 @@ export const buildWidgets = async (
         }),
       ],
     });
-    removeAddedWidgetCode(widgetPath, index);
+    removeAddedModuleCode(modulePath, index);
   }
 };
 
-const shouldBundleWidgets = (projectStructure: ProjectStructure) => {
+const shouldBundleModules = (projectStructure: ProjectStructure) => {
   const { rootFolders, subfolders } = projectStructure.config;
-  return fs.existsSync(path.join(rootFolders.source, subfolders.widgets));
+  return fs.existsSync(path.join(rootFolders.source, subfolders.modules));
 };
 
 /**
  *
- * @param widgetPath
- * @returns name of widget if set by user, else uses file name
+ * @param modulePath
+ * @returns name of module if set by user, else uses file name
  */
-const getWidgetName = (widgetPath: string): string => {
-  const sfp = new SourceFileParser(widgetPath, createTsMorphProject());
-  const { name } = path.parse(widgetPath);
+const getModuleName = (modulePath: string): string => {
+  const sfp = new SourceFileParser(modulePath, createTsMorphProject());
+  const { name } = path.parse(modulePath);
   return (
     sfp
-      .getVariablePropertyByType("WidgetConfig", "name")
+      .getVariablePropertyByType("ModuleConfig", "name")
       ?.replace(/['"`]/g, "") ?? name
   );
 };
 
 /**
- * Adds custom code to widget such that it works for user when bundled into umd.js.
+ * Adds custom code to module such that it works for user when bundled into umd.js.
  *
- * @param widgetPath
+ * @param modulePath
  * @param name
  * @returns number of added index
  */
-const addExtraWidgetCode = (widgetPath: string, name: string): number => {
-  const sfp = new SourceFileParser(widgetPath, createTsMorphProject());
-  const declaration = sfp.getVariableDeclarationByType("Widget");
+const addExtraModuleCode = (modulePath: string, name: string): number => {
+  const sfp = new SourceFileParser(modulePath, createTsMorphProject());
+  const declaration = sfp.getVariableDeclarationByType("Module");
   if (declaration === undefined) {
-    throw new Error(`Cannot find variable Widget in ${widgetPath}`);
+    throw new Error(`Cannot find variable Module in ${modulePath}`);
   }
-  const widgetName = declaration.getName();
+  const moduleName = declaration.getName();
   const insertIndex = sfp.getEndPos();
   const afterInsertIndex = sfp.insertStatement(
-    wrappedCode(widgetName, name),
+    wrappedCode(moduleName, name),
     insertIndex
   );
   sfp.addReactImports();
@@ -162,11 +162,11 @@ const addExtraWidgetCode = (widgetPath: string, name: string): number => {
 
 /**
  * Removes the custom code we added after bundling is done.
- * @param widgetPath
- * @param index index added (such as via addExtraWidgetCode)
+ * @param modulePath
+ * @param index index added (such as via addExtraModuleCode)
  */
-const removeAddedWidgetCode = (widgetPath: string, index: number) => {
-  const sfp = new SourceFileParser(widgetPath, createTsMorphProject());
+const removeAddedModuleCode = (modulePath: string, index: number) => {
+  const sfp = new SourceFileParser(modulePath, createTsMorphProject());
   sfp.removeStatement(sfp.getEndPos() - index, sfp.getEndPos());
   sfp.removeUnusedImports();
   sfp.save();

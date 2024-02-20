@@ -174,19 +174,19 @@ describe("getVariableDeclarationByType", () => {
     expect(variableDeclaration?.getName()).toEqual("foo");
   });
 
-  it("correctly gets a Widget variable", () => {
-    const parser = createParser(`const foo: Widget = () => {return <div/>;}`);
-    const variableDeclaration = parser.getVariableDeclarationByType("Widget");
+  it("correctly gets a Module variable", () => {
+    const parser = createParser(`const foo: Module = () => {return <div/>;}`);
+    const variableDeclaration = parser.getVariableDeclarationByType("Module");
     expect(variableDeclaration).toBeDefined();
     expect(variableDeclaration?.getName()).toEqual("foo");
   });
 });
 
 describe("getVariablePropertyByType", () => {
-  it("correctly gets a WidgetConfig's name", () => {
-    const parser = createParser(`const config: WidgetConfig = { name: "foo" }`);
+  it("correctly gets a ModuleConfig's name", () => {
+    const parser = createParser(`const config: ModuleConfig = { name: "foo" }`);
     const variableDeclaration = parser.getVariablePropertyByType(
-      "WidgetConfig",
+      "ModuleConfig",
       "name"
     );
     expect(variableDeclaration).toEqual(`"foo"`);
@@ -236,8 +236,8 @@ describe("removeUnusedImports", () => {
 
   it("doesn't remove used imports", () => {
     const parser = createParser(
-      `import { WidgetConfig } from "@yext/pages/*";
-      export const config: WidgetConfig = {
+      `import { ModuleConfig } from "@yext/pages/*";
+      export const config: ModuleConfig = {
         name: "foo"
       }`
     );
@@ -245,7 +245,7 @@ describe("removeUnusedImports", () => {
     expect(
       parser
         .getAllText()
-        .includes(`import { WidgetConfig } from "@yext/pages/*";`)
+        .includes(`import { ModuleConfig } from "@yext/pages/*";`)
     ).toBeTruthy();
   });
 });

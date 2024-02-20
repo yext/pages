@@ -210,9 +210,9 @@ export default class SourceFileParser {
   }
 
   /**
-   * For example, we can do getVariablePropertyByType("WidgetConfig", "name")
+   * For example, we can do getVariablePropertyByType("ModuleConfig", "name")
    * and recieve the string value that the user set as name for their
-   * variable of type WidgetConfig
+   * variable of type ModuleConfig
    *
    * @param type of the variable
    * @param property of the variable

@@ -20,7 +20,7 @@ describe("createArtifactsJson - getArtifactsConfig", () => {
           },
           {
             root: "dist",
-            pattern: "widgets/**/*",
+            pattern: "modules/**/*",
           },
         ],
         plugins: [
@@ -37,7 +37,7 @@ describe("createArtifactsJson - getArtifactsConfig", () => {
                   "assets/{server,static,renderer,render,client}/**/*{.js,.css}",
               },
               {
-                root: "dist/widgets",
+                root: "dist/modules",
                 pattern: "*{.js}",
               },
             ],

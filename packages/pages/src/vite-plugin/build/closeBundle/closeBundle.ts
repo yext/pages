@@ -50,7 +50,7 @@ export default (projectStructure: ProjectStructure) => {
                 "**"
               ),
               path.join(
-                path.resolve(rootFolders.dist, subfolders.widgets),
+                path.resolve(rootFolders.dist, subfolders.modules),
                 "**"
               ),
             ],
