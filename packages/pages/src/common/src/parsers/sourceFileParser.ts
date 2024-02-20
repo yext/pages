@@ -270,7 +270,7 @@ export default class SourceFileParser {
           .endsWith("." + type)
       );
     if (declaration === undefined) {
-      console.log("Type " + type + "cannot be found.");
+      console.log("Type " + type + " cannot be found.");
       return;
     }
     return declaration;
@@ -289,6 +289,9 @@ export default class SourceFileParser {
     return this.sourceFile.getEnd();
   }
 
+  /**
+   * Adds react and react-dom imports if they do not exist.
+   */
   addReactImports() {
     const existingReactImport = this.sourceFile.getImportDeclaration(
       (i) => i.getModuleSpecifierValue() === "react"

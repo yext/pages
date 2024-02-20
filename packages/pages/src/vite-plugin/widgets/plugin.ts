@@ -13,7 +13,7 @@ import SourceFileParser, {
 } from "../../common/src/parsers/sourceFileParser.js";
 
 const wrappedCode = (widgetName: string, containerName: string): string => {
-  return `const widgetContainerForBuildUseOnly = document.getElementById('${containerName}');
+  return `\nconst widgetContainerForBuildUseOnly = document.getElementById('${containerName}');
 if (!widgetContainerForBuildUseOnly) {
   throw new Error('could not find ${containerName} element');
 }
@@ -22,7 +22,7 @@ ReactDOM.render(
   <React.StrictMode>
     <${widgetName}/>
   </React.StrictMode>,
-  container
+  widgetContainerForBuildUseOnly
 );
   `;
 };
@@ -132,7 +132,7 @@ const getWidgetName = (widgetPath: string): string => {
   return (
     sfp
       .getVariablePropertyByType("WidgetConfig", "name")
-      .replace(/['"`]/g, "") ?? name
+      ?.replace(/['"`]/g, "") ?? name
   );
 };
 

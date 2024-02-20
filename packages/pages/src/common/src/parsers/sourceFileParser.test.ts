@@ -165,6 +165,91 @@ describe("getChildExpressions", () => {
   });
 });
 
+describe("getVariableDeclarationByType", () => {
+  it("correctly gets a string variable", () => {
+    const parser = createParser(`const foo: string = "foo";`);
+    const variableDeclaration = parser.getVariableDeclarationByType("string");
+    expect(variableDeclaration).toBeDefined();
+    expect(variableDeclaration?.getType().getText()).toEqual("string");
+    expect(variableDeclaration?.getName()).toEqual("foo");
+  });
+
+  it("correctly gets a Widget variable", () => {
+    const parser = createParser(`const foo: Widget = () => {return <div/>;}`);
+    const variableDeclaration = parser.getVariableDeclarationByType("Widget");
+    expect(variableDeclaration).toBeDefined();
+    expect(variableDeclaration?.getName()).toEqual("foo");
+  });
+});
+
+describe("getVariablePropertyByType", () => {
+  it("correctly gets a WidgetConfig's name", () => {
+    const parser = createParser(`const config: WidgetConfig = { name: "foo" }`);
+    const variableDeclaration = parser.getVariablePropertyByType(
+      "WidgetConfig",
+      "name"
+    );
+    expect(variableDeclaration).toEqual(`"foo"`);
+  });
+});
+
+describe("addReactImports", () => {
+  it("correctly adds react imports", () => {
+    const parser = createParser(`const foo = foo;`);
+    parser.addReactImports();
+    expect(
+      parser.getAllText().includes(`import * as React from "react";`)
+    ).toBeTruthy();
+    expect(
+      parser.getAllText().includes(`import * as ReactDOM from "react-dom";`)
+    ).toBeTruthy();
+  });
+
+  it("doesn't add additional imports if already there", () => {
+    const expected =
+      `import * as React from "react";\n` +
+      `import * as ReactDOM from "react-dom";\n`;
+    const parser = createParser(
+      `import * as React from "react";\n` +
+        `import * as ReactDOM from "react-dom";\n`
+    );
+    parser.addReactImports();
+    expect(parser.getAllText()).toEqual(expected);
+  });
+
+  it("only adds imports if they are missing", () => {
+    const expected =
+      `import * as React from "react";\n` +
+      `import * as ReactDOM from "react-dom";\n`;
+    const parser = createParser(`import * as React from "react";`);
+    parser.addReactImports();
+    expect(parser.getAllText()).toEqual(expected);
+  });
+});
+
+describe("removeUnusedImports", () => {
+  it("correctly removes unused imports", () => {
+    const parser = createParser(`import * as React from "react";`);
+    parser.removeUnusedImports();
+    expect(parser.getAllText()).toEqual("");
+  });
+
+  it("doesn't remove used imports", () => {
+    const parser = createParser(
+      `import { WidgetConfig } from "@yext/pages/*";
+      export const config: WidgetConfig = {
+        name: "foo"
+      }`
+    );
+    parser.removeUnusedImports();
+    expect(
+      parser
+        .getAllText()
+        .includes(`import { WidgetConfig } from "@yext/pages/*";`)
+    ).toBeTruthy();
+  });
+});
+
 function createParser(sourceCode: string) {
   const filepath = path.resolve(__dirname, "test.tsx");
   const { project } = createTestSourceFile(sourceCode, filepath);
