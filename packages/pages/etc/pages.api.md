@@ -159,9 +159,9 @@ export const renderHeadConfigToString: (headConfig: HeadConfig) => string;
 
 // @internal
 export interface ServerRenderTemplate {
-  indexHtml: string;
+  getIndexHtml(pageContext: PageContext<any>): Promise<string>;
+  getReplacementTag(): Promise<string>;
   render(pageContext: PageContext<any>): Promise<string>;
-  replacementTag: string;
 }
 
 // @public
