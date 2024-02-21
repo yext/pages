@@ -36,10 +36,6 @@ describe("createArtifactsJson - getArtifactsConfig", () => {
                 pattern:
                   "assets/{server,static,renderer,render,client}/**/*{.js,.css}",
               },
-              {
-                root: "dist/modules",
-                pattern: "*{.js}",
-              },
             ],
             event: "ON_PAGE_GENERATE",
             functionName: "PagesGenerator",
