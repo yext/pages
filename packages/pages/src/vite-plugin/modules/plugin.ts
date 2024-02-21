@@ -12,8 +12,12 @@ import SourceFileParser, {
   createTsMorphProject,
 } from "../../common/src/parsers/sourceFileParser.js";
 
+const postcssExtensions = ["cjs", "js", "ts", "mjs"];
+
 const wrappedCode = (moduleName: string, containerName: string): string => {
-  return `\nconst moduleContainerForBuildUseOnly = document.getElementById('${containerName}');
+  return `
+// The following code is added during build and removed after build is completed.
+const moduleContainerForBuildUseOnly = document.getElementById('${containerName}');
 if (!moduleContainerForBuildUseOnly) {
   throw new Error('could not find ${containerName} element');
 }
@@ -27,8 +31,7 @@ ReactDOM.render(
   `;
 };
 
-const moduleResponseHeader = {
-  pathPattern: "^modules/.*",
+const moduleResponseHeaderProps = {
   headerKey: "Access-Control-Allow-Origin",
   headerValues: ["*"],
 };
@@ -39,8 +42,6 @@ export const buildModules = async (
   if (!shouldBundleModules(projectStructure)) {
     return;
   }
-
-  addResponseHeadersToConfigYaml(projectStructure, moduleResponseHeader);
 
   const { rootFolders, subfolders, envVarConfig } = projectStructure.config;
   const outdir = path.join(rootFolders.dist, subfolders.modules);
@@ -72,6 +73,18 @@ export const buildModules = async (
       loggerInfo(msg, options);
     };
 
+    // For each module, add response header to config.yaml.
+    // Users can manually adjust headerKey and headerValue in their config.yaml.
+    // As long as pathPattern matches, it won't be overwitten.
+    addResponseHeadersToConfigYaml(
+      projectStructure,
+      {
+        pathPattern: `^modules/${moduleName}/.*`,
+        ...moduleResponseHeaderProps,
+      },
+      " This response header allows access to your modules from other sites"
+    );
+
     await build({
       customLogger: logger,
       configFile: false,
@@ -82,11 +95,7 @@ export const buildModules = async (
       },
       publicDir: false,
       css: {
-        postcss: path.join(
-          rootFolders.source,
-          subfolders.modules,
-          `${moduleName}/postcss.config.js`
-        ),
+        postcss: getPostcssConfigFilepath(rootFolders, subfolders, moduleName),
       },
       build: {
         emptyOutDir: false,
@@ -170,4 +179,34 @@ const removeAddedModuleCode = (modulePath: string, index: number) => {
   sfp.removeStatement(sfp.getEndPos() - index, sfp.getEndPos());
   sfp.removeUnusedImports();
   sfp.save();
+};
+
+const getPostcssConfigFilepath = (
+  rootFolders: any,
+  subfolders: any,
+  moduleName: string
+): string => {
+  for (const extension of postcssExtensions) {
+    const filePath = path.join(
+      rootFolders.source,
+      subfolders.modules,
+      `${moduleName}/postcss.config.${extension}`
+    );
+    if (fs.existsSync(filePath)) {
+      return filePath;
+    }
+  }
+
+  // Use root config if one isn't found
+  for (const extension of postcssExtensions) {
+    const filePath = path.join(
+      rootFolders.source,
+      `postcss.config.${extension}`
+    );
+    if (fs.existsSync(filePath)) {
+      return filePath;
+    }
+  }
+
+  throw new Error(`Cannot find a postcss.config file for ${moduleName}`);
 };

@@ -246,14 +246,12 @@ export default class SourceFileParser {
             return variableProperty;
           }
         } else {
-          console.log(type + " does not have a '" + property + "' property.");
-          return;
+          throw new Error(`${type} does not have a '${property}' property.`);
         }
       } else {
-        console.log(
-          "Initializer for " + type + "variable is not an object literal."
+        throw new Error(
+          `Initializer for ${type} variable is not an object literal.`
         );
-        return;
       }
     }
   }
@@ -270,8 +268,7 @@ export default class SourceFileParser {
           .endsWith("." + type)
       );
     if (declaration === undefined) {
-      console.log("Type " + type + " cannot be found.");
-      return;
+      throw new Error(`Type ${type} cannot be found.`);
     }
     return declaration;
   }

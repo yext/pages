@@ -13,10 +13,12 @@ export interface ResponseHeaderProps {
  *
  * @param projectStructure
  * @param responseHeaderProps
+ * @param comment to be placed in responseHeader
  */
 export const addResponseHeadersToConfigYaml = (
   projectStructure: ProjectStructure,
-  responseHeaderProps: ResponseHeaderProps
+  responseHeaderProps: ResponseHeaderProps,
+  comment: string | undefined
 ) => {
   const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
   if (!fs.existsSync(configYamlPath)) {
@@ -40,10 +42,11 @@ export const addResponseHeadersToConfigYaml = (
 
   fs.writeFileSync(configYamlPath, YAML.stringify(yamlDoc));
 
-  const yaml = YAML.parseDocument(fs.readFileSync(configYamlPath, "utf-8"));
-  const responseHeader: any = yaml.get("responseHeaders");
-  responseHeader.comment =
-    " This response header allows access to your modules from other sites";
+  if (comment) {
+    const yaml = YAML.parseDocument(fs.readFileSync(configYamlPath, "utf-8"));
+    const responseHeader: any = yaml.get("responseHeaders");
+    responseHeader.comment = comment;
 
-  fs.writeFileSync(configYamlPath, YAML.stringify(yaml));
+    fs.writeFileSync(configYamlPath, YAML.stringify(yaml));
+  }
 };
