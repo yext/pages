@@ -8,6 +8,8 @@ import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
 import { addResponseHeadersToConfigYaml } from "../../util/editConfigYaml.js";
+// @ts-expect-error due to type any
+import scopeTailwind from "vite-plugin-scope-tailwind";
 import SourceFileParser, {
   createTsMorphProject,
 } from "../../common/src/parsers/sourceFileParser.js";
@@ -36,6 +38,11 @@ const moduleResponseHeaderProps = {
   headerValues: ["*"],
 };
 
+type FileInfo = {
+  path: string;
+  name: string;
+};
+
 export const buildModules = async (
   projectStructure: ProjectStructure
 ): Promise<void> => {
@@ -46,7 +53,7 @@ export const buildModules = async (
   const { rootFolders, subfolders, envVarConfig } = projectStructure.config;
   const outdir = path.join(rootFolders.dist, subfolders.modules);
 
-  const filepaths: { [s: string]: string } = {};
+  const filepaths: { [s: string]: FileInfo } = {};
   glob
     .sync(
       convertToPosixPath(
@@ -57,14 +64,15 @@ export const buildModules = async (
     .forEach((f) => {
       const filepath = path.resolve(f);
       const moduleName = getModuleName(filepath);
-      filepaths[moduleName] = filepath;
+      const { name } = path.parse(filepath);
+      filepaths[moduleName ?? name] = { path: filepath, name: name };
     });
 
   const logger = createLogger();
   const loggerInfo = logger.info;
 
-  for (const [moduleName, modulePath] of Object.entries(filepaths)) {
-    const index = addExtraModuleCode(modulePath, moduleName);
+  for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
+    const index = addExtraModuleCode(fileInfo.path, moduleName);
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
         loggerInfo(pc.green(`\nBuilding ${moduleName} module...`));
@@ -79,7 +87,7 @@ export const buildModules = async (
     addResponseHeadersToConfigYaml(
       projectStructure,
       {
-        pathPattern: `^modules/${moduleName}/.*`,
+        pathPattern: `^modules/${moduleName}.*`,
         ...moduleResponseHeaderProps,
       },
       " This response header allows access to your modules from other sites"
@@ -95,14 +103,18 @@ export const buildModules = async (
       },
       publicDir: false,
       css: {
-        postcss: getPostcssConfigFilepath(rootFolders, subfolders, moduleName),
+        postcss: getPostcssConfigFilepath(
+          rootFolders,
+          subfolders,
+          fileInfo.name
+        ),
       },
       build: {
         emptyOutDir: false,
         outDir: outdir,
         minify: true,
         rollupOptions: {
-          input: modulePath,
+          input: fileInfo.path,
           output: {
             format: "umd",
             entryFileNames: `${moduleName}.umd.js`,
@@ -112,6 +124,7 @@ export const buildModules = async (
       },
       define: processEnvVariables(envVarConfig.envVarPrefix),
       plugins: [
+        scopeTailwind({ react: true }),
         nodePolyfills({
           globals: {
             Buffer: "build",
@@ -121,7 +134,7 @@ export const buildModules = async (
         }),
       ],
     });
-    removeAddedModuleCode(modulePath, index);
+    removeAddedModuleCode(fileInfo.path, index);
   }
 };
 
@@ -133,23 +146,20 @@ const shouldBundleModules = (projectStructure: ProjectStructure) => {
 /**
  *
  * @param modulePath
- * @returns name of module if set by user, else uses file name
+ * @returns name of module if set by user via ModuleConfig
  */
-const getModuleName = (modulePath: string): string => {
+const getModuleName = (modulePath: string): string | undefined => {
   const sfp = new SourceFileParser(modulePath, createTsMorphProject());
-  const { name } = path.parse(modulePath);
-  return (
-    sfp
-      .getVariablePropertyByType("ModuleConfig", "name")
-      ?.replace(/['"`]/g, "") ?? name
-  );
+  return sfp
+    .getVariablePropertyByType("ModuleConfig", "name")
+    ?.replace(/['"`]/g, "");
 };
 
 /**
  * Adds custom code to module such that it works for user when bundled into umd.js.
  *
  * @param modulePath
- * @param name
+ * @param name set by ModuleConfig or filename
  * @returns number of added index
  */
 const addExtraModuleCode = (modulePath: string, name: string): number => {
@@ -184,29 +194,26 @@ const removeAddedModuleCode = (modulePath: string, index: number) => {
 const getPostcssConfigFilepath = (
   rootFolders: any,
   subfolders: any,
-  moduleName: string
+  filename: string
 ): string => {
   for (const extension of postcssExtensions) {
     const filePath = path.join(
       rootFolders.source,
       subfolders.modules,
-      `${moduleName}/postcss.config.${extension}`
+      `${filename}/postcss.config.${extension}`
     );
     if (fs.existsSync(filePath)) {
       return filePath;
     }
   }
 
-  // Use root config if one isn't found
+  // Use root config if one isn't found in module
   for (const extension of postcssExtensions) {
-    const filePath = path.join(
-      rootFolders.source,
-      `postcss.config.${extension}`
-    );
+    const filePath = path.join(`postcss.config.${extension}`);
     if (fs.existsSync(filePath)) {
       return filePath;
     }
   }
 
-  throw new Error(`Cannot find a postcss.config file for ${moduleName}`);
+  throw new Error(`Cannot find a postcss.config file for ${filename}`);
 };
