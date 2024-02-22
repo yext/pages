@@ -71,6 +71,15 @@ export const buildModules = async (
   const logger = createLogger();
   const loggerInfo = logger.info;
 
+  if (tailwindBaseExists()) {
+    // TODO add link to recommended implementation for user.
+    loggerInfo(
+      pc.yellow(
+        `\nPlease be aware that using @tailwind base applies styles globally. This can affect code outside of the widget.`
+      )
+    );
+  }
+
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
     const index = addExtraModuleCode(fileInfo.path, moduleName);
     logger.info = (msg, options) => {
@@ -108,6 +117,11 @@ export const buildModules = async (
           subfolders,
           fileInfo.name
         ),
+      },
+      esbuild: {
+        logOverride: {
+          "css-syntax-error": "silent",
+        },
       },
       build: {
         emptyOutDir: false,
@@ -181,6 +195,7 @@ const addExtraModuleCode = (modulePath: string, name: string): number => {
 
 /**
  * Removes the custom code we added after bundling is done.
+ *
  * @param modulePath
  * @param index index added (such as via addExtraModuleCode)
  */
@@ -191,6 +206,16 @@ const removeAddedModuleCode = (modulePath: string, index: number) => {
   sfp.save();
 };
 
+/**
+ * Returns the postcss.config filepath if it exists in module.
+ * Else returns the root postcss.config filepath.
+ * If there is none, throws error.
+ *
+ * @param rootFolders
+ * @param subfolders
+ * @param filename of module
+ * @returns string
+ */
 const getPostcssConfigFilepath = (
   rootFolders: any,
   subfolders: any,
@@ -207,7 +232,6 @@ const getPostcssConfigFilepath = (
     }
   }
 
-  // Use root config if one isn't found in module
   for (const extension of postcssExtensions) {
     const filePath = path.join(`postcss.config.${extension}`);
     if (fs.existsSync(filePath)) {
@@ -216,4 +240,25 @@ const getPostcssConfigFilepath = (
   }
 
   throw new Error(`Cannot find a postcss.config file for ${filename}`);
+};
+
+/**
+ * Looks at all css files in src and returns true
+ * if there is an unwrapped tailwind base
+ *
+ * @returns boolean
+ */
+const tailwindBaseExists = (): boolean => {
+  const files = glob.sync("./src/**/*.css");
+  for (const filePath of files) {
+    try {
+      const data = fs.readFileSync(filePath, "utf8");
+      if (data.includes(`@tailwind base`) && !data.includes(`.tailwind {`)) {
+        return true;
+      }
+    } catch (err) {
+      throw new Error(`Cannot read file at ${filePath} due to: ${err}`);
+    }
+  }
+  return false;
 };
