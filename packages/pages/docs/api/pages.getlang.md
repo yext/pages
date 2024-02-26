@@ -2,7 +2,7 @@
 
 [Home](./index.md) &gt; [@yext/pages](./pages.md) &gt; [getLang](./pages.getlang.md)
 
-## getLang variable
+## getLang() function
 
 Function that takes in a [HeadConfig](./pages.headconfig.md) interface and a props, and returns the lang value that will be set on the HTML tag.
 
@@ -14,3 +14,14 @@ getLang: <T extends TemplateRenderProps<any>>(
   props: T
 ) => string;
 ```
+
+## Parameters
+
+| Parameter  | Type                                             | Description |
+| ---------- | ------------------------------------------------ | ----------- |
+| headConfig | [HeadConfig](./pages.headconfig.md) \| undefined |             |
+| props      | T                                                |             |
+
+**Returns:**
+
+string

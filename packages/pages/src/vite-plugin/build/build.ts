@@ -5,10 +5,6 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { buildServerlessFunctions } from "../serverless-functions/plugin.js";
 
-const intro = `
-var global = globalThis;
-`;
-
 /**
  * This plugin defines how to build the project for production. It bundles
  * assets, copies Yext plugin files that execute the bundled assets in a Deno
@@ -49,7 +45,6 @@ export const build = async (
           rollupOptions: {
             preserveEntrySignatures: "strict",
             output: {
-              intro,
               assetFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash][extname]`,
               chunkFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash].js`,
               sanitizeFileName: false,

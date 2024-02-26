@@ -2,7 +2,7 @@
 
 [Home](./index.md) &gt; [@yext/pages](./pages.md) &gt; [getRelativePrefixToRootFromPath](./pages.getrelativeprefixtorootfrompath.md)
 
-## getRelativePrefixToRootFromPath variable
+## getRelativePrefixToRootFromPath() function
 
 Function that takes a path to a generated template and returns the relative path to the root of the site. Will return the empty string if already at the root level.
 
@@ -11,3 +11,13 @@ Function that takes a path to a generated template and returns the relative path
 ```typescript
 getRelativePrefixToRootFromPath: (path: string) => string;
 ```
+
+## Parameters
+
+| Parameter | Type   | Description |
+| --------- | ------ | ----------- |
+| path      | string |             |
+
+**Returns:**
+
+string
