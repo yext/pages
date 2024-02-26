@@ -182,11 +182,11 @@ describe("getVariableDeclarationByType", () => {
   });
 });
 
-describe("getVariablePropertyByType", () => {
-  it("correctly gets a ModuleConfig's name", () => {
-    const parser = createParser(`const config: ModuleConfig = { name: "foo" }`);
-    const variableDeclaration = parser.getVariablePropertyByType(
-      "ModuleConfig",
+describe("getVariablePropertyByName", () => {
+  it("correctly gets a config's name", () => {
+    const parser = createParser(`export const config = { name: "foo" }`);
+    const variableDeclaration = parser.getVariablePropertyByName(
+      "config",
       "name"
     );
     expect(variableDeclaration).toEqual(`"foo"`);

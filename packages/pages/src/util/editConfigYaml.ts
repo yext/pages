@@ -18,35 +18,34 @@ export interface ResponseHeaderProps {
 export const addResponseHeadersToConfigYaml = (
   projectStructure: ProjectStructure,
   responseHeaderProps: ResponseHeaderProps,
-  comment: string | undefined
+  comment: string
 ) => {
   const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
   if (!fs.existsSync(configYamlPath)) {
     return;
   }
 
-  const yamlDoc = YAML.parse(fs.readFileSync(configYamlPath, "utf-8"));
+  const yaml = YAML.parse(fs.readFileSync(configYamlPath, "utf-8"));
   if (
-    Object.hasOwn(yamlDoc, "responseHeaders") &&
-    yamlDoc.responseHeaders.find(
+    Object.hasOwn(yaml, "responseHeaders") &&
+    yaml.responseHeaders.find(
       (e: ResponseHeaderProps) =>
         e.pathPattern === responseHeaderProps.pathPattern
     )
   ) {
     return;
-  } else if (Object.hasOwn(yamlDoc, "responseHeaders")) {
-    yamlDoc.responseHeaders.push(responseHeaderProps);
+  } else if (Object.hasOwn(yaml, "responseHeaders")) {
+    yaml.responseHeaders.push(responseHeaderProps);
   } else {
-    Object.assign(yamlDoc, { responseHeaders: [responseHeaderProps] });
+    Object.assign(yaml, { responseHeaders: [responseHeaderProps] });
   }
 
-  fs.writeFileSync(configYamlPath, YAML.stringify(yamlDoc));
-
-  if (comment) {
-    const yaml = YAML.parseDocument(fs.readFileSync(configYamlPath, "utf-8"));
-    const responseHeader: any = yaml.get("responseHeaders");
-    responseHeader.comment = comment;
-
-    fs.writeFileSync(configYamlPath, YAML.stringify(yaml));
+  let yamlDoc = YAML.stringify(yaml);
+  if (!yamlDoc.includes(comment)) {
+    const index = yamlDoc.indexOf("responseHeaders:");
+    if (index !== -1) {
+      yamlDoc = yamlDoc.slice(0, index) + comment + yamlDoc.slice(index);
+    }
   }
+  fs.writeFileSync(configYamlPath, yamlDoc);
 };

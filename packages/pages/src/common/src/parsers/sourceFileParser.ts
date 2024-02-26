@@ -210,26 +210,19 @@ export default class SourceFileParser {
   }
 
   /**
-   * For example, we can do getVariablePropertyByType("ModuleConfig", "name")
+   * For example, we can do getVariablePropertyByName("config", "name")
    * and recieve the string value that the user set as name for their
-   * variable of type ModuleConfig
+   * variable named config. This only works for exported variables.
    *
-   * @param type of the variable
+   * @param name of the variable
    * @param property of the variable
    * @returns property of the variable as any
    */
-  getVariablePropertyByType(type: string, property: string): any {
-    const declaration = this.getVariableDeclarationByType(type);
-    if (declaration === undefined) {
-      return;
-    }
-    const variableType = declaration.getType();
-    if (variableType.getText().includes(type)) {
-      const initializer = declaration.getInitializer();
-      if (
-        initializer &&
-        initializer.getKind() === SyntaxKind.ObjectLiteralExpression
-      ) {
+  getVariablePropertyByName(name: string, property: string): any {
+    const variableDeclarations = this.sourceFile.getVariableDeclarations();
+    for (const declaration of variableDeclarations) {
+      if (declaration.getName() === name && declaration.isExported()) {
+        const initializer = declaration.getInitializer();
         const objectLiteral = initializer as any;
         const variableProperty = objectLiteral
           .getProperties()
@@ -245,15 +238,10 @@ export default class SourceFileParser {
           } else {
             return variableProperty;
           }
-        } else {
-          throw new Error(`${type} does not have a '${property}' property.`);
         }
-      } else {
-        throw new Error(
-          `Initializer for ${type} variable is not an object literal.`
-        );
       }
     }
+    return;
   }
 
   getVariableDeclarationByType(type: string): VariableDeclaration | undefined {

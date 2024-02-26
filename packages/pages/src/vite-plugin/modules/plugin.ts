@@ -13,8 +13,9 @@ import scopeTailwind from "vite-plugin-scope-tailwind";
 import SourceFileParser, {
   createTsMorphProject,
 } from "../../common/src/parsers/sourceFileParser.js";
-
-const postcssExtensions = ["cjs", "js", "ts", "mjs"];
+import { logWarning } from "../../util/logError.js";
+import postcss from "postcss";
+import nested from "postcss-nested";
 
 const wrappedCode = (moduleName: string, containerName: string): string => {
   return `
@@ -73,10 +74,8 @@ export const buildModules = async (
 
   if (tailwindBaseExists()) {
     // TODO add link to recommended implementation for user.
-    loggerInfo(
-      pc.yellow(
-        `\nPlease be aware that using @tailwind base applies styles globally. This can affect code outside of the widget.`
-      )
+    logWarning(
+      `Please be aware that using @tailwind base applies styles globally. This can affect code outside of the widget.`
     );
   }
 
@@ -99,7 +98,7 @@ export const buildModules = async (
         pathPattern: `^modules/${moduleName}.*`,
         ...moduleResponseHeaderProps,
       },
-      " This response header allows access to your modules from other sites"
+      "# The ^modules/ header allows access to your modules from other sites\n"
     );
 
     await build({
@@ -112,7 +111,7 @@ export const buildModules = async (
       },
       publicDir: false,
       css: {
-        postcss: getPostcssConfigFilepath(
+        postcss: getPostCssConfigFilepath(
           rootFolders,
           subfolders,
           fileInfo.name
@@ -124,6 +123,7 @@ export const buildModules = async (
         },
       },
       build: {
+        chunkSizeWarningLimit: 2000,
         emptyOutDir: false,
         outDir: outdir,
         minify: true,
@@ -164,9 +164,7 @@ const shouldBundleModules = (projectStructure: ProjectStructure) => {
  */
 const getModuleName = (modulePath: string): string | undefined => {
   const sfp = new SourceFileParser(modulePath, createTsMorphProject());
-  return sfp
-    .getVariablePropertyByType("ModuleConfig", "name")
-    ?.replace(/['"`]/g, "");
+  return sfp.getVariablePropertyByName("config", "name")?.replace(/['"`]/g, "");
 };
 
 /**
@@ -216,48 +214,59 @@ const removeAddedModuleCode = (modulePath: string, index: number) => {
  * @param filename of module
  * @returns string
  */
-const getPostcssConfigFilepath = (
+const getPostCssConfigFilepath = (
   rootFolders: any,
   subfolders: any,
   filename: string
-): string => {
-  for (const extension of postcssExtensions) {
-    const filePath = path.join(
-      rootFolders.source,
-      subfolders.modules,
-      `${filename}/postcss.config.${extension}`
-    );
-    if (fs.existsSync(filePath)) {
-      return filePath;
-    }
+): string | undefined => {
+  const filePath = path.join(
+    rootFolders.source,
+    subfolders.modules,
+    `${filename}/postcss.config`
+  );
+  let filePaths = glob.sync(filePath + "**/*.{cjs,js,ts,mjs}");
+  if (filePaths.length == 1) {
+    return filePaths[0];
   }
 
-  for (const extension of postcssExtensions) {
-    const filePath = path.join(`postcss.config.${extension}`);
-    if (fs.existsSync(filePath)) {
-      return filePath;
-    }
+  filePaths = glob.sync("postcss.config" + "**/*.{cjs,js,ts,mjs}");
+  if (filePaths.length == 1) {
+    return filePaths[0];
   }
 
-  throw new Error(`Cannot find a postcss.config file for ${filename}`);
+  return;
 };
 
 /**
  * Looks at all css files in src and returns true
- * if there is an unwrapped tailwind base
+ * if there is an unwrapped tailwind base.
  *
  * @returns boolean
  */
 const tailwindBaseExists = (): boolean => {
   const files = glob.sync("./src/**/*.css");
+  let isTailwindBaseInRule = false;
   for (const filePath of files) {
     try {
       const data = fs.readFileSync(filePath, "utf8");
-      if (data.includes(`@tailwind base`) && !data.includes(`.tailwind {`)) {
-        return true;
-      }
+      postcss([nested])
+        .process(data, { from: undefined })
+        .then((result) => {
+          result.root.walkRules((rule) => {
+            // Check if the rule contains @tailwind base
+            if (rule.toString().includes("@tailwind base")) {
+              isTailwindBaseInRule = true;
+            }
+          });
+        })
+        .then(() => {
+          if (data.includes(`@tailwind base`) && !isTailwindBaseInRule) {
+            return true;
+          }
+        });
     } catch (err) {
-      throw new Error(`Cannot read file at ${filePath} due to: ${err}`);
+      // Purposefully ignore error, in case user has odd file we want to skip.
+      return false;
     }
   }
   return false;
