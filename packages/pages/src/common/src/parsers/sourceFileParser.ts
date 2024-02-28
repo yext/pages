@@ -274,33 +274,6 @@ export default class SourceFileParser {
     return this.sourceFile.getEnd();
   }
 
-  /**
-   * Adds react and react-dom imports if they do not exist.
-   */
-  addReactImports() {
-    const existingReactImport = this.sourceFile.getImportDeclaration(
-      (i) => i.getModuleSpecifierValue() === "react"
-    );
-    if (!existingReactImport) {
-      this.sourceFile.addImportDeclaration({
-        moduleSpecifier: "react",
-        namespaceImport: "React",
-        isTypeOnly: false,
-      });
-    }
-
-    const existingReactDOMImport = this.sourceFile.getImportDeclaration(
-      (i) => i.getModuleSpecifierValue() === "react-dom"
-    );
-    if (!existingReactDOMImport) {
-      this.sourceFile.addImportDeclaration({
-        moduleSpecifier: "react-dom",
-        namespaceImport: "ReactDOM",
-        isTypeOnly: false,
-      });
-    }
-  }
-
   removeUnusedImports() {
     this.sourceFile.fixUnusedIdentifiers();
   }

@@ -193,40 +193,6 @@ describe("getVariablePropertyByName", () => {
   });
 });
 
-describe("addReactImports", () => {
-  it("correctly adds react imports", () => {
-    const parser = createParser(`const foo = foo;`);
-    parser.addReactImports();
-    expect(
-      parser.getAllText().includes(`import * as React from "react";`)
-    ).toBeTruthy();
-    expect(
-      parser.getAllText().includes(`import * as ReactDOM from "react-dom";`)
-    ).toBeTruthy();
-  });
-
-  it("doesn't add additional imports if already there", () => {
-    const expected =
-      `import * as React from "react";\n` +
-      `import * as ReactDOM from "react-dom";\n`;
-    const parser = createParser(
-      `import * as React from "react";\n` +
-        `import * as ReactDOM from "react-dom";\n`
-    );
-    parser.addReactImports();
-    expect(parser.getAllText()).toEqual(expected);
-  });
-
-  it("only adds imports if they are missing", () => {
-    const expected =
-      `import * as React from "react";\n` +
-      `import * as ReactDOM from "react-dom";\n`;
-    const parser = createParser(`import * as React from "react";`);
-    parser.addReactImports();
-    expect(parser.getAllText()).toEqual(expected);
-  });
-});
-
 describe("removeUnusedImports", () => {
   it("correctly removes unused imports", () => {
     const parser = createParser(`import * as React from "react";`);

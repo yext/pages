@@ -1,4 +1,4 @@
-import { build, createLogger } from "vite";
+import { build, createLogger, Plugin } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -8,6 +8,7 @@ import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
 import { addResponseHeadersToConfigYaml } from "../../util/editConfigYaml.js";
+// https://github.com/dolanmiu/vite-plugin-scope-tailwind/issues/5
 // @ts-expect-error due to type any
 import scopeTailwind from "vite-plugin-scope-tailwind";
 import SourceFileParser, {
@@ -19,19 +20,14 @@ import nested from "postcss-nested";
 
 const wrappedCode = (moduleName: string, containerName: string): string => {
   return `
-// The following code is added during build and removed after build is completed.
-const moduleContainerForBuildUseOnly = document.getElementById('${containerName}');
-if (!moduleContainerForBuildUseOnly) {
-  throw new Error('could not find ${containerName} element');
-}
-
-ReactDOM.render(
-  <React.StrictMode>
-    <${moduleName}/>
-  </React.StrictMode>,
-  moduleContainerForBuildUseOnly
-);
-  `;
+  const moduleContainerForBuildUseOnly = document.getElementById('${containerName}');
+  if (!moduleContainerForBuildUseOnly) {
+    throw new Error('could not find ${containerName} element');
+  }
+  ReactDOM.render(
+    /* @__PURE__ */ jsx(${moduleName}, {}),
+    moduleContainerForBuildUseOnly
+  );`;
 };
 
 const moduleResponseHeaderProps = {
@@ -80,7 +76,6 @@ export const buildModules = async (
   }
 
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
-    const index = addExtraModuleCode(fileInfo.path, moduleName);
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
         loggerInfo(pc.green(`\nBuilding ${moduleName} module...`));
@@ -117,13 +112,7 @@ export const buildModules = async (
           fileInfo.name
         ),
       },
-      esbuild: {
-        logOverride: {
-          "css-syntax-error": "silent",
-        },
-      },
       build: {
-        chunkSizeWarningLimit: 2000,
         emptyOutDir: false,
         outDir: outdir,
         minify: true,
@@ -138,6 +127,7 @@ export const buildModules = async (
       },
       define: processEnvVariables(envVarConfig.envVarPrefix),
       plugins: [
+        addWrappedCodePlugin(fileInfo.path, moduleName),
         scopeTailwind({ react: true }),
         nodePolyfills({
           globals: {
@@ -148,8 +138,40 @@ export const buildModules = async (
         }),
       ],
     });
-    removeAddedModuleCode(fileInfo.path, index);
   }
+};
+
+export default function addWrappedCodePlugin(
+  path: string,
+  moduleName: string
+): Plugin {
+  return {
+    name: "wrapped-code-plugin",
+    apply: "build",
+    transform(source: string, id: string) {
+      if (id === path) {
+        return (
+          getReactImports(source) + source + extraModuleCode(path, moduleName)
+        );
+      }
+      return null;
+    },
+  };
+}
+
+const getReactImports = (source: string): string => {
+  let imports = "";
+  if (!(source.includes(`from 'react'`) || source.includes(`from "react"`))) {
+    imports += `import * as React from 'react';\n`;
+  }
+  if (
+    !(
+      source.includes(`from 'react-dom'`) || source.includes(`from "react-dom"`)
+    )
+  ) {
+    imports += `import * as ReactDOM from 'react-dom';\n`;
+  }
+  return imports;
 };
 
 const shouldBundleModules = (projectStructure: ProjectStructure) => {
@@ -168,44 +190,23 @@ const getModuleName = (modulePath: string): string | undefined => {
 };
 
 /**
- * Adds custom code to module such that it works for user when bundled into umd.js.
+ * Adds custom code to module when bundled into umd.js.
  *
  * @param modulePath
  * @param name set by ModuleConfig or filename
- * @returns number of added index
  */
-const addExtraModuleCode = (modulePath: string, name: string): number => {
+const extraModuleCode = (modulePath: string, name: string) => {
   const sfp = new SourceFileParser(modulePath, createTsMorphProject());
   const declaration = sfp.getVariableDeclarationByType("Module");
   if (declaration === undefined) {
     throw new Error(`Cannot find variable Module in ${modulePath}`);
   }
   const moduleName = declaration.getName();
-  const insertIndex = sfp.getEndPos();
-  const afterInsertIndex = sfp.insertStatement(
-    wrappedCode(moduleName, name),
-    insertIndex
-  );
-  sfp.addReactImports();
-  sfp.save();
-  return afterInsertIndex - insertIndex;
+  return wrappedCode(moduleName, name);
 };
 
 /**
- * Removes the custom code we added after bundling is done.
- *
- * @param modulePath
- * @param index index added (such as via addExtraModuleCode)
- */
-const removeAddedModuleCode = (modulePath: string, index: number) => {
-  const sfp = new SourceFileParser(modulePath, createTsMorphProject());
-  sfp.removeStatement(sfp.getEndPos() - index, sfp.getEndPos());
-  sfp.removeUnusedImports();
-  sfp.save();
-};
-
-/**
- * Returns the postcss.config filepath if it exists in module.
+ * Returns the postcss.config filepath if it exists in the module.
  * Else returns the root postcss.config filepath.
  * If there is none, throws error.
  *
