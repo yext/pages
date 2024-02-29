@@ -18,18 +18,6 @@ import { logWarning } from "../../util/logError.js";
 import postcss from "postcss";
 import nested from "postcss-nested";
 
-const wrappedCode = (moduleName: string, containerName: string): string => {
-  return `
-  const moduleContainerForBuildUseOnly = document.getElementById('${containerName}');
-  if (!moduleContainerForBuildUseOnly) {
-    throw new Error('could not find ${containerName} element');
-  }
-  ReactDOM.render(
-    /* @__PURE__ */ jsx(${moduleName}, {}),
-    moduleContainerForBuildUseOnly
-  );`;
-};
-
 const moduleResponseHeaderProps = {
   headerKey: "Access-Control-Allow-Origin",
   headerValues: ["*"],
@@ -67,6 +55,18 @@ export const buildModules = async (
 
   const logger = createLogger();
   const loggerInfo = logger.info;
+  const loggerWarning = logger.warn;
+  logger.warn = (msg, options) => {
+    // Suppress this warning b/c nested @tailwind rules are the best option for handling @tailwind base.
+    if (
+      msg.includes("vite:css") &&
+      msg.includes(
+        "Nested @tailwind rules were detected, but are not supported."
+      )
+    )
+      return;
+    loggerWarning(msg, options);
+  };
 
   if (tailwindBaseExists()) {
     // TODO add link to recommended implementation for user.
@@ -112,7 +112,13 @@ export const buildModules = async (
           fileInfo.name
         ),
       },
+      esbuild: {
+        logOverride: {
+          "css-syntax-error": "silent",
+        },
+      },
       build: {
+        chunkSizeWarningLimit: 2000,
         emptyOutDir: false,
         outDir: outdir,
         minify: true,
@@ -141,13 +147,25 @@ export const buildModules = async (
   }
 };
 
+const wrappedCode = (moduleName: string, containerName: string): string => {
+  return `
+  const moduleContainerForBuildUseOnly = document.getElementById('${containerName}');
+  if (!moduleContainerForBuildUseOnly) {
+    throw new Error('could not find ${containerName} element');
+  }
+  ReactDOM.render(
+    <${moduleName}/>,
+    moduleContainerForBuildUseOnly
+  );`;
+};
+
 export default function addWrappedCodePlugin(
   path: string,
   moduleName: string
 ): Plugin {
   return {
     name: "wrapped-code-plugin",
-    apply: "build",
+    enforce: "pre",
     transform(source: string, id: string) {
       if (id === path) {
         return (
