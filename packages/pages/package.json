@@ -83,7 +83,6 @@
     "ts-morph": "^21.0.1",
     "typescript": "^5.3.3",
     "vite-plugin-node-polyfills": "^0.17.0",
-    "vite-plugin-scope-tailwind": "^1.1.10",
     "yaml": "^2.3.4"
   },
   "devDependencies": {
