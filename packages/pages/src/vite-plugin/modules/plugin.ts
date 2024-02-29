@@ -8,9 +8,6 @@ import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
 import { addResponseHeadersToConfigYaml } from "../../util/editConfigYaml.js";
-// https://github.com/dolanmiu/vite-plugin-scope-tailwind/issues/5
-// @ts-expect-error due to type any
-import scopeTailwind from "vite-plugin-scope-tailwind";
 import SourceFileParser, {
   createTsMorphProject,
 } from "../../common/src/parsers/sourceFileParser.js";
@@ -134,7 +131,6 @@ export const buildModules = async (
       define: processEnvVariables(envVarConfig.envVarPrefix),
       plugins: [
         addWrappedCodePlugin(fileInfo.path, moduleName),
-        scopeTailwind({ react: true }),
         nodePolyfills({
           globals: {
             Buffer: "build",
@@ -243,12 +239,12 @@ const getPostCssConfigFilepath = (
     subfolders.modules,
     `${filename}/postcss.config`
   );
-  let filePaths = glob.sync(filePath + "**/*.{cjs,js,ts,mjs}");
+  let filePaths = glob.sync(filePath + ".{js,cjs,ts,mjs}");
   if (filePaths.length == 1) {
     return filePaths[0];
   }
 
-  filePaths = glob.sync("postcss.config" + "**/*.{cjs,js,ts,mjs}");
+  filePaths = glob.sync("postcss.config" + ".{js,cjs,ts,mjs}");
   if (filePaths.length == 1) {
     return filePaths[0];
   }
