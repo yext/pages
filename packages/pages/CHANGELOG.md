@@ -1,3 +1,14 @@
+#### 1.1.0-beta.0 (2024-02-29)
+
+##### Documentation Changes
+
+*  update util function docs (#493) (c70d9845)
+*  fix dynamic JS doc (#490) (434121df)
+
+##### New Features
+
+* **plugin:**  create plugin to integrate modules (#462) (a7ad9ea9)
+
 #### 1.0.0 (2024-02-07)
 
 ##### Chores
