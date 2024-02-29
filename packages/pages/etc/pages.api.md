@@ -92,6 +92,21 @@ export type Manifest = {
 };
 
 // @public
+export type Module = () => React.JSX.Element;
+
+// @public
+export interface ModuleConfig {
+  name?: string;
+}
+
+// @public
+export interface ModuleProps {
+  __meta: {
+    mode: "development" | "production";
+  };
+}
+
+// @public
 export type OnUrlChangeFunction = (
   arg: PagesOnUrlChangeRequest
 ) => PagesOnUrlChangeResponse;

@@ -24,6 +24,8 @@ export interface RootFolders {
 export interface Subfolders {
   /** The templates folder */
   templates: string;
+  /** The modules folder */
+  modules: string;
   /** The Node functions folder */
   serverlessFunctions: string; // Node functions
   /** Where to output the bundled static assets */
@@ -142,6 +144,7 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
   },
   subfolders: {
     templates: "templates",
+    modules: "modules",
     serverlessFunctions: "functions",
     assets: DEFAULT_ASSETS_DIR,
     public: DEFAULT_PUBLIC_DIR,
