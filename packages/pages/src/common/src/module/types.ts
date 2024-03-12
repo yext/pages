@@ -16,14 +16,16 @@ export interface ModuleConfig {
 }
 
 /**
- * The shape of the data passed directly to the module's default export.
+ * The shape of the data used in the Module.
  *
  * @public
  */
-export interface ModuleProps {
+export interface ModuleProps<T = Record<string, any>> {
   /** Additional metadata added by the toolchain */
   __meta: {
     /** Specifies if the data is returned in development or production mode */
     mode: "development" | "production";
   };
+  /** The document to use for AnalyticsProvider */
+  document: T;
 }

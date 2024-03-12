@@ -5,8 +5,25 @@ export const moduleCode = (
   const tailwind = isUsingTailwind ? ` className="tailwind"` : ``;
   const formattedModuleName =
     moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
-  return `import { Module, ModuleConfig } from "@yext/pages/*";
+
+  return `import { Module, ModuleConfig, ModuleProps } from "@yext/pages/*";
+import { AnalyticsProvider } from "@yext/pages-components";
 import "./index.css";
+
+const templateData: ModuleProps = {
+  document: {
+    businessId: "REPLACE_ME",
+    siteId: "REPLACE_ME",
+    apiKey: "REPLACE_ME",
+    __: {
+      name: "${moduleName}",
+      staticPage: true
+    }
+  }, 
+  __meta: {
+    mode: "production"
+  }
+}
 
 export const config: ModuleConfig = {
   name: "${moduleName}"
@@ -14,8 +31,11 @@ export const config: ModuleConfig = {
 
 const ${formattedModuleName}: Module = () => {
   return(
-    <div${tailwind}>
-    </div>
+    <AnalyticsProvider templateData={templateData}>
+      <div${tailwind}>
+        Module
+      </div>
+    </AnalyticsProvider>
   )
 }
 
