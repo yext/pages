@@ -25,7 +25,7 @@ export const generateModule = async (): Promise<void> => {
       type: "text",
       name: "moduleName",
       message: "What would you like to name your Module?",
-      validate: (moduleName) => !moduleExists(moduleName),
+      validate: (moduleName) => validateModuleName(moduleName),
     },
     {
       type: "confirm",
@@ -70,9 +70,14 @@ export const generateModule = async (): Promise<void> => {
   );
 };
 
-const moduleExists = (moduleName: string): boolean => {
+// Ensures moduleName isn't used already in a modulePath and the name starts with
+// an alphabetic character
+const validateModuleName = (moduleName: string): boolean => {
   const modulePath = path.join("src", "modules", moduleName);
-  return fs.existsSync(modulePath);
+  if (fs.existsSync(modulePath)) {
+    return false;
+  }
+  return /^[a-zA-Z]+$/.test(moduleName.charAt(0));
 };
 
 function handleCancel(moduleName: string) {
