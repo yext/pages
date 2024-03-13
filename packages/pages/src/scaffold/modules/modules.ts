@@ -1,10 +1,12 @@
 import { Command } from "commander";
 import { generateModule } from "./generate.js";
 import { logErrorAndExit } from "../../util/logError.js";
+import { ProjectStructure } from "../../common/src/project/structure.js";
 
 const handler = async () => {
+  const projectStructure = await ProjectStructure.init();
   try {
-    await generateModule();
+    await generateModule(projectStructure);
   } catch (error) {
     logErrorAndExit(error);
   }

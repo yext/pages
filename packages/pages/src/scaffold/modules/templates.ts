@@ -14,7 +14,6 @@ const templateData: ModuleProps = {
   document: {
     businessId: "REPLACE_ME",
     siteId: "REPLACE_ME",
-    apiKey: "REPLACE_ME",
     __: {
       name: "${moduleName}",
       staticPage: true
@@ -31,7 +30,12 @@ export const config: ModuleConfig = {
 
 const ${formattedModuleName}: Module = () => {
   return(
-    <AnalyticsProvider templateData={templateData}>
+    <AnalyticsProvider 
+      apiKey="REPLACE_ME"
+      defaultCurrency="REPLACE_ME" 
+      templateData={templateData}
+      productionDomains={["REPLACE_ME"]}
+    >
       <div${tailwind}>
         Module
       </div>

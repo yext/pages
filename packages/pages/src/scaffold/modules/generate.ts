@@ -13,19 +13,23 @@ import {
   updatePackageDependency,
 } from "../../upgrade/pagesUpdater.js";
 import { logErrorAndExit } from "../../util/logError.js";
+import { ProjectStructure } from "../../common/src/project/structure.js";
 
 /**
  * generateModule asks questions via stdout and generates files based on
  * the responses. Also, installs necessary dependencies.
  * SIGINT is handled such that any generated files are removed.
  */
-export const generateModule = async (): Promise<void> => {
+export const generateModule = async (
+  projectStructure: ProjectStructure
+): Promise<void> => {
   const questions: PromptObject[] = [
     {
       type: "text",
       name: "moduleName",
       message: "What would you like to name your Module?",
-      validate: (moduleName) => validateModuleName(moduleName),
+      validate: (moduleName) =>
+        validateModuleName(moduleName, projectStructure),
     },
     {
       type: "confirm",
@@ -36,7 +40,11 @@ export const generateModule = async (): Promise<void> => {
   ];
   const response = await prompts(questions);
 
-  const modulePath = path.join("src", "modules", response.moduleName);
+  const modulePath = path.join(
+    projectStructure.config.rootFolders.source,
+    projectStructure.config.subfolders.modules,
+    response.moduleName
+  );
 
   // Handle interruption signal (Ctrl+C)
   process.on("SIGINT", handleCancel);
@@ -72,16 +80,27 @@ export const generateModule = async (): Promise<void> => {
 
 // Ensures moduleName isn't used already in a modulePath and the name starts with
 // an alphabetic character
-const validateModuleName = (moduleName: string): boolean => {
-  const modulePath = path.join("src", "modules", moduleName);
+const validateModuleName = (
+  moduleName: string,
+  projectStructure: ProjectStructure
+): boolean => {
+  const modulePath = path.join(
+    projectStructure.config.rootFolders.source,
+    projectStructure.config.subfolders.modules,
+    moduleName
+  );
   if (fs.existsSync(modulePath)) {
     return false;
   }
   return /^[a-zA-Z]+$/.test(moduleName.charAt(0));
 };
 
-function handleCancel(moduleName: string) {
-  const modulePath = path.join("src", "modules", moduleName);
+function handleCancel(moduleName: string, projectStructure: ProjectStructure) {
+  const modulePath = path.join(
+    projectStructure.config.rootFolders.source,
+    projectStructure.config.subfolders.modules,
+    moduleName
+  );
   if (fs.existsSync(modulePath)) {
     const moduleFiles = glob.sync("**/*", { cwd: modulePath, nodir: true });
     moduleFiles.forEach((file) => {
