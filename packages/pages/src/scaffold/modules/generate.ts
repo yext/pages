@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { glob } from "glob";
+import prompts, { PromptObject } from "prompts";
 import {
   indexCssCode,
   moduleCode,
@@ -19,40 +20,37 @@ import { logErrorAndExit } from "../../util/logError.js";
  * SIGINT is handled such that any generated files are removed.
  */
 export const generateModule = async (): Promise<void> => {
-  // Ensure user input starts with a letter
-  let moduleName = await query(
-    "\n? What would you like to name your Module? ",
-    (input: string) => /^[a-zA-Z]/.test(input)
-  );
-  while (moduleExists(moduleName)) {
-    console.error(
-      `Error: Module "${moduleName}" already exists or is invalid.`
-    );
-    moduleName = await query("Please enter a different name for your Module: ");
-  }
+  const questions: PromptObject[] = [
+    {
+      type: "text",
+      name: "moduleName",
+      message: "What would you like to name your Module?",
+      validate: (moduleName) => !moduleExists(moduleName),
+    },
+    {
+      type: "confirm",
+      name: "useTailwind",
+      message: "Would you like to use Tailwind CSS?",
+      initial: true,
+    },
+  ];
+  const response = await prompts(questions);
 
-  // Ensure user input is yes, no, y, or n (ignores capitalization)
-  const useTailwind: string = await query(
-    "\n? Would you like to use Tailwind CSS? (Yes / No) ",
-    (input: string) => /^(yes|no|y|n)$/.test(input)
-  );
-  const isUsingTailwind: boolean = useTailwind === "yes" || useTailwind === "y";
-
-  const modulePath = path.join("src", "modules", moduleName);
+  const modulePath = path.join("src", "modules", response.moduleName);
 
   // Handle interruption signal (Ctrl+C)
   process.on("SIGINT", handleCancel);
 
   fs.mkdirSync(modulePath, { recursive: true });
   fs.writeFileSync(
-    path.join(modulePath, `${moduleName}.tsx`),
-    moduleCode(moduleName, isUsingTailwind)
+    path.join(modulePath, `${response.moduleName}.tsx`),
+    moduleCode(response.moduleName, response.useTailwind)
   );
   fs.writeFileSync(
     path.join(modulePath, "index.css"),
-    indexCssCode(isUsingTailwind)
+    indexCssCode(response.useTailwind)
   );
-  if (isUsingTailwind) {
+  if (response.useTailwind) {
     fs.writeFileSync(
       path.join(modulePath, "tailwind.config.ts"),
       tailwindCode()
@@ -67,30 +65,12 @@ export const generateModule = async (): Promise<void> => {
   }
 
   process.removeListener("SIGINT", handleCancel);
-  console.log(`\nModule "${moduleName}" created successfully at ${modulePath}`);
+  console.log(
+    `\nModule "${response.moduleName}" created successfully at ${modulePath}`
+  );
 };
 
-const query = (question: string, validateInput: any = null): any => {
-  return new Promise((resolve) => {
-    const stdin = process.stdin;
-    const stdout = process.stdout;
-
-    stdin.resume();
-    stdout.write(question);
-
-    stdin.once("data", (data) => {
-      const input = data.toString().trim().toLowerCase();
-      if (validateInput && !validateInput(input)) {
-        stdout.write("Please enter a valid input.\n");
-        resolve(query(question, validateInput));
-      } else {
-        resolve(input);
-      }
-    });
-  });
-};
-
-const moduleExists = (moduleName: string) => {
+const moduleExists = (moduleName: string): boolean => {
   const modulePath = path.join("src", "modules", moduleName);
   return fs.existsSync(modulePath);
 };

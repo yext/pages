@@ -1,8 +1,8 @@
 export const moduleCode = (
   moduleName: string,
-  isUsingTailwind: boolean
+  useTailwind: boolean
 ): string => {
-  const tailwind = isUsingTailwind ? ` className="tailwind"` : ``;
+  const tailwind = useTailwind ? ` className="tailwind"` : ``;
   const formattedModuleName =
     moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
 
@@ -59,8 +59,8 @@ export default {
 `;
 };
 
-export const indexCssCode = (isUsingTailwind: boolean): string => {
-  return isUsingTailwind
+export const indexCssCode = (useTailwind: boolean): string => {
+  return useTailwind
     ? `.tailwind {
   @tailwind base;
 }
