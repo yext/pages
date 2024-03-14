@@ -270,4 +270,18 @@ export class ProjectStructure {
       pathLib.join(this.config.scope ?? "", this.config.rootFiles.config)
     );
   };
+
+  /**
+   * @returns the {@link Path} to the modules folder, taking scope into account.
+   * If moduleName is provided, returns the path to that modules folder.
+   */
+  getModulePath = (moduleName: string | undefined) => {
+    const modulesPath = pathLib.join(
+      this.config.rootFolders.source,
+      this.config.subfolders.modules,
+      this.config.scope ?? "",
+      moduleName ?? ""
+    );
+    return new Path(modulesPath);
+  };
 }
