@@ -43,6 +43,7 @@ export const generateModule = async (
   const modulePath = path.join(
     projectStructure.config.rootFolders.source,
     projectStructure.config.subfolders.modules,
+    projectStructure.config.scope ?? "",
     response.moduleName
   );
 
@@ -87,6 +88,7 @@ const validateModuleName = (
   const modulePath = path.join(
     projectStructure.config.rootFolders.source,
     projectStructure.config.subfolders.modules,
+    projectStructure.config.scope ?? "",
     moduleName
   );
   if (fs.existsSync(modulePath)) {
@@ -99,6 +101,7 @@ function handleCancel(moduleName: string, projectStructure: ProjectStructure) {
   const modulePath = path.join(
     projectStructure.config.rootFolders.source,
     projectStructure.config.subfolders.modules,
+    projectStructure.config.scope ?? "",
     moduleName
   );
   if (fs.existsSync(modulePath)) {
@@ -110,9 +113,12 @@ function handleCancel(moduleName: string, projectStructure: ProjectStructure) {
     fs.rmdirSync(modulePath);
   }
 
-  const modulesPath = path.join("src", "modules");
-  if (fs.readdirSync(modulesPath).length === 0) {
-    fs.rmdirSync(modulesPath);
+  const moduleDirPath = path.join(
+    projectStructure.config.rootFolders.source,
+    projectStructure.config.subfolders.modules
+  );
+  if (fs.readdirSync(moduleDirPath).length === 0) {
+    fs.rmdirSync(moduleDirPath);
   }
   process.exit(0);
 }
