@@ -16,6 +16,8 @@ export interface TemplateModule<
   config?: TemplateConfig;
   /** The optional exported transformProps function */
   transformProps?: TransformProps<T>;
+  /** The exported, optional getAuthScope function */
+  getAuthScope?: GetAuthScope<T>;
   /** The exported getPath function */
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
@@ -55,6 +57,13 @@ export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
  * @public
  */
 export type GetPath<T extends TemplateProps> = (props: T) => string;
+
+/**
+ * The type definition for the template's GetAuthScope function.
+ *
+ * @public
+ */
+export type GetAuthScope<T extends TemplateProps> = (props: T) => string;
 
 /**
  * The type definition for the template's getHeadConfig function. getHeadConfig
