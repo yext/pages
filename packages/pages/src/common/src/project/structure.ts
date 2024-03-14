@@ -245,6 +245,27 @@ export class ProjectStructure {
   };
 
   /**
+   * @returns the list of of src/modules, taking scope into account. If a scope is defined then
+   * both the scoped and non-scoped module paths are returned.
+   */
+  getModulePaths = () => {
+    // src/modules
+    const modulesRoot = pathLib.join(
+      this.config.rootFolders.source,
+      this.config.subfolders.modules
+    );
+
+    if (this.config.scope) {
+      return [
+        new Path(pathLib.join(modulesRoot, this.config.scope)),
+        new Path(modulesRoot),
+      ];
+    }
+
+    return [new Path(modulesRoot)];
+  };
+
+  /**
    * @returns the {@link Path} to the sites-config folder, taking scope into account.
    */
   getSitesConfigPath = () => {

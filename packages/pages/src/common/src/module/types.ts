@@ -1,9 +1,20 @@
+import React from "react";
+
 /**
  * The type definition for the module's default function.
  *
  * @public
  */
 export type Module = () => React.JSX.Element;
+
+/**
+ * The type to include in any module file.
+ */
+export interface ModuleModule {
+  /** The exported config function */
+  config: ModuleConfig;
+  default: Module;
+}
 
 /**
  * The configuration options for a Module.
@@ -28,4 +39,51 @@ export interface ModuleProps<T = Record<string, any>> {
   };
   /** The document to use for AnalyticsProvider */
   document: T;
+}
+
+/**
+ * Defines the paths of the _client and _server render templates modules for use in dev.
+ * @internal
+ */
+export interface ModuleClientServerRenderTemplates {
+  /** The path to _client.tsx */
+  clientRenderTemplatePath: string;
+  /** The path to _server.tsx */
+  serverRenderTemplatePath: string;
+}
+
+/**
+ * The type of the server render module.
+ *
+ * @internal
+ */
+export interface ServerModuleRenderTemplate {
+  /** The render function required by the render templates */
+  render(pageContext: ModuleContext): Promise<string>;
+
+  /** The index.html entrypoint for your template */
+  indexHtml: string;
+
+  /** The tag in indexHtml to replace with the contents of render */
+  replacementTag: string;
+}
+
+/**
+ * The type of the client render module.
+ *
+ * @internal
+ */
+export interface ClientModuleRenderTemplate {
+  /** The render function required by the render templates */
+  render(pageContext: ModuleContext): Promise<string>;
+}
+
+/**
+ * Context of a page, which defines the template itself and its props.
+ *
+ * @internal
+ */
+export interface ModuleContext {
+  /** The template to render */
+  Page: Module;
 }

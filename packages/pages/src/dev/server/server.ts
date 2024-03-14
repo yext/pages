@@ -18,6 +18,7 @@ import { convertFunctionModuleToFunctionModuleInternal } from "../../common/src/
 import { loadViteModule } from "./ssr/loadViteModule.js";
 import { FunctionModule } from "../../common/src/function/types.js";
 import { getViteServerConfig } from "../../common/src/loader/vite.js";
+import { serverRenderModule } from "./middleware/serverRenderModule.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -140,6 +141,8 @@ export const createServer = async (
       await loadUpdatedFunctionModules();
     }
   });
+
+  app.use(/^\/(modules\/.+)/, serverRenderModule({ vite, projectStructure }));
 
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.
