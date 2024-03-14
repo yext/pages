@@ -3,7 +3,8 @@ import { generateModule } from "./generate.js";
 import { logErrorAndExit } from "../../util/logError.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 
-const handler = async ({ scope }: { scope: string }) => {
+const handler = async () => {
+  const scope = process.env.YEXT_PAGES_SCOPE;
   const projectStructure = await ProjectStructure.init({ scope });
   try {
     await generateModule(projectStructure);
@@ -19,6 +20,5 @@ export const modulesCommand = (program: Command) => {
     .description(
       "Adds the required files and folder structure for a new Pages module."
     )
-    .option("--scope <string>", "The subfolder to scaffold from")
     .action(handler);
 };

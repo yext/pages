@@ -48,7 +48,9 @@ export const generateModule = async (
   );
 
   // Handle interruption signal (Ctrl+C)
-  process.on("SIGINT", handleCancel);
+  process.on("SIGINT", () =>
+    handleCancel(response.moduleName, projectStructure)
+  );
 
   fs.mkdirSync(modulePath, { recursive: true });
   fs.writeFileSync(
@@ -73,7 +75,7 @@ export const generateModule = async (
     logErrorAndExit(error);
   }
 
-  process.removeListener("SIGINT", handleCancel);
+  process.removeListener("SIGINT", () => handleCancel);
   console.log(
     `\nModule "${response.moduleName}" created successfully at ${modulePath}`
   );
@@ -113,13 +115,6 @@ function handleCancel(moduleName: string, projectStructure: ProjectStructure) {
     fs.rmdirSync(modulePath);
   }
 
-  const moduleDirPath = path.join(
-    projectStructure.config.rootFolders.source,
-    projectStructure.config.subfolders.modules
-  );
-  if (fs.readdirSync(moduleDirPath).length === 0) {
-    fs.rmdirSync(moduleDirPath);
-  }
   process.exit(0);
 }
 
