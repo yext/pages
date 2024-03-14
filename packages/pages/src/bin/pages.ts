@@ -4,6 +4,7 @@ import { devCommand } from "../dev/dev.js";
 import { prodCommand } from "../prod/prod.js";
 import { generateCommand } from "../generate/generate.js";
 import { upgradeCommand } from "../upgrade/upgrade.js";
+import { scaffoldCommand } from "../scaffold/scaffold.js";
 
 // pages requires react and react-dom be installed to function appropriately. If
 // these are not installed in instruct the user to install them.
@@ -24,6 +25,7 @@ buildCommand(program);
 devCommand(program);
 prodCommand(program);
 generateCommand(program);
+scaffoldCommand(program);
 upgradeCommand(program);
 
 await program.parseAsync(process.argv);

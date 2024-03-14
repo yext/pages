@@ -4,16 +4,17 @@
 
 ## ModuleProps interface
 
-The shape of the data passed directly to the module's default export.
+The shape of the data used in the Module.
 
 **Signature:**
 
 ```typescript
-export interface ModuleProps
+export interface ModuleProps<T = Record<string, any>>
 ```
 
 ## Properties
 
-| Property                                  | Modifiers | Type                                     | Description                                |
-| ----------------------------------------- | --------- | ---------------------------------------- | ------------------------------------------ |
-| [\_\_meta](./pages.moduleprops.__meta.md) |           | { mode: "development" \| "production"; } | Additional metadata added by the toolchain |
+| Property                                    | Modifiers | Type                                     | Description                                |
+| ------------------------------------------- | --------- | ---------------------------------------- | ------------------------------------------ |
+| [\_\_meta](./pages.moduleprops.__meta.md)   |           | { mode: "development" \| "production"; } | Additional metadata added by the toolchain |
+| [document](./pages.moduleprops.document.md) |           | T                                        | The document to use for AnalyticsProvider  |

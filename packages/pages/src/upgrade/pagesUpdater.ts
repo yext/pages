@@ -22,7 +22,7 @@ const DEV_DEPENDENCIES = "devDependencies";
  * @param version version to update to, if not supplied uses @latest
  * @param install whether to install the package if it does not exist
  */
-async function updatePackageDependency(
+export async function updatePackageDependency(
   packageName: string,
   version: string | null,
   install: boolean = false
