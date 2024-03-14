@@ -100,10 +100,11 @@ export interface ModuleConfig {
 }
 
 // @public
-export interface ModuleProps {
+export interface ModuleProps<T = Record<string, any>> {
   __meta: {
     mode: "development" | "production";
   };
+  document: T;
 }
 
 // @public
