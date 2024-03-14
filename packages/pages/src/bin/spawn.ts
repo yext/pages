@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { spawnSync } from "child_process";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import process from "process";
 import path from "path";
+import { register } from "node:module";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -20,8 +21,8 @@ const experimentalFlags = ["--experimental-vm-modules"];
 if (nodeVersion === 18) {
   experimentalFlags.push("--experimental-specifier-resolution=node");
 } else {
-  experimentalFlags.push("--experimental-loader");
-  experimentalFlags.push(pathToLoader);
+  const loaderURL = pathToFileURL(pathToLoader);
+  register(loaderURL);
 }
 
 const results = spawnSync(
