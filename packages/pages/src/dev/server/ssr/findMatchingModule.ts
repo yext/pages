@@ -3,22 +3,24 @@ import {
   convertModuleToModuleInternal,
   ModuleInternal,
 } from "../../../common/src/module/internal/types.js";
-import { ModuleModule } from "../../../common/src/module/types.js";
+import { ModuleDefinition } from "../../../common/src/module/types.js";
 import { loadViteModule } from "./loadViteModule.js";
 import { getModuleFilepathsFromProjectStructure } from "../../../common/src/module/internal/getModuleFilepaths.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
-import { createTsMorphProject } from "../../../common/src/parsers/sourceFileParser.js";
+import SourceFileParser, {
+  createTsMorphProject,
+} from "../../../common/src/parsers/sourceFileParser.js";
 import path from "path";
 import fs from "fs";
 
-// Determines the module to load from a given feature name (from the exported config)
+// Determines the module to load from a given module name (from the exported config)
 export const findModuleInternal = async (
   devserver: ViteDevServer,
   criterion: (t: ModuleInternal) => Promise<boolean | undefined>,
   moduleFilePaths: string[]
 ): Promise<ModuleInternal | null> => {
   for (const moduleFilepath of moduleFilePaths) {
-    const moduleModule = await loadViteModule<ModuleModule>(
+    const moduleModule = await loadViteModule<ModuleDefinition>(
       devserver,
       moduleFilepath
     );
@@ -36,22 +38,10 @@ export const findModuleInternal = async (
   return null;
 };
 
-export const loadModuleInternalFromFilepath = async (
-  devserver: ViteDevServer,
-  moduleFilePath: string
-): Promise<ModuleInternal> => {
-  const moduleModule = await loadViteModule<ModuleModule>(
-    devserver,
-    moduleFilePath
-  );
-
-  return convertModuleToModuleInternal(moduleFilePath, moduleModule);
-};
-
 export const getPostCssPathFromModuleName = async (
   moduleName: string | undefined,
   projectStructure: ProjectStructure
-): Promise<string> => {
+): Promise<string | undefined> => {
   if (moduleName == undefined) {
     return "";
   }
@@ -63,27 +53,11 @@ export const getPostCssPathFromModuleName = async (
     project.addSourceFileAtPath(moduleFilePath);
     const sourceFile = project.getSourceFile(moduleFilePath);
     if (sourceFile !== undefined) {
-      const exportedDeclarations = sourceFile.getExportedDeclarations();
-      for (const [name, declarations] of exportedDeclarations) {
-        if (name == "config") {
-          declarations.forEach((declaration) => {
-            for (const child of declaration.getChildren()) {
-              const text = child.getText();
-              if (text.includes("name:")) {
-                const parsedName = text
-                  .substring(
-                    text.indexOf('"') + 1,
-                    text.indexOf('"', text.indexOf('"') + 1)
-                  )
-                  .toLowerCase();
-                if (parsedName == moduleName.toLowerCase()) {
-                  targetModuleFilePath = moduleFilePath;
-                  break;
-                }
-              }
-            }
-          });
-        }
+      const parser = new SourceFileParser(moduleFilePath, project);
+      const thisModuleName = parser.getVariablePropertyByName("config", "name");
+      if (thisModuleName.toLowerCase() === moduleName) {
+        targetModuleFilePath = moduleFilePath;
+        break;
       }
     }
   }
@@ -91,11 +65,8 @@ export const getPostCssPathFromModuleName = async (
   // Use file path that matches given name if none match the config.name, if possible
   if (targetModuleFilePath == "") {
     for (const moduleFilePath of moduleFilePaths) {
-      const fileName = moduleFilePath.split("/").slice(-1)[0];
-      if (
-        fileName.substring(0, fileName.indexOf(".")).toLowerCase() ==
-        moduleName.toLowerCase()
-      ) {
+      const folderName = moduleFilePath.split("/").slice(-2)[0].toLowerCase();
+      if (folderName === moduleName.toLowerCase()) {
         targetModuleFilePath = moduleFilePath;
         break;
       }
@@ -104,7 +75,7 @@ export const getPostCssPathFromModuleName = async (
 
   if (targetModuleFilePath == "") {
     console.error(`Could not find module matching ${moduleName}`);
-    return "";
+    return;
   }
 
   const postCssPath = path.resolve(
@@ -115,6 +86,4 @@ export const getPostCssPathFromModuleName = async (
   if (fs.existsSync(postCssPath)) {
     return postCssPath;
   }
-  console.log(`No postcss.config.js file found for module ${moduleName}`);
-  return "";
 };

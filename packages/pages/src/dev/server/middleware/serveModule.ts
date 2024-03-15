@@ -4,7 +4,6 @@ import { getGlobalClientServerRenderModules } from "../../../common/src/module/i
 import { Response } from "express-serve-static-core";
 import { getIndexTemplateDev } from "../../../common/src/template/hydration.js";
 import { ServerModuleRenderTemplate } from "../../../common/src/module/types.js";
-import { lookup } from "mime-types";
 import { getHydrationModuleDev } from "../../../common/src/module/hydration.js";
 
 /**
@@ -58,8 +57,5 @@ export default async function serveModule(
   );
 
   // Send the rendered HTML back.
-  res
-    .status(200)
-    .type(lookup(moduleInternal.path) || "text/html")
-    .end(html);
+  res.status(200).type("text/html").end(html);
 }

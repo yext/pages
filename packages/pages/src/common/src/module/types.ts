@@ -10,7 +10,7 @@ export type Module = () => React.JSX.Element;
 /**
  * The type to include in any module file.
  */
-export interface ModuleModule {
+export interface ModuleDefinition {
   /** The exported config function */
   config: ModuleConfig;
   /** The default function that returns the JSX */

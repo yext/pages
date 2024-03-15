@@ -1,4 +1,4 @@
-import { ModuleConfig, Module, ModuleModule } from "../types.js";
+import { ModuleConfig, Module, ModuleDefinition } from "../types.js";
 import { parse } from "../../template/internal/types.js";
 import { validateModuleInternal } from "./validateModuleInternal.js";
 import { lookup } from "mime-types";
@@ -33,7 +33,7 @@ export interface ModuleConfigInternal {
 
 export const convertModuleToModuleInternal = (
   moduleFilepath: string,
-  module: ModuleModule
+  module: ModuleDefinition
 ): ModuleInternal => {
   const modulePath = parse(moduleFilepath, false);
 

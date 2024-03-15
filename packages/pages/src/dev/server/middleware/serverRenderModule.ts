@@ -17,7 +17,6 @@ export const serverRenderModule =
     try {
       const moduleName = req.originalUrl
         .substring(req.originalUrl.lastIndexOf("modules/") + 8)
-        .split("/")[0]
         .toLowerCase();
       const moduleFilePaths =
         getModuleFilepathsFromProjectStructure(projectStructure);

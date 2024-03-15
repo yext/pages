@@ -65,7 +65,13 @@ const handler = async ({
     }));
   await createServer(!local, !!prodUrl, devServerPort, scope, widget);
 
-  if (openBrowser) await open(`http://localhost:${devServerPort}/`);
+  if (openBrowser) {
+    if (widget) {
+      await open(`http://localhost:${devServerPort}/modules/${widget}`);
+      return;
+    }
+    await open(`http://localhost:${devServerPort}/`);
+  }
 };
 
 /**
@@ -106,6 +112,6 @@ export const devCommand = (program: Command) => {
     .option("--noInit", "Disables automatic yext init with .yextrc file")
     .option("--noGenFeatures", "Disable feature.json generation step")
     .option("--port <number>", "The port to use for the dev server")
-    .option("--widget <string>", "Name of the widget to load postcss for.")
+    .option("--widget <string>", "Name of the widget to load.")
     .action(handler);
 };

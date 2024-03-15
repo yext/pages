@@ -17,10 +17,7 @@ import { getFunctionFilepaths } from "../../common/src/function/internal/getFunc
 import { convertFunctionModuleToFunctionModuleInternal } from "../../common/src/function/internal/types.js";
 import { loadViteModule } from "./ssr/loadViteModule.js";
 import { FunctionModule } from "../../common/src/function/types.js";
-import {
-  getViteServerConfig,
-  getViteServerConfigWithPostCssPath,
-} from "../../common/src/loader/vite.js";
+import { getViteServerConfig } from "../../common/src/loader/vite.js";
 import { serverRenderModule } from "./middleware/serverRenderModule.js";
 import { getPostCssPathFromModuleName } from "./ssr/findMatchingModule.js";
 
@@ -45,18 +42,30 @@ export const createServer = async (
 
   // initialize the default project structure and use to help configure the dev server
   const projectStructure = await ProjectStructure.init({ scope });
-  const postCssPath = await getPostCssPathFromModuleName(
-    widget,
-    projectStructure
-  );
+
+  if (widget) {
+    const postCssPath = await getPostCssPathFromModuleName(
+      widget,
+      projectStructure
+    );
+    const vite = await createViteServer({
+      ...getViteServerConfig(projectStructure),
+      css: {
+        postcss: postCssPath,
+      },
+    });
+
+    app.use(vite.middlewares);
+    app.use(errorMiddleware(vite));
+    app.use(/^\/(modules\/.+)/, serverRenderModule({ vite, projectStructure }));
+    app.listen(devServerPort, () =>
+      process.stdout.write(`listening on :${devServerPort}\n`)
+    );
+    return;
+  }
 
   // create vite using ssr mode
-  const vite =
-    postCssPath !== ""
-      ? await createViteServer(
-          getViteServerConfigWithPostCssPath(projectStructure, postCssPath)
-        )
-      : await createViteServer(getViteServerConfig(projectStructure));
+  const vite = await createViteServer(getViteServerConfig(projectStructure));
 
   // register vite's middleware
   app.use(vite.middlewares);
@@ -155,8 +164,6 @@ export const createServer = async (
       await loadUpdatedFunctionModules();
     }
   });
-
-  app.use(/^\/(modules\/.+)/, serverRenderModule({ vite, projectStructure }));
 
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.
