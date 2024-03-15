@@ -98,6 +98,7 @@ export type GeneratedPage = {
   path: string;
   content?: string;
   redirects: string[];
+  authScope?: string;
 };
 
 /**
@@ -144,6 +145,7 @@ export const generateResponses = async (
     content,
     path: path,
     redirects: templateModuleInternal.getRedirects?.(templateRenderProps) ?? [],
+    authScope: templateModuleInternal.getAuthScope?.(templateProps) ?? "",
   };
 };
 

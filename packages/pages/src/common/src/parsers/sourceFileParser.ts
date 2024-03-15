@@ -5,6 +5,7 @@ import {
   ImportDeclarationStructure,
   OptionalKind,
   ImportAttributeStructure,
+  VariableDeclaration,
 } from "ts-morph";
 import typescript from "typescript";
 
@@ -206,5 +207,74 @@ export default class SourceFileParser {
 
   getAllText(): string {
     return this.sourceFile.getFullText();
+  }
+
+  /**
+   * For example, we can do getVariablePropertyByName("config", "name")
+   * and recieve the string value that the user set as name for their
+   * variable named config. This only works for exported variables.
+   *
+   * @param name of the variable
+   * @param property of the variable
+   * @returns property of the variable as any
+   */
+  getVariablePropertyByName(name: string, property: string): any {
+    const variableDeclarations = this.sourceFile.getVariableDeclarations();
+    for (const declaration of variableDeclarations) {
+      if (declaration.getName() === name && declaration.isExported()) {
+        const initializer = declaration.getInitializer();
+        const objectLiteral = initializer as any;
+        const variableProperty = objectLiteral
+          .getProperties()
+          .find(
+            (prop: { getName: () => string }) => prop.getName() === property
+          );
+        if (variableProperty) {
+          const value = variableProperty
+            .getFirstChildByKind(SyntaxKind.StringLiteral)
+            ?.getText();
+          if (value) {
+            return value;
+          } else {
+            return variableProperty;
+          }
+        }
+      }
+    }
+    return;
+  }
+
+  getVariableDeclarationByType(type: string): VariableDeclaration | undefined {
+    const declaration =
+      this.sourceFile.getVariableDeclaration(
+        (v) => v.getType().getText() === type
+      ) ??
+      this.sourceFile.getVariableDeclaration((v) =>
+        v
+          .getType()
+          .getText()
+          .endsWith("." + type)
+      );
+    if (declaration === undefined) {
+      throw new Error(`Type ${type} cannot be found.`);
+    }
+    return declaration;
+  }
+
+  insertStatement(code: string, index = 0) {
+    this.sourceFile.insertText(index, code);
+    return this.getEndPos();
+  }
+
+  removeStatement(startIndex: number, endIndex: number) {
+    this.sourceFile.removeText(startIndex, endIndex);
+  }
+
+  getEndPos() {
+    return this.sourceFile.getEnd();
+  }
+
+  removeUnusedImports() {
+    this.sourceFile.fixUnusedIdentifiers();
   }
 }

@@ -37,6 +37,10 @@ describe("ci - getUpdatedCiConfig", () => {
             pattern: "assets/**/*",
           },
           {
+            root: "dist",
+            pattern: "modules/**/*",
+          },
+          {
             root: "dist/public_assets",
             pattern: "**/*",
           },
@@ -124,6 +128,10 @@ describe("ci - getUpdatedCiConfig", () => {
           {
             root: "dist",
             pattern: "assets/**/*",
+          },
+          {
+            root: "dist",
+            pattern: "modules/**/*",
           },
           {
             root: "dist/public_assets",

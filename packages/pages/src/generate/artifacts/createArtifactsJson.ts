@@ -48,6 +48,10 @@ export const getArtifactsConfig = async (
           root: `${projectStructure.config.rootFolders.dist}/public_assets`,
           pattern: "**/*",
         },
+        {
+          root: projectStructure.config.rootFolders.dist,
+          pattern: `${projectStructure.config.subfolders.modules}/**/*`,
+        },
       ],
       plugins: [getGeneratorPlugin(projectStructure)],
     },

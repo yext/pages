@@ -44,6 +44,9 @@ export interface FunctionModule {
 export type FunctionType = HttpFunction | OnUrlChangeFunction;
 
 // @public
+export type GetAuthScope<T extends TemplateProps> = (props: T) => string;
+
+// @public
 export type GetHeadConfig<T extends TemplateRenderProps> = (
   props: T
 ) => HeadConfig;
@@ -90,6 +93,22 @@ export type Manifest = {
   projectStructure: ProjectStructureConfig;
   bundlerManifest?: any;
 };
+
+// @public
+export type Module = () => React.JSX.Element;
+
+// @public
+export interface ModuleConfig {
+  name?: string;
+}
+
+// @public
+export interface ModuleProps<T = Record<string, any>> {
+  __meta: {
+    mode: "development" | "production";
+  };
+  document: T;
+}
 
 // @public
 export type OnUrlChangeFunction = (
@@ -260,6 +279,7 @@ export interface TemplateModule<
   config?: TemplateConfig;
   // Warning: (ae-unresolved-link) The @link reference could not be resolved: The package "@yext/pages" does not have an export "render"
   default?: Template<U>;
+  getAuthScope?: GetAuthScope<T>;
   getHeadConfig?: GetHeadConfig<U>;
   getPath: GetPath<T>;
   getRedirects?: GetRedirects<U>;
@@ -287,7 +307,7 @@ export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 // Warnings were encountered during analysis:
 //
-// dist/types/src/common/src/template/types.d.ts:165:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
+// dist/types/src/common/src/template/types.d.ts:173:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 ```

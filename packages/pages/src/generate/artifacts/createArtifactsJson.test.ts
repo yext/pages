@@ -18,6 +18,10 @@ describe("createArtifactsJson - getArtifactsConfig", () => {
             root: "dist/public_assets",
             pattern: "**/*",
           },
+          {
+            root: "dist",
+            pattern: "modules/**/*",
+          },
         ],
         plugins: [
           {
