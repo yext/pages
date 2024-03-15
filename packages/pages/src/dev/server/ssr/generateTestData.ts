@@ -89,8 +89,12 @@ export const generateTestDataForSlug = async (
 
   const parsedData = await spawnTestDataCommand(stdout, "yext", args);
 
-  // handle documents coming back as an array just in case
-  return parsedData?.length > 0 ? parsedData[0] : parsedData;
+  return getDocumentBySlug(
+    parsedData,
+    slug,
+    Array.from(slugFields),
+    templateModuleCollection
+  );
 };
 
 const loadTemplateModuleCollectionUsingVite = async (
@@ -293,4 +297,68 @@ const getDocumentByLocale = (parsedData: any, locale: string): any => {
     return documentsForLocale[0];
   }
   return parsedData;
+};
+
+const getDocumentBySlug = (
+  parsedData: any,
+  slug: string,
+  slugFields: string[],
+  templateModuleCollection: TemplateModuleCollection
+): any => {
+  if (!Array.isArray(parsedData)) {
+    return parsedData;
+  }
+
+  // Find the slugField where the slug value matches
+  const matchingSlugFieldsSet: Set<string> = new Set();
+  for (const document of parsedData) {
+    for (const slugField of slugFields) {
+      if (document[slugField] === slug) {
+        matchingSlugFieldsSet.add(slugField);
+      }
+    }
+  }
+
+  const matchingSlugFields = Array.from(matchingSlugFieldsSet);
+
+  if (matchingSlugFields.length === 0) {
+    throw new Error(`Could not find slugField on document for slug: "${slug}"`);
+  } else if (matchingSlugFields.length > 1) {
+    throw new Error(
+      `Multiple documents have the same slugField (${matchingSlugFields.join(
+        ", "
+      )}) with value: "${slug}"`
+    );
+  }
+
+  // Find the template that uses the slugfield
+  const matchingTemplateModules: TemplateModuleInternal<any, any>[] = [];
+  templateModuleCollection.forEach((templateModule) => {
+    const slugField = templateModule.config?.slugField || "slug";
+    if (slugField === matchingSlugFields[0]) {
+      matchingTemplateModules.push(templateModule);
+    }
+  });
+
+  if (matchingTemplateModules.length === 0) {
+    throw new Error(`Could not find template for slug: "${slug}"`);
+  } else if (matchingTemplateModules.length > 1) {
+    const templateNames = matchingTemplateModules
+      .map((templateModule) => templateModule.config.name)
+      .join(", ");
+    throw new Error(
+      `Multiple templates found (${templateNames}) for slug: "${slug}"`
+    );
+  }
+
+  // Return the document that matches the template
+  const matchingDocument = parsedData.find(
+    (document) => document.__.name === matchingTemplateModules[0].config.name
+  );
+
+  if (!matchingDocument) {
+    throw new Error(`Could not find document for slug: "${slug}"`);
+  }
+
+  return matchingDocument;
 };
