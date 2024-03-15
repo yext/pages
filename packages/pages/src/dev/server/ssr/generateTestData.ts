@@ -343,7 +343,12 @@ const getDocumentBySlug = (
   if (matchingTemplateModules.length === 0) {
     throw new Error(`Could not find template for slug: "${slug}"`);
   } else if (matchingTemplateModules.length > 1) {
-    throw new Error(`Multiple templates found for slug: "${slug}"`);
+    const templateNames = matchingTemplateModules
+      .map((templateModule) => templateModule.config.name)
+      .join(", ");
+    throw new Error(
+      `Multiple templates found (${templateNames}) for slug: "${slug}"`
+    );
   }
 
   // Return the document that matches the template
