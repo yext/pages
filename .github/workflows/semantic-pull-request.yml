@@ -30,5 +30,6 @@ jobs:
             dev/plugin
             pages-plugins
             playground
+            scaffold
             upgrade
             util
