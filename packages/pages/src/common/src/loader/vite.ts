@@ -23,6 +23,29 @@ export const getViteServerConfig = (
   };
 };
 
+export const getViteServerConfigWithPostCssPath = (
+  projectStructure: ProjectStructure,
+  postCssPath: string
+): InlineConfig => {
+  return {
+    css: {
+      postcss: postCssPath,
+    },
+    server: {
+      middlewareMode: true,
+    },
+    appType: "custom",
+    envDir: projectStructure.config.envVarConfig.envVarDir,
+    envPrefix: projectStructure.config.envVarConfig.envVarPrefix,
+    define: processEnvVariables(
+      projectStructure.config.envVarConfig.envVarPrefix
+    ),
+    optimizeDeps: {
+      include: ["react-dom", "react-dom/client"],
+    },
+  };
+};
+
 export type ImportedModule = {
   path: string;
   module: any;

@@ -17,8 +17,12 @@ import { getFunctionFilepaths } from "../../common/src/function/internal/getFunc
 import { convertFunctionModuleToFunctionModuleInternal } from "../../common/src/function/internal/types.js";
 import { loadViteModule } from "./ssr/loadViteModule.js";
 import { FunctionModule } from "../../common/src/function/types.js";
-import { getViteServerConfig } from "../../common/src/loader/vite.js";
+import {
+  getViteServerConfig,
+  getViteServerConfigWithPostCssPath,
+} from "../../common/src/loader/vite.js";
 import { serverRenderModule } from "./middleware/serverRenderModule.js";
+import { getPostCssPathFromModuleName } from "./ssr/findMatchingModule.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -29,7 +33,8 @@ export const createServer = async (
   dynamicGenerateData: boolean,
   useProdURLs: boolean,
   devServerPort: number,
-  scope?: string
+  scope?: string,
+  widget?: string
 ) => {
   // creates a standard express app
   const app = express();
@@ -40,9 +45,18 @@ export const createServer = async (
 
   // initialize the default project structure and use to help configure the dev server
   const projectStructure = await ProjectStructure.init({ scope });
+  const postCssPath = await getPostCssPathFromModuleName(
+    widget,
+    projectStructure
+  );
 
   // create vite using ssr mode
-  const vite = await createViteServer(getViteServerConfig(projectStructure));
+  const vite =
+    postCssPath !== ""
+      ? await createViteServer(
+          getViteServerConfigWithPostCssPath(projectStructure, postCssPath)
+        )
+      : await createViteServer(getViteServerConfig(projectStructure));
 
   // register vite's middleware
   app.use(vite.middlewares);

@@ -13,6 +13,7 @@ export type Module = () => React.JSX.Element;
 export interface ModuleModule {
   /** The exported config function */
   config: ModuleConfig;
+  /** The default function that returns the JSX */
   default: Module;
 }
 
