@@ -10,6 +10,11 @@ import { default as React_2 } from "react";
 export type Attributes = Record<string, string>;
 
 // @internal
+export interface ClientModuleRenderTemplate {
+  render(pageContext: ModuleContext): Promise<string>;
+}
+
+// @internal
 export interface ClientRenderTemplate {
   render(pageContext: PageContext<any>): Promise<string>;
 }
@@ -29,7 +34,9 @@ export const createDevServer: (
   dynamicGenerateData: boolean,
   useProdURLs: boolean,
   devServerPort: number,
-  scope?: string
+  openBrowser: boolean,
+  scope?: string,
+  module?: string
 ) => Promise<void>;
 
 // @internal (undocumented)
@@ -95,11 +102,28 @@ export type Manifest = {
 };
 
 // @public
-export type Module = () => React.JSX.Element;
+export type Module = () => React_2.JSX.Element;
+
+// @internal
+export interface ModuleClientServerRenderTemplates {
+  clientRenderModulePath: string;
+  serverRenderModulePath: string;
+}
 
 // @public
 export interface ModuleConfig {
   name?: string;
+}
+
+// @internal
+export interface ModuleContext {
+  Page: Module;
+}
+
+// @public
+export interface ModuleDefinition {
+  config: ModuleConfig;
+  default: Module;
 }
 
 // @public
@@ -175,6 +199,13 @@ export type Render<T extends TemplateRenderProps<T>> = (props: T) => string;
 
 // @public
 export const renderHeadConfigToString: (headConfig: HeadConfig) => string;
+
+// @internal
+export interface ServerModuleRenderTemplate {
+  indexHtml: string;
+  render(pageContext: ModuleContext): Promise<string>;
+  replacementTag: string;
+}
 
 // @internal
 export interface ServerRenderTemplate {
