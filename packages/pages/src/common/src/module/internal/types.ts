@@ -1,10 +1,9 @@
 import { ModuleConfig, Module, ModuleDefinition } from "../types.js";
 import { parse } from "../../template/internal/types.js";
 import { validateModuleInternal } from "./validateModuleInternal.js";
-import { lookup } from "mime-types";
 
 /**
- * A domain representation of a template module. Contains all fields from an imported module as well
+ * A domain representation of a widget module. Contains all fields from an imported module as well
  * as metadata about the module used in downstream processing.
  */
 export interface ModuleInternal {
@@ -31,7 +30,7 @@ export interface ModuleConfigInternal {
   name: string;
 }
 
-export const convertModuleToModuleInternal = (
+export const convertModuleDefinitionToModuleInternal = (
   moduleFilepath: string,
   module: ModuleDefinition
 ): ModuleInternal => {
@@ -61,8 +60,4 @@ export const convertModuleConfigToModuleConfigInternal = (
   return {
     name: moduleConfig?.name ?? moduleName,
   };
-};
-
-export const getContentType = (moduleInternal: ModuleInternal): string => {
-  return lookup(moduleInternal.path) || "text/html";
 };

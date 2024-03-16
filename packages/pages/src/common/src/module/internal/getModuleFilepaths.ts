@@ -60,18 +60,18 @@ export const getGlobalClientServerRenderModules =
   (): ModuleClientServerRenderTemplates => {
     const shouldUseReactRoot = getReactVersion() >= 18;
 
-    const clientRenderTemplatePath = findGlobalRenderFile(
+    const clientRenderModulePath = findGlobalRenderFile(
       shouldUseReactRoot
         ? globalClientRenderFilename
         : globalClientRenderFilename17
     );
-    const serverRenderTemplatePath = findGlobalRenderFile(
+    const serverRenderModulePath = findGlobalRenderFile(
       globalServerRenderFilename
     );
 
     return {
-      clientRenderTemplatePath,
-      serverRenderTemplatePath,
+      clientRenderModulePath: clientRenderModulePath,
+      serverRenderModulePath: serverRenderModulePath,
     };
   };
 

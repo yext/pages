@@ -2,13 +2,14 @@ import { ModuleInternal } from "../../../common/src/module/internal/types.js";
 import { ViteDevServer } from "vite";
 import { getGlobalClientServerRenderModules } from "../../../common/src/module/internal/getModuleFilepaths.js";
 import { Response } from "express-serve-static-core";
-import { getIndexTemplateDev } from "../../../common/src/template/hydration.js";
 import { ServerModuleRenderTemplate } from "../../../common/src/module/types.js";
-import { getHydrationModuleDev } from "../../../common/src/module/hydration.js";
+import {
+  getHydrationModuleDev,
+  getIndexModuleDev,
+} from "../../../common/src/module/hydration.js";
 
 /**
- * Renders the HTML for a given {@link TemplateModuleInternal}
- * and {@link TemplateRenderProps}, and sends it back to the Response.
+ * Renders the HTML for a given {@link ModuleInternal}, and sends it back to the Response.
  */
 export default async function serveModule(
   res: Response,
@@ -19,19 +20,17 @@ export default async function serveModule(
   const clientServerRenderModules = getGlobalClientServerRenderModules();
 
   const clientHydrationString = getHydrationModuleDev(
-    clientServerRenderModules.clientRenderTemplatePath,
+    clientServerRenderModules.clientRenderModulePath,
     moduleInternal.path
   );
 
   const serverRenderTemplateModule = (await vite.ssrLoadModule(
-    clientServerRenderModules.serverRenderTemplatePath
+    clientServerRenderModules.serverRenderModulePath
   )) as ServerModuleRenderTemplate;
 
-  const clientInjectedIndexHtml = getIndexTemplateDev(
+  const clientInjectedIndexHtml = getIndexModuleDev(
     clientHydrationString,
-    serverRenderTemplateModule.indexHtml,
-    "en",
-    undefined
+    serverRenderTemplateModule.indexHtml
   );
 
   const transformedIndexHtml = await vite.transformIndexHtml(

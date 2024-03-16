@@ -19,7 +19,8 @@ import { loadViteModule } from "./ssr/loadViteModule.js";
 import { FunctionModule } from "../../common/src/function/types.js";
 import { getViteServerConfig } from "../../common/src/loader/vite.js";
 import { serverRenderModule } from "./middleware/serverRenderModule.js";
-import { getPostCssPathFromModuleName } from "./ssr/findMatchingModule.js";
+import { getModuleInfoFromModuleName } from "./ssr/findMatchingModule.js";
+import open from "open";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -30,8 +31,9 @@ export const createServer = async (
   dynamicGenerateData: boolean,
   useProdURLs: boolean,
   devServerPort: number,
+  openBrowser: boolean,
   scope?: string,
-  widget?: string
+  module?: string
 ) => {
   // creates a standard express app
   const app = express();
@@ -43,24 +45,45 @@ export const createServer = async (
   // initialize the default project structure and use to help configure the dev server
   const projectStructure = await ProjectStructure.init({ scope });
 
-  if (widget) {
-    const postCssPath = await getPostCssPathFromModuleName(
-      widget,
+  if (module) {
+    const moduleInfo = await getModuleInfoFromModuleName(
+      module,
       projectStructure
     );
-    const vite = await createViteServer({
-      ...getViteServerConfig(projectStructure),
-      css: {
-        postcss: postCssPath,
-      },
-    });
-
-    app.use(vite.middlewares);
-    app.use(errorMiddleware(vite));
-    app.use(/^\/(modules\/.+)/, serverRenderModule({ vite, projectStructure }));
-    app.listen(devServerPort, () =>
-      process.stdout.write(`listening on :${devServerPort}\n`)
-    );
+    if (moduleInfo !== undefined) {
+      let vite;
+      // initialize using postCss if we have it
+      if (moduleInfo.postCssPath !== undefined) {
+        vite = await createViteServer({
+          ...getViteServerConfig(projectStructure),
+          css: {
+            postcss: moduleInfo.postCssPath,
+          },
+        });
+      }
+      // otherwise initialize without setting postcss
+      if (!vite) {
+        vite = await createViteServer(getViteServerConfig(projectStructure));
+      }
+      app.use(vite.middlewares);
+      app.use(errorMiddleware(vite));
+      app.use(
+        `/modules/${moduleInfo.moduleName}`,
+        serverRenderModule({
+          vite: vite,
+          modulePath: moduleInfo.modulePath,
+        })
+      );
+      app.listen(devServerPort, () =>
+        process.stdout.write(`listening on :${devServerPort}\n`)
+      );
+      if (openBrowser) {
+        await open(
+          `http://localhost:${devServerPort}/modules/${moduleInfo.moduleName}`
+        );
+      }
+      return;
+    }
     return;
   }
 

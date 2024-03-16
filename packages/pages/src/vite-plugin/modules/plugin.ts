@@ -198,7 +198,7 @@ const shouldBundleModules = (projectStructure: ProjectStructure) => {
  * @param modulePath
  * @returns name of module if set by user via ModuleConfig
  */
-const getModuleName = (modulePath: string): string | undefined => {
+export const getModuleName = (modulePath: string): string | undefined => {
   const sfp = new SourceFileParser(modulePath, createTsMorphProject());
   return sfp.getVariablePropertyByName("config", "name")?.replace(/['"`]/g, "");
 };

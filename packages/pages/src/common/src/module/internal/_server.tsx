@@ -13,7 +13,7 @@ export const render = async (pageContext: ModuleContext) => {
 export const replacementTag = "<!--YEXT-SERVER-->";
 
 export const indexHtml = `<!DOCTYPE html>
-    <html lang="<!--app-lang-->">
+    <html>
       <head></head>
       <body>
         <div id="reactele">${replacementTag}</div>

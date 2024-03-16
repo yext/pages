@@ -48,9 +48,9 @@ export interface ModuleProps<T = Record<string, any>> {
  */
 export interface ModuleClientServerRenderTemplates {
   /** The path to _client.tsx */
-  clientRenderTemplatePath: string;
+  clientRenderModulePath: string;
   /** The path to _server.tsx */
-  serverRenderTemplatePath: string;
+  serverRenderModulePath: string;
 }
 
 /**
