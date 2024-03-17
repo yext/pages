@@ -17,7 +17,7 @@ export const serverRenderModule =
 
       if (!moduleInternal) {
         const moduleName = req.originalUrl
-          .substring(req.originalUrl.lastIndexOf("modules/") + 8)
+          .substring(req.originalUrl.lastIndexOf("/") + 1)
           .toLowerCase();
         send404(res, `Cannot find module for: ${moduleName}`);
         return;
