@@ -79,7 +79,7 @@ export const tailwindCode = () => {
   return `import type { Config } from 'tailwindcss';
 
 export default {
-  content: ["./**/*.{js,ts,tsx}"],
+  content: ["./src/modules/**/*.{js,ts,tsx}"],
   theme: {
     extend: {},
   },
