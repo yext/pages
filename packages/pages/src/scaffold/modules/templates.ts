@@ -81,7 +81,7 @@ export const tailwindCode = (projectStructure: ProjectStructure) => {
   return `import type { Config } from 'tailwindcss';
 
 export default {
-  content: ["./${projectStructure.config.rootFolders.source}/**/*.{js,ts,tsx,jsx}"],
+  content: ["./${projectStructure.config.rootFolders.source}/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {},
   },
