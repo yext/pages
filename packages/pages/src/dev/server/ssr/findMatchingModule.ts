@@ -6,11 +6,11 @@ import {
 import { ModuleDefinition } from "../../../common/src/module/types.js";
 import { loadViteModule } from "./loadViteModule.js";
 import { getModuleFilepathsFromProjectStructure } from "../../../common/src/module/internal/getModuleFilepaths.js";
+import { getModuleName } from "../../../common/src/module/internal/getModuleName.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { createTsMorphProject } from "../../../common/src/parsers/sourceFileParser.js";
 import path from "path";
 import fs from "fs";
-import { getModuleName } from "../../../vite-plugin/modules/plugin.js";
 
 export interface ModuleInfo {
   moduleName: string;

@@ -15,6 +15,7 @@ import { logWarning } from "../../util/logError.js";
 import postcss from "postcss";
 import nested from "postcss-nested";
 import { createModuleLogger } from "../../common/src/module/internal/logger.js";
+import { getModuleName } from "../../common/src/module/internal/getModuleName.js";
 
 const moduleResponseHeaderProps = {
   headerKey: "Access-Control-Allow-Origin",
@@ -179,16 +180,6 @@ const getReactImports = (source: string): string => {
 const shouldBundleModules = (projectStructure: ProjectStructure) => {
   const { rootFolders, subfolders } = projectStructure.config;
   return fs.existsSync(path.join(rootFolders.source, subfolders.modules));
-};
-
-/**
- *
- * @param modulePath
- * @returns name of module if set by user via ModuleConfig
- */
-export const getModuleName = (modulePath: string): string | undefined => {
-  const sfp = new SourceFileParser(modulePath, createTsMorphProject());
-  return sfp.getVariablePropertyByName("config", "name")?.replace(/['"`]/g, "");
 };
 
 /**
