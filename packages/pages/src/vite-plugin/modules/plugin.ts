@@ -1,4 +1,4 @@
-import { build, createLogger, Plugin, Logger } from "vite";
+import { build, Plugin } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -14,6 +14,7 @@ import SourceFileParser, {
 import { logWarning } from "../../util/logError.js";
 import postcss from "postcss";
 import nested from "postcss-nested";
+import { createModuleLogger } from "../../common/src/module/internal/logger.js";
 
 const moduleResponseHeaderProps = {
   headerKey: "Access-Control-Allow-Origin",
@@ -23,32 +24,6 @@ const moduleResponseHeaderProps = {
 type FileInfo = {
   path: string;
   name: string;
-};
-
-/**
- * Returns a custom vite logger with nested tailwind warnings hidden.
- * @return Logger
- */
-export const createModuleLogger = (): Logger => {
-  const ignoredMessages: string[] = [
-    // Suppress this warning b/c nested @tailwind rules are the best option for handling @tailwind base.
-    "Nested @tailwind rules were detected, but are not supported.",
-    // Sometimes the MIT license gets logged for React modules
-    "/*! tailwindcss v3.1.8 | MIT License",
-  ];
-  const logger = createLogger();
-  const loggerWarning = logger.warn;
-  logger.warn = (msg, options) => {
-    if (msg.includes("vite:css")) {
-      for (const ignoredMessage of ignoredMessages) {
-        if (msg.includes(ignoredMessage)) {
-          return;
-        }
-      }
-    }
-    loggerWarning(msg, options);
-  };
-  return logger;
 };
 
 export const buildModules = async (

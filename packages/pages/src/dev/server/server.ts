@@ -6,6 +6,7 @@ import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
+import { createModuleLogger } from "../../common/src/module/internal/logger.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
@@ -18,7 +19,6 @@ import { convertFunctionModuleToFunctionModuleInternal } from "../../common/src/
 import { loadViteModule } from "./ssr/loadViteModule.js";
 import { FunctionModule } from "../../common/src/function/types.js";
 import { getViteServerConfig } from "../../common/src/loader/vite.js";
-import { createModuleLogger } from "../../vite-plugin/modules/plugin.js";
 import { serverRenderModule } from "./middleware/serverRenderModule.js";
 import { getModuleInfoFromModuleName } from "./ssr/findMatchingModule.js";
 import open from "open";
