@@ -1,3 +1,5 @@
+import { ProjectStructure } from "../../common/src/project/structure.js";
+
 export const moduleCode = (
   moduleName: string,
   useTailwind: boolean
@@ -75,11 +77,11 @@ export const indexCssCode = (useTailwind: boolean): string => {
     : ``;
 };
 
-export const tailwindCode = () => {
+export const tailwindCode = (projectStructure: ProjectStructure) => {
   return `import type { Config } from 'tailwindcss';
 
 export default {
-  content: ["./**/*.{js,ts,tsx}"],
+  content: ["./${projectStructure.config.rootFolders.source}/**/*.{js,ts,tsx}"],
   theme: {
     extend: {},
   },
