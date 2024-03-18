@@ -4,6 +4,14 @@
 
 ## pages package
 
+## Functions
+
+| Function                                                                            | Description                                                                                                                                                                     |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [getLang(headConfig, props)](./pages.getlang.md)                                    | Function that takes in a [HeadConfig](./pages.headconfig.md) interface and a props, and returns the lang value that will be set on the HTML tag.                                |
+| [getRelativePrefixToRootFromPath(path)](./pages.getrelativeprefixtorootfrompath.md) | Function that takes a path to a generated template and returns the relative path to the root of the site. Will return the empty string if already at the root level.            |
+| [renderHeadConfigToString(headConfig)](./pages.renderheadconfigtostring.md)         | Function that takes a [HeadConfig](./pages.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the head tags. |
+
 ## Interfaces
 
 | Interface                                                     | Description                                                                                                                                                                                                |
@@ -23,14 +31,6 @@
 | [TemplateModule](./pages.templatemodule.md)                   | The type to include in any template file. It defines the available functions and fields that are available to the template.                                                                                |
 | [TemplateProps](./pages.templateprops.md)                     | The shape of the data passed directly to the different template functions with the exception of the render function (getPath, getHeadConfig, etc).                                                         |
 | [TemplateRenderProps](./pages.templaterenderprops.md)         | The shape of the data passed directly to the template's render function. Extends the [TemplateProps](./pages.templateprops.md) interface and has the additions of a path and a relativePrefixToRoot field. |
-
-## Variables
-
-| Variable                                                                      | Description                                                                                                                                                                     |
-| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [getLang](./pages.getlang.md)                                                 | Function that takes in a [HeadConfig](./pages.headconfig.md) interface and a props, and returns the lang value that will be set on the HTML tag.                                |
-| [getRelativePrefixToRootFromPath](./pages.getrelativeprefixtorootfrompath.md) | Function that takes a path to a generated template and returns the relative path to the root of the site. Will return the empty string if already at the root level.            |
-| [renderHeadConfigToString](./pages.renderheadconfigtostring.md)               | Function that takes a [HeadConfig](./pages.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the head tags. |
 
 ## Type Aliases
 

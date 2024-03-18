@@ -2,7 +2,7 @@
 
 [Home](./index.md) &gt; [@yext/pages](./pages.md) &gt; [renderHeadConfigToString](./pages.renderheadconfigtostring.md)
 
-## renderHeadConfigToString variable
+## renderHeadConfigToString() function
 
 Function that takes a [HeadConfig](./pages.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the head tags.
 
@@ -11,3 +11,13 @@ Function that takes a [HeadConfig](./pages.headconfig.md) interface and outputs 
 ```typescript
 renderHeadConfigToString: (headConfig: HeadConfig) => string;
 ```
+
+## Parameters
+
+| Parameter  | Type                                | Description |
+| ---------- | ----------------------------------- | ----------- |
+| headConfig | [HeadConfig](./pages.headconfig.md) |             |
+
+**Returns:**
+
+string
