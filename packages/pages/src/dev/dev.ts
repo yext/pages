@@ -17,6 +17,7 @@ interface DevArgs {
   noGenFeatures?: boolean;
   noGenTestData?: boolean;
   port?: number;
+  module?: string;
 }
 
 const handler = async ({
@@ -27,6 +28,7 @@ const handler = async ({
   scope,
   noGenFeatures,
   port,
+  module,
 }: DevArgs) => {
   const { config } = (await ProjectStructure.init({ scope })).config.rootFiles;
 
@@ -61,9 +63,18 @@ const handler = async ({
     (await getPort({
       port: portNumbers(5173, 6000),
     }));
-  await createServer(!local, !!prodUrl, devServerPort, scope);
+  await createServer(
+    !local,
+    !!prodUrl,
+    devServerPort,
+    openBrowser,
+    scope,
+    module
+  );
 
-  if (openBrowser) await open(`http://localhost:${devServerPort}/`);
+  if (openBrowser && !module) {
+    await open(`http://localhost:${devServerPort}/`);
+  }
 };
 
 /**
@@ -104,5 +115,6 @@ export const devCommand = (program: Command) => {
     .option("--noInit", "Disables automatic yext init with .yextrc file")
     .option("--noGenFeatures", "Disable feature.json generation step")
     .option("--port <number>", "The port to use for the dev server")
+    .option("--module <string>", "Name of the module to load.")
     .action(handler);
 };

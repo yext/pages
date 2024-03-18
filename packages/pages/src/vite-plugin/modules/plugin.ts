@@ -1,4 +1,4 @@
-import { build, createLogger, Plugin } from "vite";
+import { build, Plugin } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -14,6 +14,8 @@ import SourceFileParser, {
 import { logWarning } from "../../util/logError.js";
 import postcss from "postcss";
 import nested from "postcss-nested";
+import { createModuleLogger } from "../../common/src/module/internal/logger.js";
+import { getModuleName } from "../../common/src/module/internal/getModuleName.js";
 
 const moduleResponseHeaderProps = {
   headerKey: "Access-Control-Allow-Origin",
@@ -50,20 +52,7 @@ export const buildModules = async (
       filepaths[moduleName ?? name] = { path: filepath, name: name };
     });
 
-  const logger = createLogger();
-  const loggerInfo = logger.info;
-  const loggerWarning = logger.warn;
-  logger.warn = (msg, options) => {
-    // Suppress this warning b/c nested @tailwind rules are the best option for handling @tailwind base.
-    if (
-      msg.includes("vite:css") &&
-      msg.includes(
-        "Nested @tailwind rules were detected, but are not supported."
-      )
-    )
-      return;
-    loggerWarning(msg, options);
-  };
+  const logger = createModuleLogger();
 
   if (tailwindBaseExists()) {
     // TODO add link to recommended implementation for user.
@@ -75,10 +64,10 @@ export const buildModules = async (
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
-        loggerInfo(pc.green(`\nBuilding ${moduleName} module...`));
+        logger.info(pc.green(`\nBuilding ${moduleName} module...`));
         return;
       }
-      loggerInfo(msg, options);
+      logger.info(msg, options);
     };
 
     // For each module, add response header to config.yaml.
@@ -191,16 +180,6 @@ const getReactImports = (source: string): string => {
 const shouldBundleModules = (projectStructure: ProjectStructure) => {
   const { rootFolders, subfolders } = projectStructure.config;
   return fs.existsSync(path.join(rootFolders.source, subfolders.modules));
-};
-
-/**
- *
- * @param modulePath
- * @returns name of module if set by user via ModuleConfig
- */
-const getModuleName = (modulePath: string): string | undefined => {
-  const sfp = new SourceFileParser(modulePath, createTsMorphProject());
-  return sfp.getVariablePropertyByName("config", "name")?.replace(/['"`]/g, "");
 };
 
 /**
