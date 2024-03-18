@@ -18,6 +18,7 @@ import { convertFunctionModuleToFunctionModuleInternal } from "../../common/src/
 import { loadViteModule } from "./ssr/loadViteModule.js";
 import { FunctionModule } from "../../common/src/function/types.js";
 import { getViteServerConfig } from "../../common/src/loader/vite.js";
+import { createModuleLogger } from "../../vite-plugin/modules/plugin.js";
 import { serverRenderModule } from "./middleware/serverRenderModule.js";
 import { getModuleInfoFromModuleName } from "./ssr/findMatchingModule.js";
 import open from "open";
@@ -59,12 +60,19 @@ export const createServer = async (
           css: {
             postcss: moduleInfo.postCssPath,
           },
+          customLogger: createModuleLogger(),
+        });
+      } else {
+        vite = await createViteServer({
+          ...getViteServerConfig(projectStructure),
+          customLogger: createModuleLogger(),
         });
       }
       // otherwise initialize without setting postcss
       if (!vite) {
         vite = await createViteServer(getViteServerConfig(projectStructure));
       }
+
       app.use(vite.middlewares);
       app.use(errorMiddleware(vite));
       app.use(
