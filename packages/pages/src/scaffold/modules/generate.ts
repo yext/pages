@@ -59,7 +59,7 @@ export const generateModule = async (
   if (response.useTailwind) {
     fs.writeFileSync(
       path.join(modulePath, "tailwind.config.ts"),
-      tailwindCode()
+      tailwindCode(projectStructure)
     );
     fs.writeFileSync(path.join(modulePath, "postcss.config.js"), postcssCode());
   }
