@@ -53,6 +53,7 @@ export const buildModules = async (
     });
 
   const logger = createModuleLogger();
+  const loggerInfo = logger.info;
 
   if (tailwindBaseExists()) {
     // TODO add link to recommended implementation for user.
@@ -64,10 +65,10 @@ export const buildModules = async (
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
-        logger.info(pc.green(`\nBuilding ${moduleName} module...`));
+        loggerInfo(pc.green(`\nBuilding ${moduleName} module...`));
         return;
       }
-      logger.info(msg, options);
+      loggerInfo(msg, options);
     };
 
     // For each module, add response header to config.yaml.
