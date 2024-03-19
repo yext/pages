@@ -28,7 +28,7 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
     : undefined;
 
   const templateFilepath = path.join(
-    projectStructure.getTemplatePaths()[0].path,
+    projectStructure.getTemplatePaths(manifest)[0].path,
     `${templateModuleInternal.templateName}.tsx`
   );
 

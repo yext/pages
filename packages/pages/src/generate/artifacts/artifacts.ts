@@ -21,9 +21,6 @@ export const artifactsCommand = (program: Command) => {
   program
     .command("artifacts")
     .description("Generatesartifacts.json file")
-    .option(
-      "--scope <string>",
-      "The subfolder to scope the served templates from"
-    )
+    .option("--scope <string>", "The subfolder to scope from")
     .action(artifactsHandler);
 };

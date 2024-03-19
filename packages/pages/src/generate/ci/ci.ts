@@ -24,10 +24,7 @@ export const ciCommand = (program: Command) => {
   program
     .command("ci")
     .description("Generates ci.json file")
-    .option(
-      "--scope <string>",
-      "The subfolder to scope the served templates from"
-    )
+    .option("--scope <string>", "The subfolder to scope from")
     .action(handler);
 };
 

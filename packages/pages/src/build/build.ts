@@ -13,9 +13,6 @@ export const buildCommand = (program: Command) => {
   program
     .command("build")
     .description("Build site using Vite")
-    .option(
-      "--scope <string>",
-      "The subfolder to scope the served templates from"
-    )
+    .option("--scope <string>", "The subfolder to scope from")
     .action(handler);
 };

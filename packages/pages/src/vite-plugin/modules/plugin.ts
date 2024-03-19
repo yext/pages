@@ -34,23 +34,29 @@ export const buildModules = async (
     return;
   }
 
-  const { rootFolders, subfolders, envVarConfig } = projectStructure.config;
+  const { rootFolders, subfolders, envVarConfig, scope } =
+    projectStructure.config;
   const outdir = path.join(rootFolders.dist, subfolders.modules);
 
   const filepaths: { [s: string]: FileInfo } = {};
-  glob
-    .sync(
-      convertToPosixPath(
-        path.join(rootFolders.source, subfolders.modules, "**/*.{jsx,tsx}")
-      ),
-      { nodir: true }
-    )
-    .forEach((f) => {
-      const filepath = path.resolve(f);
-      const moduleName = getModuleName(filepath);
-      const { name } = path.parse(filepath);
-      filepaths[moduleName ?? name] = { path: filepath, name: name };
-    });
+  const modulePaths = projectStructure.getModulePaths();
+  modulePaths.forEach((modulePath) => {
+    glob
+      .sync(convertToPosixPath(path.join(modulePath.path, "*/*.{jsx,tsx}")), {
+        nodir: true,
+      })
+      .forEach((f) => {
+        const filepath = path.resolve(f);
+        const moduleName = getModuleName(filepath);
+        const { name } = path.parse(filepath);
+        // If that name exists already, don't overwrite the filepaths
+        // Example, if scope is declared, the scoped module's info should stay
+        // in filepaths and not be overwritten by a non-scoped module.
+        if (!((moduleName ?? name) in filepaths)) {
+          filepaths[moduleName ?? name] = { path: filepath, name: name };
+        }
+      });
+  });
 
   const logger = createModuleLogger();
 
@@ -76,7 +82,9 @@ export const buildModules = async (
     addResponseHeadersToConfigYaml(
       projectStructure,
       {
-        pathPattern: `^modules/${moduleName}.*`,
+        pathPattern: scope
+          ? `^modules/${scope}/${moduleName}.*`
+          : `^modules/${moduleName}.*`,
         ...moduleResponseHeaderProps,
       },
       "# The ^modules/ header allows access to your modules from other sites\n"
