@@ -21,7 +21,7 @@ const experimentalFlags = ["--experimental-vm-modules"];
 if (nodeVersion === 18) {
   experimentalFlags.push("--experimental-specifier-resolution=node");
 } else {
-  const loaderURL = pathToFileURL(pathToLoader);
+  const loaderURL = pathToFileURL(pathToLoader).toString();
   register(loaderURL);
 }
 
