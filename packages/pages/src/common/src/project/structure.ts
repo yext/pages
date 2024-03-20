@@ -242,7 +242,7 @@ export class ProjectStructure {
     if (this.config.scope) {
       // src/templates/[scope]
       const scopedPath: string = pathLib.join(templatesRoot, this.config.scope);
-      if (fs && fs.existsSync(scopedPath)) {
+      if (fs?.existsSync(scopedPath)) {
         return [new Path(scopedPath), new Path(templatesRoot)];
       } else if (
         manifest &&
