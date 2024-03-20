@@ -71,6 +71,10 @@ export const generateTestDataForSlug = async (
 
   const slugFields = new Set<string>();
   templateModuleCollection.forEach((templateModule) => {
+    // We don't want to add the default "slug" field when no entity templates need it
+    if (templateModule.config.templateType == "static") {
+      return;
+    }
     const slugField = templateModule?.config?.slugField;
     if (slugField) {
       slugFields.add(slugField);
