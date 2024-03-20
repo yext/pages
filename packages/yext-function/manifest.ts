@@ -128,6 +128,8 @@ export interface ProjectStructureConfig {
    *
    * The subfolder path inside src/templates and sites-config
    * to scope a build to a subset of templates using a specific sites-config folder.
+   *
+   * Modules scoping is also supported.
    */
   scope?: string;
 }

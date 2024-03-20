@@ -7,7 +7,6 @@ import { convertToPosixPath } from "../../common/src/template/paths.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
-import { addResponseHeadersToConfigYaml } from "../../util/editConfigYaml.js";
 import SourceFileParser, {
   createTsMorphProject,
 } from "../../common/src/parsers/sourceFileParser.js";
@@ -16,11 +15,6 @@ import postcss from "postcss";
 import nested from "postcss-nested";
 import { createModuleLogger } from "../../common/src/module/internal/logger.js";
 import { getModuleName } from "../../common/src/module/internal/getModuleName.js";
-
-const moduleResponseHeaderProps = {
-  headerKey: "Access-Control-Allow-Origin",
-  headerValues: ["*"],
-};
 
 type FileInfo = {
   path: string;
@@ -38,19 +32,24 @@ export const buildModules = async (
   const outdir = path.join(rootFolders.dist, subfolders.modules);
 
   const filepaths: { [s: string]: FileInfo } = {};
-  glob
-    .sync(
-      convertToPosixPath(
-        path.join(rootFolders.source, subfolders.modules, "**/*.{jsx,tsx}")
-      ),
-      { nodir: true }
-    )
-    .forEach((f) => {
-      const filepath = path.resolve(f);
-      const moduleName = getModuleName(filepath);
-      const { name } = path.parse(filepath);
-      filepaths[moduleName ?? name] = { path: filepath, name: name };
-    });
+  const modulePaths = projectStructure.getModulePaths();
+  modulePaths.forEach((modulePath) => {
+    glob
+      .sync(convertToPosixPath(path.join(modulePath.path, "*/*.{jsx,tsx}")), {
+        nodir: true,
+      })
+      .forEach((f) => {
+        const filepath = path.resolve(f);
+        const moduleName = getModuleName(filepath);
+        const { name } = path.parse(filepath);
+        // If that name exists already, don't overwrite the filepaths
+        // Example, if scope is declared, the scoped module's info should stay
+        // in filepaths and not be overwritten by a non-scoped module.
+        if (!((moduleName ?? name) in filepaths)) {
+          filepaths[moduleName ?? name] = { path: filepath, name: name };
+        }
+      });
+  });
 
   const logger = createModuleLogger();
   const loggerInfo = logger.info;
@@ -70,18 +69,6 @@ export const buildModules = async (
       }
       loggerInfo(msg, options);
     };
-
-    // For each module, add response header to config.yaml.
-    // Users can manually adjust headerKey and headerValue in their config.yaml.
-    // As long as pathPattern matches, it won't be overwitten.
-    addResponseHeadersToConfigYaml(
-      projectStructure,
-      {
-        pathPattern: `^modules/${moduleName}.*`,
-        ...moduleResponseHeaderProps,
-      },
-      "# The ^modules/ header allows access to your modules from other sites\n"
-    );
 
     await build({
       customLogger: logger,

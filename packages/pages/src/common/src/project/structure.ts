@@ -1,8 +1,10 @@
 import pathLib from "node:path";
 import merge from "lodash/merge.js";
+import fs from "node:fs";
 import { Path } from "./path.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
 import { determinePublicFilepath } from "../assets/getPublicFilepath.js";
+import { Manifest } from "../template/types.js";
 
 /**
  * All important folders defined at the root of the project.
@@ -127,6 +129,8 @@ export interface ProjectStructureConfig {
    *
    * The subfolder path inside src/templates and sites-config
    * to scope a build to a subset of templates using a specific sites-config folder.
+   *
+   * Modules scoping is also supported.
    */
   scope?: string;
 }
@@ -224,10 +228,11 @@ export class ProjectStructure {
   };
 
   /**
-   * @returns the list of of src/templates, taking scope into account. If a scope is defined then
-   * both the scoped and non-scoped template paths are returned.
+   * @param manifest should only be provided if fs doesn't work in the env.
+   * @returns the list of of src/templates, taking scope into account. If a scope is defined and
+   * the scoped path exists, then both the scoped and non-scoped template paths are returned.
    */
-  getTemplatePaths = () => {
+  getTemplatePaths = (manifest?: Manifest) => {
     // src/templates
     const templatesRoot = pathLib.join(
       this.config.rootFolders.source,
@@ -235,34 +240,23 @@ export class ProjectStructure {
     );
 
     if (this.config.scope) {
-      return [
-        new Path(pathLib.join(templatesRoot, this.config.scope)),
-        new Path(templatesRoot),
-      ];
+      // src/templates/[scope]
+      const scopedPath: string = pathLib.join(templatesRoot, this.config.scope);
+      if (fs?.existsSync(scopedPath)) {
+        return [new Path(scopedPath), new Path(templatesRoot)];
+      } else if (
+        manifest &&
+        Object.keys(manifest.bundlerManifest).some((key) =>
+          key.includes(scopedPath)
+        )
+      ) {
+        // manifest is used instead of fs during render code due to fs not working.
+        // Specifically in pages/src/vite-plugin/build/buildStart/rendering/wrapper.ts
+        return [new Path(scopedPath), new Path(templatesRoot)];
+      }
     }
 
     return [new Path(templatesRoot)];
-  };
-
-  /**
-   * @returns the list of of src/modules, taking scope into account. If a scope is defined then
-   * both the scoped and non-scoped module paths are returned.
-   */
-  getModulePaths = () => {
-    // src/modules
-    const modulesRoot = pathLib.join(
-      this.config.rootFolders.source,
-      this.config.subfolders.modules
-    );
-
-    if (this.config.scope) {
-      return [
-        new Path(pathLib.join(modulesRoot, this.config.scope)),
-        new Path(modulesRoot),
-      ];
-    }
-
-    return [new Path(modulesRoot)];
   };
 
   /**
@@ -294,15 +288,26 @@ export class ProjectStructure {
 
   /**
    * @returns the {@link Path} to the modules folder, taking scope into account.
-   * If moduleName is provided, returns the path to that modules folder.
+   * If moduleName is provided, returns the path to that modules folder. If a scope is
+   * defined and scoped path exists, then both the scoped and non-scoped module paths are returned.
    */
-  getModulePath = (moduleName: string | undefined) => {
+  getModulePaths = (moduleName?: string) => {
     const modulesPath = pathLib.join(
+      this.config.rootFolders.source,
+      this.config.subfolders.modules,
+      moduleName ?? ""
+    );
+    const scopedPath = pathLib.join(
       this.config.rootFolders.source,
       this.config.subfolders.modules,
       this.config.scope ?? "",
       moduleName ?? ""
     );
-    return new Path(modulesPath);
+
+    if (this.config.scope && fs.existsSync(scopedPath)) {
+      return [new Path(scopedPath), new Path(modulesPath)];
+    }
+
+    return [new Path(modulesPath)];
   };
 }

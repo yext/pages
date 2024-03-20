@@ -40,7 +40,10 @@ export const generateModule = async (
   ];
   const response = await prompts(questions);
 
-  const modulePath = projectStructure.getModulePath(response.moduleName).path;
+  const modulePath = path.join(
+    projectStructure.getModulePaths()[0].path,
+    response.moduleName
+  );
 
   // Handle interruption signal (Ctrl+C)
   process.on("SIGINT", () =>
@@ -82,7 +85,10 @@ const validateModuleName = (
   moduleName: string,
   projectStructure: ProjectStructure
 ): boolean => {
-  const modulePath = projectStructure.getModulePath(moduleName).path;
+  const modulePath = path.join(
+    projectStructure.getModulePaths()[0].path,
+    moduleName
+  );
   if (fs.existsSync(modulePath)) {
     return false;
   }
@@ -90,7 +96,7 @@ const validateModuleName = (
 };
 
 function handleCancel(moduleName: string, projectStructure: ProjectStructure) {
-  const modulePath = projectStructure.getModulePath(moduleName).path;
+  const modulePath = projectStructure.getModulePaths(moduleName)[0].path;
   if (fs.existsSync(modulePath)) {
     const moduleFiles = glob.sync("**/*", { cwd: modulePath, nodir: true });
     moduleFiles.forEach((file) => {

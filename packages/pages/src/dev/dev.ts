@@ -87,10 +87,7 @@ export const devCommand = (program: Command) => {
       "Creates features.json, generates test data, " +
         "and runs a custom local development server that is backed by Vite."
     )
-    .option(
-      "--scope <string>",
-      "The subfolder to scope the served templates from"
-    )
+    .option("--scope <string>", "The subfolder to scope from")
     .option("--local", "Disables dynamically generated test data")
     .option(
       "--prod-url",
