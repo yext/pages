@@ -7,7 +7,6 @@ import { convertToPosixPath } from "../../common/src/template/paths.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
-import { addResponseHeadersToConfigYaml } from "../../util/editConfigYaml.js";
 import SourceFileParser, {
   createTsMorphProject,
 } from "../../common/src/parsers/sourceFileParser.js";
@@ -16,11 +15,6 @@ import postcss from "postcss";
 import nested from "postcss-nested";
 import { createModuleLogger } from "../../common/src/module/internal/logger.js";
 import { getModuleName } from "../../common/src/module/internal/getModuleName.js";
-
-const moduleResponseHeaderProps = {
-  headerKey: "Access-Control-Allow-Origin",
-  headerValues: ["*"],
-};
 
 type FileInfo = {
   path: string;
@@ -34,8 +28,7 @@ export const buildModules = async (
     return;
   }
 
-  const { rootFolders, subfolders, envVarConfig, scope } =
-    projectStructure.config;
+  const { rootFolders, subfolders, envVarConfig } = projectStructure.config;
   const outdir = path.join(rootFolders.dist, subfolders.modules);
 
   const filepaths: { [s: string]: FileInfo } = {};
@@ -76,20 +69,6 @@ export const buildModules = async (
       }
       loggerInfo(msg, options);
     };
-
-    // For each module, add response header to config.yaml.
-    // Users can manually adjust headerKey and headerValue in their config.yaml.
-    // As long as pathPattern matches, it won't be overwitten.
-    addResponseHeadersToConfigYaml(
-      projectStructure,
-      {
-        pathPattern: scope
-          ? `^modules/${scope}/${moduleName}.*`
-          : `^modules/${moduleName}.*`,
-        ...moduleResponseHeaderProps,
-      },
-      "# The ^modules/ header allows access to your modules from other sites\n"
-    );
 
     await build({
       customLogger: logger,
