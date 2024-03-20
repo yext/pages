@@ -145,6 +145,8 @@ export const formatServing = (servingJson: any) => {
 const migrateSiteMap = async (configYamlPath: string, sitemapPath: string) => {
   const sitemapJson = readJsonSync(sitemapPath);
   if (sitemapJson !== null) {
+    sitemapJson.excludeList = sitemapJson["exclude_list"];
+    sitemapJson.exclude_list = undefined;
     console.info(`migrating site map from ${sitemapPath} to ${configYamlPath}`);
     writeYamlSync(configYamlPath, "sitemap", sitemapJson);
   }
