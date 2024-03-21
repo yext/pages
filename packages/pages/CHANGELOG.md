@@ -1,3 +1,27 @@
+#### 1.1.0-beta.1 (2024-03-21)
+
+##### Chores
+
+* **deps:**  update non-major dependencies (#492) (a1cf300b)
+
+##### New Features
+
+*  support scope with modules (#502) (7c7c4c02)
+* **dev:**  add widgets to dev mode (#497) (c2e2d1d2)
+* **scaffold:**  scaffold modules (#494) (20462260)
+* **plugin:**  add getAuthScope and pass to GeneratedPage (#495) (d9d14ee6)
+
+##### Bug Fixes
+
+* **dev:**
+  *  adjust GTD logic and pass scope (#504) (9d486f2c)
+  *  find correct document by slug (#498) (435beede)
+* **upgrade:**  exclude_list to excludeList (#503) (c578bd68)
+* **plugin:**  fixed logger error during build (#501) (00523a44)
+* **scaffold:**
+  *  include .jsx in tailwind (#500) (0186b912)
+  *  update scaffold command to point tailwind to ./src/modules (#499) (d9b01fe1)
+
 #### 1.1.0-beta.0 (2024-02-29)
 
 ##### Documentation Changes
