@@ -70,22 +70,20 @@ export const generateTestDataForSlug = async (
   args.push("--slug", `"${slug}"`);
 
   const slugFields = new Set<string>();
-  let shouldAddDefaultSlugField = false;
   templateModuleCollection.forEach((templateModule) => {
+    // We don't want to add the default "slug" field when no entity templates need it
+    if (templateModule.config.templateType == "static") {
+      return;
+    }
     const slugField = templateModule?.config?.slugField;
     if (slugField) {
       slugFields.add(slugField);
     } else {
-      shouldAddDefaultSlugField = true;
+      slugFields.add("slug");
     }
   });
 
-  if (slugFields.size !== 0) {
-    if (shouldAddDefaultSlugField) {
-      slugFields.add("slug");
-    }
-    args.push("--slugFields", Array.from(slugFields).toString());
-  }
+  args.push("--slugFields", Array.from(slugFields).toString());
 
   const parsedData = await spawnTestDataCommand(stdout, "yext", args);
 
@@ -270,7 +268,9 @@ const getCommonArgs = (
 
   if (projectStructure.config.scope) {
     args.push("--hostname", projectStructure.config.scope);
+    args.push("--scope", projectStructure.config.scope);
   }
+
   return args;
 };
 
@@ -309,9 +309,17 @@ const getDocumentBySlug = (
     return parsedData;
   }
 
+  // Filter out any non-entity pages
+  const filteredDocuments: any[] = parsedData.map(
+    (document) => !!document?.__?.entityPageSet
+  );
+  if (filteredDocuments.length === 1) {
+    return filteredDocuments[0];
+  }
+
   // Find the slugField where the slug value matches
   const matchingSlugFieldsSet: Set<string> = new Set();
-  for (const document of parsedData) {
+  for (const document of filteredDocuments) {
     for (const slugField of slugFields) {
       if (document[slugField] === slug) {
         matchingSlugFieldsSet.add(slugField);
