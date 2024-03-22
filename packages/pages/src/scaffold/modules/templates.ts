@@ -5,8 +5,9 @@ export const moduleCode = (
   useTailwind: boolean
 ): string => {
   const tailwind = useTailwind ? ` className="tailwind"` : ``;
-  const formattedModuleName =
-    moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
+  const formattedModuleName = moduleName
+    .replace(/[-]+(\w)/g, (_, char) => char.toUpperCase()) // if there's a hyphen, remove and make PascalCase
+    .replace(/^\w/, (char) => char.toUpperCase()); // first char is uppercased
 
   return `import { Module, ModuleConfig, ModuleProps } from "@yext/pages/*";
 import { AnalyticsProvider } from "@yext/pages-components";

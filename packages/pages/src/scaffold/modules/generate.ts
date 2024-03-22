@@ -29,7 +29,8 @@ export const generateModule = async (
       name: "moduleName",
       message: "What would you like to name your Module?",
       validate: (moduleName) =>
-        validateModuleName(moduleName, projectStructure),
+        validateModuleName(moduleName, projectStructure) ||
+        "Please ensure the name provided isn't already used and is valid.",
     },
     {
       type: "confirm",
@@ -79,8 +80,13 @@ export const generateModule = async (
   );
 };
 
-// Ensures moduleName isn't used already in a modulePath and the name starts with
-// an alphabetic character
+/**
+ * Validates the following:
+ *  moduleName isn't used already in a modulePath
+ *  the name starts with an alphabetic character
+ *  the name has no spaces
+ *  the name only contains alphanumeric characters, hyphens, underscores, or dollar signs.
+ */
 const validateModuleName = (
   moduleName: string,
   projectStructure: ProjectStructure
@@ -92,7 +98,11 @@ const validateModuleName = (
   if (fs.existsSync(modulePath)) {
     return false;
   }
-  return /^[a-zA-Z]+$/.test(moduleName.charAt(0));
+  return (
+    /^[a-zA-Z]+$/.test(moduleName.charAt(0)) &&
+    !/\s/.test(moduleName) &&
+    /^[0-9a-zA-Z_$-]+$/.test(moduleName)
+  );
 };
 
 function handleCancel(moduleName: string, projectStructure: ProjectStructure) {
