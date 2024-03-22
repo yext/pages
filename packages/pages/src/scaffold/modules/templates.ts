@@ -69,10 +69,9 @@ export const indexCssCode = (useTailwind: boolean): string => {
   return useTailwind
     ? `.tailwind {
   @tailwind base;
+  @tailwind components;
+  @tailwind utilities;  
 }
-
-@tailwind components;
-@tailwind utilities;  
 `
     : ``;
 };
