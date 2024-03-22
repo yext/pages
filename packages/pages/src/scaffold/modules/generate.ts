@@ -98,12 +98,16 @@ const validateModuleName = (
   if (fs.existsSync(modulePath)) {
     return false;
   }
-  return (
-    /^[a-zA-Z]+$/.test(moduleName.charAt(0)) &&
-    !/\s/.test(moduleName) &&
-    /^[0-9a-zA-Z_$-]+$/.test(moduleName)
-  );
+  return validateModuleNameFormat(moduleName);
 };
+
+export function validateModuleNameFormat(moduleName: string): boolean {
+  return (
+    /^[a-zA-Z]+$/.test(moduleName.charAt(0)) && // moduleName starts with alphabetic character
+    !/\s/.test(moduleName) && // moduleName doesn't contain spaces
+    /^[0-9a-zA-Z_$-]+$/.test(moduleName) // moduleName only has alphanumeric characters, hyphens, underscores, or dollar signs
+  );
+}
 
 function handleCancel(moduleName: string, projectStructure: ProjectStructure) {
   const modulePath = projectStructure.getModulePaths(moduleName)[0].path;
