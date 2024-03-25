@@ -1,10 +1,10 @@
 import path from "path";
 import fs from "fs";
 import { readdir } from "fs/promises";
-import { findTemplateModuleInternal } from "./findTemplateModuleInternal.js";
 import { ViteDevServer } from "vite";
 import { validateGetPathValue } from "../../../common/src/template/internal/validateGetPathValue.js";
 import { logWarning } from "../../../util/logError.js";
+import { loadTemplateModuleCollectionUsingVite } from "../../../common/src/template/loader/loader.js";
 
 const LOCAL_DATA_PATH = "localData";
 
@@ -61,6 +61,11 @@ export const getLocalDataManifest = async (
     }
   }
 
+  const templateModuleCollection = await loadTemplateModuleCollectionUsingVite(
+    vite,
+    templateFilepaths
+  );
+
   const staticPaths: string[] = [];
   for (const fileName of dir) {
     const data = JSON.parse(
@@ -78,11 +83,7 @@ export const getLocalDataManifest = async (
       continue;
     }
 
-    const templateModuleInternal = await findTemplateModuleInternal(
-      vite,
-      async (t) => featureName === t.config.name,
-      templateFilepaths
-    );
+    const templateModuleInternal = templateModuleCollection.get(featureName);
 
     const uid = data.uid?.toString();
     const entityId = data.id?.toString();
