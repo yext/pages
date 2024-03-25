@@ -60,7 +60,7 @@ export type TemplateModuleCollection = Map<
 >;
 
 /**
- * Simlar to loadTemplateModules above but reuses and existing Vite dev server.
+ * Simlar to loadTemplateModules above but reuses an existing Vite dev server.
  */
 export const loadTemplateModuleCollectionUsingVite = async (
   vite: ViteDevServer,
