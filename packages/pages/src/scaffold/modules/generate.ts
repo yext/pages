@@ -14,6 +14,12 @@ import {
 } from "../../upgrade/pagesUpdater.js";
 import { logErrorAndExit } from "../../util/logError.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
+import { addResponseHeadersToConfigYaml } from "../../util/editConfigYaml.js";
+
+const moduleResponseHeaderProps = {
+  headerKey: "Access-Control-Allow-Origin",
+  headerValues: ["*"],
+};
 
 /**
  * generateModule asks questions via stdout and generates files based on
@@ -73,6 +79,20 @@ export const generateModule = async (
   } catch (error) {
     logErrorAndExit(error);
   }
+
+  // Formats src/modules/my-module to ^modules/my-module
+  const configPathPattern = modulePath.replace(
+    `${projectStructure.config.rootFolders.source}${path.sep}`,
+    "^"
+  );
+  addResponseHeadersToConfigYaml(
+    projectStructure,
+    {
+      pathPattern: `${configPathPattern}.*`,
+      ...moduleResponseHeaderProps,
+    },
+    "# The ^modules/ header allows access to your modules from other sites\n"
+  );
 
   process.removeListener("SIGINT", () => handleCancel);
   console.log(
