@@ -1,12 +1,17 @@
 import { ProjectStructure } from "../../common/src/project/structure.js";
 
+export const formatModuleName = (moduleName: string): string => {
+  return moduleName
+    .replace(/[-]+(\w)/g, (_, char) => char.toUpperCase()) // if there's a hyphen, remove and make PascalCase
+    .replace(/^\w/, (char) => char.toUpperCase()); // first char is uppercased
+};
+
 export const moduleCode = (
   moduleName: string,
   useTailwind: boolean
 ): string => {
   const tailwind = useTailwind ? ` className="tailwind"` : ``;
-  const formattedModuleName =
-    moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
+  const formattedModuleName = formatModuleName(moduleName);
 
   return `import { Module, ModuleConfig, ModuleProps } from "@yext/pages/*";
 import { AnalyticsProvider } from "@yext/pages-components";
