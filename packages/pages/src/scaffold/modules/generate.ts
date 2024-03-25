@@ -81,7 +81,7 @@ export const generateModule = async (
 
   // Formats src/modules/my-module to ^modules/my-module
   const configPathPattern = modulePath.replace(
-    new RegExp(`^${projectStructure.config.rootFolders.source}[/\\\\]?`),
+    `${projectStructure.config.rootFolders.source}${path.sep}`,
     "^"
   );
   addResponseHeadersToConfigYaml(
