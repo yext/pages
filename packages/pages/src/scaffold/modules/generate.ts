@@ -98,10 +98,10 @@ const validateModuleName = (
   if (fs.existsSync(modulePath)) {
     return false;
   }
-  return validateModuleNameFormat(moduleName);
+  return isValidModuleName(moduleName);
 };
 
-export function validateModuleNameFormat(moduleName: string): boolean {
+export function isValidModuleName(moduleName: string): boolean {
   return (
     /^[a-zA-Z]+$/.test(moduleName.charAt(0)) && // moduleName starts with alphabetic character
     !/\s/.test(moduleName) && // moduleName doesn't contain spaces
