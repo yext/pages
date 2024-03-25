@@ -11,15 +11,13 @@ import path from "path";
 import fs from "fs";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
-import {
-  convertTemplateModuleToTemplateModuleInternal,
-  TemplateModuleInternal,
-} from "../../../common/src/template/internal/types.js";
+import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { ViteDevServer } from "vite";
-import { loadViteModule } from "./loadViteModule.js";
-import { TemplateModule } from "../../../common/src/template/types.js";
 import { getTemplatesConfig } from "../../../generate/templates/createTemplatesJson.js";
-import { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
+import {
+  TemplateModuleCollection,
+  loadTemplateModuleCollectionUsingVite,
+} from "../../../common/src/template/loader/loader.js";
 import runSubprocess from "../../../util/runSubprocess.js";
 import YAML from "yaml";
 
@@ -93,28 +91,6 @@ export const generateTestDataForSlug = async (
     Array.from(slugFields),
     templateModuleCollection
   );
-};
-
-const loadTemplateModuleCollectionUsingVite = async (
-  vite: ViteDevServer,
-  templateFilepaths: string[]
-): Promise<TemplateModuleCollection> => {
-  const templateModules: TemplateModuleInternal<any, any>[] = await Promise.all(
-    templateFilepaths.map(async (templateFilepath) => {
-      const templateModule = await loadViteModule<TemplateModule<any, any>>(
-        vite,
-        templateFilepath
-      );
-      return convertTemplateModuleToTemplateModuleInternal(
-        templateFilepath,
-        templateModule,
-        false
-      );
-    })
-  );
-  return templateModules.reduce((prev, module) => {
-    return prev.set(module.config.name, module);
-  }, new Map());
 };
 
 export const generateTestDataForPage = async (
