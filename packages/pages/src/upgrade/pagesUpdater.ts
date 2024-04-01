@@ -440,7 +440,7 @@ export const installDependencies = async () => {
 };
 
 // Note that Node 20 <20.2.0 leads to build errors: `Unexpected early exit.`
-const NODE_ENGINES = "^18.40.0 || >=20.2.0";
+const NODE_ENGINES = "^18.4.0 || >=20.2.0";
 /**
  * Update package engines to latest supported node versions.
  */
