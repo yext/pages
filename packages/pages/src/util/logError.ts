@@ -10,8 +10,12 @@ import { removeHydrationClientFiles } from "../common/src/template/client.js";
  * @public
  */
 export const logErrorAndExit = (error: string | any) => {
-  console.error(colors.red(`ERROR: ${error}`));
+  logError(error);
   process.exit(1);
+};
+
+export const logError = (error: string | any) => {
+  console.error(colors.red(`ERROR: ${error}`));
 };
 
 export const logWarning = (warning: string) => {
