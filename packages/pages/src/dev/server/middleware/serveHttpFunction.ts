@@ -5,6 +5,7 @@ import {
   Site,
   HttpFunction,
 } from "../../../common/src/function/types.js";
+import { logError } from "../../../util/logError.js";
 
 export const serveHttpFunction = async (
   req: Request,
@@ -22,11 +23,18 @@ export const serveHttpFunction = async (
   };
 
   if (serverlessFunction.default) {
-    const fnRes = await (serverlessFunction.default as HttpFunction)(argument);
-    res
-      .status(fnRes.statusCode)
-      .header({ ...fnRes.headers, "Content-Type": "application/json" })
-      .send(fnRes.body);
+    try {
+      const fnRes = await (serverlessFunction.default as HttpFunction)(
+        argument
+      );
+      res
+        .status(fnRes.statusCode)
+        .header({ ...fnRes.headers, "Content-Type": "application/json" })
+        .send(fnRes.body);
+    } catch (e: any) {
+      logError(e.message);
+      next();
+    }
   } else {
     next();
   }
