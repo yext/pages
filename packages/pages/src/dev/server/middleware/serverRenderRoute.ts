@@ -6,7 +6,7 @@ import {
   parseAsEntityUrl,
   getLocaleFromUrl,
 } from "../ssr/parseNonProdUrl.js";
-import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
+import { findTemplateModuleInternalByName } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import sendAppHTML from "./sendAppHTML.js";
@@ -14,8 +14,8 @@ import { TemplateModuleInternal } from "../../../common/src/template/internal/ty
 import { convertTemplateConfigInternalToFeaturesConfig } from "../../../common/src/feature/features.js";
 import { generateTestDataForPage } from "../ssr/generateTestData.js";
 import { entityPageCriterion, getLocalData } from "../ssr/getLocalData.js";
-import { findStaticTemplateModuleAndDocByTemplateName } from "../ssr/findMatchingStaticTemplate.js";
 import send404 from "./send404.js";
+import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -34,13 +34,12 @@ export const serverRenderRoute =
 
       const { staticURL } = parseAsStaticUrl(url);
 
-      const staticTemplateAndProps =
-        await findStaticTemplateModuleAndDocByTemplateName(
-          vite,
-          templateFilepaths,
-          staticURL,
-          locale
-        );
+      const staticTemplateAndProps = await findStaticTemplateModuleAndDocBySlug(
+        vite,
+        templateFilepaths,
+        staticURL,
+        locale
+      );
 
       if (staticTemplateAndProps) {
         await sendAppHTML(
@@ -60,9 +59,9 @@ export const serverRenderRoute =
         return;
       }
 
-      const templateModuleInternal = await findTemplateModuleInternal(
+      const templateModuleInternal = await findTemplateModuleInternalByName(
         vite,
-        async (t) => feature === t.config.name,
+        feature,
         templateFilepaths
       );
       if (!templateModuleInternal) {
@@ -128,7 +127,9 @@ const getDocument = async (
     );
   }
 
-  return getLocalData(
-    entityPageCriterion(entityId, templateModuleInternal.config.name, locale)
-  );
+  return (
+    await getLocalData(
+      entityPageCriterion(entityId, templateModuleInternal.config.name, locale)
+    )
+  )?.document;
 };

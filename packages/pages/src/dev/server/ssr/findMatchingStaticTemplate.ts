@@ -1,25 +1,30 @@
 import { ViteDevServer } from "vite";
 import {
   getAllLocalData,
-  getLocalData,
+  readLocalDataFile,
   staticPageCriterion,
 } from "./getLocalData.js";
-import {
-  TemplateModuleInternal,
-  convertTemplateModuleToTemplateModuleInternal,
-} from "../../../common/src/template/internal/types.js";
-import { loadViteModule } from "./loadViteModule.js";
-import {
-  TemplateModule,
-  TemplateRenderProps,
-} from "../../../common/src/template/types.js";
+import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
+import { TemplateRenderProps } from "../../../common/src/template/types.js";
 import { propsLoader } from "./propsLoader.js";
-import { findTemplateModuleInternal } from "./findTemplateModuleInternal.js";
+import { loadTemplateModuleInternal } from "./findTemplateModuleInternal.js";
 
 export type StaticTemplateAndProps = {
   staticTemplateModuleInternal: TemplateModuleInternal<any, any>;
   props: TemplateRenderProps;
 };
+
+type TemplateAndLocalDataPaths = {
+  templateFilePath?: string;
+  localDataFilename?: string;
+  isStatic: boolean;
+};
+
+// A cache of slug to template/localData filepaths to avoid loading everything on every lookup.
+const slugToModuleAndLocalDataPaths = new Map<
+  string,
+  TemplateAndLocalDataPaths
+>();
 
 /**
  * Loops through all static templates. For each, finds all localData static files
@@ -35,34 +40,68 @@ export type StaticTemplateAndProps = {
 export const findStaticTemplateModuleAndDocBySlug = async (
   devserver: ViteDevServer,
   templateFilepaths: string[],
-  slug: string
+  slug: string,
+  locale?: string
 ): Promise<StaticTemplateAndProps | void> => {
+  // If locale is passed it's being used in noProdUrl mode so treat slug as templateName and
+  // locale as part of the slug key.
+  const resolvedSlug = locale ? `${slug}/${locale}` : slug;
+
+  const moduleAndDocPaths = slugToModuleAndLocalDataPaths.get(resolvedSlug);
+  if (moduleAndDocPaths) {
+    // If we've seen this slug and determined it's not for a static template return early
+    if (!moduleAndDocPaths.isStatic) {
+      return;
+    }
+
+    // Freshly load the template and document as they could have changed
+    const templateModuleInternal = await loadTemplateModuleInternal(
+      devserver,
+      moduleAndDocPaths.templateFilePath!
+    );
+
+    const document = readLocalDataFile(moduleAndDocPaths.localDataFilename!);
+
+    const props: TemplateRenderProps = await propsLoader({
+      templateModuleInternal,
+      document: document,
+    });
+
+    if (templateModuleInternal.getPath(props) === slug) {
+      return {
+        staticTemplateModuleInternal: templateModuleInternal,
+        props: props,
+      };
+    }
+  }
+
+  // Cache miss, find the info for the slug
   for (const templateFilepath of templateFilepaths) {
-    const templateModule = await loadViteModule<TemplateModule<any, any>>(
+    const templateModuleInternal = await loadTemplateModuleInternal(
       devserver,
       templateFilepath
     );
-
-    const templateModuleInternal =
-      convertTemplateModuleToTemplateModuleInternal(
-        templateFilepath,
-        templateModule,
-        false
-      );
 
     if (templateModuleInternal.config.templateType !== "static") {
       continue;
     }
 
-    // need to revamp for non-dynamic
-    const docs = await getAllLocalData(
-      staticPageCriterion(templateModuleInternal.config.name)
+    const localDatas = await getAllLocalData(
+      staticPageCriterion(templateModuleInternal.config.name, locale)
     );
 
-    for (const doc of docs) {
+    for (const localData of localDatas) {
       const props: TemplateRenderProps = await propsLoader({
         templateModuleInternal,
-        document: doc,
+        document: localData.document,
+      });
+
+      const resolvedGetPath = templateModuleInternal.getPath(props);
+
+      slugToModuleAndLocalDataPaths.set(resolvedGetPath, {
+        templateFilePath: templateFilepath,
+        localDataFilename: localData.localDataFilename,
+        isStatic: true,
       });
 
       if (templateModuleInternal.getPath(props) === slug) {
@@ -73,41 +112,9 @@ export const findStaticTemplateModuleAndDocBySlug = async (
       }
     }
   }
-};
 
-/**
- * Find the static template based on templateName (which comes from the local
- * url) as well as the corresponding localData document. If neither is found
- * returns undefined.
- */
-export const findStaticTemplateModuleAndDocByTemplateName = async (
-  devserver: ViteDevServer,
-  templateFilepaths: string[],
-  featureName: string,
-  locale: string
-): Promise<StaticTemplateAndProps | void> => {
-  const templateModuleInternal = await findTemplateModuleInternal(
-    devserver,
-    async (t) =>
-      t.config.templateType === "static" && featureName === t.config.name,
-    templateFilepaths
-  );
-  if (!templateModuleInternal) {
-    return;
-  }
-
-  const document = await getLocalData(staticPageCriterion(featureName, locale));
-  if (!document) {
-    return;
-  }
-
-  const props: TemplateRenderProps = await propsLoader({
-    templateModuleInternal,
-    document,
+  // No static templates/files found for this slug, cache it as non-static
+  slugToModuleAndLocalDataPaths.set(resolvedSlug, {
+    isStatic: false,
   });
-
-  return {
-    staticTemplateModuleInternal: templateModuleInternal,
-    props: props,
-  };
 };

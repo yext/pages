@@ -1,7 +1,7 @@
 import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
 import { propsLoader } from "../ssr/propsLoader.js";
-import { findTemplateModuleInternal } from "../ssr/findTemplateModuleInternal.js";
+import { findTemplateModuleInternalByName } from "../ssr/findTemplateModuleInternal.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { TemplateRenderProps } from "../../../common/src/template/types.js";
@@ -58,9 +58,9 @@ export const serverRenderSlugRoute =
       }
 
       const feature = document.__.name;
-      const templateModuleInternal = await findTemplateModuleInternal(
+      const templateModuleInternal = await findTemplateModuleInternalByName(
         vite,
-        async (t) => feature === t.config.name,
+        feature,
         templateFilepaths
       );
       if (!templateModuleInternal) {
