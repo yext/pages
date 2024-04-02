@@ -14,6 +14,7 @@ export interface ModuleConfig
 
 ## Properties
 
-| Property                              | Modifiers | Type   | Description                                                                                  |
-| ------------------------------------- | --------- | ------ | -------------------------------------------------------------------------------------------- |
-| [name?](./pages.moduleconfig.name.md) |           | string | _(Optional)_ Name of the module. If not defined uses the module filename (without extension) |
+| Property                                  | Modifiers | Type   | Description                                                                                  |
+| ----------------------------------------- | --------- | ------ | -------------------------------------------------------------------------------------------- |
+| [domain?](./pages.moduleconfig.domain.md) |           | string | _(Optional)_ Hosted domain for the module. Necessary for use of large static assets.         |
+| [name?](./pages.moduleconfig.name.md)     |           | string | _(Optional)_ Name of the module. If not defined uses the module filename (without extension) |

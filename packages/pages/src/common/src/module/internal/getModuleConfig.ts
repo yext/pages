@@ -10,3 +10,14 @@ export const getModuleName = (modulePath: string): string | undefined => {
   const sfp = new SourceFileParser(modulePath, createTsMorphProject());
   return sfp.getVariablePropertyByName("config", "name")?.replace(/['"`]/g, "");
 };
+
+/**
+ * @param modulePath
+ * @returns domain of module if set by user via ModuleConfig
+ */
+export const getModuleDomain = (modulePath: string): string | undefined => {
+  const sfp = new SourceFileParser(modulePath, createTsMorphProject());
+  return sfp
+    .getVariablePropertyByName("config", "domain")
+    ?.replace(/['"`]/g, "");
+};

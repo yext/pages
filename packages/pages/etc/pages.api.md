@@ -112,6 +112,7 @@ export interface ModuleClientServerRenderTemplates {
 
 // @public
 export interface ModuleConfig {
+  domain?: string;
   name?: string;
 }
 
