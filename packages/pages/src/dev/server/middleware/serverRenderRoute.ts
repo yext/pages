@@ -37,6 +37,7 @@ export const serverRenderRoute =
       const staticTemplateAndProps = await findStaticTemplateModuleAndDocBySlug(
         vite,
         templateFilepaths,
+        false,
         staticURL,
         locale
       );

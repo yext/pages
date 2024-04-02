@@ -31,6 +31,7 @@ export const serverRenderSlugRoute =
       const staticTemplateAndProps = await findStaticTemplateModuleAndDocBySlug(
         vite,
         templateFilepaths,
+        true,
         slug
       );
 

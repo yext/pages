@@ -40,12 +40,13 @@ const slugToModuleAndLocalDataPaths = new Map<
 export const findStaticTemplateModuleAndDocBySlug = async (
   devserver: ViteDevServer,
   templateFilepaths: string[],
-  slug: string,
+  useProdUrls: boolean,
+  slug: string, // treated as templateName when useProdUrls is true
   locale?: string
 ): Promise<StaticTemplateAndProps | void> => {
   // If locale is passed it's being used in noProdUrl mode so treat slug as templateName and
   // locale as part of the slug key.
-  const resolvedSlug = locale ? `${slug}/${locale}` : slug;
+  const resolvedSlug = useProdUrls ? slug : `${slug}/${locale}`;
 
   const moduleAndDocPaths = slugToModuleAndLocalDataPaths.get(resolvedSlug);
   if (moduleAndDocPaths) {
@@ -60,18 +61,30 @@ export const findStaticTemplateModuleAndDocBySlug = async (
       moduleAndDocPaths.templateFilePath!
     );
 
-    const document = readLocalDataFile(moduleAndDocPaths.localDataFilename!);
+    const document = await readLocalDataFile(
+      moduleAndDocPaths.localDataFilename!
+    );
 
     const props: TemplateRenderProps = await propsLoader({
       templateModuleInternal,
       document: document,
     });
 
-    if (templateModuleInternal.getPath(props) === slug) {
-      return {
-        staticTemplateModuleInternal: templateModuleInternal,
-        props: props,
-      };
+    // Use the result of getPath for prodUrls, otherwise use templateName
+    if (useProdUrls) {
+      if (templateModuleInternal.getPath(props) === slug) {
+        return {
+          staticTemplateModuleInternal: templateModuleInternal,
+          props: props,
+        };
+      }
+    } else {
+      if (templateModuleInternal.config.name === slug) {
+        return {
+          staticTemplateModuleInternal: templateModuleInternal,
+          props: props,
+        };
+      }
     }
   }
 
@@ -96,19 +109,27 @@ export const findStaticTemplateModuleAndDocBySlug = async (
         document: localData.document,
       });
 
-      const resolvedGetPath = templateModuleInternal.getPath(props);
-
-      slugToModuleAndLocalDataPaths.set(resolvedGetPath, {
+      slugToModuleAndLocalDataPaths.set(resolvedSlug, {
         templateFilePath: templateFilepath,
         localDataFilename: localData.localDataFilename,
         isStatic: true,
       });
 
-      if (templateModuleInternal.getPath(props) === slug) {
-        return {
-          staticTemplateModuleInternal: templateModuleInternal,
-          props: props,
-        };
+      // Use the result of getPath for prodUrls, otherwise use templateName
+      if (useProdUrls) {
+        if (templateModuleInternal.getPath(props) === slug) {
+          return {
+            staticTemplateModuleInternal: templateModuleInternal,
+            props: props,
+          };
+        }
+      } else {
+        if (templateModuleInternal.config.name === slug) {
+          return {
+            staticTemplateModuleInternal: templateModuleInternal,
+            props: props,
+          };
+        }
       }
     }
   }
