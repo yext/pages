@@ -1,8 +1,5 @@
 import { build, Plugin } from "vite";
-import {
-  ProjectStructure,
-  Subfolders,
-} from "../../common/src/project/structure.js";
+import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
 import fs from "node:fs";
@@ -97,6 +94,15 @@ export const buildModules = async (
           "css-syntax-error": "silent",
         },
       },
+      experimental: {
+        renderBuiltUrl(filename, { type }) {
+          const domain = getModuleDomain(fileInfo.path);
+          if (type === "asset" && domain) {
+            return `${domain}/${subfolders.modules}/` + filename;
+          }
+          return filename;
+        },
+      },
       build: {
         chunkSizeWarningLimit: 2000,
         emptyOutDir: false,
@@ -123,42 +129,7 @@ export const buildModules = async (
         }),
       ],
     });
-    editAssetsPaths(
-      `${rootFolders.dist}/${subfolders.modules}/${moduleName}.umd.js`,
-      getModuleDomain(fileInfo.path),
-      subfolders
-    );
   }
-};
-
-/**
- * Replaces asset paths with absolute paths based on hosted domain.
- * Ex. if the asset path is "src/assets/foo.svg", it'll be changed to
- * "<hostedDomain>/modules/assets/foo.svg".
- *
- * @param umdPath dist/modules/<moduleName>.umd.js
- * @param domain if given by user
- * @param subfolders of the ProjectStructure
- */
-const editAssetsPaths = (
-  umdPath: string,
-  domain: string | undefined,
-  subfolders: Subfolders
-) => {
-  if (!domain) {
-    return;
-  }
-  try {
-    const data = fs.readFileSync(umdPath, "utf-8");
-    const updatedContent = data.replace(
-      new RegExp(`/${subfolders.assets}/`, "g"),
-      `${domain}/${subfolders.modules}/${subfolders.assets}/`
-    );
-    fs.writeFileSync(umdPath, updatedContent);
-  } catch (error) {
-    throw new Error(`Cannot resolve asset path in ${umdPath}`);
-  }
-  return;
 };
 
 const wrappedCode = (moduleName: string, containerName: string): string => {
