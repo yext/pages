@@ -286,7 +286,7 @@ const getDocumentBySlug = (
   }
 
   // Filter out any non-entity pages
-  const filteredDocuments: any[] = parsedData.map(
+  const filteredDocuments: any[] = parsedData.filter(
     (document) => !!document?.__?.entityPageSet
   );
   if (filteredDocuments.length === 1) {
