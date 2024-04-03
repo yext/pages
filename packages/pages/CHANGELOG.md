@@ -1,3 +1,25 @@
+#### 1.1.0-beta.2 (2024-04-03)
+
+##### New Features
+
+* **dev:**  upgrade script uses engine 18.4.0 (#510) (4f82368d)
+* **scaffold:**  add response headers to config.yaml during scaffold (#508) (b9f64d9e)
+
+##### Bug Fixes
+
+* **dev:**
+  *  filtering documents by slug (#513) (7530a0f5)
+  *  serverless functions dev server crash (#511) (b263b2bb)
+* **scaffold:**
+  *  validate + format module name from user (#507) (c0968c70)
+  *  edit tailwind in modules templates (#506) (e774cacb)
+
+##### Performance Improvements
+
+* **dev:**
+  *  speed up page loads and alleviate memory pressure (#512) (3a1f6fc1)
+  *  optimize loading index page (#509) (e8553cdf)
+
 #### 1.1.0-beta.1 (2024-03-21)
 
 ##### Chores

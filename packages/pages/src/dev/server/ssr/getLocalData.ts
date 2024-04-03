@@ -140,12 +140,33 @@ export const getLocalDataManifest = async (
   return localDataManifest;
 };
 
+export const readLocalDataFile = async (
+  localDataFilepath: string
+): Promise<Record<string, any> | undefined> => {
+  try {
+    return JSON.parse(
+      fs
+        .readFileSync(
+          path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${localDataFilepath}`)
+        )
+        .toString()
+    );
+  } catch (err: any) {
+    return;
+  }
+};
+
+export type LocalData = {
+  localDataFilename: string;
+  document: Record<string, any>;
+};
+
 /**
  * Reads through all localData and returns the first document that matches criterion.
  */
 export const getLocalData = async (
   criterion: (data: any) => boolean
-): Promise<Record<string, any> | undefined> => {
+): Promise<LocalData | undefined> => {
   try {
     const dir = await readdir(LOCAL_DATA_PATH);
 
@@ -158,7 +179,10 @@ export const getLocalData = async (
           .toString()
       );
       if (criterion(data)) {
-        return data;
+        return {
+          localDataFilename: fileName,
+          document: data,
+        };
       }
     }
   } catch (err: any) {
@@ -175,7 +199,7 @@ export const getLocalData = async (
  */
 export const getAllLocalData = async (
   criterion: (data: any) => boolean
-): Promise<Record<string, any>[]> => {
+): Promise<LocalData[]> => {
   try {
     const dir = await readdir(LOCAL_DATA_PATH);
     return dir
@@ -188,10 +212,17 @@ export const getAllLocalData = async (
             .toString()
         );
         if (criterion(data)) {
-          return data;
+          return {
+            localDataFilename: fileName,
+            document: data,
+          };
         }
+        return {
+          localDataFilename: "",
+          document: undefined,
+        };
       })
-      .filter((data) => data !== undefined);
+      .filter((data) => data.document !== undefined);
   } catch (err: any) {
     if (err.code === "ENOENT") {
       throw "No localData exists. Please run `yext pages generate-test-data`";
@@ -265,5 +296,5 @@ export const getLocalEntityPageDataForSlug = async (slug: string) => {
       `Multiple localData files match slug: ${slug}, expected only a single file`
     );
   }
-  return localDataForSlug[0];
+  return localDataForSlug[0].document;
 };
