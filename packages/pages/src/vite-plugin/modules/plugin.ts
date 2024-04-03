@@ -98,7 +98,7 @@ export const buildModules = async (
         renderBuiltUrl(filename, { type }) {
           const domain = getModuleDomain(fileInfo.path);
           if (type === "asset" && domain) {
-            return `${domain}/${subfolders.modules}/` + filename;
+            return `${domain}/${subfolders.modules}/${filename}`;
           }
           return filename;
         },
