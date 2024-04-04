@@ -1,6 +1,7 @@
 import { ProjectStructureConfig } from "../project/structure.js";
 import { HeadConfig } from "./head.js";
 import React from "react";
+import { RedirectSource } from "../redirect/types.js";
 
 /**
  * The type to include in any template file. It defines the available functions and fields that are available
@@ -41,7 +42,9 @@ export interface TemplateModule<
  *
  * @public
  */
-export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
+export type GetRedirects<T extends TemplateProps> = (
+  props: T
+) => (RedirectSource | string)[];
 
 /**
  * The type definition for the template's transformProps function. Can be used

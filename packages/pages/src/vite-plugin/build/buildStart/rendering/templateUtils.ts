@@ -11,6 +11,7 @@ import {
   convertTemplateModuleToTemplateModuleInternal,
   TemplateModuleInternal,
 } from "../../../../common/src/template/internal/types.js";
+import { RedirectSource } from "../../../../common/src/redirect/types.js";
 import { ProjectStructure } from "../../../../common/src/project/structure.js";
 import { validateGetPathValue } from "../../../../common/src/template/internal/validateGetPathValue.js";
 
@@ -97,7 +98,7 @@ const importRenderTemplate = async (
 export type GeneratedPage = {
   path: string;
   content?: string;
-  redirects: string[];
+  redirects: (RedirectSource | string)[];
   authScope?: string;
 };
 
