@@ -11,5 +11,8 @@ export const scopedViteConfigPath = (scope?: string) => {
     }
   }
 
-  return VITE_CONFIG;
+  const viteConfigPath = path.resolve(VITE_CONFIG);
+  if (existsSync(viteConfigPath)) {
+    return viteConfigPath;
+  }
 };
