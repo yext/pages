@@ -3,11 +3,13 @@ import { ProjectStructure } from "../project/structure.js";
 import { processEnvVariables } from "../../../util/processEnvVariables.js";
 import { pathToFileURL } from "node:url";
 import { loadViteModule } from "../../../dev/server/ssr/loadViteModule.js";
+import { scopedViteConfigPath } from "../../../util/viteConfig.js";
 
 export const getViteServerConfig = (
   projectStructure: ProjectStructure
 ): InlineConfig => {
   return {
+    configFile: scopedViteConfigPath(projectStructure.config.scope),
     server: {
       middlewareMode: true,
     },
