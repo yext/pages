@@ -40,7 +40,7 @@ export interface StreamConfig {
 /**
  * Converts a {@link TemplateConfig.config.stream} into a valid {@link StreamConfig}.
  */
-export const convertTemplateConfigToStreamConfig = (
+export const convertConfigToStreamConfig = (
   // config is optional for a user to set
   config: TemplateConfigInternal | undefined
 ): StreamConfig | void => {

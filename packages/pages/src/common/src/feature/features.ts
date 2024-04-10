@@ -1,5 +1,5 @@
 import { TemplateConfigInternal } from "../template/internal/types.js";
-import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
+import { convertConfigToStreamConfig, StreamConfig } from "./stream.js";
 
 /**
  * The shape of data that represents a features.json file, used by Yext Pages.
@@ -18,7 +18,7 @@ export const convertTemplateConfigInternalToFeaturesConfig = (
   config: TemplateConfigInternal
 ): FeaturesConfig => {
   const featureConfig = convertTemplateConfigToFeatureConfig(config);
-  const streamConfig = convertTemplateConfigToStreamConfig(config);
+  const streamConfig = convertConfigToStreamConfig(config);
 
   return {
     features: [featureConfig],

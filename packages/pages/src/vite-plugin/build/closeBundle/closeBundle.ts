@@ -19,6 +19,10 @@ import { logErrorAndClean } from "../../../util/logError.js";
 import { isUsingConfig } from "../../../util/config.js";
 import { createArtifactsJson } from "../../../generate/artifacts/createArtifactsJson.js";
 import { Path } from "../../../common/src/project/path.js";
+import {
+  loadRedirectModules,
+  RedirectModuleCollection,
+} from "../../../common/src/redirect/loader/loader.js";
 
 export default (projectStructure: ProjectStructure) => {
   return {
@@ -28,6 +32,7 @@ export default (projectStructure: ProjectStructure) => {
         startLog: "Validating template modules",
       });
       let templateModules: TemplateModuleCollection;
+      let redirectModules: RedirectModuleCollection;
 
       const { rootFolders, subfolders } = projectStructure.config;
 
@@ -53,12 +58,50 @@ export default (projectStructure: ProjectStructure) => {
                 path.resolve(rootFolders.dist, subfolders.modules),
                 "**"
               ),
+              path.join(
+                path.resolve(rootFolders.dist, subfolders.redirects),
+                "**"
+              ),
+            ],
+          }
+        );
+        const redirectBundles = glob.sync(
+          convertToPosixPath(
+            path.join(
+              path.resolve(
+                rootFolders.dist,
+                subfolders.assets,
+                subfolders.serverBundle
+              ),
+              "**/*.js"
+            )
+          ),
+          {
+            ignore: [
+              path.join(
+                path.resolve(rootFolders.dist, subfolders.serverlessFunctions),
+                "**"
+              ),
+              path.join(
+                path.resolve(rootFolders.dist, subfolders.modules),
+                "**"
+              ),
+              path.join(
+                path.resolve(rootFolders.dist, subfolders.templates),
+                "**"
+              ),
             ],
           }
         );
 
         templateModules = await loadTemplateModules(
           serverBundles,
+          false,
+          true,
+          projectStructure
+        );
+        redirectModules = await loadRedirectModules(
+          redirectBundles,
           false,
           true,
           projectStructure
@@ -94,6 +137,7 @@ export default (projectStructure: ProjectStructure) => {
         try {
           createTemplatesJsonFromModule(
             templateModules,
+            redirectModules,
             projectStructure,
             "TEMPLATES"
           );
@@ -107,6 +151,7 @@ export default (projectStructure: ProjectStructure) => {
         try {
           createTemplatesJsonFromModule(
             templateModules,
+            redirectModules,
             projectStructure,
             "FEATURES"
           );
