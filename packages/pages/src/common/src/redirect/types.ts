@@ -1,4 +1,4 @@
-import { TemplateConfig, TemplateProps } from "../template/types.js";
+import { TemplateProps, Stream } from "../template/types.js";
 
 export interface RedirectSource {
   source: string;
@@ -13,9 +13,27 @@ export interface RedirectSource {
  */
 export interface RedirectModule<T extends TemplateProps> {
   /** The exported config function */
-  config?: TemplateConfig;
+  config?: RedirectConfig;
+  /** The exported GetDestination function */
   getDestination: GetDestination<T>;
+  /** The exported GetSources function */
   getSources: GetSources<T>;
+}
+
+/**
+ * The exported `config` function's definition.
+ *
+ * @public
+ */
+export interface RedirectConfig {
+  /** The name of the redirect. If not defined uses the redirect filename (without extension) */
+  name?: string;
+  /** The stream that this redirect uses. If a stream is defined the streamId is not required. */
+  streamId?: string;
+  /** The stream configuration used by the redirect */
+  stream?: Stream;
+  /** The field to use as the slug for dynamic dev mode */
+  slugField?: string;
 }
 
 /**

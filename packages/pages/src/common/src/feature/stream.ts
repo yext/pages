@@ -1,4 +1,5 @@
 import { TemplateConfigInternal } from "../template/internal/types.js";
+import { RedirectConfigInternal } from "../redirect/internal/types.js";
 
 /**
  * The shape of data that represents a stream configuration.
@@ -40,9 +41,28 @@ export interface StreamConfig {
 /**
  * Converts a {@link TemplateConfig.config.stream} into a valid {@link StreamConfig}.
  */
-export const convertConfigToStreamConfig = (
+export const convertTemplateConfigToStreamConfig = (
   // config is optional for a user to set
   config: TemplateConfigInternal | undefined
+): StreamConfig | void => {
+  if (!config) {
+    return;
+  }
+  if (config.stream) {
+    return {
+      ...config.stream,
+      source: "knowledgeGraph",
+      destination: "pages",
+    };
+  }
+};
+
+/**
+ * Converts a {@link RedirectConfig.config.stream} into a valid {@link StreamConfig}.
+ */
+export const convertRedirectConfigToStreamConfig = (
+  // config is optional for a user to set
+  config: RedirectConfigInternal | undefined
 ): StreamConfig | void => {
   if (!config) {
     return;

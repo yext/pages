@@ -23,6 +23,7 @@ import {
   loadRedirectModules,
   RedirectModuleCollection,
 } from "../../../common/src/redirect/loader/loader.js";
+import { getRedirectFilePathsFromProjectStructure } from "../../../common/src/redirect/internal/getRedirectFilepaths.js";
 
 export default (projectStructure: ProjectStructure) => {
   return {
@@ -65,45 +66,19 @@ export default (projectStructure: ProjectStructure) => {
             ],
           }
         );
-        const redirectBundles = glob.sync(
-          convertToPosixPath(
-            path.join(
-              path.resolve(
-                rootFolders.dist,
-                subfolders.assets,
-                subfolders.serverBundle
-              ),
-              "**/*.js"
-            )
-          ),
-          {
-            ignore: [
-              path.join(
-                path.resolve(rootFolders.dist, subfolders.serverlessFunctions),
-                "**"
-              ),
-              path.join(
-                path.resolve(rootFolders.dist, subfolders.modules),
-                "**"
-              ),
-              path.join(
-                path.resolve(rootFolders.dist, subfolders.templates),
-                "**"
-              ),
-            ],
-          }
-        );
-
         templateModules = await loadTemplateModules(
           serverBundles,
           false,
           true,
           projectStructure
         );
+
+        const redirectPaths =
+          getRedirectFilePathsFromProjectStructure(projectStructure);
         redirectModules = await loadRedirectModules(
-          redirectBundles,
-          false,
+          redirectPaths,
           true,
+          false,
           projectStructure
         );
 

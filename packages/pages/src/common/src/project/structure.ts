@@ -263,11 +263,10 @@ export class ProjectStructure {
   };
 
   /**
-   * @param manifest should only be provided if fs doesn't work in the env.
-   * @returns the list of of src/redirects, taking scope into account. If a scope is defined and
+   * @returns the list of src/redirects, taking scope into account. If a scope is defined and
    * the scoped path exists, then both the scoped and non-scoped redirect paths are returned.
    */
-  getRedirectPaths = (manifest?: Manifest) => {
+  getRedirectPaths = () => {
     // src/redirects
     const redirectsRoot = pathLib.join(
       this.config.rootFolders.source,
@@ -278,15 +277,6 @@ export class ProjectStructure {
       // src/redirects/[scope]
       const scopedPath: string = pathLib.join(redirectsRoot, this.config.scope);
       if (fs?.existsSync(scopedPath)) {
-        return [new Path(scopedPath), new Path(redirectsRoot)];
-      } else if (
-        manifest &&
-        Object.keys(manifest.bundlerManifest).some((key) =>
-          key.includes(scopedPath)
-        )
-      ) {
-        // manifest is used instead of fs during render code due to fs not working.
-        // Specifically in pages/src/vite-plugin/build/buildStart/rendering/wrapper.ts
         return [new Path(scopedPath), new Path(redirectsRoot)];
       }
     }

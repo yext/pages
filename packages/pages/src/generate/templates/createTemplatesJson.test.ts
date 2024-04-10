@@ -54,8 +54,7 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
     redirectModules.set("closed-location", {
       config: {
         name: "closed-location",
-        hydrate: false,
-        templateType: "entity",
+        redirectType: "entity",
         streamId: "closed-location-stream",
         stream: {
           $id: "closed-location-stream",

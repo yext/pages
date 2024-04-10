@@ -1,10 +1,16 @@
 import { TemplateProps } from "../../template/types.js";
 import {
-  convertTemplateConfigToTemplateConfigInternal,
+  convertStreamToStreamInternal,
+  isStaticTemplateConfig,
   parse,
-  TemplateConfigInternal,
+  StreamInternal,
 } from "../../template/internal/types.js";
-import { GetDestination, GetSources, RedirectModule } from "../types.js";
+import {
+  GetDestination,
+  GetSources,
+  RedirectConfig,
+  RedirectModule,
+} from "../types.js";
 import { validateRedirectModuleInternal } from "./validateRedirectModuleInternal.js";
 
 /**
@@ -22,11 +28,27 @@ export interface RedirectModuleInternal<T extends TemplateProps> {
   /** The name of the file (without extension) */
   redirectName: string;
   /** The exported config function */
-  config: TemplateConfigInternal;
+  config: RedirectConfigInternal;
   /** The exported getDestination function **/
   getDestination: GetDestination<T>;
   /** The exported getSources function **/
   getSources: GetSources<T>;
+}
+
+/**
+ * The exported `config` function's definition.
+ */
+export interface RedirectConfigInternal {
+  /** The name of the redirect. If not defined uses the redirect filename (without extension) */
+  name: string;
+  /** The stream that this redirect uses. If a stream is defined the streamId is not required. */
+  streamId?: string;
+  /** The stream configuration used by the redirect */
+  stream?: StreamInternal;
+  /** The field to use as the slug for dynamic dev mode */
+  slugField?: string;
+  /** The type of redirect */
+  redirectType: "entity" | "static";
 }
 
 export const convertRedirectModuleToRedirectModuleInternal = (
@@ -38,7 +60,7 @@ export const convertRedirectModuleToRedirectModuleInternal = (
 
   const redirectModuleInternal = {
     ...redirectModule,
-    config: convertTemplateConfigToTemplateConfigInternal(
+    config: convertRedirectConfigToRedirectConfigInternal(
       redirectPath.name,
       redirectModule.config
     ),
@@ -50,4 +72,20 @@ export const convertRedirectModuleToRedirectModuleInternal = (
   validateRedirectModuleInternal(redirectModuleInternal);
 
   return redirectModuleInternal;
+};
+
+export const convertRedirectConfigToRedirectConfigInternal = (
+  redirectName: string,
+  redirectConfig: RedirectConfig | undefined
+): RedirectConfigInternal => {
+  const stream = convertStreamToStreamInternal(redirectConfig?.stream);
+
+  return {
+    name: redirectConfig?.name ?? redirectName,
+    ...redirectConfig,
+    stream: stream,
+    redirectType: isStaticTemplateConfig(redirectConfig?.streamId, stream)
+      ? "static"
+      : "entity",
+  };
 };

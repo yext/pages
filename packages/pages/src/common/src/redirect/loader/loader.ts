@@ -44,7 +44,7 @@ export const loadRedirectModules = async (
   return importedRedirectModules.reduce((prev, module) => {
     if (prev.has(module.config.name)) {
       throw new Error(
-        `Redirects must have unique feature names. Found multiple redirects with "${module.config.name}"`
+        `Redirects must have unique names. Found multiple redirects with name "${module.config.name}"`
       );
     }
     return prev.set(module.config.name, module);

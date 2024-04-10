@@ -5,11 +5,13 @@ import {
   FeaturesConfig,
   FeatureConfig,
   convertTemplateConfigToFeatureConfig,
+  convertRedirectConfigToFeatureConfig,
 } from "../../common/src/feature/features.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import {
   StreamConfig,
-  convertConfigToStreamConfig,
+  convertTemplateConfigToStreamConfig,
+  convertRedirectConfigToStreamConfig,
 } from "../../common/src/feature/stream.js";
 import {
   TemplateModuleCollection,
@@ -114,23 +116,23 @@ export const createTemplatesJsonFromModule = async (
 
 export const getTemplatesConfig = (
   templateModules: TemplateModuleCollection,
-  redirectModules: RedirectModuleCollection | undefined
+  redirectModules?: RedirectModuleCollection
 ): FeaturesConfig => {
   const features: FeatureConfig[] = [];
   const streams: StreamConfig[] = [];
   for (const module of templateModules.values()) {
     const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
     features.push(featureConfig);
-    const streamConfig = convertConfigToStreamConfig(module.config);
+    const streamConfig = convertTemplateConfigToStreamConfig(module.config);
     if (streamConfig) {
       pushStreamConfigIfValid(streams, streamConfig);
     }
   }
   if (redirectModules) {
     for (const module of redirectModules.values()) {
-      const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
+      const featureConfig = convertRedirectConfigToFeatureConfig(module.config);
       features.push(featureConfig);
-      const streamConfig = convertConfigToStreamConfig(module.config);
+      const streamConfig = convertRedirectConfigToStreamConfig(module.config);
       if (streamConfig) {
         pushStreamConfigIfValid(streams, streamConfig);
       }

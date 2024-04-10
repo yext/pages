@@ -59,10 +59,7 @@ export const generateTestDataForSlug = async (
     }
   }
 
-  const featuresConfig = getTemplatesConfig(
-    templateModuleCollection,
-    undefined
-  );
+  const featuresConfig = getTemplatesConfig(templateModuleCollection);
   const featuresConfigForEntityPages: FeaturesConfig = {
     features: featuresConfig.features.filter((f) => "entityPageSet" in f),
     streams: featuresConfig.streams,

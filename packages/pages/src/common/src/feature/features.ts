@@ -1,5 +1,6 @@
 import { TemplateConfigInternal } from "../template/internal/types.js";
-import { convertConfigToStreamConfig, StreamConfig } from "./stream.js";
+import { RedirectConfigInternal } from "../redirect/internal/types.js";
+import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
 
 /**
  * The shape of data that represents a features.json file, used by Yext Pages.
@@ -18,7 +19,7 @@ export const convertTemplateConfigInternalToFeaturesConfig = (
   config: TemplateConfigInternal
 ): FeaturesConfig => {
   const featureConfig = convertTemplateConfigToFeatureConfig(config);
-  const streamConfig = convertConfigToStreamConfig(config);
+  const streamConfig = convertTemplateConfigToStreamConfig(config);
 
   return {
     features: [featureConfig],
@@ -91,6 +92,37 @@ export const convertTemplateConfigToFeatureConfig = (
       entityPageSet: {
         pageUrlField: config.pageUrlField,
       },
+    };
+  }
+
+  return featureConfig;
+};
+
+/**
+ * Converts a {@link RedirectConfigInternal} into a valid single {@link FeatureConfig}.
+ */
+export const convertRedirectConfigToFeatureConfig = (
+  config: RedirectConfigInternal
+): FeatureConfig => {
+  const streamConfig = config.stream || null;
+
+  const featureConfigBase: FeatureConfigBase = {
+    name: config.name,
+    streamId: streamConfig?.$id ?? config.streamId,
+    templateType: "JS",
+  };
+
+  let featureConfig: FeatureConfig;
+  // If the redirectConfig does not reference a stream, assume it's a static feature.
+  if (config.redirectType === "static") {
+    featureConfig = {
+      ...featureConfigBase,
+      staticPage: {},
+    };
+  } else {
+    featureConfig = {
+      ...featureConfigBase,
+      entityPageSet: {},
     };
   }
 

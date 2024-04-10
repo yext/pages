@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { convertConfigToStreamConfig, StreamConfig } from "./stream.js";
+import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
 import { TemplateConfigInternal } from "../template/internal/types.js";
 
 describe("stream", () => {
@@ -10,7 +10,7 @@ describe("stream", () => {
       templateType: "static",
     };
 
-    const streamConfig = convertConfigToStreamConfig(templateConfig);
+    const streamConfig = convertTemplateConfigToStreamConfig(templateConfig);
 
     expect(streamConfig).toEqual(void 0);
   });
@@ -30,7 +30,7 @@ describe("stream", () => {
       templateType: "entity",
     };
 
-    const streamConfig = convertConfigToStreamConfig(templateConfig);
+    const streamConfig = convertTemplateConfigToStreamConfig(templateConfig);
     const expectedStreamConfig: StreamConfig = {
       $id: "$id",
       source: "knowledgeGraph",
