@@ -1,7 +1,6 @@
 import { TemplateProps } from "../../template/types.js";
 import {
   convertStreamToStreamInternal,
-  isStaticTemplateConfig,
   parse,
   StreamInternal,
 } from "../../template/internal/types.js";
@@ -45,10 +44,6 @@ export interface RedirectConfigInternal {
   streamId?: string;
   /** The stream configuration used by the redirect */
   stream?: StreamInternal;
-  /** The field to use as the slug for dynamic dev mode */
-  slugField?: string;
-  /** The type of redirect */
-  redirectType: "entity" | "static";
 }
 
 export const convertRedirectModuleToRedirectModuleInternal = (
@@ -84,8 +79,5 @@ export const convertRedirectConfigToRedirectConfigInternal = (
     name: redirectConfig?.name ?? redirectName,
     ...redirectConfig,
     stream: stream,
-    redirectType: isStaticTemplateConfig(redirectConfig?.streamId, stream)
-      ? "static"
-      : "entity",
   };
 };

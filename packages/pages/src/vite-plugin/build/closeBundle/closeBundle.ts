@@ -23,7 +23,6 @@ import {
   loadRedirectModules,
   RedirectModuleCollection,
 } from "../../../common/src/redirect/loader/loader.js";
-import { getRedirectFilePathsFromProjectStructure } from "../../../common/src/redirect/internal/getRedirectFilepaths.js";
 
 export default (projectStructure: ProjectStructure) => {
   return {
@@ -73,12 +72,39 @@ export default (projectStructure: ProjectStructure) => {
           projectStructure
         );
 
-        const redirectPaths =
-          getRedirectFilePathsFromProjectStructure(projectStructure);
+        const redirectBundles = glob.sync(
+          convertToPosixPath(
+            path.join(
+              path.resolve(
+                rootFolders.dist,
+                subfolders.assets,
+                subfolders.redirectBundle
+              ),
+              "**/*.js"
+            )
+          ),
+          {
+            ignore: [
+              path.join(
+                path.resolve(rootFolders.dist, subfolders.serverlessFunctions),
+                "**"
+              ),
+              path.join(
+                path.resolve(rootFolders.dist, subfolders.modules),
+                "**"
+              ),
+              path.join(
+                path.resolve(rootFolders.dist, subfolders.templates),
+                "**"
+              ),
+            ],
+          }
+        );
+
         redirectModules = await loadRedirectModules(
-          redirectPaths,
-          true,
+          redirectBundles,
           false,
+          true,
           projectStructure
         );
 
@@ -139,7 +165,11 @@ export default (projectStructure: ProjectStructure) => {
 
       finisher = logger.timedLog({ startLog: "Writing manifest.json" });
       try {
-        await generateManifestFile(templateModules, projectStructure);
+        await generateManifestFile(
+          templateModules,
+          redirectModules,
+          projectStructure
+        );
         finisher.succeed("Successfully wrote manifest.json");
       } catch (e: any) {
         finisher.fail("Failed to write manifest.json");

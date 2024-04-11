@@ -40,6 +40,8 @@ export interface Subfolders {
   clientBundle: string;
   /** Where to output the server bundles */
   serverBundle: string;
+  /** Where to output the redirect bundles */
+  redirectBundle: string;
   /** Where to output the render bundles */
   renderBundle: string; // _client and _server
   /** Where to output the renderer bundle */
@@ -157,6 +159,7 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
     public: DEFAULT_PUBLIC_DIR,
     clientBundle: "client",
     serverBundle: "server",
+    redirectBundle: "redirect",
     renderBundle: "render",
     renderer: "renderer",
     static: "static",

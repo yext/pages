@@ -18,6 +18,7 @@ export default (projectStructure: ProjectStructure) => {
   ): Promise<void> {
     inputOptions.input = await discoverInputs(
       projectStructure.getTemplatePaths(),
+      projectStructure.getRedirectPaths(),
       projectStructure
     );
     console.log(yextBanner);
@@ -129,17 +130,18 @@ const yextBanner = `
  * in scoped template folder path is included. Also adds an additional entry-point
  * for all templates ending in tsx to be used to hydrate the bundle.
  *
- * @param rootTemplateDir the directory where all templates are stored.
- * @param scopedTemplateDir the directory where a subset of templates use for the build are stored.
+ * @param templatePaths
+ * @param redirectPaths
  * @param projectStructure
  * @returns
  */
 const discoverInputs = async (
   templatePaths: Path[],
+  redirectPaths: Path[],
   projectStructure: ProjectStructure
 ): Promise<{ [entryAlias: string]: string }> => {
   const entryPoints: Record<string, string> = {};
-  const updateEntryPoints = async (dir: string) =>
+  const updateEntryPoints = async (dir: string, isRedirect: boolean) =>
     (await readdir(dir, { withFileTypes: true }))
       .filter((dirent) => !dirent.isDirectory())
       .map((file) => file.name)
@@ -149,9 +151,11 @@ const discoverInputs = async (
       )
       .forEach((template) => {
         const parsedPath = parse(template);
-        const bundlePath = template.includes(".client")
-          ? projectStructure.config.subfolders.clientBundle
-          : projectStructure.config.subfolders.serverBundle;
+        const bundlePath = isRedirect
+          ? projectStructure.config.subfolders.redirectBundle
+          : template.includes(".client")
+            ? projectStructure.config.subfolders.clientBundle
+            : projectStructure.config.subfolders.serverBundle;
         const outputPath = `${bundlePath}/${parsedPath.name.replace(
           ".client",
           ""
@@ -163,7 +167,10 @@ const discoverInputs = async (
       });
 
   for (const templatePath of templatePaths) {
-    await updateEntryPoints(templatePath.getAbsolutePath());
+    await updateEntryPoints(templatePath.getAbsolutePath(), false);
+  }
+  for (const redirectPath of redirectPaths) {
+    await updateEntryPoints(redirectPath.getAbsolutePath(), true);
   }
 
   return { ...entryPoints, ...discoverRenderTemplates(projectStructure) };

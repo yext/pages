@@ -112,19 +112,8 @@ export const convertRedirectConfigToFeatureConfig = (
     templateType: "JS",
   };
 
-  let featureConfig: FeatureConfig;
-  // If the redirectConfig does not reference a stream, assume it's a static feature.
-  if (config.redirectType === "static") {
-    featureConfig = {
-      ...featureConfigBase,
-      staticPage: {},
-    };
-  } else {
-    featureConfig = {
-      ...featureConfigBase,
-      entityPageSet: {},
-    };
-  }
-
-  return featureConfig;
+  return {
+    ...featureConfigBase,
+    entityPageSet: {},
+  };
 };

@@ -32,8 +32,6 @@ export interface RedirectConfig {
   streamId?: string;
   /** The stream configuration used by the redirect */
   stream?: Stream;
-  /** The field to use as the slug for dynamic dev mode */
-  slugField?: string;
 }
 
 /**

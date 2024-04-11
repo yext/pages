@@ -54,7 +54,6 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
     redirectModules.set("closed-location", {
       config: {
         name: "closed-location",
-        redirectType: "entity",
         streamId: "closed-location-stream",
         stream: {
           $id: "closed-location-stream",
