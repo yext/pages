@@ -275,6 +275,9 @@ export class ProjectStructure {
       this.config.rootFolders.source,
       this.config.subfolders.redirects
     );
+    if (!fs?.existsSync(redirectsRoot)) {
+      return [];
+    }
 
     if (this.config.scope) {
       // src/redirects/[scope]

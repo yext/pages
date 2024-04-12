@@ -31,17 +31,12 @@ export default async (
 ): Promise<GeneratedPage | GeneratedRedirect> => {
   const projectStructure = new ProjectStructure(manifest.projectStructure);
   const feature = props.document.__.name;
+
   const template = await readTemplateModules(
     feature,
     manifest,
     projectStructure
   );
-  const redirect = await readRedirectModules(
-    feature,
-    manifest,
-    projectStructure
-  );
-
   if (template) {
     const pluginRenderTemplates = await getPluginRenderTemplates(
       manifest,
@@ -56,6 +51,11 @@ export default async (
     );
   }
 
+  const redirect = await readRedirectModules(
+    feature,
+    manifest,
+    projectStructure
+  );
   if (redirect) {
     return await generateRedirectResponses(redirect, props);
   }
