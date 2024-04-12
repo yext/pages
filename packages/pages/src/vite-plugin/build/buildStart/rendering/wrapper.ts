@@ -19,7 +19,7 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
   pluginRenderTemplates: PluginRenderTemplates,
   manifest: Manifest,
   projectStructure: ProjectStructure
-): Promise<string> => {
+): Promise<string | undefined> => {
   if (!manifest) {
     throw new Error("Manifest is undefined");
   }
@@ -27,10 +27,14 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
     ? templateModuleInternal.getHeadConfig(props)
     : undefined;
 
-  const templateFilepath = path.join(
-    projectStructure.getTemplatePaths(manifest)[0].path,
+  const templateFilepath = findOriginalTemplatePathInManifest(
+    projectStructure,
+    manifest,
     `${templateModuleInternal.templateName}.tsx`
   );
+  if (!templateFilepath) {
+    return;
+  }
 
   let clientHydrationString;
   if (hydrate) {
@@ -61,4 +65,50 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
   );
 
   return clientInjectedServerHtml;
+};
+
+/**
+ * Finds the original template path based on the template name and scope. If a scope is set it
+ * first tries to find the scoped template, otherwise falls back to the root templates. Note that
+ * a template of the same name cannot exist in the scoped folder and the root. The scope overrides
+ * it.
+ *
+ * @param templateName
+ * @param manifest
+ */
+export const findOriginalTemplatePathInManifest = (
+  projectStructure: ProjectStructure,
+  manifest: Manifest,
+  templateName: string // with extension
+) => {
+  // src/templates
+  const templatesRoot = path.join(
+    projectStructure.config.rootFolders.source,
+    projectStructure.config.subfolders.templates
+  );
+
+  if (projectStructure.config.scope) {
+    const scopedFilepath = path.join(
+      templatesRoot,
+      projectStructure.config.scope,
+      templateName
+    );
+
+    if (
+      Object.keys(manifest.bundlerManifest).some((key) =>
+        key.includes(scopedFilepath)
+      )
+    ) {
+      return scopedFilepath;
+    }
+  }
+
+  const filepath = path.join(templatesRoot, templateName);
+  if (
+    Object.keys(manifest.bundlerManifest).some((key) => key.includes(filepath))
+  ) {
+    return filepath;
+  }
+
+  console.error(`Template ${templateName} not found in manifest`);
 };
