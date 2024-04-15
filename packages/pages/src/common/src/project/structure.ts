@@ -4,7 +4,6 @@ import fs from "node:fs";
 import { Path } from "./path.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
 import { determinePublicFilepath } from "../assets/getPublicFilepath.js";
-import { Manifest } from "../template/types.js";
 
 /**
  * All important folders defined at the root of the project.
@@ -234,32 +233,20 @@ export class ProjectStructure {
   };
 
   /**
-   * @param manifest should only be provided if fs doesn't work in the env.
    * @returns the list of of src/templates, taking scope into account. If a scope is defined and
    * the scoped path exists, then both the scoped and non-scoped template paths are returned.
    */
-  getTemplatePaths = (manifest?: Manifest) => {
+  getTemplatePaths = () => {
     // src/templates
     const templatesRoot = pathLib.join(
       this.config.rootFolders.source,
       this.config.subfolders.templates
     );
 
-    if (this.config.scope) {
-      // src/templates/[scope]
-      const scopedPath: string = pathLib.join(templatesRoot, this.config.scope);
-      if (fs?.existsSync(scopedPath)) {
-        return [new Path(scopedPath), new Path(templatesRoot)];
-      } else if (
-        manifest &&
-        Object.keys(manifest.bundlerManifest).some((key) =>
-          key.includes(scopedPath)
-        )
-      ) {
-        // manifest is used instead of fs during render code due to fs not working.
-        // Specifically in pages/src/vite-plugin/build/buildStart/rendering/wrapper.ts
-        return [new Path(scopedPath), new Path(templatesRoot)];
-      }
+    const scopedPath = pathLib.join(templatesRoot, this.config.scope ?? "");
+
+    if (this.config.scope && fs.existsSync(scopedPath)) {
+      return [new Path(scopedPath), new Path(templatesRoot)];
     }
 
     return [new Path(templatesRoot)];
