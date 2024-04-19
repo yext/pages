@@ -5,16 +5,22 @@ import {
   FeaturesConfig,
   FeatureConfig,
   convertTemplateConfigToFeatureConfig,
+  convertRedirectConfigToFeatureConfig,
 } from "../../common/src/feature/features.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import {
   StreamConfig,
   convertTemplateConfigToStreamConfig,
+  convertRedirectConfigToStreamConfig,
 } from "../../common/src/feature/stream.js";
 import {
   TemplateModuleCollection,
   loadTemplateModules,
 } from "../../common/src/template/loader/loader.js";
+import {
+  loadRedirectModules,
+  RedirectModuleCollection,
+} from "../../common/src/redirect/loader/loader.js";
 
 /**
  * Loads the templates as modules and generates a templates.json or
@@ -22,6 +28,7 @@ import {
  */
 export const createTemplatesJson = async (
   templateFilepaths: string[],
+  redirectFilepaths: string[],
   projectStructure: ProjectStructure,
   type: "FEATURES" | "TEMPLATES"
 ): Promise<void> => {
@@ -32,7 +39,19 @@ export const createTemplatesJson = async (
     projectStructure
   );
 
-  return createTemplatesJsonFromModule(templateModules, projectStructure, type);
+  const redirectModules = await loadRedirectModules(
+    redirectFilepaths,
+    true,
+    false,
+    projectStructure
+  );
+
+  return createTemplatesJsonFromModule(
+    templateModules,
+    redirectModules,
+    projectStructure,
+    type
+  );
 };
 
 /**
@@ -40,13 +59,17 @@ export const createTemplatesJson = async (
  */
 export const createTemplatesJsonFromModule = async (
   templateModules: TemplateModuleCollection,
+  redirectModules: RedirectModuleCollection,
   projectStructure: ProjectStructure,
   type: "FEATURES" | "TEMPLATES"
 ): Promise<void> => {
   // Note: the object used to be known as "features" but it's been changed to "templates".
   // We're allowing the generation of a features.json file still for backwards compatibility,
   // which is why all of the types have not yet been renamed.
-  const { features, streams } = getTemplatesConfig(templateModules);
+  const { features, streams } = getTemplatesConfig(
+    templateModules,
+    redirectModules
+  );
   let templatesAbsolutePath;
 
   switch (type) {
@@ -92,7 +115,8 @@ export const createTemplatesJsonFromModule = async (
 };
 
 export const getTemplatesConfig = (
-  templateModules: TemplateModuleCollection
+  templateModules: TemplateModuleCollection,
+  redirectModules?: RedirectModuleCollection
 ): FeaturesConfig => {
   const features: FeatureConfig[] = [];
   const streams: StreamConfig[] = [];
@@ -102,6 +126,16 @@ export const getTemplatesConfig = (
     const streamConfig = convertTemplateConfigToStreamConfig(module.config);
     if (streamConfig) {
       pushStreamConfigIfValid(streams, streamConfig);
+    }
+  }
+  if (redirectModules) {
+    for (const module of redirectModules.values()) {
+      const featureConfig = convertRedirectConfigToFeatureConfig(module.config);
+      features.push(featureConfig);
+      const streamConfig = convertRedirectConfigToStreamConfig(module.config);
+      if (streamConfig) {
+        pushStreamConfigIfValid(streams, streamConfig);
+      }
     }
   }
 

@@ -27,6 +27,8 @@ export interface Subfolders {
   templates: string;
   /** The modules folder */
   modules: string;
+  /** The redirects folder */
+  redirects: string;
   /** The Node functions folder */
   serverlessFunctions: string; // Node functions
   /** Where to output the bundled static assets */
@@ -37,6 +39,8 @@ export interface Subfolders {
   clientBundle: string;
   /** Where to output the server bundles */
   serverBundle: string;
+  /** Where to output the redirect bundles */
+  redirectBundle: string;
   /** Where to output the render bundles */
   renderBundle: string; // _client and _server
   /** Where to output the renderer bundle */
@@ -148,11 +152,13 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
   subfolders: {
     templates: "templates",
     modules: "modules",
+    redirects: "redirects",
     serverlessFunctions: "functions",
     assets: DEFAULT_ASSETS_DIR,
     public: DEFAULT_PUBLIC_DIR,
     clientBundle: "client",
     serverBundle: "server",
+    redirectBundle: "redirect",
     renderBundle: "render",
     renderer: "renderer",
     static: "static",
@@ -244,6 +250,31 @@ export class ProjectStructure {
     }
 
     return [new Path(templatesRoot)];
+  };
+
+  /**
+   * @returns the list of src/redirects, taking scope into account. If a scope is defined and
+   * the scoped path exists, then both the scoped and non-scoped redirect paths are returned.
+   */
+  getRedirectPaths = () => {
+    // src/redirects
+    const redirectsRoot = pathLib.join(
+      this.config.rootFolders.source,
+      this.config.subfolders.redirects
+    );
+    if (!fs?.existsSync(redirectsRoot)) {
+      return [];
+    }
+
+    if (this.config.scope) {
+      // src/redirects/[scope]
+      const scopedPath: string = pathLib.join(redirectsRoot, this.config.scope);
+      if (fs?.existsSync(scopedPath)) {
+        return [new Path(scopedPath), new Path(redirectsRoot)];
+      }
+    }
+
+    return [new Path(redirectsRoot)];
   };
 
   /**

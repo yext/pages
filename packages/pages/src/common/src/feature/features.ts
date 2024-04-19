@@ -1,4 +1,5 @@
 import { TemplateConfigInternal } from "../template/internal/types.js";
+import { RedirectConfigInternal } from "../redirect/internal/types.js";
 import { convertTemplateConfigToStreamConfig, StreamConfig } from "./stream.js";
 
 /**
@@ -95,4 +96,24 @@ export const convertTemplateConfigToFeatureConfig = (
   }
 
   return featureConfig;
+};
+
+/**
+ * Converts a {@link RedirectConfigInternal} into a valid single {@link FeatureConfig}.
+ */
+export const convertRedirectConfigToFeatureConfig = (
+  config: RedirectConfigInternal
+): FeatureConfig => {
+  const streamConfig = config.stream || null;
+
+  const featureConfigBase: FeatureConfigBase = {
+    name: config.name,
+    streamId: streamConfig?.$id ?? config.streamId,
+    templateType: "JS",
+  };
+
+  return {
+    ...featureConfigBase,
+    entityPageSet: {},
+  };
 };

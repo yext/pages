@@ -1,9 +1,9 @@
 import {
+  Manifest,
+  ServerRenderTemplate,
+  TemplateModule,
   TemplateProps,
   TemplateRenderProps,
-  Manifest,
-  TemplateModule,
-  ServerRenderTemplate,
 } from "../../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../../common/src/template/paths.js";
 import { reactWrapper } from "./wrapper.js";
@@ -24,27 +24,26 @@ export const readTemplateModules = async (
   feature: string,
   manifest: Manifest,
   projectStructure: ProjectStructure
-): Promise<TemplateModuleInternal<any, any>> => {
+): Promise<TemplateModuleInternal<any, any> | undefined> => {
+  if (!manifest.serverPaths[feature]) {
+    return;
+  }
+
   const path = manifest.serverPaths[feature].replace(
     projectStructure.config.subfolders.assets,
     ".."
   );
-  if (!path) {
-    throw new Error(`Could not find path for feature ${feature}`);
-  }
   let importedModule = pathToModule.get(path) as TemplateModule<any, any>;
   if (!importedModule) {
     importedModule = await import(path);
     pathToModule.set(path, importedModule);
   }
 
-  const templateModuleInternal = convertTemplateModuleToTemplateModuleInternal(
+  return convertTemplateModuleToTemplateModuleInternal(
     path,
     importedModule,
     true
   );
-
-  return templateModuleInternal;
 };
 
 /** The render template information needed by the plugin execution */
@@ -109,8 +108,9 @@ export type GeneratedPage = {
  * @param templateProps
  * @param pluginRenderTemplates
  * @param manifest
+ * @param projectStructure
  */
-export const generateResponses = async (
+export const generateTemplateResponses = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   templateProps: TemplateProps,
   pluginRenderTemplates: PluginRenderTemplates,

@@ -95,6 +95,9 @@ export type Manifest = {
   serverPaths: {
     [key: string]: string;
   };
+  redirectPaths: {
+    [key: string]: string;
+  };
   clientPaths: {
     [key: string]: string;
   };
@@ -342,7 +345,7 @@ export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 // Warnings were encountered during analysis:
 //
-// dist/types/src/common/src/template/types.d.ts:174:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
+// dist/types/src/common/src/template/types.d.ts:178:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 ```

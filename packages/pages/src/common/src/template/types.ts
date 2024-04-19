@@ -185,6 +185,10 @@ export type Manifest = {
   serverPaths: {
     [key: string]: string;
   };
+  /** A map of feature name to the redirect path of the feature */
+  redirectPaths: {
+    [key: string]: string;
+  };
   /** A map of feature name to the client path of the feature */
   clientPaths: {
     [key: string]: string;
