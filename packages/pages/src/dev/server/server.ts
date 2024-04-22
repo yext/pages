@@ -6,7 +6,6 @@ import { ignoreFavicon } from "./middleware/ignoreFavicon.js";
 import { errorMiddleware } from "./middleware/errorMiddleware.js";
 import { indexPage } from "./middleware/indexPage.js";
 import { generateTestData } from "./ssr/generateTestData.js";
-import { createModuleLogger } from "../../common/src/module/internal/logger.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { finalSlashRedirect } from "./middleware/finalSlashRedirect.js";
 import { serverRenderSlugRoute } from "./middleware/serverRenderSlugRoute.js";
@@ -60,20 +59,13 @@ export const createServer = async (
           css: {
             postcss: moduleInfo.postCssPath,
           },
-          customLogger: createModuleLogger(),
         });
       } else {
-        vite = await createViteServer({
-          ...getViteServerConfig(projectStructure),
-          customLogger: createModuleLogger(),
-        });
+        vite = await createViteServer(getViteServerConfig(projectStructure));
       }
       // otherwise initialize without setting postcss
       if (!vite) {
-        vite = await createViteServer({
-          ...getViteServerConfig(projectStructure),
-          customLogger: createModuleLogger(),
-        });
+        vite = await createViteServer(getViteServerConfig(projectStructure));
       }
 
       app.use(vite.middlewares);
@@ -99,10 +91,7 @@ export const createServer = async (
   }
 
   // create vite using ssr mode
-  const vite = await createViteServer({
-    ...getViteServerConfig(projectStructure),
-    customLogger: createModuleLogger(),
-  });
+  const vite = await createViteServer(getViteServerConfig(projectStructure));
 
   // register vite's middleware
   app.use(vite.middlewares);
