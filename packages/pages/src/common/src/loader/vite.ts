@@ -4,6 +4,7 @@ import { processEnvVariables } from "../../../util/processEnvVariables.js";
 import { pathToFileURL } from "node:url";
 import { loadViteModule } from "../../../dev/server/ssr/loadViteModule.js";
 import { scopedViteConfigPath } from "../../../util/viteConfig.js";
+import { createModuleLogger } from "../module/internal/logger.js";
 
 export const getViteServerConfig = (
   projectStructure: ProjectStructure
@@ -22,6 +23,7 @@ export const getViteServerConfig = (
     optimizeDeps: {
       include: ["react-dom", "react-dom/client"],
     },
+    customLogger: createModuleLogger(),
   };
 };
 
