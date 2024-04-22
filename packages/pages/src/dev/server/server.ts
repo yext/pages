@@ -70,7 +70,10 @@ export const createServer = async (
       }
       // otherwise initialize without setting postcss
       if (!vite) {
-        vite = await createViteServer(getViteServerConfig(projectStructure));
+        vite = await createViteServer({
+          ...getViteServerConfig(projectStructure),
+          customLogger: createModuleLogger(),
+        });
       }
 
       app.use(vite.middlewares);
@@ -96,7 +99,10 @@ export const createServer = async (
   }
 
   // create vite using ssr mode
-  const vite = await createViteServer(getViteServerConfig(projectStructure));
+  const vite = await createViteServer({
+    ...getViteServerConfig(projectStructure),
+    customLogger: createModuleLogger(),
+  });
 
   // register vite's middleware
   app.use(vite.middlewares);
