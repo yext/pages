@@ -1,3 +1,31 @@
+#### 1.1.0-beta.3 (2024-04-23)
+
+##### Chores
+
+*  delete binary (4103e46d)
+
+##### New Features
+
+* **dev/plugin:**
+  *  update isProduction logic (#521) (fc3a80ec)
+  *  update isProduction logic (c2c7d7ed)
+  *  add support for src/redirects (#518) (269a2eeb)
+  *  allow scoped vite.config.js (#516) (82a2593c)
+* **plugin:**  add support for statusCode to getRedirects (#515) (b2b997b7)
+
+##### Bug Fixes
+
+* **dev:**  hide nested css warning (#520) (ad21b260)
+* **plugin:**  non-scoped templates not rendering properly (#517) (53634979)
+
+##### Other Changes
+
+* **dev/plugin:**  update isProduction logic" (34515a9e)
+
+##### Refactors
+
+*  remove manifest check from getTemplatePaths (#519) (1ef944e2)
+
 #### 1.1.0-beta.2 (2024-04-03)
 
 ##### New Features
