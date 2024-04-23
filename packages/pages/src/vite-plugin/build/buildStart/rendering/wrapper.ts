@@ -51,11 +51,18 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
   });
 
   const html = (
-    await pluginRenderTemplates.server.getIndexHtml({
-      Page: templateModuleInternal.default!,
-      pageProps: props,
-    })
-  ).replace(await pluginRenderTemplates.server.getReplacementTag(), serverHtml);
+    pluginRenderTemplates.server.getIndexHtml
+      ? await pluginRenderTemplates.server.getIndexHtml({
+          Page: templateModuleInternal.default!,
+          pageProps: props,
+        })
+      : pluginRenderTemplates.server.indexHtml
+  ).replace(
+    pluginRenderTemplates.server.getReplacementTag
+      ? await pluginRenderTemplates.server.getReplacementTag()
+      : pluginRenderTemplates.server.replacementTag,
+    serverHtml
+  );
 
   const clientInjectedServerHtml = getServerTemplatePlugin(
     clientHydrationString,

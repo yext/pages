@@ -57,6 +57,8 @@ const serverRenderTemplate: ServerRenderTemplate = {
   getReplacementTag: async () => {
     return "<!--REPLACE-ME>";
   },
+  indexHtml: "",
+  replacementTag: "",
 };
 
 describe("generateResponses", () => {

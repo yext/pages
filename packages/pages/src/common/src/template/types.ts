@@ -268,6 +268,12 @@ export interface ClientServerRenderTemplates {
  * @internal
  */
 export interface ServerRenderTemplate {
+  /** @deprecated The index.html entrypoint for your template */
+  indexHtml: string;
+
+  /** @deprecated The tag in indexHtml to replace with the contents of render */
+  replacementTag: string;
+
   /** The render function required by the render templates */
   render(pageContext: PageContext<any>): Promise<string>;
 
