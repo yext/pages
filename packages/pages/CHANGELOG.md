@@ -1,3 +1,88 @@
+#### 1.1.0-beta.3 (2024-04-23)
+
+##### Chores
+
+*  delete binary (4103e46d)
+
+##### New Features
+
+* **dev/plugin:**
+  *  update isProduction logic (#521) (fc3a80ec)
+  *  update isProduction logic (c2c7d7ed)
+  *  add support for src/redirects (#518) (269a2eeb)
+  *  allow scoped vite.config.js (#516) (82a2593c)
+* **plugin:**  add support for statusCode to getRedirects (#515) (b2b997b7)
+
+##### Bug Fixes
+
+* **dev:**  hide nested css warning (#520) (ad21b260)
+* **plugin:**  non-scoped templates not rendering properly (#517) (53634979)
+
+##### Other Changes
+
+* **dev/plugin:**  update isProduction logic" (34515a9e)
+
+##### Refactors
+
+*  remove manifest check from getTemplatePaths (#519) (1ef944e2)
+
+#### 1.1.0-beta.2 (2024-04-03)
+
+##### New Features
+
+* **dev:**  upgrade script uses engine 18.4.0 (#510) (4f82368d)
+* **scaffold:**  add response headers to config.yaml during scaffold (#508) (b9f64d9e)
+
+##### Bug Fixes
+
+* **dev:**
+  *  filtering documents by slug (#513) (7530a0f5)
+  *  serverless functions dev server crash (#511) (b263b2bb)
+* **scaffold:**
+  *  validate + format module name from user (#507) (c0968c70)
+  *  edit tailwind in modules templates (#506) (e774cacb)
+
+##### Performance Improvements
+
+* **dev:**
+  *  speed up page loads and alleviate memory pressure (#512) (3a1f6fc1)
+  *  optimize loading index page (#509) (e8553cdf)
+
+#### 1.1.0-beta.1 (2024-03-21)
+
+##### Chores
+
+* **deps:**  update non-major dependencies (#492) (a1cf300b)
+
+##### New Features
+
+*  support scope with modules (#502) (7c7c4c02)
+* **dev:**  add widgets to dev mode (#497) (c2e2d1d2)
+* **scaffold:**  scaffold modules (#494) (20462260)
+* **plugin:**  add getAuthScope and pass to GeneratedPage (#495) (d9d14ee6)
+
+##### Bug Fixes
+
+* **dev:**
+  *  adjust GTD logic and pass scope (#504) (9d486f2c)
+  *  find correct document by slug (#498) (435beede)
+* **upgrade:**  exclude_list to excludeList (#503) (c578bd68)
+* **plugin:**  fixed logger error during build (#501) (00523a44)
+* **scaffold:**
+  *  include .jsx in tailwind (#500) (0186b912)
+  *  update scaffold command to point tailwind to ./src/modules (#499) (d9b01fe1)
+
+#### 1.1.0-beta.0 (2024-02-29)
+
+##### Documentation Changes
+
+*  update util function docs (#493) (c70d9845)
+*  fix dynamic JS doc (#490) (434121df)
+
+##### New Features
+
+* **plugin:**  create plugin to integrate modules (#462) (a7ad9ea9)
+
 #### 1.0.0 (2024-02-07)
 
 ##### Chores

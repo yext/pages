@@ -15,7 +15,7 @@ export const propsLoader = async ({
   templateModuleInternal,
   document,
 }: PageLoaderValues): Promise<TemplateRenderProps> => {
-  const { transformProps, getPath } = templateModuleInternal;
+  const { transformProps, getPath, getAuthScope } = templateModuleInternal;
 
   document.siteInternalHostName = process.env.YEXT_PAGES_SCOPE;
 
@@ -26,6 +26,11 @@ export const propsLoader = async ({
 
   if (transformProps) {
     templateProps = await transformProps(templateProps);
+  }
+
+  if (getAuthScope) {
+    // Not used in dev but executed so errors are caught
+    getAuthScope(templateProps);
   }
 
   const path = getPath(templateProps);

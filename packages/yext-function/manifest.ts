@@ -45,6 +45,8 @@ export interface RootFolders {
 export interface Subfolders {
   /** The templates folder */
   templates: string;
+  /** The modules folder */
+  modules: string;
   /** The Node functions folder */
   serverlessFunctions: string; // Node functions
   /** Where to output the bundled static assets */
@@ -126,6 +128,8 @@ export interface ProjectStructureConfig {
    *
    * The subfolder path inside src/templates and sites-config
    * to scope a build to a subset of templates using a specific sites-config folder.
+   *
+   * Modules scoping is also supported.
    */
   scope?: string;
 }

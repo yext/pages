@@ -22,7 +22,7 @@ const DEV_DEPENDENCIES = "devDependencies";
  * @param version version to update to, if not supplied uses @latest
  * @param install whether to install the package if it does not exist
  */
-async function updatePackageDependency(
+export async function updatePackageDependency(
   packageName: string,
   version: string | null,
   install: boolean = false
@@ -440,7 +440,7 @@ export const installDependencies = async () => {
 };
 
 // Note that Node 20 <20.2.0 leads to build errors: `Unexpected early exit.`
-const NODE_ENGINES = "^18.0.0 || >=20.2.0";
+const NODE_ENGINES = "^18.4.0 || >=20.2.0";
 /**
  * Update package engines to latest supported node versions.
  */

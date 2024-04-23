@@ -6,6 +6,7 @@ import { Manifest } from "../../../common/src/template/types.js";
 import { glob } from "glob";
 import { Path } from "../../../common/src/project/path.js";
 import { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
+import { RedirectModuleCollection } from "../../../common/src/redirect/loader/loader.js";
 
 /**
  * Creates a manifest.json for use with the Pages vite-plugin
@@ -14,11 +15,16 @@ import { TemplateModuleCollection } from "../../../common/src/template/loader/lo
  */
 export const generateManifestFile = async (
   templateModules: TemplateModuleCollection,
+  redirectModules: RedirectModuleCollection,
   projectStructure: ProjectStructure
 ): Promise<void> => {
   const featureNameToBundlePath = new Map();
   for (const [featureName, module] of templateModules.entries()) {
     featureNameToBundlePath.set(featureName, module.path);
+  }
+  const featureNameToRedirectPath = new Map();
+  for (const [featureName, module] of redirectModules.entries()) {
+    featureNameToRedirectPath.set(featureName, module.path);
   }
 
   const distPath = new Path(projectStructure.config.rootFolders.dist);
@@ -26,6 +32,12 @@ export const generateManifestFile = async (
   const relativeBundlePaths = Array.from(featureNameToBundlePath.entries()).map(
     ([name, path]) => [name, convertToPosixPath(distPath.getRelativePath(path))]
   );
+  const redirectBundlePaths = Array.from(
+    featureNameToRedirectPath.entries()
+  ).map(([name, path]) => [
+    name,
+    convertToPosixPath(distPath.getRelativePath(path)),
+  ]);
 
   // Scans for paths in dist/assets/<assetPath> and finds the paths and file names.
   const getAssetBundlePaths = async (
@@ -55,6 +67,7 @@ export const generateManifestFile = async (
   }
   const manifest: Manifest = {
     serverPaths: Object.fromEntries(relativeBundlePaths),
+    redirectPaths: Object.fromEntries(redirectBundlePaths),
     clientPaths: Object.fromEntries(
       await getAssetBundlePaths(projectStructure.config.subfolders.clientBundle)
     ),

@@ -13,6 +13,9 @@ export type Manifest = {
   serverPaths: {
     [key: string]: string;
   };
+  redirectPaths: {
+    [key: string]: string;
+  };
   clientPaths: {
     [key: string]: string;
   };

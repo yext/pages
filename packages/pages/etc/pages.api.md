@@ -10,6 +10,11 @@ import { default as React_2 } from "react";
 export type Attributes = Record<string, string>;
 
 // @internal
+export interface ClientModuleRenderTemplate {
+  render(pageContext: ModuleContext): Promise<string>;
+}
+
+// @internal
 export interface ClientRenderTemplate {
   render(pageContext: PageContext<any>): Promise<string>;
 }
@@ -29,7 +34,9 @@ export const createDevServer: (
   dynamicGenerateData: boolean,
   useProdURLs: boolean,
   devServerPort: number,
-  scope?: string
+  openBrowser: boolean,
+  scope?: string,
+  module?: string
 ) => Promise<void>;
 
 // @internal (undocumented)
@@ -42,6 +49,9 @@ export interface FunctionModule {
 
 // @public
 export type FunctionType = HttpFunction | OnUrlChangeFunction;
+
+// @public
+export type GetAuthScope<T extends TemplateProps> = (props: T) => string;
 
 // @public
 export type GetHeadConfig<T extends TemplateRenderProps> = (
@@ -57,8 +67,12 @@ export const getLang: <T extends TemplateRenderProps<any>>(
 // @public
 export type GetPath<T extends TemplateProps> = (props: T) => string;
 
+// Warning: (ae-forgotten-export) The symbol "RedirectSource" needs to be exported by the entry point index.d.ts
+//
 // @public
-export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
+export type GetRedirects<T extends TemplateProps> = (
+  props: T
+) => (RedirectSource | string)[];
 
 // @public
 export const getRelativePrefixToRootFromPath: (path: string) => string;
@@ -81,6 +95,9 @@ export type Manifest = {
   serverPaths: {
     [key: string]: string;
   };
+  redirectPaths: {
+    [key: string]: string;
+  };
   clientPaths: {
     [key: string]: string;
   };
@@ -90,6 +107,39 @@ export type Manifest = {
   projectStructure: ProjectStructureConfig;
   bundlerManifest?: any;
 };
+
+// @public
+export type Module = () => React_2.JSX.Element;
+
+// @internal
+export interface ModuleClientServerRenderTemplates {
+  clientRenderModulePath: string;
+  serverRenderModulePath: string;
+}
+
+// @public
+export interface ModuleConfig {
+  name?: string;
+}
+
+// @internal
+export interface ModuleContext {
+  Page: Module;
+}
+
+// @public
+export interface ModuleDefinition {
+  config: ModuleConfig;
+  default: Module;
+}
+
+// @public
+export interface ModuleProps<T = Record<string, any>> {
+  __meta: {
+    mode: "development" | "production";
+  };
+  document: T;
+}
 
 // @public
 export type OnUrlChangeFunction = (
@@ -156,6 +206,13 @@ export type Render<T extends TemplateRenderProps<T>> = (props: T) => string;
 
 // @public
 export const renderHeadConfigToString: (headConfig: HeadConfig) => string;
+
+// @internal
+export interface ServerModuleRenderTemplate {
+  indexHtml: string;
+  render(pageContext: ModuleContext): Promise<string>;
+  replacementTag: string;
+}
 
 // @internal
 export interface ServerRenderTemplate {
@@ -260,6 +317,7 @@ export interface TemplateModule<
   config?: TemplateConfig;
   // Warning: (ae-unresolved-link) The @link reference could not be resolved: The package "@yext/pages" does not have an export "render"
   default?: Template<U>;
+  getAuthScope?: GetAuthScope<T>;
   getHeadConfig?: GetHeadConfig<U>;
   getPath: GetPath<T>;
   getRedirects?: GetRedirects<U>;
@@ -287,7 +345,7 @@ export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 // Warnings were encountered during analysis:
 //
-// dist/types/src/common/src/template/types.d.ts:165:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
+// dist/types/src/common/src/template/types.d.ts:178:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 ```

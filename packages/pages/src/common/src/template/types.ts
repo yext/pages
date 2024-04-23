@@ -1,6 +1,7 @@
 import { ProjectStructureConfig } from "../project/structure.js";
 import { HeadConfig } from "./head.js";
 import React from "react";
+import { RedirectSource } from "../redirect/types.js";
 
 /**
  * The type to include in any template file. It defines the available functions and fields that are available
@@ -16,6 +17,8 @@ export interface TemplateModule<
   config?: TemplateConfig;
   /** The optional exported transformProps function */
   transformProps?: TransformProps<T>;
+  /** The exported, optional getAuthScope function */
+  getAuthScope?: GetAuthScope<T>;
   /** The exported getPath function */
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
@@ -39,7 +42,9 @@ export interface TemplateModule<
  *
  * @public
  */
-export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
+export type GetRedirects<T extends TemplateProps> = (
+  props: T
+) => (RedirectSource | string)[];
 
 /**
  * The type definition for the template's transformProps function. Can be used
@@ -55,6 +60,13 @@ export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
  * @public
  */
 export type GetPath<T extends TemplateProps> = (props: T) => string;
+
+/**
+ * The type definition for the template's GetAuthScope function.
+ *
+ * @public
+ */
+export type GetAuthScope<T extends TemplateProps> = (props: T) => string;
 
 /**
  * The type definition for the template's getHeadConfig function. getHeadConfig
@@ -171,6 +183,10 @@ export interface Stream {
 export type Manifest = {
   /** A map of feature name to the server path of the feature */
   serverPaths: {
+    [key: string]: string;
+  };
+  /** A map of feature name to the redirect path of the feature */
+  redirectPaths: {
     [key: string]: string;
   };
   /** A map of feature name to the client path of the feature */

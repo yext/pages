@@ -1,5 +1,6 @@
 import pathLib from "node:path";
 import merge from "lodash/merge.js";
+import fs from "node:fs";
 import { Path } from "./path.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
 import { determinePublicFilepath } from "../assets/getPublicFilepath.js";
@@ -24,6 +25,10 @@ export interface RootFolders {
 export interface Subfolders {
   /** The templates folder */
   templates: string;
+  /** The modules folder */
+  modules: string;
+  /** The redirects folder */
+  redirects: string;
   /** The Node functions folder */
   serverlessFunctions: string; // Node functions
   /** Where to output the bundled static assets */
@@ -34,6 +39,8 @@ export interface Subfolders {
   clientBundle: string;
   /** Where to output the server bundles */
   serverBundle: string;
+  /** Where to output the redirect bundles */
+  redirectBundle: string;
   /** Where to output the render bundles */
   renderBundle: string; // _client and _server
   /** Where to output the renderer bundle */
@@ -125,6 +132,8 @@ export interface ProjectStructureConfig {
    *
    * The subfolder path inside src/templates and sites-config
    * to scope a build to a subset of templates using a specific sites-config folder.
+   *
+   * Modules scoping is also supported.
    */
   scope?: string;
 }
@@ -142,11 +151,14 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
   },
   subfolders: {
     templates: "templates",
+    modules: "modules",
+    redirects: "redirects",
     serverlessFunctions: "functions",
     assets: DEFAULT_ASSETS_DIR,
     public: DEFAULT_PUBLIC_DIR,
     clientBundle: "client",
     serverBundle: "server",
+    redirectBundle: "redirect",
     renderBundle: "render",
     renderer: "renderer",
     static: "static",
@@ -221,8 +233,8 @@ export class ProjectStructure {
   };
 
   /**
-   * @returns the list of of src/templates, taking scope into account. If a scope is defined then
-   * both the scoped and non-scoped template paths are returned.
+   * @returns the list of of src/templates, taking scope into account. If a scope is defined and
+   * the scoped path exists, then both the scoped and non-scoped template paths are returned.
    */
   getTemplatePaths = () => {
     // src/templates
@@ -231,14 +243,38 @@ export class ProjectStructure {
       this.config.subfolders.templates
     );
 
-    if (this.config.scope) {
-      return [
-        new Path(pathLib.join(templatesRoot, this.config.scope)),
-        new Path(templatesRoot),
-      ];
+    const scopedPath = pathLib.join(templatesRoot, this.config.scope ?? "");
+
+    if (this.config.scope && fs.existsSync(scopedPath)) {
+      return [new Path(scopedPath), new Path(templatesRoot)];
     }
 
     return [new Path(templatesRoot)];
+  };
+
+  /**
+   * @returns the list of src/redirects, taking scope into account. If a scope is defined and
+   * the scoped path exists, then both the scoped and non-scoped redirect paths are returned.
+   */
+  getRedirectPaths = () => {
+    // src/redirects
+    const redirectsRoot = pathLib.join(
+      this.config.rootFolders.source,
+      this.config.subfolders.redirects
+    );
+    if (!fs?.existsSync(redirectsRoot)) {
+      return [];
+    }
+
+    if (this.config.scope) {
+      // src/redirects/[scope]
+      const scopedPath: string = pathLib.join(redirectsRoot, this.config.scope);
+      if (fs?.existsSync(scopedPath)) {
+        return [new Path(scopedPath), new Path(redirectsRoot)];
+      }
+    }
+
+    return [new Path(redirectsRoot)];
   };
 
   /**
@@ -266,5 +302,30 @@ export class ProjectStructure {
     return new Path(
       pathLib.join(this.config.scope ?? "", this.config.rootFiles.config)
     );
+  };
+
+  /**
+   * @returns the {@link Path} to the modules folder, taking scope into account.
+   * If moduleName is provided, returns the path to that modules folder. If a scope is
+   * defined and scoped path exists, then both the scoped and non-scoped module paths are returned.
+   */
+  getModulePaths = (moduleName?: string) => {
+    const modulesPath = pathLib.join(
+      this.config.rootFolders.source,
+      this.config.subfolders.modules,
+      moduleName ?? ""
+    );
+    const scopedPath = pathLib.join(
+      this.config.rootFolders.source,
+      this.config.subfolders.modules,
+      this.config.scope ?? "",
+      moduleName ?? ""
+    );
+
+    if (this.config.scope && fs.existsSync(scopedPath)) {
+      return [new Path(scopedPath), new Path(modulesPath)];
+    }
+
+    return [new Path(modulesPath)];
   };
 }

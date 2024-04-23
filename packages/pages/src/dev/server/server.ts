@@ -18,6 +18,9 @@ import { convertFunctionModuleToFunctionModuleInternal } from "../../common/src/
 import { loadViteModule } from "./ssr/loadViteModule.js";
 import { FunctionModule } from "../../common/src/function/types.js";
 import { getViteServerConfig } from "../../common/src/loader/vite.js";
+import { serverRenderModule } from "./middleware/serverRenderModule.js";
+import { getModuleInfoFromModuleName } from "./ssr/findMatchingModule.js";
+import open from "open";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -28,7 +31,9 @@ export const createServer = async (
   dynamicGenerateData: boolean,
   useProdURLs: boolean,
   devServerPort: number,
-  scope?: string
+  openBrowser: boolean,
+  scope?: string,
+  module?: string
 ) => {
   // creates a standard express app
   const app = express();
@@ -39,6 +44,51 @@ export const createServer = async (
 
   // initialize the default project structure and use to help configure the dev server
   const projectStructure = await ProjectStructure.init({ scope });
+
+  if (module) {
+    const moduleInfo = await getModuleInfoFromModuleName(
+      module,
+      projectStructure
+    );
+    if (moduleInfo !== undefined) {
+      let vite;
+      // initialize using postCss if we have it
+      if (moduleInfo.postCssPath !== undefined) {
+        vite = await createViteServer({
+          ...getViteServerConfig(projectStructure),
+          css: {
+            postcss: moduleInfo.postCssPath,
+          },
+        });
+      } else {
+        vite = await createViteServer(getViteServerConfig(projectStructure));
+      }
+      // otherwise initialize without setting postcss
+      if (!vite) {
+        vite = await createViteServer(getViteServerConfig(projectStructure));
+      }
+
+      app.use(vite.middlewares);
+      app.use(errorMiddleware(vite));
+      app.use(
+        `/modules/${moduleInfo.moduleName}`,
+        serverRenderModule({
+          vite: vite,
+          modulePath: moduleInfo.modulePath,
+        })
+      );
+      app.listen(devServerPort, () =>
+        process.stdout.write(`listening on :${devServerPort}\n`)
+      );
+      if (openBrowser) {
+        await open(
+          `http://localhost:${devServerPort}/modules/${moduleInfo.moduleName}`
+        );
+      }
+      return;
+    }
+    return;
+  }
 
   // create vite using ssr mode
   const vite = await createViteServer(getViteServerConfig(projectStructure));

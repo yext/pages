@@ -4,12 +4,23 @@
 
 ## pages package
 
+## Functions
+
+| Function                                                                            | Description                                                                                                                                                                     |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [getLang(headConfig, props)](./pages.getlang.md)                                    | Function that takes in a [HeadConfig](./pages.headconfig.md) interface and a props, and returns the lang value that will be set on the HTML tag.                                |
+| [getRelativePrefixToRootFromPath(path)](./pages.getrelativeprefixtorootfrompath.md) | Function that takes a path to a generated template and returns the relative path to the root of the site. Will return the empty string if already at the root level.            |
+| [renderHeadConfigToString(headConfig)](./pages.renderheadconfigtostring.md)         | Function that takes a [HeadConfig](./pages.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the head tags. |
+
 ## Interfaces
 
 | Interface                                                     | Description                                                                                                                                                                                                |
 | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [FunctionModule](./pages.functionmodule.md)                   | Defines the functions and fields that are available to the serverless function.                                                                                                                            |
 | [HeadConfig](./pages.headconfig.md)                           | The configuration that allows users to entirely arbitarily set the inner contents of the head element that will be prepended to the generated HTML document.                                               |
+| [ModuleConfig](./pages.moduleconfig.md)                       | The configuration options for a Module.                                                                                                                                                                    |
+| [ModuleDefinition](./pages.moduledefinition.md)               | The type to include in any module file.                                                                                                                                                                    |
+| [ModuleProps](./pages.moduleprops.md)                         | The shape of the data used in the Module.                                                                                                                                                                  |
 | [PagesHttpRequest](./pages.pageshttprequest.md)               | The argument passed to a http/api type function.                                                                                                                                                           |
 | [PagesHttpResponse](./pages.pageshttpresponse.md)             | The return value for a http/api serverless function.                                                                                                                                                       |
 | [PagesOnUrlChangeRequest](./pages.pagesonurlchangerequest.md) | The argument passed to an onUrlChange type plugin.                                                                                                                                                         |
@@ -22,25 +33,19 @@
 | [TemplateProps](./pages.templateprops.md)                     | The shape of the data passed directly to the different template functions with the exception of the render function (getPath, getHeadConfig, etc).                                                         |
 | [TemplateRenderProps](./pages.templaterenderprops.md)         | The shape of the data passed directly to the template's render function. Extends the [TemplateProps](./pages.templateprops.md) interface and has the additions of a path and a relativePrefixToRoot field. |
 
-## Variables
-
-| Variable                                                                      | Description                                                                                                                                                                     |
-| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [getLang](./pages.getlang.md)                                                 | Function that takes in a [HeadConfig](./pages.headconfig.md) interface and a props, and returns the lang value that will be set on the HTML tag.                                |
-| [getRelativePrefixToRootFromPath](./pages.getrelativeprefixtorootfrompath.md) | Function that takes a path to a generated template and returns the relative path to the root of the site. Will return the empty string if already at the root level.            |
-| [renderHeadConfigToString](./pages.renderheadconfigtostring.md)               | Function that takes a [HeadConfig](./pages.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the head tags. |
-
 ## Type Aliases
 
 | Type Alias                                                      | Description                                                                                                                                                                                                                             |
 | --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [Attributes](./pages.attributes.md)                             | Custom type for specifying HTML element attributes in the [Tag](./pages.tag.md) interface.                                                                                                                                              |
 | [FunctionType](./pages.functiontype.md)                         | The valid Serverless Function types;                                                                                                                                                                                                    |
+| [GetAuthScope](./pages.getauthscope.md)                         | The type definition for the template's GetAuthScope function.                                                                                                                                                                           |
 | [GetHeadConfig](./pages.getheadconfig.md)                       | The type definition for the template's getHeadConfig function. getHeadConfig takes in the provided data and will output a HeadConfig object which will be used to generate the tags inside the head tag of the generated HTML document. |
 | [GetPath](./pages.getpath.md)                                   | The type definition for the template's getPath function.                                                                                                                                                                                |
 | [GetRedirects](./pages.getredirects.md)                         | The type definiton for the template's getRedirects function.                                                                                                                                                                            |
 | [HttpFunction](./pages.httpfunction.md)                         | A function that runs when a specific path is visited on the site.                                                                                                                                                                       |
 | [Manifest](./pages.manifest.md)                                 | A manifest of bundled files present during a production build.                                                                                                                                                                          |
+| [Module](./pages.module.md)                                     | The type definition for the module's default function.                                                                                                                                                                                  |
 | [OnUrlChangeFunction](./pages.onurlchangefunction.md)           | A function that runs when the path of a production page changes.                                                                                                                                                                        |
 | [PagesOnUrlChangeResponse](./pages.pagesonurlchangeresponse.md) | onUrlUpdate plugins return void.                                                                                                                                                                                                        |
 | [Render](./pages.render.md)                                     | The type definition for the template's render function.                                                                                                                                                                                 |

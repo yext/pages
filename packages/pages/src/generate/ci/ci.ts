@@ -24,10 +24,7 @@ export const ciCommand = (program: Command) => {
   program
     .command("ci")
     .description("Generates ci.json file")
-    .option(
-      "--scope <string>",
-      "The subfolder to scope the served templates from"
-    )
+    .option("--scope <string>", "The subfolder to scope from")
     .action(handler);
 };
 
@@ -89,6 +86,11 @@ export const getUpdatedCiConfig = async (
   ciConfigCopy.artifactStructure.assets.push({
     root: projectStructure.config.rootFolders.dist,
     pattern: `${projectStructure.config.subfolders.assets}/**/*`,
+  });
+
+  ciConfigCopy.artifactStructure.assets.push({
+    root: projectStructure.config.rootFolders.dist,
+    pattern: `${projectStructure.config.subfolders.modules}/**/*`,
   });
 
   // static assets based on the Vite publicDir

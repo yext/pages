@@ -165,6 +165,57 @@ describe("getChildExpressions", () => {
   });
 });
 
+describe("getVariableDeclarationByType", () => {
+  it("correctly gets a string variable", () => {
+    const parser = createParser(`const foo: string = "foo";`);
+    const variableDeclaration = parser.getVariableDeclarationByType("string");
+    expect(variableDeclaration).toBeDefined();
+    expect(variableDeclaration?.getType().getText()).toEqual("string");
+    expect(variableDeclaration?.getName()).toEqual("foo");
+  });
+
+  it("correctly gets a Module variable", () => {
+    const parser = createParser(`const foo: Module = () => {return <div/>;}`);
+    const variableDeclaration = parser.getVariableDeclarationByType("Module");
+    expect(variableDeclaration).toBeDefined();
+    expect(variableDeclaration?.getName()).toEqual("foo");
+  });
+});
+
+describe("getVariablePropertyByName", () => {
+  it("correctly gets a config's name", () => {
+    const parser = createParser(`export const config = { name: "foo" }`);
+    const variableDeclaration = parser.getVariablePropertyByName(
+      "config",
+      "name"
+    );
+    expect(variableDeclaration).toEqual(`"foo"`);
+  });
+});
+
+describe("removeUnusedImports", () => {
+  it("correctly removes unused imports", () => {
+    const parser = createParser(`import * as React from "react";`);
+    parser.removeUnusedImports();
+    expect(parser.getAllText()).toEqual("");
+  });
+
+  it("doesn't remove used imports", () => {
+    const parser = createParser(
+      `import { ModuleConfig } from "@yext/pages/*";
+      export const config: ModuleConfig = {
+        name: "foo"
+      }`
+    );
+    parser.removeUnusedImports();
+    expect(
+      parser
+        .getAllText()
+        .includes(`import { ModuleConfig } from "@yext/pages/*";`)
+    ).toBeTruthy();
+  });
+});
+
 function createParser(sourceCode: string) {
   const filepath = path.resolve(__dirname, "test.tsx");
   const { project } = createTestSourceFile(sourceCode, filepath);

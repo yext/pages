@@ -11,15 +11,13 @@ import path from "path";
 import fs from "fs";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
-import {
-  convertTemplateModuleToTemplateModuleInternal,
-  TemplateModuleInternal,
-} from "../../../common/src/template/internal/types.js";
+import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { ViteDevServer } from "vite";
-import { loadViteModule } from "./loadViteModule.js";
-import { TemplateModule } from "../../../common/src/template/types.js";
 import { getTemplatesConfig } from "../../../generate/templates/createTemplatesJson.js";
-import { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
+import {
+  TemplateModuleCollection,
+  loadTemplateModuleCollectionUsingVite,
+} from "../../../common/src/template/loader/loader.js";
 import runSubprocess from "../../../util/runSubprocess.js";
 import YAML from "yaml";
 
@@ -70,49 +68,29 @@ export const generateTestDataForSlug = async (
   args.push("--slug", `"${slug}"`);
 
   const slugFields = new Set<string>();
-  let shouldAddDefaultSlugField = false;
   templateModuleCollection.forEach((templateModule) => {
+    // We don't want to add the default "slug" field when no entity templates need it
+    if (templateModule.config.templateType == "static") {
+      return;
+    }
     const slugField = templateModule?.config?.slugField;
     if (slugField) {
       slugFields.add(slugField);
     } else {
-      shouldAddDefaultSlugField = true;
+      slugFields.add("slug");
     }
   });
 
-  if (slugFields.size !== 0) {
-    if (shouldAddDefaultSlugField) {
-      slugFields.add("slug");
-    }
-    args.push("--slugFields", Array.from(slugFields).toString());
-  }
+  args.push("--slugFields", Array.from(slugFields).toString());
 
   const parsedData = await spawnTestDataCommand(stdout, "yext", args);
 
-  // handle documents coming back as an array just in case
-  return parsedData?.length > 0 ? parsedData[0] : parsedData;
-};
-
-const loadTemplateModuleCollectionUsingVite = async (
-  vite: ViteDevServer,
-  templateFilepaths: string[]
-): Promise<TemplateModuleCollection> => {
-  const templateModules: TemplateModuleInternal<any, any>[] = await Promise.all(
-    templateFilepaths.map(async (templateFilepath) => {
-      const templateModule = await loadViteModule<TemplateModule<any, any>>(
-        vite,
-        templateFilepath
-      );
-      return convertTemplateModuleToTemplateModuleInternal(
-        templateFilepath,
-        templateModule,
-        false
-      );
-    })
+  return getDocumentBySlug(
+    parsedData,
+    slug,
+    Array.from(slugFields),
+    templateModuleCollection
   );
-  return templateModules.reduce((prev, module) => {
-    return prev.set(module.config.name, module);
-  }, new Map());
 };
 
 export const generateTestDataForPage = async (
@@ -266,7 +244,9 @@ const getCommonArgs = (
 
   if (projectStructure.config.scope) {
     args.push("--hostname", projectStructure.config.scope);
+    args.push("--scope", projectStructure.config.scope);
   }
+
   return args;
 };
 
@@ -293,4 +273,76 @@ const getDocumentByLocale = (parsedData: any, locale: string): any => {
     return documentsForLocale[0];
   }
   return parsedData;
+};
+
+const getDocumentBySlug = (
+  parsedData: any,
+  slug: string,
+  slugFields: string[],
+  templateModuleCollection: TemplateModuleCollection
+): any => {
+  if (!Array.isArray(parsedData)) {
+    return parsedData;
+  }
+
+  // Filter out any non-entity pages
+  const filteredDocuments: any[] = parsedData.filter(
+    (document) => !!document?.__?.entityPageSet
+  );
+  if (filteredDocuments.length === 1) {
+    return filteredDocuments[0];
+  }
+
+  // Find the slugField where the slug value matches
+  const matchingSlugFieldsSet: Set<string> = new Set();
+  for (const document of filteredDocuments) {
+    for (const slugField of slugFields) {
+      if (document[slugField] === slug) {
+        matchingSlugFieldsSet.add(slugField);
+      }
+    }
+  }
+
+  const matchingSlugFields = Array.from(matchingSlugFieldsSet);
+
+  if (matchingSlugFields.length === 0) {
+    throw new Error(`Could not find slugField on document for slug: "${slug}"`);
+  } else if (matchingSlugFields.length > 1) {
+    throw new Error(
+      `Multiple documents have the same slugField (${matchingSlugFields.join(
+        ", "
+      )}) with value: "${slug}"`
+    );
+  }
+
+  // Find the template that uses the slugfield
+  const matchingTemplateModules: TemplateModuleInternal<any, any>[] = [];
+  templateModuleCollection.forEach((templateModule) => {
+    const slugField = templateModule.config?.slugField || "slug";
+    if (slugField === matchingSlugFields[0]) {
+      matchingTemplateModules.push(templateModule);
+    }
+  });
+
+  if (matchingTemplateModules.length === 0) {
+    throw new Error(`Could not find template for slug: "${slug}"`);
+  } else if (matchingTemplateModules.length > 1) {
+    const templateNames = matchingTemplateModules
+      .map((templateModule) => templateModule.config.name)
+      .join(", ");
+    throw new Error(
+      `Multiple templates found (${templateNames}) for slug: "${slug}"`
+    );
+  }
+
+  // Return the document that matches the template
+  const matchingDocument = parsedData.find(
+    (document) => document.__.name === matchingTemplateModules[0].config.name
+  );
+
+  if (!matchingDocument) {
+    throw new Error(`Could not find document for slug: "${slug}"`);
+  }
+
+  return matchingDocument;
 };

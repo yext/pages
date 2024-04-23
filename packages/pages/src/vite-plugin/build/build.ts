@@ -4,6 +4,7 @@ import closeBundle from "./closeBundle/closeBundle.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { buildServerlessFunctions } from "../serverless-functions/plugin.js";
+import { buildModules } from "../modules/plugin.js";
 
 const intro = `
 var global = globalThis;
@@ -33,6 +34,7 @@ export const build = async (
       sequential: true,
       handler: async (): Promise<void> => {
         await buildServerlessFunctions(projectStructure);
+        await buildModules(projectStructure);
       },
     },
     config: async (): Promise<UserConfig> => {

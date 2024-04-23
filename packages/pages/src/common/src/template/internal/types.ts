@@ -10,6 +10,7 @@ import {
   TemplateModule,
   TemplateProps,
   TemplateRenderProps,
+  GetAuthScope,
 } from "../types.js";
 import path from "node:path";
 import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal.js";
@@ -35,6 +36,8 @@ export interface TemplateModuleInternal<
   config: TemplateConfigInternal;
   /** The optional exported transformProps function */
   transformProps?: TransformProps<T>;
+  /** The exported, optional getAuthScope function */
+  getAuthScope?: GetAuthScope<T>;
   /** The exported getPath function */
   getPath: GetPath<T>;
   /** The exported, optional headFunction */
@@ -186,7 +189,7 @@ export const convertTemplateConfigToTemplateConfigInternal = (
  * Converts a {@link Stream} into a valid {@link StreamInternal}
  * by setting stream.localization.primary: false if a locales array exists.
  */
-const convertStreamToStreamInternal = (
+export const convertStreamToStreamInternal = (
   stream: Stream | undefined
 ): StreamInternal | undefined => {
   if (!stream) return;

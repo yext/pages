@@ -25,9 +25,6 @@ export const prodCommand = (program: Command) => {
     .description("Runs a custom local production server")
     .option("--noBuild", "Disable build step")
     .option("--noRender", "Disable render step")
-    .option(
-      "--scope  <string>",
-      "The subfolder to scope the served templates from"
-    )
+    .option("--scope  <string>", "The subfolder to scope from")
     .action(handler);
 };
