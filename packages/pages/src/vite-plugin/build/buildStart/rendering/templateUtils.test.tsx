@@ -45,14 +45,20 @@ const serverRenderTemplate: ServerRenderTemplate = {
   render: () => {
     return Promise.resolve("");
   },
-  indexHtml: `<!DOCTYPE html>
-  <html lang="<!--app-lang-->">
-    <head></head>
-    <body>
-      <div id="reactele"><!--REPLACE-ME></div>
-    </body>
-  </html>`,
-  replacementTag: "<!--REPLACE-ME>",
+  getIndexHtml: async () => {
+    return `<!DOCTYPE html>
+      <html lang="<!--app-lang-->">
+        <head></head>
+        <body>
+          <div id="reactele"><!--REPLACE-ME></div>
+        </body>
+      </html>`;
+  },
+  getReplacementTag: async () => {
+    return "<!--REPLACE-ME>";
+  },
+  indexHtml: "",
+  replacementTag: "",
 };
 
 describe("generateResponses", () => {

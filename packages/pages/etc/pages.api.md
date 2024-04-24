@@ -216,8 +216,12 @@ export interface ServerModuleRenderTemplate {
 
 // @internal
 export interface ServerRenderTemplate {
+  getIndexHtml(pageContext: PageContext<any>): Promise<string>;
+  getReplacementTag(): Promise<string>;
+  // @deprecated (undocumented)
   indexHtml: string;
   render(pageContext: PageContext<any>): Promise<string>;
+  // @deprecated (undocumented)
   replacementTag: string;
 }
 

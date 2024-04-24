@@ -55,7 +55,12 @@ export default async function sendAppHTML(
 
   const clientInjectedIndexHtml = getIndexTemplateDev(
     clientHydrationString,
-    serverRenderTemplateModule.indexHtml,
+    serverRenderTemplateModule.getIndexHtml
+      ? await serverRenderTemplateModule.getIndexHtml({
+          Page: templateModuleInternal.default!,
+          pageProps: props,
+        })
+      : serverRenderTemplateModule.indexHtml,
     getLang(headConfig, props),
     headConfig
   );
@@ -79,7 +84,9 @@ export default async function sendAppHTML(
   };
 
   const html = transformedIndexHtml.replace(
-    serverRenderTemplateModule.replacementTag,
+    serverRenderTemplateModule.getReplacementTag
+      ? await serverRenderTemplateModule.getReplacementTag()
+      : serverRenderTemplateModule.replacementTag,
     await getServerHtml()
   );
 
