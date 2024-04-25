@@ -27,8 +27,6 @@ export interface ModuleDefinition {
 export interface ModuleConfig {
   /** Name of the module. If not defined uses the module filename (without extension) */
   name?: string;
-  /** Hosted domain for the module. Necessary for use of large static assets. */
-  domain?: string;
 }
 
 /**

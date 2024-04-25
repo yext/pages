@@ -14,10 +14,7 @@ import { logWarning } from "../../util/logError.js";
 import postcss from "postcss";
 import nested from "postcss-nested";
 import { createModuleLogger } from "../../common/src/module/internal/logger.js";
-import {
-  getModuleDomain,
-  getModuleName,
-} from "../../common/src/module/internal/getModuleConfig.js";
+import { getModuleName } from "../../common/src/module/internal/getModuleConfig.js";
 
 type FileInfo = {
   path: string;
@@ -96,7 +93,13 @@ export const buildModules = async (
       },
       experimental: {
         renderBuiltUrl(filename, { type }) {
-          const domain = getModuleDomain(fileInfo.path);
+          let domain = `http://localhost:8000`;
+          if (typeof process.env.YEXT_SITE_ARGUMENT !== "undefined") {
+            domain = new URL(
+              "http://" +
+                JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
+            ).toString();
+          }
           if (type === "asset" && domain) {
             return `${domain}/${subfolders.modules}/${filename}`;
           }
