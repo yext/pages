@@ -1,3 +1,9 @@
+#### 1.1.0-beta.4 (2024-04-25)
+
+##### Bug Fixes
+
+* **dev/plugin:**  _server.tsx now uses functions (#489) (7a97fa8e)
+
 #### 1.1.0-beta.3 (2024-04-23)
 
 ##### Chores
