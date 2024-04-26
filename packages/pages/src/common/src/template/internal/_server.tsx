@@ -10,12 +10,16 @@ export const render = async (pageContext: PageContext<any>) => {
   return ReactDOMServer.renderToString(<Page {...pageProps} />);
 };
 
-export const replacementTag = "<!--YEXT-SERVER-->";
+export const getReplacementTag = async () => {
+  return "<!--YEXT-SERVER-->";
+};
 
-export const indexHtml = `<!DOCTYPE html>
-    <html lang="<!--app-lang-->">
-      <head></head>
-      <body>
-        <div id="reactele">${replacementTag}</div>
-      </body>
-    </html>`;
+export const getIndexHtml = async () => {
+  return `<!DOCTYPE html>
+  <html lang="<!--app-lang-->">
+    <head></head>
+    <body>
+      <div id="reactele">${await getReplacementTag()}</div>
+    </body>
+  </html>`;
+};

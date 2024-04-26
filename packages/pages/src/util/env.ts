@@ -1,32 +1,25 @@
-import { getRuntime } from "./runtime.js";
-
 /**
  * Determines if the code is being executed on the production site on
  * the client. This is useful for things like firing analytics only
  * in production (opposed to dev or staging) and not during server side
- * rendering. If one or more domains are provided, the current hostname
- * must match one of them in order to be considered a production domain.
- * If no domains are provided, all hostnames are considered production
- * domains except for localhost and preview.pagescdn.com.
+ * rendering. The domains list has been deprecated and is no longer used.
+ * A client-side variable, IS_PRODUCTION, is now injected at serving time.
  *
- * @param domains The specified production domains of the site
+ * @param domains - Deprecated: The specified production domains of the site
  *
  * @public
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const isProduction = (...domains: string[]): boolean => {
-  const runtime = getRuntime();
-  if (runtime.name !== "browser") {
-    return false;
+  if (typeof window !== "undefined") {
+    // Previously users would pass in the siteDomain from the document, however this lead
+    // to incorrect cases where a domain is set after the deploy was made. The document
+    // remains the same for the deploy, so then isProduction() would incorrectly evaluate to
+    // false. Now this global var is injected at serving time, so it is always correct.
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return window.IS_PRODUCTION || false;
   }
 
-  const currentHostname: string = window?.location?.hostname;
-
-  if (domains.length === 0) {
-    return (
-      currentHostname !== "localhost" &&
-      !currentHostname.includes("preview.pagescdn.com")
-    );
-  }
-
-  return domains.some((domain) => domain?.includes(currentHostname));
+  return false;
 };

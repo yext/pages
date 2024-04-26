@@ -4,11 +4,16 @@ import {
   TemplateProps,
 } from "../../../../common/src/template/types.js";
 import {
-  generateResponses,
-  readTemplateModules,
   GeneratedPage,
+  generateTemplateResponses,
   getPluginRenderTemplates,
+  readTemplateModules,
 } from "./templateUtils.js";
+import {
+  GeneratedRedirect,
+  generateRedirectResponses,
+  readRedirectModules,
+} from "./redirectUtils.js";
 
 /**
  * This function is the main rendering function which is imported and executed in the Deno runtime
@@ -23,25 +28,37 @@ import {
 export default async (
   props: TemplateProps,
   manifest: Manifest
-): Promise<GeneratedPage> => {
+): Promise<GeneratedPage | GeneratedRedirect> => {
   const projectStructure = new ProjectStructure(manifest.projectStructure);
+  const feature = props.document.__.name;
+
   const template = await readTemplateModules(
-    props.document.__.name,
+    feature,
     manifest,
     projectStructure
   );
-  const pluginRenderTemplates = await getPluginRenderTemplates(
-    manifest,
-    projectStructure
-  );
+  if (template) {
+    const pluginRenderTemplates = await getPluginRenderTemplates(
+      manifest,
+      projectStructure
+    );
+    return await generateTemplateResponses(
+      template,
+      props,
+      pluginRenderTemplates,
+      manifest,
+      projectStructure
+    );
+  }
 
-  const responses = await generateResponses(
-    template,
-    props,
-    pluginRenderTemplates,
+  const redirect = await readRedirectModules(
+    feature,
     manifest,
     projectStructure
   );
+  if (redirect) {
+    return await generateRedirectResponses(redirect, props);
+  }
 
-  return responses;
+  throw new Error(`Could not find path for feature ${feature}`);
 };

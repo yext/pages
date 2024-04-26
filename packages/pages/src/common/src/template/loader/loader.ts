@@ -14,6 +14,7 @@ import { TemplateModule } from "../types.js";
  * @param templateModulePaths the templates filepaths to load as modules
  * @param transpile set to true if the templates need to be transpiled (such as when they are in tsx format)
  * @param adjustForFingerprintedAsset removes the fingerprint portion (for server bundles)
+ * @param projectStructure the structure of the project
  * @returns Promise<{@link TemplateModuleCollection}>
  */
 export const loadTemplateModules = async (

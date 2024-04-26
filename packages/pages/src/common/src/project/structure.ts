@@ -4,7 +4,6 @@ import fs from "node:fs";
 import { Path } from "./path.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
 import { determinePublicFilepath } from "../assets/getPublicFilepath.js";
-import { Manifest } from "../template/types.js";
 
 /**
  * All important folders defined at the root of the project.
@@ -28,6 +27,8 @@ export interface Subfolders {
   templates: string;
   /** The modules folder */
   modules: string;
+  /** The redirects folder */
+  redirects: string;
   /** The Node functions folder */
   serverlessFunctions: string; // Node functions
   /** Where to output the bundled static assets */
@@ -38,6 +39,8 @@ export interface Subfolders {
   clientBundle: string;
   /** Where to output the server bundles */
   serverBundle: string;
+  /** Where to output the redirect bundles */
+  redirectBundle: string;
   /** Where to output the render bundles */
   renderBundle: string; // _client and _server
   /** Where to output the renderer bundle */
@@ -149,11 +152,13 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
   subfolders: {
     templates: "templates",
     modules: "modules",
+    redirects: "redirects",
     serverlessFunctions: "functions",
     assets: DEFAULT_ASSETS_DIR,
     public: DEFAULT_PUBLIC_DIR,
     clientBundle: "client",
     serverBundle: "server",
+    redirectBundle: "redirect",
     renderBundle: "render",
     renderer: "renderer",
     static: "static",
@@ -228,35 +233,48 @@ export class ProjectStructure {
   };
 
   /**
-   * @param manifest should only be provided if fs doesn't work in the env.
    * @returns the list of of src/templates, taking scope into account. If a scope is defined and
    * the scoped path exists, then both the scoped and non-scoped template paths are returned.
    */
-  getTemplatePaths = (manifest?: Manifest) => {
+  getTemplatePaths = () => {
     // src/templates
     const templatesRoot = pathLib.join(
       this.config.rootFolders.source,
       this.config.subfolders.templates
     );
 
-    if (this.config.scope) {
-      // src/templates/[scope]
-      const scopedPath: string = pathLib.join(templatesRoot, this.config.scope);
-      if (fs?.existsSync(scopedPath)) {
-        return [new Path(scopedPath), new Path(templatesRoot)];
-      } else if (
-        manifest &&
-        Object.keys(manifest.bundlerManifest).some((key) =>
-          key.includes(scopedPath)
-        )
-      ) {
-        // manifest is used instead of fs during render code due to fs not working.
-        // Specifically in pages/src/vite-plugin/build/buildStart/rendering/wrapper.ts
-        return [new Path(scopedPath), new Path(templatesRoot)];
-      }
+    const scopedPath = pathLib.join(templatesRoot, this.config.scope ?? "");
+
+    if (this.config.scope && fs.existsSync(scopedPath)) {
+      return [new Path(scopedPath), new Path(templatesRoot)];
     }
 
     return [new Path(templatesRoot)];
+  };
+
+  /**
+   * @returns the list of src/redirects, taking scope into account. If a scope is defined and
+   * the scoped path exists, then both the scoped and non-scoped redirect paths are returned.
+   */
+  getRedirectPaths = () => {
+    // src/redirects
+    const redirectsRoot = pathLib.join(
+      this.config.rootFolders.source,
+      this.config.subfolders.redirects
+    );
+    if (!fs?.existsSync(redirectsRoot)) {
+      return [];
+    }
+
+    if (this.config.scope) {
+      // src/redirects/[scope]
+      const scopedPath: string = pathLib.join(redirectsRoot, this.config.scope);
+      if (fs?.existsSync(scopedPath)) {
+        return [new Path(scopedPath), new Path(redirectsRoot)];
+      }
+    }
+
+    return [new Path(redirectsRoot)];
   };
 
   /**

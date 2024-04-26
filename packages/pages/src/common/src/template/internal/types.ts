@@ -189,7 +189,7 @@ export const convertTemplateConfigToTemplateConfigInternal = (
  * Converts a {@link Stream} into a valid {@link StreamInternal}
  * by setting stream.localization.primary: false if a locales array exists.
  */
-const convertStreamToStreamInternal = (
+export const convertStreamToStreamInternal = (
   stream: Stream | undefined
 ): StreamInternal | undefined => {
   if (!stream) return;

@@ -6,7 +6,7 @@ import {
   TemplateProps,
   Manifest,
 } from "../../../../common/src/template/types.js";
-import { generateResponses } from "./templateUtils.js";
+import { generateTemplateResponses } from "./templateUtils.js";
 import path from "node:path";
 import { ProjectStructure } from "../../../../common/src/project/structure.js";
 
@@ -27,6 +27,7 @@ const baseTemplateModule: TemplateModuleInternal<any, any> = {
 
 const manifest: Manifest = {
   serverPaths: {},
+  redirectPaths: {},
   clientPaths: {},
   renderPaths: {},
   projectStructure: new ProjectStructure().config,
@@ -44,14 +45,20 @@ const serverRenderTemplate: ServerRenderTemplate = {
   render: () => {
     return Promise.resolve("");
   },
-  indexHtml: `<!DOCTYPE html>
-  <html lang="<!--app-lang-->">
-    <head></head>
-    <body>
-      <div id="reactele"><!--REPLACE-ME></div>
-    </body>
-  </html>`,
-  replacementTag: "<!--REPLACE-ME>",
+  getIndexHtml: async () => {
+    return `<!DOCTYPE html>
+      <html lang="<!--app-lang-->">
+        <head></head>
+        <body>
+          <div id="reactele"><!--REPLACE-ME></div>
+        </body>
+      </html>`;
+  },
+  getReplacementTag: async () => {
+    return "<!--REPLACE-ME>";
+  },
+  indexHtml: "",
+  replacementTag: "",
 };
 
 describe("generateResponses", () => {
@@ -59,7 +66,7 @@ describe("generateResponses", () => {
 
   it("calls transformProps when transformProps is defined", async () => {
     const fn = vi.fn((props) => props);
-    await generateResponses(
+    await generateTemplateResponses(
       { ...baseTemplateModule, transformProps: fn },
       baseProps,
       {
@@ -77,7 +84,7 @@ describe("generateResponses", () => {
 
   it("calls getRedirects when getRedirects is defined", async () => {
     const fn = vi.fn();
-    await generateResponses(
+    await generateTemplateResponses(
       { ...baseTemplateModule, getRedirects: fn },
       baseProps,
       {

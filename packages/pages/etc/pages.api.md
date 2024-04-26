@@ -67,8 +67,12 @@ export const getLang: <T extends TemplateRenderProps<any>>(
 // @public
 export type GetPath<T extends TemplateProps> = (props: T) => string;
 
+// Warning: (ae-forgotten-export) The symbol "RedirectSource" needs to be exported by the entry point index.d.ts
+//
 // @public
-export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
+export type GetRedirects<T extends TemplateProps> = (
+  props: T
+) => (RedirectSource | string)[];
 
 // @public
 export const getRelativePrefixToRootFromPath: (path: string) => string;
@@ -89,6 +93,9 @@ export type HttpFunction = (arg: PagesHttpRequest) => PagesHttpResponse;
 // @public
 export type Manifest = {
   serverPaths: {
+    [key: string]: string;
+  };
+  redirectPaths: {
     [key: string]: string;
   };
   clientPaths: {
@@ -209,8 +216,12 @@ export interface ServerModuleRenderTemplate {
 
 // @internal
 export interface ServerRenderTemplate {
+  getIndexHtml(pageContext: PageContext<any>): Promise<string>;
+  getReplacementTag(): Promise<string>;
+  // @deprecated (undocumented)
   indexHtml: string;
   render(pageContext: PageContext<any>): Promise<string>;
+  // @deprecated (undocumented)
   replacementTag: string;
 }
 
@@ -338,7 +349,7 @@ export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 // Warnings were encountered during analysis:
 //
-// dist/types/src/common/src/template/types.d.ts:173:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
+// dist/types/src/common/src/template/types.d.ts:178:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 ```

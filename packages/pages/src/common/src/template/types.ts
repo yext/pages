@@ -1,6 +1,7 @@
 import { ProjectStructureConfig } from "../project/structure.js";
 import { HeadConfig } from "./head.js";
 import React from "react";
+import { RedirectSource } from "../redirect/types.js";
 
 /**
  * The type to include in any template file. It defines the available functions and fields that are available
@@ -41,7 +42,9 @@ export interface TemplateModule<
  *
  * @public
  */
-export type GetRedirects<T extends TemplateProps> = (props: T) => string[];
+export type GetRedirects<T extends TemplateProps> = (
+  props: T
+) => (RedirectSource | string)[];
 
 /**
  * The type definition for the template's transformProps function. Can be used
@@ -182,6 +185,10 @@ export type Manifest = {
   serverPaths: {
     [key: string]: string;
   };
+  /** A map of feature name to the redirect path of the feature */
+  redirectPaths: {
+    [key: string]: string;
+  };
   /** A map of feature name to the client path of the feature */
   clientPaths: {
     [key: string]: string;
@@ -261,14 +268,20 @@ export interface ClientServerRenderTemplates {
  * @internal
  */
 export interface ServerRenderTemplate {
+  /** @deprecated The index.html entrypoint for your template */
+  indexHtml: string;
+
+  /** @deprecated The tag in indexHtml to replace with the contents of render */
+  replacementTag: string;
+
   /** The render function required by the render templates */
   render(pageContext: PageContext<any>): Promise<string>;
 
   /** The index.html entrypoint for your template */
-  indexHtml: string;
+  getIndexHtml(pageContext: PageContext<any>): Promise<string>;
 
   /** The tag in indexHtml to replace with the contents of render */
-  replacementTag: string;
+  getReplacementTag(): Promise<string>;
 }
 
 /**
