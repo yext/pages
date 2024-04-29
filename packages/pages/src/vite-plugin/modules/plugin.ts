@@ -101,7 +101,7 @@ export const buildModules = async (
                   JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
               ).toString();
             } catch (_) {
-              logger.error("Cannot parse YEXT_SITE_ARGUMENT");
+              throw new Error("Cannot parse YEXT_SITE_ARGUMENT");
             }
           }
           if (type === "asset" && domain) {
