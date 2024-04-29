@@ -10,7 +10,7 @@ import pc from "picocolors";
 import SourceFileParser, {
   createTsMorphProject,
 } from "../../common/src/parsers/sourceFileParser.js";
-import { logWarning } from "../../util/logError.js";
+import { logErrorAndExit, logWarning } from "../../util/logError.js";
 import postcss from "postcss";
 import nested from "postcss-nested";
 import { createModuleLogger } from "../../common/src/module/internal/logger.js";
@@ -101,7 +101,7 @@ export const buildModules = async (
                   JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
               ).toString();
             } catch (_) {
-              throw new Error("Cannot parse YEXT_SITE_ARGUMENT");
+              logErrorAndExit("Cannot parse YEXT_SITE_ARGUMENT");
             }
           }
           if (type === "asset" && domain) {
