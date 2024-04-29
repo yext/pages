@@ -10,11 +10,11 @@ import pc from "picocolors";
 import SourceFileParser, {
   createTsMorphProject,
 } from "../../common/src/parsers/sourceFileParser.js";
-import { logWarning } from "../../util/logError.js";
+import { logErrorAndExit, logWarning } from "../../util/logError.js";
 import postcss from "postcss";
 import nested from "postcss-nested";
 import { createModuleLogger } from "../../common/src/module/internal/logger.js";
-import { getModuleName } from "../../common/src/module/internal/getModuleName.js";
+import { getModuleName } from "../../common/src/module/internal/getModuleConfig.js";
 
 type FileInfo = {
   path: string;
@@ -89,6 +89,25 @@ export const buildModules = async (
       esbuild: {
         logOverride: {
           "css-syntax-error": "silent",
+        },
+      },
+      experimental: {
+        renderBuiltUrl(filename, { type }) {
+          let domain = `http://localhost:8000`;
+          if (typeof process.env.YEXT_SITE_ARGUMENT !== "undefined") {
+            try {
+              domain = new URL(
+                "https://" +
+                  JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
+              ).toString();
+            } catch (_) {
+              logErrorAndExit("Cannot parse YEXT_SITE_ARGUMENT");
+            }
+          }
+          if (type === "asset" && domain) {
+            return `${domain}/${subfolders.modules}/${filename}`;
+          }
+          return filename;
         },
       },
       build: {
