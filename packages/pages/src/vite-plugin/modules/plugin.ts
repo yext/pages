@@ -95,10 +95,14 @@ export const buildModules = async (
         renderBuiltUrl(filename, { type }) {
           let domain = `http://localhost:8000`;
           if (typeof process.env.YEXT_SITE_ARGUMENT !== "undefined") {
-            domain = new URL(
-              "http://" +
-                JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
-            ).toString();
+            try {
+              domain = new URL(
+                "https://" +
+                  JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
+              ).toString();
+            } catch (_) {
+              logger.error("Cannot parse YEXT_SITE_ARGUMENT");
+            }
           }
           if (type === "asset" && domain) {
             return `${domain}/${subfolders.modules}/${filename}`;
