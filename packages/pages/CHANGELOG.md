@@ -1,3 +1,9 @@
+#### 1.1.0-beta.5 (2024-04-30)
+
+##### Bug Fixes
+
+*  handle static assets in modules (#514) (501a8f58)
+
 #### 1.1.0-beta.4 (2024-04-25)
 
 ##### Bug Fixes
