@@ -1,7 +1,14 @@
 import { TemplateProps, Stream } from "../template/types.js";
 
+/**
+ * The type of a RedirectSource. It defines the source and statusCode for a redirect.
+ *
+ * @public
+ */
 export interface RedirectSource {
+  /** The source to redirect from */
   source: string;
+  /** The status code of the redirect */
   statusCode: number;
 }
 

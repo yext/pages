@@ -21,6 +21,6 @@ step("Publishing package...");
 const releaseTag = version.includes("beta")
   ? "beta"
   : version.includes("alpha")
-  ? "alpha"
-  : undefined;
+    ? "alpha"
+    : undefined;
 await publishPackage(pkgDir, releaseTag);
