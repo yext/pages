@@ -1,3 +1,13 @@
+#### 1.1.0-beta.6 (2024-04-30)
+
+##### Documentation Changes
+
+*  add RedirectSource (6920e222)
+
+##### Bug Fixes
+
+* **plugin:**  export redirect types (#522) (fcb26479)
+
 #### 1.1.0-beta.5 (2024-04-30)
 
 ##### Bug Fixes
