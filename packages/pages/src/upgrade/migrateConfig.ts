@@ -110,7 +110,7 @@ export const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
 
   return {
     id: sitesJson.$id, // Replace $id with id and keeps id in the first position
-    entityId: entityId,
+    entityId: entityId.toString(),
     localization: sitesJson.localization,
     fields: sitesJson.fields,
   };
