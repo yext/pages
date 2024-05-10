@@ -224,6 +224,7 @@ const getSiteStream = (projectStructure: ProjectStructure) => {
   if (fs.existsSync(configYamlPath)) {
     const yamlDoc = YAML.parse(fs.readFileSync(configYamlPath, "utf-8"));
     if (yamlDoc.siteStream) {
+      yamlDoc.siteStream.entityId = yamlDoc.siteStream?.entityId?.toString();
       return prepareJsonForCmd(yamlDoc.siteStream);
     }
   }

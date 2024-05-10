@@ -54,6 +54,9 @@ export type FunctionType = HttpFunction | OnUrlChangeFunction;
 export type GetAuthScope<T extends TemplateProps> = (props: T) => string;
 
 // @public
+export type GetDestination<T extends TemplateProps> = (props: T) => string;
+
+// @public
 export type GetHeadConfig<T extends TemplateRenderProps> = (
   props: T
 ) => HeadConfig;
@@ -67,8 +70,6 @@ export const getLang: <T extends TemplateRenderProps<any>>(
 // @public
 export type GetPath<T extends TemplateProps> = (props: T) => string;
 
-// Warning: (ae-forgotten-export) The symbol "RedirectSource" needs to be exported by the entry point index.d.ts
-//
 // @public
 export type GetRedirects<T extends TemplateProps> = (
   props: T
@@ -76,6 +77,11 @@ export type GetRedirects<T extends TemplateProps> = (
 
 // @public
 export const getRelativePrefixToRootFromPath: (path: string) => string;
+
+// @public
+export type GetSources<T extends TemplateProps> = (
+  props: T
+) => RedirectSource[];
 
 // @public
 export interface HeadConfig {
@@ -200,6 +206,26 @@ export interface PagesOnUrlChangeRequest {
 
 // @public
 export type PagesOnUrlChangeResponse = void;
+
+// @public
+export interface RedirectConfig {
+  name?: string;
+  stream?: Stream;
+  streamId?: string;
+}
+
+// @public
+export interface RedirectModule<T extends TemplateProps> {
+  config?: RedirectConfig;
+  getDestination: GetDestination<T>;
+  getSources: GetSources<T>;
+}
+
+// @public
+export interface RedirectSource {
+  source: string;
+  statusCode: number;
+}
 
 // @public
 export type Render<T extends TemplateRenderProps<T>> = (props: T) => string;

@@ -14,4 +14,4 @@ export type GetRedirects<T extends TemplateProps> = (
 ) => (RedirectSource | string)[];
 ```
 
-**References:** [TemplateProps](./pages.templateprops.md)
+**References:** [TemplateProps](./pages.templateprops.md)<!-- -->, [RedirectSource](./pages.redirectsource.md)
