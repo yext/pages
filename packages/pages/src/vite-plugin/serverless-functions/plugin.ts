@@ -1,4 +1,4 @@
-import { build, createLogger } from "vite";
+import { createLogger, mergeConfig } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -45,10 +45,6 @@ export const buildServerlessFunctions = async (
   const viteConfig = await import(
     scopedViteConfigPath(projectStructure.config.scope) ?? ""
   );
-  const config = viteConfig?.default;
-  const filteredPlugins = config?.plugins?.[0]?.filter(
-    (obj: any) => obj.name !== "vite:react-refresh"
-  );
 
   for (const [name, filepath] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
@@ -62,29 +58,24 @@ export const buildServerlessFunctions = async (
       loggerInfo(msg, options);
     };
 
-    await build({
-      ...config,
+    const override = {
       customLogger: logger,
       configFile: false,
       envDir: envVarConfig.envVarDir,
       envPrefix: envVarConfig.envVarPrefix,
       resolve: {
-        ...config?.resolve,
         conditions: ["worker", "webworker"],
       },
       publicDir: false,
       build: {
-        ...config?.build,
         emptyOutDir: false,
         outDir: outdir,
         minify: false,
         lib: {
-          ...config?.build?.lib,
           entry: { [name]: filepath },
           formats: ["es"],
         },
         rollupOptions: {
-          ...config?.build?.rollupOptions,
           output: {
             // must use this over lib.fileName otherwise it always ends in .js
             entryFileNames: `[name]/mod.ts`,
@@ -101,9 +92,9 @@ export const buildServerlessFunctions = async (
             process: "build",
           },
         }),
-        ...filteredPlugins,
       ],
-    });
+    };
+    await mergeConfig(viteConfig, override);
   }
 };
 

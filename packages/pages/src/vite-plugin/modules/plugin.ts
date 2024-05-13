@@ -1,4 +1,4 @@
-import { build, Plugin } from "vite";
+import { mergeConfig, Plugin } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -65,10 +65,6 @@ export const buildModules = async (
   const viteConfig = await import(
     scopedViteConfigPath(projectStructure.config.scope) ?? ""
   );
-  const config = viteConfig?.default;
-  const filteredPlugins = config?.plugins?.[0]?.filter(
-    (obj: any) => obj.name !== "vite:react-refresh"
-  );
 
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
@@ -79,19 +75,16 @@ export const buildModules = async (
       loggerInfo(msg, options);
     };
 
-    await build({
-      ...config,
+    const override = {
       customLogger: logger,
       configFile: false,
       envDir: envVarConfig.envVarDir,
       envPrefix: envVarConfig.envVarPrefix,
       resolve: {
-        ...config?.resolve,
         conditions: ["worker", "webworker"],
       },
       publicDir: false,
       css: {
-        ...config?.css,
         postcss: getPostCssConfigFilepath(
           rootFolders,
           subfolders,
@@ -99,14 +92,12 @@ export const buildModules = async (
         ),
       },
       esbuild: {
-        ...config?.esbuild,
         logOverride: {
-          ...config?.esbuild?.logOverride,
           "css-syntax-error": "silent",
         },
       },
       experimental: {
-        renderBuiltUrl(filename, { type }) {
+        renderBuiltUrl(filename: any, { type }: any) {
           let domain = `http://localhost:8000`;
           if (typeof process.env.YEXT_SITE_ARGUMENT !== "undefined") {
             try {
@@ -125,13 +116,11 @@ export const buildModules = async (
         },
       },
       build: {
-        ...config?.build,
         chunkSizeWarningLimit: 2000,
         emptyOutDir: false,
         outDir: outdir,
         minify: true,
         rollupOptions: {
-          ...config?.build?.rollupOptions,
           input: fileInfo.path,
           output: {
             format: "umd",
@@ -142,7 +131,6 @@ export const buildModules = async (
       },
       define: processEnvVariables(envVarConfig.envVarPrefix),
       plugins: [
-        ...filteredPlugins,
         addWrappedCodePlugin(fileInfo.path, moduleName),
         nodePolyfills({
           globals: {
@@ -152,7 +140,8 @@ export const buildModules = async (
           },
         }),
       ],
-    });
+    };
+    await mergeConfig(viteConfig, override);
   }
 };
 
