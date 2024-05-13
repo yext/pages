@@ -15,6 +15,7 @@ import postcss from "postcss";
 import nested from "postcss-nested";
 import { createModuleLogger } from "../../common/src/module/internal/logger.js";
 import { getModuleName } from "../../common/src/module/internal/getModuleConfig.js";
+import { scopedViteConfigPath } from "../../util/viteConfig.js";
 
 type FileInfo = {
   path: string;
@@ -60,6 +61,11 @@ export const buildModules = async (
       `Please be aware that using @tailwind base applies styles globally. This can affect code outside of the widget.`
     );
   }
+
+  const viteConfig = await import(
+    scopedViteConfigPath(projectStructure.config.scope) ?? ""
+  );
+  const rollupOptions = viteConfig?.default?.build?.rollupOptions;
 
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
@@ -121,6 +127,7 @@ export const buildModules = async (
             format: "umd",
             entryFileNames: `${moduleName}.umd.js`,
           },
+          ...rollupOptions,
         },
         reportCompressedSize: false,
       },
