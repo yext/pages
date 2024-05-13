@@ -65,7 +65,10 @@ export const buildModules = async (
   const viteConfig = await import(
     scopedViteConfigPath(projectStructure.config.scope) ?? ""
   );
-  const rollupOptions = viteConfig?.default?.build?.rollupOptions;
+  const config = viteConfig?.default;
+  const filteredPlugins = config?.plugins?.[0]?.filter(
+    (obj: any) => obj.name !== "vite:react-refresh"
+  );
 
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
@@ -77,15 +80,18 @@ export const buildModules = async (
     };
 
     await build({
+      ...config,
       customLogger: logger,
       configFile: false,
       envDir: envVarConfig.envVarDir,
       envPrefix: envVarConfig.envVarPrefix,
       resolve: {
+        ...config?.resolve,
         conditions: ["worker", "webworker"],
       },
       publicDir: false,
       css: {
+        ...config?.css,
         postcss: getPostCssConfigFilepath(
           rootFolders,
           subfolders,
@@ -93,7 +99,9 @@ export const buildModules = async (
         ),
       },
       esbuild: {
+        ...config?.esbuild,
         logOverride: {
+          ...config?.esbuild?.logOverride,
           "css-syntax-error": "silent",
         },
       },
@@ -117,22 +125,24 @@ export const buildModules = async (
         },
       },
       build: {
+        ...config?.build,
         chunkSizeWarningLimit: 2000,
         emptyOutDir: false,
         outDir: outdir,
         minify: true,
         rollupOptions: {
+          ...config?.build?.rollupOptions,
           input: fileInfo.path,
           output: {
             format: "umd",
             entryFileNames: `${moduleName}.umd.js`,
           },
-          ...rollupOptions,
         },
         reportCompressedSize: false,
       },
       define: processEnvVariables(envVarConfig.envVarPrefix),
       plugins: [
+        ...filteredPlugins,
         addWrappedCodePlugin(fileInfo.path, moduleName),
         nodePolyfills({
           globals: {
