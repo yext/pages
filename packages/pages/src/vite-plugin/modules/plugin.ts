@@ -1,4 +1,4 @@
-import { mergeConfig, Plugin } from "vite";
+import { build, mergeConfig, Plugin } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -15,7 +15,10 @@ import postcss from "postcss";
 import nested from "postcss-nested";
 import { createModuleLogger } from "../../common/src/module/internal/logger.js";
 import { getModuleName } from "../../common/src/module/internal/getModuleConfig.js";
-import { scopedViteConfigPath } from "../../util/viteConfig.js";
+import {
+  removePluginFromViteConfig,
+  scopedViteConfigPath,
+} from "../../util/viteConfig.js";
 
 type FileInfo = {
   path: string;
@@ -74,7 +77,7 @@ export const buildModules = async (
       loggerInfo(msg, options);
     };
 
-    const override = {
+    const moduleBuildConfig = {
       customLogger: logger,
       configFile: false,
       envDir: envVarConfig.envVarDir,
@@ -140,7 +143,13 @@ export const buildModules = async (
         }),
       ],
     };
-    await mergeConfig(viteConfig, override);
+    await build(
+      mergeConfig(
+        removePluginFromViteConfig(viteConfig.default),
+        moduleBuildConfig,
+        false
+      )
+    );
   }
 };
 

@@ -16,3 +16,12 @@ export const scopedViteConfigPath = (scope?: string) => {
     return viteConfigPath;
   }
 };
+
+export const removePluginFromViteConfig = (config: any) => {
+  if (config?.plugins) {
+    config.plugins = config.plugins?.[0]?.filter(
+      (obj: any) => obj.name !== "vite:react-refresh"
+    );
+  }
+  return config;
+};

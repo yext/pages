@@ -1,4 +1,4 @@
-import { createLogger, mergeConfig } from "vite";
+import { build, createLogger, mergeConfig } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -8,7 +8,10 @@ import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { FunctionMetadataParser } from "../../common/src/function/internal/functionMetadataParser.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
-import { scopedViteConfigPath } from "../../util/viteConfig.js";
+import {
+  removePluginFromViteConfig,
+  scopedViteConfigPath,
+} from "../../util/viteConfig.js";
 
 export const buildServerlessFunctions = async (
   projectStructure: ProjectStructure
@@ -57,7 +60,7 @@ export const buildServerlessFunctions = async (
       loggerInfo(msg, options);
     };
 
-    const override = {
+    const serverlessFunctionBuildConfig = {
       customLogger: logger,
       configFile: false,
       envDir: envVarConfig.envVarDir,
@@ -93,7 +96,13 @@ export const buildServerlessFunctions = async (
         }),
       ],
     };
-    await mergeConfig(viteConfig, override);
+    await build(
+      mergeConfig(
+        removePluginFromViteConfig(viteConfig.default),
+        serverlessFunctionBuildConfig,
+        false
+      )
+    );
   }
 };
 
