@@ -62,9 +62,8 @@ export const buildModules = async (
     );
   }
 
-  const viteConfig = await import(
-    scopedViteConfigPath(projectStructure.config.scope) ?? ""
-  );
+  const viteConfigPath = scopedViteConfigPath(projectStructure.config.scope);
+  const viteConfig = viteConfigPath ? await import(viteConfigPath) : "";
 
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {

@@ -42,9 +42,8 @@ export const buildServerlessFunctions = async (
   const logger = createLogger();
   const loggerInfo = logger.info;
 
-  const viteConfig = await import(
-    scopedViteConfigPath(projectStructure.config.scope) ?? ""
-  );
+  const viteConfigPath = scopedViteConfigPath(projectStructure.config.scope);
+  const viteConfig = viteConfigPath ? await import(viteConfigPath) : "";
 
   for (const [name, filepath] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
