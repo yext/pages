@@ -16,3 +16,10 @@ export const scopedViteConfigPath = (scope?: string) => {
     return viteConfigPath;
   }
 };
+
+export const removePluginFromViteConfig = (config: any) => {
+  if (config?.plugins) {
+    config.plugins = "";
+  }
+  return config;
+};

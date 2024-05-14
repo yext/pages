@@ -1,4 +1,4 @@
-import { build, createLogger } from "vite";
+import { build, createLogger, mergeConfig } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -8,6 +8,10 @@ import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { FunctionMetadataParser } from "../../common/src/function/internal/functionMetadataParser.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
+import {
+  removePluginFromViteConfig,
+  scopedViteConfigPath,
+} from "../../util/viteConfig.js";
 
 export const buildServerlessFunctions = async (
   projectStructure: ProjectStructure
@@ -41,6 +45,9 @@ export const buildServerlessFunctions = async (
   const logger = createLogger();
   const loggerInfo = logger.info;
 
+  const viteConfigPath = scopedViteConfigPath(projectStructure.config.scope);
+  const viteConfig = viteConfigPath ? await import(viteConfigPath) : "";
+
   for (const [name, filepath] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
@@ -53,7 +60,7 @@ export const buildServerlessFunctions = async (
       loggerInfo(msg, options);
     };
 
-    await build({
+    const serverlessFunctionBuildConfig = {
       customLogger: logger,
       configFile: false,
       envDir: envVarConfig.envVarDir,
@@ -88,7 +95,13 @@ export const buildServerlessFunctions = async (
           },
         }),
       ],
-    });
+    };
+    await build(
+      mergeConfig(
+        removePluginFromViteConfig(viteConfig.default),
+        serverlessFunctionBuildConfig
+      )
+    );
   }
 };
 

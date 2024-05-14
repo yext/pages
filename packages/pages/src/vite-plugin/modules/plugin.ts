@@ -1,4 +1,4 @@
-import { build, Plugin } from "vite";
+import { build, mergeConfig, Plugin } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -15,6 +15,10 @@ import postcss from "postcss";
 import nested from "postcss-nested";
 import { createModuleLogger } from "../../common/src/module/internal/logger.js";
 import { getModuleName } from "../../common/src/module/internal/getModuleConfig.js";
+import {
+  removePluginFromViteConfig,
+  scopedViteConfigPath,
+} from "../../util/viteConfig.js";
 
 type FileInfo = {
   path: string;
@@ -61,6 +65,9 @@ export const buildModules = async (
     );
   }
 
+  const viteConfigPath = scopedViteConfigPath(projectStructure.config.scope);
+  const viteConfig = viteConfigPath ? await import(viteConfigPath) : "";
+
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
@@ -70,7 +77,7 @@ export const buildModules = async (
       loggerInfo(msg, options);
     };
 
-    await build({
+    const moduleBuildConfig = {
       customLogger: logger,
       configFile: false,
       envDir: envVarConfig.envVarDir,
@@ -92,7 +99,10 @@ export const buildModules = async (
         },
       },
       experimental: {
-        renderBuiltUrl(filename, { type }) {
+        renderBuiltUrl(
+          filename: string,
+          { type }: { type: "asset" | "public" }
+        ) {
           let domain = `http://localhost:8000`;
           if (typeof process.env.YEXT_SITE_ARGUMENT !== "undefined") {
             try {
@@ -135,7 +145,13 @@ export const buildModules = async (
           },
         }),
       ],
-    });
+    };
+    await build(
+      mergeConfig(
+        removePluginFromViteConfig(viteConfig.default),
+        moduleBuildConfig
+      )
+    );
   }
 };
 
