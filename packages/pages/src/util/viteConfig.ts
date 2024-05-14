@@ -18,9 +18,10 @@ export const scopedViteConfigPath = (scope?: string) => {
 };
 
 export const removePluginFromViteConfig = (config: any) => {
-  if (config?.plugins) {
+  if (config?.plugins?.[0]) {
     config.plugins = config.plugins?.[0]?.filter(
-      (obj: any) => obj.name !== "vite:react-refresh"
+      (obj: any) =>
+        obj.name !== "vite:react-refresh" || obj.name !== "vite:react-babel"
     );
   }
   return config;
