@@ -1,3 +1,10 @@
+#### 1.1.0-beta.7 (2024-05-14)
+
+##### Bug Fixes
+
+* **plugin:**  use the user's vite.config (#524) (57e3e812)
+*  handle siteStream's entityId as string (#523) (52ebb408)
+
 #### 1.1.0-beta.6 (2024-04-30)
 
 ##### Documentation Changes
