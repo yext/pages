@@ -99,7 +99,10 @@ export const buildModules = async (
         },
       },
       experimental: {
-        renderBuiltUrl(filename: any, { type }: any) {
+        renderBuiltUrl(
+          filename: string,
+          { type }: { type: "asset" | "public" }
+        ) {
           let domain = `http://localhost:8000`;
           if (typeof process.env.YEXT_SITE_ARGUMENT !== "undefined") {
             try {
