@@ -99,8 +99,7 @@ export const buildServerlessFunctions = async (
     await build(
       mergeConfig(
         removePluginFromViteConfig(viteConfig.default),
-        serverlessFunctionBuildConfig,
-        false
+        serverlessFunctionBuildConfig
       )
     );
   }

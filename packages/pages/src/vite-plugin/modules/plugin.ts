@@ -146,8 +146,7 @@ export const buildModules = async (
     await build(
       mergeConfig(
         removePluginFromViteConfig(viteConfig.default),
-        moduleBuildConfig,
-        false
+        moduleBuildConfig
       )
     );
   }
