@@ -34,6 +34,7 @@ interface FeatureConfigBase {
   /** @deprecated field will be unsupported in the future */
   alternateLanguageFields?: string[];
   onUrlChange?: PluginFunctionSelector;
+  additionalProperties?: string;
 }
 
 interface EntityPageSetConfig extends FeatureConfigBase {
@@ -75,8 +76,8 @@ export const convertTemplateConfigToFeatureConfig = (
     streamId: streamConfig?.$id ?? config.streamId,
     templateType: "JS",
     alternateLanguageFields: config.alternateLanguageFields,
+    additionalProperties: config.additionalProperties,
   };
-
   let featureConfig: FeatureConfig;
   // If the templateConfig does not reference a stream, assume it's a static feature.
   if (config.templateType === "static") {
