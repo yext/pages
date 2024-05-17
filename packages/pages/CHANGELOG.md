@@ -1,3 +1,9 @@
+#### 1.1.0 (2024-05-17)
+
+##### New Features
+
+* **plugin:**  add additionalProperties to templates.json (#525) (4cfc75ec)
+
 #### 1.1.0-beta.7 (2024-05-14)
 
 ##### Bug Fixes
