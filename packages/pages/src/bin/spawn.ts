@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 import { spawnSync } from "child_process";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import process from "process";
 import path from "path";
+import { register } from "node:module";
+console.log("before fileURLToPath");
 const __filename = fileURLToPath(import.meta.url);
+console.log("after fileURLToPath");
 const __dirname = path.dirname(__filename);
 
 const filePrefix = path.sep === path.win32.sep ? "file:\\\\" : "";
@@ -20,8 +23,10 @@ const experimentalFlags = ["--experimental-vm-modules"];
 if (nodeVersion === 18) {
   experimentalFlags.push("--experimental-specifier-resolution=node");
 } else {
-  experimentalFlags.push("--experimental-loader");
-  experimentalFlags.push(pathToLoader);
+  console.log("pathToLoader " + pathToLoader);
+  const loaderURL = pathToFileURL(pathToLoader).href;
+  console.log("test (to remove): " + loaderURL.toString());
+  register(loaderURL);
 }
 
 const results = spawnSync(
