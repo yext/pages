@@ -1,3 +1,9 @@
+#### 1.1.1 (2024-06-13)
+
+##### Bug Fixes
+
+* **dev:**  don't lookup mime type unless there's an extension (#526) (72657e0d)
+
 #### 1.1.0 (2024-05-17)
 
 ##### New Features
