@@ -13,5 +13,10 @@ export const getContentType = (
   // with a fallback to the current logic.
   const path = templateModuleInternal.getPath(props);
 
-  return lookup(path) || "text/html";
+  // There is a bug in mime-types where "map" returns "application/json" instead of false
+  // https://github.com/jshttp/mime-types/issues/125
+  // Instead, only get the mime type if there's an extension, otherwise fallback to "text/html"
+  const pathExtention = path.includes(".") ? path.split(".").pop() : "";
+
+  return pathExtention ? lookup(pathExtention) || "text/html" : "text/html";
 };
