@@ -17,10 +17,11 @@ PagesJS is a collection of tools that make it easy to develop on [Yext Pages](ht
 ## Utility Functions
 
 | Function                                                                                                 |
-| -------------------------------------------------------------------------------------------------------- |
+| -------------------------------------------------------------------------------------------------------- | --- |
 | [fetch()](https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#fetch)               |
 | [getRuntime()](https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#getRuntime)     |
 | [isProduction()](https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#isProduction) |
+| [useDocument()](https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#useDocument)   |     |
 
 ## Development
 
