@@ -118,7 +118,7 @@ export interface TemplateConfig {
   /** The field to use as the slug for dynamic dev mode */
   slugField?: string;
   /** The field to pass additional metadata */
-  additionalProperties?: string;
+  additionalProperties?: Record<string, any>;
 }
 
 /**

@@ -16,7 +16,7 @@ export interface TemplateConfig
 
 | Property                                                                      | Modifiers | Type                        | Description                                                                                                  |
 | ----------------------------------------------------------------------------- | --------- | --------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [additionalProperties?](./pages.templateconfig.additionalproperties.md)       |           | string                      | _(Optional)_ The field to pass additional metadata                                                           |
+| [additionalProperties?](./pages.templateconfig.additionalproperties.md)       |           | Record<string, any>         | _(Optional)_ The field to pass additional metadata                                                           |
 | [alternateLanguageFields?](./pages.templateconfig.alternatelanguagefields.md) |           | string\[\]                  | _(Optional)_ The specific fields to add additional language options to based on the stream's localization    |
 | [hydrate?](./pages.templateconfig.hydrate.md)                                 |           | boolean                     | _(Optional)_ Determines if hydration is allowed or not for webpages                                          |
 | [name?](./pages.templateconfig.name.md)                                       |           | string                      | _(Optional)_ The name of the template feature. If not defined uses the template filename (without extension) |

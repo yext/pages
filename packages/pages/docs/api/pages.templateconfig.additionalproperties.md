@@ -9,5 +9,5 @@ The field to pass additional metadata
 **Signature:**
 
 ```typescript
-additionalProperties?: string;
+additionalProperties?: Record<string, any>;
 ```

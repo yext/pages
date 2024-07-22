@@ -329,7 +329,7 @@ export type Template<T extends TemplateRenderProps> = (
 
 // @public
 export interface TemplateConfig {
-  additionalProperties?: string;
+  additionalProperties?: Record<string, any>;
   alternateLanguageFields?: string[];
   hydrate?: boolean;
   name?: string;
