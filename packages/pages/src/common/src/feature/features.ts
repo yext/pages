@@ -34,7 +34,7 @@ interface FeatureConfigBase {
   /** @deprecated field will be unsupported in the future */
   alternateLanguageFields?: string[];
   onUrlChange?: PluginFunctionSelector;
-  additionalProperties?: string;
+  additionalProperties?: Record<string, any>;
 }
 
 interface EntityPageSetConfig extends FeatureConfigBase {
