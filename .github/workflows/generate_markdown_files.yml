@@ -12,7 +12,7 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v2.4.1
       - name: Install deps
         run: pnpm i
       - name: generate-docs
