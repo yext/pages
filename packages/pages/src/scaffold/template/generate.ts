@@ -46,20 +46,26 @@ export const generateTemplate = async (
     },
     {
       type: (prev, values) =>
-        values.entityScope === "Entity Type" ? "text" : null,
+        values.entityScope === "Entity Type" ? "list" : null,
       name: "entityTypes",
       message: "Enter the entity type(s):",
+      initial: "",
+      separator: ",",
     },
     {
-      type: (prev, values) => (values.entityScope === "Filter" ? "text" : null),
+      type: (prev, values) => (values.entityScope === "Filter" ? "list" : null),
       name: "savedFilterIds",
       message: "Enter the saved filter ID(s):",
+      initial: "",
+      separator: ",",
     },
     {
       type: (prev, values) =>
-        values.entityScope === "Entity Id" ? "text" : null,
+        values.entityScope === "Entity Id" ? "list" : null,
       name: "entityIds",
       message: "Enter the entity ID(s):",
+      initial: "",
+      separator: ",",
     },
   ];
 
