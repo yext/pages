@@ -1,5 +1,7 @@
 import prompts, { PromptObject } from "prompts";
 import { ProjectStructure } from "../../common/src/project/structure.js";
+import path from "node:path";
+import fs from "node:fs";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // TODO: Remove after using adding generation code for templates
@@ -12,7 +14,9 @@ export const generateTemplate = async (
       type: "text",
       name: "templateName",
       message: "What would you like to name your Template?",
-      // TODO: Validate template name
+      validate: (templateName) =>
+        validateTemplateName(templateName, projectStructure) ||
+        "Please ensure the name provided isn't already used and is valid.",
     },
     {
       type: "confirm",
@@ -63,4 +67,44 @@ export const generateTemplate = async (
 
   // TODO (SUMO-5251): handle generating VE templates
   // TODO (SUMO-5252): handle generating non-VE templates
+};
+
+// Returns true if templateName can be formatted into valid filename and that filename isn't being used.
+const validateTemplateName = (
+  templateName: string,
+  projectStructure: ProjectStructure
+): boolean => {
+  const formattedFileName = formatFileName(templateName);
+
+  // Must start with an alphabetic char
+  if (/^[^a-zA-Z]/.test(formattedFileName)) {
+    return false;
+  }
+
+  const templatePath = path.join(
+    projectStructure.getTemplatePaths()[0].path,
+    formattedFileName
+  );
+  if (fs.existsSync(templatePath)) {
+    return false;
+  }
+
+  return true;
+};
+
+const formatFileName = (templateName: string): string => {
+  const specialCharsRemoved = templateName.replace(/[^a-zA-Z0-9\s]+/g, "");
+
+  const words = specialCharsRemoved.split(" ");
+  if (words.length === 0) {
+    return "";
+  }
+
+  let fileName = words[0].toLowerCase();
+  for (let i = 1; i < words.length; i++) {
+    fileName +=
+      words[i].charAt(0).toUpperCase() + words[i].slice(1).toLowerCase();
+  }
+
+  return fileName;
 };
