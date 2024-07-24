@@ -2,9 +2,8 @@ import prompts, { PromptObject } from "prompts";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import path from "node:path";
 import fs from "node:fs";
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// TODO: Remove after using adding generation code for templates
+import { newConfigFile, visualEditorTemplateCode } from "./sampleTemplates.js";
+import ConfigParser from "../../common/src/parsers/puckConfigParser.js";
 
 export const generateTemplate = async (
   projectStructure: ProjectStructure
@@ -71,8 +70,11 @@ export const generateTemplate = async (
 
   const response = await prompts(questions);
 
-  // TODO (SUMO-5251): handle generating VE templates
-  // TODO (SUMO-5252): handle generating non-VE templates
+  if (response.isVisualEditor) {
+    generateVETemplate(response, projectStructure);
+  } else {
+    // TODO (SUMO-5252): handle generating non-VE templates
+  }
 };
 
 // Returns true if templateName can be formatted into valid filename and that filename isn't being used.
@@ -113,4 +115,50 @@ const formatFileName = (templateName: string): string => {
   }
 
   return fileName;
+};
+
+// Creates a src/templates/ file with a basic template based on provided user responses
+// and adds the new VE template and config to src/ve.config.ts
+const generateVETemplate = (
+  response: any,
+  projectStructure: ProjectStructure
+) => {
+  const templatePath = projectStructure.getTemplatePaths()[0].path;
+  const templateFileName = formatFileName(response.templateName);
+
+  fs.writeFileSync(
+    path.join(templatePath, `${templateFileName}.tsx`),
+    visualEditorTemplateCode(
+      response.templateName,
+      templateFileName,
+      response.entityScope,
+      response.filter
+    )
+  );
+  addVETemplateToConfig(
+    response.templateName,
+    templateFileName,
+    projectStructure
+  );
+};
+
+const addVETemplateToConfig = (
+  templateName: string,
+  fileName: string,
+  projectStructure: ProjectStructure
+) => {
+  const configPath = path.join(
+    projectStructure.config.rootFolders.source,
+    "ve.config.ts"
+  );
+  if (fs.existsSync(configPath)) {
+    new ConfigParser().addDataToPuckConfig(
+      templateName,
+      fileName.charAt(0).toUpperCase() + fileName.slice(1),
+      fileName,
+      configPath
+    );
+  } else {
+    fs.writeFileSync(configPath, newConfigFile(templateName, fileName));
+  }
 };

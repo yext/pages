@@ -277,4 +277,16 @@ export default class SourceFileParser {
   removeUnusedImports() {
     this.sourceFile.fixUnusedIdentifiers();
   }
+
+  format() {
+    this.sourceFile.formatText();
+  }
+
+  getVariableStatement(variableName: string) {
+    return this.sourceFile.getVariableStatementOrThrow(variableName);
+  }
+
+  getVariableDeclaration(variableName: string) {
+    return this.sourceFile.getVariableDeclarationOrThrow(variableName);
+  }
 }
