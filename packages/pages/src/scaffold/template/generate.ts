@@ -38,31 +38,32 @@ export const generateTemplate = async (
       message:
         "How would you like you to define the entity scope for your template?",
       choices: [
-        { title: "Entity Type", value: "Entity Type" },
-        { title: "Static", value: "Static" },
-        { title: "Filter", value: "Filter" },
-        { title: "Entity Id", value: "Entity Id" },
+        { title: "Entity Type", value: "entityTypes" },
+        { title: "Static", value: "static" },
+        { title: "Filter", value: "savedFilterIds" },
+        { title: "Entity Id", value: "entityIds" },
       ],
     },
     {
       type: (prev, values) =>
-        values.entityScope === "Entity Type" ? "list" : null,
-      name: "entityTypes",
+        values.entityScope === "entityTypes" ? "list" : null,
+      name: "filter",
       message: "Enter the entity type(s):",
       initial: "",
       separator: ",",
     },
     {
-      type: (prev, values) => (values.entityScope === "Filter" ? "list" : null),
-      name: "savedFilterIds",
+      type: (prev, values) =>
+        values.entityScope === "savedFilterIds" ? "list" : null,
+      name: "filter",
       message: "Enter the saved filter ID(s):",
       initial: "",
       separator: ",",
     },
     {
       type: (prev, values) =>
-        values.entityScope === "Entity Id" ? "list" : null,
-      name: "entityIds",
+        values.entityScope === "entityIds" ? "list" : null,
+      name: "filter",
       message: "Enter the entity ID(s):",
       initial: "",
       separator: ",",
