@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { modulesCommand } from "./modules/modules.js";
+import { templateCommand } from "./template/template.js";
 
 export const scaffoldCommand = (program: Command) => {
   const scaffold = program
@@ -16,4 +17,5 @@ export const scaffoldCommand = (program: Command) => {
       console.log('Must provide a subcommand of "scaffold".');
     });
   modulesCommand(scaffold);
+  templateCommand(scaffold);
 };
