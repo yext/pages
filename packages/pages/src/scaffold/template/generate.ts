@@ -39,8 +39,7 @@ export const generateTemplate = async (
         "How would you like you to define the entity scope for your template?",
       choices: [
         { title: "Entity Type", value: "entityTypes" },
-        { title: "Static", value: "static" },
-        { title: "Filter", value: "savedFilterIds" },
+        { title: "Saved Filter", value: "savedFilterIds" },
         { title: "Entity Id", value: "entityIds" },
       ],
     },
