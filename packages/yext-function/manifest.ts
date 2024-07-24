@@ -49,6 +49,8 @@ export interface Subfolders {
   modules: string;
   /** The Node functions folder */
   serverlessFunctions: string; // Node functions
+  /** The puck folder */
+  puck: string;
   /** Where to output the bundled static assets */
   assets: string;
   /** Where to output the client bundles */
