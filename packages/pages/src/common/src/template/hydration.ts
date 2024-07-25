@@ -154,7 +154,7 @@ export const getIndexTemplateDev = (
   );
   commonIndex = injectIntoEndOfHead(
     commonIndex,
-    `<script id="templatesJsonDev">${JSON.stringify(templatesConfig, null)}</script>`
+    `<script>const pageSets = ${JSON.stringify(templatesConfig, null)}</script>`
   );
 
   return commonIndex;
