@@ -142,7 +142,7 @@ const generateVETemplate = async (
   addVETemplateToConfig(templateFileName, projectStructure);
 
   try {
-    await getDependencies();
+    await addVEDependencies();
   } catch (error) {
     logErrorAndExit(error);
   }
@@ -163,7 +163,7 @@ const addVETemplateToConfig = (
   }
 };
 
-const getDependencies = async () => {
+const addVEDependencies = async () => {
   await updatePackageDependency("@yext/visual-editor", null, true);
   await updatePackageDependency("@measured/puck", null, true);
   await installDependencies();
