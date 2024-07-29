@@ -1,14 +1,12 @@
-// TODO: Use new resolveData (or similar function) in transformProps
 export const visualEditorTemplateCode = (
   templateName: string,
-  fileName: string,
   entityScope: string,
   filter: string[]
 ): string => {
   const formattedTemplateName =
-    fileName.charAt(0).toUpperCase() + fileName.slice(1);
+    templateName.charAt(0).toUpperCase() + templateName.slice(1);
   const filterCode = `${entityScope}: ${JSON.stringify(filter)},`;
-  const config = `${fileName}Config`;
+  const config = `${templateName}Config`;
 
   return `import {
   Template,
@@ -22,7 +20,7 @@ export const visualEditorTemplateCode = (
 import { Config, Render } from "@measured/puck";
 import { ${config} } from "../ve.config";
 import { DocumentProvider } from "../hooks/useDocument";
-import { getTemplatePuckData } from "../utils/puckDataHelper";
+import { resolveVisualEditorData } from "@yext/visual-editor";
 
 export const config: TemplateConfig = {
   name: "${templateName}",
@@ -53,25 +51,14 @@ export const transformProps = async (data) => {
   const entityConfigurations = document.c_visualConfigurations ?? [];
   const entityLayoutConfigurations = document.c_pages_layouts ?? [];
   const siteLayoutConfigurations = document._site?.c_visualLayouts;
-  try {
-    const templateData = getTemplatePuckData(
-      entityConfigurations,
-      entityLayoutConfigurations,
-      siteLayoutConfigurations,
-      config.name,
-    );
-    const visualTemplate = JSON.parse(templateData);
-    return {
-      ...data,
-      document: {
-        ...document,
-        visualTemplate,
-      },
-    };
-  } catch (error) {
-    console.error("Failed to parse visualTemplate: " + error);
-    return data;
-  }
+  const visualTemplate = resolveVisualEditorData(entityConfigurations, entityLayoutConfigurations, siteLayoutConfigurations, ${formattedTemplateName});
+  return {
+    ...data,
+    document: {
+      ...document,
+      visualTemplate,
+    },
+  };
 };
 
 export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = ({
@@ -85,7 +72,7 @@ export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = ({
 };
 
 export const getPath: GetPath<TemplateProps> = ({ document }) => {
-  return document.slug ? document.slug : "${fileName}/" + document.id;
+  return document.slug ? document.slug : "${templateName}/" + document.id;
 };
 
 const ${formattedTemplateName}: Template<TemplateRenderProps> = ({ document }) => {
@@ -101,14 +88,14 @@ export default ${formattedTemplateName};
 `;
 };
 
-export const newConfigFile = (templateName: string, fileName: string) => {
+export const newConfigFile = (templateName: string) => {
   const formattedTemplateName =
-    fileName.charAt(0).toUpperCase() + fileName.slice(1);
+    templateName.charAt(0).toUpperCase() + templateName.slice(1);
 
   return `import type { Config } from "@measured/puck";
-${newConfig(formattedTemplateName, fileName)}
+${newConfig(formattedTemplateName, templateName)}
 export const puckConfigs = new Map<string, Config<any>>([
-  ["${templateName}",  ${fileName}Config],
+  ["${templateName}",  ${templateName}Config],
 ]);
 `;
 };

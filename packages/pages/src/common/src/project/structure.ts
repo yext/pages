@@ -31,8 +31,6 @@ export interface Subfolders {
   redirects: string;
   /** The Node functions folder */
   serverlessFunctions: string; // Node functions
-  /** The puck folder */
-  puck: string;
   /** Where to output the bundled static assets */
   assets: string;
   /** Where to output the bundled public assets */
@@ -156,7 +154,6 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
     modules: "modules",
     redirects: "redirects",
     serverlessFunctions: "functions",
-    puck: "puck",
     assets: DEFAULT_ASSETS_DIR,
     public: DEFAULT_PUBLIC_DIR,
     clientBundle: "client",
@@ -330,25 +327,5 @@ export class ProjectStructure {
     }
 
     return [new Path(modulesPath)];
-  };
-
-  /**
-   * @returns the list of of src/puck, taking scope into account. If a scope is defined and
-   * the scoped path exists, then both the scoped and non-scoped puck paths are returned.
-   */
-  getPuckPaths = () => {
-    // src/puck
-    const puckRoot = pathLib.join(
-      this.config.rootFolders.source,
-      this.config.subfolders.puck
-    );
-
-    const scopedPath = pathLib.join(puckRoot, this.config.scope ?? "");
-
-    if (this.config.scope && fs.existsSync(scopedPath)) {
-      return [new Path(scopedPath), new Path(puckRoot)];
-    }
-
-    return [new Path(puckRoot)];
   };
 }

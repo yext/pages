@@ -3,7 +3,12 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import path from "node:path";
 import fs from "node:fs";
 import { newConfigFile, visualEditorTemplateCode } from "./sampleTemplates.js";
-import ConfigParser from "../../common/src/parsers/puckConfigParser.js";
+import { addDataToPuckConfig } from "../../common/src/parsers/puckConfigParser.js";
+import {
+  installDependencies,
+  updatePackageDependency,
+} from "../../upgrade/pagesUpdater.js";
+import { logErrorAndExit } from "../../util/logError.js";
 
 export const generateTemplate = async (
   projectStructure: ProjectStructure
@@ -71,7 +76,7 @@ export const generateTemplate = async (
   const response = await prompts(questions);
 
   if (response.isVisualEditor) {
-    generateVETemplate(response, projectStructure);
+    await generateVETemplate(response, projectStructure);
   } else {
     // TODO (SUMO-5252): handle generating non-VE templates
   }
@@ -119,7 +124,7 @@ const formatFileName = (templateName: string): string => {
 
 // Creates a src/templates/ file with a basic template based on provided user responses
 // and adds the new VE template and config to src/ve.config.ts
-const generateVETemplate = (
+const generateVETemplate = async (
   response: any,
   projectStructure: ProjectStructure
 ) => {
@@ -129,21 +134,21 @@ const generateVETemplate = (
   fs.writeFileSync(
     path.join(templatePath, `${templateFileName}.tsx`),
     visualEditorTemplateCode(
-      response.templateName,
       templateFileName,
       response.entityScope,
       response.filter
     )
   );
-  addVETemplateToConfig(
-    response.templateName,
-    templateFileName,
-    projectStructure
-  );
+  addVETemplateToConfig(templateFileName, projectStructure);
+
+  try {
+    await getDependencies();
+  } catch (error) {
+    logErrorAndExit(error);
+  }
 };
 
 const addVETemplateToConfig = (
-  templateName: string,
   fileName: string,
   projectStructure: ProjectStructure
 ) => {
@@ -152,13 +157,14 @@ const addVETemplateToConfig = (
     "ve.config.ts"
   );
   if (fs.existsSync(configPath)) {
-    new ConfigParser().addDataToPuckConfig(
-      templateName,
-      fileName.charAt(0).toUpperCase() + fileName.slice(1),
-      fileName,
-      configPath
-    );
+    addDataToPuckConfig(fileName, configPath);
   } else {
-    fs.writeFileSync(configPath, newConfigFile(templateName, fileName));
+    fs.writeFileSync(configPath, newConfigFile(fileName));
   }
+};
+
+const getDependencies = async () => {
+  await updatePackageDependency("@yext/visual-editor", null, true);
+  await updatePackageDependency("@measured/puck", null, true);
+  await installDependencies();
 };

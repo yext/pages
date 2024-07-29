@@ -4,49 +4,40 @@ import { newConfig } from "../../../scaffold/template/sampleTemplates.js";
 import { SyntaxKind } from "ts-morph";
 
 /**
- * ConfigParser is a class for parsing the puck config file.
+ * Adds variables to the puck config file and adds the new config to
+ * the exported map.
+ * @param fileName template name with invalid chars and spaces removed
+ * @param filepath /src/puck/ve.config.ts
  */
-export default class ConfigParser {
-  /**
-   * Adds variables to the puckConfig file and adds the new config to
-   * the exported map.
-   * @param templateName as recieved by user input
-   * @param formattedTemplateName capitalized first letter of fileName
-   * @param fileName removed invalid chars from templateName
-   * @param filepath /src/puck/ve.config.ts
-   */
-  addDataToPuckConfig(
-    templateName: string,
-    formattedTemplateName: string,
-    fileName: string,
-    filepath: string
-  ) {
-    if (!fs.existsSync(filepath)) {
-      throw new Error(`Filepath "${filepath}" is invalid.`);
-    }
-    const newSfp = new SourceFileParser(filepath, createTsMorphProject());
-
-    const puckConfigsStatement = newSfp.getVariableStatement("puckConfigs");
-
-    const puckConfigsStartLocation = puckConfigsStatement.getStart();
-    newSfp.insertStatement(
-      newConfig(formattedTemplateName, fileName),
-      puckConfigsStartLocation
-    );
-
-    const puckConfigsDeclaration = newSfp.getVariableDeclaration("puckConfigs");
-    const puckConfigsInitializer = puckConfigsDeclaration.getInitializer();
-    if (
-      puckConfigsInitializer &&
-      puckConfigsInitializer.getKind() === SyntaxKind.NewExpression
-    ) {
-      const newExpression = puckConfigsInitializer;
-      const puckConfigsArray = newExpression.getFirstChildByKindOrThrow(
-        SyntaxKind.ArrayLiteralExpression
-      );
-      puckConfigsArray.addElement(`["${templateName}", ${fileName}Config]`);
-    }
-    newSfp.format();
-    newSfp.save();
+export function addDataToPuckConfig(fileName: string, filepath: string) {
+  if (!fs.existsSync(filepath)) {
+    throw new Error(`Filepath "${filepath}" is invalid.`);
   }
+  const parser = new SourceFileParser(filepath, createTsMorphProject());
+
+  const puckConfigsStatement = parser.getVariableStatement("puckConfigs");
+
+  const formattedTemplateName =
+    fileName.charAt(0).toUpperCase() + fileName.slice(1);
+
+  const puckConfigsStartLocation = puckConfigsStatement.getStart();
+  parser.insertStatement(
+    newConfig(formattedTemplateName, fileName),
+    puckConfigsStartLocation
+  );
+
+  const puckConfigsDeclaration = parser.getVariableDeclaration("puckConfigs");
+  const puckConfigsInitializer = puckConfigsDeclaration.getInitializer();
+  if (
+    puckConfigsInitializer &&
+    puckConfigsInitializer.getKind() === SyntaxKind.NewExpression
+  ) {
+    const newExpression = puckConfigsInitializer;
+    const puckConfigsArray = newExpression.getFirstChildByKindOrThrow(
+      SyntaxKind.ArrayLiteralExpression
+    );
+    puckConfigsArray.addElement(`["${fileName}", ${fileName}Config]`);
+  }
+  parser.format();
+  parser.save();
 }
