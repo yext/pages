@@ -88,9 +88,12 @@ export const serverRenderRoute =
         return;
       }
 
+      const overrides = JSON.parse(req.body.overrides);
+      const documentWithOverrides = overrideDocument(document, overrides.data);
+
       const props = await propsLoader({
         templateModuleInternal,
-        document,
+        document: documentWithOverrides,
       });
       await sendAppHTML(
         res,
@@ -133,4 +136,24 @@ const getDocument = async (
       entityPageCriterion(entityId, templateModuleInternal.config.name, locale)
     )
   )?.document;
+};
+
+const overrideDocument = (document: any, overrideData: any) => {
+  if (!overrideData) {
+    return document;
+  }
+  return {
+    ...document,
+    _site: {
+      ...document._site,
+      c_visualLayouts: [
+        {
+          c_visualConfiguration: {
+            data: JSON.stringify(overrideData),
+            template: document.__.name,
+          },
+        },
+      ],
+    },
+  };
 };
