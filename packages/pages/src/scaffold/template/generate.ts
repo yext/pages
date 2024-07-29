@@ -83,9 +83,9 @@ export const generateTemplate = async (
   if (response.isVisualEditor) {
     await generateVETemplate(response, projectStructure);
   } else {
-    (await response.isDynamic)
-      ? generateDynamicTemplate(response, projectStructure)
-      : generateStaticTemplate(response.templateName, projectStructure);
+    response.isDynamic
+      ? await generateDynamicTemplate(response, projectStructure)
+      : await generateStaticTemplate(response.templateName, projectStructure);
   }
 };
 
