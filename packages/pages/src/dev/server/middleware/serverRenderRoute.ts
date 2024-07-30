@@ -28,8 +28,6 @@ export const serverRenderRoute =
   ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
-      console.log("serverRenderRoute");
-      console.log("req.body:", req.body);
       const url = new URL("http://" + req.headers.host + req.originalUrl);
       const locale = getLocaleFromUrl(url) ?? "en";
       const templateFilepaths =
