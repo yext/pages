@@ -1,5 +1,6 @@
 import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
+import merge from "lodash/merge.js";
 import { propsLoader } from "../ssr/propsLoader.js";
 import {
   parseAsStaticUrl,
@@ -27,6 +28,8 @@ export const serverRenderRoute =
   ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
+      console.log("serverRenderRoute");
+      console.log("req.body:", req.body);
       const url = new URL("http://" + req.headers.host + req.originalUrl);
       const locale = getLocaleFromUrl(url) ?? "en";
       const templateFilepaths =
@@ -88,12 +91,12 @@ export const serverRenderRoute =
         return;
       }
 
-      const overrides = JSON.parse(req.body.overrides);
-      const documentWithOverrides = overrideDocument(document, overrides.data);
+      const overrides = JSON.parse(req?.body?.overrides ?? "{}");
+      merge(document, overrides);
 
       const props = await propsLoader({
         templateModuleInternal,
-        document: documentWithOverrides,
+        document,
       });
       await sendAppHTML(
         res,
@@ -136,24 +139,4 @@ const getDocument = async (
       entityPageCriterion(entityId, templateModuleInternal.config.name, locale)
     )
   )?.document;
-};
-
-const overrideDocument = (document: any, overrideData: any) => {
-  if (!overrideData) {
-    return document;
-  }
-  return {
-    ...document,
-    _site: {
-      ...document._site,
-      c_visualLayouts: [
-        {
-          c_visualConfiguration: {
-            data: JSON.stringify(overrideData),
-            template: document.__.name,
-          },
-        },
-      ],
-    },
-  };
 };
