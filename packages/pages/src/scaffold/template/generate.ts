@@ -2,7 +2,12 @@ import prompts, { PromptObject } from "prompts";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import path from "node:path";
 import fs from "node:fs";
-import { newConfigFile, visualEditorTemplateCode } from "./sampleTemplates.js";
+import {
+  dynamicTemplate,
+  newConfigFile,
+  staticTemplate,
+  visualEditorTemplateCode,
+} from "./sampleTemplates.js";
 import { addDataToPuckConfig } from "../../common/src/parsers/puckConfigParser.js";
 import {
   installDependencies,
@@ -78,7 +83,9 @@ export const generateTemplate = async (
   if (response.isVisualEditor) {
     await generateVETemplate(response, projectStructure);
   } else {
-    // TODO (SUMO-5252): handle generating non-VE templates
+    response.isDynamic
+      ? await generateDynamicTemplate(response, projectStructure)
+      : await generateStaticTemplate(response.templateName, projectStructure);
   }
 };
 
@@ -167,4 +174,32 @@ const addVEDependencies = async () => {
   await updatePackageDependency("@yext/visual-editor", null, true);
   await updatePackageDependency("@measured/puck", null, true);
   await installDependencies();
+};
+
+// Creates a file with a basic dynamic template based on provided user responses
+const generateDynamicTemplate = async (
+  response: any,
+  projectStructure: ProjectStructure
+) => {
+  const templatePath = projectStructure.getTemplatePaths()[0].path;
+  const templateFileName = formatFileName(response.templateName);
+
+  fs.writeFileSync(
+    path.join(templatePath, `${templateFileName}.tsx`),
+    dynamicTemplate(templateFileName, response.entityScope, response.filter)
+  );
+};
+
+// Creates a file with a basic static template based templateName provided by user
+const generateStaticTemplate = async (
+  templateName: string,
+  projectStructure: ProjectStructure
+) => {
+  const templatePath = projectStructure.getTemplatePaths()[0].path;
+  const templateFileName = formatFileName(templateName);
+
+  fs.writeFileSync(
+    path.join(templatePath, `${templateFileName}.tsx`),
+    staticTemplate(templateFileName)
+  );
 };
