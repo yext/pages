@@ -1,5 +1,6 @@
 import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
+import merge from "lodash/merge.js";
 import { propsLoader } from "../ssr/propsLoader.js";
 import {
   parseAsStaticUrl,
@@ -87,6 +88,9 @@ export const serverRenderRoute =
         );
         return;
       }
+
+      const overrides = JSON.parse(req?.body?.overrides ?? "{}");
+      merge(document, overrides);
 
       const props = await propsLoader({
         templateModuleInternal,
