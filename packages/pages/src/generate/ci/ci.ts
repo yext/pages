@@ -29,7 +29,7 @@ export const ciCommand = (program: Command) => {
 };
 
 /**
- * Updates the ci.json by adding or updating the Generator plugin. Returns an error if the
+ * Updates the ci.json by adding or updating the Generator plugin. Retunrs an error if the
  * file does not exist.
  *
  * @param ciConfigPath path to the ci.json file
