@@ -1,3 +1,24 @@
+#### 1.2.0-beta.0 (2024-08-01)
+
+##### New Features
+
+* **dev:**
+  *  override document visual configuration (#534) (f7b7e7e9)
+  *  add pageSets to global variable in header in dev mode (#531) (b239cbb5)
+* **scaffold:**
+  *  create dynamic and static templates on scaffold (#533) (0008e583)
+  *  create ve template on scaffold (#532) (4039f5bd)
+  *  add prompts for scaffold template (#529) (529ee240)
+* **util:**  add useDocument hook (#528) (f27199ab)
+
+##### Bug Fixes
+
+*  pnpm actions (083a7a54)
+
+##### Refactors
+
+*  change the type of additionalProperties in TemplateConfig to 'Record<string, any>' (#527) (8fd95b19)
+
 #### 1.1.1 (2024-06-13)
 
 ##### Bug Fixes
