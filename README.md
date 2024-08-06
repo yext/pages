@@ -5,7 +5,7 @@
 PagesJS is a collection of tools that make it easy to develop on [Yext Pages](https://www.yext.com/platform/pages). It provides 2 main tools:
 
 1. A default development server, backed by [Vite](https://vitejs.dev/), that makes local development fast and easy.
-1. A Vite plugin used to bundle your assets and templates for Yext Pages.
+2. A Vite plugin used to bundle your assets and templates for Yext Pages.
 
 ## Packages
 
@@ -17,11 +17,11 @@ PagesJS is a collection of tools that make it easy to develop on [Yext Pages](ht
 ## Utility Functions
 
 | Function                                                                                                 |
-| -------------------------------------------------------------------------------------------------------- | --- |
+| -------------------------------------------------------------------------------------------------------- |
 | [fetch()](https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#fetch)               |
 | [getRuntime()](https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#getRuntime)     |
 | [isProduction()](https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#isProduction) |
-| [useDocument()](https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#useDocument)   |     |
+| [useDocument()](https://github.com/yext/pages/blob/main/packages/pages/src/util/README.md#useDocument)   |
 
 ## Development
 
