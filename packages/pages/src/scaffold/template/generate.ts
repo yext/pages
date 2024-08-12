@@ -56,7 +56,7 @@ export const generateTemplate = async (
       type: (prev, values) =>
         values.entityScope === "entityTypes" ? "list" : null,
       name: "filter",
-      message: "Enter the entity type(s):",
+      message: "Enter the entity type(s) as a comma-separated list:",
       initial: "",
       separator: ",",
     },
@@ -64,7 +64,7 @@ export const generateTemplate = async (
       type: (prev, values) =>
         values.entityScope === "savedFilterIds" ? "list" : null,
       name: "filter",
-      message: "Enter the saved filter ID(s):",
+      message: "Enter the saved filter ID(s) as a comma-separated list:",
       initial: "",
       separator: ",",
     },
@@ -72,7 +72,7 @@ export const generateTemplate = async (
       type: (prev, values) =>
         values.entityScope === "entityIds" ? "list" : null,
       name: "filter",
-      message: "Enter the entity ID(s):",
+      message: "Enter the entity ID(s) as a comma-separated list:",
       initial: "",
       separator: ",",
     },
