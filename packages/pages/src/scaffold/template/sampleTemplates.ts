@@ -19,7 +19,7 @@ export const visualEditorTemplateCode = (
 } from "@yext/pages";
 import { Config, Render } from "@measured/puck";
 import { ${config} } from "../ve.config";
-import { DocumentProvider } from "../hooks/useDocument";
+import { DocumentProvider } from "@yext/pages/util";
 import { resolveVisualEditorData } from "@yext/visual-editor";
 
 export const config: TemplateConfig = {
@@ -46,19 +46,8 @@ export const config: TemplateConfig = {
   }
 };
 
-export const transformProps = async (data) => {
-  const { document } = data;
-  const entityConfigurations = document.c_visualConfigurations ?? [];
-  const entityLayoutConfigurations = document.c_pages_layouts ?? [];
-  const siteLayoutConfigurations = document._site?.c_visualLayouts;
-  const visualTemplate = resolveVisualEditorData(entityConfigurations, entityLayoutConfigurations, siteLayoutConfigurations, ${formattedTemplateName});
-  return {
-    ...data,
-    document: {
-      ...document,
-      visualTemplate,
-    },
-  };
+export const transformProps = async (data: TemplateRenderProps) => {
+  return resolveVisualEditorData(data, "${templateName}");
 };
 
 export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = ({
