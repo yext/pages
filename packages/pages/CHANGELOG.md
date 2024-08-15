@@ -1,3 +1,9 @@
+#### 1.2.0-beta.2 (2024-08-15)
+
+##### Bug Fixes
+
+* **scaffold:**  edit puck version (#539) (e7966210)
+
 #### 1.2.0-beta.1 (2024-08-15)
 
 ##### Bug Fixes
