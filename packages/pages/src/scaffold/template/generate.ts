@@ -130,7 +130,7 @@ const formatFileName = (templateName: string): string => {
 };
 
 // Creates a src/templates/ file with a basic template based on provided user responses
-// and adds the new VE template and config to src/ve.config.ts
+// and adds the new VE template and config to src/ve.config.tsx
 const generateVETemplate = async (
   response: any,
   projectStructure: ProjectStructure
@@ -161,7 +161,7 @@ const addVETemplateToConfig = (
 ) => {
   const configPath = path.join(
     projectStructure.config.rootFolders.source,
-    "ve.config.ts"
+    "ve.config.tsx"
   );
   if (fs.existsSync(configPath)) {
     addDataToPuckConfig(fileName, configPath);
@@ -172,7 +172,11 @@ const addVETemplateToConfig = (
 
 const addVEDependencies = async () => {
   await updatePackageDependency("@yext/visual-editor", null, true);
-  await updatePackageDependency("@measured/puck", null, true);
+  await updatePackageDependency(
+    "@measured/puck",
+    "0.16.0-canary.39e7f40",
+    true
+  );
   await installDependencies();
 };
 
