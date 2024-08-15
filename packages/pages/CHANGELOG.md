@@ -1,3 +1,12 @@
+#### 1.2.0-beta.1 (2024-08-15)
+
+##### Bug Fixes
+
+* **scaffold:**
+  *  update scaffold template command (#538) (cf43a28e)
+  *  wording of scaffold template prompt (#537) (4b63eb67)
+*  reformat readme (#535) (bbdc78e9)
+
 #### 1.2.0-beta.0 (2024-08-01)
 
 ##### New Features
