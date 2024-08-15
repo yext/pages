@@ -7,7 +7,7 @@ import { SyntaxKind } from "ts-morph";
  * Adds variables to the puck config file and adds the new config to
  * the exported map.
  * @param fileName template name with invalid chars and spaces removed
- * @param filepath /src/puck/ve.config.ts
+ * @param filepath /src/ve.config.tsx
  */
 export function addDataToPuckConfig(fileName: string, filepath: string) {
   if (!fs.existsSync(filepath)) {
