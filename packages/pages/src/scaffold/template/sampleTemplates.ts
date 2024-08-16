@@ -42,7 +42,6 @@ export const config: TemplateConfig = {
   },
   additionalProperties: {
     isVETemplate: true,
-    isDraft: true,
   }
 };
 
