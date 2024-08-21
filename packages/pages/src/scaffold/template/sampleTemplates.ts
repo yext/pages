@@ -90,7 +90,6 @@ export const puckConfigs = new Map<string, Config<any>>([
 
 export const newConfig = (formattedTemplateName: string, fileName: string) => {
   return `
-// eslint-disable-next-line @typescript-eslint/ban-types
 type ${formattedTemplateName}Props = {
 };
 
