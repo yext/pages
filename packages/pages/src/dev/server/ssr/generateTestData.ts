@@ -11,6 +11,7 @@ import path from "path";
 import fs from "fs";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { SiteStreamConfig } from "../../../common/src/template/types.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { ViteDevServer } from "vite";
 import { getTemplatesConfig } from "../../../generate/templates/createTemplatesJson.js";
@@ -208,16 +209,16 @@ async function spawnTestDataCommand(
   });
 }
 
-const getSiteStream = (projectStructure: ProjectStructure) => {
+export const getSiteStream = (
+  projectStructure: ProjectStructure
+): SiteStreamConfig | undefined => {
   const siteStreamPath = path.resolve(
     projectStructure.getSitesConfigPath().path,
     projectStructure.config.sitesConfigFiles.siteStream
   );
 
   if (fs.existsSync(siteStreamPath)) {
-    return prepareJsonForCmd(
-      JSON.parse(fs.readFileSync(siteStreamPath).toString())
-    );
+    return JSON.parse(fs.readFileSync(siteStreamPath).toString());
   }
 
   const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
@@ -225,9 +226,10 @@ const getSiteStream = (projectStructure: ProjectStructure) => {
     const yamlDoc = YAML.parse(fs.readFileSync(configYamlPath, "utf-8"));
     if (yamlDoc.siteStream) {
       yamlDoc.siteStream.entityId = yamlDoc.siteStream?.entityId?.toString();
-      return prepareJsonForCmd(yamlDoc.siteStream);
+      return yamlDoc.siteStream;
     }
   }
+  return;
 };
 
 const getCommonArgs = (
@@ -238,7 +240,7 @@ const getCommonArgs = (
 
   args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
 
-  const siteStream = getSiteStream(projectStructure);
+  const siteStream = prepareJsonForCmd(getSiteStream(projectStructure));
   if (siteStream) {
     args.push("--siteStreamConfig", siteStream);
   }

@@ -1,6 +1,6 @@
 import { HeadConfig, renderHeadConfigToString } from "./head.js";
 import { convertToPosixPath } from "./paths.js";
-import { TemplateRenderProps } from "./types.js";
+import { SiteStreamConfig, TemplateRenderProps } from "./types.js";
 import { FeaturesConfig } from "../feature/features.js";
 
 /**
@@ -144,6 +144,7 @@ export const getIndexTemplateDev = (
   indexHtml: string,
   appLanguage: string,
   templatesConfig: FeaturesConfig,
+  siteStream: SiteStreamConfig | undefined,
   headConfig?: HeadConfig
 ): string => {
   let commonIndex = getCommonInjectedIndexHtml(
@@ -154,7 +155,7 @@ export const getIndexTemplateDev = (
   );
   commonIndex = injectIntoEndOfHead(
     commonIndex,
-    `<script>const pageSets = ${JSON.stringify(templatesConfig, null)}</script>`
+    `<script>const pageSets = ${JSON.stringify(templatesConfig, null)};const siteStream = ${JSON.stringify(siteStream, null)};</script>`
   );
 
   return commonIndex;

@@ -178,6 +178,39 @@ export interface Stream {
 }
 
 /**
+ * The site stream config.
+ *
+ * @public
+ */
+export interface SiteStreamConfig {
+  /** Identifies the stream as a site stream */
+  id: "site-stream";
+  /** The entity id of the site stream */
+  entityId: string;
+  /** The fields to apply to the stream */
+  fields: string[];
+  /** The localization used by the filter. Either set primary: true or specify a locales array. */
+  localization:
+    | {
+        /** The entity profiles languages to apply to the stream. */
+        locales: string[];
+        primary?: never;
+      }
+    | {
+        /** Use the primary profile language. */
+        primary: true;
+        locales?: never;
+      };
+  /** The transformation to apply to the stream */
+  transform?: {
+    /** The option fields to be expanded to include the display fields, numeric values, and selected boolean */
+    expandOptionFields?: string[];
+    /** The option fields to be replaced with display names */
+    replaceOptionValuesWithDisplayNames?: string[];
+  };
+}
+
+/**
  * A manifest of bundled files present during a production build.
  *
  * @public
