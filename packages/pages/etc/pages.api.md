@@ -275,6 +275,26 @@ export interface Site {
 }
 
 // @public
+export interface SiteStreamConfig {
+  entityId: string;
+  fields: string[];
+  id: "site-stream";
+  localization:
+    | {
+        locales: string[];
+        primary?: never;
+      }
+    | {
+        primary: true;
+        locales?: never;
+      };
+  transform?: {
+    expandOptionFields?: string[];
+    replaceOptionValuesWithDisplayNames?: string[];
+  };
+}
+
+// @public
 export interface StaticTemplateConfig {
   hydrate?: boolean;
   locales?: string[];
@@ -376,7 +396,7 @@ export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 // Warnings were encountered during analysis:
 //
-// dist/types/src/common/src/template/types.d.ts:180:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
+// dist/types/src/common/src/template/types.d.ts:210:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 ```
