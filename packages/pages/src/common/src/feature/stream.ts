@@ -48,12 +48,11 @@ export interface StreamConfig {
 
 /**
  * The shape of data that represents a site stream.
- * Similar to {@link StreamConfig} but the id is always site-stream
- * and there can only be one entityId.
+ * Similar to {@link StreamConfig} but there can only be one entityId.
  */
 export interface SiteStream {
-  /** Identifies the stream as a site stream */
-  id: "site-stream";
+  /** Identifies the stream */
+  id: string;
   /** The entity id of the site stream */
   entityId: string;
   /** The fields to apply to the stream */
@@ -164,7 +163,7 @@ export const formatSiteStream = (
   }
 
   return {
-    id: "site-stream", // Replace $id with id and keeps id in the first position
+    id: sitesJson.$id, // Replace $id with id and keeps id in the first position
     entityId: entityId?.toString() || "",
     localization: sitesJson.localization,
     fields: sitesJson.fields,

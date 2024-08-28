@@ -72,13 +72,13 @@ describe("formatSiteStream", () => {
 
   it("returns expected entityId", () => {
     const testJson = {
-      $id: "site-stream",
+      $id: "my-site-stream",
       filter: { entityIds: ["1234"] },
       localization: { locales: ["en"] },
       fields: [],
     };
     const expectedJson = {
-      id: "site-stream",
+      id: "my-site-stream",
       entityId: "1234",
       localization: { locales: ["en"] },
       fields: [],
@@ -88,14 +88,14 @@ describe("formatSiteStream", () => {
 
   it("returns expected full config", () => {
     const testJson = {
-      $id: "site-stream",
+      $id: "site-stream-123",
       fields: ["meta", "name"],
       filter: { entityIds: ["1234"] },
       source: "foo",
       localization: { locales: ["en"] },
     };
     const expectedJson = {
-      id: "site-stream",
+      id: "site-stream-123",
       entityId: "1234",
       fields: ["meta", "name"],
       localization: { locales: ["en"] },
