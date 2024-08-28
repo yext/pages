@@ -18,7 +18,7 @@ import {
   getTemplatesConfig,
 } from "../../../generate/templates/createTemplatesJson.js";
 import { FeaturesConfig } from "../../../common/src/feature/features.js";
-
+import { readSiteStream } from "../../../common/src/feature/stream.js";
 /**
  * Renders the HTML for a given {@link TemplateModuleInternal}
  * and {@link TemplateRenderProps}, and sends it back to the Response.
@@ -65,6 +65,8 @@ export default async function sendAppHTML(
     redirectModules
   );
 
+  const siteStream = readSiteStream(projectStructure);
+
   const clientInjectedIndexHtml = getIndexTemplateDev(
     clientHydrationString,
     serverRenderTemplateModule.getIndexHtml
@@ -75,6 +77,7 @@ export default async function sendAppHTML(
       : serverRenderTemplateModule.indexHtml,
     getLang(headConfig, props),
     templatesConfig,
+    siteStream,
     headConfig
   );
 
