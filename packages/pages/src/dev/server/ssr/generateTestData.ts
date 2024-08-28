@@ -7,11 +7,8 @@ import {
   UPGRADE_MESSAGE_LINE_BEGIN,
   UPGRADE_INSTRUCTIONS_LINE_BEGIN,
 } from "./constants.js";
-import path from "path";
-import fs from "fs";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
-import { SiteStreamConfig } from "../../../common/src/template/types.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { ViteDevServer } from "vite";
 import { getTemplatesConfig } from "../../../generate/templates/createTemplatesJson.js";
@@ -20,7 +17,7 @@ import {
   loadTemplateModuleCollectionUsingVite,
 } from "../../../common/src/template/loader/loader.js";
 import runSubprocess from "../../../util/runSubprocess.js";
-import YAML from "yaml";
+import { readSiteStream } from "../../../common/src/feature/stream.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
@@ -209,29 +206,6 @@ async function spawnTestDataCommand(
   });
 }
 
-export const getSiteStream = (
-  projectStructure: ProjectStructure
-): SiteStreamConfig | undefined => {
-  const siteStreamPath = path.resolve(
-    projectStructure.getSitesConfigPath().path,
-    projectStructure.config.sitesConfigFiles.siteStream
-  );
-
-  if (fs.existsSync(siteStreamPath)) {
-    return JSON.parse(fs.readFileSync(siteStreamPath).toString());
-  }
-
-  const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
-  if (fs.existsSync(configYamlPath)) {
-    const yamlDoc = YAML.parse(fs.readFileSync(configYamlPath, "utf-8"));
-    if (yamlDoc.siteStream) {
-      yamlDoc.siteStream.entityId = yamlDoc.siteStream?.entityId?.toString();
-      return yamlDoc.siteStream;
-    }
-  }
-  return;
-};
-
 const getCommonArgs = (
   featuresConfig: FeaturesConfig,
   projectStructure: ProjectStructure
@@ -240,7 +214,7 @@ const getCommonArgs = (
 
   args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
 
-  const siteStream = prepareJsonForCmd(getSiteStream(projectStructure));
+  const siteStream = prepareJsonForCmd(readSiteStream(projectStructure));
   if (siteStream) {
     args.push("--siteStreamConfig", siteStream);
   }

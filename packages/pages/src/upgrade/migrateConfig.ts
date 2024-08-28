@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import yaml from "yaml";
 import { ProjectStructure } from "../common/src/project/structure.js";
-import { logErrorAndExit } from "../util/logError.js";
+import { formatSiteStream } from "../common/src/feature/stream.js";
 
 type BuildConfiguration = {
   buildCommand: string;
@@ -96,24 +96,6 @@ const migrateSiteStream = async (
     const newSiteStream = formatSiteStream(sitesJson, siteStreamPath);
     writeYamlSync(configYamlPath, "siteStream", newSiteStream);
   }
-};
-
-export const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
-  let entityId;
-  if (sitesJson.filter?.entityIds && sitesJson.filter?.entityIds.length === 1) {
-    entityId = sitesJson.filter.entityIds[0];
-  } else if (sitesJson.filter?.entityIds) {
-    logErrorAndExit(
-      `Unable to migrate ${siteStreamPath} due to multiple entityIds`
-    );
-  }
-
-  return {
-    id: sitesJson.$id, // Replace $id with id and keeps id in the first position
-    entityId: entityId?.toString(),
-    localization: sitesJson.localization,
-    fields: sitesJson.fields,
-  };
 };
 
 const migrateRedirects = async (source: string, dest: string) => {
