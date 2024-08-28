@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import {
   convertTemplateConfigToStreamConfig,
   StreamConfig,
@@ -96,6 +96,16 @@ describe("formatSiteStream", () => {
 });
 
 describe("readSiteStream", () => {
+  afterEach(() => {
+    if (fs.existsSync("config.yaml")) {
+      fs.rmSync("config.yaml");
+    }
+    if (fs.existsSync("sites-config/site-stream.json")) {
+      fs.rmSync("sites-config/site-stream.json");
+      fs.rmdirSync("sites-config");
+    }
+  });
+
   const projectStructure = new ProjectStructure({});
 
   it("reads siteStream from config.yaml", () => {
@@ -119,7 +129,6 @@ describe("readSiteStream", () => {
       fields: ["c_visualLayouts.c_visualConfiguration"],
       localization: { locales: ["en"] },
     });
-    fs.rmSync(path);
   });
 
   it("reads siteStream from config.yaml", () => {
@@ -146,7 +155,5 @@ describe("readSiteStream", () => {
       fields: ["c_visualLayouts.c_visualConfiguration"],
       localization: { locales: ["en"] },
     });
-    fs.rmSync(path);
-    fs.rmdirSync("sites-config");
   });
 });
