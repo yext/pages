@@ -7,6 +7,7 @@ import { TemplateConfigInternal } from "../template/internal/types.js";
 import { RedirectConfigInternal } from "../redirect/internal/types.js";
 import { ProjectStructure } from "../project/structure.js";
 import { logErrorAndExit } from "../../../util/logError.js";
+import { Stream } from "../template/types.js";
 
 /**
  * The shape of data that represents a stream configuration.
@@ -149,7 +150,10 @@ export const readSiteStream = (
  * Converts the deprecated format of a siteStream specified in site-stream.json into
  * the format of a siteStream specified in config.yaml
  */
-export const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
+export const formatSiteStream = (
+  sitesJson: Stream,
+  siteStreamPath: string
+): SiteStream => {
   let entityId;
   if (sitesJson.filter?.entityIds && sitesJson.filter?.entityIds.length === 1) {
     entityId = sitesJson.filter.entityIds[0];
@@ -160,8 +164,8 @@ export const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
   }
 
   return {
-    id: sitesJson.$id, // Replace $id with id and keeps id in the first position
-    entityId: entityId?.toString(),
+    id: "site-stream", // Replace $id with id and keeps id in the first position
+    entityId: entityId?.toString() || "",
     localization: sitesJson.localization,
     fields: sitesJson.fields,
   };

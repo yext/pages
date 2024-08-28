@@ -57,7 +57,12 @@ const siteStreamPath = "foo/bar";
 
 describe("formatSiteStream", () => {
   it("errors and exits when there are multiple entityIds", () => {
-    const testJson = { filter: { entityIds: ["1234", "123"] } };
+    const testJson = {
+      $id: "site-stream",
+      filter: { entityIds: ["1234", "123"] },
+      localization: { locales: ["en"] },
+      fields: [],
+    };
     const mockExit = vi
       .spyOn(process, "exit")
       .mockImplementation(() => undefined as never);
@@ -66,30 +71,34 @@ describe("formatSiteStream", () => {
   });
 
   it("returns expected entityId", () => {
-    const testJson = { filter: { entityIds: ["1234"] } };
-    const expectedJson = { entityId: "1234" };
-    expect(formatSiteStream(testJson, siteStreamPath)).toEqual(expectedJson);
-  });
-
-  it("returns expected id with id first", () => {
-    const testJson = { fields: ["meta", "name"], $id: "123" };
-    const expectedJson = { id: "123", fields: ["meta", "name"] };
+    const testJson = {
+      $id: "site-stream",
+      filter: { entityIds: ["1234"] },
+      localization: { locales: ["en"] },
+      fields: [],
+    };
+    const expectedJson = {
+      id: "site-stream",
+      entityId: "1234",
+      localization: { locales: ["en"] },
+      fields: [],
+    };
     expect(formatSiteStream(testJson, siteStreamPath)).toEqual(expectedJson);
   });
 
   it("returns expected full config", () => {
     const testJson = {
-      $id: "123",
+      $id: "site-stream",
       fields: ["meta", "name"],
       filter: { entityIds: ["1234"] },
       source: "foo",
-      localization: ["en"],
+      localization: { locales: ["en"] },
     };
     const expectedJson = {
-      id: "123",
+      id: "site-stream",
       entityId: "1234",
       fields: ["meta", "name"],
-      localization: ["en"],
+      localization: { locales: ["en"] },
     };
     expect(formatSiteStream(testJson, siteStreamPath)).toEqual(expectedJson);
   });
@@ -101,8 +110,7 @@ describe("readSiteStream", () => {
       fs.rmSync("config.yaml");
     }
     if (fs.existsSync("sites-config/site-stream.json")) {
-      fs.rmSync("sites-config/site-stream.json");
-      fs.rmdirSync("sites-config");
+      fs.rmSync("sites-config", { recursive: true, force: true });
     }
   });
 
@@ -131,7 +139,7 @@ describe("readSiteStream", () => {
     });
   });
 
-  it("reads siteStream from config.yaml", () => {
+  it("reads siteStream from sites-config/sites-stream.json", () => {
     projectStructure.getSitesConfigPath;
     const path = "sites-config/site-stream.json";
     fs.mkdirSync("sites-config");
