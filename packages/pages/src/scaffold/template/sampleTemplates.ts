@@ -82,7 +82,7 @@ export const newConfigFile = (templateName: string) => {
 
   return `import type { Config } from "@measured/puck";
 ${newConfig(formattedTemplateName, templateName)}
-export const puckConfigs = new Map<string, Config<any>>([
+export const componentRegistry = new Map<string, Config<any>>([
   ["${templateName}",  ${templateName}Config],
 ]);
 `;
