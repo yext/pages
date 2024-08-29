@@ -1,3 +1,16 @@
+#### 1.2.0-beta.3 (2024-08-29)
+
+##### New Features
+
+* **dev:**  make site stream available to Visual Editor via global variable (#542) (d626be47)
+
+##### Bug Fixes
+
+* **scaffold:**
+  *  puckConfigs -> componentRegistry (#543) (0020b155)
+  *  remove eslint ignore  (#541) (8e575d43)
+  *  remove isDraft from template (#540) (e3aa48d9)
+
 #### 1.2.0-beta.2 (2024-08-15)
 
 ##### Bug Fixes
