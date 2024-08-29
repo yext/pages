@@ -15,7 +15,7 @@ export function addDataToPuckConfig(fileName: string, filepath: string) {
   }
   const parser = new SourceFileParser(filepath, createTsMorphProject());
 
-  const puckConfigsStatement = parser.getVariableStatement("puckConfigs");
+  const puckConfigsStatement = parser.getVariableStatement("componentRegistry");
 
   const formattedTemplateName =
     fileName.charAt(0).toUpperCase() + fileName.slice(1);
@@ -26,7 +26,8 @@ export function addDataToPuckConfig(fileName: string, filepath: string) {
     puckConfigsStartLocation
   );
 
-  const puckConfigsDeclaration = parser.getVariableDeclaration("puckConfigs");
+  const puckConfigsDeclaration =
+    parser.getVariableDeclaration("componentRegistry");
   const puckConfigsInitializer = puckConfigsDeclaration.getInitializer();
   if (
     puckConfigsInitializer &&

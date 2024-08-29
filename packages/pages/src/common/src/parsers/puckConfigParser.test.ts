@@ -13,7 +13,7 @@ describe("addDataToPuckConfig", () => {
     try {
       fs.writeFileSync(
         "test.tsx",
-        `export const puckConfigs = new Map<string, Config<any>>([
+        `export const componentRegistry = new Map<string, Config<any>>([
           ["location", locationConfig],
         ]);`
       );
