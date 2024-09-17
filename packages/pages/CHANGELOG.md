@@ -1,3 +1,19 @@
+#### 1.1.2 (2024-09-17)
+
+##### New Features
+
+* **util:**  add useDocument hook (#528) (f27199ab)
+
+##### Bug Fixes
+
+* **plugin:**  don't merge the entire user vite.config.js (#545) (5ba5ff4a)
+* **dev:**  increase serverless function POST limit (#544) (1b9de9ef)
+*  pnpm actions (083a7a54)
+
+##### Refactors
+
+*  change the type of additionalProperties in TemplateConfig to 'Record<string, any>' (#527) (8fd95b19)
+
 #### 1.1.1 (2024-06-13)
 
 ##### Bug Fixes
