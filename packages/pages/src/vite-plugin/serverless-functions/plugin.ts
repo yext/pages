@@ -1,4 +1,4 @@
-import { build, createLogger, mergeConfig } from "vite";
+import { build, createLogger, InlineConfig, mergeConfig } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -57,7 +57,7 @@ export const buildServerlessFunctions = async (
       loggerInfo(msg, options);
     };
 
-    const serverlessFunctionBuildConfig = {
+    const serverlessFunctionBuildConfig: InlineConfig = {
       customLogger: logger,
       configFile: false,
       envDir: envVarConfig.envVarDir,
@@ -93,18 +93,21 @@ export const buildServerlessFunctions = async (
         }),
       ],
     };
-    await build(
-      mergeConfig(
-        {
-          build: {
-            rollupOptions: {
-              external: viteConfig.default.build.rollupOptions.external,
+
+    const mergedConfig = viteConfig.default.build.rollupOptions.external
+      ? mergeConfig(
+          {
+            build: {
+              rollupOptions: {
+                external: viteConfig.default.build.rollupOptions.external,
+              },
             },
           },
-        },
-        serverlessFunctionBuildConfig
-      )
-    );
+          serverlessFunctionBuildConfig
+        )
+      : serverlessFunctionBuildConfig;
+
+    await build(mergedConfig);
   }
 };
 
