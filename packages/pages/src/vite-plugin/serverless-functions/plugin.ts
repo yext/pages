@@ -1,4 +1,4 @@
-import { build, createLogger, mergeConfig } from "vite";
+import { build, createLogger, InlineConfig, mergeConfig } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -8,10 +8,7 @@ import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { FunctionMetadataParser } from "../../common/src/function/internal/functionMetadataParser.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
-import {
-  removePluginFromViteConfig,
-  scopedViteConfigPath,
-} from "../../util/viteConfig.js";
+import { scopedViteConfigPath } from "../../util/viteConfig.js";
 
 export const buildServerlessFunctions = async (
   projectStructure: ProjectStructure
@@ -60,7 +57,7 @@ export const buildServerlessFunctions = async (
       loggerInfo(msg, options);
     };
 
-    const serverlessFunctionBuildConfig = {
+    const serverlessFunctionBuildConfig: InlineConfig = {
       customLogger: logger,
       configFile: false,
       envDir: envVarConfig.envVarDir,
@@ -96,12 +93,21 @@ export const buildServerlessFunctions = async (
         }),
       ],
     };
-    await build(
-      mergeConfig(
-        removePluginFromViteConfig(viteConfig.default),
-        serverlessFunctionBuildConfig
-      )
-    );
+
+    const mergedConfig = viteConfig.default.build.rollupOptions.external
+      ? mergeConfig(
+          {
+            build: {
+              rollupOptions: {
+                external: viteConfig.default.build.rollupOptions.external,
+              },
+            },
+          },
+          serverlessFunctionBuildConfig
+        )
+      : serverlessFunctionBuildConfig;
+
+    await build(mergedConfig);
   }
 };
 
