@@ -8,10 +8,7 @@ import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { FunctionMetadataParser } from "../../common/src/function/internal/functionMetadataParser.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
-import {
-  removePluginFromViteConfig,
-  scopedViteConfigPath,
-} from "../../util/viteConfig.js";
+import { scopedViteConfigPath } from "../../util/viteConfig.js";
 
 export const buildServerlessFunctions = async (
   projectStructure: ProjectStructure
@@ -98,7 +95,13 @@ export const buildServerlessFunctions = async (
     };
     await build(
       mergeConfig(
-        removePluginFromViteConfig(viteConfig.default),
+        {
+          build: {
+            rollupOptions: {
+              external: viteConfig.default.build.rollupOptions.external,
+            },
+          },
+        },
         serverlessFunctionBuildConfig
       )
     );
