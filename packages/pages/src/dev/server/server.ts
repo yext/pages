@@ -23,6 +23,7 @@ import { getModuleInfoFromModuleName } from "./ssr/findMatchingModule.js";
 import open from "open";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const SERVERLESS_FUNCTION_POST_REQUEST_LIMIT = "50mb";
 
 /**
  * @internal
@@ -39,8 +40,13 @@ export const createServer = async (
   const app = express();
 
   // necessary for serverless functions' req.body to be available
-  app.use(express.json()); // used to parse JSON bodies
-  app.use(express.urlencoded({ extended: true })); // parse URL-encoded bodies
+  app.use(express.json({ limit: SERVERLESS_FUNCTION_POST_REQUEST_LIMIT })); // used to parse JSON bodies
+  app.use(
+    express.urlencoded({
+      limit: SERVERLESS_FUNCTION_POST_REQUEST_LIMIT,
+      extended: true,
+    })
+  ); // parse URL-encoded bodies
 
   // initialize the default project structure and use to help configure the dev server
   const projectStructure = await ProjectStructure.init({ scope });
