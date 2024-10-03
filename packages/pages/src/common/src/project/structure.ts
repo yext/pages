@@ -217,14 +217,14 @@ export class ProjectStructure {
     // TODO: handle other extensions
     const assetsDir = await determineAssetsFilepath(
       DEFAULT_ASSETS_DIR,
-      pathLib.resolve("vite.config.js")
+      pathLib.resolve(config.scope ?? "", "vite.config.js")
     );
 
     config.subfolders.assets = assetsDir;
 
     const publicDir = await determinePublicFilepath(
       DEFAULT_PUBLIC_DIR,
-      pathLib.resolve("vite.config.js")
+      pathLib.resolve(config.scope ?? "", "vite.config.js")
     );
 
     config.subfolders.public = publicDir;
