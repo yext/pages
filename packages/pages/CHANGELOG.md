@@ -1,3 +1,9 @@
+#### 1.1.3 (2024-10-03)
+
+##### Bug Fixes
+
+*  use scope when finding vite.config.js (#546) (4c74e43f)
+
 #### 1.1.2 (2024-09-17)
 
 ##### New Features
