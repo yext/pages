@@ -53,6 +53,12 @@ export function createManager(config: InternalSlugManagerConfig) {
     }
     const entitiesResponse = await api.listEntities(params);
 
+    if (!entitesResponse.entities) {
+      return JSON.stringify({
+        data: []
+      });
+    }
+
     const profileParams = new URLSearchParams({
       fields: ["meta", ...slugGeneratorFnFields].join(","),
       filter: JSON.stringify({
