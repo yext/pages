@@ -1,3 +1,9 @@
+#### 1.0.0-beta.7 (2024-10-31)
+
+##### Bug Fixes
+
+* **pages-plugins:**  prevent making api request with unbounded entities (#547) (573888ea)
+
 #### 1.0.0-beta.6 (2023-10-25)
 
 ##### New Features
