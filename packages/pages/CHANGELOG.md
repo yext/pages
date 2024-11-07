@@ -1,3 +1,11 @@
+#### 1.1.4 (2024-11-07)
+
+##### Bug Fixes
+
+* **scaffold:**  update module template (#550) (4528c597)
+* **plugin:**  deprecated type assertion (#549) (f1c53a9c)
+* **modules:**  ignore user's build output options (#548) (7d119fc0)
+
 #### 1.1.3 (2024-10-03)
 
 ##### Bug Fixes
