@@ -13,7 +13,8 @@ export const moduleCode = (
   const tailwind = useTailwind ? ` className="tailwind"` : ``;
   const formattedModuleName = formatModuleName(moduleName);
 
-  return `import { Module, ModuleConfig, ModuleProps } from "@yext/pages/*";
+  return `import * as React from "react";
+import { Module, ModuleConfig, ModuleProps } from "@yext/pages/*";
 import { AnalyticsProvider } from "@yext/pages-components";
 import "./index.css";
 
@@ -39,9 +40,8 @@ const ${formattedModuleName}: Module = () => {
   return(
     <AnalyticsProvider 
       apiKey="REPLACE_ME"
-      defaultCurrency="REPLACE_ME" 
+      currency="REPLACE_ME" 
       templateData={templateData}
-      productionDomains={["REPLACE_ME"]}
     >
       <div${tailwind}>
         Module
