@@ -1,4 +1,4 @@
-import manifest from "./manifest.json" assert { type: "json" };
+import manifest from "./manifest.json" with { type: "json" };
 
 export type Manifest = {
   /** A map of feature name to the server path of the feature */
