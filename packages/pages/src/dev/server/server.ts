@@ -56,23 +56,18 @@ export const createServer = async (
       module,
       projectStructure
     );
-    if (moduleInfo !== undefined) {
-      let vite;
-      // initialize using postCss if we have it
-      if (moduleInfo.postCssPath !== undefined) {
-        vite = await createViteServer({
-          ...getViteServerConfig(projectStructure),
+    if (moduleInfo) {
+      let viteServerConfig = getViteServerConfig(projectStructure);
+      if (moduleInfo.postCssPath) {
+        viteServerConfig = {
+          ...viteServerConfig,
           css: {
             postcss: moduleInfo.postCssPath,
           },
-        });
-      } else {
-        vite = await createViteServer(getViteServerConfig(projectStructure));
+        };
       }
-      // otherwise initialize without setting postcss
-      if (!vite) {
-        vite = await createViteServer(getViteServerConfig(projectStructure));
-      }
+
+      const vite = await createViteServer(viteServerConfig);
 
       app.use(vite.middlewares);
       app.use(errorMiddleware(vite));
