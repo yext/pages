@@ -30,7 +30,7 @@ export default async (
   manifest: Manifest
 ): Promise<GeneratedPage | GeneratedRedirect> => {
   const projectStructure = new ProjectStructure(manifest.projectStructure);
-  const feature = props.document.__.name;
+  const feature = props.document.__.code_template ?? props.document.__.name;
 
   const template = await readTemplateModules(
     feature,
