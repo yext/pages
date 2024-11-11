@@ -254,7 +254,11 @@ export class ProjectStructure {
       return [new Path(scopedPath), new Path(templatesRoot)];
     }
 
-    return [new Path(templatesRoot)];
+    if (fs.existsSync(templatesRoot)) {
+      return [new Path(templatesRoot)];
+    }
+
+    return [];
   };
 
   /**
