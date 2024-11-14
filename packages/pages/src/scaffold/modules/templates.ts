@@ -10,7 +10,7 @@ export const moduleCode = (
   moduleName: string,
   useTailwind: boolean
 ): string => {
-  const tailwind = useTailwind ? ` className="tailwind"` : ``;
+  const tailwind = useTailwind ? ` className="tailwind tw-${moduleName}"` : ``;
   const formattedModuleName = formatModuleName(moduleName);
 
   return `import * as React from "react";
@@ -72,24 +72,31 @@ export default {
 
 export const indexCssCode = (useTailwind: boolean): string => {
   return useTailwind
-    ? `.tailwind {
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;  
-}
+    ? `@tailwind base;
+@tailwind components;
+@tailwind utilities;  
 `
     : ``;
 };
 
-export const tailwindCode = (projectStructure: ProjectStructure) => {
+export const tailwindCode = (
+  projectStructure: ProjectStructure,
+  moduleName: string
+) => {
   return `import type { Config } from 'tailwindcss';
+  import { scopedPreflightStyles, isolateInsideOfContainer } from 'tailwindcss-scoped-preflight';
 
 export default {
+  important: '.tailwind.tw-${moduleName}',
   content: ["./${projectStructure.config.rootFolders.source}/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    scopedPreflightStyles({
+      isolationStrategy: isolateInsideOfContainer('.tw-${moduleName}'),
+    }),
+  ]
 } satisfies Config
 `;
 };
