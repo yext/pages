@@ -10,7 +10,7 @@ export const moduleCode = (
   moduleName: string,
   useTailwind: boolean
 ): string => {
-  const tailwind = useTailwind ? ` className="tailwind tw-${moduleName}"` : ``;
+  const tailwind = useTailwind ? ` className="tw-${moduleName}"` : ``;
   const formattedModuleName = formatModuleName(moduleName);
 
   return `import * as React from "react";
@@ -87,7 +87,7 @@ export const tailwindCode = (
   import { scopedPreflightStyles, isolateInsideOfContainer } from 'tailwindcss-scoped-preflight';
 
 export default {
-  important: '.tailwind.tw-${moduleName}',
+  important: '.tw-${moduleName}',
   content: ["./${projectStructure.config.rootFolders.source}/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {},
