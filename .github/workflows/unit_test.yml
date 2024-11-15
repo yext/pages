@@ -19,13 +19,13 @@ jobs:
         node-version: [18.x, 20.x]
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.6
       
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.4.1
+        uses: pnpm/action-setup@v4.0.0
 
       - name: "test with node ${{ matrix.node-version }}"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4.0.2
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
@@ -34,9 +34,9 @@ jobs:
         run: pnpm i
 
       - name: Download build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
-          name: build-output
+          name: build-output-${{ matrix.node-version }}
           path: dist/
 
       - name: Run tests

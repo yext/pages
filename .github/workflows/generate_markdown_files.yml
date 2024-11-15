@@ -7,12 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:    
       - name: "Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.6
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.4.1
+        uses: pnpm/action-setup@v4.0.0
       - name: Install deps
         run: pnpm i
       - name: generate-docs
