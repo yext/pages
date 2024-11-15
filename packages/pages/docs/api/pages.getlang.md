@@ -17,11 +17,42 @@ getLang: <T extends TemplateRenderProps<any>>(
 
 ## Parameters
 
-| Parameter  | Type                                             | Description |
-| ---------- | ------------------------------------------------ | ----------- |
-| headConfig | [HeadConfig](./pages.headconfig.md) \| undefined |             |
-| props      | T                                                |             |
+<table><thead><tr><th>
 
+Parameter
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+headConfig
+
+</td><td>
+
+[HeadConfig](./pages.headconfig.md) \| undefined
+
+</td><td>
+
+</td></tr>
+<tr><td>
+
+props
+
+</td><td>
+
+T
+
+</td><td>
+
+</td></tr>
+</tbody></table>
 **Returns:**
 
 string

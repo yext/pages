@@ -14,13 +14,141 @@ export interface TemplateModule<T extends TemplateProps, U extends TemplateRende
 
 ## Properties
 
-| Property                                                    | Modifiers | Type                                                         | Description                                                                                                                                                 |
-| ----------------------------------------------------------- | --------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [config?](./pages.templatemodule.config.md)                 |           | [TemplateConfig](./pages.templateconfig.md)                  | _(Optional)_ The exported config function                                                                                                                   |
-| [default?](./pages.templatemodule.default.md)               |           | [Template](./pages.template.md)<!-- -->&lt;U&gt;             | _(Optional)_ The exported default template function. This is expected to be a React Component. If undefined then will be used to generate the HTML instead. |
-| [getAuthScope?](./pages.templatemodule.getauthscope.md)     |           | [GetAuthScope](./pages.getauthscope.md)<!-- -->&lt;T&gt;     | _(Optional)_ The exported, optional getAuthScope function                                                                                                   |
-| [getHeadConfig?](./pages.templatemodule.getheadconfig.md)   |           | [GetHeadConfig](./pages.getheadconfig.md)<!-- -->&lt;U&gt;   | _(Optional)_ The exported, optional headFunction                                                                                                            |
-| [getPath](./pages.templatemodule.getpath.md)                |           | [GetPath](./pages.getpath.md)<!-- -->&lt;T&gt;               | The exported getPath function                                                                                                                               |
-| [getRedirects?](./pages.templatemodule.getredirects.md)     |           | [GetRedirects](./pages.getredirects.md)<!-- -->&lt;U&gt;     | _(Optional)_ The exported, optional, function which returns a list of redirects                                                                             |
-| [render?](./pages.templatemodule.render.md)                 |           | [Render](./pages.render.md)<!-- -->&lt;U&gt;                 | _(Optional)_ The exported render function                                                                                                                   |
-| [transformProps?](./pages.templatemodule.transformprops.md) |           | [TransformProps](./pages.transformprops.md)<!-- -->&lt;T&gt; | _(Optional)_ The optional exported transformProps function                                                                                                  |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[config?](./pages.templatemodule.config.md)
+
+</td><td>
+
+</td><td>
+
+[TemplateConfig](./pages.templateconfig.md)
+
+</td><td>
+
+_(Optional)_ The exported config function
+
+</td></tr>
+<tr><td>
+
+[default?](./pages.templatemodule.default.md)
+
+</td><td>
+
+</td><td>
+
+[Template](./pages.template.md)<!-- -->&lt;U&gt;
+
+</td><td>
+
+_(Optional)_ The exported default template function. This is expected to be a React Component. If undefined then will be used to generate the HTML instead.
+
+</td></tr>
+<tr><td>
+
+[getAuthScope?](./pages.templatemodule.getauthscope.md)
+
+</td><td>
+
+</td><td>
+
+[GetAuthScope](./pages.getauthscope.md)<!-- -->&lt;T&gt;
+
+</td><td>
+
+_(Optional)_ The exported, optional getAuthScope function
+
+</td></tr>
+<tr><td>
+
+[getHeadConfig?](./pages.templatemodule.getheadconfig.md)
+
+</td><td>
+
+</td><td>
+
+[GetHeadConfig](./pages.getheadconfig.md)<!-- -->&lt;U&gt;
+
+</td><td>
+
+_(Optional)_ The exported, optional headFunction
+
+</td></tr>
+<tr><td>
+
+[getPath](./pages.templatemodule.getpath.md)
+
+</td><td>
+
+</td><td>
+
+[GetPath](./pages.getpath.md)<!-- -->&lt;T&gt;
+
+</td><td>
+
+The exported getPath function
+
+</td></tr>
+<tr><td>
+
+[getRedirects?](./pages.templatemodule.getredirects.md)
+
+</td><td>
+
+</td><td>
+
+[GetRedirects](./pages.getredirects.md)<!-- -->&lt;U&gt;
+
+</td><td>
+
+_(Optional)_ The exported, optional, function which returns a list of redirects
+
+</td></tr>
+<tr><td>
+
+[render?](./pages.templatemodule.render.md)
+
+</td><td>
+
+</td><td>
+
+[Render](./pages.render.md)<!-- -->&lt;U&gt;
+
+</td><td>
+
+_(Optional)_ The exported render function
+
+</td></tr>
+<tr><td>
+
+[transformProps?](./pages.templatemodule.transformprops.md)
+
+</td><td>
+
+</td><td>
+
+[TransformProps](./pages.transformprops.md)<!-- -->&lt;T&gt;
+
+</td><td>
+
+_(Optional)_ The optional exported transformProps function
+
+</td></tr>
+</tbody></table>

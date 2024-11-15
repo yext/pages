@@ -14,8 +14,66 @@ export interface PagesHttpResponse
 
 ## Properties
 
-| Property                                              | Modifiers | Type                                                             | Description                                        |
-| ----------------------------------------------------- | --------- | ---------------------------------------------------------------- | -------------------------------------------------- |
-| [body](./pages.pageshttpresponse.body.md)             |           | string                                                           | HTTP response body (refer to MDN Web Docs).        |
-| [headers](./pages.pageshttpresponse.headers.md)       |           | { \[key: string\]: string; } \| { \[key: string\]: \[string\]; } | HTTP response headers (refer to MDN Web Docs).     |
-| [statusCode](./pages.pageshttpresponse.statuscode.md) |           | number                                                           | HTTP response status code (refer to MDN Web Docs). |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[body](./pages.pageshttpresponse.body.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+HTTP response body (refer to MDN Web Docs).
+
+</td></tr>
+<tr><td>
+
+[headers](./pages.pageshttpresponse.headers.md)
+
+</td><td>
+
+</td><td>
+
+{ \[key: string\]: string; } \| { \[key: string\]: \[string\]; }
+
+</td><td>
+
+HTTP response headers (refer to MDN Web Docs).
+
+</td></tr>
+<tr><td>
+
+[statusCode](./pages.pageshttpresponse.statuscode.md)
+
+</td><td>
+
+</td><td>
+
+number
+
+</td><td>
+
+HTTP response status code (refer to MDN Web Docs).
+
+</td></tr>
+</tbody></table>

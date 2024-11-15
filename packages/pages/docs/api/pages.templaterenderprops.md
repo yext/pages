@@ -16,7 +16,51 @@ export interface TemplateRenderProps<T = any> extends TemplateProps<T>
 
 ## Properties
 
-| Property                                                                    | Modifiers | Type   | Description                                                                                                                                        |
-| --------------------------------------------------------------------------- | --------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [path](./pages.templaterenderprops.path.md)                                 |           | string | The path that the generated file will live at on the site, as defined by the [GetPath](./pages.getpath.md) function.                               |
-| [relativePrefixToRoot](./pages.templaterenderprops.relativeprefixtoroot.md) |           | string | The relative path from the generated page to the root of the site. i.e. The path example/path/foo would have the relativePrefixToRoot of '../../'. |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[path](./pages.templaterenderprops.path.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The path that the generated file will live at on the site, as defined by the [GetPath](./pages.getpath.md) function.
+
+</td></tr>
+<tr><td>
+
+[relativePrefixToRoot](./pages.templaterenderprops.relativeprefixtoroot.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The relative path from the generated page to the root of the site. i.e. The path example/path/foo would have the relativePrefixToRoot of '../../'.
+
+</td></tr>
+</tbody></table>

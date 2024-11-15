@@ -14,7 +14,51 @@ export interface Tag
 
 ## Properties
 
-| Property                                | Modifiers | Type                                | Description                                                                                                                              |
-| --------------------------------------- | --------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| [attributes](./pages.tag.attributes.md) |           | [Attributes](./pages.attributes.md) | The attributes to add to the element. Each attribute will be added in the form 'key="value"' and attributes will be seperated by a space |
-| [type](./pages.tag.type.md)             |           | [TagType](./pages.tagtype.md)       | The type of the element to create (i.e. meta, script, link, etc.)                                                                        |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[attributes](./pages.tag.attributes.md)
+
+</td><td>
+
+</td><td>
+
+[Attributes](./pages.attributes.md)
+
+</td><td>
+
+The attributes to add to the element. Each attribute will be added in the form 'key="value"' and attributes will be seperated by a space
+
+</td></tr>
+<tr><td>
+
+[type](./pages.tag.type.md)
+
+</td><td>
+
+</td><td>
+
+[TagType](./pages.tagtype.md)
+
+</td><td>
+
+The type of the element to create (i.e. meta, script, link, etc.)
+
+</td></tr>
+</tbody></table>

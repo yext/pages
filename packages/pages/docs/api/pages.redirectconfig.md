@@ -14,8 +14,66 @@ export interface RedirectConfig
 
 ## Properties
 
-| Property                                        | Modifiers | Type                        | Description                                                                                           |
-| ----------------------------------------------- | --------- | --------------------------- | ----------------------------------------------------------------------------------------------------- |
-| [name?](./pages.redirectconfig.name.md)         |           | string                      | _(Optional)_ The name of the redirect. If not defined uses the redirect filename (without extension)  |
-| [stream?](./pages.redirectconfig.stream.md)     |           | [Stream](./pages.stream.md) | _(Optional)_ The stream configuration used by the redirect                                            |
-| [streamId?](./pages.redirectconfig.streamid.md) |           | string                      | _(Optional)_ The stream that this redirect uses. If a stream is defined the streamId is not required. |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[name?](./pages.redirectconfig.name.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ The name of the redirect. If not defined uses the redirect filename (without extension)
+
+</td></tr>
+<tr><td>
+
+[stream?](./pages.redirectconfig.stream.md)
+
+</td><td>
+
+</td><td>
+
+[Stream](./pages.stream.md)
+
+</td><td>
+
+_(Optional)_ The stream configuration used by the redirect
+
+</td></tr>
+<tr><td>
+
+[streamId?](./pages.redirectconfig.streamid.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ The stream that this redirect uses. If a stream is defined the streamId is not required.
+
+</td></tr>
+</tbody></table>

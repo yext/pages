@@ -14,10 +14,96 @@ export interface Stream
 
 ## Properties
 
-| Property                                       | Modifiers | Type                                                                                   | Description                                                                               |
-| ---------------------------------------------- | --------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| [$id](./pages.stream._id.md)                   |           | string                                                                                 | The identifier of the stream                                                              |
-| [fields](./pages.stream.fields.md)             |           | string\[\]                                                                             | The fields to apply to the stream                                                         |
-| [filter](./pages.stream.filter.md)             |           | { entityIds?: string\[\]; entityTypes?: string\[\]; savedFilterIds?: string\[\]; }     | The filter to apply to the stream                                                         |
-| [localization](./pages.stream.localization.md) |           | { locales: string\[\]; primary?: never; } \| { primary: true; locales?: never; }       | The localization used by the filter. Either set primary: true or specify a locales array. |
-| [transform?](./pages.stream.transform.md)      |           | { expandOptionFields?: string\[\]; replaceOptionValuesWithDisplayNames?: string\[\]; } | _(Optional)_ The transformation to apply to the stream                                    |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[$id](./pages.stream._id.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The identifier of the stream
+
+</td></tr>
+<tr><td>
+
+[fields](./pages.stream.fields.md)
+
+</td><td>
+
+</td><td>
+
+string\[\]
+
+</td><td>
+
+The fields to apply to the stream
+
+</td></tr>
+<tr><td>
+
+[filter](./pages.stream.filter.md)
+
+</td><td>
+
+</td><td>
+
+{ entityIds?: string\[\]; entityTypes?: string\[\]; savedFilterIds?: string\[\]; }
+
+</td><td>
+
+The filter to apply to the stream
+
+</td></tr>
+<tr><td>
+
+[localization](./pages.stream.localization.md)
+
+</td><td>
+
+</td><td>
+
+{ locales: string\[\]; primary?: never; } \| { primary: true; locales?: never; }
+
+</td><td>
+
+The localization used by the filter. Either set primary: true or specify a locales array.
+
+</td></tr>
+<tr><td>
+
+[transform?](./pages.stream.transform.md)
+
+</td><td>
+
+</td><td>
+
+{ expandOptionFields?: string\[\]; replaceOptionValuesWithDisplayNames?: string\[\]; }
+
+</td><td>
+
+_(Optional)_ The transformation to apply to the stream
+
+</td></tr>
+</tbody></table>

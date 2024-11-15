@@ -14,11 +14,111 @@ export interface PagesHttpRequest
 
 ## Properties
 
-| Property                                               | Modifiers | Type                             | Description                                            |
-| ------------------------------------------------------ | --------- | -------------------------------- | ------------------------------------------------------ |
-| [body](./pages.pageshttprequest.body.md)               |           | string                           | The body of the request                                |
-| [headers](./pages.pageshttprequest.headers.md)         |           | { \[key: string\]: string\[\]; } | Request headers in the request                         |
-| [method](./pages.pageshttprequest.method.md)           |           | string                           | Method of the request                                  |
-| [pathParams](./pages.pageshttprequest.pathparams.md)   |           | { \[key: string\]: string; }     | Object containing each path parameter.                 |
-| [queryParams](./pages.pageshttprequest.queryparams.md) |           | { \[key: string\]: string; }     | Object containing each query parameter.                |
-| [site](./pages.pageshttprequest.site.md)               |           | [Site](./pages.site.md)          | Site object containing all deploy-related information. |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[body](./pages.pageshttprequest.body.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The body of the request
+
+</td></tr>
+<tr><td>
+
+[headers](./pages.pageshttprequest.headers.md)
+
+</td><td>
+
+</td><td>
+
+{ \[key: string\]: string\[\]; }
+
+</td><td>
+
+Request headers in the request
+
+</td></tr>
+<tr><td>
+
+[method](./pages.pageshttprequest.method.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+Method of the request
+
+</td></tr>
+<tr><td>
+
+[pathParams](./pages.pageshttprequest.pathparams.md)
+
+</td><td>
+
+</td><td>
+
+{ \[key: string\]: string; }
+
+</td><td>
+
+Object containing each path parameter.
+
+</td></tr>
+<tr><td>
+
+[queryParams](./pages.pageshttprequest.queryparams.md)
+
+</td><td>
+
+</td><td>
+
+{ \[key: string\]: string; }
+
+</td><td>
+
+Object containing each query parameter.
+
+</td></tr>
+<tr><td>
+
+[site](./pages.pageshttprequest.site.md)
+
+</td><td>
+
+</td><td>
+
+[Site](./pages.site.md)
+
+</td><td>
+
+Site object containing all deploy-related information.
+
+</td></tr>
+</tbody></table>
