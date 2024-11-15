@@ -51,7 +51,7 @@
     "execa": "^8.0.1",
     "fs-extra": "^11.2.0",
     "generate-changelog": "^1.8.0",
-    "generate-license-file": "^3.0.0",
+    "generate-license-file": "^3.6.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
     "minimist": "^1.2.8",
