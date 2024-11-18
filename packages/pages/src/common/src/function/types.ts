@@ -60,21 +60,27 @@ export interface PagesHttpResponse {
 }
 
 /**
+ * The domains the site is hosted on.
+ * @public
+ */
+export interface DomainMap {
+  /** The production domain. */
+  production: string;
+  /** The staging domain. */
+  staging: string;
+  /** The preview domain. */
+  deployPreview: string;
+  /** The reverse proxy prefix. */
+  displayUrlPrefix: string;
+}
+
+/**
  * The argument passed to an onUrlChange type plugin.
  * @public
  */
 export interface PagesOnUrlChangeRequest {
   /** The domains the site is hosted on. */
-  domainMap: {
-    /** The production domain. */
-    production: string;
-    /** The staging domain. */
-    staging: string;
-    /** The preview domain. */
-    deployPreview: string;
-    /** The reverse proxy prefix. */
-    displayUrlPrefix: string;
-  };
+  domainMap: DomainMap;
   /** The entity's ID. */
   entityId: string;
   /** The name of the feature. */

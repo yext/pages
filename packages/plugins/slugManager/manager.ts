@@ -55,7 +55,7 @@ export function createManager(config: InternalSlugManagerConfig) {
 
     if (!entitesResponse.entities) {
       return JSON.stringify({
-        data: []
+        data: [],
       });
     }
 

@@ -39,6 +39,9 @@
     "build:js": "node src/bundler.js",
     "build:types": "tsc",
     "build": "pnpm build:js && pnpm build:types",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs --port 8080",
     "fmt": "prettier --write --cache \"src/**/**.{ts,tsx,js,jsx}\"",
     "lint": "eslint --cache --fix src/**",
     "api-extractor": "api-extractor run --local --verbose",
@@ -79,6 +82,7 @@
     "ts-morph": "^22.0.0",
     "typescript": "^5.4.2",
     "vite-plugin-node-polyfills": "0.17.0",
+    "vitepress": "1.5.0",
     "yaml": "^2.4.1"
   },
   "devDependencies": {

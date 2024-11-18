@@ -39,7 +39,7 @@ Description
 
 </td><td>
 
-{ production: string; staging: string; deployPreview: string; displayUrlPrefix: string; }
+[DomainMap](./pages.domainmap.md)
 
 </td><td>
 

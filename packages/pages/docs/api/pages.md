@@ -57,6 +57,15 @@ Description
 </th></tr></thead>
 <tbody><tr><td>
 
+[DomainMap](./pages.domainmap.md)
+
+</td><td>
+
+The domains the site is hosted on.
+
+</td></tr>
+<tr><td>
+
 [FunctionModule](./pages.functionmodule.md)
 
 </td><td>

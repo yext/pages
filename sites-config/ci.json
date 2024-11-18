@@ -2,7 +2,7 @@
   "artifactStructure": {
     "assets": [
       {
-        "root": "packages/pages/storybook-static"
+        "root": "packages/pages/docs/.vitepress/dist"
       }
     ]
   },
@@ -17,10 +17,10 @@
     ]
   },
   "buildArtifacts": {
-    "buildCmd": "(cd packages/pages && pnpm run build-storybook)"
+    "buildCmd": "(cd packages/pages && pnpm run docs:build)"
   },
   "livePreview": {
-    "serveSetupCmd": "(cd packages/pages && pnpm run build-storybook)",
-    "serveCmd": "(cd packages/pages && pnpm run storybook -- -p 8080)"
+    "serveSetupCmd": "(cd packages/pages && pnpm run docs:build)",
+    "serveCmd": "(cd packages/pages && pnpm docs:preview)"
   }
 }
