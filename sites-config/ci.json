@@ -17,10 +17,10 @@
     ]
   },
   "buildArtifacts": {
-    "buildCmd": "(cd packages/pages && pnpm run docs:build)"
+    "buildCmd": "cd packages/pages && pnpm run docs:build"
   },
   "livePreview": {
-    "serveSetupCmd": "(cd packages/pages && pnpm run docs:build)",
-    "serveCmd": "(cd packages/pages && pnpm docs:preview)"
+    "serveSetupCmd": "cd packages/pages && pnpm run docs:build",
+    "serveCmd": "cd packages/pages && pnpm docs:preview"
   }
 }
