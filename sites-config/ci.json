@@ -7,7 +7,7 @@
     ]
   },
   "dependencies": {
-    "installDepsCmd": "npm install -g pnpm && pnpm install",
+    "installDepsCmd": "npm install -g pnpm && pnpm install --ignore-scripts",
     "requiredFiles": [
       "package.json",
       "pnpm-lock.json",
