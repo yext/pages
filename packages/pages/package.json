@@ -105,6 +105,7 @@
     "glob": "^10.3.10",
     "jsdom": "24.0.0",
     "minimatch": "^9.0.3",
+    "type-fest": "^4.27.0",
     "vitest": "^1.4.0"
   },
   "peerDependencies": {
