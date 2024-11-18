@@ -14,7 +14,51 @@ export interface RedirectSource
 
 ## Properties
 
-| Property                                           | Modifiers | Type   | Description                     |
-| -------------------------------------------------- | --------- | ------ | ------------------------------- |
-| [source](./pages.redirectsource.source.md)         |           | string | The source to redirect from     |
-| [statusCode](./pages.redirectsource.statuscode.md) |           | number | The status code of the redirect |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[source](./pages.redirectsource.source.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The source to redirect from
+
+</td></tr>
+<tr><td>
+
+[statusCode](./pages.redirectsource.statuscode.md)
+
+</td><td>
+
+</td><td>
+
+number
+
+</td><td>
+
+The status code of the redirect
+
+</td></tr>
+</tbody></table>

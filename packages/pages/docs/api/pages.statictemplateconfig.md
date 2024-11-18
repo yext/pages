@@ -14,9 +14,81 @@ export interface StaticTemplateConfig
 
 ## Properties
 
-| Property                                                    | Modifiers | Type       | Description                                                                                                  |
-| ----------------------------------------------------------- | --------- | ---------- | ------------------------------------------------------------------------------------------------------------ |
-| [hydrate?](./pages.statictemplateconfig.hydrate.md)         |           | boolean    | _(Optional)_ Determines if hydration is allowed or not for webpages                                          |
-| [locales?](./pages.statictemplateconfig.locales.md)         |           | string\[\] | _(Optional)_ Locales for a static page                                                                       |
-| [name?](./pages.statictemplateconfig.name.md)               |           | string     | _(Optional)_ The name of the template feature. If not defined uses the template filename (without extension) |
-| [onUrlChange?](./pages.statictemplateconfig.onurlchange.md) |           | string     | _(Optional)_ The name of the onUrlChange function to use.                                                    |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[hydrate?](./pages.statictemplateconfig.hydrate.md)
+
+</td><td>
+
+</td><td>
+
+boolean
+
+</td><td>
+
+_(Optional)_ Determines if hydration is allowed or not for webpages
+
+</td></tr>
+<tr><td>
+
+[locales?](./pages.statictemplateconfig.locales.md)
+
+</td><td>
+
+</td><td>
+
+string\[\]
+
+</td><td>
+
+_(Optional)_ Locales for a static page
+
+</td></tr>
+<tr><td>
+
+[name?](./pages.statictemplateconfig.name.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ The name of the template feature. If not defined uses the template filename (without extension)
+
+</td></tr>
+<tr><td>
+
+[onUrlChange?](./pages.statictemplateconfig.onurlchange.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ The name of the onUrlChange function to use.
+
+</td></tr>
+</tbody></table>

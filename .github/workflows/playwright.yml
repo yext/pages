@@ -16,17 +16,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.6
         with:
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
-      - uses: pnpm/action-setup@v2.4.1
-      - uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v4.0.0
+      - uses: actions/setup-node@v4.0.2
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
-          name: build-output
+          name: build-output-${{ matrix.node-version }}
           path: packages/pages/dist
 
       # It's important to not run the build for @yext/pages on Windows.
@@ -57,7 +57,7 @@ jobs:
           default_author: github_actions 
 
       - name: Upload Playwright Reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.3.3
         if: always()
         with:
           name: playwright-reports-${{ matrix.os }}-${{ matrix.node-version }}

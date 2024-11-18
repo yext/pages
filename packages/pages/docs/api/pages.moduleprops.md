@@ -14,7 +14,51 @@ export interface ModuleProps<T = Record<string, any>>
 
 ## Properties
 
-| Property                                    | Modifiers | Type                                     | Description                                |
-| ------------------------------------------- | --------- | ---------------------------------------- | ------------------------------------------ |
-| [\_\_meta](./pages.moduleprops.__meta.md)   |           | { mode: "development" \| "production"; } | Additional metadata added by the toolchain |
-| [document](./pages.moduleprops.document.md) |           | T                                        | The document to use for AnalyticsProvider  |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[\_\_meta](./pages.moduleprops.__meta.md)
+
+</td><td>
+
+</td><td>
+
+{ mode: "development" \| "production"; }
+
+</td><td>
+
+Additional metadata added by the toolchain
+
+</td></tr>
+<tr><td>
+
+[document](./pages.moduleprops.document.md)
+
+</td><td>
+
+</td><td>
+
+T
+
+</td><td>
+
+The document to use for AnalyticsProvider
+
+</td></tr>
+</tbody></table>

@@ -5,7 +5,7 @@ The following npm package may be included in this product:
 
  - express@4.18.3
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 (The MIT License)
 
@@ -36,9 +36,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The following npm package may be included in this product:
 
- - commander@12.0.0
+ - commander@12.1.0
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 (The MIT License)
 
@@ -69,7 +69,7 @@ The following npm package may be included in this product:
 
  - fs-extra@11.2.0
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 (The MIT License)
 
@@ -93,7 +93,7 @@ The following npm package may be included in this product:
 
  - escape-html@1.0.3
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 (The MIT License)
 
@@ -126,7 +126,7 @@ The following npm package may be included in this product:
 
  - mime-types@2.1.35
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 (The MIT License)
 
@@ -156,9 +156,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 The following npm package may be included in this product:
 
- - rollup@4.13.0
+ - rollup@4.27.2
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 # Rollup core license
 Rollup is released under the MIT license:
@@ -175,7 +175,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 # Licenses of bundled dependencies
 The published Rollup artifact additionally contains code with the following licenses:
-MIT, ISC
+MIT, ISC, 0BSD
 
 # Bundled dependencies:
 ## @jridgewell/sourcemap-codec
@@ -266,7 +266,8 @@ Repository: sindresorhus/binary-extensions
 
 > MIT License
 > 
-> Copyright (c) 2019 Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com), Paul Miller (https://paulmillr.com)
+> Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
+> Copyright (c) Paul Miller (https://paulmillr.com)
 > 
 > Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 > 
@@ -283,7 +284,7 @@ Repository: micromatch/braces
 
 > The MIT License (MIT)
 > 
-> Copyright (c) 2014-2018, Jon Schlinkert.
+> Copyright (c) 2014-present, Jon Schlinkert.
 > 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal
@@ -793,6 +794,26 @@ Repository: micromatch/to-regex-range
 
 ---------------------------------------
 
+## tslib
+License: 0BSD
+By: Microsoft Corp.
+Repository: https://github.com/Microsoft/tslib.git
+
+> Copyright (c) Microsoft Corporation.
+> 
+> Permission to use, copy, modify, and/or distribute this software for any
+> purpose with or without fee is hereby granted.
+> 
+> THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+> REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+> AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+> INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+> LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+> OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+> PERFORMANCE OF THIS SOFTWARE.
+
+---------------------------------------
+
 ## yargs-parser
 License: ISC
 By: Ben Coe
@@ -819,7 +840,7 @@ The following npm package may be included in this product:
 
  - typescript@5.4.2
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 Apache License
 
@@ -883,7 +904,7 @@ The following npm package may be included in this product:
 
  - ansi-to-html@0.7.2
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 Copyright (c) 2012 Rob Burns
 
@@ -914,7 +935,7 @@ The following npm package may be included in this product:
 
  - yaml@2.4.1
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 Copyright Eemeli Aro <eemeli@gmail.com>
 
@@ -936,7 +957,7 @@ The following npm package may be included in this product:
 
  - lodash@4.17.21
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
 
@@ -992,7 +1013,7 @@ The following npm package may be included in this product:
 
  - picocolors@1.0.0
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 ISC License
 
@@ -1016,7 +1037,7 @@ The following npm package may be included in this product:
 
  - prompts@2.4.2
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 MIT License
 
@@ -1046,7 +1067,7 @@ The following npm package may be included in this product:
 
  - module-from-string@3.3.0
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 MIT License
 
@@ -1076,7 +1097,7 @@ The following npm package may be included in this product:
 
  - vite-plugin-node-polyfills@0.17.0
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 MIT License
 
@@ -1111,7 +1132,7 @@ The following npm packages may be included in this product:
  - ora@8.0.1
  - pretty-ms@9.0.0
 
-These packages each contain the following license and notice below:
+These packages each contain the following license:
 
 MIT License
 
@@ -1129,7 +1150,7 @@ The following npm package may be included in this product:
 
  - ts-morph@22.0.0
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 The MIT License (MIT)
 
@@ -1159,7 +1180,7 @@ The following npm package may be included in this product:
 
  - browser-or-node@2.1.1
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 The MIT License (MIT)
 
@@ -1189,7 +1210,7 @@ The following npm package may be included in this product:
 
  - postcss@8.4.35
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 The MIT License (MIT)
 
@@ -1218,7 +1239,7 @@ The following npm package may be included in this product:
 
  - postcss-nested@6.0.1
 
-This package contains the following license and notice below:
+This package contains the following license:
 
 The MIT License (MIT)
 

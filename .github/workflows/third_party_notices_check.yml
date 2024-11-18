@@ -6,17 +6,17 @@ jobs:
   license-check-setup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.6
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4.0.2
         with:
           node-version: 18.x
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.4.1
+        uses: pnpm/action-setup@v4.0.0
 
       - name: Global install generate-license-file
         run: pnpm i -g generate-license-file

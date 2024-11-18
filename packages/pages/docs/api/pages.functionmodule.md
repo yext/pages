@@ -14,6 +14,36 @@ export interface FunctionModule
 
 ## Properties
 
-| Property                                      | Modifiers | Type                                    | Description                        |
-| --------------------------------------------- | --------- | --------------------------------------- | ---------------------------------- |
-| [default?](./pages.functionmodule.default.md) |           | [FunctionType](./pages.functiontype.md) | _(Optional)_ The exported function |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[default?](./pages.functionmodule.default.md)
+
+</td><td>
+
+</td><td>
+
+[FunctionType](./pages.functiontype.md)
+
+</td><td>
+
+_(Optional)_ The exported function
+
+</td></tr>
+</tbody></table>
