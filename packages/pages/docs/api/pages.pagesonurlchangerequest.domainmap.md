@@ -9,10 +9,5 @@ The domains the site is hosted on.
 **Signature:**
 
 ```typescript
-domainMap: {
-  production: string;
-  staging: string;
-  deployPreview: string;
-  displayUrlPrefix: string;
-}
+domainMap: DomainMap;
 ```
