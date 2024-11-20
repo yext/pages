@@ -1,3 +1,22 @@
+#### 1.1.5 (2024-11-20)
+
+##### Chores
+
+*  update actions (#554) (e3321415)
+
+##### Documentation Changes
+
+*  add vitepress setup (#555) (cedd094e)
+
+##### New Features
+
+* **dev/plugin:**  build without templates directory  (#552) (9073f4cc)
+* **plugin:**  render using code_template if it exists (#551) (0ab2f771)
+
+##### Bug Fixes
+
+* **modules:**  update scaffold tailwind  (#553) (daa62b0b)
+
 #### 1.1.4 (2024-11-07)
 
 ##### Bug Fixes
