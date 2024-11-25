@@ -14,7 +14,7 @@ export interface StreamConfig {
   /** The fields to apply to the stream */
   fields: string[];
   /** The filter to apply to the stream */
-  filter: {
+  filter?: {
     /** The entity IDs to apply to the stream */
     entityIds?: string[];
     /** The entity types to apply to the stream */
