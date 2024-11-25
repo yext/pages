@@ -19,12 +19,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: [
-      "**/dist",
-      "packages/pages/tests/fixtures",
-      "playground/locations-site",
-      "playground/multibrand-site",
-    ],
+    ignores: ["**/dist", "packages/pages/tests/fixtures", "playground/**"],
   },
   ...compat.extends(
     "eslint:recommended",
@@ -66,6 +61,13 @@ export default [
       "@typescript-eslint/no-non-null-assertion": "off",
       "import/extensions": ["error", "ignorePackages"],
       "react/no-deprecated": "off",
+      "@typescript-eslint/no-unused-expressions": [
+        "error",
+        {
+          allowShortCircuit: true,
+          allowTernary: true,
+        },
+      ],
     },
   },
 ];
