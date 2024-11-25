@@ -289,7 +289,7 @@ export interface StaticTemplateConfig {
 export interface Stream {
   $id: string;
   fields: string[];
-  filter: {
+  filter?: {
     entityIds?: string[];
     entityTypes?: string[];
     savedFilterIds?: string[];

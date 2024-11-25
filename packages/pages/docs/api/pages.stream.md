@@ -63,7 +63,7 @@ The fields to apply to the stream
 </td></tr>
 <tr><td>
 
-[filter](./pages.stream.filter.md)
+[filter?](./pages.stream.filter.md)
 
 </td><td>
 
@@ -73,7 +73,7 @@ The fields to apply to the stream
 
 </td><td>
 
-The filter to apply to the stream
+_(Optional)_ The filter to apply to the stream
 
 </td></tr>
 <tr><td>
