@@ -34,6 +34,9 @@
   },
   "homepage": "https://github.com/yext/pages#readme",
   "devDependencies": {
+    "@eslint/compat": "^1.2.3",
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.15.0",
     "@playwright/test": "^1.48.2",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.14.202",
@@ -52,6 +55,7 @@
     "fs-extra": "^11.2.0",
     "generate-changelog": "^1.8.0",
     "generate-license-file": "^3.6.0",
+    "globals": "^15.12.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
     "minimist": "^1.2.8",
