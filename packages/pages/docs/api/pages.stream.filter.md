@@ -9,7 +9,7 @@ The filter to apply to the stream
 **Signature:**
 
 ```typescript
-filter: {
+filter?: {
         entityIds?: string[];
         entityTypes?: string[];
         savedFilterIds?: string[];

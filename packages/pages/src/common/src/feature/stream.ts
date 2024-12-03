@@ -1,5 +1,6 @@
 import { TemplateConfigInternal } from "../template/internal/types.js";
 import { RedirectConfigInternal } from "../redirect/internal/types.js";
+import { logErrorAndExit } from "../../../util/logError.js";
 
 /**
  * The shape of data that represents a stream configuration.
@@ -14,7 +15,7 @@ export interface StreamConfig {
   /** The fields to apply to the stream */
   fields: string[];
   /** The filter to apply to the stream */
-  filter: {
+  filter?: {
     /** The entity IDs to apply to the stream */
     entityIds?: string[];
     /** The entity types to apply to the stream */
@@ -48,6 +49,15 @@ export const convertTemplateConfigToStreamConfig = (
   if (!config) {
     return;
   }
+
+  if (
+    config.stream &&
+    !config.stream.filter &&
+    !config.additionalProperties?.isVETemplate
+  ) {
+    logErrorAndExit("Filter is required in StreamConfig for templates.");
+  }
+
   if (config.stream) {
     return {
       ...config.stream,
