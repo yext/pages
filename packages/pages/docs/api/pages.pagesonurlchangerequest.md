@@ -14,13 +14,141 @@ export interface PagesOnUrlChangeRequest
 
 ## Properties
 
-| Property                                                      | Modifiers | Type                                                                                      | Description                                            |
-| ------------------------------------------------------------- | --------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| [domainMap](./pages.pagesonurlchangerequest.domainmap.md)     |           | { production: string; staging: string; deployPreview: string; displayUrlPrefix: string; } | The domains the site is hosted on.                     |
-| [entityId](./pages.pagesonurlchangerequest.entityid.md)       |           | string                                                                                    | The entity's ID.                                       |
-| [feature](./pages.pagesonurlchangerequest.feature.md)         |           | string                                                                                    | The name of the feature.                               |
-| [locale](./pages.pagesonurlchangerequest.locale.md)           |           | string                                                                                    | The entity's locale                                    |
-| [path](./pages.pagesonurlchangerequest.path.md)               |           | string                                                                                    | The entity's path.                                     |
-| [previousUrl](./pages.pagesonurlchangerequest.previousurl.md) |           | string                                                                                    | The entity's old URL.                                  |
-| [site](./pages.pagesonurlchangerequest.site.md)               |           | [Site](./pages.site.md)                                                                   | Site object containing all deploy-related information. |
-| [url](./pages.pagesonurlchangerequest.url.md)                 |           | string                                                                                    | The entity's new URL.                                  |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[domainMap](./pages.pagesonurlchangerequest.domainmap.md)
+
+</td><td>
+
+</td><td>
+
+[DomainMap](./pages.domainmap.md)
+
+</td><td>
+
+The domains the site is hosted on.
+
+</td></tr>
+<tr><td>
+
+[entityId](./pages.pagesonurlchangerequest.entityid.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The entity's ID.
+
+</td></tr>
+<tr><td>
+
+[feature](./pages.pagesonurlchangerequest.feature.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The name of the feature.
+
+</td></tr>
+<tr><td>
+
+[locale](./pages.pagesonurlchangerequest.locale.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The entity's locale
+
+</td></tr>
+<tr><td>
+
+[path](./pages.pagesonurlchangerequest.path.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The entity's path.
+
+</td></tr>
+<tr><td>
+
+[previousUrl](./pages.pagesonurlchangerequest.previousurl.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The entity's old URL.
+
+</td></tr>
+<tr><td>
+
+[site](./pages.pagesonurlchangerequest.site.md)
+
+</td><td>
+
+</td><td>
+
+[Site](./pages.site.md)
+
+</td><td>
+
+Site object containing all deploy-related information.
+
+</td></tr>
+<tr><td>
+
+[url](./pages.pagesonurlchangerequest.url.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The entity's new URL.
+
+</td></tr>
+</tbody></table>

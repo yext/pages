@@ -14,7 +14,51 @@ export interface ModuleDefinition
 
 ## Properties
 
-| Property                                       | Modifiers | Type                                    | Description                               |
-| ---------------------------------------------- | --------- | --------------------------------------- | ----------------------------------------- |
-| [config](./pages.moduledefinition.config.md)   |           | [ModuleConfig](./pages.moduleconfig.md) | The exported config function              |
-| [default](./pages.moduledefinition.default.md) |           | [Module](./pages.module.md)             | The default function that returns the JSX |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[config](./pages.moduledefinition.config.md)
+
+</td><td>
+
+</td><td>
+
+[ModuleConfig](./pages.moduleconfig.md)
+
+</td><td>
+
+The exported config function
+
+</td></tr>
+<tr><td>
+
+[default](./pages.moduledefinition.default.md)
+
+</td><td>
+
+</td><td>
+
+[Module](./pages.module.md)
+
+</td><td>
+
+The default function that returns the JSX
+
+</td></tr>
+</tbody></table>

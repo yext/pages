@@ -10,10 +10,11 @@ export const moduleCode = (
   moduleName: string,
   useTailwind: boolean
 ): string => {
-  const tailwind = useTailwind ? ` className="tailwind"` : ``;
+  const tailwind = useTailwind ? ` className="tw-${moduleName}"` : ``;
   const formattedModuleName = formatModuleName(moduleName);
 
-  return `import { Module, ModuleConfig, ModuleProps } from "@yext/pages/*";
+  return `import * as React from "react";
+import { Module, ModuleConfig, ModuleProps } from "@yext/pages/*";
 import { AnalyticsProvider } from "@yext/pages-components";
 import "./index.css";
 
@@ -39,9 +40,8 @@ const ${formattedModuleName}: Module = () => {
   return(
     <AnalyticsProvider 
       apiKey="REPLACE_ME"
-      defaultCurrency="REPLACE_ME" 
+      currency="REPLACE_ME" 
       templateData={templateData}
-      productionDomains={["REPLACE_ME"]}
     >
       <div${tailwind}>
         Module
@@ -72,24 +72,31 @@ export default {
 
 export const indexCssCode = (useTailwind: boolean): string => {
   return useTailwind
-    ? `.tailwind {
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;  
-}
+    ? `@tailwind base;
+@tailwind components;
+@tailwind utilities;  
 `
     : ``;
 };
 
-export const tailwindCode = (projectStructure: ProjectStructure) => {
+export const tailwindCode = (
+  projectStructure: ProjectStructure,
+  moduleName: string
+) => {
   return `import type { Config } from 'tailwindcss';
+  import { scopedPreflightStyles, isolateInsideOfContainer } from 'tailwindcss-scoped-preflight';
 
 export default {
+  important: '.tw-${moduleName}',
   content: ["./${projectStructure.config.rootFolders.source}/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    scopedPreflightStyles({
+      isolationStrategy: isolateInsideOfContainer('.tw-${moduleName}'),
+    }),
+  ]
 } satisfies Config
 `;
 };

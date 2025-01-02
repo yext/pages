@@ -69,7 +69,7 @@ export const generateModule = async (
   if (response.useTailwind) {
     fs.writeFileSync(
       path.join(modulePath, "tailwind.config.ts"),
-      tailwindCode(projectStructure)
+      tailwindCode(projectStructure, response.moduleName)
     );
     fs.writeFileSync(path.join(modulePath, "postcss.config.js"), postcssCode());
   }
@@ -146,5 +146,6 @@ function handleCancel(moduleName: string, projectStructure: ProjectStructure) {
 const getDependencies = async () => {
   await updatePackageDependency("@yext/pages-components", null, true);
   await updatePackageDependency("tailwindcss", null, true);
+  await updatePackageDependency("tailwindcss-scoped-preflight", null, true);
   await installDependencies();
 };

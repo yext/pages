@@ -14,8 +14,66 @@ export interface RedirectModule<T extends TemplateProps>
 
 ## Properties
 
-| Property                                                   | Modifiers | Type                                                         | Description                               |
-| ---------------------------------------------------------- | --------- | ------------------------------------------------------------ | ----------------------------------------- |
-| [config?](./pages.redirectmodule.config.md)                |           | [RedirectConfig](./pages.redirectconfig.md)                  | _(Optional)_ The exported config function |
-| [getDestination](./pages.redirectmodule.getdestination.md) |           | [GetDestination](./pages.getdestination.md)<!-- -->&lt;T&gt; | The exported GetDestination function      |
-| [getSources](./pages.redirectmodule.getsources.md)         |           | [GetSources](./pages.getsources.md)<!-- -->&lt;T&gt;         | The exported GetSources function          |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[config?](./pages.redirectmodule.config.md)
+
+</td><td>
+
+</td><td>
+
+[RedirectConfig](./pages.redirectconfig.md)
+
+</td><td>
+
+_(Optional)_ The exported config function
+
+</td></tr>
+<tr><td>
+
+[getDestination](./pages.redirectmodule.getdestination.md)
+
+</td><td>
+
+</td><td>
+
+[GetDestination](./pages.getdestination.md)<!-- -->&lt;T&gt;
+
+</td><td>
+
+The exported GetDestination function
+
+</td></tr>
+<tr><td>
+
+[getSources](./pages.redirectmodule.getsources.md)
+
+</td><td>
+
+</td><td>
+
+[GetSources](./pages.getsources.md)<!-- -->&lt;T&gt;
+
+</td><td>
+
+The exported GetSources function
+
+</td></tr>
+</tbody></table>

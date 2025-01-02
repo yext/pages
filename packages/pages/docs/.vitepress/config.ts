@@ -1,33 +1,73 @@
-import { defineConfig } from "vitepress";
+import { DefaultTheme, defineConfig } from "vitepress";
+import { readdirSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const API_FOLDER = "api";
+
+const getSidebarSubfolder = (subfolderName: string) => {
+  const dirPath = path.resolve(__dirname, "..", subfolderName);
+  const files = readdirSync(dirPath);
+
+  return files
+    .filter((file) => file.endsWith(".md")) // Include only markdown files
+    .map((file) => {
+      const name = file.replace(/\.md$/, ""); // Remove the `.md` extension
+      let updatedName = name.replace("pages.", "");
+      updatedName = updatedName.charAt(0).toUpperCase() + updatedName.slice(1); // Capitalize the first letter
+
+      return {
+        text: updatedName,
+        link: `${dirPath}/${name}`, // Build relative link
+      };
+    });
+};
+
+const sidebarGuide = (): DefaultTheme.SidebarItem[] => {
+  return [
+    {
+      text: "Introduction",
+      collapsed: false,
+      items: [
+        { text: "What is PagesJS?", link: "intro" },
+        { text: "Getting Started", link: "getting-started" },
+      ],
+    },
+    { text: "Config & API Reference", base: "/api/", link: "pages" },
+  ];
+};
 
 export default defineConfig({
-  lang: "en-US",
-  title: "Pages",
-  description: "A set of tools to allow development for Yext Pages",
-  lastUpdated: true,
-  markdown: { attrs: { disable: true } },
-
+  title: "PagesJS",
+  description: "Pages development for Yext.",
+  markdown: {
+    html: true,
+  },
   themeConfig: {
-    lastUpdatedText: "Last Updated",
-    editLink: {
-      pattern:
-        "https://github.com/yext/pages/tree/main/packages/pages/docs/:path",
-      text: "Edit This Page",
+    search: {
+      provider: "local",
     },
     nav: [
-      { text: "Guide", link: "/index.html", activeMatch: "^/$|^/index.html" },
-      { text: "API", link: "/api/index.html", activeMatch: "^/$|^/api/" },
+      { text: "Home", link: "/" },
+      {
+        text: "Guide",
+        link: "/guide//getting-started",
+        activeMatch: "/guide/",
+      },
+      { text: "API Reference", link: "api//pages", activeMatch: "/api/" },
     ],
-    sidebar: getSidebar(),
+
+    sidebar: {
+      "/guide/": { base: "/guide/", items: sidebarGuide() },
+      "/api/": { base: "/api/", items: [{}] },
+    },
+    // {
+    //   text: "API",
+    //   items: getSidebarSubfolder(API_FOLDER),
+    // },
+
+    socialLinks: [{ icon: "github", link: "https://github.com/yext/pages" }],
   },
 });
-
-function getSidebar() {
-  return [
-    { text: "Guide", items: [{ text: "Home", link: "/index.html" }] },
-    {
-      text: "API",
-      items: [{ text: "API Docs", link: "/api/index.html" }],
-    },
-  ];
-}

@@ -14,10 +14,31 @@ renderHeadConfigToString: (headConfig: HeadConfig) => string;
 
 ## Parameters
 
-| Parameter  | Type                                | Description |
-| ---------- | ----------------------------------- | ----------- |
-| headConfig | [HeadConfig](./pages.headconfig.md) |             |
+<table><thead><tr><th>
 
+Parameter
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+headConfig
+
+</td><td>
+
+[HeadConfig](./pages.headconfig.md)
+
+</td><td>
+
+</td></tr>
+</tbody></table>
 **Returns:**
 
 string

@@ -6,54 +6,399 @@
 
 ## Functions
 
-| Function                                                                            | Description                                                                                                                                                                     |
-| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [getLang(headConfig, props)](./pages.getlang.md)                                    | Function that takes in a [HeadConfig](./pages.headconfig.md) interface and a props, and returns the lang value that will be set on the HTML tag.                                |
-| [getRelativePrefixToRootFromPath(path)](./pages.getrelativeprefixtorootfrompath.md) | Function that takes a path to a generated template and returns the relative path to the root of the site. Will return the empty string if already at the root level.            |
-| [renderHeadConfigToString(headConfig)](./pages.renderheadconfigtostring.md)         | Function that takes a [HeadConfig](./pages.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the head tags. |
+<table><thead><tr><th>
+
+Function
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[getLang(headConfig, props)](./pages.getlang.md)
+
+</td><td>
+
+Function that takes in a [HeadConfig](./pages.headconfig.md) interface and a props, and returns the lang value that will be set on the HTML tag.
+
+</td></tr>
+<tr><td>
+
+[getRelativePrefixToRootFromPath(path)](./pages.getrelativeprefixtorootfrompath.md)
+
+</td><td>
+
+Function that takes a path to a generated template and returns the relative path to the root of the site. Will return the empty string if already at the root level.
+
+</td></tr>
+<tr><td>
+
+[renderHeadConfigToString(headConfig)](./pages.renderheadconfigtostring.md)
+
+</td><td>
+
+Function that takes a [HeadConfig](./pages.headconfig.md) interface and outputs a valid string of HTML that will be inserted into the generated document between the head tags.
+
+</td></tr>
+</tbody></table>
 
 ## Interfaces
 
-| Interface                                                     | Description                                                                                                                                                                                                |
-| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [FunctionModule](./pages.functionmodule.md)                   | Defines the functions and fields that are available to the serverless function.                                                                                                                            |
-| [HeadConfig](./pages.headconfig.md)                           | The configuration that allows users to entirely arbitarily set the inner contents of the head element that will be prepended to the generated HTML document.                                               |
-| [ModuleConfig](./pages.moduleconfig.md)                       | The configuration options for a Module.                                                                                                                                                                    |
-| [ModuleDefinition](./pages.moduledefinition.md)               | The type to include in any module file.                                                                                                                                                                    |
-| [ModuleProps](./pages.moduleprops.md)                         | The shape of the data used in the Module.                                                                                                                                                                  |
-| [PagesHttpRequest](./pages.pageshttprequest.md)               | The argument passed to a http/api type function.                                                                                                                                                           |
-| [PagesHttpResponse](./pages.pageshttpresponse.md)             | The return value for a http/api serverless function.                                                                                                                                                       |
-| [PagesOnUrlChangeRequest](./pages.pagesonurlchangerequest.md) | The argument passed to an onUrlChange type plugin.                                                                                                                                                         |
-| [RedirectConfig](./pages.redirectconfig.md)                   | The exported <code>config</code> function's definition.                                                                                                                                                    |
-| [RedirectModule](./pages.redirectmodule.md)                   | The type to include in any redirect file. It defines the available functions and fields that are available to the redirect.                                                                                |
-| [RedirectSource](./pages.redirectsource.md)                   | The type of a RedirectSource. It defines the source and statusCode for a redirect.                                                                                                                         |
-| [Site](./pages.site.md)                                       | The site information passed to a serverless function by the Yext system.                                                                                                                                   |
-| [StaticTemplateConfig](./pages.statictemplateconfig.md)       | Shape of TemplateConfig for Static Pages                                                                                                                                                                   |
-| [Stream](./pages.stream.md)                                   | The stream config defined in [TemplateConfig.stream](./pages.templateconfig.stream.md)<!-- -->.                                                                                                            |
-| [Tag](./pages.tag.md)                                         | Interface for an HTML tag. Can set attributes on the tag, but if a body needs to be defined, use the other field of the [HeadConfig](./pages.headconfig.md) interface.                                     |
-| [TemplateConfig](./pages.templateconfig.md)                   | The exported <code>config</code> function's definition.                                                                                                                                                    |
-| [TemplateModule](./pages.templatemodule.md)                   | The type to include in any template file. It defines the available functions and fields that are available to the template.                                                                                |
-| [TemplateProps](./pages.templateprops.md)                     | The shape of the data passed directly to the different template functions with the exception of the render function (getPath, getHeadConfig, etc).                                                         |
-| [TemplateRenderProps](./pages.templaterenderprops.md)         | The shape of the data passed directly to the template's render function. Extends the [TemplateProps](./pages.templateprops.md) interface and has the additions of a path and a relativePrefixToRoot field. |
+<table><thead><tr><th>
+
+Interface
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[DomainMap](./pages.domainmap.md)
+
+</td><td>
+
+The domains the site is hosted on.
+
+</td></tr>
+<tr><td>
+
+[FunctionModule](./pages.functionmodule.md)
+
+</td><td>
+
+Defines the functions and fields that are available to the serverless function.
+
+</td></tr>
+<tr><td>
+
+[HeadConfig](./pages.headconfig.md)
+
+</td><td>
+
+The configuration that allows users to entirely arbitarily set the inner contents of the head element that will be prepended to the generated HTML document.
+
+</td></tr>
+<tr><td>
+
+[ModuleConfig](./pages.moduleconfig.md)
+
+</td><td>
+
+The configuration options for a Module.
+
+</td></tr>
+<tr><td>
+
+[ModuleDefinition](./pages.moduledefinition.md)
+
+</td><td>
+
+The type to include in any module file.
+
+</td></tr>
+<tr><td>
+
+[ModuleProps](./pages.moduleprops.md)
+
+</td><td>
+
+The shape of the data used in the Module.
+
+</td></tr>
+<tr><td>
+
+[PagesHttpRequest](./pages.pageshttprequest.md)
+
+</td><td>
+
+The argument passed to a http/api type function.
+
+</td></tr>
+<tr><td>
+
+[PagesHttpResponse](./pages.pageshttpresponse.md)
+
+</td><td>
+
+The return value for a http/api serverless function.
+
+</td></tr>
+<tr><td>
+
+[PagesOnUrlChangeRequest](./pages.pagesonurlchangerequest.md)
+
+</td><td>
+
+The argument passed to an onUrlChange type plugin.
+
+</td></tr>
+<tr><td>
+
+[RedirectConfig](./pages.redirectconfig.md)
+
+</td><td>
+
+The exported `config` function's definition.
+
+</td></tr>
+<tr><td>
+
+[RedirectModule](./pages.redirectmodule.md)
+
+</td><td>
+
+The type to include in any redirect file. It defines the available functions and fields that are available to the redirect.
+
+</td></tr>
+<tr><td>
+
+[RedirectSource](./pages.redirectsource.md)
+
+</td><td>
+
+The type of a RedirectSource. It defines the source and statusCode for a redirect.
+
+</td></tr>
+<tr><td>
+
+[Site](./pages.site.md)
+
+</td><td>
+
+The site information passed to a serverless function by the Yext system.
+
+</td></tr>
+<tr><td>
+
+[StaticTemplateConfig](./pages.statictemplateconfig.md)
+
+</td><td>
+
+Shape of TemplateConfig for Static Pages
+
+</td></tr>
+<tr><td>
+
+[Stream](./pages.stream.md)
+
+</td><td>
+
+The stream config defined in [TemplateConfig.stream](./pages.templateconfig.stream.md)<!-- -->.
+
+</td></tr>
+<tr><td>
+
+[Tag](./pages.tag.md)
+
+</td><td>
+
+Interface for an HTML tag. Can set attributes on the tag, but if a body needs to be defined, use the other field of the [HeadConfig](./pages.headconfig.md) interface.
+
+</td></tr>
+<tr><td>
+
+[TemplateConfig](./pages.templateconfig.md)
+
+</td><td>
+
+The exported `config` function's definition.
+
+</td></tr>
+<tr><td>
+
+[TemplateModule](./pages.templatemodule.md)
+
+</td><td>
+
+The type to include in any template file. It defines the available functions and fields that are available to the template.
+
+</td></tr>
+<tr><td>
+
+[TemplateProps](./pages.templateprops.md)
+
+</td><td>
+
+The shape of the data passed directly to the different template functions with the exception of the render function (getPath, getHeadConfig, etc).
+
+</td></tr>
+<tr><td>
+
+[TemplateRenderProps](./pages.templaterenderprops.md)
+
+</td><td>
+
+The shape of the data passed directly to the template's render function. Extends the [TemplateProps](./pages.templateprops.md) interface and has the additions of a path and a relativePrefixToRoot field.
+
+</td></tr>
+</tbody></table>
 
 ## Type Aliases
 
-| Type Alias                                                      | Description                                                                                                                                                                                                                             |
-| --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Attributes](./pages.attributes.md)                             | Custom type for specifying HTML element attributes in the [Tag](./pages.tag.md) interface.                                                                                                                                              |
-| [FunctionType](./pages.functiontype.md)                         | The valid Serverless Function types;                                                                                                                                                                                                    |
-| [GetAuthScope](./pages.getauthscope.md)                         | The type definition for the template's GetAuthScope function.                                                                                                                                                                           |
-| [GetDestination](./pages.getdestination.md)                     | The type definition for the redirect's getDestination function.                                                                                                                                                                         |
-| [GetHeadConfig](./pages.getheadconfig.md)                       | The type definition for the template's getHeadConfig function. getHeadConfig takes in the provided data and will output a HeadConfig object which will be used to generate the tags inside the head tag of the generated HTML document. |
-| [GetPath](./pages.getpath.md)                                   | The type definition for the template's getPath function.                                                                                                                                                                                |
-| [GetRedirects](./pages.getredirects.md)                         | The type definiton for the template's getRedirects function.                                                                                                                                                                            |
-| [GetSources](./pages.getsources.md)                             | The type definiton for the redirect's getSources function.                                                                                                                                                                              |
-| [HttpFunction](./pages.httpfunction.md)                         | A function that runs when a specific path is visited on the site.                                                                                                                                                                       |
-| [Manifest](./pages.manifest.md)                                 | A manifest of bundled files present during a production build.                                                                                                                                                                          |
-| [Module](./pages.module.md)                                     | The type definition for the module's default function.                                                                                                                                                                                  |
-| [OnUrlChangeFunction](./pages.onurlchangefunction.md)           | A function that runs when the path of a production page changes.                                                                                                                                                                        |
-| [PagesOnUrlChangeResponse](./pages.pagesonurlchangeresponse.md) | onUrlUpdate plugins return void.                                                                                                                                                                                                        |
-| [Render](./pages.render.md)                                     | The type definition for the template's render function.                                                                                                                                                                                 |
-| [TagType](./pages.tagtype.md)                                   | Type that enumerates the allowed types of HTML elements in the document header.                                                                                                                                                         |
-| [Template](./pages.template.md)                                 | The type definition for the template's default function.                                                                                                                                                                                |
-| [TransformProps](./pages.transformprops.md)                     | The type definition for the template's transformProps function. Can be used to alter and/or augement the props (which include the data document) passed into the template at render time.                                               |
+<table><thead><tr><th>
+
+Type Alias
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[Attributes](./pages.attributes.md)
+
+</td><td>
+
+Custom type for specifying HTML element attributes in the [Tag](./pages.tag.md) interface.
+
+</td></tr>
+<tr><td>
+
+[FunctionType](./pages.functiontype.md)
+
+</td><td>
+
+The valid Serverless Function types;
+
+</td></tr>
+<tr><td>
+
+[GetAuthScope](./pages.getauthscope.md)
+
+</td><td>
+
+The type definition for the template's GetAuthScope function.
+
+</td></tr>
+<tr><td>
+
+[GetDestination](./pages.getdestination.md)
+
+</td><td>
+
+The type definition for the redirect's getDestination function.
+
+</td></tr>
+<tr><td>
+
+[GetHeadConfig](./pages.getheadconfig.md)
+
+</td><td>
+
+The type definition for the template's getHeadConfig function. getHeadConfig takes in the provided data and will output a HeadConfig object which will be used to generate the tags inside the head tag of the generated HTML document.
+
+</td></tr>
+<tr><td>
+
+[GetPath](./pages.getpath.md)
+
+</td><td>
+
+The type definition for the template's getPath function.
+
+</td></tr>
+<tr><td>
+
+[GetRedirects](./pages.getredirects.md)
+
+</td><td>
+
+The type definiton for the template's getRedirects function.
+
+</td></tr>
+<tr><td>
+
+[GetSources](./pages.getsources.md)
+
+</td><td>
+
+The type definiton for the redirect's getSources function.
+
+</td></tr>
+<tr><td>
+
+[HttpFunction](./pages.httpfunction.md)
+
+</td><td>
+
+A function that runs when a specific path is visited on the site.
+
+</td></tr>
+<tr><td>
+
+[Manifest](./pages.manifest.md)
+
+</td><td>
+
+A manifest of bundled files present during a production build.
+
+</td></tr>
+<tr><td>
+
+[Module](./pages.module.md)
+
+</td><td>
+
+The type definition for the module's default function.
+
+</td></tr>
+<tr><td>
+
+[OnUrlChangeFunction](./pages.onurlchangefunction.md)
+
+</td><td>
+
+A function that runs when the path of a production page changes.
+
+</td></tr>
+<tr><td>
+
+[PagesOnUrlChangeResponse](./pages.pagesonurlchangeresponse.md)
+
+</td><td>
+
+onUrlUpdate plugins return void.
+
+</td></tr>
+<tr><td>
+
+[Render](./pages.render.md)
+
+</td><td>
+
+The type definition for the template's render function.
+
+</td></tr>
+<tr><td>
+
+[TagType](./pages.tagtype.md)
+
+</td><td>
+
+Type that enumerates the allowed types of HTML elements in the document header.
+
+</td></tr>
+<tr><td>
+
+[Template](./pages.template.md)
+
+</td><td>
+
+The type definition for the template's default function.
+
+</td></tr>
+<tr><td>
+
+[TransformProps](./pages.transformprops.md)
+
+</td><td>
+
+The type definition for the template's transformProps function. Can be used to alter and/or augement the props (which include the data document) passed into the template at render time.
+
+</td></tr>
+</tbody></table>

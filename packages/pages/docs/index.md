@@ -1,7 +1,27 @@
-# PagesJS
+---
+# https://vitepress.dev/reference/default-theme-home-page
+layout: home
 
-While Pages works with any javascript based templating language we recommend using React. Yext's Professional Services team uses React internally and we recommend it as the standard framework of choice.
+hero:
+  name: "PagesJS"
+  text: "Develop Pages on the Yext platform."
+  tagline: Generate local webpages for your entities
+  actions:
+    - theme: brand
+      text: What is PagesJS?
+      link: /guide/intro
+    - theme: alt
+      text: Quickstart
+      link: /guide/getting-started
+    - theme: alt
+      text: API Docs
+      link: /api/pages
 
-## API
-
-[Pages API Documentation](./api/index.md)
+features:
+  - title: Reverse Proxy
+    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Static Site Generation
+    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Authentication
+    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+---

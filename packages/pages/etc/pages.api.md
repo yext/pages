@@ -43,6 +43,14 @@ export const createDevServer: (
 export const devCommand: (program: Command) => void;
 
 // @public
+export interface DomainMap {
+  deployPreview: string;
+  displayUrlPrefix: string;
+  production: string;
+  staging: string;
+}
+
+// @public
 export interface FunctionModule {
   default?: FunctionType;
 }
@@ -189,12 +197,7 @@ export interface PagesHttpResponse {
 
 // @public
 export interface PagesOnUrlChangeRequest {
-  domainMap: {
-    production: string;
-    staging: string;
-    deployPreview: string;
-    displayUrlPrefix: string;
-  };
+  domainMap: DomainMap;
   entityId: string;
   feature: string;
   locale: string;
@@ -286,7 +289,7 @@ export interface StaticTemplateConfig {
 export interface Stream {
   $id: string;
   fields: string[];
-  filter: {
+  filter?: {
     entityIds?: string[];
     entityTypes?: string[];
     savedFilterIds?: string[];

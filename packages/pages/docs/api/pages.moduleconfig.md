@@ -14,6 +14,36 @@ export interface ModuleConfig
 
 ## Properties
 
-| Property                              | Modifiers | Type   | Description                                                                                  |
-| ------------------------------------- | --------- | ------ | -------------------------------------------------------------------------------------------- |
-| [name?](./pages.moduleconfig.name.md) |           | string | _(Optional)_ Name of the module. If not defined uses the module filename (without extension) |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[name?](./pages.moduleconfig.name.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ Name of the module. If not defined uses the module filename (without extension)
+
+</td></tr>
+</tbody></table>

@@ -214,17 +214,22 @@ export class ProjectStructure {
   ) => {
     const config = merge(defaultProjectStructureConfig, projectStructureConfig);
 
+    let viteConfigPath = pathLib.resolve(config.scope ?? "", "vite.config.js");
+    if (config.scope && !fs.existsSync(viteConfigPath)) {
+      viteConfigPath = pathLib.resolve("vite.config.js");
+    }
+
     // TODO: handle other extensions
     const assetsDir = await determineAssetsFilepath(
       DEFAULT_ASSETS_DIR,
-      pathLib.resolve("vite.config.js")
+      viteConfigPath
     );
 
     config.subfolders.assets = assetsDir;
 
     const publicDir = await determinePublicFilepath(
       DEFAULT_PUBLIC_DIR,
-      pathLib.resolve("vite.config.js")
+      viteConfigPath
     );
 
     config.subfolders.public = publicDir;
@@ -249,7 +254,11 @@ export class ProjectStructure {
       return [new Path(scopedPath), new Path(templatesRoot)];
     }
 
-    return [new Path(templatesRoot)];
+    if (fs.existsSync(templatesRoot)) {
+      return [new Path(templatesRoot)];
+    }
+
+    return [];
   };
 
   /**

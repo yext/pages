@@ -1,6 +1,6 @@
 {
   "name": "@yext/pages-plugins",
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.8",
   "description": "Plugins that can be used with the Yext Pages system",
   "author": "sumo@yext.com",
   "license": "BSD-3-Clause",

@@ -1,4 +1,4 @@
-import manifest from "./manifest.json" assert { type: "json" };
+import manifest from "./manifest.json" with { type: "json" };
 
 const templateRendererCache = new Map();
 

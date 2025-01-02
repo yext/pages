@@ -14,11 +14,111 @@ export interface HeadConfig
 
 ## Properties
 
-| Property                                    | Modifiers | Type                              | Description                                                                                                                                                    |
-| ------------------------------------------- | --------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [charset?](./pages.headconfig.charset.md)   |           | string                            | _(Optional)_ Declares the document's encoding. Will default to 'UTF-8' if omitted.                                                                             |
-| [lang?](./pages.headconfig.lang.md)         |           | string                            | _(Optional)_ Lang of the page. Will be set to the document's locale if omitted.                                                                                |
-| [other?](./pages.headconfig.other.md)       |           | string                            | _(Optional)_ For any content that can't be fully encapsulted by our Tag interface, (i.e. template or style) an arbitrary, user-defined string can be provided. |
-| [tags?](./pages.headconfig.tags.md)         |           | [Tag](./pages.tag.md)<!-- -->\[\] | _(Optional)_ Well-defined interface for adding HTML tags (such as meta tags)                                                                                   |
-| [title?](./pages.headconfig.title.md)       |           | string                            | _(Optional)_ Title of the page. Will default to 'Yext Pages Site' if omitted.                                                                                  |
-| [viewport?](./pages.headconfig.viewport.md) |           | string                            | _(Optional)_ Declares the size and shape of the document's viewport. Will default to 'width=device-width, initial-scale=1' if omitted.                         |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[charset?](./pages.headconfig.charset.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ Declares the document's encoding. Will default to 'UTF-8' if omitted.
+
+</td></tr>
+<tr><td>
+
+[lang?](./pages.headconfig.lang.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ Lang of the page. Will be set to the document's locale if omitted.
+
+</td></tr>
+<tr><td>
+
+[other?](./pages.headconfig.other.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ For any content that can't be fully encapsulted by our Tag interface, (i.e. template or style) an arbitrary, user-defined string can be provided.
+
+</td></tr>
+<tr><td>
+
+[tags?](./pages.headconfig.tags.md)
+
+</td><td>
+
+</td><td>
+
+[Tag](./pages.tag.md)<!-- -->\[\]
+
+</td><td>
+
+_(Optional)_ Well-defined interface for adding HTML tags (such as meta tags)
+
+</td></tr>
+<tr><td>
+
+[title?](./pages.headconfig.title.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ Title of the page. Will default to 'Yext Pages Site' if omitted.
+
+</td></tr>
+<tr><td>
+
+[viewport?](./pages.headconfig.viewport.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ Declares the size and shape of the document's viewport. Will default to 'width=device-width, initial-scale=1' if omitted.
+
+</td></tr>
+</tbody></table>

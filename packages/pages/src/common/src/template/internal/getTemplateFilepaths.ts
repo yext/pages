@@ -91,7 +91,6 @@ export const getGlobalClientServerRenderTemplates = (
 
 /**
  * @param templatesRootPath the path where the templates live, typically src/templates
- * @param scopedTemplatePath the subfolder path inside templatesRoot to scope to - used in multibrand setups
  * @param globalFilename the file to find
  * @param defaultFilename the name of the provided file if globalFilename cannot be found - necessary for _client.js vs _client17.js
  * @returns the path to the appropriate file along with a boolean denoting if the path returned is a custom render template
@@ -101,13 +100,15 @@ const findGlobalRenderFile = (
   globalFilename: string,
   defaultFilename: string
 ): [string, boolean] => {
-  const pathToGlobalFile = path.join(
-    templatePaths[0].getAbsolutePath(),
-    globalFilename
-  );
+  if (templatePaths.length > 0) {
+    const pathToGlobalFile = path.join(
+      templatePaths[0].getAbsolutePath(),
+      globalFilename
+    );
 
-  if (existsSync(pathToGlobalFile)) {
-    return [pathToGlobalFile, true];
+    if (existsSync(pathToGlobalFile)) {
+      return [pathToGlobalFile, true];
+    }
   }
 
   // Use the built-in default rendering templates if none defined by the user

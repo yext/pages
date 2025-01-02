@@ -14,14 +14,156 @@ export interface TemplateConfig
 
 ## Properties
 
-| Property                                                                      | Modifiers | Type                        | Description                                                                                                  |
-| ----------------------------------------------------------------------------- | --------- | --------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [additionalProperties?](./pages.templateconfig.additionalproperties.md)       |           | Record&lt;string, any&gt;   | _(Optional)_ The field to pass additional metadata                                                           |
-| [alternateLanguageFields?](./pages.templateconfig.alternatelanguagefields.md) |           | string\[\]                  | _(Optional)_ The specific fields to add additional language options to based on the stream's localization    |
-| [hydrate?](./pages.templateconfig.hydrate.md)                                 |           | boolean                     | _(Optional)_ Determines if hydration is allowed or not for webpages                                          |
-| [name?](./pages.templateconfig.name.md)                                       |           | string                      | _(Optional)_ The name of the template feature. If not defined uses the template filename (without extension) |
-| [onUrlChange?](./pages.templateconfig.onurlchange.md)                         |           | string                      | _(Optional)_ The name of the onUrlChange function to use.                                                    |
-| [pageUrlField?](./pages.templateconfig.pageurlfield.md)                       |           | string                      | _(Optional)_ The field to be used as the custom writeback URL for the template                               |
-| [slugField?](./pages.templateconfig.slugfield.md)                             |           | string                      | _(Optional)_ The field to use as the slug for dynamic dev mode                                               |
-| [stream?](./pages.templateconfig.stream.md)                                   |           | [Stream](./pages.stream.md) | _(Optional)_ The stream configuration used by the template                                                   |
-| [streamId?](./pages.templateconfig.streamid.md)                               |           | string                      | _(Optional)_ The stream that this template uses. If a stream is defined the streamId is not required.        |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[additionalProperties?](./pages.templateconfig.additionalproperties.md)
+
+</td><td>
+
+</td><td>
+
+Record&lt;string, any&gt;
+
+</td><td>
+
+_(Optional)_ The field to pass additional metadata
+
+</td></tr>
+<tr><td>
+
+[alternateLanguageFields?](./pages.templateconfig.alternatelanguagefields.md)
+
+</td><td>
+
+</td><td>
+
+string\[\]
+
+</td><td>
+
+_(Optional)_ The specific fields to add additional language options to based on the stream's localization
+
+</td></tr>
+<tr><td>
+
+[hydrate?](./pages.templateconfig.hydrate.md)
+
+</td><td>
+
+</td><td>
+
+boolean
+
+</td><td>
+
+_(Optional)_ Determines if hydration is allowed or not for webpages
+
+</td></tr>
+<tr><td>
+
+[name?](./pages.templateconfig.name.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ The name of the template feature. If not defined uses the template filename (without extension)
+
+</td></tr>
+<tr><td>
+
+[onUrlChange?](./pages.templateconfig.onurlchange.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ The name of the onUrlChange function to use.
+
+</td></tr>
+<tr><td>
+
+[pageUrlField?](./pages.templateconfig.pageurlfield.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ The field to be used as the custom writeback URL for the template
+
+</td></tr>
+<tr><td>
+
+[slugField?](./pages.templateconfig.slugfield.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ The field to use as the slug for dynamic dev mode
+
+</td></tr>
+<tr><td>
+
+[stream?](./pages.templateconfig.stream.md)
+
+</td><td>
+
+</td><td>
+
+[Stream](./pages.stream.md)
+
+</td><td>
+
+_(Optional)_ The stream configuration used by the template
+
+</td></tr>
+<tr><td>
+
+[streamId?](./pages.templateconfig.streamid.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ The stream that this template uses. If a stream is defined the streamId is not required.
+
+</td></tr>
+</tbody></table>

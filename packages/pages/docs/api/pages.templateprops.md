@@ -14,8 +14,66 @@ export interface TemplateProps<T = Record<string, any>>
 
 ## Properties
 
-| Property                                               | Modifiers | Type                                     | Description                                                                                                                                                                                                           |
-| ------------------------------------------------------ | --------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [\_\_meta](./pages.templateprops.__meta.md)            |           | { mode: "development" \| "production"; } | Additional metadata added by the toolchain                                                                                                                                                                            |
-| [document](./pages.templateprops.document.md)          |           | T                                        | The entire document returned after applying the stream to a single entity                                                                                                                                             |
-| [pathOverride?](./pages.templateprops.pathoverride.md) |           | string                                   | _(Optional)_ Set in the preview context of the generatepagecontent API endpoint. Since the preview domain is different (occurs in the context of a serverless function) the relativePrefixToRoot needs to be updated. |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[\_\_meta](./pages.templateprops.__meta.md)
+
+</td><td>
+
+</td><td>
+
+{ mode: "development" \| "production"; }
+
+</td><td>
+
+Additional metadata added by the toolchain
+
+</td></tr>
+<tr><td>
+
+[document](./pages.templateprops.document.md)
+
+</td><td>
+
+</td><td>
+
+T
+
+</td><td>
+
+The entire document returned after applying the stream to a single entity
+
+</td></tr>
+<tr><td>
+
+[pathOverride?](./pages.templateprops.pathoverride.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+_(Optional)_ Set in the preview context of the generatepagecontent API endpoint. Since the preview domain is different (occurs in the context of a serverless function) the relativePrefixToRoot needs to be updated.
+
+</td></tr>
+</tbody></table>

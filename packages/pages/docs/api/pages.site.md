@@ -14,24 +14,306 @@ export interface Site
 
 ## Properties
 
-| Property                                               | Modifiers | Type                                                       | Description                                                             |
-| ------------------------------------------------------ | --------- | ---------------------------------------------------------- | ----------------------------------------------------------------------- |
-| [branchId](./pages.site.branchid.md)                   |           | string                                                     | Internal ID of the site branch.                                         |
-| [businessId](./pages.site.businessid.md)               |           | string                                                     | Internal ID of the Yext account.                                        |
-| [businessName](./pages.site.businessname.md)           |           | string                                                     | Display name of the Yext account.                                       |
-| [commitHash](./pages.site.commithash.md)               |           | string                                                     | The Git commit hash associated with the deploy.                         |
-| [commitMessage](./pages.site.commitmessage.md)         |           | string                                                     | The Git commit message associated with the deploy.                      |
-| [deployId](./pages.site.deployid.md)                   |           | string                                                     | Internal ID for the deploy.                                             |
-| [displayUrlPrefix](./pages.site.displayurlprefix.md)   |           | string                                                     | The "base URL" used for reverse proxying, as specified in serving.json. |
-| [invocationContext](./pages.site.invocationcontext.md) |           | "local" \| "preview" \| "staging" \| "production" \| null  | Environment in which a request is invoked.                              |
-| [partnerId](./pages.site.partnerid.md)                 |           | string                                                     | External ID of the Yext account.                                        |
-| [platformUrl](./pages.site.platformurl.md)             |           | string                                                     | URL of the deploy in the Yext platform.                                 |
-| [previewDomain](./pages.site.previewdomain.md)         |           | string                                                     | URL of preview domain associated with the deploy.                       |
-| [productionDomain](./pages.site.productiondomain.md)   |           | string                                                     | URL of production domain associated with the deploy.                    |
-| [repoBranchName](./pages.site.repobranchname.md)       |           | string                                                     | Name of the GitHub branch associated with the deploy.                   |
-| [repoBranchUrl](./pages.site.repobranchurl.md)         |           | string                                                     | URL of the GitHub branch associated with the site.                      |
-| [repoUrl](./pages.site.repourl.md)                     |           | string                                                     | URL of the GitHub repo associated with the site.                        |
-| [siteId](./pages.site.siteid.md)                       |           | string                                                     | Internal ID of the site.                                                |
-| [siteName](./pages.site.sitename.md)                   |           | string                                                     | Display name of the site.                                               |
-| [stagingDomain](./pages.site.stagingdomain.md)         |           | string                                                     | URL of staging domain associated with the deploy.                       |
-| [yextUniverse](./pages.site.yextuniverse.md)           |           | "development" \| "qa" \| "sandbox" \| "production" \| null | Universe of the Yext account.                                           |
+<table><thead><tr><th>
+
+Property
+
+</th><th>
+
+Modifiers
+
+</th><th>
+
+Type
+
+</th><th>
+
+Description
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[branchId](./pages.site.branchid.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+Internal ID of the site branch.
+
+</td></tr>
+<tr><td>
+
+[businessId](./pages.site.businessid.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+Internal ID of the Yext account.
+
+</td></tr>
+<tr><td>
+
+[businessName](./pages.site.businessname.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+Display name of the Yext account.
+
+</td></tr>
+<tr><td>
+
+[commitHash](./pages.site.commithash.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The Git commit hash associated with the deploy.
+
+</td></tr>
+<tr><td>
+
+[commitMessage](./pages.site.commitmessage.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The Git commit message associated with the deploy.
+
+</td></tr>
+<tr><td>
+
+[deployId](./pages.site.deployid.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+Internal ID for the deploy.
+
+</td></tr>
+<tr><td>
+
+[displayUrlPrefix](./pages.site.displayurlprefix.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+The "base URL" used for reverse proxying, as specified in serving.json.
+
+</td></tr>
+<tr><td>
+
+[invocationContext](./pages.site.invocationcontext.md)
+
+</td><td>
+
+</td><td>
+
+"local" \| "preview" \| "staging" \| "production" \| null
+
+</td><td>
+
+Environment in which a request is invoked.
+
+</td></tr>
+<tr><td>
+
+[partnerId](./pages.site.partnerid.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+External ID of the Yext account.
+
+</td></tr>
+<tr><td>
+
+[platformUrl](./pages.site.platformurl.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+URL of the deploy in the Yext platform.
+
+</td></tr>
+<tr><td>
+
+[previewDomain](./pages.site.previewdomain.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+URL of preview domain associated with the deploy.
+
+</td></tr>
+<tr><td>
+
+[productionDomain](./pages.site.productiondomain.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+URL of production domain associated with the deploy.
+
+</td></tr>
+<tr><td>
+
+[repoBranchName](./pages.site.repobranchname.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+Name of the GitHub branch associated with the deploy.
+
+</td></tr>
+<tr><td>
+
+[repoBranchUrl](./pages.site.repobranchurl.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+URL of the GitHub branch associated with the site.
+
+</td></tr>
+<tr><td>
+
+[repoUrl](./pages.site.repourl.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+URL of the GitHub repo associated with the site.
+
+</td></tr>
+<tr><td>
+
+[siteId](./pages.site.siteid.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+Internal ID of the site.
+
+</td></tr>
+<tr><td>
+
+[siteName](./pages.site.sitename.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+Display name of the site.
+
+</td></tr>
+<tr><td>
+
+[stagingDomain](./pages.site.stagingdomain.md)
+
+</td><td>
+
+</td><td>
+
+string
+
+</td><td>
+
+URL of staging domain associated with the deploy.
+
+</td></tr>
+<tr><td>
+
+[yextUniverse](./pages.site.yextuniverse.md)
+
+</td><td>
+
+</td><td>
+
+"development" \| "qa" \| "sandbox" \| "production" \| null
+
+</td><td>
+
+Universe of the Yext account.
+
+</td></tr>
+</tbody></table>

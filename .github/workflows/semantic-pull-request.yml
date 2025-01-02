@@ -26,10 +26,11 @@ jobs:
           scopes: |
             deps
             dev
-            plugin
             dev/plugin
+            modules
             pages-plugins
             playground
+            plugin
             scaffold
             upgrade
             util

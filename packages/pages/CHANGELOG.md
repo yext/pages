@@ -48,6 +48,51 @@
 *  pages@1.2.0-beta.0 (2953ca7a)
 *  pages@1.2.0-beta.0 (dfb04527)
 
+#### 1.1.5 (2024-11-20)
+
+##### Chores
+
+*  update actions (#554) (e3321415)
+
+##### Documentation Changes
+
+*  add vitepress setup (#555) (cedd094e)
+
+##### New Features
+
+* **dev/plugin:**  build without templates directory  (#552) (9073f4cc)
+* **plugin:**  render using code_template if it exists (#551) (0ab2f771)
+
+##### Bug Fixes
+
+* **modules:**  update scaffold tailwind  (#553) (daa62b0b)
+
+#### 1.1.4 (2024-11-07)
+
+##### Bug Fixes
+
+* **scaffold:**  update module template (#550) (4528c597)
+* **plugin:**  deprecated type assertion (#549) (f1c53a9c)
+* **modules:**  ignore user's build output options (#548) (7d119fc0)
+
+#### 1.1.3 (2024-10-03)
+
+##### Bug Fixes
+
+*  use scope when finding vite.config.js (#546) (4c74e43f)
+
+#### 1.1.2 (2024-09-17)
+
+##### New Features
+
+* **util:**  add useDocument hook (#528) (f27199ab)
+
+##### Bug Fixes
+
+* **plugin:**  don't merge the entire user vite.config.js (#545) (5ba5ff4a)
+* **dev:**  increase serverless function POST limit (#544) (1b9de9ef)
+*  pnpm actions (083a7a54)
+
 ##### Refactors
 
 *  change the type of additionalProperties in TemplateConfig to 'Record<string, any>' (#527) (8fd95b19)
