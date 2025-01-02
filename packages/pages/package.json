@@ -1,6 +1,6 @@
 {
   "name": "@yext/pages",
-  "version": "1.2.0-beta.3",
+  "version": "1.2.0-beta.4",
   "description": "The default React development toolchain provided by Yext",
   "author": "sumo@yext.com",
   "license": "BSD-3-Clause",

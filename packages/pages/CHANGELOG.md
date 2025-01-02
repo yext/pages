@@ -1,3 +1,43 @@
+#### 1.2.0-beta.4 (2025-01-02)
+
+##### Chores
+
+*  update actions (#554) (e3321415)
+
+##### Documentation Changes
+
+*  add vitepress setup (#555) (cedd094e)
+
+##### New Features
+
+*  make stream's filter optional (#558) (cb34773d)
+* **dev/plugin:**  build without templates directory  (#552) (9073f4cc)
+* **plugin:**  render using code_template if it exists (#551) (0ab2f771)
+
+##### Bug Fixes
+
+* **plugin:**
+  *  update code_template to codeTemplate (#559) (7244ca5e)
+  *  deprecated type assertion (#549) (f1c53a9c)
+  *  don't merge the entire user vite.config.js (#545) (5ba5ff4a)
+*  migrate eslint docs per version changes (#556) (d8c3adf0)
+*  use scope when finding vite.config.js (#546) (4c74e43f)
+* **modules:**
+  *  update scaffold tailwind  (#553) (daa62b0b)
+  *  ignore user's build output options (#548) (7d119fc0)
+* **scaffold:**  update module template (#550) (4528c597)
+* **pages-plugins:**  prevent making api request with unbounded entities (#547) (573888ea)
+* **dev:**  increase serverless function POST limit (#544) (1b9de9ef)
+
+##### Other Changes
+
+*  pages@1.1.5 (d35f9c48)
+*  pages@1.1.4 (818694a4)
+*  plugins@1.0.0-beta.8 (4b5e3c4a)
+*  plugins@1.0.0-beta.7 (ff6e74f6)
+*  pages@1.1.3 (c556e254)
+*  pages@1.1.2 (f6944124)
+
 #### 1.2.0-beta.3 (2024-08-29)
 
 ##### New Features
