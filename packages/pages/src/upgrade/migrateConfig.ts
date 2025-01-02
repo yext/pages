@@ -36,7 +36,7 @@ const writeYamlSync = (configYamlPath: string, target: string, data: any) => {
   fs.writeFileSync(configYamlPath, yaml.stringify(yamlDoc));
 };
 
-const migrateCiJson = async (configYamlPath: string, ciPath: string) => {
+const migrateCiJson = (configYamlPath: string, ciPath: string) => {
   const ciJson = readJsonSync(ciPath);
   if (ciJson !== null) {
     const buildArtifacts = ciJson.buildArtifacts;
@@ -76,7 +76,7 @@ const migrateCiJson = async (configYamlPath: string, ciPath: string) => {
   }
 };
 
-const migrateLocales = async (configYamlPath: string, featuresPath: string) => {
+const migrateLocales = (configYamlPath: string, featuresPath: string) => {
   const featuresJson = readJsonSync(featuresPath);
   if (!!featuresJson && !!featuresJson.locales) {
     console.info(`migrating locales from ${featuresPath} to ${configYamlPath}`);
@@ -84,10 +84,7 @@ const migrateLocales = async (configYamlPath: string, featuresPath: string) => {
   }
 };
 
-const migrateSiteStream = async (
-  configYamlPath: string,
-  siteStreamPath: string
-) => {
+const migrateSiteStream = (configYamlPath: string, siteStreamPath: string) => {
   const sitesJson = readJsonSync(siteStreamPath);
   if (sitesJson !== null) {
     console.info(
@@ -116,14 +113,14 @@ export const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
   };
 };
 
-const migrateRedirects = async (source: string, dest: string) => {
+const migrateRedirects = (source: string, dest: string) => {
   if (fs.existsSync(source)) {
     console.info(`migrating redirects from ${source} to ${dest}`);
     fs.copyFileSync(source, dest);
   }
 };
 
-const migrateServing = async (configYamlPath: string, servingPath: string) => {
+const migrateServing = (configYamlPath: string, servingPath: string) => {
   const servingJson = readJsonSync(servingPath);
   if (servingJson !== null) {
     const newServingJson = formatServing(servingJson);
@@ -142,7 +139,7 @@ export const formatServing = (servingJson: any) => {
   }
 };
 
-const migrateSiteMap = async (configYamlPath: string, sitemapPath: string) => {
+const migrateSiteMap = (configYamlPath: string, sitemapPath: string) => {
   const sitemapJson = readJsonSync(sitemapPath);
   if (sitemapJson !== null) {
     sitemapJson.excludeList = sitemapJson["exclude_list"];
@@ -152,7 +149,7 @@ const migrateSiteMap = async (configYamlPath: string, sitemapPath: string) => {
   }
 };
 
-const migrateAuth = async (configYamlPath: string, authPath: string) => {
+const migrateAuth = (configYamlPath: string, authPath: string) => {
   const authJson = readJsonSync(authPath);
   if (authJson !== null) {
     console.info(`migrating auth info from ${authPath} to ${configYamlPath}`);
@@ -178,7 +175,7 @@ export const migrateConfigs = async (projectStructure: ProjectStructure) => {
   for (const file of files) {
     const filePath = path.resolve(sitesConfigPath, file.toString());
     if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
-      await migrateConfigs(
+      migrateConfigs(
         await ProjectStructure.init({
           scope: path.join(scope, file.toString()),
         })
@@ -198,31 +195,31 @@ export const migrateConfigs = async (projectStructure: ProjectStructure) => {
     console.info(`${configYamlPath} does not exist, creating it`);
     fs.writeFileSync(configYamlPath, "");
   }
-  await migrateCiJson(
+  migrateCiJson(
     configYamlPath,
     path.resolve(sitesConfigPath, sitesConfigFiles.ci)
   );
-  await migrateLocales(
+  migrateLocales(
     configYamlPath,
     path.resolve(sitesConfigPath, sitesConfigFiles.features)
   );
-  await migrateSiteStream(
+  migrateSiteStream(
     configYamlPath,
     path.resolve(sitesConfigPath, sitesConfigFiles.siteStream)
   );
-  await migrateServing(
+  migrateServing(
     configYamlPath,
     path.resolve(sitesConfigPath, sitesConfigFiles.serving)
   );
-  await migrateRedirects(
+  migrateRedirects(
     path.resolve(sitesConfigPath, sitesConfigFiles.redirects),
     path.resolve(scopeFolder, sitesConfigFiles.redirects)
   );
-  await migrateSiteMap(
+  migrateSiteMap(
     configYamlPath,
     path.resolve(sitesConfigPath, sitesConfigFiles.sitemap)
   );
-  await migrateAuth(
+  migrateAuth(
     configYamlPath,
     path.resolve(sitesConfigPath, sitesConfigFiles.auth)
   );

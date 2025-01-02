@@ -5,10 +5,12 @@ import latestVersion from "latest-version";
 import { execSync } from "child_process";
 import { fileURLToPath } from "url";
 import typescript from "typescript";
+import colors from "picocolors";
 
 const pagesSlashComponentsRegex = /@yext\/pages\/components/g;
 const sitesComponentsRegex = /@yext\/sites-components/g;
 const reactComponentsRegex = /@yext\/react-components/g;
+const sitesReactComponentsRegex = /@yext\/sites-react-components/g;
 const markdownRegex = /Markdown.{1,10}from ["']@yext\/react-components/g;
 
 const pagesComponentsReplacement = "@yext/pages-components";
@@ -143,6 +145,7 @@ function processDirectoryRecursively(
 export const updateToUsePagesComponents = async (source: string) => {
   await removePackageDependency("@yext/sites-components");
   await removePackageDependency("@yext/react-components");
+  await removePackageDependency("@yext/sites-react-components");
   await removePackageDependency("@yext/components-tsx-maps");
   await removePackageDependency("@yext/components-tsx-geo");
   // update imports from pages/components to sites-components
@@ -152,6 +155,9 @@ export const updateToUsePagesComponents = async (source: string) => {
   const hasSitesComponentsImports = replaceSitesComponentsImports(source);
   // update imports from react-components to pages-components
   const hasReactComponentsImports = replaceReactComponentsImports(source);
+  // update imports from sites-react-components to pages-components
+  const hasSitesReactComponentsImports =
+    replaceSitesReactComponentsImports(source);
   const movedTsxMapsImports = moveTsxMapsImportsToPagesComponents(source);
 
   await updatePackageDependency(
@@ -160,8 +166,22 @@ export const updateToUsePagesComponents = async (source: string) => {
     hasPagesSlashComponentsImports ||
       hasSitesComponentsImports ||
       hasReactComponentsImports ||
+      hasSitesReactComponentsImports ||
       movedTsxMapsImports
   );
+
+  if (
+    hasSitesComponentsImports ||
+    hasReactComponentsImports ||
+    hasSitesReactComponentsImports
+  ) {
+    console.log(
+      colors.yellow(
+        "Some deprecated libraries were automatically removed and updated to use @yext/pages-components. " +
+          "You may need to update your imports or make some code adjustments."
+      )
+    );
+  }
 };
 
 /**
@@ -273,6 +293,29 @@ export const replaceReactComponentsImports = (source: string): boolean => {
       fs.writeFileSync(filePath, modifiedContent, "utf8");
       hasReplaced = true;
       console.log(`react-components imports replaced in: ${filePath}`);
+    }
+  };
+  processDirectoryRecursively(source, operation);
+  return hasReplaced;
+};
+
+/**
+ * Replaces imports for sites-react-components with pages-components
+ * @param source the src folder
+ * @return hasReplaced
+ */
+export const replaceSitesReactComponentsImports = (source: string): boolean => {
+  let hasReplaced = false;
+  const operation = async (filePath: string) => {
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    if (fileContent.match(sitesReactComponentsRegex)) {
+      const modifiedContent = fileContent.replace(
+        sitesReactComponentsRegex,
+        pagesComponentsReplacement
+      );
+      fs.writeFileSync(filePath, modifiedContent, "utf8");
+      hasReplaced = true;
+      console.log(`sites-react-components imports replaced in: ${filePath}`);
     }
   };
   processDirectoryRecursively(source, operation);
