@@ -1,3 +1,16 @@
+#### 1.1.6 (2025-01-03)
+
+##### New Features
+
+* **upgrade:**  swap sites-react-components to pages-components (#560) (4de8a075)
+*  make stream's filter optional (#558) (cb34773d)
+
+##### Bug Fixes
+
+* **upgrade:**  pin Vite to version 5 (#561) (7dc2dd33)
+* **plugin:**  update code_template to codeTemplate (#559) (7244ca5e)
+*  migrate eslint docs per version changes (#556) (d8c3adf0)
+
 #### 1.1.5 (2024-11-20)
 
 ##### Chores
