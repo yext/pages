@@ -1,92 +1,15 @@
-#### 1.2.0-beta.4 (2025-01-02)
-
-##### Chores
-
-*  update actions (#554) (e3321415)
-
-##### Documentation Changes
-
-*  add vitepress setup (#555) (cedd094e)
+#### 1.1.6 (2025-01-03)
 
 ##### New Features
 
+* **upgrade:**  swap sites-react-components to pages-components (#560) (4de8a075)
 *  make stream's filter optional (#558) (cb34773d)
-* **dev/plugin:**  build without templates directory  (#552) (9073f4cc)
-* **plugin:**  render using code_template if it exists (#551) (0ab2f771)
 
 ##### Bug Fixes
 
-* **plugin:**
-  *  update code_template to codeTemplate (#559) (7244ca5e)
-  *  deprecated type assertion (#549) (f1c53a9c)
-  *  don't merge the entire user vite.config.js (#545) (5ba5ff4a)
+* **upgrade:**  pin Vite to version 5 (#561) (7dc2dd33)
+* **plugin:**  update code_template to codeTemplate (#559) (7244ca5e)
 *  migrate eslint docs per version changes (#556) (d8c3adf0)
-*  use scope when finding vite.config.js (#546) (4c74e43f)
-* **modules:**
-  *  update scaffold tailwind  (#553) (daa62b0b)
-  *  ignore user's build output options (#548) (7d119fc0)
-* **scaffold:**  update module template (#550) (4528c597)
-* **pages-plugins:**  prevent making api request with unbounded entities (#547) (573888ea)
-* **dev:**  increase serverless function POST limit (#544) (1b9de9ef)
-
-##### Other Changes
-
-*  pages@1.1.5 (d35f9c48)
-*  pages@1.1.4 (818694a4)
-*  plugins@1.0.0-beta.8 (4b5e3c4a)
-*  plugins@1.0.0-beta.7 (ff6e74f6)
-*  pages@1.1.3 (c556e254)
-*  pages@1.1.2 (f6944124)
-
-#### 1.2.0-beta.3 (2024-08-29)
-
-##### New Features
-
-* **dev:**  make site stream available to Visual Editor via global variable (#542) (d626be47)
-
-##### Bug Fixes
-
-* **scaffold:**
-  *  puckConfigs -> componentRegistry (#543) (0020b155)
-  *  remove eslint ignore  (#541) (8e575d43)
-  *  remove isDraft from template (#540) (e3aa48d9)
-
-#### 1.2.0-beta.2 (2024-08-15)
-
-##### Bug Fixes
-
-* **scaffold:**  edit puck version (#539) (e7966210)
-
-#### 1.2.0-beta.1 (2024-08-15)
-
-##### Bug Fixes
-
-* **scaffold:**
-  *  update scaffold template command (#538) (cf43a28e)
-  *  wording of scaffold template prompt (#537) (4b63eb67)
-*  reformat readme (#535) (bbdc78e9)
-
-#### 1.2.0-beta.0 (2024-08-01)
-
-##### New Features
-
-* **dev:**
-  *  override document visual configuration (#534) (f7b7e7e9)
-  *  add pageSets to global variable in header in dev mode (#531) (b239cbb5)
-* **scaffold:**
-  *  create dynamic and static templates on scaffold (#533) (0008e583)
-  *  create ve template on scaffold (#532) (4039f5bd)
-  *  add prompts for scaffold template (#529) (529ee240)
-* **util:**  add useDocument hook (#528) (f27199ab)
-
-##### Bug Fixes
-
-*  pnpm actions (083a7a54)
-
-##### Other Changes
-
-*  pages@1.2.0-beta.0 (2953ca7a)
-*  pages@1.2.0-beta.0 (dfb04527)
 
 #### 1.1.5 (2024-11-20)
 

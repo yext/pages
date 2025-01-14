@@ -1,3 +1,6 @@
 .env
 tsdoc-metadata.json
 docs/.vitepress/cache
+
+# Output of 'pnpm pack'
+*.tgz

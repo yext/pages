@@ -1,6 +1,6 @@
 {
   "name": "@yext/pages",
-  "version": "1.2.0-beta.4",
+  "version": "1.1.6",
   "description": "The default React development toolchain provided by Yext",
   "author": "sumo@yext.com",
   "license": "BSD-3-Clause",
@@ -32,7 +32,7 @@
     }
   },
   "engines": {
-    "node": "^18 || ^20.2.0"
+    "node": "^18 || ^20.2.0 || ^22"
   },
   "scripts": {
     "watch": "node src/bundler --watch",

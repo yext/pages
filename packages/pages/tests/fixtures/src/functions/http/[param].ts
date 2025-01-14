@@ -1,8 +1,6 @@
-import { HttpFunctionArgument, HttpFunctionResponse } from "../../../../../src";
+import { PagesHttpRequest, PagesHttpResponse } from "../../../../../src";
 
-export default function helloWorld(
-  _: HttpFunctionArgument
-): HttpFunctionResponse {
+export default function helloWorld(_: PagesHttpRequest): PagesHttpResponse {
   return {
     body: "Hello World",
     headers: {},

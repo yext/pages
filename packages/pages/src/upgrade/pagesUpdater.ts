@@ -5,16 +5,36 @@ import latestVersion from "latest-version";
 import { execSync } from "child_process";
 import { fileURLToPath } from "url";
 import typescript from "typescript";
+import colors from "picocolors";
 
 const pagesSlashComponentsRegex = /@yext\/pages\/components/g;
 const sitesComponentsRegex = /@yext\/sites-components/g;
 const reactComponentsRegex = /@yext\/react-components/g;
+const sitesReactComponentsRegex = /@yext\/sites-react-components/g;
 const markdownRegex = /Markdown.{1,10}from ["']@yext\/react-components/g;
 
 const pagesComponentsReplacement = "@yext/pages-components";
 
 const DEPENDENCIES = "dependencies";
 const DEV_DEPENDENCIES = "devDependencies";
+
+type Only<T, U> = {
+  [P in keyof T]: T[P];
+} & {
+  [P in keyof U]?: never;
+};
+
+type Either<T, U> = Only<T, U> | Only<U, T>;
+
+type DependencyVersion = Either<SpecificVersion, LatestMajorVersion>;
+
+type SpecificVersion = {
+  specificVersion: string;
+};
+
+type LatestMajorVersion = {
+  latestMajorVersion: string;
+};
 
 /**
  * Helper function to update a package dependency in package.json
@@ -24,7 +44,7 @@ const DEV_DEPENDENCIES = "devDependencies";
  */
 export async function updatePackageDependency(
   packageName: string,
-  version: string | null,
+  version: DependencyVersion | null,
   install: boolean = false
 ) {
   const packagePath = path.resolve("package.json");
@@ -44,15 +64,12 @@ export async function updatePackageDependency(
     if (!install && !currentVersion) {
       return;
     }
-    let toVersion = version || (await latestVersion(packageName));
+    const toVersion = await getPackageVersion(packageName, version);
     if (!toVersion) {
       console.error(`Failed to get version for ${packageName}`);
       return;
     }
-    // if getting the latest version, add a caret
-    if (!version && toVersion.charAt(0) !== "^") {
-      toVersion = "^" + toVersion;
-    }
+
     if (currentVersion === toVersion) {
       return;
     }
@@ -68,6 +85,28 @@ export async function updatePackageDependency(
     process.exit(1);
   }
 }
+
+const getPackageVersion = async (
+  packageName: string,
+  version: DependencyVersion | null
+): Promise<string | void> => {
+  if (!version) {
+    return "^" + (await latestVersion(packageName));
+  }
+
+  if (version.specificVersion) {
+    return version.specificVersion;
+  }
+
+  if (version.latestMajorVersion) {
+    return (
+      "^" +
+      (await latestVersion(packageName, {
+        version: version.latestMajorVersion,
+      }))
+    );
+  }
+};
 
 /**
  * Helper function to remove a package dependency in package.json
@@ -143,6 +182,7 @@ function processDirectoryRecursively(
 export const updateToUsePagesComponents = async (source: string) => {
   await removePackageDependency("@yext/sites-components");
   await removePackageDependency("@yext/react-components");
+  await removePackageDependency("@yext/sites-react-components");
   await removePackageDependency("@yext/components-tsx-maps");
   await removePackageDependency("@yext/components-tsx-geo");
   // update imports from pages/components to sites-components
@@ -152,6 +192,9 @@ export const updateToUsePagesComponents = async (source: string) => {
   const hasSitesComponentsImports = replaceSitesComponentsImports(source);
   // update imports from react-components to pages-components
   const hasReactComponentsImports = replaceReactComponentsImports(source);
+  // update imports from sites-react-components to pages-components
+  const hasSitesReactComponentsImports =
+    replaceSitesReactComponentsImports(source);
   const movedTsxMapsImports = moveTsxMapsImportsToPagesComponents(source);
 
   await updatePackageDependency(
@@ -160,8 +203,22 @@ export const updateToUsePagesComponents = async (source: string) => {
     hasPagesSlashComponentsImports ||
       hasSitesComponentsImports ||
       hasReactComponentsImports ||
+      hasSitesReactComponentsImports ||
       movedTsxMapsImports
   );
+
+  if (
+    hasSitesComponentsImports ||
+    hasReactComponentsImports ||
+    hasSitesReactComponentsImports
+  ) {
+    console.log(
+      colors.yellow(
+        "Some deprecated libraries were automatically removed and updated to use @yext/pages-components. " +
+          "You may need to update your imports or make some code adjustments."
+      )
+    );
+  }
 };
 
 /**
@@ -176,7 +233,9 @@ export const updatePagesJSToCurrentVersion = async () => {
       "package.json"
     );
     const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
-    await updatePackageDependency("@yext/pages", packageJson.version);
+    await updatePackageDependency("@yext/pages", {
+      specificVersion: packageJson.version as string,
+    });
   } catch (e) {
     console.error("Failed to upgrade pages version: ", (e as Error).message);
     process.exit(1);
@@ -187,8 +246,10 @@ export const updatePagesJSToCurrentVersion = async () => {
  * Updates vitejs/plugin-react and vite to specified versions
  */
 export const updateDevDependencies = async () => {
-  await updatePackageDependency("@vitejs/plugin-react", null);
-  await updatePackageDependency("vite", null);
+  await updatePackageDependency("@vitejs/plugin-react", {
+    latestMajorVersion: "4",
+  });
+  await updatePackageDependency("vite", { latestMajorVersion: "5" });
   await updatePackageDependency("@yext/search-headless-react", null);
   await updatePackageDependency("@yext/search-ui-react", null);
 };
@@ -273,6 +334,29 @@ export const replaceReactComponentsImports = (source: string): boolean => {
       fs.writeFileSync(filePath, modifiedContent, "utf8");
       hasReplaced = true;
       console.log(`react-components imports replaced in: ${filePath}`);
+    }
+  };
+  processDirectoryRecursively(source, operation);
+  return hasReplaced;
+};
+
+/**
+ * Replaces imports for sites-react-components with pages-components
+ * @param source the src folder
+ * @return hasReplaced
+ */
+export const replaceSitesReactComponentsImports = (source: string): boolean => {
+  let hasReplaced = false;
+  const operation = async (filePath: string) => {
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    if (fileContent.match(sitesReactComponentsRegex)) {
+      const modifiedContent = fileContent.replace(
+        sitesReactComponentsRegex,
+        pagesComponentsReplacement
+      );
+      fs.writeFileSync(filePath, modifiedContent, "utf8");
+      hasReplaced = true;
+      console.log(`sites-react-components imports replaced in: ${filePath}`);
     }
   };
   processDirectoryRecursively(source, operation);
