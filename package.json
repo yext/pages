@@ -23,7 +23,7 @@
     "*.{ts,js,tsx,jsx}": "eslint --cache --fix"
   },
   "engines": {
-    "node": "^18 || ^20.2.0"
+    "node": "^18 || ^20.2.0 || ^22"
   },
   "repository": {
     "type": "git",

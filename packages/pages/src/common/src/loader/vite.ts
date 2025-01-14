@@ -76,10 +76,21 @@ export const loadModules = async (
     for (const modulePath of modulePaths) {
       importedModules.push({
         path: modulePath,
-        module: await import(pathToFileURL(modulePath).toString()),
+        module: await import(pathToDecodedFileURL(modulePath)),
       });
     }
   }
 
   return importedModules;
+};
+
+/**
+ * Node 22 changed pathToFileUrl to automatically encode characters that are not valid in URLs,
+ * while earlier versions did not. This function decodes the file URL to match the behavior of
+ * earlier versions.
+ */
+const pathToDecodedFileURL = (path: string): string => {
+  const fileUrlString = pathToFileURL(path).toString();
+  const decodedFileUrlString = decodeURI(fileUrlString);
+  return decodedFileUrlString.slice(7); // Remove "file://"
 };

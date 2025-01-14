@@ -3,12 +3,12 @@ import { spawnSync } from "child_process";
 import { fileURLToPath } from "url";
 import process from "process";
 import path from "path";
+import { pathToFileURL } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const filePrefix = path.sep === path.win32.sep ? "file:\\\\" : "";
 const pathToPagesScript = path.resolve(__dirname, "./pages.js");
-const pathToLoader = filePrefix + path.resolve(__dirname, "./loader.js");
+const pathToLoader = pathToFileURL(path.resolve(__dirname, "./loader.js")).href;
 
 const nodeVersion = Number(
   spawnSync("node", ["-v"], { encoding: "utf-8" })
@@ -20,8 +20,9 @@ const experimentalFlags = ["--experimental-vm-modules"];
 if (nodeVersion === 18) {
   experimentalFlags.push("--experimental-specifier-resolution=node");
 } else {
-  experimentalFlags.push("--experimental-loader");
-  experimentalFlags.push(pathToLoader);
+  // Coercion to any is necessary because @types/node is not properly recognizing when dymanically importing
+  const { register }: any = await import("node:module");
+  register(pathToLoader);
 }
 
 const results = spawnSync(
