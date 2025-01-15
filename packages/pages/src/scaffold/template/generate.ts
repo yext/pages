@@ -27,22 +27,27 @@ export const generateTemplate = async (
         validateTemplateName(templateName, projectStructure) ||
         "Please ensure the name provided isn't already used and is valid.",
     },
+    // TODO: Add this back when hybrid VE templates are supported
+    // {
+    //   type: "confirm",
+    //   name: "isVisualEditor",
+    //   message: "Is this a Visual Editor template?",
+    //   initial: true,
+    // },
     {
-      type: "confirm",
-      name: "isVisualEditor",
-      message: "Is this a Visual Editor template?",
-      initial: true,
-    },
-    {
-      type: (prev) => (prev ? null : "toggle"),
+      // type: (prev) => (prev ? null : "toggle"),
+      type: "toggle",
       name: "isDynamic",
       message: "Is this a static or dynamic template?",
       initial: true,
       active: "Dynamic",
       inactive: "Static",
     },
+  ];
+
+  const entityScopeQuestions: PromptObject[] = [
     {
-      type: (prev) => (prev ? "select" : null),
+      type: "select",
       name: "entityScope",
       message:
         "How would you like you to define the entity scope for your template?",
@@ -83,9 +88,15 @@ export const generateTemplate = async (
   if (response.isVisualEditor) {
     await generateVETemplate(response, projectStructure);
   } else {
-    response.isDynamic
-      ? await generateDynamicTemplate(response, projectStructure)
-      : await generateStaticTemplate(response.templateName, projectStructure);
+    if (response.isDynamic) {
+      const subsequentResponse = await prompts(entityScopeQuestions);
+      await generateDynamicTemplate(
+        { ...response, ...subsequentResponse },
+        projectStructure
+      );
+    } else {
+      await generateStaticTemplate(response.templateName, projectStructure);
+    }
   }
 };
 
@@ -140,11 +151,7 @@ const generateVETemplate = async (
 
   fs.writeFileSync(
     path.join(templatePath, `${templateFileName}.tsx`),
-    visualEditorTemplateCode(
-      templateFileName,
-      response.entityScope,
-      response.filter
-    )
+    visualEditorTemplateCode(templateFileName)
   );
   addVETemplateToConfig(templateFileName, projectStructure);
 
@@ -174,7 +181,7 @@ const addVEDependencies = async () => {
   await updatePackageDependency("@yext/visual-editor", null, true);
   await updatePackageDependency(
     "@measured/puck",
-    "0.16.0-canary.39e7f40",
+    { specificVersion: "0.17.1" },
     true
   );
   await installDependencies();

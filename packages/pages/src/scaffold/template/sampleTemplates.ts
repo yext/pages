@@ -1,53 +1,23 @@
-export const visualEditorTemplateCode = (
-  templateName: string,
-  entityScope: string,
-  filter: string[]
-): string => {
+export const visualEditorTemplateCode = (templateName: string): string => {
   const formattedTemplateName =
     templateName.charAt(0).toUpperCase() + templateName.slice(1);
-  const filterCode = `${entityScope}: ${JSON.stringify(filter)},`;
   const config = `${templateName}Config`;
 
-  return `import {
+  return `import "@yext/visual-editor/style.css";
+import {
   Template,
   GetPath,
-  TemplateConfig,
   TemplateProps,
   TemplateRenderProps,
   GetHeadConfig,
   HeadConfig,
 } from "@yext/pages";
-import { Config, Render } from "@measured/puck";
+import { Render } from "@measured/puck";
 import { ${config} } from "../ve.config";
-import { DocumentProvider } from "@yext/pages/util";
-import { resolveVisualEditorData } from "@yext/visual-editor";
-
-export const config: TemplateConfig = {
-  name: "${templateName}",
-  stream: {
-    $id: "${templateName}-stream",
-    filter: {
-      ${filterCode}
-    },
-    fields: [
-      "id",
-      "name",
-      "slug",
-      "c_visualConfigurations",
-      "c_pages_layouts.c_visualConfiguration",
-    ],
-    localization: {
-      locales: ["en"],
-    },
-  },
-  additionalProperties: {
-    isVETemplate: true,
-  }
-};
-
-export const transformProps = async (data: TemplateRenderProps) => {
-  return resolveVisualEditorData(data, "${templateName}");
-};
+import { applyTheme, VisualEditorProvider } from "@yext/visual-editor";
+import { themeConfig } from "../../theme.config";
+import { buildSchema } from "../utils/buildSchema";
+import { AnalyticsProvider } from "@yext/pages-components";
 
 export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = ({
   document,
@@ -55,20 +25,47 @@ export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = ({
   return {
     title: document.name,
     charset: "UTF-8",
-    viewport: "width=device-width, initial-scale=1"
+    viewport: "width=device-width, initial-scale=1",
+    tags: [
+      {
+        type: "link",
+        attributes: {
+          rel: "icon",
+          type: "image/x-icon",
+        },
+      },
+    ],
+    other: [applyTheme(document, themeConfig), buildSchema(document)].join(
+      "\\n"
+    ),
   };
 };
 
 export const getPath: GetPath<TemplateProps> = ({ document }) => {
-  return document.slug ? document.slug : "${templateName}/" + document.id;
+  const localePath = document.locale !== "en" ? \`\${document.locale}/\` : "";
+  return document.address
+    ? \`\${localePath}\${document.address.region}/\${document.address.city}/\${document.address.line1}-\${document.id.toString()}\`
+    : \`\${localePath}\${document.id.toString()}\`;
 };
 
-const ${formattedTemplateName}: Template<TemplateRenderProps> = ({ document }) => {
-  const { visualTemplate } = document;
+const ${formattedTemplateName}: Template<TemplateRenderProps> = (props) => {
+  const { document } = props;
+  // temporary: guard for generated repo-based static page
+  if (!document?.__?.layout) {
+    return <></>;
+  }
+
   return (
-    <DocumentProvider value={document}>
-      <Render config={${config} as Config} data={visualTemplate} />
-    </DocumentProvider>
+    <AnalyticsProvider
+      // @ts-expect-error ts(2304) the api key will be populated
+      apiKey={YEXT_PUBLIC_EVENTS_API_KEY}
+      templateData={props}
+      currency="USD"
+    >
+      <VisualEditorProvider document={document}>
+        <Render config={${config}} data={JSON.parse(document.__.layout)} />
+      </VisualEditorProvider>
+    </AnalyticsProvider>
   );
 };
 
@@ -153,6 +150,7 @@ export const getPath: GetPath<TemplateProps> = ({ document }) => {
 };
 
 const ${formattedTemplateName}: Template<TemplateRenderProps> = ({ document }) => {
+  console.log(document);
   return (
      <div>${formattedTemplateName} page</div>
   );
@@ -171,6 +169,7 @@ export const staticTemplate = (templateName: string) => {
   TemplateProps,
   TemplateRenderProps,
   GetHeadConfig,
+  Template,
 } from "@yext/pages";
  
 export const getPath: GetPath<TemplateProps> = () => {
@@ -185,9 +184,9 @@ export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = () => {
   };
 };
 
-const ${formattedTemplateName} = (data: TemplateRenderProps) => {
+const ${formattedTemplateName}: Template<TemplateRenderProps> = () => {
   return (
-    <div>${templateName} page</div>
+     <div>${templateName} page</div>
   );
 };
 
