@@ -4,6 +4,7 @@ import path from "node:path";
 import fs from "node:fs";
 import {
   buildSchemaUtil,
+  defaultLayoutData,
   dynamicTemplate,
   newConfigFile,
   staticTemplate,
@@ -18,6 +19,7 @@ import {
 } from "../../upgrade/pagesUpdater.js";
 import { logErrorAndExit } from "../../util/logError.js";
 import { addThemeConfigToTailwind } from "../../common/src/parsers/tailwindConfigParser.js";
+import { TemplateManifest } from "../../common/src/template/types.js";
 
 export const generateTemplate = async (
   projectStructure: ProjectStructure
@@ -151,16 +153,17 @@ const generateVETemplate = async (
   projectStructure: ProjectStructure
 ) => {
   const templatePath = projectStructure.getTemplatePaths()[0].path;
-  const templateFileName = formatFileName(response.templateName);
+  const templateFilename = formatFileName(response.templateName);
 
   fs.writeFileSync(
-    path.join(templatePath, `${templateFileName}.tsx`),
-    visualEditorTemplateCode(templateFileName)
+    path.join(templatePath, `${templateFilename}.tsx`),
+    visualEditorTemplateCode(templateFilename)
   );
-  addVETemplateToConfig(templateFileName, projectStructure);
+  addVETemplateToConfig(templateFilename, projectStructure);
   addVEThemeConfig();
   addTailwindConfig();
   addBuildSchemaUtil(projectStructure);
+  addTemplateManifest(templateFilename, projectStructure);
 
   try {
     await addVEDependencies();
@@ -214,6 +217,37 @@ const addBuildSchemaUtil = (projectStructure: ProjectStructure) => {
   }
 
   fs.writeFileSync(buildSchemaUtilPath, buildSchemaUtil);
+};
+
+const addTemplateManifest = (
+  templateName: string,
+  projectStructure: ProjectStructure
+) => {
+  const templateManifestPath = projectStructure
+    .getTemplateManifestPath()
+    .getAbsolutePath();
+
+  let templateManifest: TemplateManifest;
+  if (fs.existsSync(templateManifestPath)) {
+    templateManifest = JSON.parse(
+      fs.readFileSync(templateManifestPath, "utf-8")
+    ) as TemplateManifest;
+  } else {
+    templateManifest = { templates: [] };
+  }
+
+  templateManifest.templates.push({
+    name: templateName,
+    description: `Use this template to generate pages for each of your ${templateName}.`,
+    exampleSiteUrl: "",
+    layoutRequired: true,
+    defaultLayoutData: defaultLayoutData,
+  });
+
+  fs.writeFileSync(
+    templateManifestPath,
+    JSON.stringify(templateManifest, null, 2)
+  );
 };
 
 const addVEDependencies = async () => {
