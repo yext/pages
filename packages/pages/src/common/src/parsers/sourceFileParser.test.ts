@@ -8,13 +8,13 @@ describe("getDefaultExport", () => {
     const parser = createParser(
       `export const no = false; export default function test() {}`
     );
-    const defaultExport = parser.getDefaultExport();
+    const defaultExport = parser.getDefaultExportName();
     expect(defaultExport).toBe("test");
   });
 
   it("correctly gets default export's name when variable", () => {
     const parser = createParser(`const test = 5; export default test`);
-    const defaultExport = parser.getDefaultExport();
+    const defaultExport = parser.getDefaultExportName();
     expect(defaultExport).toBe("test");
   });
 });
@@ -23,7 +23,7 @@ describe("addDefaultExport", () => {
   it("correctly adds default export to file", () => {
     const parser = createParser(``);
     parser.addDefaultExport("test");
-    expect(parser.getDefaultExport()).toBe("test");
+    expect(parser.getDefaultExportName()).toBe("test");
   });
 });
 
@@ -213,6 +213,24 @@ describe("removeUnusedImports", () => {
         .getAllText()
         .includes(`import { ModuleConfig } from "@yext/pages/*";`)
     ).toBeTruthy();
+  });
+});
+
+describe("ensureNamedImport", () => {
+  it("correctly adds a new named import and module", () => {
+    const parser = createParser("");
+    parser.ensureNamedImport("@testModule", "testFunction");
+    expect(parser.getAllText()).toContain(
+      'import { testFunction } from "@testModule";'
+    );
+  });
+
+  it("correctly adds a second named import to an existing module", () => {
+    const parser = createParser('import { testFunction } from "@testModule";');
+    parser.ensureNamedImport("@testModule", "testFunction2");
+    expect(parser.getAllText()).toContain(
+      'import { testFunction, testFunction2 } from "@testModule";'
+    );
   });
 });
 

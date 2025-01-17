@@ -3,9 +3,12 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import path from "node:path";
 import fs from "node:fs";
 import {
+  buildSchemaUtil,
   dynamicTemplate,
   newConfigFile,
   staticTemplate,
+  tailwindConfig,
+  veThemeConfig,
   visualEditorTemplateCode,
 } from "./sampleTemplates.js";
 import { addDataToPuckConfig } from "../../common/src/parsers/puckConfigParser.js";
@@ -14,6 +17,7 @@ import {
   updatePackageDependency,
 } from "../../upgrade/pagesUpdater.js";
 import { logErrorAndExit } from "../../util/logError.js";
+import { addThemeConfigToTailwind } from "../../common/src/parsers/tailwindConfigParser.js";
 
 export const generateTemplate = async (
   projectStructure: ProjectStructure
@@ -154,6 +158,9 @@ const generateVETemplate = async (
     visualEditorTemplateCode(templateFileName)
   );
   addVETemplateToConfig(templateFileName, projectStructure);
+  addVEThemeConfig();
+  addTailwindConfig();
+  addBuildSchemaUtil(projectStructure);
 
   try {
     await addVEDependencies();
@@ -175,6 +182,38 @@ const addVETemplateToConfig = (
   } else {
     fs.writeFileSync(configPath, newConfigFile(fileName));
   }
+};
+
+const addVEThemeConfig = () => {
+  const themeConfigPath = path.join("ve.config.tsx");
+  if (fs.existsSync(themeConfigPath)) {
+    return;
+  }
+
+  fs.writeFileSync(themeConfigPath, veThemeConfig);
+};
+
+const addTailwindConfig = () => {
+  const tailwindConfigPath = path.join("tailwind.config.ts");
+  if (fs.existsSync(tailwindConfigPath)) {
+    addThemeConfigToTailwind(tailwindConfigPath);
+    return;
+  }
+
+  fs.writeFileSync(tailwindConfigPath, tailwindConfig);
+};
+
+const addBuildSchemaUtil = (projectStructure: ProjectStructure) => {
+  const buildSchemaUtilPath = path.join(
+    projectStructure.config.rootFolders.source,
+    "utils",
+    "buildSchema.ts"
+  );
+  if (fs.existsSync(buildSchemaUtilPath)) {
+    return;
+  }
+
+  fs.writeFileSync(buildSchemaUtilPath, buildSchemaUtil);
 };
 
 const addVEDependencies = async () => {
