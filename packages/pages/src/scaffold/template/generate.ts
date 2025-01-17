@@ -174,7 +174,7 @@ const addVEDependencies = async () => {
   await updatePackageDependency("@yext/visual-editor", null, true);
   await updatePackageDependency(
     "@measured/puck",
-    "0.16.0-canary.39e7f40",
+    { specificVersion: "0.17.1" },
     true
   );
   await installDependencies();
