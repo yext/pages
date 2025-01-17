@@ -31,7 +31,7 @@ export default class TemplateParser {
    * @return output and newSfp.
    */
   makeClientTemplateFromSfp(newSfp: SourceFileParser) {
-    const defaultExportName = this.originalSfp.getDefaultExport();
+    const defaultExportName = this.originalSfp.getDefaultExportName();
     const childExpressionNames: string[] = [defaultExportName];
     this.originalSfp.getChildExpressions(
       defaultExportName,
