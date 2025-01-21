@@ -6,7 +6,14 @@ import {
   visualEditorTemplateCode,
 } from "./sampleTemplates.js";
 import fs from "node:fs";
-import { Project } from "ts-morph";
+import { Diagnostic, Project, ts } from "ts-morph";
+
+const filterOutModuleErrors = (d: Diagnostic<ts.Diagnostic>) => {
+  return (
+    !d.getMessageText().toString().includes("Cannot find module") &&
+    !d.getMessageText().toString().includes("Cannot use JSX")
+  );
+};
 
 describe("newConfigFile", () => {
   it("confirm returned code has no warnings", () => {
@@ -19,13 +26,7 @@ describe("newConfigFile", () => {
       project.addSourceFileAtPath(filePath);
       const diagnostics = project
         .getPreEmitDiagnostics()
-        .filter(
-          (d) =>
-            !d
-              .getMessageText()
-              .toString()
-              .includes("Cannot find module '@measured/puck'")
-        );
+        .filter(filterOutModuleErrors);
       expect(diagnostics.length).toBe(0);
     } finally {
       if (fs.existsSync("test.tsx")) {
@@ -37,11 +38,7 @@ describe("newConfigFile", () => {
 
 describe("visualEditorTemplateCode", () => {
   it("confirm returned code has no warnings", () => {
-    const fileContent = visualEditorTemplateCode(
-      "testTemplate",
-      "entityTypes",
-      ["location"]
-    );
+    const fileContent = visualEditorTemplateCode("testTemplate");
     const filePath = "test.tsx";
 
     try {
@@ -50,11 +47,7 @@ describe("visualEditorTemplateCode", () => {
       project.addSourceFileAtPath(filePath);
       const diagnostics = project
         .getPreEmitDiagnostics()
-        .filter(
-          (d) =>
-            !d.getMessageText().toString().includes("Cannot find module") &&
-            !d.getMessageText().toString().includes("Cannot use JSX")
-        );
+        .filter(filterOutModuleErrors);
       expect(diagnostics.length).toBe(0);
     } finally {
       if (fs.existsSync("test.tsx")) {
@@ -75,11 +68,7 @@ describe("staticTemplate", () => {
       project.addSourceFileAtPath(filePath);
       const diagnostics = project
         .getPreEmitDiagnostics()
-        .filter(
-          (d) =>
-            !d.getMessageText().toString().includes("Cannot find module") &&
-            !d.getMessageText().toString().includes("Cannot use JSX")
-        );
+        .filter(filterOutModuleErrors);
       expect(diagnostics.length).toBe(0);
     } finally {
       if (fs.existsSync("test.tsx")) {
@@ -102,11 +91,7 @@ describe("dynamicTemplate", () => {
       project.addSourceFileAtPath(filePath);
       const diagnostics = project
         .getPreEmitDiagnostics()
-        .filter(
-          (d) =>
-            !d.getMessageText().toString().includes("Cannot find module") &&
-            !d.getMessageText().toString().includes("Cannot use JSX")
-        );
+        .filter(filterOutModuleErrors);
       expect(diagnostics.length).toBe(0);
     } finally {
       if (fs.existsSync("test.tsx")) {

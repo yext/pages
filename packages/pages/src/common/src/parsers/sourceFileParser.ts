@@ -6,6 +6,7 @@ import {
   OptionalKind,
   ImportAttributeStructure,
   VariableDeclaration,
+  ts,
 } from "ts-morph";
 import typescript from "typescript";
 
@@ -102,7 +103,7 @@ export default class SourceFileParser {
    * getDefaultExport parses the source file for a default export.
    * @returns the default export's name
    */
-  getDefaultExport(): string {
+  getDefaultExportName(): string {
     const defaultExportSymbol = this.sourceFile.getDefaultExportSymbol();
     if (!defaultExportSymbol) {
       return "";
@@ -130,6 +131,10 @@ export default class SourceFileParser {
       expression: defaultName,
       isExportEquals: false, // set to default
     });
+  }
+
+  getSourceFile() {
+    return this.sourceFile;
   }
 
   /**
@@ -288,5 +293,34 @@ export default class SourceFileParser {
 
   getVariableDeclaration(variableName: string) {
     return this.sourceFile.getVariableDeclarationOrThrow(variableName);
+  }
+
+  /**
+   * Checks if a named import exists in the source file and adds it if it doesn't.
+   */
+  ensureNamedImport(moduleName: string, importName: string) {
+    const imports = this.sourceFile.getImportDeclarations();
+
+    // Check if there's already an import for the specified module
+    const targetImport = imports.find(
+      (imp) => imp.getModuleSpecifierValue() === moduleName
+    );
+
+    if (targetImport) {
+      // Check if the named import already exists
+      const namedImports = targetImport.getNamedImports();
+      const hasImport = namedImports.some((ni) => ni.getName() === importName);
+
+      if (!hasImport) {
+        // Add the named import if it doesn't exist
+        targetImport.addNamedImport(importName);
+      }
+    } else {
+      // Add a new import declaration if the module is not imported
+      this.sourceFile.addImportDeclaration({
+        moduleSpecifier: moduleName,
+        namedImports: [importName],
+      });
+    }
   }
 }

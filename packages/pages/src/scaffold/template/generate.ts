@@ -3,9 +3,13 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import path from "node:path";
 import fs from "node:fs";
 import {
+  buildSchemaUtil,
+  defaultLayoutData,
   dynamicTemplate,
   newConfigFile,
   staticTemplate,
+  tailwindConfig,
+  veThemeConfig,
   visualEditorTemplateCode,
 } from "./sampleTemplates.js";
 import { addDataToPuckConfig } from "../../common/src/parsers/puckConfigParser.js";
@@ -14,6 +18,8 @@ import {
   updatePackageDependency,
 } from "../../upgrade/pagesUpdater.js";
 import { logErrorAndExit } from "../../util/logError.js";
+import { addThemeConfigToTailwind } from "../../common/src/parsers/tailwindConfigParser.js";
+import { TemplateManifest } from "../../common/src/template/types.js";
 
 export const generateTemplate = async (
   projectStructure: ProjectStructure
@@ -27,22 +33,27 @@ export const generateTemplate = async (
         validateTemplateName(templateName, projectStructure) ||
         "Please ensure the name provided isn't already used and is valid.",
     },
+    // TODO: Add this back when hybrid VE templates are supported
+    // {
+    //   type: "confirm",
+    //   name: "isVisualEditor",
+    //   message: "Is this a Visual Editor template?",
+    //   initial: true,
+    // },
     {
-      type: "confirm",
-      name: "isVisualEditor",
-      message: "Is this a Visual Editor template?",
-      initial: true,
-    },
-    {
-      type: (prev) => (prev ? null : "toggle"),
+      // type: (prev) => (prev ? null : "toggle"),
+      type: "toggle",
       name: "isDynamic",
       message: "Is this a static or dynamic template?",
       initial: true,
       active: "Dynamic",
       inactive: "Static",
     },
+  ];
+
+  const entityScopeQuestions: PromptObject[] = [
     {
-      type: (prev) => (prev ? "select" : null),
+      type: "select",
       name: "entityScope",
       message:
         "How would you like you to define the entity scope for your template?",
@@ -83,9 +94,15 @@ export const generateTemplate = async (
   if (response.isVisualEditor) {
     await generateVETemplate(response, projectStructure);
   } else {
-    response.isDynamic
-      ? await generateDynamicTemplate(response, projectStructure)
-      : await generateStaticTemplate(response.templateName, projectStructure);
+    if (response.isDynamic) {
+      const subsequentResponse = await prompts(entityScopeQuestions);
+      await generateDynamicTemplate(
+        { ...response, ...subsequentResponse },
+        projectStructure
+      );
+    } else {
+      await generateStaticTemplate(response.templateName, projectStructure);
+    }
   }
 };
 
@@ -136,17 +153,17 @@ const generateVETemplate = async (
   projectStructure: ProjectStructure
 ) => {
   const templatePath = projectStructure.getTemplatePaths()[0].path;
-  const templateFileName = formatFileName(response.templateName);
+  const templateFilename = formatFileName(response.templateName);
 
   fs.writeFileSync(
-    path.join(templatePath, `${templateFileName}.tsx`),
-    visualEditorTemplateCode(
-      templateFileName,
-      response.entityScope,
-      response.filter
-    )
+    path.join(templatePath, `${templateFilename}.tsx`),
+    visualEditorTemplateCode(templateFilename)
   );
-  addVETemplateToConfig(templateFileName, projectStructure);
+  addVETemplateToConfig(templateFilename, projectStructure);
+  addVEThemeConfig();
+  addTailwindConfig();
+  addBuildSchemaUtil(projectStructure);
+  addTemplateManifest(templateFilename, projectStructure);
 
   try {
     await addVEDependencies();
@@ -168,6 +185,69 @@ const addVETemplateToConfig = (
   } else {
     fs.writeFileSync(configPath, newConfigFile(fileName));
   }
+};
+
+const addVEThemeConfig = () => {
+  const themeConfigPath = path.join("ve.config.tsx");
+  if (fs.existsSync(themeConfigPath)) {
+    return;
+  }
+
+  fs.writeFileSync(themeConfigPath, veThemeConfig);
+};
+
+const addTailwindConfig = () => {
+  const tailwindConfigPath = path.join("tailwind.config.ts");
+  if (fs.existsSync(tailwindConfigPath)) {
+    addThemeConfigToTailwind(tailwindConfigPath);
+    return;
+  }
+
+  fs.writeFileSync(tailwindConfigPath, tailwindConfig);
+};
+
+const addBuildSchemaUtil = (projectStructure: ProjectStructure) => {
+  const buildSchemaUtilPath = path.join(
+    projectStructure.config.rootFolders.source,
+    "utils",
+    "buildSchema.ts"
+  );
+  if (fs.existsSync(buildSchemaUtilPath)) {
+    return;
+  }
+
+  fs.writeFileSync(buildSchemaUtilPath, buildSchemaUtil);
+};
+
+const addTemplateManifest = (
+  templateName: string,
+  projectStructure: ProjectStructure
+) => {
+  const templateManifestPath = projectStructure
+    .getTemplateManifestPath()
+    .getAbsolutePath();
+
+  let templateManifest: TemplateManifest;
+  if (fs.existsSync(templateManifestPath)) {
+    templateManifest = JSON.parse(
+      fs.readFileSync(templateManifestPath, "utf-8")
+    ) as TemplateManifest;
+  } else {
+    templateManifest = { templates: [] };
+  }
+
+  templateManifest.templates.push({
+    name: templateName,
+    description: `Use this template to generate pages for each of your ${templateName}.`,
+    exampleSiteUrl: "",
+    layoutRequired: true,
+    defaultLayoutData: defaultLayoutData,
+  });
+
+  fs.writeFileSync(
+    templateManifestPath,
+    JSON.stringify(templateManifest, null, 2)
+  );
 };
 
 const addVEDependencies = async () => {
