@@ -1,6 +1,8 @@
 import { HeadConfig, renderHeadConfigToString } from "./head.js";
 import { convertToPosixPath } from "./paths.js";
 import { TemplateRenderProps } from "./types.js";
+import { FeaturesConfig } from "../feature/features.js";
+import { SiteStream } from "../feature/stream.js";
 
 /**
  * Imports the custom hydration template and entrypoint template as modules and calls
@@ -134,6 +136,7 @@ const getCommonInjectedIndexHtml = (
  * @param clientHydrationString
  * @param indexHtml
  * @param appLanguage
+ * @param templatesConfig
  * @param headConfig
  * @returns the server template to render in the Vite dev environment
  */
@@ -141,14 +144,22 @@ export const getIndexTemplateDev = (
   clientHydrationString: string | undefined,
   indexHtml: string,
   appLanguage: string,
+  templatesConfig: FeaturesConfig,
+  siteStream: SiteStream | undefined,
   headConfig?: HeadConfig
 ): string => {
-  return getCommonInjectedIndexHtml(
+  let commonIndex = getCommonInjectedIndexHtml(
     clientHydrationString,
     indexHtml,
     appLanguage,
     headConfig
   );
+  commonIndex = injectIntoEndOfHead(
+    commonIndex,
+    `<script>const pageSets = ${JSON.stringify(templatesConfig, null)};const siteStream = ${JSON.stringify(siteStream, null)};</script>`
+  );
+
+  return commonIndex;
 };
 
 /**

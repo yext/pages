@@ -21,30 +21,19 @@ import {
   loadRedirectModules,
   RedirectModuleCollection,
 } from "../../common/src/redirect/loader/loader.js";
+import { getTemplateFilepaths } from "../../common/src/template/internal/getTemplateFilepaths.js";
+import { getRedirectFilePaths } from "../../common/src/redirect/internal/getRedirectFilepaths.js";
 
 /**
  * Loads the templates as modules and generates a templates.json or
  * features.json from the templates.
  */
 export const createTemplatesJson = async (
-  templateFilepaths: string[],
-  redirectFilepaths: string[],
   projectStructure: ProjectStructure,
   type: "FEATURES" | "TEMPLATES"
 ): Promise<void> => {
-  const templateModules = await loadTemplateModules(
-    templateFilepaths,
-    true,
-    false,
-    projectStructure
-  );
-
-  const redirectModules = await loadRedirectModules(
-    redirectFilepaths,
-    true,
-    false,
-    projectStructure
-  );
+  const { templateModules, redirectModules } =
+    await getTemplateModules(projectStructure);
 
   return createTemplatesJsonFromModule(
     templateModules,
@@ -112,6 +101,35 @@ export const createTemplatesJsonFromModule = async (
     templatesAbsolutePath,
     JSON.stringify(templatesJson, null, "  ")
   );
+};
+
+/**
+ * Helper to get the template modules from the project structure
+ * @param projectStructure
+ */
+export const getTemplateModules = async (
+  projectStructure: ProjectStructure
+) => {
+  const templateFilepaths = getTemplateFilepaths(
+    projectStructure.getTemplatePaths()
+  );
+  const redirectFilepaths = getRedirectFilePaths(
+    projectStructure.getRedirectPaths()
+  );
+  const templateModules = await loadTemplateModules(
+    templateFilepaths,
+    true,
+    false,
+    projectStructure
+  );
+
+  const redirectModules = await loadRedirectModules(
+    redirectFilepaths,
+    true,
+    false,
+    projectStructure
+  );
+  return { templateModules, redirectModules };
 };
 
 export const getTemplatesConfig = (

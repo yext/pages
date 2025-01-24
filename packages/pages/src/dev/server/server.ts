@@ -192,9 +192,18 @@ export const createServer = async (
     }
   });
 
+  app.post(
+    /^\/(.+)/,
+    serverRenderRoute({
+      vite,
+      dynamicGenerateData,
+      projectStructure,
+    })
+  );
+
   // When a page is requested that is anything except the root, call our
   // serverRenderRoute middleware.
-  app.use(
+  app.get(
     /^\/(.+)/,
     useProdURLs
       ? serverRenderSlugRoute({

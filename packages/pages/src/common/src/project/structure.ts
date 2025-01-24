@@ -86,6 +86,8 @@ export interface DistConfigFiles {
 export interface RootFiles {
   /** The config.yaml file */
   config: string;
+  /** The .template-manifest.json file for in-platform page sets */
+  templateManifest: string;
 }
 
 /**
@@ -180,6 +182,7 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
   },
   rootFiles: {
     config: "config.yaml",
+    templateManifest: ".template-manifest.json",
   },
   envVarConfig: {
     envVarDir: "",
@@ -310,6 +313,18 @@ export class ProjectStructure {
   getConfigYamlPath = () => {
     return new Path(
       pathLib.join(this.config.scope ?? "", this.config.rootFiles.config)
+    );
+  };
+
+  /**
+   * @returns the {@link Path} to the .template-manifest.json file, taking scope into account.
+   */
+  getTemplateManifestPath = () => {
+    return new Path(
+      pathLib.join(
+        this.config.scope ?? "",
+        this.config.rootFiles.templateManifest
+      )
     );
   };
 

@@ -26,12 +26,39 @@
   "streams": [
     {
       "$id": "oakley-stream",
-      "fields": ["id", "name", "slug"],
+      "fields": [
+        "id",
+        "name",
+        "slug"
+      ],
       "filter": {
-        "savedFilterIds": ["1241548641"]
+        "savedFilterIds": [
+          "1241548641"
+        ]
       },
       "localization": {
-        "locales": ["en"],
+        "locales": [
+          "en"
+        ],
+        "primary": false
+      },
+      "source": "knowledgeGraph",
+      "destination": "pages"
+    },
+    {
+      "$id": "closed-oakley-redirects",
+      "fields": [
+        "slug"
+      ],
+      "filter": {
+        "savedFilterIds": [
+          "1241548641"
+        ]
+      },
+      "localization": {
+        "locales": [
+          "en"
+        ],
         "primary": false
       },
       "source": "knowledgeGraph",
