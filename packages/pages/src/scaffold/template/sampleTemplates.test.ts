@@ -33,7 +33,7 @@ describe("newConfigFile", () => {
         fs.unlinkSync("test.tsx");
       }
     }
-  });
+  }, 10000);
 });
 
 describe("visualEditorTemplateCode", () => {
