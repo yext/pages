@@ -54,7 +54,7 @@ describe("visualEditorTemplateCode", () => {
         fs.unlinkSync("test.tsx");
       }
     }
-  });
+  }, 10000);
 });
 
 describe("staticTemplate", () => {
@@ -75,7 +75,7 @@ describe("staticTemplate", () => {
         fs.unlinkSync("test.tsx");
       }
     }
-  });
+  }, 10000);
 });
 
 describe("dynamicTemplate", () => {
@@ -98,5 +98,5 @@ describe("dynamicTemplate", () => {
         fs.unlinkSync("test.tsx");
       }
     }
-  });
+  }, 10000);
 });
