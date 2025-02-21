@@ -1,3 +1,15 @@
+#### 1.2.0 (2025-02-21)
+
+##### Chores
+
+*  update main.yml to use ubuntu-latest (#567) (7f5fe9b2)
+*  upgrade vitest (#566) (0c819dc2)
+
+##### New Features
+
+*  merge VLE 1.2.0 branch (#565) (34ed4441)
+*  support Node 22 (#562) (07b96002)
+
 #### 1.1.6 (2025-01-03)
 
 ##### New Features
