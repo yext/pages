@@ -307,25 +307,3 @@ export interface PageContext<T extends TemplateRenderProps<T>> {
   /** The template to render */
   Page: Template<T>;
 }
-
-/**
- * The type of the .template-manifest.json file,
- * which is used to specify in-platform page sets.
- *
- * @internal
- */
-export interface TemplateManifest {
-  /** The list of templates to use for in-platform page sets. */
-  templates: {
-    /** The file name of the template, without the extension */
-    name: string;
-    /** A description of the template. */
-    description: string;
-    /** A URL of an example site that uses the template. */
-    exampleSiteUrl: string;
-    /** Determines if a layout is automatically created during page set creation  */
-    layoutRequired: boolean;
-    /** Stringified Puck data to use when a new layout is created */
-    defaultLayoutData: string;
-  }[];
-}

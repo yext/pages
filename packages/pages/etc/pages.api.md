@@ -343,17 +343,6 @@ export interface TemplateConfig {
   streamId?: string;
 }
 
-// @internal
-export interface TemplateManifest {
-  templates: {
-    name: string;
-    description: string;
-    exampleSiteUrl: string;
-    layoutRequired: boolean;
-    defaultLayoutData: string;
-  }[];
-}
-
 // @public
 export interface TemplateModule<
   T extends TemplateProps,
