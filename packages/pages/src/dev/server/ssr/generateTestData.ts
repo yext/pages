@@ -57,7 +57,10 @@ export const generateTestDataForSlug = async (
     }
   }
 
-  const featuresConfig = getTemplatesConfig(templateModuleCollection);
+  const featuresConfig = getTemplatesConfig(
+    templateModuleCollection,
+    projectStructure
+  );
   const featuresConfigForEntityPages: FeaturesConfig = {
     features: featuresConfig.features.filter((f) => "entityPageSet" in f),
     streams: featuresConfig.streams,
@@ -184,7 +187,7 @@ async function spawnTestDataCommand(
       if (testData) {
         try {
           parsedData = JSON.parse(testData.trim());
-        } catch (e) {
+        } catch {
           stdout.write(
             `\nUnable to parse test data from command: \`${command} ${args.join(
               " "
