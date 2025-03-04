@@ -7123,6 +7123,7 @@ The following npm packages may be included in this product:
  - @docsearch/js@3.8.0
  - @docsearch/react@3.8.0
  - @esbuild/linux-x64@0.21.5
+ - @esbuild/linux-x64@0.23.1
  - @pnpm/config.env-replace@1.1.0
  - @pnpm/network.ca-file@1.0.2
  - @rollup/plugin-inject@5.0.5
@@ -7133,7 +7134,6 @@ The following npm packages may be included in this product:
  - cookie-signature@1.0.6
  - des.js@1.1.0
  - elliptic@6.5.4
- - esbuild-linux-64@0.15.18
  - hash.js@1.1.7
  - hmac-drbg@1.0.1
  - miller-rabin@4.0.1
@@ -7740,8 +7740,8 @@ SOFTWARE.
 
 The following npm packages may be included in this product:
 
- - esbuild@0.15.18
  - esbuild@0.21.5
+ - esbuild@0.23.1
 
 These packages each contain the following license:
 
@@ -7952,7 +7952,7 @@ SOFTWARE.
 
 The following npm package may be included in this product:
 
- - module-from-string@3.3.0
+ - module-from-string@3.3.1
 
 This package contains the following license:
 
