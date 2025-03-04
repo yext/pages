@@ -141,23 +141,23 @@ export const getTemplatesConfig = (
 ): FeaturesConfig => {
   const features: FeatureConfig[] = [];
   const streams: StreamConfig[] = [];
+  let inPlatformTemplateNames: string[] = [];
+
+  const templateManifestPath = projectStructure
+    .getTemplateManifestPath()
+    .getAbsolutePath();
+
+  if (fs.existsSync(templateManifestPath)) {
+    const templateManifest = JSON.parse(
+      fs.readFileSync(templateManifestPath, "utf-8")
+    ) as TemplateManifest;
+
+    inPlatformTemplateNames = templateManifest.templates.map(
+      (templateInfo) => templateInfo.name
+    );
+  }
+
   for (const module of templateModules.values()) {
-    let inPlatformTemplateNames: string[] = [];
-
-    const templateManifestPath = projectStructure
-      .getTemplateManifestPath()
-      .getAbsolutePath();
-
-    if (fs.existsSync(templateManifestPath)) {
-      const templateManifest = JSON.parse(
-        fs.readFileSync(templateManifestPath, "utf-8")
-      ) as TemplateManifest;
-
-      inPlatformTemplateNames = templateManifest.templates.map(
-        (templateInfo) => templateInfo.name
-      );
-    }
-
     if (inPlatformTemplateNames.includes(module.config.name)) {
       // skip in-platform page sets
       continue;
