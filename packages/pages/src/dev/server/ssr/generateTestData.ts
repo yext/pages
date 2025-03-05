@@ -18,6 +18,7 @@ import {
 } from "../../../common/src/template/loader/loader.js";
 import runSubprocess from "../../../util/runSubprocess.js";
 import { readSiteStream } from "../../../common/src/feature/stream.js";
+import { VisualEditorPreviewOverrides } from "../middleware/types.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
@@ -96,10 +97,15 @@ export const generateTestDataForPage = async (
   featuresConfig: FeaturesConfig,
   entityId: string,
   locale: string,
-  projectStructure: ProjectStructure
+  projectStructure: ProjectStructure,
+  visualEditorOverrides?: VisualEditorPreviewOverrides
 ): Promise<any> => {
   const featureName = featuresConfig.features[0]?.name;
-  const args = getCommonArgs(featuresConfig, projectStructure);
+  const args = getCommonArgs(
+    featuresConfig,
+    projectStructure,
+    visualEditorOverrides
+  );
 
   if (entityId) {
     args.push("--entityIds", entityId);
@@ -112,6 +118,10 @@ export const generateTestDataForPage = async (
   }
 
   args.push("--featureName", `"${featureName}"`);
+
+  if (visualEditorOverrides) {
+    args.push("--allFields");
+  }
 
   const parsedData = await spawnTestDataCommand(stdout, "yext", args);
   return getDocumentByLocale(parsedData, locale);
@@ -184,7 +194,7 @@ async function spawnTestDataCommand(
       if (testData) {
         try {
           parsedData = JSON.parse(testData.trim());
-        } catch (e) {
+        } catch {
           stdout.write(
             `\nUnable to parse test data from command: \`${command} ${args.join(
               " "
@@ -208,13 +218,21 @@ async function spawnTestDataCommand(
 
 const getCommonArgs = (
   featuresConfig: FeaturesConfig,
-  projectStructure: ProjectStructure
+  projectStructure: ProjectStructure,
+  visualEditorOverrides?: VisualEditorPreviewOverrides
 ) => {
   const args = ["pages", "generate-test-data", "--printDocuments"];
 
   args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
 
-  const siteStream = prepareJsonForCmd(readSiteStream(projectStructure));
+  const siteStreamJson = readSiteStream(projectStructure);
+  if (visualEditorOverrides && siteStreamJson) {
+    siteStreamJson.entityId = `site-${visualEditorOverrides.siteId}`;
+    siteStreamJson.localization = {
+      locales: [visualEditorOverrides.locale],
+    };
+  }
+  const siteStream = prepareJsonForCmd(siteStreamJson);
   if (siteStream) {
     args.push("--siteStreamConfig", siteStream);
   }

@@ -1,6 +1,5 @@
 import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
-import merge from "lodash/merge.js";
 import { propsLoader } from "../ssr/propsLoader.js";
 import {
   parseAsStaticUrl,
@@ -17,6 +16,7 @@ import { generateTestDataForPage } from "../ssr/generateTestData.js";
 import { entityPageCriterion, getLocalData } from "../ssr/getLocalData.js";
 import send404 from "./send404.js";
 import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
+import { VisualEditorPreviewOverrides } from "./types.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -29,33 +29,46 @@ export const serverRenderRoute =
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
-      const locale = getLocaleFromUrl(url) ?? "en";
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
-
       const { staticURL } = parseAsStaticUrl(url);
 
-      const staticTemplateAndProps = await findStaticTemplateModuleAndDocBySlug(
-        vite,
-        templateFilepaths,
-        false,
-        staticURL,
-        locale
-      );
+      const visualEditorOverrides = req?.body?.overrides
+        ? (JSON.parse(req?.body?.overrides) as VisualEditorPreviewOverrides)
+        : undefined;
 
-      if (staticTemplateAndProps) {
-        await sendAppHTML(
-          res,
-          staticTemplateAndProps.staticTemplateModuleInternal,
-          staticTemplateAndProps.props,
-          vite,
-          req.originalUrl,
-          projectStructure
-        );
-        return;
+      let entityId, feature, locale;
+      if (visualEditorOverrides) {
+        feature = visualEditorOverrides.pageSet.codeTemplate;
+        entityId = visualEditorOverrides.entityId;
+        locale = visualEditorOverrides.locale;
+      } else {
+        ({ entityId, feature } = parseAsEntityUrl(url));
+        locale = getLocaleFromUrl(url) ?? "en";
       }
 
-      const { feature, entityId } = parseAsEntityUrl(url);
+      if (!visualEditorOverrides) {
+        const staticTemplateAndProps =
+          await findStaticTemplateModuleAndDocBySlug(
+            vite,
+            templateFilepaths,
+            false,
+            staticURL,
+            locale
+          );
+        if (staticTemplateAndProps) {
+          await sendAppHTML(
+            res,
+            staticTemplateAndProps.staticTemplateModuleInternal,
+            staticTemplateAndProps.props,
+            vite,
+            req.originalUrl,
+            projectStructure
+          );
+          return;
+        }
+      }
+
       if (!entityId || !feature) {
         send404(res, `Cannot find template with URL "${url}"`);
         return;
@@ -64,7 +77,8 @@ export const serverRenderRoute =
       const templateModuleInternal = await findTemplateModuleInternalByName(
         vite,
         feature,
-        templateFilepaths
+        templateFilepaths,
+        !!visualEditorOverrides
       );
       if (!templateModuleInternal) {
         send404(
@@ -74,12 +88,43 @@ export const serverRenderRoute =
         return;
       }
 
+      if (visualEditorOverrides) {
+        templateModuleInternal.config = {
+          templateType: "entity",
+          hydrate: true,
+          name: visualEditorOverrides.pageSet.id,
+          stream: {
+            $id: visualEditorOverrides.pageSet.id,
+            filter: {
+              entityTypes: visualEditorOverrides.pageSet.scope.entityTypes
+                .length
+                ? visualEditorOverrides.pageSet.scope.entityTypes.map(
+                    (scopeItem) => scopeItem.name
+                  )
+                : undefined,
+              savedFilterIds: visualEditorOverrides.pageSet.scope.savedFilters
+                .length
+                ? visualEditorOverrides.pageSet.scope.savedFilters.map(
+                    (scopeItem) => scopeItem.externalId
+                  )
+                : undefined,
+            },
+            localization: {
+              locales: visualEditorOverrides.pageSet.scope.locales,
+              primary: false,
+            },
+            fields: [],
+          },
+        };
+      }
+
       const document = await getDocument(
         dynamicGenerateData,
         templateModuleInternal,
         entityId,
         locale,
-        projectStructure
+        projectStructure,
+        visualEditorOverrides
       );
       if (!document) {
         send404(
@@ -89,8 +134,12 @@ export const serverRenderRoute =
         return;
       }
 
-      const overrides = JSON.parse(req?.body?.overrides ?? "{}");
-      merge(document, overrides);
+      if (visualEditorOverrides) {
+        document.__.theme = visualEditorOverrides.theme ?? "{}";
+        document.__.layout =
+          visualEditorOverrides.layout ??
+          '{"root": {}, "zones": {}, "content": []}';
+      }
 
       const props = await propsLoader({
         templateModuleInternal,
@@ -116,9 +165,10 @@ const getDocument = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   entityId: string,
   locale: string,
-  projectStructure: ProjectStructure
+  projectStructure: ProjectStructure,
+  visualEditorOverrides?: VisualEditorPreviewOverrides
 ) => {
-  if (dynamicGenerateData) {
+  if (visualEditorOverrides?.pageSet || dynamicGenerateData) {
     const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(
       templateModuleInternal.config
     );
@@ -128,7 +178,8 @@ const getDocument = async (
       featuresConfig,
       entityId,
       locale,
-      projectStructure
+      projectStructure,
+      visualEditorOverrides
     );
   }
 
