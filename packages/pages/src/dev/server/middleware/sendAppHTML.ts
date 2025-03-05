@@ -62,6 +62,7 @@ export default async function sendAppHTML(
     await getTemplateModules(projectStructure);
   const templatesConfig: FeaturesConfig = getTemplatesConfig(
     templateModules,
+    projectStructure,
     redirectModules
   );
 

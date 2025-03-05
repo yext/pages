@@ -23,6 +23,7 @@ import {
 } from "../../common/src/redirect/loader/loader.js";
 import { getTemplateFilepaths } from "../../common/src/template/internal/getTemplateFilepaths.js";
 import { getRedirectFilePaths } from "../../common/src/redirect/internal/getRedirectFilepaths.js";
+import { TemplateManifest } from "../../common/src/template/types.js";
 
 /**
  * Loads the templates as modules and generates a templates.json or
@@ -57,6 +58,7 @@ export const createTemplatesJsonFromModule = async (
   // which is why all of the types have not yet been renamed.
   const { features, streams } = getTemplatesConfig(
     templateModules,
+    projectStructure,
     redirectModules
   );
   let templatesAbsolutePath;
@@ -134,11 +136,33 @@ export const getTemplateModules = async (
 
 export const getTemplatesConfig = (
   templateModules: TemplateModuleCollection,
+  projectStructure: ProjectStructure,
   redirectModules?: RedirectModuleCollection
 ): FeaturesConfig => {
   const features: FeatureConfig[] = [];
   const streams: StreamConfig[] = [];
+  let inPlatformTemplateNames: string[] = [];
+
+  const templateManifestPath = projectStructure
+    .getTemplateManifestPath()
+    .getAbsolutePath();
+
+  if (fs.existsSync(templateManifestPath)) {
+    const templateManifest = JSON.parse(
+      fs.readFileSync(templateManifestPath, "utf-8")
+    ) as TemplateManifest;
+
+    inPlatformTemplateNames = templateManifest.templates.map(
+      (templateInfo) => templateInfo.name
+    );
+  }
+
   for (const module of templateModules.values()) {
+    if (inPlatformTemplateNames.includes(module.config.name)) {
+      // skip in-platform page sets
+      continue;
+    }
+
     const featureConfig = convertTemplateConfigToFeatureConfig(module.config);
     features.push(featureConfig);
     const streamConfig = convertTemplateConfigToStreamConfig(module.config);
