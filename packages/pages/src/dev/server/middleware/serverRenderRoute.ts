@@ -17,6 +17,7 @@ import { entityPageCriterion, getLocalData } from "../ssr/getLocalData.js";
 import send404 from "./send404.js";
 import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
 import { VisualEditorPreviewOverrides } from "./types.js";
+import { getPageSetConfig } from "./getPageSetConfig.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -89,33 +90,7 @@ export const serverRenderRoute =
       }
 
       if (visualEditorOverrides) {
-        templateModuleInternal.config = {
-          templateType: "entity",
-          hydrate: true,
-          name: visualEditorOverrides.pageSet.id,
-          stream: {
-            $id: visualEditorOverrides.pageSet.id,
-            filter: {
-              entityTypes: visualEditorOverrides.pageSet.scope.entityTypes
-                .length
-                ? visualEditorOverrides.pageSet.scope.entityTypes.map(
-                    (scopeItem) => scopeItem.name
-                  )
-                : undefined,
-              savedFilterIds: visualEditorOverrides.pageSet.scope.savedFilters
-                .length
-                ? visualEditorOverrides.pageSet.scope.savedFilters.map(
-                    (scopeItem) => scopeItem.externalId
-                  )
-                : undefined,
-            },
-            localization: {
-              locales: visualEditorOverrides.pageSet.scope.locales,
-              primary: false,
-            },
-            fields: [],
-          },
-        };
+        templateModuleInternal.config = getPageSetConfig(visualEditorOverrides);
       }
 
       const document = await getDocument(

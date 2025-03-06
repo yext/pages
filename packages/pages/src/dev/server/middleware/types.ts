@@ -27,23 +27,8 @@ export type PageSet = {
   id: string;
   /** The name of the code template the page set should use. */
   codeTemplate: string;
-  /**
-   * Assignments define when to use this page set in new deployments for the site. They support the following:
-   * - GLOBAL to use this page set in all new deployments
-   * - PRODUCTION to use this page set in all new deployments for the production branch of the site
-   * - STAGING to use this page set in all new deployments for staging branches of the site
-   * - <branch name> to use this page set in all new deployments for the specified branch
-   * - <branch id> to use this page set in all new deployments for the specified branch
-   */
-  assignments: string[];
   /** The page set's entity scope. */
   scope: Scope;
-  /** A display name to use for this page set. */
-  displayName: string;
-  /** The type of the page set. */
-  type: "ENTITY" | "DIRECTORY";
-  /** Whether the page set is linked to directory page sets. */
-  hasDirectoryPageSets: boolean;
 };
 
 /**
@@ -66,10 +51,6 @@ type Scope = {
 type ScopeItem = {
   /** The display name of the scope item. */
   name: string;
-  /** A link to the scope item in Knowledge Graph. */
-  link: string;
-  /** The internal id of the scope item. */
-  internalId: number;
   /** The external id of the scope item. */
   externalId: string;
 };
