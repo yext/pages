@@ -8,9 +8,11 @@ jobs:
     steps:    
       - name: "Checkout"
         uses: actions/checkout@v4.1.6
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         with:
-          ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
+      - run: git checkout "$HEAD_REF"
       - name: Install pnpm
         uses: pnpm/action-setup@v4.0.0
       - name: Install deps
