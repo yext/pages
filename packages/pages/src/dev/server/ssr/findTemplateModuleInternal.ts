@@ -16,8 +16,7 @@ const templateNameToTemplateFilepath = new Map<string, string>();
 export const findTemplateModuleInternalByName = async (
   devserver: ViteDevServer,
   templateName: string,
-  templateFilepaths: string[],
-  isInPlatformPageSet: boolean = false
+  templateFilepaths: string[]
 ): Promise<TemplateModuleInternal<any, any> | null> => {
   const templateFilepath = templateNameToTemplateFilepath.get(templateName);
   if (templateFilepath) {
@@ -32,13 +31,6 @@ export const findTemplateModuleInternalByName = async (
       devserver,
       templateFilepath
     );
-
-    if (
-      !isInPlatformPageSet &&
-      templateModuleInternal.config.templateType !== "entity"
-    ) {
-      continue;
-    }
 
     templateNameToTemplateFilepath.set(
       templateModuleInternal.config.name,

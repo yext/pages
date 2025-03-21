@@ -1,5 +1,6 @@
 import { RequestHandler } from "express-serve-static-core";
 import { ViteDevServer } from "vite";
+import merge from "lodash/merge.js";
 import { propsLoader } from "../ssr/propsLoader.js";
 import {
   parseAsStaticUrl,
@@ -17,38 +18,48 @@ import { entityPageCriterion, getLocalData } from "../ssr/getLocalData.js";
 import send404 from "./send404.js";
 import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
 import { VisualEditorPreviewOverrides } from "./types.js";
-import { getPageSetConfig } from "./getPageSetConfig.js";
+import {
+  getInPlatformPageSetDocuments,
+  PageSetConfig,
+} from "../ssr/inPlatformPageSets.js";
 
 type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
   projectStructure: ProjectStructure;
+  siteId?: number;
+  inPlatformPageSets: PageSetConfig[];
 };
 
 export const serverRenderRoute =
-  ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
+  ({
+    vite,
+    dynamicGenerateData,
+    projectStructure,
+    siteId,
+    inPlatformPageSets,
+  }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
+      const locale = getLocaleFromUrl(url) ?? "en";
       const templateFilepaths =
         getTemplateFilepathsFromProjectStructure(projectStructure);
+
       const { staticURL } = parseAsStaticUrl(url);
+      const { entityId, feature } = parseAsEntityUrl(url);
 
-      const visualEditorOverrides = req?.body?.overrides
-        ? (JSON.parse(req?.body?.overrides) as VisualEditorPreviewOverrides)
-        : undefined;
-
-      let entityId, feature, locale;
-      if (visualEditorOverrides) {
-        feature = visualEditorOverrides.pageSet.codeTemplate;
-        entityId = visualEditorOverrides.entityId;
-        locale = visualEditorOverrides.locale;
-      } else {
-        ({ entityId, feature } = parseAsEntityUrl(url));
-        locale = getLocaleFromUrl(url) ?? "en";
+      // First, match the feature name to an in-platform page set id
+      let pageSet: PageSetConfig | undefined = undefined;
+      for (const ps of inPlatformPageSets) {
+        if (ps.id === feature) {
+          pageSet = ps;
+          break;
+        }
       }
 
-      if (!visualEditorOverrides) {
+      // If no in-platform page set found, try to render a static page
+      if (!pageSet) {
         const staticTemplateAndProps =
           await findStaticTemplateModuleAndDocBySlug(
             vite,
@@ -57,6 +68,7 @@ export const serverRenderRoute =
             staticURL,
             locale
           );
+
         if (staticTemplateAndProps) {
           await sendAppHTML(
             res,
@@ -75,32 +87,42 @@ export const serverRenderRoute =
         return;
       }
 
-      const templateModuleInternal = await findTemplateModuleInternalByName(
-        vite,
-        feature,
-        templateFilepaths,
-        !!visualEditorOverrides
-      );
+      // Look up the template by code_template if in-platform or feature if in-repo
+      const templateModuleInternal =
+        siteId && pageSet
+          ? await findTemplateModuleInternalByName(
+              vite,
+              pageSet.code_template,
+              templateFilepaths
+            )
+          : await findTemplateModuleInternalByName(
+              vite,
+              feature,
+              templateFilepaths
+            );
       if (!templateModuleInternal) {
         send404(
           res,
-          `Cannot find template corresponding to feature: ${feature}`
+          `Cannot find template corresponding to feature: ${pageSet ? pageSet.code_template : feature}`
         );
         return;
       }
 
-      if (visualEditorOverrides) {
-        templateModuleInternal.config = getPageSetConfig(visualEditorOverrides);
-      }
-
-      const document = await getDocument(
-        dynamicGenerateData,
-        templateModuleInternal,
-        entityId,
-        locale,
-        projectStructure,
-        visualEditorOverrides
-      );
+      const document =
+        siteId && pageSet
+          ? (
+              await getInPlatformPageSetDocuments(siteId, pageSet.id, {
+                entityIds: [entityId],
+                locale,
+              })
+            )?.[0]
+          : await getDocument(
+              dynamicGenerateData,
+              templateModuleInternal,
+              entityId,
+              locale,
+              projectStructure
+            );
       if (!document) {
         send404(
           res,
@@ -109,11 +131,10 @@ export const serverRenderRoute =
         return;
       }
 
-      if (visualEditorOverrides) {
-        document.__.theme = visualEditorOverrides.theme ?? "{}";
-        document.__.layout =
-          visualEditorOverrides.layout ??
-          '{"root": {}, "zones": {}, "content": []}';
+      // If loaded via POST request, merge visual editor overrides
+      if (req.method === "POST") {
+        const overrides = JSON.parse(req?.body?.overrides ?? "{}");
+        merge(document, overrides);
       }
 
       const props = await propsLoader({

@@ -21,6 +21,10 @@ import { getViteServerConfig } from "../../common/src/loader/vite.js";
 import { serverRenderModule } from "./middleware/serverRenderModule.js";
 import { getModuleInfoFromModuleName } from "./ssr/findMatchingModule.js";
 import open from "open";
+import {
+  getInPlatformPageSets,
+  PageSetConfig,
+} from "./ssr/inPlatformPageSets.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SERVERLESS_FUNCTION_POST_REQUEST_LIMIT = "50mb";
@@ -34,7 +38,8 @@ export const createServer = async (
   devServerPort: number,
   openBrowser: boolean,
   scope?: string,
-  module?: string
+  module?: string,
+  siteId?: number
 ) => {
   // creates a standard express app
   const app = express();
@@ -110,10 +115,15 @@ export const createServer = async (
   // Redirect urls with a final slash to their canonical url without the slash
   app.use(finalSlashRedirect);
 
-  // Call generateTestData to ensure we have data to populate the index page.
+  let inPlatformPageSets: PageSetConfig[] = [];
   // If the user specifies dynamicGenerateData = false we assume they have localData already.
   if (dynamicGenerateData) {
+    // Call generateTestData to ensure we have data to populate the index page.
     await generateTestData(projectStructure.config.scope);
+    if (siteId) {
+      // If siteId is provided, fetch in-platform page sets
+      inPlatformPageSets = await getInPlatformPageSets(siteId);
+    }
   }
 
   // Load functions from their source files
@@ -198,6 +208,8 @@ export const createServer = async (
       vite,
       dynamicGenerateData,
       projectStructure,
+      siteId,
+      inPlatformPageSets,
     })
   );
 
@@ -210,11 +222,15 @@ export const createServer = async (
           vite,
           dynamicGenerateData,
           projectStructure,
+          siteId,
+          inPlatformPageSets,
         })
       : serverRenderRoute({
           vite,
           dynamicGenerateData,
           projectStructure,
+          siteId,
+          inPlatformPageSets,
         })
   );
 
@@ -227,6 +243,8 @@ export const createServer = async (
       useProdURLs,
       projectStructure,
       devServerPort,
+      inPlatformPageSets,
+      siteId,
     })
   );
 

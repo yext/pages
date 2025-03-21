@@ -10,15 +10,27 @@ import { generateTestDataForSlug } from "../ssr/generateTestData.js";
 import { getLocalEntityPageDataForSlug } from "../ssr/getLocalData.js";
 import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
 import send404 from "./send404.js";
+import {
+  getInPlatformPageSetDocuments,
+  PageSetConfig,
+} from "../ssr/inPlatformPageSets.js";
 
 type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
   projectStructure: ProjectStructure;
+  siteId?: number;
+  inPlatformPageSets: PageSetConfig[];
 };
 
 export const serverRenderSlugRoute =
-  ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
+  ({
+    vite,
+    dynamicGenerateData,
+    projectStructure,
+    siteId,
+    inPlatformPageSets,
+  }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
@@ -47,18 +59,33 @@ export const serverRenderSlugRoute =
         return;
       }
 
-      const document = await getDocument(
+      // First, try to get an entity document
+      let document = await getDocument(
         dynamicGenerateData,
         vite,
         slug,
         projectStructure
       );
+      // If the document is not found, and in-platform page sets are present,
+      // loop through each page set and attempt to get an in-platform-based document
+      if (!document && siteId && inPlatformPageSets.length) {
+        for (const ps of inPlatformPageSets) {
+          document = (
+            await getInPlatformPageSetDocuments(siteId, ps.id, {
+              slug,
+            })
+          )?.[0];
+          if (document) {
+            break;
+          }
+        }
+      }
       if (!document) {
         send404(res, `Cannot find document corresponding to slug: ${slug}`);
         return;
       }
 
-      const feature = document.__.name;
+      const feature = document.__.codeTemplate || document.__.name;
       const templateModuleInternal = await findTemplateModuleInternalByName(
         vite,
         feature,

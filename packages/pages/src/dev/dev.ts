@@ -18,6 +18,7 @@ interface DevArgs {
   noGenTestData?: boolean;
   port?: number;
   module?: string;
+  siteId?: number;
 }
 
 const handler = async ({
@@ -29,6 +30,7 @@ const handler = async ({
   noGenFeatures,
   port,
   module,
+  siteId,
 }: DevArgs) => {
   const { config } = (await ProjectStructure.init({ scope })).config.rootFiles;
 
@@ -69,7 +71,8 @@ const handler = async ({
     devServerPort,
     openBrowser,
     scope,
-    module
+    module,
+    siteId
   );
 
   if (openBrowser && !module) {
@@ -113,5 +116,9 @@ export const devCommand = (program: Command) => {
     .option("--noGenFeatures", "Disable feature.json generation step")
     .option("--port <number>", "The port to use for the dev server")
     .option("--module <string>", "Name of the module to load.")
+    .option(
+      "--siteId <number>",
+      "The id of the site to use with in-platform page sets."
+    )
     .action(handler);
 };
