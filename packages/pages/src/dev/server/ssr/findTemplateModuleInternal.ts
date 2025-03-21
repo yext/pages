@@ -32,10 +32,6 @@ export const findTemplateModuleInternalByName = async (
       templateFilepath
     );
 
-    if (templateModuleInternal.config.templateType !== "entity") {
-      continue;
-    }
-
     templateNameToTemplateFilepath.set(
       templateModuleInternal.config.name,
       templateFilepath
