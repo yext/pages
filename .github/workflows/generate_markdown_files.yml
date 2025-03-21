@@ -9,7 +9,6 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v4.1.6
         with:
-          ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
       - name: Install pnpm
         uses: pnpm/action-setup@v4.0.0
