@@ -212,7 +212,7 @@ export const indexPage =
             return pageSetAccumulator;
           },
           Promise.resolve("")
-        )},
+        )}
         </div>`
         );
       }
