@@ -189,7 +189,10 @@ export const indexPage =
                 (await pageSetAccumulator) +
                 `<h4>
                 ${pageSetConfig.display_name}
-                pages [template: ${pageSetConfig.code_template}] (${documents.length}):
+                pages [template: ${pageSetConfig.code_template}] (${
+                  (documents?.filter((d) => !useProdURLs || d.slug) || [])
+                    .length
+                }):
               </h4>
                 <table>
                   <thead>
