@@ -17,7 +17,6 @@ import { generateTestDataForPage } from "../ssr/generateTestData.js";
 import { entityPageCriterion, getLocalData } from "../ssr/getLocalData.js";
 import send404 from "./send404.js";
 import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
-import { VisualEditorPreviewOverrides } from "./types.js";
 import {
   getInPlatformPageSetDocuments,
   PageSetConfig,
@@ -93,12 +92,14 @@ export const serverRenderRoute =
           ? await findTemplateModuleInternalByName(
               vite,
               pageSet.code_template,
-              templateFilepaths
+              templateFilepaths,
+              true
             )
           : await findTemplateModuleInternalByName(
               vite,
               feature,
-              templateFilepaths
+              templateFilepaths,
+              false
             );
       if (!templateModuleInternal) {
         send404(
@@ -163,10 +164,9 @@ const getDocument = async (
   templateModuleInternal: TemplateModuleInternal<any, any>,
   entityId: string,
   locale: string,
-  projectStructure: ProjectStructure,
-  visualEditorOverrides?: VisualEditorPreviewOverrides
+  projectStructure: ProjectStructure
 ) => {
-  if (visualEditorOverrides?.pageSet || dynamicGenerateData) {
+  if (dynamicGenerateData) {
     const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(
       templateModuleInternal.config
     );
@@ -176,8 +176,7 @@ const getDocument = async (
       featuresConfig,
       entityId,
       locale,
-      projectStructure,
-      visualEditorOverrides
+      projectStructure
     );
   }
 

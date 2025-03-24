@@ -93,7 +93,8 @@ export const serverRenderSlugRoute =
       const templateModuleInternal = await findTemplateModuleInternalByName(
         vite,
         feature,
-        templateFilepaths
+        templateFilepaths,
+        Boolean(document.__.codeTemplate)
       );
       if (!templateModuleInternal) {
         send404(
