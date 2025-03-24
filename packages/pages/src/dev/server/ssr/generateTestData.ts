@@ -18,7 +18,6 @@ import {
 } from "../../../common/src/template/loader/loader.js";
 import runSubprocess from "../../../util/runSubprocess.js";
 import { readSiteStream } from "../../../common/src/feature/stream.js";
-import { VisualEditorPreviewOverrides } from "../middleware/types.js";
 
 /**
  * generateTestData will run yext pages generate-test-data and return true in
@@ -97,15 +96,10 @@ export const generateTestDataForPage = async (
   featuresConfig: FeaturesConfig,
   entityId: string,
   locale: string,
-  projectStructure: ProjectStructure,
-  visualEditorOverrides?: VisualEditorPreviewOverrides
+  projectStructure: ProjectStructure
 ): Promise<any> => {
   const featureName = featuresConfig.features[0]?.name;
-  const args = getCommonArgs(
-    featuresConfig,
-    projectStructure,
-    visualEditorOverrides
-  );
+  const args = getCommonArgs(featuresConfig, projectStructure);
 
   if (entityId) {
     args.push("--entityIds", entityId);
@@ -118,10 +112,6 @@ export const generateTestDataForPage = async (
   }
 
   args.push("--featureName", `"${featureName}"`);
-
-  if (visualEditorOverrides) {
-    args.push("--allFields");
-  }
 
   const parsedData = await spawnTestDataCommand(stdout, "yext", args);
   return getDocumentByLocale(parsedData, locale);
@@ -218,21 +208,13 @@ async function spawnTestDataCommand(
 
 const getCommonArgs = (
   featuresConfig: FeaturesConfig,
-  projectStructure: ProjectStructure,
-  visualEditorOverrides?: VisualEditorPreviewOverrides
+  projectStructure: ProjectStructure
 ) => {
   const args = ["pages", "generate-test-data", "--printDocuments"];
 
   args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
 
-  const siteStreamJson = readSiteStream(projectStructure);
-  if (visualEditorOverrides && siteStreamJson) {
-    siteStreamJson.entityId = `site-${visualEditorOverrides.siteId}`;
-    siteStreamJson.localization = {
-      locales: [visualEditorOverrides.locale],
-    };
-  }
-  const siteStream = prepareJsonForCmd(siteStreamJson);
+  const siteStream = prepareJsonForCmd(readSiteStream(projectStructure));
   if (siteStream) {
     args.push("--siteStreamConfig", siteStream);
   }

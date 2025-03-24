@@ -59,16 +59,9 @@ export const serverRenderSlugRoute =
         return;
       }
 
-      // First, try to get an entity document
-      let document = await getDocument(
-        dynamicGenerateData,
-        vite,
-        slug,
-        projectStructure
-      );
-      // If the document is not found, and in-platform page sets are present,
-      // loop through each page set and attempt to get an in-platform-based document
-      if (!document && siteId && inPlatformPageSets.length) {
+      // If in-platform page sets exist, try to match the slug to a page set
+      let document;
+      if (siteId && inPlatformPageSets.length) {
         for (const ps of inPlatformPageSets) {
           document = (
             await getInPlatformPageSetDocuments(siteId, ps.id, {
@@ -80,6 +73,17 @@ export const serverRenderSlugRoute =
           }
         }
       }
+      // If the document is not found (or there are no in-platform page sets),
+      // get the document via local data or generate-test-data
+      if (!document) {
+        document = await getDocument(
+          dynamicGenerateData,
+          vite,
+          slug,
+          projectStructure
+        );
+      }
+
       if (!document) {
         send404(res, `Cannot find document corresponding to slug: ${slug}`);
         return;
