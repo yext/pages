@@ -103,7 +103,9 @@ export const serverRenderRoute =
       if (!templateModuleInternal) {
         send404(
           res,
-          `Cannot find template corresponding to feature: ${pageSet ? pageSet.code_template : feature}`
+          pageSet
+            ? `Cannot find template: ${pageSet.code_template}`
+            : `Cannot find template corresponding to feature: ${feature}`
         );
         return;
       }
