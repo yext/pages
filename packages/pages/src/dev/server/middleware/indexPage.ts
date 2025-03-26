@@ -24,6 +24,10 @@ import { getPartition } from "../../../util/partition.js";
 import { getYextUrlForPartition } from "../../../util/url.js";
 import path from "node:path";
 import { logWarning } from "../../../util/logError.js";
+import {
+  getInPlatformPageSetDocuments,
+  PageSetConfig,
+} from "../ssr/inPlatformPageSets.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -31,6 +35,8 @@ type Props = {
   useProdURLs: boolean;
   projectStructure: ProjectStructure;
   devServerPort: number;
+  siteId?: number;
+  inPlatformPageSets: PageSetConfig[];
 };
 
 export const indexPage =
@@ -40,6 +46,8 @@ export const indexPage =
     useProdURLs,
     projectStructure,
     devServerPort,
+    siteId,
+    inPlatformPageSets,
   }: Props): RequestHandler =>
   async (_req, res, next) => {
     try {
@@ -161,6 +169,54 @@ export const indexPage =
            <i class="fa fa-times-circle"></i>
              <p>${noLocalDataErrorText}</p>
           </div>`
+        );
+      }
+
+      // If there are any in-platform page sets, render that section.
+      if (inPlatformPageSets.length && siteId) {
+        indexPageHtml = indexPageHtml.replace(
+          `<!--in-platform-pages-html-->`,
+          `<h3>In-Platform Page Sets</h3>
+          <div class="list">
+        ${await inPlatformPageSets.reduce(
+          async (pageSetAccumulator, pageSetConfig) => {
+            const documents = await getInPlatformPageSetDocuments(
+              siteId,
+              pageSetConfig.id
+            );
+            if (documents?.length) {
+              return (
+                (await pageSetAccumulator) +
+                `<h4>
+                ${pageSetConfig.display_name}
+                pages [template: ${pageSetConfig.code_template}] (${
+                  (documents?.filter((d) => !useProdURLs || d.slug) || [])
+                    .length
+                }):
+              </h4>
+                <table>
+                  <thead>
+                    <tr>
+                      <td>URL</td>
+                      <td>Entity ID</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${createInPlatformPageSetsItems(
+                      documents,
+                      pageSetConfig.id,
+                      useProdURLs,
+                      devServerPort
+                    )}
+                  </tbody>
+                </table>`
+              );
+            }
+            return pageSetAccumulator;
+          },
+          Promise.resolve("")
+        )}
+        </div>`
         );
       }
 
@@ -327,6 +383,60 @@ const createEntityPageListItems = (
     },
     ""
   );
+};
+
+const createInPlatformPageSetsItems = (
+  documents: Record<string, any>[],
+  templateName: string,
+  useProdURLs: boolean,
+  devServerPort: number
+) => {
+  const { accountId, universe } = parseYextrcContents();
+  const partition = getPartition(Number(accountId));
+  const formatKnowledgeGraphLink = (uid: string) => {
+    if (accountId !== undefined && universe !== undefined) {
+      return `https://${getYextUrlForPartition(
+        universe,
+        partition
+      )}/s/${accountId}/entity/edit?entityIds=${uid}`;
+    }
+    return;
+  };
+
+  return documents.reduce((entityAccumulator, { uid, id, slug, meta }) => {
+    if (useProdURLs && !slug) {
+      logWarning(
+        `No document.slug found for entityId "${id}", no link will be rendered in the index page.`
+      );
+      return entityAccumulator;
+    }
+
+    const link = formatEntityLink(
+      useProdURLs,
+      templateName,
+      id,
+      meta.locale,
+      slug
+    );
+
+    return (
+      entityAccumulator +
+      `<tr>
+        <td>
+          <a href="http://localhost:${devServerPort}/${link}">
+            ${link}
+           </a>
+        </td>
+        <td>
+          ${
+            accountId && universe
+              ? `<a href="${formatKnowledgeGraphLink(uid)}">${id}</a>`
+              : id
+          }
+        </td>
+    </tr>`
+    );
+  }, "");
 };
 
 const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {

@@ -10,15 +10,27 @@ import { generateTestDataForSlug } from "../ssr/generateTestData.js";
 import { getLocalEntityPageDataForSlug } from "../ssr/getLocalData.js";
 import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
 import send404 from "./send404.js";
+import {
+  getInPlatformPageSetDocuments,
+  PageSetConfig,
+} from "../ssr/inPlatformPageSets.js";
 
 type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
   projectStructure: ProjectStructure;
+  siteId?: number;
+  inPlatformPageSets: PageSetConfig[];
 };
 
 export const serverRenderSlugRoute =
-  ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
+  ({
+    vite,
+    dynamicGenerateData,
+    projectStructure,
+    siteId,
+    inPlatformPageSets,
+  }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
@@ -47,22 +59,42 @@ export const serverRenderSlugRoute =
         return;
       }
 
-      const document = await getDocument(
-        dynamicGenerateData,
-        vite,
-        slug,
-        projectStructure
-      );
+      // If in-platform page sets exist, try to match the slug to a page set
+      let document;
+      if (siteId && inPlatformPageSets.length) {
+        for (const ps of inPlatformPageSets) {
+          document = (
+            await getInPlatformPageSetDocuments(siteId, ps.id, {
+              slug,
+            })
+          )?.[0];
+          if (document) {
+            break;
+          }
+        }
+      }
+      // If the document is not found (or there are no in-platform page sets),
+      // get the document via local data or generate-test-data
+      if (!document) {
+        document = await getDocument(
+          dynamicGenerateData,
+          vite,
+          slug,
+          projectStructure
+        );
+      }
+
       if (!document) {
         send404(res, `Cannot find document corresponding to slug: ${slug}`);
         return;
       }
 
-      const feature = document.__.name;
+      const feature = document.__.codeTemplate || document.__.name;
       const templateModuleInternal = await findTemplateModuleInternalByName(
         vite,
         feature,
-        templateFilepaths
+        templateFilepaths,
+        Boolean(document.__.codeTemplate)
       );
       if (!templateModuleInternal) {
         send404(

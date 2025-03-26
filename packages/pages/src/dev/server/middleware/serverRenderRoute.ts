@@ -17,15 +17,27 @@ import { generateTestDataForPage } from "../ssr/generateTestData.js";
 import { entityPageCriterion, getLocalData } from "../ssr/getLocalData.js";
 import send404 from "./send404.js";
 import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
+import {
+  getInPlatformPageSetDocuments,
+  PageSetConfig,
+} from "../ssr/inPlatformPageSets.js";
 
 type Props = {
   vite: ViteDevServer;
   dynamicGenerateData: boolean;
   projectStructure: ProjectStructure;
+  siteId?: number;
+  inPlatformPageSets: PageSetConfig[];
 };
 
 export const serverRenderRoute =
-  ({ vite, dynamicGenerateData, projectStructure }: Props): RequestHandler =>
+  ({
+    vite,
+    dynamicGenerateData,
+    projectStructure,
+    siteId,
+    inPlatformPageSets,
+  }: Props): RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
       const url = new URL("http://" + req.headers.host + req.originalUrl);
@@ -34,53 +46,86 @@ export const serverRenderRoute =
         getTemplateFilepathsFromProjectStructure(projectStructure);
 
       const { staticURL } = parseAsStaticUrl(url);
+      const { entityId, feature } = parseAsEntityUrl(url);
 
-      const staticTemplateAndProps = await findStaticTemplateModuleAndDocBySlug(
-        vite,
-        templateFilepaths,
-        false,
-        staticURL,
-        locale
-      );
-
-      if (staticTemplateAndProps) {
-        await sendAppHTML(
-          res,
-          staticTemplateAndProps.staticTemplateModuleInternal,
-          staticTemplateAndProps.props,
-          vite,
-          req.originalUrl,
-          projectStructure
-        );
-        return;
+      // First, match the feature name to an in-platform page set id
+      let pageSet: PageSetConfig | undefined = undefined;
+      for (const ps of inPlatformPageSets) {
+        if (ps.id === feature) {
+          pageSet = ps;
+          break;
+        }
       }
 
-      const { feature, entityId } = parseAsEntityUrl(url);
+      // If no in-platform page set found, try to render a static page
+      if (!pageSet) {
+        const staticTemplateAndProps =
+          await findStaticTemplateModuleAndDocBySlug(
+            vite,
+            templateFilepaths,
+            false,
+            staticURL,
+            locale
+          );
+
+        if (staticTemplateAndProps) {
+          await sendAppHTML(
+            res,
+            staticTemplateAndProps.staticTemplateModuleInternal,
+            staticTemplateAndProps.props,
+            vite,
+            req.originalUrl,
+            projectStructure
+          );
+          return;
+        }
+      }
+
       if (!entityId || !feature) {
         send404(res, `Cannot find template with URL "${url}"`);
         return;
       }
 
-      const templateModuleInternal = await findTemplateModuleInternalByName(
-        vite,
-        feature,
-        templateFilepaths
-      );
+      // Look up the template by code_template if in-platform or feature if in-repo
+      const templateModuleInternal =
+        siteId && pageSet
+          ? await findTemplateModuleInternalByName(
+              vite,
+              pageSet.code_template,
+              templateFilepaths,
+              true
+            )
+          : await findTemplateModuleInternalByName(
+              vite,
+              feature,
+              templateFilepaths,
+              false
+            );
       if (!templateModuleInternal) {
         send404(
           res,
-          `Cannot find template corresponding to feature: ${feature}`
+          pageSet
+            ? `Cannot find template: ${pageSet.code_template}`
+            : `Cannot find template corresponding to feature: ${feature}`
         );
         return;
       }
 
-      const document = await getDocument(
-        dynamicGenerateData,
-        templateModuleInternal,
-        entityId,
-        locale,
-        projectStructure
-      );
+      const document =
+        siteId && pageSet
+          ? (
+              await getInPlatformPageSetDocuments(siteId, pageSet.id, {
+                entityIds: [entityId],
+                locale,
+              })
+            )?.[0]
+          : await getDocument(
+              dynamicGenerateData,
+              templateModuleInternal,
+              entityId,
+              locale,
+              projectStructure
+            );
       if (!document) {
         send404(
           res,
@@ -89,8 +134,11 @@ export const serverRenderRoute =
         return;
       }
 
-      const overrides = JSON.parse(req?.body?.overrides ?? "{}");
-      merge(document, overrides);
+      // If loaded via POST request, merge visual editor overrides
+      if (req.method === "POST") {
+        const overrides = JSON.parse(req?.body?.overrides ?? "{}");
+        merge(document, overrides);
+      }
 
       const props = await propsLoader({
         templateModuleInternal,

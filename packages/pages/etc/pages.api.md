@@ -36,7 +36,8 @@ export const createDevServer: (
   devServerPort: number,
   openBrowser: boolean,
   scope?: string,
-  module?: string
+  module?: string,
+  siteId?: number
 ) => Promise<void>;
 
 // @internal (undocumented)
