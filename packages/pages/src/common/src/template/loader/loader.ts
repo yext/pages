@@ -6,8 +6,7 @@ import { ProjectStructure } from "../../project/structure.js";
 import { loadModules } from "../../loader/vite.js";
 import { ViteDevServer } from "vite";
 import { loadViteModule } from "../../../../dev/server/ssr/loadViteModule.js";
-import { TemplateManifest, TemplateModule } from "../types.js";
-import fs from "node:fs";
+import { TemplateModule } from "../types.js";
 
 /**
  * Loads all templates in the project.
@@ -30,21 +29,6 @@ export const loadTemplateModules = async (
     projectStructure
   );
 
-  const templateManifestPath = projectStructure
-    .getTemplateManifestPath()
-    .getAbsolutePath();
-
-  let inPlatformTemplateNames: string[] = [];
-  if (fs.existsSync(templateManifestPath)) {
-    const templateManifest = JSON.parse(
-      fs.readFileSync(templateManifestPath, "utf-8")
-    ) as TemplateManifest;
-
-    inPlatformTemplateNames = templateManifest.templates.map(
-      (templateInfo) => templateInfo.name
-    );
-  }
-
   const importedTemplateModules = [] as TemplateModuleInternal<any, any>[];
   for (const importedModule of importedModules) {
     const templateModuleInternal =
@@ -54,15 +38,10 @@ export const loadTemplateModules = async (
         adjustForFingerprintedAsset
       );
 
-    // ignore templates marked for in-platform page set use by .template-manifest.json
-    if (
-      !inPlatformTemplateNames.includes(templateModuleInternal.templateName)
-    ) {
-      importedTemplateModules.push({
-        ...templateModuleInternal,
-        path: importedModule.path,
-      });
-    }
+    importedTemplateModules.push({
+      ...templateModuleInternal,
+      path: importedModule.path,
+    });
   }
 
   return importedTemplateModules.reduce((prev, module) => {
