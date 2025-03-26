@@ -55,7 +55,7 @@ export const getInPlatformPageSetDocuments = async (
 
   return await spawnPageSetCommands(
     process.stdout,
-    "$ALPHA/bazel-bin/gocode/src/yext/cli/yext pages visual-editor document --xYextLocalCliGateway",
+    "yext pages visual-editor document",
     args,
     "["
   );
