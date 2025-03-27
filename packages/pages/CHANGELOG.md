@@ -1,3 +1,15 @@
+#### 1.2.1 (2025-03-27)
+
+##### New Features
+
+* **dev:**  support visual editor local dev mode (#572) (434e710a)
+
+##### Bug Fixes
+
+*  page set commands shell vulnerability  (#574) (fa02ec12)
+*  workflow vulnerability (#573) (5596f7a3)
+*  correctly ignore templates marked for in platform page sets (#571) (e49944d2)
+
 #### 1.2.0 (2025-02-21)
 
 ##### Chores
