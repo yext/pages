@@ -17,8 +17,8 @@ export const getInPlatformPageSets = async (
 ): Promise<PageSetConfig[]> => {
   const pageSetsRes = await spawnPageSetCommands(
     process.stdout,
-    "yext pages visual-editor pagesets",
-    ["--siteId", siteId.toString(10)],
+    "yext",
+    ["pages", "visual-editor", "pagesets", "--siteId", siteId.toString(10)],
     "{"
   );
 
@@ -55,8 +55,8 @@ export const getInPlatformPageSetDocuments = async (
 
   return await spawnPageSetCommands(
     process.stdout,
-    "yext pages visual-editor document",
-    args,
+    "yext",
+    ["pages", "visual-editor", "document", ...args],
     "["
   );
 };
@@ -70,7 +70,6 @@ async function spawnPageSetCommands(
   return new Promise((resolve) => {
     const childProcess = spawn(command, args, {
       stdio: ["inherit", "pipe", "inherit"],
-      shell: true,
     });
 
     // Assume that all CLI chunks will come before any stream data. Once stream data is found
