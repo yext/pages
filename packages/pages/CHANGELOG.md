@@ -1,3 +1,9 @@
+#### 1.2.2 (2025-04-02)
+
+##### Bug Fixes
+
+* **dev:**  siteStream not properly null checked (#575) (f10bcb8a)
+
 #### 1.2.1 (2025-03-27)
 
 ##### New Features
