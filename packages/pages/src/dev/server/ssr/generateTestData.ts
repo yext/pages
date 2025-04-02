@@ -217,9 +217,9 @@ const getCommonArgs = (
 
   args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
 
-  const siteStream = prepareJsonForCmd(readSiteStream(projectStructure));
+  const siteStream = readSiteStream(projectStructure);
   if (siteStream) {
-    args.push("--siteStreamConfig", siteStream);
+    args.push("--siteStreamConfig", prepareJsonForCmd(siteStream));
   }
 
   if (projectStructure.config.scope) {
@@ -233,13 +233,11 @@ const getCommonArgs = (
 // We need to specially handle JSON arguemnts when running on windows due to an existing bug/behavior in Powershell where inner quotes are
 // stripped from strings when passed to a third-party program. Read more: https://stackoverflow.com/questions/52822984/powershell-best-way-to-escape-double-quotes-in-string-passed-to-an-external-pro.
 const prepareJsonForCmd = (json: any) => {
-  let jsonString;
   if (process.platform == "win32") {
-    jsonString = `${JSON.stringify(json).replace(/([\\]*)"/g, `$1$1\\"`)}`;
-  } else {
-    jsonString = `'${JSON.stringify(json)}'`;
+    return `${JSON.stringify(json).replace(/([\\]*)"/g, `$1$1\\"`)}`;
   }
-  return jsonString;
+
+  return `'${JSON.stringify(json)}'`;
 };
 
 const getDocumentByLocale = (parsedData: any, locale: string): any => {
