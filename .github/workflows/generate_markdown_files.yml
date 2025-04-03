@@ -25,6 +25,8 @@ jobs:
           push: true
           pull: --rebase --autostash
           default_author: github_actions
-      - name: Fail on push
-        run: |
-          if [[ ${{ steps.generate-markdown.outputs.pushed }} == true ]]; then exit 1; else exit 0; fi
+      -  name: Fail on push
+         env:
+          PUSHED: ${{ steps.generate-markdown.outputs.pushed }}
+         run: |
+          if [[ $PUSHED == true ]]; then exit 1; else exit 0; fi
