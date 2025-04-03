@@ -1,3 +1,9 @@
+#### 1.2.3 (2025-04-03)
+
+##### Bug Fixes
+
+* **scaffold:**  pin tailwind upgrade during module scaffold to version 3 (#576) (581f1a58)
+
 #### 1.2.2 (2025-04-02)
 
 ##### Bug Fixes
