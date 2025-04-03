@@ -145,7 +145,15 @@ function handleCancel(moduleName: string, projectStructure: ProjectStructure) {
 
 const getDependencies = async () => {
   await updatePackageDependency("@yext/pages-components", null, true);
-  await updatePackageDependency("tailwindcss", null, true);
-  await updatePackageDependency("tailwindcss-scoped-preflight", null, true);
+  await updatePackageDependency(
+    "tailwindcss",
+    { latestMajorVersion: "3" },
+    true
+  );
+  await updatePackageDependency(
+    "tailwindcss-scoped-preflight",
+    { latestMajorVersion: "3" },
+    true
+  );
   await installDependencies();
 };
