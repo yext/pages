@@ -1,3 +1,10 @@
+#### 1.0.0-beta.9 (2025-04-24)
+
+##### Bug Fixes
+
+* **pages-plugins:**  typo in slug manager undefined check (#578) (b1f96469)
+*  additional workflow change (#577) (599690e1)
+
 #### 1.0.0-beta.8 (2024-10-31)
 
 #### 1.0.0-beta.7 (2024-10-31)
