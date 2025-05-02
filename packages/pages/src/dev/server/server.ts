@@ -25,6 +25,7 @@ import {
   getInPlatformPageSets,
   PageSetConfig,
 } from "./ssr/inPlatformPageSets.js";
+import runSubProcess from "../../util/runSubprocess.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SERVERLESS_FUNCTION_POST_REQUEST_LIMIT = "50mb";
@@ -118,12 +119,14 @@ export const createServer = async (
   let inPlatformPageSets: PageSetConfig[] = [];
   // If the user specifies dynamicGenerateData = false we assume they have localData already.
   if (dynamicGenerateData) {
-    // Call generateTestData to ensure we have data to populate the index page.
-    await generateTestData(projectStructure.config.scope);
     if (siteId) {
+      // If siteId is provided, regenerate templates to handle files created by the visual editor plugin
+      runSubProcess("pages generate templates", []);
       // If siteId is provided, fetch in-platform page sets
       inPlatformPageSets = await getInPlatformPageSets(siteId);
     }
+    // Call generateTestData to ensure we have data to populate the index page.
+    await generateTestData(projectStructure.config.scope);
   }
 
   // Load functions from their source files
