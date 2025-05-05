@@ -11,6 +11,6 @@ Additional metadata added by the toolchain
 ```typescript
 __meta: {
   mode: "development" | "production";
-  universe: "development" | "qa" | "sandbox" | "production";
+  universe: YextEnv;
 }
 ```

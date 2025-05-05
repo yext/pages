@@ -376,7 +376,7 @@ export interface TemplateModule<
 export interface TemplateProps<T = Record<string, any>> {
   __meta: {
     mode: "development" | "production";
-    universe: "development" | "qa" | "sandbox" | "production";
+    universe: YextEnv;
   };
   document: T;
   pathOverride?: string;
@@ -391,9 +391,13 @@ export interface TemplateRenderProps<T = any> extends TemplateProps<T> {
 // @public
 export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
+// @internal
+export type YextEnv = "development" | "qa" | "sandbox" | "production";
+
 // Warnings were encountered during analysis:
 //
 // dist/types/src/common/src/template/types.d.ts:180:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
+// dist/types/src/common/src/template/types.d.ts:203:9 - (ae-incompatible-release-tags) The symbol "universe" is marked as @public, but its signature references "YextEnv" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 ```
