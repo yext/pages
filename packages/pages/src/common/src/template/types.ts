@@ -205,6 +205,8 @@ export type Manifest = {
   bundlerManifest?: any;
 };
 
+export type YextEnv = "development" | "qa" | "sandbox" | "production";
+
 /**
  * The shape of the data passed directly to the different template functions with the
  * exception of the render function (getPath, getHeadConfig, etc).
@@ -218,7 +220,7 @@ export interface TemplateProps<T = Record<string, any>> {
   __meta: {
     /** Specifies if the data is returned in development or production mode */
     mode: "development" | "production";
-    universe: "development" | "qa" | "sandbox" | "production";
+    universe: YextEnv;
   };
   /**
    * Set in the preview context of the generatepagecontent API endpoint. Since

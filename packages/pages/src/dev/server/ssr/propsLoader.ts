@@ -5,6 +5,7 @@ import {
 import { getRelativePrefixToRootFromPath } from "../../../common/src/template/paths.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { validateGetPathValue } from "../../../common/src/template/internal/validateGetPathValue.js";
+import { getEnvFromYextCredential } from "./yextEnv.js";
 
 type PageLoaderValues = {
   templateModuleInternal: TemplateModuleInternal<any, any>;
@@ -23,7 +24,7 @@ export const propsLoader = async ({
     document: document,
     __meta: {
       mode: "development",
-      universe: "production", // TODO get from yext init
+      universe: getEnvFromYextCredential(),
     },
   };
 
