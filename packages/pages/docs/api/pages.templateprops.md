@@ -39,7 +39,7 @@ Description
 
 </td><td>
 
-{ mode: "development" \| "production"; }
+{ mode: "development" \| "production"; universe: "development" \| "qa" \| "sandbox" \| "production"; }
 
 </td><td>
 

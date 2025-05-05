@@ -152,6 +152,7 @@ export interface ModuleDefinition {
 export interface ModuleProps<T = Record<string, any>> {
   __meta: {
     mode: "development" | "production";
+    universe: "development" | "qa" | "sandbox" | "production";
   };
   document: T;
 }
@@ -375,6 +376,7 @@ export interface TemplateModule<
 export interface TemplateProps<T = Record<string, any>> {
   __meta: {
     mode: "development" | "production";
+    universe: "development" | "qa" | "sandbox" | "production";
   };
   document: T;
   pathOverride?: string;
