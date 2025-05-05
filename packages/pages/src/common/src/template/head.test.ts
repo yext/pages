@@ -179,7 +179,10 @@ describe("getLang", () => {
       document: { locale: lang },
       path: "",
       relativePrefixToRoot: "",
-      __meta: { mode: "development" },
+      __meta: {
+        mode: "development",
+        universe: "production",
+      },
     };
 
     expect(getLang(undefined, props)).toEqual(lang);
@@ -196,5 +199,6 @@ const templateProps: TemplateRenderProps = {
   document: {},
   __meta: {
     mode: "development",
+    universe: "production",
   },
 };

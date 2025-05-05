@@ -21,6 +21,7 @@ export const PagesGenerator = async (data): Promise<Record<any, any>> => {
       document: data.streamOutput,
       __meta: {
         mode: "production",
+        universe: data.site.yextUniverse,
       },
       pathOverride: data.pathOverride,
     },

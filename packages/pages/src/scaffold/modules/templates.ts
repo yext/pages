@@ -28,7 +28,8 @@ const templateData: ModuleProps = {
     }
   }, 
   __meta: {
-    mode: "production"
+    mode: "production",
+    universe: "production"
   }
 }
 

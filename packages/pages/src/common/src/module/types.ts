@@ -39,6 +39,7 @@ export interface ModuleProps<T = Record<string, any>> {
   __meta: {
     /** Specifies if the data is returned in development or production mode */
     mode: "development" | "production";
+    universe: "development" | "qa" | "sandbox" | "production";
   };
   /** The document to use for AnalyticsProvider */
   document: T;

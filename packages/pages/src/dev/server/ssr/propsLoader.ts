@@ -21,7 +21,10 @@ export const propsLoader = async ({
 
   let templateProps: TemplateProps = {
     document: document,
-    __meta: { mode: "development" },
+    __meta: {
+      mode: "development",
+      universe: "production", // TODO get from yext init
+    },
   };
 
   if (transformProps) {
