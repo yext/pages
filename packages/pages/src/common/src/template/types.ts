@@ -205,6 +205,11 @@ export type Manifest = {
   bundlerManifest?: any;
 };
 
+/**
+ * The type of "yextUniverse" environment
+ *
+ * @internal
+ */
 export type YextEnv = "development" | "qa" | "sandbox" | "production";
 
 /**
