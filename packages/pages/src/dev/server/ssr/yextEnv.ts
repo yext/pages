@@ -1,7 +1,7 @@
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import { homedir } from "os";
-import { YextEnv } from "../../../common/src/template/types.js";
+import { isYextEnv, YextEnv } from "../../../common/src/template/types.js";
 /**
  * Reads the "env" field from ~/.yext/current/active-credential (cross-platform).
  * Returns 'production' by default if file or field is missing or invalid.
@@ -17,7 +17,7 @@ export function getEnvFromYextCredential(): YextEnv {
 
     const content = readFileSync(filePath, "utf8");
 
-    let data: unknown;
+    let data: any;
     try {
       data = JSON.parse(content);
     } catch (parseErr) {
@@ -28,34 +28,23 @@ export function getEnvFromYextCredential(): YextEnv {
       return "production";
     }
 
-    if (
-      typeof data === "object" &&
-      data !== null &&
-      "env" in data &&
-      typeof (data as any).env === "string"
-    ) {
-      const env = (data as { env: string }).env as string;
-
-      const validEnvs: YextEnv[] = [
-        "development",
-        "qa",
-        "sandbox",
-        "production",
-      ];
-      if (validEnvs.includes(env as YextEnv)) {
+    const env = (data as { env: string }).env as string;
+    if (env) {
+      if (isYextEnv(env)) {
         return env as YextEnv;
+      } else {
+        console.warn(`Invalid "env" value in ${filePath}: ${env}`);
       }
-
-      console.warn(`Invalid "env" value in ${filePath}: ${env}`);
     } else {
       console.warn(`"env" field not found in: ${filePath}`);
     }
+
+    return "production";
   } catch (err) {
     console.error(
-      "Unexpected error while reading Yext credential:",
+      "Unexpected error while reading Yext credential: ",
       (err as Error).message
     );
+    return "production";
   }
-
-  return "production";
 }

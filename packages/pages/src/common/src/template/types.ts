@@ -205,12 +205,21 @@ export type Manifest = {
   bundlerManifest?: any;
 };
 
+const YEXT_ENVS = ["development", "qa", "sandbox", "production"] as const;
 /**
  * The type of "yextUniverse" environment
  *
  * @internal
  */
-export type YextEnv = "development" | "qa" | "sandbox" | "production";
+export type YextEnv = (typeof YEXT_ENVS)[number];
+/**
+ * Returns true if the "env" string is a YextEnv
+ *
+ * @internal
+ */
+export function isYextEnv(env: string): env is YextEnv {
+  return (YEXT_ENVS as readonly string[]).includes(env);
+}
 
 /**
  * The shape of the data passed directly to the different template functions with the
