@@ -53,7 +53,7 @@ export function createManager(config: InternalSlugManagerConfig) {
     }
     const entitiesResponse = await api.listEntities(params);
 
-    if (!entitiesResponse.entities) {
+    if (!entitiesResponse?.entities?.length) {
       return JSON.stringify({
         data: [],
       });
