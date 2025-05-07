@@ -1,7 +1,7 @@
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import { homedir } from "os";
-import { isYextEnv, YextEnv } from "../../../common/src/template/types.js";
+import { YextEnv, YEXT_ENVS } from "../../../common/src/template/types.js";
 /**
  * Reads the "env" field from ~/.yext/current/active-credential (cross-platform).
  * Returns 'production' by default if file or field is missing or invalid.
@@ -17,7 +17,7 @@ export function getEnvFromYextCredential(): YextEnv {
 
     const content = readFileSync(filePath, "utf8");
 
-    let data: any;
+    let data: Record<string, string>;
     try {
       data = JSON.parse(content);
     } catch (parseErr) {
@@ -28,17 +28,12 @@ export function getEnvFromYextCredential(): YextEnv {
       return "production";
     }
 
-    const env = (data as { env: string }).env as string;
-    if (env) {
-      if (isYextEnv(env)) {
-        return env as YextEnv;
-      } else {
-        console.warn(`Invalid "env" value in ${filePath}: ${env}`);
-      }
-    } else {
-      console.warn(`"env" field not found in: ${filePath}`);
+    const env: string = data["env"];
+    if ((YEXT_ENVS as readonly string[]).includes(env)) {
+      return env as YextEnv;
     }
 
+    console.warn(`Invalid "env" value in ${filePath}: ${env}`);
     return "production";
   } catch (err) {
     console.error(
