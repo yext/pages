@@ -7,6 +7,10 @@ import { isUsingConfig } from "../util/config.js";
 import { logWarning } from "../util/logError.js";
 import { ProjectStructure } from "../common/src/project/structure.js";
 
+/**
+ * The arguments passed to the dev CLI command.
+ * @internal
+ */
 export interface DevArgs {
   local?: boolean;
   prodUrl?: boolean;
