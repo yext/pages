@@ -31,14 +31,33 @@ export const convertToPosixPath: (p: string) => string;
 
 // @internal (undocumented)
 export const createDevServer: (
-  dynamicGenerateData: boolean,
-  useProdURLs: boolean,
   devServerPort: number,
-  openBrowser: boolean,
-  scope?: string,
-  module?: string,
-  siteId?: number
+  devArgs: DevArgs
 ) => Promise<void>;
+
+// @internal
+export interface DevArgs {
+  // (undocumented)
+  local?: boolean;
+  // (undocumented)
+  module?: string;
+  // (undocumented)
+  noGenFeatures?: boolean;
+  // (undocumented)
+  noGenTestData?: boolean;
+  // (undocumented)
+  noInit?: boolean;
+  // (undocumented)
+  openBrowser: boolean;
+  // (undocumented)
+  port?: number;
+  // (undocumented)
+  prodUrl?: boolean;
+  // (undocumented)
+  scope?: string;
+  // (undocumented)
+  siteId?: number;
+}
 
 // @internal (undocumented)
 export const devCommand: (program: Command) => void;
