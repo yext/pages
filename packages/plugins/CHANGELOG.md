@@ -1,3 +1,9 @@
+#### 1.0.0-beta.10 (2025-05-06)
+
+##### Bug Fixes
+
+* **pages-plugins:**  slugmanager unbounded entity request bug (#581) (02d6fd98)
+
 #### 1.0.0-beta.9 (2025-04-24)
 
 ##### Bug Fixes
