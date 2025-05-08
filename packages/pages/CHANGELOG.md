@@ -1,3 +1,9 @@
+#### 1.2.4 (2025-05-08)
+
+##### Refactors
+
+* **dev:**  generate templates.json after vite initialization (#582) (a5eea128)
+
 #### 1.2.3 (2025-04-03)
 
 ##### Bug Fixes
