@@ -1,6 +1,5 @@
 import { Command } from "commander";
 import { createServer } from "./server/server.js";
-import runSubProcess from "../util/runSubprocess.js";
 import { autoYextInit } from "./server/autoInit.js";
 import open from "open";
 import getPort, { portNumbers } from "get-port";
@@ -8,7 +7,11 @@ import { isUsingConfig } from "../util/config.js";
 import { logWarning } from "../util/logError.js";
 import { ProjectStructure } from "../common/src/project/structure.js";
 
-interface DevArgs {
+/**
+ * The arguments passed to the dev CLI command.
+ * @internal
+ */
+export interface DevArgs {
   local?: boolean;
   prodUrl?: boolean;
   openBrowser: boolean;
@@ -21,17 +24,8 @@ interface DevArgs {
   siteId?: number;
 }
 
-const handler = async ({
-  local,
-  prodUrl,
-  openBrowser,
-  noInit,
-  scope,
-  noGenFeatures,
-  port,
-  module,
-  siteId,
-}: DevArgs) => {
+const handler = async (devArgs: DevArgs) => {
+  const { openBrowser, noInit, scope, port, module } = devArgs;
   const { config } = (await ProjectStructure.init({ scope })).config.rootFiles;
 
   if (!isUsingConfig(config, scope)) {
@@ -46,34 +40,14 @@ const handler = async ({
   if (!noInit) {
     await autoYextInit(scope);
   }
-  if (!noGenFeatures) {
-    if (isUsingConfig(config, scope)) {
-      await runSubProcess(
-        "pages generate templates",
-        scope ? [`--scope ${scope}`] : []
-      );
-    } else {
-      await runSubProcess(
-        "pages generate features",
-        scope ? [`--scope ${scope}`] : []
-      );
-    }
-  }
 
   const devServerPort =
     port ??
     (await getPort({
       port: portNumbers(5173, 6000),
     }));
-  await createServer(
-    !local,
-    !!prodUrl,
-    devServerPort,
-    openBrowser,
-    scope,
-    module,
-    siteId
-  );
+
+  await createServer(devServerPort, devArgs);
 
   if (openBrowser && !module) {
     await open(`http://localhost:${devServerPort}/`);

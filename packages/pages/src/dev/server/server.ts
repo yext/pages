@@ -25,6 +25,9 @@ import {
   getInPlatformPageSets,
   PageSetConfig,
 } from "./ssr/inPlatformPageSets.js";
+import { isUsingConfig } from "../../util/config.js";
+import runSubProcess from "../../util/runSubprocess.js";
+import { DevArgs } from "../dev.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SERVERLESS_FUNCTION_POST_REQUEST_LIMIT = "50mb";
@@ -32,15 +35,11 @@ const SERVERLESS_FUNCTION_POST_REQUEST_LIMIT = "50mb";
 /**
  * @internal
  */
-export const createServer = async (
-  dynamicGenerateData: boolean,
-  useProdURLs: boolean,
-  devServerPort: number,
-  openBrowser: boolean,
-  scope?: string,
-  module?: string,
-  siteId?: number
-) => {
+export const createServer = async (devServerPort: number, devArgs: DevArgs) => {
+  const { openBrowser, scope, noGenFeatures, module, siteId } = devArgs;
+  const useProdURLs = !!devArgs.prodUrl;
+  const dynamicGenerateData = !devArgs.local;
+
   // creates a standard express app
   const app = express();
 
@@ -101,6 +100,21 @@ export const createServer = async (
 
   // register vite's middleware
   app.use(vite.middlewares);
+
+  const { config } = projectStructure.config.rootFiles;
+  if (!noGenFeatures) {
+    if (isUsingConfig(config, scope)) {
+      await runSubProcess(
+        "pages generate templates",
+        scope ? [`--scope ${scope}`] : []
+      );
+    } else {
+      await runSubProcess(
+        "pages generate features",
+        scope ? [`--scope ${scope}`] : []
+      );
+    }
+  }
 
   // Load favicon for index page
   app.use("/favicon.ico", (req, res) => {
