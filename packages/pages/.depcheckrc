@@ -1,0 +1,13 @@
+ignores:
+
+# Implicitly needed by typescript (tsc)
+
+- type-fest
+
+# Fixture in tests/fixtures/inPlatformTemplate.tsx
+
+- "@yext/pages"
+
+# Using the type in src/dev/server/middleware/indexPage.ts but we already have @types/express-serve-static-core
+
+- express-serve-static-core
