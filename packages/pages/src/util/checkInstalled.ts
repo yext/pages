@@ -4,7 +4,7 @@ function checkInstalled(command: string): void {
   if (command.includes("yext")) {
     try {
       execSync("yext version");
-    } catch (ignored) {
+    } catch (_) {
       throw new Error(
         "Yext CLI is not installed. Please install by " +
           "following the instructions here: " +

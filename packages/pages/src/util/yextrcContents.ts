@@ -33,7 +33,7 @@ export const parseYextrcContents = (scope: string | undefined = undefined) => {
       accountId = parsedContents.accountId;
       universe = parsedContents.universe;
     }
-  } catch (e: any) {
+  } catch (_) {
     // Return undefined for both fields if .yextrc cannot be read
   }
   return { accountId, universe };

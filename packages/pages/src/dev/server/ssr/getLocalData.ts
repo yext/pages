@@ -151,7 +151,7 @@ export const readLocalDataFile = async (
         )
         .toString()
     );
-  } catch (err: any) {
+  } catch (_) {
     return;
   }
 };

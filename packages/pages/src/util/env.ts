@@ -9,7 +9,7 @@
  *
  * @public
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// oxlint-disable-next-line no-unused-vars
 export const isProduction = (...domains: string[]): boolean => {
   if (typeof window !== "undefined") {
     // Previously users would pass in the siteDomain from the document, however this lead
