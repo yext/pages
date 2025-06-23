@@ -279,7 +279,7 @@ const tailwindBaseExists = (): boolean => {
             return true;
           }
         });
-    } catch (err) {
+    } catch (_) {
       // Purposefully ignore error, in case user has odd file we want to skip.
       return false;
     }

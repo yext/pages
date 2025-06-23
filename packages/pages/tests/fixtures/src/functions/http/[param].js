@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function helloWorld(_) {
+function helloWorld() {
   return {
     body: "Hello World",
     headers: {},

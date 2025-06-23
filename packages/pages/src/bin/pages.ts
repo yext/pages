@@ -11,7 +11,7 @@ import { scaffoldCommand } from "../scaffold/scaffold.js";
 ["react", "react-dom"].forEach((dep) => {
   try {
     import(dep);
-  } catch (e) {
+  } catch (_) {
     console.error(
       `Cannot find "${dep}" which is a necessary dependency for generation. Please install this module.`
     );

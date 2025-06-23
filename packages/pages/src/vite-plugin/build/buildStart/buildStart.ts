@@ -36,7 +36,7 @@ const clean = (yextDir: string) => {
   try {
     fs.rmSync(yextDir, { recursive: true });
     finisher.succeed("Finished cleaning");
-  } catch (e) {
+  } catch (_) {
     finisher.fail("Nothing to clean");
   }
 };

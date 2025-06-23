@@ -71,7 +71,7 @@ const getPath = ({ document }) => {
 const getRedirects = ({ document }) => {
   return [`index-old/${document.id.toString()}`];
 };
-const getHeadConfig = ({ relativePrefixToRoot, path, document }) => {
+const getHeadConfig = ({ document }) => {
   return {
     title: document.name,
     charset: "UTF-8",
@@ -86,17 +86,7 @@ const getHeadConfig = ({ relativePrefixToRoot, path, document }) => {
     ],
   };
 };
-const Location = ({ relativePrefixToRoot, path, document }) => {
-  const {
-    _site,
-    name,
-    address,
-    openTime,
-    hours,
-    mainPhone,
-    geocodedCoordinate,
-    services,
-  } = document;
+const Location = () => {
   return /* @__PURE__ */ React.createElement(
     React.Fragment,
     null,

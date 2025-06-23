@@ -31,7 +31,7 @@ export const makeClientFiles = async (projectStructure: ProjectStructure) => {
           generateAndSaveClientHydrationTemplates(templateFilePath);
         });
     }
-  } catch (err) {
+  } catch (_) {
     logErrorAndExit("Failed to make client templates.");
     await removeHydrationClientFiles(projectStructure);
   }

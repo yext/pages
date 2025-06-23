@@ -74,8 +74,6 @@ export const getRedirects: GetRedirects<TemplateProps> = ({ document }) => {
  * This can include the title, meta tags, script tags, etc.
  */
 export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = ({
-  relativePrefixToRoot,
-  path,
   document,
 }): HeadConfig => {
   return {
@@ -97,22 +95,7 @@ export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = ({
  * This is the main template. It can have any name as long as it's the default export.
  * The props passed in here are the direct stream document defined by `config`.
  */
-const Location: Template<TemplateRenderProps> = ({
-  relativePrefixToRoot,
-  path,
-  document,
-}) => {
-  const {
-    _site,
-    name,
-    address,
-    openTime,
-    hours,
-    mainPhone,
-    geocodedCoordinate,
-    services,
-  } = document;
-
+const Location: Template<TemplateRenderProps> = () => {
   return <>Hello, World</>;
 };
 

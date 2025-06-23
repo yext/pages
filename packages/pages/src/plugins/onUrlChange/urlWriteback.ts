@@ -33,7 +33,7 @@ interface WritebackPayload {
  *
  * @public
  */
-function urlWriteback(config: UrlWritebackConfig): any {
+export function urlWriteback(config: UrlWritebackConfig): any {
   function onUrlChange(event: WritebackPayload) {
     if (!(event.entityId && event.locale && event.url)) {
       return null;
@@ -57,5 +57,3 @@ function urlWriteback(config: UrlWritebackConfig): any {
 
   return onUrlChange;
 }
-
-export { urlWriteback as urlWriteback };

@@ -11,7 +11,6 @@ vi.mock("browser-or-node", () => ({
 }));
 
 declare global {
-  // eslint-disable-next-line no-var
   var Deno:
     | {
         version: {

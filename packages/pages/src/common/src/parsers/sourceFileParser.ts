@@ -6,7 +6,6 @@ import {
   OptionalKind,
   ImportAttributeStructure,
   VariableDeclaration,
-  ts,
 } from "ts-morph";
 import typescript from "typescript";
 

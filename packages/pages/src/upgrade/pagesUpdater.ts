@@ -565,7 +565,7 @@ export const checkNodeVersion = () => {
         `You are currently using an unsupported node version ${nodeVersion}. Please install node ${NODE_ENGINES}.`
       );
     }
-  } catch (e) {
+  } catch (_) {
     console.log(ERR_MSG);
   }
 };
