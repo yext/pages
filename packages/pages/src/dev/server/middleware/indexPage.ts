@@ -34,7 +34,6 @@ type Props = {
   dynamicGenerateData: boolean;
   useProdURLs: boolean;
   projectStructure: ProjectStructure;
-  devServerPort: number;
   siteId?: number;
   inPlatformPageSets: PageSetConfig[];
 };
@@ -45,7 +44,6 @@ export const indexPage =
     dynamicGenerateData,
     useProdURLs,
     projectStructure,
-    devServerPort,
     siteId,
     inPlatformPageSets,
   }: Props): RequestHandler =>
@@ -113,11 +111,7 @@ export const indexPage =
           indexPageHtml = indexPageHtml.replace(
             `<!--static-pages-html-->`,
             `<h3>Static Pages</h3>
-            ${createStaticPageListItems(
-              localDataManifest,
-              useProdURLs,
-              devServerPort
-            )}`
+            ${createStaticPageListItems(localDataManifest, useProdURLs)}`
           );
         }
 
@@ -151,8 +145,7 @@ export const indexPage =
                     ${createEntityPageListItems(
                       localDataManifest,
                       templateName,
-                      useProdURLs,
-                      devServerPort
+                      useProdURLs
                     )}
                   </tbody>
                 </table>`,
@@ -205,8 +198,7 @@ export const indexPage =
                     ${createInPlatformPageSetsItems(
                       documents,
                       pageSetConfig.id,
-                      useProdURLs,
-                      devServerPort
+                      useProdURLs
                     )}
                   </tbody>
                 </table>`
@@ -232,11 +224,7 @@ export const indexPage =
           )
         ).values(),
       ];
-      indexPageHtml = createFunctionsTable(
-        functionsList,
-        indexPageHtml,
-        devServerPort
-      );
+      indexPageHtml = createFunctionsTable(functionsList, indexPageHtml);
 
       // Send the HTML back.
       res.status(200).set({ "Content-Type": "text/html" }).end(indexPageHtml);
@@ -265,8 +253,7 @@ const formatStaticLink = (
 
 const createStaticPageListItems = (
   localDataManifest: LocalDataManifest,
-  useProdURLs: boolean,
-  devServerPort: number
+  useProdURLs: boolean
 ) => {
   return Array.from(localDataManifest.static).reduce(
     (templateAccumulator, [, { featureName, pathToLocalesMap }]) => {
@@ -293,7 +280,7 @@ const createStaticPageListItems = (
                 return `
                   <tr>
                     <td>
-                      <a href="http://localhost:${devServerPort}/${link}">
+                      <a href="/${link}">
                         ${link}
                       </a>
                     </td>
@@ -329,8 +316,7 @@ const formatEntityLink = (
 const createEntityPageListItems = (
   localDataManifest: LocalDataManifest,
   templateName: string,
-  useProdURLs: boolean,
-  devServerPort: number
+  useProdURLs: boolean
 ) => {
   const { accountId, universe } = parseYextrcContents();
   const partition = getPartition(Number(accountId));
@@ -367,7 +353,7 @@ const createEntityPageListItems = (
         entityAccumulator +
         `<tr>
         <td>
-          <a href="http://localhost:${devServerPort}/${link}">
+          <a href="/${link}">
             ${link}
            </a>
         </td>
@@ -388,8 +374,7 @@ const createEntityPageListItems = (
 const createInPlatformPageSetsItems = (
   documents: Record<string, any>[],
   templateName: string,
-  useProdURLs: boolean,
-  devServerPort: number
+  useProdURLs: boolean
 ) => {
   const { accountId, universe } = parseYextrcContents();
   const partition = getPartition(Number(accountId));
@@ -423,7 +408,7 @@ const createInPlatformPageSetsItems = (
       entityAccumulator +
       `<tr>
         <td>
-          <a href="http://localhost:${devServerPort}/${link}">
+          <a href="/${link}">
             ${link}
            </a>
         </td>
@@ -457,8 +442,7 @@ const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
 
 const createFunctionsTable = (
   functionsList: FunctionModuleInternal[],
-  indexPageHtml: string,
-  devServerPort: number
+  indexPageHtml: string
 ) => {
   if (functionsList.length > 0) {
     return indexPageHtml.replace(
@@ -481,7 +465,7 @@ const createFunctionsTable = (
                     <td>
                       ${
                         func.config.event === "API"
-                          ? `<a href="http://localhost:${devServerPort}/${func.slug.dev}">
+                          ? `<a href="/${func.slug.dev}">
                           ${func.slug.original}                 
                         </a>`
                           : func.slug.dev
