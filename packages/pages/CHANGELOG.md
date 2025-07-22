@@ -1,3 +1,14 @@
+#### 1.2.5 (2025-07-22)
+
+##### Chores
+
+* **deps:**  swap from eslint to oxlint (#584) (95679433)
+*  remove unused esbuild loader and cleanup unused deps (#583) (a79a35e9)
+
+##### Bug Fixes
+
+*  make index page urls relative (#585) (e8cf9951)
+
 #### 1.2.4 (2025-05-08)
 
 ##### Refactors
