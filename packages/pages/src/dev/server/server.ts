@@ -256,7 +256,6 @@ export const createServer = async (devServerPort: number, devArgs: DevArgs) => {
       dynamicGenerateData,
       useProdURLs,
       projectStructure,
-      devServerPort,
       inPlatformPageSets,
       siteId,
     })

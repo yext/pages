@@ -65,19 +65,6 @@
       },
       "source": "knowledgeGraph",
       "destination": "pages"
-    },
-    {
-      "$id": "closed-location-redirects",
-      "fields": ["slug"],
-      "filter": {
-        "entityTypes": ["location"]
-      },
-      "localization": {
-        "locales": ["en"],
-        "primary": false
-      },
-      "source": "knowledgeGraph",
-      "destination": "pages"
     }
   ]
 }
