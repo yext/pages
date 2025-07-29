@@ -1,3 +1,9 @@
+#### 1.2.6 (2025-07-29)
+
+##### New Features
+
+*  allow plugin filesize validation to be overridden (#586) (adcdba75)
+
 #### 1.2.5 (2025-07-22)
 
 ##### Chores
