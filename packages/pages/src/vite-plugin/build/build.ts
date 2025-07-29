@@ -16,7 +16,9 @@ var global = globalThis;
  * environment, and puts them all in an output directory.
  */
 export const build = async (
-  projectStructure: ProjectStructure
+  projectStructure: ProjectStructure,
+  pluginFilesizeLimit: number,
+  pluginTotalFilesizeLimit: number
 ): Promise<Plugin> => {
   const { envVarConfig, subfolders } = projectStructure.config;
 
@@ -71,6 +73,10 @@ export const build = async (
       };
     },
     buildStart: buildStart(projectStructure),
-    closeBundle: closeBundle(projectStructure),
+    closeBundle: closeBundle(
+      projectStructure,
+      pluginFilesizeLimit,
+      pluginTotalFilesizeLimit
+    ),
   };
 };

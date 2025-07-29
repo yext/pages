@@ -13,6 +13,12 @@ const plugin = async (): Promise<PluginOption[]> => {
   const projectStructure = await ProjectStructure.init({
     scope: process.env.YEXT_PAGES_SCOPE,
   });
+  const pluginFilesizeLimit = Number(
+    process.env.YEXT_PAGES_PLUGIN_FILESIZE_LIMIT
+  );
+  const pluginTotalFilesizeLimit = Number(
+    process.env.YEXT_PAGES_PLUGIN_TOTAL_FILESIZE_LIMIT
+  );
 
   const hasPublicAssets = fs.existsSync(
     projectStructure.config.subfolders.public
@@ -20,7 +26,7 @@ const plugin = async (): Promise<PluginOption[]> => {
 
   return [
     clientHydration(projectStructure),
-    build(projectStructure),
+    build(projectStructure, pluginFilesizeLimit, pluginTotalFilesizeLimit),
     nodePolyfills({
       globals: {
         Buffer: "build",
