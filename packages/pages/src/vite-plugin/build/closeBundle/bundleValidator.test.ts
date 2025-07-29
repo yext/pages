@@ -3,6 +3,9 @@ import { Stats } from "fs";
 import { validateBundles } from "./bundleValidator.js";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 
+const PLUGIN_FILESIZE_LIMIT = 10; // MB
+const PLUGIN_TOTAL_FILESIZE_LIMIT = 10; // MB
+
 describe("bundleValidator", () => {
   const projectStructure = new ProjectStructure();
 
@@ -21,9 +24,13 @@ describe("bundleValidator", () => {
       return getStats(0.1);
     });
 
-    expect(() => validateBundles(projectStructure)).toThrowError(
-      "Bundled file file1.js exceeds max size of 10 MB"
-    );
+    expect(() =>
+      validateBundles(
+        projectStructure,
+        PLUGIN_FILESIZE_LIMIT,
+        PLUGIN_TOTAL_FILESIZE_LIMIT
+      )
+    ).toThrowError("Bundled file file1.js exceeds max size of 10 MB");
   });
 
   it("throws an error when the total sizes exceed the max limit", async () => {
@@ -43,7 +50,13 @@ describe("bundleValidator", () => {
       getStats(1.5)
     );
 
-    expect(() => validateBundles(projectStructure)).toThrowError(
+    expect(() =>
+      validateBundles(
+        projectStructure,
+        PLUGIN_FILESIZE_LIMIT,
+        PLUGIN_TOTAL_FILESIZE_LIMIT
+      )
+    ).toThrowError(
       "The total size of all bundles exceeds the max size of 10 MB"
     );
   });
@@ -64,7 +77,13 @@ describe("bundleValidator", () => {
       getStats(0.5)
     );
 
-    expect(() => validateBundles(projectStructure)).not.toThrowError();
+    expect(() =>
+      validateBundles(
+        projectStructure,
+        PLUGIN_FILESIZE_LIMIT,
+        PLUGIN_TOTAL_FILESIZE_LIMIT
+      )
+    ).not.toThrowError();
   });
 });
 

@@ -24,7 +24,11 @@ import {
   RedirectModuleCollection,
 } from "../../../common/src/redirect/loader/loader.js";
 
-export default (projectStructure: ProjectStructure) => {
+export default (
+  projectStructure: ProjectStructure,
+  pluginFilesizeLimit: number,
+  pluginTotalFilesizeLimit: number
+) => {
   return {
     sequential: true,
     handler: async () => {
@@ -109,7 +113,11 @@ export default (projectStructure: ProjectStructure) => {
         );
 
         validateUniqueFeatureName(templateModules);
-        validateBundles(projectStructure);
+        validateBundles(
+          projectStructure,
+          pluginFilesizeLimit,
+          pluginTotalFilesizeLimit
+        );
         finisher.succeed("Validated template modules");
       } catch (e: any) {
         finisher.fail("One or more template modules failed validation");
