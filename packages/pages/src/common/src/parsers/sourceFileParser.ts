@@ -13,7 +13,6 @@ export function createTsMorphProject() {
   return new Project({
     compilerOptions: {
       jsx: typescript.JsxEmit.ReactJSX,
-      lib: ["ES2023", "DOM"],
     },
   });
 }
@@ -193,10 +192,7 @@ export default class SourceFileParser {
         attributes: importDec.attributes,
       });
     });
-    this.sourceFile
-      .fixMissingImports()
-      .organizeImports()
-      .fixUnusedIdentifiers();
+    this.sourceFile.organizeImports().fixUnusedIdentifiers();
   }
 
   getFileName(): string {
