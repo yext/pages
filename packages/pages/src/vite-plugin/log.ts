@@ -3,7 +3,7 @@
  */
 import { startTimer } from "./timing.js";
 import ora from "ora";
-import chalk from "chalk";
+import picocolors from "picocolors";
 
 type ILogger = {
   timedLog: (opts: TimedLogOpts) => TimedLogFinisher;
@@ -40,7 +40,7 @@ logger.timedLog = (opts: TimedLogOpts) => {
 };
 
 const addTimingToLog = (prettyPrintedTime: string, text: string): string => {
-  return `${chalk.grey(`[${prettyPrintedTime}]`)} ${text}`;
+  return `${picocolors.gray(`[${prettyPrintedTime}]`)} ${text}`;
 };
 
 export default logger;

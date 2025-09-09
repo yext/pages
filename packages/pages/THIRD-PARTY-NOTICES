@@ -1061,7 +1061,6 @@ SOFTWARE.
 
 The following npm packages may be included in this product:
 
- - chalk@5.3.0
  - get-port@7.0.0
  - latest-version@9.0.0
  - open@10.1.0
