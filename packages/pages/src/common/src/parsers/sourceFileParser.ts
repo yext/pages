@@ -13,6 +13,7 @@ export function createTsMorphProject() {
   return new Project({
     compilerOptions: {
       jsx: typescript.JsxEmit.ReactJSX,
+      lib: ["ES2023", "DOM"],
     },
   });
 }
