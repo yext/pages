@@ -1,7 +1,7 @@
 import fs from "fs";
 import { spawn } from "child_process";
 import prompts from "prompts";
-import chalk from "chalk";
+import picocolors from "picocolors";
 import { parseYextrcContents } from "../../util/yextrcContents.js";
 import { logErrorAndExit } from "../../util/logError.js";
 import checkInstalled from "../../util/checkInstalled.js";
@@ -91,7 +91,7 @@ const askForAccountId = async (): Promise<string> => {
     `
 What is your Yext Account ID?
 (e.g. \`yext.com/s/` +
-      chalk.bold(`<ACCOUNT_ID>`) +
+      picocolors.bold(`<ACCOUNT_ID>`) +
       `/home\`)
   `
   );
