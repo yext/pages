@@ -153,7 +153,7 @@ const migrateAuth = (configYamlPath: string, authPath: string) => {
   const authJson = readJsonSync(authPath);
   if (authJson !== null) {
     console.info(`migrating auth info from ${authPath} to ${configYamlPath}`);
-    writeYamlSync(configYamlPath, "authorization", authJson);
+    writeYamlSync(configYamlPath, "authentication", authJson);
   }
 };
 
