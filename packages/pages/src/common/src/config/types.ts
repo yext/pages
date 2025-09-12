@@ -55,7 +55,7 @@ export interface ConfigYaml {
   };
 
   /** Auth policy configuration */
-  authorization: {
+  authentication: {
     policyName: string;
   };
 
