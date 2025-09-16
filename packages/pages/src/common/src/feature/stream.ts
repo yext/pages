@@ -8,6 +8,7 @@ import { RedirectConfigInternal } from "../redirect/internal/types.js";
 import { ProjectStructure } from "../project/structure.js";
 import { logErrorAndExit } from "../../../util/logError.js";
 import { Stream } from "../template/types.js";
+import { processEnvVariables } from "../../../util/processEnvVariables.js";
 
 /**
  * The shape of data that represents a stream configuration.
@@ -126,6 +127,45 @@ export const convertRedirectConfigToStreamConfig = (
 };
 
 /**
+ * Recursively traverses a configuration object and substitutes
+ * string values that match keys in the envVars map. Returns a
+ * new object with substituted values.
+ */
+const substituteEnvVars = <T>(
+  configData: T,
+  envVars: Record<string, string>
+): T => {
+  if (typeof configData === "string") {
+    const envValue = envVars[configData];
+    if (envValue !== undefined) {
+      try {
+        return JSON.parse(envValue);
+      } catch {
+        return envValue as T;
+      }
+    }
+    return configData;
+  }
+
+  if (Array.isArray(configData)) {
+    return configData.map((item) => substituteEnvVars(item, envVars)) as T;
+  }
+
+  if (configData && typeof configData === "object") {
+    const newConfig: { [key: string]: any } = {};
+    for (const key in configData) {
+      if (Object.prototype.hasOwnProperty.call(configData, key)) {
+        const value = (configData as any)[key];
+        newConfig[key] = substituteEnvVars(value, envVars);
+      }
+    }
+    return newConfig as T;
+  }
+
+  return configData;
+};
+
+/**
  * Loads the site stream specified in config.yaml or site-stream.json into a {@link SiteStream}.
  */
 export const readSiteStream = (
@@ -144,7 +184,12 @@ export const readSiteStream = (
   // read site stream from config.yaml
   const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
   if (fs.existsSync(configYamlPath)) {
-    const yamlDoc = YAML.parse(fs.readFileSync(configYamlPath, "utf-8"));
+    let yamlDoc = YAML.parse(fs.readFileSync(configYamlPath, "utf-8"));
+    const envVars = processEnvVariables(
+      projectStructure.config.envVarConfig.envVarPrefix
+    );
+    yamlDoc = substituteEnvVars(yamlDoc, envVars);
+
     if (yamlDoc.siteStream) {
       yamlDoc.siteStream.entityId = yamlDoc.siteStream?.entityId?.toString();
       return yamlDoc.siteStream;
