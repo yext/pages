@@ -8,6 +8,11 @@ import {
 import { TemplateConfigInternal } from "../template/internal/types.js";
 import fs from "fs";
 import { ProjectStructure } from "../project/structure.js";
+import { processEnvVariables } from "../../../util/processEnvVariables.js";
+
+vi.mock("../../../util/processEnvVariables.js", () => ({
+  processEnvVariables: vi.fn(() => ({})),
+}));
 
 describe("stream", () => {
   it("returns void if no stream", async () => {
@@ -112,6 +117,7 @@ describe("readSiteStream", () => {
     if (fs.existsSync("sites-config/site-stream.json")) {
       fs.rmSync("sites-config", { recursive: true, force: true });
     }
+    vi.mocked(processEnvVariables).mockReset();
   });
 
   const projectStructure = new ProjectStructure({});
@@ -161,6 +167,35 @@ describe("readSiteStream", () => {
       id: "site-stream",
       entityId: "site-stream-from-json",
       fields: ["c_visualLayouts.c_visualConfiguration"],
+      localization: { locales: ["en"] },
+    });
+  });
+
+  it("substitutes environment variables in config.yaml", () => {
+    vi.mocked(processEnvVariables).mockReturnValueOnce({
+      STREAM_ID: "env-substituted-id",
+      ENTITY_ID: "env-entity-123",
+    });
+
+    const path = "config.yaml";
+    fs.writeFileSync(
+      path,
+      `siteStream:
+        id: STREAM_ID
+        entityId: ENTITY_ID
+        fields:
+          - name
+        localization:
+          locales:
+            - en
+      `
+    );
+
+    const siteStream = readSiteStream(projectStructure);
+    expect(siteStream).toEqual({
+      id: "env-substituted-id",
+      entityId: "env-entity-123",
+      fields: ["name"],
       localization: { locales: ["en"] },
     });
   });
