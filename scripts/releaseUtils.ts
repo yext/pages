@@ -169,19 +169,6 @@ export function updateVersion(pkgPath: string, version: string): void {
   writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
 }
 
-export async function publishPackage(
-  pkdDir: string,
-  tag?: string
-): Promise<void> {
-  const publicArgs = ["publish", "--access", "public"];
-  if (tag) {
-    publicArgs.push(`--tag`, tag);
-  }
-  await runIfNotDry("npm", publicArgs, {
-    cwd: pkdDir,
-  });
-}
-
 export async function getLatestTag(pkgName: string): Promise<string> {
   const tags = (await run("git", ["tag"], { stdio: "pipe" })).stdout
     .split(/\n/)
