@@ -9,6 +9,10 @@
     "React"
   ],
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yext/pages.git"
+  },
   "exports": {
     ".": "./dist/index.js",
     "./vite-plugin": "./dist/vite-plugin/plugin.js",

@@ -1,3 +1,4 @@
+# This file must be .github/workflows/publish.yml for Trusted Publishing
 name: Publish Package
 
 on:
@@ -17,14 +18,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.6
+        with:
+          ref: main
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4.0.0
 
-      - name: Set node version to 18.x
+      - name: Set node version to 20.x
         uses: actions/setup-node@v4.0.2
         with:
-          node-version: 18.x
+          node-version: 20.x
           registry-url: https://registry.npmjs.org/
           cache: "pnpm"
 
@@ -37,7 +40,9 @@ jobs:
 
       - name: Verify package version and get npm tag
         id: get_npm_tag
-        run: pnpm run ci-verify-publish ${{ github.ref_name }}
+        run: |
+          TAG=$(pnpm run ci-verify-publish ${{ github.ref_name }} | tail -n 1)
+          echo "npm_tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Publish
         run: cd packages/pages-components && pnpm publish --access public --tag ${{ steps.get_npm_tag.outputs.npm_tag }}
