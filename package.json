@@ -15,7 +15,7 @@
     "generate-notices": "generate-license-file --input package.json --output ./THIRD-PARTY-NOTICES --overwrite",
     "lint": "oxlint --fix",
     "docs": "pnpm -r run api-extractor && pnpm -r run generate-docs && pnpm run fmt",
-    "ci-publish": "tsx scripts/publishCI.ts",
+    "ci-verify-publish": "tsx scripts/verifyPublish.ts",
     "prepare": "husky install"
   },
   "lint-staged": {
