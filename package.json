@@ -35,7 +35,7 @@
   "homepage": "https://github.com/yext/pages#readme",
   "devDependencies": {
     "oxlint": "^1.2.0",
-    "@playwright/test": "^1.48.2",
+    "@playwright/test": "^1.55.1",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.14.202",
     "@types/minimist": "^1.2.5",
