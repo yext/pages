@@ -15,19 +15,17 @@ export function resolveApiBase(
   partition: "US" | "EU",
   env: "prod" | "production" | "sbx" | "sandbox"
 ): string {
-  // Normalize environment values
-  const isProduction = env === "prod" || env === "production";
-  const isSandbox = env === "sbx" || env === "sandbox";
-
-  if (isProduction) {
-    return partition === "EU" ? YEXT_API_EU_PROD : YEXT_API_US_PROD;
+  switch (env) {
+    case "prod":
+    case "production":
+      return partition === "EU" ? YEXT_API_EU_PROD : YEXT_API_US_PROD;
+    case "sbx":
+    case "sandbox":
+      if (partition === "EU") {
+        throw new Error("EU partition only supports production environment");
+      }
+      return YEXT_API_US_SBX;
+    default:
+      return YEXT_API_US_PROD;
   }
-  if (isSandbox) {
-    if (partition === "EU") {
-      throw new Error("EU partition only supports production environment");
-    }
-    return YEXT_API_US_SBX;
-  }
-  // Default fallback for any unrecognized env value
-  return YEXT_API_US_PROD;
 }

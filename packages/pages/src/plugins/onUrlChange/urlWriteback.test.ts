@@ -81,7 +81,40 @@ describe("build output verification", () => {
     }
   });
 
-  it("resolveApiBase.js contains the correct implementation", async () => {
+  it("resolveApiBase.ts source uses switch statement on env", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const sourceFile = path.join(
+      process.cwd(),
+      "src",
+      "util",
+      "resolveApiBase.ts"
+    );
+
+    if (fs.existsSync(sourceFile)) {
+      const content = fs.readFileSync(sourceFile, "utf-8");
+      // Verify it uses switch statement on env
+      expect(content).toMatch(/switch\s*\(\s*env\s*\)/);
+      // Verify switch cases
+      expect(content).toContain('case "prod":');
+      expect(content).toContain('case "production":');
+      expect(content).toContain('case "sbx":');
+      expect(content).toContain('case "sandbox":');
+      expect(content).toContain("default:");
+      // Verify constants
+      expect(content).toContain("YEXT_API_US_PROD");
+      expect(content).toContain("YEXT_API_US_SBX");
+      expect(content).toContain("YEXT_API_EU_PROD");
+      // Verify EU validation
+      expect(content).toContain(
+        "EU partition only supports production environment"
+      );
+    } else {
+      console.warn("Source file not found, skipping source verification test");
+    }
+  });
+
+  it("resolveApiBase.js build output contains correct implementation", async () => {
     const fs = await import("fs");
     const path = await import("path");
     const builtFile = path.join(
@@ -93,11 +126,11 @@ describe("build output verification", () => {
 
     if (fs.existsSync(builtFile)) {
       const content = fs.readFileSync(builtFile, "utf-8");
+      // Verify API constants (esbuild may transform switch to if, but behavior is same)
       expect(content).toContain("YEXT_API_US_PROD");
       expect(content).toContain("YEXT_API_US_SBX");
       expect(content).toContain("YEXT_API_EU_PROD");
-      expect(content).toContain('env === "prod" || env === "production"');
-      expect(content).toContain('env === "sbx" || env === "sandbox"');
+      // Verify EU validation error message
       expect(content).toContain(
         "EU partition only supports production environment"
       );
