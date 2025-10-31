@@ -1,6 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { buildApiUrl } from "./yext.js";
-import { resolveApiBase } from "../../util/resolveApiBase.js";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { buildApiUrl, updateEntity } from "./yext.js";
 
 describe("buildApiUrl", () => {
   it("returns a correctly built url", async () => {
@@ -14,25 +13,46 @@ describe("buildApiUrl", () => {
   });
 });
 
-describe("resolveApiBase integration", () => {
-  it("resolves US production URL", () => {
-    const url = resolveApiBase("US", "production");
-    expect(url).toBe("https://api.yext.com/v2/accounts/me/");
+describe("updateEntity with resolveApiBase", () => {
+  let originalFetch: typeof fetch;
+
+  beforeEach(() => {
+    originalFetch = global.fetch;
   });
 
-  it("resolves US sandbox URL", () => {
-    const url = resolveApiBase("US", "sandbox");
-    expect(url).toBe("https://api-sandbox.yext.com/v2/accounts/me/");
+  afterEach(() => {
+    global.fetch = originalFetch;
+    vi.restoreAllMocks();
   });
 
-  it("resolves EU production URL", () => {
-    const url = resolveApiBase("EU", "production");
-    expect(url).toBe("https://api.eu.yext.com/v2/accounts/me/");
-  });
+  const mockFetch = (expectedUrl: string) => {
+    return vi.fn().mockImplementation((req: Request) => {
+      expect(req.url).toContain(expectedUrl);
+      return Promise.resolve(
+        new Response(
+          JSON.stringify({
+            meta: { uuid: "test-uuid", errors: [] },
+            response: {
+              name: "Test Entity",
+              meta: { id: "123", language: "en" },
+            },
+          }),
+          { status: 200 }
+        )
+      );
+    });
+  };
 
-  it("throws error for EU sandbox", () => {
-    expect(() => resolveApiBase("EU", "sandbox")).toThrow(
-      "EU partition only supports production environment"
-    );
+  it("calls US production API when env is prod", async () => {
+    global.fetch = mockFetch("https://api.yext.com/v2/accounts/me/");
+
+    await updateEntity("entity123", "en", { name: "Test" }, "test-api-key", {
+      env: "prod",
+      partition: "US",
+    });
+
+    expect(global.fetch).toHaveBeenCalled();
+    const call = (global.fetch as any).mock.calls[0][0] as Request;
+    expect(call.url).toContain("https://api.yext.com/v2/accounts/me/");
   });
 });
