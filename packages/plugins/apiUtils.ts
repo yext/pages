@@ -15,17 +15,28 @@ export function resolveApiBase(
   partition: "US" | "EU",
   env: "prod" | "production" | "sbx" | "sandbox"
 ): string {
-  switch (env) {
-    case "prod":
-    case "production":
-      return partition === "EU" ? YEXT_API_EU_PROD : YEXT_API_US_PROD;
-    case "sbx":
-    case "sandbox":
-      if (partition === "EU") {
-        throw new Error("EU partition only supports production environment");
+  switch (partition) {
+    case "EU":
+      switch (env) {
+        case "prod":
+        case "production":
+          return YEXT_API_EU_PROD;
+        case "sbx":
+        case "sandbox":
+        default:
+          throw new Error("EU partition only supports production environment");
       }
-      return YEXT_API_US_SBX;
+    case "US":
     default:
-      return YEXT_API_US_PROD;
+      switch (env) {
+        case "prod":
+        case "production":
+          return YEXT_API_US_PROD;
+        case "sbx":
+        case "sandbox":
+          return YEXT_API_US_SBX;
+        default:
+          throw new Error(`Unhandled environment: ${env}`);
+      }
   }
 }
