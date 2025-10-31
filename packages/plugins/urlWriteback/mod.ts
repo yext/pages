@@ -14,6 +14,7 @@ export interface UrlWritebackConfig {
   environment?: "sbx" | "prod";
   v?: string;
   featureToFieldMap?: Record<string, string>;
+  partition?: "US" | "EU";
 }
 
 /**
@@ -52,6 +53,7 @@ export default function urlWriteback(config: UrlWritebackConfig) {
     return updateEntity(event.entityId, event.locale, update, config.apiKey, {
       v: config.v,
       env: config.environment,
+      partition: config.partition,
     });
   }
 

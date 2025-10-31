@@ -1,3 +1,5 @@
+import { resolveApiBase } from "../apiUtils.ts";
+
 export interface ApiResponse<T = Record<string, unknown>> {
   meta: {
     uuid: string;
@@ -24,6 +26,7 @@ export interface BaseEntity {
 export interface Meta {
   id: string;
   language: string;
+  entityType?: string;
 }
 
 async function wrappedFetch<T>(req: Request) {
@@ -76,15 +79,13 @@ export class API implements IAPI {
     config: {
       v?: string;
       env?: "sandbox" | "production";
+      partition?: "US" | "EU";
     }
   ) {
-    const { v = "20220909", env = "production" } = config;
+    const { v = "20220909", env = "production", partition = "US" } = config;
     this.apiKey = apiKey;
     this.v = v;
-    this.baseUrl =
-      env === "production"
-        ? "https://api.yext.com/v2/accounts/me/"
-        : "https://api-sandbox.yext.com/v2/accounts/me/";
+    this.baseUrl = resolveApiBase(partition, env);
   }
 
   constructRequestUrl(path: string, additionalParams?: URLSearchParams) {
