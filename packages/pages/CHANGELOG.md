@@ -1,3 +1,119 @@
+#### 1.2.7 (2025-10-31)
+
+##### Chores
+
+*  upgrade playwright ([#593](https://github.com/yext/pages/pull/593)) ([1934f846](https://github.com/yext/pages/commit/1934f8461f54307d3e3a23f43ee4b0e42d1e79cc))
+*  remove unused esbuild loader and cleanup unused deps ([#583](https://github.com/yext/pages/pull/583)) ([a79a35e9](https://github.com/yext/pages/commit/a79a35e9e54d23c928a05605732c947df9af3840))
+*  update main.yml to use ubuntu-latest ([#567](https://github.com/yext/pages/pull/567)) ([7f5fe9b2](https://github.com/yext/pages/commit/7f5fe9b2078e59775e46ebc3c20fd226d0f7883e))
+*  upgrade vitest ([#566](https://github.com/yext/pages/pull/566)) ([0c819dc2](https://github.com/yext/pages/commit/0c819dc281db8780206015e56acb10611279530a))
+*  update actions ([#554](https://github.com/yext/pages/pull/554)) ([e3321415](https://github.com/yext/pages/commit/e332141549a2214e4459f3c0deb68a44344469e6))
+*  delete binary ([4103e46d](https://github.com/yext/pages/commit/4103e46d530a87c0223934ff513d6ad61c0035e5))
+* **deps:**
+  *  remove chalk ([#588](https://github.com/yext/pages/pull/588)) ([d4cf76d0](https://github.com/yext/pages/commit/d4cf76d0db31f143a7da9623e1ce64be3b9f1b79))
+  *  swap from eslint to oxlint ([#584](https://github.com/yext/pages/pull/584)) ([95679433](https://github.com/yext/pages/commit/956794339735983af5062492af66bdcac8c2ab8d))
+
+##### Continuous Integration
+
+*  support trusted publishing ([#592](https://github.com/yext/pages/pull/592)) ([d52c4977](https://github.com/yext/pages/commit/d52c4977b59832aa3ac70ecf2f792e511ab112f5))
+
+##### Documentation Changes
+
+*  add vitepress setup ([#555](https://github.com/yext/pages/pull/555)) ([cedd094e](https://github.com/yext/pages/commit/cedd094eb2992ba879c34ac0a5514f6cc6fb5e46))
+*  add RedirectSource ([6920e222](https://github.com/yext/pages/commit/6920e222f01aeeca5a368cb12e815de4963310c0))
+
+##### New Features
+
+*  add Slug Manager support for EU ([#594](https://github.com/yext/pages/pull/594)) ([6d989fcd](https://github.com/yext/pages/commit/6d989fcdb6ee2d07fb678764d1a98826f41affd7))
+*  allow plugin filesize validation to be overridden ([#586](https://github.com/yext/pages/pull/586)) ([adcdba75](https://github.com/yext/pages/commit/adcdba75624d6816cb073c3fbd71b4bc97567ba3))
+*  merge VLE 1.2.0 branch ([#565](https://github.com/yext/pages/pull/565)) ([34ed4441](https://github.com/yext/pages/commit/34ed4441b79e9573e47cb68729d25e82e095c1ec))
+*  support Node 22 ([#562](https://github.com/yext/pages/pull/562)) ([07b96002](https://github.com/yext/pages/commit/07b960027ef1f47f6099390c119a7bfb3577896c))
+*  make stream's filter optional ([#558](https://github.com/yext/pages/pull/558)) ([cb34773d](https://github.com/yext/pages/commit/cb34773dc9f39ada44fc4c3cc4ca45aeb40d058c))
+* **dev:**  support visual editor local dev mode ([#572](https://github.com/yext/pages/pull/572)) ([434e710a](https://github.com/yext/pages/commit/434e710a72bce3286f7f9d0c6bc0ec9bca50037c))
+* **upgrade:**  swap sites-react-components to pages-components ([#560](https://github.com/yext/pages/pull/560)) ([4de8a075](https://github.com/yext/pages/commit/4de8a0755e8667abba72a8b34c94aca38e51ea76))
+* **dev/plugin:**
+  *  build without templates directory  ([#552](https://github.com/yext/pages/pull/552)) ([9073f4cc](https://github.com/yext/pages/commit/9073f4cc6c3a26c303cc7a66a67c41be2f3e9e40))
+  *  update isProduction logic ([#521](https://github.com/yext/pages/pull/521)) ([fc3a80ec](https://github.com/yext/pages/commit/fc3a80ecd73ac6818c13d2850ac7ad503ef1cc34))
+  *  update isProduction logic ([c2c7d7ed](https://github.com/yext/pages/commit/c2c7d7ed5b525f414167d224b1680bd93933b79a))
+  *  add support for src/redirects ([#518](https://github.com/yext/pages/pull/518)) ([269a2eeb](https://github.com/yext/pages/commit/269a2eeb8ccaa1b66d2ece6422a50afb4dcf3d36))
+  *  allow scoped vite.config.js ([#516](https://github.com/yext/pages/pull/516)) ([82a2593c](https://github.com/yext/pages/commit/82a2593c4ea2bfe5836348df0ec6932eb40400b6))
+* **plugin:**
+  *  render using code_template if it exists ([#551](https://github.com/yext/pages/pull/551)) ([0ab2f771](https://github.com/yext/pages/commit/0ab2f771d74c1d807a54264db2d4b146bc4705bd))
+  *  add additionalProperties to templates.json ([#525](https://github.com/yext/pages/pull/525)) ([4cfc75ec](https://github.com/yext/pages/commit/4cfc75ec12aa838bf20f0a22416a924b267e6295))
+  *  add support for statusCode to getRedirects ([#515](https://github.com/yext/pages/pull/515)) ([b2b997b7](https://github.com/yext/pages/commit/b2b997b73c3abca399a65266ed90077534c3e9f0))
+* **util:**  add useDocument hook ([#528](https://github.com/yext/pages/pull/528)) ([f27199ab](https://github.com/yext/pages/commit/f27199ab45d87384ad59d58c0fab3183649d6aaf))
+
+##### Bug Fixes
+
+* **dev:**
+  *  allow envVars to be used in config.yaml ([#590](https://github.com/yext/pages/pull/590)) ([adc669f9](https://github.com/yext/pages/commit/adc669f95e6419fae0a0c06f6b7b2cbfc15689d7))
+  *  siteStream not properly null checked ([#575](https://github.com/yext/pages/pull/575)) ([f10bcb8a](https://github.com/yext/pages/commit/f10bcb8a9f4550ef31809809df3310a3a9078eb6))
+  *  increase serverless function POST limit ([#544](https://github.com/yext/pages/pull/544)) ([1b9de9ef](https://github.com/yext/pages/commit/1b9de9eff379e5ca8f8f0e016302226ea23d55e1))
+  *  don't lookup mime type unless there's an extension ([#526](https://github.com/yext/pages/pull/526)) ([72657e0d](https://github.com/yext/pages/commit/72657e0d9c7696100a34337a467af0ab2517a821))
+  *  hide nested css warning ([#520](https://github.com/yext/pages/pull/520)) ([ad21b260](https://github.com/yext/pages/commit/ad21b2606b3c5b085499bb3de0d9bc66411360e0))
+*  migrate authentication not authorization ([#589](https://github.com/yext/pages/pull/589)) ([c9a5df7e](https://github.com/yext/pages/commit/c9a5df7e4a87f52c5f77d58f9032fca47bd857a9))
+*  make index page urls relative ([#585](https://github.com/yext/pages/pull/585)) ([e8cf9951](https://github.com/yext/pages/commit/e8cf9951d557a523d9e784f92958152f49e0c74d))
+*  additional workflow change ([#577](https://github.com/yext/pages/pull/577)) ([599690e1](https://github.com/yext/pages/commit/599690e198643ad236ab5e619e1f30b62dddbdba))
+*  page set commands shell vulnerability  ([#574](https://github.com/yext/pages/pull/574)) ([fa02ec12](https://github.com/yext/pages/commit/fa02ec120008af2e2d4199eee8ece7121b9d7b86))
+*  workflow vulnerability ([#573](https://github.com/yext/pages/pull/573)) ([5596f7a3](https://github.com/yext/pages/commit/5596f7a36cadea54f4940d7f77a3910080be80c1))
+*  correctly ignore templates marked for in platform page sets ([#571](https://github.com/yext/pages/pull/571)) ([e49944d2](https://github.com/yext/pages/commit/e49944d28d141a6090b69d94a9ed8e339b8bbf1c))
+*  migrate eslint docs per version changes ([#556](https://github.com/yext/pages/pull/556)) ([d8c3adf0](https://github.com/yext/pages/commit/d8c3adf0bc6fe7b3e36fba49cc1eca13254a1f38))
+*  use scope when finding vite.config.js ([#546](https://github.com/yext/pages/pull/546)) ([4c74e43f](https://github.com/yext/pages/commit/4c74e43f37a1767650dd1739c03d6fd54e04445e))
+*  pnpm actions ([083a7a54](https://github.com/yext/pages/commit/083a7a543a1044c71a91e5fc8d230938fcf8b616))
+*  handle siteStream's entityId as string ([#523](https://github.com/yext/pages/pull/523)) ([52ebb408](https://github.com/yext/pages/commit/52ebb4087e035f1675ab4d7a72affa11c55f9601))
+*  handle static assets in modules ([#514](https://github.com/yext/pages/pull/514)) ([501a8f58](https://github.com/yext/pages/commit/501a8f589fed351b4d41e3a660b1518ddc5d3128))
+* **pages-plugins:**
+  *  slugmanager unbounded entity request bug ([#581](https://github.com/yext/pages/pull/581)) ([02d6fd98](https://github.com/yext/pages/commit/02d6fd981e8880b9b449905f90fbcd929e8f7a96))
+  *  typo in slug manager undefined check ([#578](https://github.com/yext/pages/pull/578)) ([b1f96469](https://github.com/yext/pages/commit/b1f9646916cb3225a29d136f96f08d96f7d33bb2))
+  *  prevent making api request with unbounded entities ([#547](https://github.com/yext/pages/pull/547)) ([573888ea](https://github.com/yext/pages/commit/573888eab202efa47d08ed2a76e205121578888b))
+* **scaffold:**
+  *  pin tailwind upgrade during module scaffold to version 3 ([#576](https://github.com/yext/pages/pull/576)) ([581f1a58](https://github.com/yext/pages/commit/581f1a586007dd0a7acfd944bbbd008f0ea071c6))
+  *  update module template ([#550](https://github.com/yext/pages/pull/550)) ([4528c597](https://github.com/yext/pages/commit/4528c5973f130dade5cd2a88f61eb620761d8ac8))
+* **upgrade:**  pin Vite to version 5 ([#561](https://github.com/yext/pages/pull/561)) ([7dc2dd33](https://github.com/yext/pages/commit/7dc2dd3347a60578ac12a59088b3d4db6c019af0))
+* **plugin:**
+  *  update code_template to codeTemplate ([#559](https://github.com/yext/pages/pull/559)) ([7244ca5e](https://github.com/yext/pages/commit/7244ca5ea9f4beca1423ecf2d26309b3fe149d66))
+  *  deprecated type assertion ([#549](https://github.com/yext/pages/pull/549)) ([f1c53a9c](https://github.com/yext/pages/commit/f1c53a9cc953fcfa5ffd2bd4623ba2b5b152ee72))
+  *  don't merge the entire user vite.config.js ([#545](https://github.com/yext/pages/pull/545)) ([5ba5ff4a](https://github.com/yext/pages/commit/5ba5ff4a56b766bc0b64638fa6e90c64a10502d6))
+  *  use the user's vite.config ([#524](https://github.com/yext/pages/pull/524)) ([57e3e812](https://github.com/yext/pages/commit/57e3e81208ade8a32687598d332692cfd050edf4))
+  *  export redirect types ([#522](https://github.com/yext/pages/pull/522)) ([fcb26479](https://github.com/yext/pages/commit/fcb26479a88a98cec2d097b4a15078fb9edb4761))
+  *  non-scoped templates not rendering properly ([#517](https://github.com/yext/pages/pull/517)) ([53634979](https://github.com/yext/pages/commit/53634979d38bccdeffa140b7bf0545071770475b))
+* **modules:**
+  *  update scaffold tailwind  ([#553](https://github.com/yext/pages/pull/553)) ([daa62b0b](https://github.com/yext/pages/commit/daa62b0b2631178efeb337b4198dfc0c76a4d52f))
+  *  ignore user's build output options ([#548](https://github.com/yext/pages/pull/548)) ([7d119fc0](https://github.com/yext/pages/commit/7d119fc0aff64b830f966918f7088e8b39b70fcb))
+* **dev/plugin:**  _server.tsx now uses functions ([#489](https://github.com/yext/pages/pull/489)) ([7a97fa8e](https://github.com/yext/pages/commit/7a97fa8e96146f9774e94ba98bd616e98aa9d7ce))
+
+##### Other Changes
+
+*  pages@1.2.6 ([6cf374fe](https://github.com/yext/pages/commit/6cf374fee6a2e21d9522e780a8b4bdf906e038b7))
+*  pages@1.2.5 ([ab50bfb4](https://github.com/yext/pages/commit/ab50bfb435133e15560bae275f858fadc549f8e3))
+*  pages@1.2.4 ([8fc47ac0](https://github.com/yext/pages/commit/8fc47ac090c72dc9b43f7c228b2e1ba5059e91e6))
+*  plugins@1.0.0-beta.10 ([119ed5e0](https://github.com/yext/pages/commit/119ed5e07f208dd6acc886dfa705f17a3b46d758))
+*  plugins@1.0.0-beta.9 ([b091ccd7](https://github.com/yext/pages/commit/b091ccd73317870b1e40c4e160448e422f217551))
+*  pages@1.2.3 ([fcdd13a7](https://github.com/yext/pages/commit/fcdd13a79ce0afc36e64be34476285d885c4666b))
+*  pages@1.2.2 ([a6806d54](https://github.com/yext/pages/commit/a6806d54d6f8e45c0aca0e685fa4579c5a1b4299))
+*  pages@1.2.1 ([e040bb3e](https://github.com/yext/pages/commit/e040bb3e2e9a83e7062fdf349162b5bc196a3609))
+*  pages@1.2.0 ([14f2a6c6](https://github.com/yext/pages/commit/14f2a6c6276487bb1b21488706325ebc34056ca6))
+*  pages@1.1.6 ([e2d62256](https://github.com/yext/pages/commit/e2d62256ae4668fb6a5710826ddd56233e5ffb29))
+*  pages@1.1.5 ([d35f9c48](https://github.com/yext/pages/commit/d35f9c480c573051817433befe0c570f127e8d99))
+*  pages@1.1.4 ([818694a4](https://github.com/yext/pages/commit/818694a4be244c991b1dbb4619b71e46d9c6cd56))
+*  plugins@1.0.0-beta.8 ([4b5e3c4a](https://github.com/yext/pages/commit/4b5e3c4add5874da670bb6bb55a2fd14b1384174))
+*  plugins@1.0.0-beta.7 ([ff6e74f6](https://github.com/yext/pages/commit/ff6e74f62ef5fdb168be34c1f06c0847609d6dc3))
+*  pages@1.1.3 ([c556e254](https://github.com/yext/pages/commit/c556e2548e48dfc914dbf63722885339a51f37f2))
+*  pages@1.1.2 ([f6944124](https://github.com/yext/pages/commit/f69441249e473c7e9bbca71127667636f89a1307))
+*  pages@1.1.1 ([9ba356b2](https://github.com/yext/pages/commit/9ba356b218bdcf098cba726fa1bb9aa69d6099c9))
+*  pages@1.1.0 ([ce160de8](https://github.com/yext/pages/commit/ce160de8c208aab092a5e3ffd9432f92c9fbcf62))
+*  pages@1.1.0-beta.7 ([fa7565e8](https://github.com/yext/pages/commit/fa7565e8b5b7d6feb0d56ebc723e96db5a45b673))
+*  pages@1.1.0-beta.6 ([fa2780a6](https://github.com/yext/pages/commit/fa2780a6b37ae2ce477a8e6ae1a072915ea9c0a8))
+*  pages@1.1.0-beta.5 ([eb3951ef](https://github.com/yext/pages/commit/eb3951ef3af3464b1c864e89419ab266962eb864))
+*  pages@1.1.0-beta.4 ([c4cddf35](https://github.com/yext/pages/commit/c4cddf35f1966c3e5c30d62cfe4b45c8b9eb7399))
+*  pages@1.1.0-beta.3 ([4bfa4b98](https://github.com/yext/pages/commit/4bfa4b9839f9c32fda2a5dea8ff91651f317ec5b))
+* **dev/plugin:**  update isProduction logic" ([34515a9e](https://github.com/yext/pages/commit/34515a9e8a55f8ce5e9034913d1fe1648359795e))
+
+##### Refactors
+
+* **dev:**  generate templates.json after vite initialization ([#582](https://github.com/yext/pages/pull/582)) ([a5eea128](https://github.com/yext/pages/commit/a5eea128a55c7d004537e422df3446d179e7228a))
+*  change the type of additionalProperties in TemplateConfig to 'Record<string, any>' ([#527](https://github.com/yext/pages/pull/527)) ([8fd95b19](https://github.com/yext/pages/commit/8fd95b1973858c3086fb17a8e267abb58f9e1a51))
+*  remove manifest check from getTemplatePaths ([#519](https://github.com/yext/pages/pull/519)) ([1ef944e2](https://github.com/yext/pages/commit/1ef944e259f54f4959b0db6038fab2f01440b1d4))
+
 #### 1.2.6 (2025-07-29)
 
 ##### New Features
