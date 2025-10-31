@@ -76,15 +76,21 @@ export class API implements IAPI {
     config: {
       v?: string;
       env?: "sandbox" | "production";
+      partition?: "US" | "EU";
     }
   ) {
-    const { v = "20220909", env = "production" } = config;
+    const { v = "20220909", env = "production", partition = "US" } = config;
     this.apiKey = apiKey;
     this.v = v;
-    this.baseUrl =
-      env === "production"
-        ? "https://api.yext.com/v2/accounts/me/"
-        : "https://api-sandbox.yext.com/v2/accounts/me/";
+
+    if (partition === "EU") {
+      this.baseUrl = "https://api.eu.yext.com/v2/accounts/me/";
+    } else {
+      this.baseUrl =
+        env === "production"
+          ? "https://api.yext.com/v2/accounts/me/"
+          : "https://api-sandbox.yext.com/v2/accounts/me/";
+    }
   }
 
   constructRequestUrl(path: string, additionalParams?: URLSearchParams) {
