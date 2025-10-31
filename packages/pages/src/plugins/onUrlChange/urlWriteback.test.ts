@@ -56,3 +56,53 @@ describe("updateEntity with resolveApiBase", () => {
     expect(call.url).toContain("https://api.yext.com/v2/accounts/me/");
   });
 });
+
+describe("build output verification", () => {
+  it("yext.js import includes resolveApiBase", async () => {
+    // Read the built file to verify the import is preserved
+    const fs = await import("fs");
+    const path = await import("path");
+    const builtFile = path.join(
+      process.cwd(),
+      "dist",
+      "plugins",
+      "onUrlChange",
+      "yext.js"
+    );
+
+    if (fs.existsSync(builtFile)) {
+      const content = fs.readFileSync(builtFile, "utf-8");
+      expect(content).toContain(
+        'import { resolveApiBase } from "../../util/resolveApiBase.js"'
+      );
+      expect(content).toContain("resolveApiBase(partition, env)");
+    } else {
+      console.warn("Build output not found, skipping build verification test");
+    }
+  });
+
+  it("resolveApiBase.js contains the correct implementation", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const builtFile = path.join(
+      process.cwd(),
+      "dist",
+      "util",
+      "resolveApiBase.js"
+    );
+
+    if (fs.existsSync(builtFile)) {
+      const content = fs.readFileSync(builtFile, "utf-8");
+      expect(content).toContain("YEXT_API_US_PROD");
+      expect(content).toContain("YEXT_API_US_SBX");
+      expect(content).toContain("YEXT_API_EU_PROD");
+      expect(content).toContain('env === "prod" || env === "production"');
+      expect(content).toContain('env === "sbx" || env === "sandbox"');
+      expect(content).toContain(
+        "EU partition only supports production environment"
+      );
+    } else {
+      console.warn("Build output not found, skipping build verification test");
+    }
+  });
+});
