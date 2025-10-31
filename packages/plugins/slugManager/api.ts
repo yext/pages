@@ -24,6 +24,7 @@ export interface BaseEntity {
 export interface Meta {
   id: string;
   language: string;
+  entityType?: string;
 }
 
 async function wrappedFetch<T>(req: Request) {
@@ -83,13 +84,20 @@ export class API implements IAPI {
     this.apiKey = apiKey;
     this.v = v;
 
-    if (partition === "EU") {
-      this.baseUrl = "https://api.eu.yext.com/v2/accounts/me/";
-    } else {
-      this.baseUrl =
-        env === "production"
-          ? "https://api.yext.com/v2/accounts/me/"
-          : "https://api-sandbox.yext.com/v2/accounts/me/";
+    switch (partition) {
+      case "EU":
+        if (env !== "production") {
+          throw new Error("EU partition only supports production environment");
+        }
+        this.baseUrl = "https://api.eu.yext.com/v2/accounts/me/";
+        break;
+      case "US":
+      default:
+        this.baseUrl =
+          env === "production"
+            ? "https://api.yext.com/v2/accounts/me/"
+            : "https://api-sandbox.yext.com/v2/accounts/me/";
+        break;
     }
   }
 

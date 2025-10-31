@@ -38,6 +38,7 @@ interface ApiResponse<T> {
 
 const API_BASE_PROD = "https://api.yext.com/v2/accounts/me/";
 const API_BASE_SBX = "https://api-sandbox.yext.com/v2/accounts/me/";
+const API_BASE_EU = "https://api.eu.yext.com/v2/accounts/me/";
 
 export function buildApiUrl(
   base: string,
@@ -61,9 +62,25 @@ export async function updateEntity<T extends EntityProfile>(
   options?: {
     env?: "prod" | "sbx";
     v?: string;
+    partition?: "US" | "EU";
   }
 ): Promise<T> {
-  const URL_BASE = options?.env === "sbx" ? API_BASE_SBX : API_BASE_PROD;
+  const partition = options?.partition || "US";
+  const env = options?.env || "prod";
+
+  let URL_BASE: string;
+  switch (partition) {
+    case "EU":
+      if (env !== "prod") {
+        throw new Error("EU partition only supports production environment");
+      }
+      URL_BASE = API_BASE_EU;
+      break;
+    case "US":
+    default:
+      URL_BASE = env === "sbx" ? API_BASE_SBX : API_BASE_PROD;
+      break;
+  }
 
   const url = buildApiUrl(URL_BASE, `entityprofiles/${id}/${locale}`, {
     api_key: apiKey,
