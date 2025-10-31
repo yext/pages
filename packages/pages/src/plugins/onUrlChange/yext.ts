@@ -1,3 +1,5 @@
+import { resolveApiBase } from "../../util/resolveApiBase.js";
+
 interface EntityProfile {
   [field: string]: ProfileValue;
 
@@ -36,10 +38,6 @@ interface ApiResponse<T> {
   response: T;
 }
 
-const API_BASE_PROD = "https://api.yext.com/v2/accounts/me/";
-const API_BASE_SBX = "https://api-sandbox.yext.com/v2/accounts/me/";
-const API_BASE_EU = "https://api.eu.yext.com/v2/accounts/me/";
-
 export function buildApiUrl(
   base: string,
   path: string,
@@ -67,20 +65,7 @@ export async function updateEntity<T extends EntityProfile>(
 ): Promise<T> {
   const partition = options?.partition || "US";
   const env = options?.env || "prod";
-
-  let URL_BASE: string;
-  switch (partition) {
-    case "EU":
-      if (env !== "prod") {
-        throw new Error("EU partition only supports production environment");
-      }
-      URL_BASE = API_BASE_EU;
-      break;
-    case "US":
-    default:
-      URL_BASE = env === "sbx" ? API_BASE_SBX : API_BASE_PROD;
-      break;
-  }
+  const URL_BASE = resolveApiBase(partition, env);
 
   const url = buildApiUrl(URL_BASE, `entityprofiles/${id}/${locale}`, {
     api_key: apiKey,

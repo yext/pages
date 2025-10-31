@@ -1,3 +1,5 @@
+import { resolveApiBase } from "../apiUtils.ts";
+
 export interface ApiResponse<T = Record<string, unknown>> {
   meta: {
     uuid: string;
@@ -83,22 +85,7 @@ export class API implements IAPI {
     const { v = "20220909", env = "production", partition = "US" } = config;
     this.apiKey = apiKey;
     this.v = v;
-
-    switch (partition) {
-      case "EU":
-        if (env !== "production") {
-          throw new Error("EU partition only supports production environment");
-        }
-        this.baseUrl = "https://api.eu.yext.com/v2/accounts/me/";
-        break;
-      case "US":
-      default:
-        this.baseUrl =
-          env === "production"
-            ? "https://api.yext.com/v2/accounts/me/"
-            : "https://api-sandbox.yext.com/v2/accounts/me/";
-        break;
-    }
+    this.baseUrl = resolveApiBase(partition, env);
   }
 
   constructRequestUrl(path: string, additionalParams?: URLSearchParams) {
