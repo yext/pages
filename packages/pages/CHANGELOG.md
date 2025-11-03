@@ -1,3 +1,13 @@
+#### 1.2.7 (2025-11-03)
+
+##### Bug Fixes
+
+*  use correct directory for pages package publish ([#595](https://github.com/yext/pages/pull/595)) ([26126b48](https://github.com/yext/pages/commit/26126b48e9cc81ee754f6d8dc571b6d3f644a06b))
+
+##### Other Changes
+
+*  pages@1.2.7" ([24ed74e3](https://github.com/yext/pages/commit/24ed74e3760c92536aff022bbc1fb158d4915bdc))
+
 #### 1.2.6 (2025-07-29)
 
 ##### New Features
