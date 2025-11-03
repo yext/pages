@@ -45,4 +45,4 @@ jobs:
           echo "npm_tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Publish
-        run: cd packages/pages-components && pnpm publish --access public --tag ${{ steps.get_npm_tag.outputs.npm_tag }}
+        run: cd packages/pages && pnpm publish --access public --tag ${{ steps.get_npm_tag.outputs.npm_tag }}
