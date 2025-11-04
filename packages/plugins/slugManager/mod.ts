@@ -8,6 +8,7 @@ export type SlugManagerConfig = Omit<InternalSlugManagerConfig, "api"> & {
   apiKey: string;
   v?: string;
   env?: "production" | "sandbox";
+  partition?: "US" | "EU";
 };
 
 /**
@@ -23,7 +24,8 @@ export default function createSlugManager(config: SlugManagerConfig) {
   const api = new API(config.apiKey, {
     v: config.v,
     env: config.env,
+    partition: config.partition,
   });
 
-  return createManager(Object.assign(config, { api }));
+  return createManager({ ...config, api } as InternalSlugManagerConfig);
 }

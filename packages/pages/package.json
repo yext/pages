@@ -1,6 +1,6 @@
 {
   "name": "@yext/pages",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "The default React development toolchain provided by Yext",
   "author": "sumo@yext.com",
   "license": "BSD-3-Clause",
@@ -9,6 +9,10 @@
     "React"
   ],
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yext/pages.git"
+  },
   "exports": {
     ".": "./dist/index.js",
     "./vite-plugin": "./dist/vite-plugin/plugin.js",
