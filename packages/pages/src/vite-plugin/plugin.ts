@@ -84,5 +84,27 @@ const copyPublicAssets = async (
   };
 };
 
+// cleanup on interruption (ctrl + C)
+const handleCleanupAndExit = async () => {
+  try {
+    const projectStructure = await ProjectStructure.init({
+      scope: process.env.YEXT_PAGES_SCOPE,
+    });
+    await removeHydrationClientFiles(projectStructure);
+    process.exit(0);
+  } catch (error) {
+    console.error("Error during cleanup:", error);
+    process.exit(1);
+  }
+};
+
+process.on("SIGINT", () => {
+  void handleCleanupAndExit();
+});
+
+process.on("SIGTERM", () => {
+  void handleCleanupAndExit();
+});
+
 export default plugin;
 export { plugin as yextSSG };
