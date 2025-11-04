@@ -85,20 +85,25 @@ const copyPublicAssets = async (
 };
 
 // cleanup on interruption (ctrl + C)
-process.on("SIGINT", async () => {
-  const projectStructure = await ProjectStructure.init({
-    scope: process.env.YEXT_PAGES_SCOPE,
-  });
-  removeHydrationClientFiles(projectStructure);
-  process.nextTick(() => process.exit(0));
+const handleCleanupAndExit = async () => {
+  try {
+    const projectStructure = await ProjectStructure.init({
+      scope: process.env.YEXT_PAGES_SCOPE,
+    });
+    await removeHydrationClientFiles(projectStructure);
+    process.exit(0);
+  } catch (error) {
+    console.error("Error during cleanup:", error);
+    process.exit(1);
+  }
+};
+
+process.on("SIGINT", () => {
+  void handleCleanupAndExit();
 });
 
-process.on("SIGTERM", async () => {
-  const projectStructure = await ProjectStructure.init({
-    scope: process.env.YEXT_PAGES_SCOPE,
-  });
-  removeHydrationClientFiles(projectStructure);
-  process.nextTick(() => process.exit(0));
+process.on("SIGTERM", () => {
+  void handleCleanupAndExit();
 });
 
 export default plugin;
