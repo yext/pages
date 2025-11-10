@@ -1,4 +1,4 @@
-import { IAPI, BaseEntity, Meta } from "./api.ts";
+import { IAPI, BaseEntity, Meta, API } from "./api.ts";
 
 interface ProfileUpdate {
   meta: Meta;
@@ -11,9 +11,19 @@ interface SlugFormatString {
   fields?: never;
 }
 
+interface SlugConflictFormatString {
+  slugConflictFormat?: string;
+  fields?: never;
+}
+
 interface SlugFormatFunc {
   slugFormat: (lang: string, profile: BaseEntity) => string;
   fields: string[];
+}
+
+interface SlugConflictFormatFunc {
+  slugConflictFormat?: (lang: string, profile: BaseEntity) => string;
+  fields?: string[];
 }
 
 export type InternalSlugManagerConfig = {
@@ -21,7 +31,7 @@ export type InternalSlugManagerConfig = {
   entityTypes?: string[];
   slugField?: string;
   api: Pick<IAPI, "updateField" | "listLanguageProfiles" | "listEntities">;
-} & (SlugFormatString | SlugFormatFunc);
+} & (SlugFormatString | SlugFormatFunc) & (SlugConflictFormatString | SlugConflictFormatFunc);
 
 export function createManager(config: InternalSlugManagerConfig) {
   const {
@@ -29,6 +39,7 @@ export function createManager(config: InternalSlugManagerConfig) {
     slugField = "slug",
     entityTypes = [],
     slugFormat,
+    slugConflictFormat = undefined,
     api,
     fields,
   } = config;
@@ -73,11 +84,13 @@ export function createManager(config: InternalSlugManagerConfig) {
     const idToPrimaryLanguage = getEntityIdToPrimaryLanguageMap(
       entitiesResponse.entities
     );
-    const updates = getUpdates(
+    const updates = await getUpdates(
       response.profileLists.flatMap((profile) => profile.profiles),
       idToPrimaryLanguage,
       slugField,
-      slugFormat
+      slugFormat,
+      api,
+      slugConflictFormat
     );
 
     const outputString = JSON.stringify({
@@ -119,25 +132,54 @@ export function createManager(config: InternalSlugManagerConfig) {
       );
     }
 
-    const slug =
+    let desiredSlug =
       typeof slugFormat == "string" ? slugFormat : slugFormat(lang, profile);
-    return api.updateField(event.entityId, lang, slugField, slug);
+    const isDuplicate = await isSlugConfict(desiredSlug, api);
+    if (isDuplicate) {
+      desiredSlug = slugConflictFormat == null ? desiredSlug + "-[[entityId]]" : typeof slugConflictFormat == "string" ? slugConflictFormat : slugConflictFormat(lang, profile);
+    }
+    return api.updateField(event.entityId, lang, slugField, desiredSlug);
   }
 
   return { connector, webhook };
 }
 
-export function getUpdates(
+async function isSlugConfict(desiredSlug : string, api : Pick<IAPI, "updateField" | "listLanguageProfiles" | "listEntities">) {
+  const params = new URLSearchParams({
+    fields: ["meta", ...["slug"]].join(","),
+    /**
+     * Match entities that have the same slug.
+     */
+    filter: JSON.stringify({
+      "slug": {
+        $contains: desiredSlug,
+      }
+    }),
+  });
+  const entitiesResponse = await api.listEntities(params);	
+  if (entitiesResponse?.entities?.length > 1) {
+    return true;
+  }
+  return false;
+}
+
+export async function getUpdates(
   profiles: BaseEntity[],
   idToPrimaryLanguage: Record<string, string>,
   slugField: string,
-  slugFormat: string | ((lang: string, profile: BaseEntity) => string)
+  slugFormat: string | ((lang: string, profile: BaseEntity) => string),
+  api: Pick<IAPI, "updateField" | "listLanguageProfiles" | "listEntities">,
+  slugConflictFormat?: string | ((lang: string, profile: BaseEntity) => string)
 ) {
   const updates: ProfileUpdate[] = [];
   for (const profile of profiles) {
     const lang = profile.meta.language;
-    const desiredSlug =
+    let desiredSlug =
       typeof slugFormat == "string" ? slugFormat : slugFormat(lang, profile);
+    const isDuplicate = await isSlugConfict(desiredSlug, api);
+    if (isDuplicate) {
+      desiredSlug = slugConflictFormat == null ? desiredSlug + "-[[entityId]]" : typeof slugConflictFormat == "string" ? slugConflictFormat : slugConflictFormat(lang, profile);
+    }
 
     updates.push({
       [slugField]: desiredSlug,
