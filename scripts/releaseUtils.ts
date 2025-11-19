@@ -170,16 +170,20 @@ export function updateVersion(pkgPath: string, version: string): void {
 }
 
 export async function getLatestTag(pkgName: string): Promise<string> {
-  // -v:refname is a descending semver sort
+  // -v:refname is a descending semver sort, however it doesn't handle pre-releases correctly
   const result = await run("git", ["tag", "--sort=-v:refname"], {
     stdio: "pipe",
   });
 
-  const prefix = `${pkgName}@`;
-  return result.stdout
-    .trim()
-    .split(/\n/)
-    .filter((tag) => tag.startsWith(prefix))[0];
+  const allTags = result.stdout.trim().split(/\n/).filter(Boolean);
+  const packageTags = allTags.filter((tag) => tag.startsWith(`${pkgName}@`));
+  // Strip the package name prefix to get clean version strings.
+  const versionStrings = packageTags.map((tag) =>
+    tag.replace(`${pkgName}@`, "")
+  );
+  const sortedVersions = semver.rsort(versionStrings);
+
+  return `${pkgName}@${sortedVersions[0]}`;
 }
 
 export async function logRecentCommits(pkgName: string): Promise<void> {
