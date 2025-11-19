@@ -68,7 +68,7 @@ export async function getPackageInfo(pkgName: string): Promise<{
 export async function run(
   bin: string,
   args: string[],
-  opts: ExecaOptions<string> = {}
+  opts: ExecaOptions = {}
 ): Promise<ExecaReturnValue<string>> {
   return execa(bin, args, { stdio: "inherit", ...opts });
 }
@@ -76,7 +76,7 @@ export async function run(
 export async function dryRun(
   bin: string,
   args: string[],
-  opts?: ExecaOptions<string>
+  opts?: ExecaOptions
 ): Promise<void> {
   return console.log(
     colors.blue(`[dryrun] ${bin} ${args.join(" ")}`),
@@ -100,7 +100,7 @@ export function getVersionChoices(currentVersion: string): VersionChoice[] {
   const isStable = !currentBeta && !currentAlpha;
 
   function inc(i: ReleaseType, tag = currentAlpha ? "alpha" : "beta") {
-    const incVersion = semver.inc(currentVersion, i, tag);
+    const incVersion = semver.inc(currentVersion, i, tag, "1");
     if (incVersion) {
       return incVersion;
     }
@@ -145,7 +145,7 @@ export function getVersionChoices(currentVersion: string): VersionChoice[] {
   } else if (currentAlpha) {
     versionChoices.push({
       title: "beta",
-      value: inc("patch") + "-beta.0",
+      value: inc("patch") + "-beta.1",
     });
   } else {
     versionChoices.push({
@@ -170,14 +170,16 @@ export function updateVersion(pkgPath: string, version: string): void {
 }
 
 export async function getLatestTag(pkgName: string): Promise<string> {
-  const tags = (await run("git", ["tag"], { stdio: "pipe" })).stdout
-    .split(/\n/)
-    .filter(Boolean);
+  // -v:refname is a descending semver sort
+  const result = await run("git", ["tag", "--sort=-v:refname"], {
+    stdio: "pipe",
+  });
+
   const prefix = `${pkgName}@`;
-  return tags
-    .filter((tag) => tag.startsWith(prefix))
-    .sort()
-    .reverse()[0];
+  return result.stdout
+    .trim()
+    .split(/\n/)
+    .filter((tag) => tag.startsWith(prefix))[0];
 }
 
 export async function logRecentCommits(pkgName: string): Promise<void> {
