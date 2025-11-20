@@ -23,7 +23,7 @@
     "*.{ts,js,tsx,jsx}": "oxlint --fix"
   },
   "engines": {
-    "node": "^18 || ^20.2.0 || ^22"
+    "node": "^20.2.0 || ^22 || ^24"
   },
   "repository": {
     "type": "git",
