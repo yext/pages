@@ -12,7 +12,7 @@
     "build-test-site": "pages build"
   },
   "engines": {
-    "node": "^20.2.0 || ^22 || ^24"
+    "node": "^20.6.0 || ^22 || ^24"
   },
   "dependencies": {
     "react": "^18.2.0",
