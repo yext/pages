@@ -560,7 +560,7 @@ export const checkNodeVersion = () => {
       return;
     }
     const version = parseInt(nodeVersion.toString().split(".")[0].substring(1));
-    if (version !== 18 && version !== 20) {
+    if (version !== 20 && version !== 22 && version !== 24) {
       console.error(
         `You are currently using an unsupported node version ${nodeVersion}. Please install node ${NODE_ENGINES}.`
       );
