@@ -314,6 +314,7 @@ export interface Stream {
     entityTypes?: string[];
     savedFilterIds?: string[];
   };
+  includeBrandCertifiedFacts?: boolean;
   localization:
     | {
         locales: string[];
@@ -359,7 +360,7 @@ export interface TemplateConfig {
   onUrlChange?: string;
   pageUrlField?: string;
   slugField?: string;
-  stream?: Stream;
+  stream?: Stream & Record<string, any>;
   streamId?: string;
 }
 
@@ -410,7 +411,7 @@ export type TransformProps<T extends TemplateProps> = (props: T) => Promise<T>;
 
 // Warnings were encountered during analysis:
 //
-// dist/types/src/common/src/template/types.d.ts:180:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
+// dist/types/src/common/src/template/types.d.ts:182:5 - (ae-forgotten-export) The symbol "ProjectStructureConfig" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 ```

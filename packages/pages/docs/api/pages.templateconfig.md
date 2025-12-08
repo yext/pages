@@ -144,7 +144,7 @@ _(Optional)_ The field to use as the slug for dynamic dev mode
 
 </td><td>
 
-[Stream](./pages.stream.md)
+[Stream](./pages.stream.md) &amp; Record&lt;string, any&gt;
 
 </td><td>
 
