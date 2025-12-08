@@ -108,7 +108,7 @@ export interface TemplateConfig {
   /** The stream that this template uses. If a stream is defined the streamId is not required. */
   streamId?: string;
   /** The stream configuration used by the template */
-  stream?: Stream;
+  stream?: Stream & Record<string, any>;
   /** The specific fields to add additional language options to based on the stream's localization */
   alternateLanguageFields?: string[];
   /** The name of the onUrlChange function to use. */
@@ -175,6 +175,8 @@ export interface Stream {
     /** The option fields to be replaced with display names */
     replaceOptionValuesWithDisplayNames?: string[];
   };
+  /** The option to include brand certified facts in the stream. */
+  includeBrandCertifiedFacts?: boolean;
 }
 
 /**

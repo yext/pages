@@ -61,7 +61,7 @@ export interface TemplateConfigInternal {
   /** The stream that this template uses. If a stream is defined the streamId is not required. */
   streamId?: string;
   /** The stream configuration used by the template */
-  stream?: StreamInternal;
+  stream?: StreamInternal & Record<string, any>;
   /**
    * The specific fields to add additional language options to based on the stream's localization.
    * @deprecated field will be unsupported in the future
@@ -112,6 +112,8 @@ export interface StreamInternal {
     /** The option fields to be replaced with display names */
     replaceOptionValuesWithDisplayNames?: string[];
   };
+  /** The option to include brand certified facts in the stream. */
+  includeBrandCertifiedFacts?: boolean;
 }
 
 /**
