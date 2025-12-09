@@ -61,7 +61,7 @@ export interface TemplateConfigInternal {
   /** The stream that this template uses. If a stream is defined the streamId is not required. */
   streamId?: string;
   /** The stream configuration used by the template */
-  stream?: StreamInternal & Record<string, any>;
+  stream?: StreamInternal;
   /**
    * The specific fields to add additional language options to based on the stream's localization.
    * @deprecated field will be unsupported in the future
