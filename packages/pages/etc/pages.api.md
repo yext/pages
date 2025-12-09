@@ -360,7 +360,7 @@ export interface TemplateConfig {
   onUrlChange?: string;
   pageUrlField?: string;
   slugField?: string;
-  stream?: Stream & Record<string, any>;
+  stream?: Stream;
   streamId?: string;
 }
 

@@ -9,5 +9,5 @@ The stream configuration used by the template
 **Signature:**
 
 ```typescript
-stream?: Stream & Record<string, any>;
+stream?: Stream;
 ```
