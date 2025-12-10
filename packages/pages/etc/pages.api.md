@@ -314,7 +314,7 @@ export interface Stream {
     entityTypes?: string[];
     savedFilterIds?: string[];
   };
-  includeBrandCertifiedFacts?: boolean;
+  includeCertifiedFacts?: boolean;
   localization:
     | {
         locales: string[];

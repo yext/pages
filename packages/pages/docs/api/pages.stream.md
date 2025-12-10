@@ -78,7 +78,7 @@ _(Optional)_ The filter to apply to the stream
 </td></tr>
 <tr><td>
 
-[includeBrandCertifiedFacts?](./pages.stream.includebrandcertifiedfacts.md)
+[includeCertifiedFacts?](./pages.stream.includecertifiedfacts.md)
 
 </td><td>
 
@@ -88,7 +88,7 @@ boolean
 
 </td><td>
 
-_(Optional)_ The option to include brand certified facts in the stream.
+_(Optional)_ The option to include certified facts in the stream.
 
 </td></tr>
 <tr><td>
