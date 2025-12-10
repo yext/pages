@@ -44,7 +44,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
         localization: {
           primary: true,
         },
-        includeBrandCertifiedFacts: true,
+        includeCertifiedFacts: true,
       },
       templateType: "entity",
     };
@@ -71,7 +71,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
           localization: {
             primary: true,
           },
-          includeBrandCertifiedFacts: true,
+          includeCertifiedFacts: true,
         },
       ],
     };

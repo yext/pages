@@ -112,8 +112,8 @@ export interface StreamInternal {
     /** The option fields to be replaced with display names */
     replaceOptionValuesWithDisplayNames?: string[];
   };
-  /** The option to include brand certified facts in the stream. */
-  includeBrandCertifiedFacts?: boolean;
+  /** The option to include certified facts in the stream. */
+  includeCertifiedFacts?: boolean;
 }
 
 /**
