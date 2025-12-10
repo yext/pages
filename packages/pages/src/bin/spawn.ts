@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 const pathToPagesScript = path.resolve(__dirname, "./pages.js");
 const pathToLoader = pathToFileURL(path.resolve(__dirname, "./loader.js")).href;
 
+// Keeping this unused function in case it's needed again
 const nodeVersion = Number(
   spawnSync("node", ["-v"], { encoding: "utf-8" })
     .stdout.substring(1)
@@ -17,13 +18,9 @@ const nodeVersion = Number(
 );
 
 const experimentalFlags = ["--experimental-vm-modules"];
-if (nodeVersion === 18) {
-  experimentalFlags.push("--experimental-specifier-resolution=node");
-} else {
-  // Coercion to any is necessary because @types/node is not properly recognizing when dymanically importing
-  const { register }: any = await import("node:module");
-  register(pathToLoader);
-}
+// Coercion to any is necessary because @types/node is not properly recognizing when dymanically importing
+const { register }: any = await import("node:module");
+register(pathToLoader);
 
 const results = spawnSync(
   "node",

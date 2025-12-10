@@ -523,8 +523,8 @@ export const installDependencies = async () => {
   }
 };
 
-// Note that Node 20 <20.2.0 leads to build errors: `Unexpected early exit.`
-const NODE_ENGINES = "^18.4.0 || >=20.2.0";
+const NODE_ENGINES = "^20.6.0 || ^22 || ^24";
+
 /**
  * Update package engines to latest supported node versions.
  */
@@ -560,7 +560,7 @@ export const checkNodeVersion = () => {
       return;
     }
     const version = parseInt(nodeVersion.toString().split(".")[0].substring(1));
-    if (version !== 18 && version !== 20) {
+    if (version !== 20 && version !== 22 && version !== 24) {
       console.error(
         `You are currently using an unsupported node version ${nodeVersion}. Please install node ${NODE_ENGINES}.`
       );
