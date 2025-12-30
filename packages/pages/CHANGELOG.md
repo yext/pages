@@ -1,3 +1,18 @@
+#### 1.2.8 (2025-12-30)
+
+##### Chores
+
+*  rename certified facts ([#600](https://github.com/yext/pages/pull/600)) ([8291fa92](https://github.com/yext/pages/commit/8291fa9272cefd38acf0f726f01050ec9343af9b))
+
+##### New Features
+
+*  add brand certified facts stream flag ([#599](https://github.com/yext/pages/pull/599)) ([28db200c](https://github.com/yext/pages/commit/28db200c651e4d79e00ab60dfe94196e17a486b7))
+
+##### Bug Fixes
+
+*  release tag sorting ([#597](https://github.com/yext/pages/pull/597)) ([14cda16a](https://github.com/yext/pages/commit/14cda16a8ed0df2b53b361ce1b2835b5de9d5da8))
+* **plugin:**  cleanup .client files on signal interrupts ([#591](https://github.com/yext/pages/pull/591)) ([4fb56275](https://github.com/yext/pages/commit/4fb56275f380f74990dfe023e4481236956a2f47))
+
 #### 1.2.7 (2025-11-03)
 
 ##### Bug Fixes
