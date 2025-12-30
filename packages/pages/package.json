@@ -14,27 +14,28 @@
     "url": "https://github.com/yext/pages.git"
   },
   "exports": {
-    ".": "./dist/index.js",
-    "./vite-plugin": "./dist/vite-plugin/plugin.js",
-    "./util": "./dist/util/index.js",
-    "./plugins": "./dist/plugins/index.js"
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "dist/types/src/index.d.ts"
-      ],
-      "vite-plugin": [
-        "dist/types/src/vite-plugin/index.d.ts"
-      ],
-      "util": [
-        "dist/types/src/util/index.d.ts"
-      ],
-      "plugins": [
-        "dist/types/src/plugins/index.d.ts"
-      ]
+    ".": {
+      "types": "./dist/types/src/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./vite-plugin": {
+      "types": "./dist/types/src/vite-plugin/index.d.ts",
+      "import": "./dist/vite-plugin/plugin.js",
+      "default": "./dist/vite-plugin/plugin.js"
+    },
+    "./util": {
+      "types": "./dist/types/src/util/index.d.ts",
+      "import": "./dist/util/index.js",
+      "default": "./dist/util/index.js"
+    },
+    "./plugins": {
+      "types": "./dist/types/src/plugins/index.d.ts",
+      "import": "./dist/plugins/index.js",
+      "default": "./dist/plugins/index.js"
     }
   },
+  "types": "./dist/types/src/index.d.ts",
   "engines": {
     "node": "^20.6.0 || ^22 || ^24"
   },
