@@ -175,6 +175,8 @@ export interface Stream {
     /** The option fields to be replaced with display names */
     replaceOptionValuesWithDisplayNames?: string[];
   };
+  /** The option to include certified facts in the stream. */
+  includeCertifiedFacts?: boolean;
 }
 
 /**

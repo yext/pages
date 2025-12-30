@@ -74,6 +74,7 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
             transform: {
               replaceOptionValuesWithDisplayNames: ["paymentOptions"],
             },
+            includeCertifiedFacts: true,
           },
           templateType: "entity",
         },
@@ -155,6 +156,7 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
             },
             source: "knowledgeGraph",
             destination: "pages",
+            includeCertifiedFacts: true,
           },
           {
             $id: "closed-location-stream",

@@ -78,6 +78,21 @@ _(Optional)_ The filter to apply to the stream
 </td></tr>
 <tr><td>
 
+[includeCertifiedFacts?](./pages.stream.includecertifiedfacts.md)
+
+</td><td>
+
+</td><td>
+
+boolean
+
+</td><td>
+
+_(Optional)_ The option to include certified facts in the stream.
+
+</td></tr>
+<tr><td>
+
 [localization](./pages.stream.localization.md)
 
 </td><td>
