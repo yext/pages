@@ -4,16 +4,14 @@ import { TemplateRenderProps } from "./types.js";
 import pc from "picocolors";
 
 describe("renderHeadConfigToString", () => {
-  it("properly renders a default title and excludes missing optionals", async () => {
-    const headConfig: HeadConfig = {};
+  it("throws an error if title is missing", async () => {
+    const headConfig = {} as any as HeadConfig;
 
     const expectedHeadConfig = `<title>Yext Pages Site</title>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">`;
 
-    expect(renderHeadConfigToString(headConfig).replaceAll(" ", "")).toEqual(
-      expectedHeadConfig.replaceAll(" ", "")
-    );
+    expect(() => renderHeadConfigToString(headConfig)).toThrowError();
   });
 
   it("properly renders the title and excludes missing optionals", async () => {
@@ -168,7 +166,7 @@ describe("renderHeadConfigToString", () => {
 describe("getLang", () => {
   it("returns the correct lang when headConfig overrides it", async () => {
     const lang = "fr";
-    const headConfig: HeadConfig = { lang: lang };
+    const headConfig: HeadConfig = { title: "My Title", lang: lang };
 
     expect(getLang(headConfig, templateProps)).toEqual(lang);
   });
