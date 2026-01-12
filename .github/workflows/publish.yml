@@ -19,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.6
         with:
-          ref: main
+          ref: ${{ github.ref }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4.0.0
@@ -45,4 +45,4 @@ jobs:
           echo "npm_tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Publish
-        run: cd packages/pages && pnpm publish --access public --tag ${{ steps.get_npm_tag.outputs.npm_tag }}
+        run: cd packages/pages && pnpm publish --access public --tag ${{ steps.get_npm_tag.outputs.npm_tag }} --no-git-checks
