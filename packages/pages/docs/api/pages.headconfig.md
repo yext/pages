@@ -93,7 +93,7 @@ _(Optional)_ Well-defined interface for adding HTML tags (such as meta tags)
 </td></tr>
 <tr><td>
 
-[title?](./pages.headconfig.title.md)
+[title](./pages.headconfig.title.md)
 
 </td><td>
 
@@ -103,7 +103,7 @@ string
 
 </td><td>
 
-_(Optional)_ Title of the page. Will default to 'Yext Pages Site' if omitted.
+Title of the page.
 
 </td></tr>
 <tr><td>

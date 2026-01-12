@@ -4,10 +4,10 @@
 
 ## HeadConfig.title property
 
-Title of the page. Will default to 'Yext Pages Site' if omitted.
+Title of the page.
 
 **Signature:**
 
 ```typescript
-title?: string;
+title: string;
 ```
