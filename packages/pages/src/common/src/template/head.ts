@@ -10,8 +10,8 @@ import pc from "picocolors";
  */
 
 export interface HeadConfig {
-  /** Title of the page. Will default to 'Yext Pages Site' if omitted. */
-  title?: string;
+  /** Title of the page. */
+  title: string;
   /** Declares the document's encoding. Will default to 'UTF-8' if omitted. */
   charset?: string;
   /** Declares the size and shape of the document's viewport. Will default to
@@ -76,9 +76,11 @@ export interface Tag {
  * @public
  */
 export const renderHeadConfigToString = (headConfig: HeadConfig): string => {
-  return `<title>${
-    headConfig.title ? headConfig.title : "Yext Pages Site"
-  }</title>
+  if (!headConfig.title) {
+    throw new Error("Title is missing from head configuration.");
+  }
+
+  return `<title>${headConfig.title}</title>
     <meta charset="${headConfig.charset || "UTF-8"}">
     <meta name="viewport" content="${
       headConfig.viewport || "width=device-width, initial-scale=1"
