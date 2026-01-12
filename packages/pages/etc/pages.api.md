@@ -117,7 +117,7 @@ export interface HeadConfig {
   lang?: string;
   other?: string;
   tags?: Tag[];
-  title?: string;
+  title: string;
   viewport?: string;
 }
 
