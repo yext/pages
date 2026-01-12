@@ -1,23 +1,3 @@
-#### 1.2.9 (2026-01-12)
-
-##### Chores
-
-*  rename certified facts ([#600](https://github.com/yext/pages/pull/600)) ([7e8e44a3](https://github.com/yext/pages/commit/7e8e44a32554c14306b3e58b0bf9624330f0070f))
-
-##### New Features
-
-*  add brand certified facts stream flag ([#599](https://github.com/yext/pages/pull/599)) ([23f87fc0](https://github.com/yext/pages/commit/23f87fc0d8545e59149f3cfb05e9a42b57d1e33d))
-
-##### Bug Fixes
-
-*  release tag sorting ([#597](https://github.com/yext/pages/pull/597)) ([7157019c](https://github.com/yext/pages/commit/7157019c681d07e338f77b65ff2d0d942604864e))
-* **plugin:**  cleanup .client files on signal interrupts ([#591](https://github.com/yext/pages/pull/591)) ([4fb56275](https://github.com/yext/pages/commit/4fb56275f380f74990dfe023e4481236956a2f47))
-
-##### Other Changes
-
-*  require title in getHeadConfig ([#602](https://github.com/yext/pages/pull/602)) ([33835828](https://github.com/yext/pages/commit/3383582804a2279b9abab06a0f81d30db3bf49ee))
-*  pages@1.2.8 ([860346ee](https://github.com/yext/pages/commit/860346ee363e420f3f7c085f01192a835ab22e31))
-
 #### 1.2.8 (2025-12-30)
 
 ##### Chores
