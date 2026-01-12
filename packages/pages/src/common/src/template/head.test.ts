@@ -7,10 +7,6 @@ describe("renderHeadConfigToString", () => {
   it("throws an error if title is missing", async () => {
     const headConfig = {} as any as HeadConfig;
 
-    const expectedHeadConfig = `<title>Yext Pages Site</title>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">`;
-
     expect(() => renderHeadConfigToString(headConfig)).toThrowError();
   });
 
