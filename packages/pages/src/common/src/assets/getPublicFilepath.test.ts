@@ -20,10 +20,7 @@ describe("getPublicFilepath - determinePublicFilepath", () => {
     const importSpy = vi.spyOn(importHelper, "import_");
     importSpy.mockImplementation(async () => viteConfig);
 
-    const actual = await determinePublicFilepath(
-      "public",
-      "does not matter since mocked"
-    );
+    const actual = await determinePublicFilepath("public", "does not matter since mocked");
 
     expect(actual).toEqual("viteConfigPublicDir");
   });

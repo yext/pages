@@ -3,10 +3,7 @@ import { ViteDevServer } from "vite";
 import { getGlobalClientServerRenderModules } from "../../../common/src/module/internal/getModuleFilepaths.js";
 import { Response } from "express-serve-static-core";
 import { ServerModuleRenderTemplate } from "../../../common/src/module/types.js";
-import {
-  getHydrationModuleDev,
-  getIndexModuleDev,
-} from "../../../common/src/module/hydration.js";
+import { getHydrationModuleDev, getIndexModuleDev } from "../../../common/src/module/hydration.js";
 
 /**
  * Renders the HTML for a given {@link ModuleInternal}, and sends it back to the Response.

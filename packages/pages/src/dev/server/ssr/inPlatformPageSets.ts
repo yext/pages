@@ -12,9 +12,7 @@ export type PageSetConfig = {
   display_name: string;
 };
 
-export const getInPlatformPageSets = async (
-  siteId: number
-): Promise<PageSetConfig[]> => {
+export const getInPlatformPageSets = async (siteId: number): Promise<PageSetConfig[]> => {
   const pageSetsRes = await spawnPageSetCommands(
     process.stdout,
     "yext",
@@ -103,17 +101,13 @@ async function spawnPageSetCommands(
           parsedData = JSON.parse(testData.trim());
         } catch {
           stdout.write(
-            `\nUnable to parse test data from command: \`${command} ${args.join(
-              " "
-            )}\``
+            `\nUnable to parse test data from command: \`${command} ${args.join(" ")}\``
           );
           resolve(null);
         }
       } else {
         stdout.write(
-          `\nUnable to generate test data from command: \`${command} ${args.join(
-            " "
-          )}\``
+          `\nUnable to generate test data from command: \`${command} ${args.join(" ")}\``
         );
       }
 

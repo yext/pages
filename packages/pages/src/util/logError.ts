@@ -22,10 +22,7 @@ export const logWarning = (warning: string) => {
   console.warn(colors.yellow(`WARNING: ${warning}`));
 };
 
-export const logErrorAndClean = async (
-  error: string | any,
-  projectStructure: ProjectStructure
-) => {
+export const logErrorAndClean = async (error: string | any, projectStructure: ProjectStructure) => {
   await removeHydrationClientFiles(projectStructure);
   logErrorAndExit(error);
 };

@@ -6,10 +6,7 @@ import { Project } from "ts-morph";
  * @param filepath
  * @returns a sourceFile and Project
  */
-export default function createTestSourceFile(
-  code: string,
-  filepath = "test.tsx"
-) {
+export default function createTestSourceFile(code: string, filepath = "test.tsx") {
   const p = createTestProject();
   p.createSourceFile(filepath, code);
   return {

@@ -53,23 +53,13 @@ const slugFormatFunc = (lang: string, profile: BaseEntity) => {
 const slugFormatFuncFields = ["c_customField"];
 
 Deno.test("getUpdates returns correct number of updates", () => {
-  const updates = getUpdates(
-    profiles,
-    idToPrimaryLanguage,
-    slugField,
-    slugFormatString
-  );
+  const updates = getUpdates(profiles, idToPrimaryLanguage, slugField, slugFormatString);
 
   assertEquals(updates.length, 3);
 });
 
 Deno.test("getUpdates correctly sets isAlternateProfile", () => {
-  const updates = getUpdates(
-    profiles,
-    idToPrimaryLanguage,
-    slugField,
-    slugFormatString
-  );
+  const updates = getUpdates(profiles, idToPrimaryLanguage, slugField, slugFormatString);
 
   for (const update of updates) {
     assertNotEquals(
@@ -80,23 +70,13 @@ Deno.test("getUpdates correctly sets isAlternateProfile", () => {
 });
 
 Deno.test("getUpdates sets correct slug field", () => {
-  const updates = getUpdates(
-    profiles,
-    idToPrimaryLanguage,
-    slugField,
-    slugFormatString
-  );
+  const updates = getUpdates(profiles, idToPrimaryLanguage, slugField, slugFormatString);
 
   updates.forEach((update) => assertExists(update[slugField]));
 });
 
 Deno.test("getUpdates respects slug format", () => {
-  const updates = getUpdates(
-    profiles,
-    idToPrimaryLanguage,
-    slugField,
-    slugFormatFunc
-  );
+  const updates = getUpdates(profiles, idToPrimaryLanguage, slugField, slugFormatFunc);
 
   updates.forEach((update, idx) => {
     const expectedSlug = slugFormatFunc(update.meta.language, profiles[idx]);
@@ -105,12 +85,7 @@ Deno.test("getUpdates respects slug format", () => {
 });
 
 const baseMockAPI: IAPI = {
-  updateField: <T>(
-    id: string,
-    locale: string,
-    field: string,
-    value: string
-  ) => {
+  updateField: <T>(id: string, locale: string, field: string, value: string) => {
     return Promise.resolve({
       name: id,
       [field]: value,

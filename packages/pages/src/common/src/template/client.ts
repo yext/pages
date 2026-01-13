@@ -1,8 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import SourceFileParser, {
-  createTsMorphProject,
-} from "../parsers/sourceFileParser.js";
+import SourceFileParser, { createTsMorphProject } from "../parsers/sourceFileParser.js";
 import TemplateParser from "../parsers/templateParser.js";
 import { ProjectStructure } from "../project/structure.js";
 import { readdir } from "node:fs/promises";
@@ -46,13 +44,8 @@ const generateAndSaveClientHydrationTemplates = (templatePath: string) => {
   const clientTemplatePath = getClientPath(templatePath);
   fs.writeFileSync(clientTemplatePath, "");
   const sfp = new SourceFileParser(templatePath, createTsMorphProject());
-  const newSfp = new SourceFileParser(
-    clientTemplatePath,
-    createTsMorphProject()
-  );
-  const templateParser = new TemplateParser(sfp).makeClientTemplateFromSfp(
-    newSfp
-  );
+  const newSfp = new SourceFileParser(clientTemplatePath, createTsMorphProject());
+  const templateParser = new TemplateParser(sfp).makeClientTemplateFromSfp(newSfp);
   templateParser.sourceFile.save();
 };
 
@@ -71,9 +64,7 @@ const getClientPath = (templatePath: string): string => {
  * Removes any generated [template].client files.
  * @param projectStructure
  */
-export const removeHydrationClientFiles = async (
-  projectStructure: ProjectStructure
-) => {
+export const removeHydrationClientFiles = async (projectStructure: ProjectStructure) => {
   const templatePaths = projectStructure.getTemplatePaths();
   for (const templatePath of templatePaths) {
     (await readdir(templatePath.getAbsolutePath(), { withFileTypes: true }))

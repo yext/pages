@@ -1,7 +1,4 @@
-import {
-  TemplateProps,
-  TemplateRenderProps,
-} from "../../../common/src/template/types.js";
+import { TemplateProps, TemplateRenderProps } from "../../../common/src/template/types.js";
 import { getRelativePrefixToRootFromPath } from "../../../common/src/template/paths.js";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
 import { validateGetPathValue } from "../../../common/src/template/internal/validateGetPathValue.js";

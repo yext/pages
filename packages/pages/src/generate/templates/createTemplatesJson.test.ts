@@ -21,10 +21,7 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
           },
         ],
       };
-      fs.writeFileSync(
-        ".template-manifest.json",
-        JSON.stringify(testTemplateManifest)
-      );
+      fs.writeFileSync(".template-manifest.json", JSON.stringify(testTemplateManifest));
 
       const templateModules: TemplateModuleCollection = new Map();
       templateModules.set("turtlehead-tacos", {
@@ -174,13 +171,9 @@ describe("createTemplatesJsonFromModule - getFeaturesConfig", () => {
         ],
       };
 
-      expect(
-        getTemplatesConfig(
-          templateModules,
-          new ProjectStructure(),
-          redirectModules
-        )
-      ).toEqual(expected);
+      expect(getTemplatesConfig(templateModules, new ProjectStructure(), redirectModules)).toEqual(
+        expected
+      );
     } finally {
       if (fs.existsSync(".template-manifest.json")) {
         fs.unlinkSync(".template-manifest.json");

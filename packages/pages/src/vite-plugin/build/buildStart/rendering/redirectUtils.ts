@@ -2,15 +2,9 @@ import {
   convertRedirectModuleToRedirectModuleInternal,
   RedirectModuleInternal,
 } from "../../../../common/src/redirect/internal/types.js";
-import {
-  Manifest,
-  TemplateProps,
-} from "../../../../common/src/template/types.js";
+import { Manifest, TemplateProps } from "../../../../common/src/template/types.js";
 import { ProjectStructure } from "../../../../common/src/project/structure.js";
-import {
-  RedirectModule,
-  RedirectSource,
-} from "../../../../common/src/redirect/types.js";
+import { RedirectModule, RedirectSource } from "../../../../common/src/redirect/types.js";
 
 const pathToRedirectModule = new Map<string, RedirectModule<any>>();
 
@@ -40,11 +34,7 @@ export const readRedirectModules = async (
     pathToRedirectModule.set(path, importedModule);
   }
 
-  return convertRedirectModuleToRedirectModuleInternal(
-    path,
-    importedModule,
-    true
-  );
+  return convertRedirectModuleToRedirectModuleInternal(path, importedModule, true);
 };
 
 /**

@@ -41,17 +41,13 @@ const migrateCiJson = (configYamlPath: string, ciPath: string) => {
   if (ciJson !== null) {
     const buildArtifacts = ciJson.buildArtifacts;
     if (buildArtifacts) {
-      console.info(
-        `migrating buildArtifacts from ${ciPath} to ${configYamlPath}`
-      );
+      console.info(`migrating buildArtifacts from ${ciPath} to ${configYamlPath}`);
       const buildConfiguration: BuildConfiguration = {
         buildCommand: buildArtifacts.buildCmd?.replace("build:local", "build"),
       };
       const dependencies = ciJson.dependencies;
       if (dependencies) {
-        console.info(
-          `migrating dependencies from ${ciPath} to ${configYamlPath}`
-        );
+        console.info(`migrating dependencies from ${ciPath} to ${configYamlPath}`);
         buildConfiguration.installDependenciesStep = {
           command: dependencies.installDepsCmd,
           requiredFiles: dependencies.requiredFiles,
@@ -67,11 +63,7 @@ const migrateCiJson = (configYamlPath: string, ciPath: string) => {
         serveCommand: livePreview.serveCmd,
         watchCommand: livePreview.watchCmd,
       };
-      writeYamlSync(
-        configYamlPath,
-        "livePreviewConfiguration",
-        livePreviewConfiguration
-      );
+      writeYamlSync(configYamlPath, "livePreviewConfiguration", livePreviewConfiguration);
     }
   }
 };
@@ -87,9 +79,7 @@ const migrateLocales = (configYamlPath: string, featuresPath: string) => {
 const migrateSiteStream = (configYamlPath: string, siteStreamPath: string) => {
   const sitesJson = readJsonSync(siteStreamPath);
   if (sitesJson !== null) {
-    console.info(
-      `migrating global data from ${siteStreamPath} to ${configYamlPath}`
-    );
+    console.info(`migrating global data from ${siteStreamPath} to ${configYamlPath}`);
     const newSiteStream = formatSiteStream(sitesJson, siteStreamPath);
     writeYamlSync(configYamlPath, "siteStream", newSiteStream);
   }
@@ -100,9 +90,7 @@ export const formatSiteStream = (sitesJson: any, siteStreamPath: string) => {
   if (sitesJson.filter?.entityIds && sitesJson.filter?.entityIds.length === 1) {
     entityId = sitesJson.filter.entityIds[0];
   } else if (sitesJson.filter?.entityIds) {
-    logErrorAndExit(
-      `Unable to migrate ${siteStreamPath} due to multiple entityIds`
-    );
+    logErrorAndExit(`Unable to migrate ${siteStreamPath} due to multiple entityIds`);
   }
 
   return {
@@ -125,9 +113,7 @@ const migrateServing = (configYamlPath: string, servingPath: string) => {
   if (servingJson !== null) {
     const newServingJson = formatServing(servingJson);
     if (newServingJson) {
-      console.info(
-        `migrating reverse proxy info from ${servingPath} to ${configYamlPath}`
-      );
+      console.info(`migrating reverse proxy info from ${servingPath} to ${configYamlPath}`);
       writeYamlSync(configYamlPath, "serving", newServingJson);
     }
   }
@@ -163,9 +149,7 @@ const migrateAuth = (configYamlPath: string, authPath: string) => {
  */
 export const migrateConfigs = async (projectStructure: ProjectStructure) => {
   const scope = projectStructure.config.scope || "";
-  const sitesConfigPath = projectStructure
-    .getSitesConfigPath()
-    .getAbsolutePath();
+  const sitesConfigPath = projectStructure.getSitesConfigPath().getAbsolutePath();
   if (!fs.existsSync(sitesConfigPath)) {
     console.info("sites-config folder not found, nothing to migrate");
     return;
@@ -195,34 +179,16 @@ export const migrateConfigs = async (projectStructure: ProjectStructure) => {
     console.info(`${configYamlPath} does not exist, creating it`);
     fs.writeFileSync(configYamlPath, "");
   }
-  migrateCiJson(
-    configYamlPath,
-    path.resolve(sitesConfigPath, sitesConfigFiles.ci)
-  );
-  migrateLocales(
-    configYamlPath,
-    path.resolve(sitesConfigPath, sitesConfigFiles.features)
-  );
-  migrateSiteStream(
-    configYamlPath,
-    path.resolve(sitesConfigPath, sitesConfigFiles.siteStream)
-  );
-  migrateServing(
-    configYamlPath,
-    path.resolve(sitesConfigPath, sitesConfigFiles.serving)
-  );
+  migrateCiJson(configYamlPath, path.resolve(sitesConfigPath, sitesConfigFiles.ci));
+  migrateLocales(configYamlPath, path.resolve(sitesConfigPath, sitesConfigFiles.features));
+  migrateSiteStream(configYamlPath, path.resolve(sitesConfigPath, sitesConfigFiles.siteStream));
+  migrateServing(configYamlPath, path.resolve(sitesConfigPath, sitesConfigFiles.serving));
   migrateRedirects(
     path.resolve(sitesConfigPath, sitesConfigFiles.redirects),
     path.resolve(scopeFolder, sitesConfigFiles.redirects)
   );
-  migrateSiteMap(
-    configYamlPath,
-    path.resolve(sitesConfigPath, sitesConfigFiles.sitemap)
-  );
-  migrateAuth(
-    configYamlPath,
-    path.resolve(sitesConfigPath, sitesConfigFiles.auth)
-  );
+  migrateSiteMap(configYamlPath, path.resolve(sitesConfigPath, sitesConfigFiles.sitemap));
+  migrateAuth(configYamlPath, path.resolve(sitesConfigPath, sitesConfigFiles.auth));
   // cleanup old sites-config
   fs.rmSync(sitesConfigPath, { force: true, recursive: true });
 };

@@ -21,10 +21,7 @@ import { getViteServerConfig } from "../../common/src/loader/vite.js";
 import { serverRenderModule } from "./middleware/serverRenderModule.js";
 import { getModuleInfoFromModuleName } from "./ssr/findMatchingModule.js";
 import open from "open";
-import {
-  getInPlatformPageSets,
-  PageSetConfig,
-} from "./ssr/inPlatformPageSets.js";
+import { getInPlatformPageSets, PageSetConfig } from "./ssr/inPlatformPageSets.js";
 import { isUsingConfig } from "../../util/config.js";
 import runSubProcess from "../../util/runSubprocess.js";
 import { DevArgs } from "../dev.js";
@@ -56,10 +53,7 @@ export const createServer = async (devServerPort: number, devArgs: DevArgs) => {
   const projectStructure = await ProjectStructure.init({ scope });
 
   if (module) {
-    const moduleInfo = await getModuleInfoFromModuleName(
-      module,
-      projectStructure
-    );
+    const moduleInfo = await getModuleInfoFromModuleName(module, projectStructure);
     if (moduleInfo) {
       let viteServerConfig = getViteServerConfig(projectStructure);
       if (moduleInfo.postCssPath) {
@@ -82,13 +76,9 @@ export const createServer = async (devServerPort: number, devArgs: DevArgs) => {
           modulePath: moduleInfo.modulePath,
         })
       );
-      app.listen(devServerPort, () =>
-        process.stdout.write(`listening on :${devServerPort}\n`)
-      );
+      app.listen(devServerPort, () => process.stdout.write(`listening on :${devServerPort}\n`));
       if (openBrowser) {
-        await open(
-          `http://localhost:${devServerPort}/modules/${moduleInfo.moduleName}`
-        );
+        await open(`http://localhost:${devServerPort}/modules/${moduleInfo.moduleName}`);
       }
       return;
     }
@@ -104,15 +94,9 @@ export const createServer = async (devServerPort: number, devArgs: DevArgs) => {
   const { config } = projectStructure.config.rootFiles;
   if (!noGenFeatures) {
     if (isUsingConfig(config, scope)) {
-      await runSubProcess(
-        "pages generate templates",
-        scope ? [`--scope ${scope}`] : []
-      );
+      await runSubProcess("pages generate templates", scope ? [`--scope ${scope}`] : []);
     } else {
-      await runSubProcess(
-        "pages generate features",
-        scope ? [`--scope ${scope}`] : []
-      );
+      await runSubProcess("pages generate features", scope ? [`--scope ${scope}`] : []);
     }
   }
 
@@ -150,22 +134,15 @@ export const createServer = async (devServerPort: number, devArgs: DevArgs) => {
       )
     );
     for (const functionPath of functionFilepaths) {
-      const functionModule = await loadViteModule<FunctionModule>(
-        vite,
-        path.format(functionPath)
+      const functionModule = await loadViteModule<FunctionModule>(vite, path.format(functionPath));
+
+      const functionModuleInternal = convertFunctionModuleToFunctionModuleInternal(
+        functionPath,
+        functionModule,
+        projectStructure
       );
 
-      const functionModuleInternal =
-        convertFunctionModuleToFunctionModuleInternal(
-          functionPath,
-          functionModule,
-          projectStructure
-        );
-
-      functionModules.set(
-        functionModuleInternal.config.name,
-        functionModuleInternal
-      );
+      functionModules.set(functionModuleInternal.config.name, functionModuleInternal);
     }
   };
 
@@ -198,9 +175,7 @@ export const createServer = async (devServerPort: number, devArgs: DevArgs) => {
           }
           const updatedFunction = functionModules.get(func.config.name);
           if (!updatedFunction) {
-            throw new Error(
-              "Could not load function with name" + func.config.name
-            );
+            throw new Error("Could not load function with name" + func.config.name);
           }
           serveHttpFunction(req, res, next, updatedFunction);
         });
@@ -263,7 +238,5 @@ export const createServer = async (devServerPort: number, devArgs: DevArgs) => {
 
   app.use(errorMiddleware(vite));
 
-  app.listen(devServerPort, () =>
-    process.stdout.write(`listening on :${devServerPort}\n`)
-  );
+  app.listen(devServerPort, () => process.stdout.write(`listening on :${devServerPort}\n`));
 };

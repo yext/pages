@@ -41,22 +41,13 @@ export default class SourceFileParser {
    * @param parentExpressionName the expression to parse through
    * @param allChildExpressions an array to save parsed expression names into
    */
-  getChildExpressions(
-    parentExpressionName: string,
-    allChildExpressions: string[]
-  ) {
-    const parentExpression =
-      this.sourceFile.getVariableStatement(parentExpressionName);
-    const descendantIdentifiers = parentExpression?.getDescendantsOfKind(
-      SyntaxKind.Identifier
-    );
+  getChildExpressions(parentExpressionName: string, allChildExpressions: string[]) {
+    const parentExpression = this.sourceFile.getVariableStatement(parentExpressionName);
+    const descendantIdentifiers = parentExpression?.getDescendantsOfKind(SyntaxKind.Identifier);
     descendantIdentifiers?.forEach((identifier) => {
       if (!allChildExpressions.includes(identifier.getText().trim())) {
         allChildExpressions.push(identifier.getText().trim());
-        this.getChildExpressions(
-          identifier.getText().trim(),
-          allChildExpressions
-        );
+        this.getChildExpressions(identifier.getText().trim(), allChildExpressions);
       }
     });
   }
@@ -112,9 +103,7 @@ export default class SourceFileParser {
     if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
       return exportDeclaration.getName() ?? "";
     } else if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
-      const expression = this.sourceFile.getExportAssignment(
-        (d) => !d.isExportEquals()
-      );
+      const expression = this.sourceFile.getExportAssignment((d) => !d.isExportEquals());
       const defaultName = expression?.getChildAtIndex(2).getText();
       return defaultName ?? "";
     }
@@ -182,20 +171,16 @@ export default class SourceFileParser {
    */
   setAllImports(allImports: OptionalKind<ImportDeclarationStructure>[]) {
     allImports.forEach((importDec) => {
-      let moduleSpecifier: string | undefined;
       this.sourceFile.addImportDeclaration({
         isTypeOnly: importDec.isTypeOnly,
         defaultImport: importDec.defaultImport,
         namedImports: importDec.namedImports,
         namespaceImport: importDec.namespaceImport,
-        moduleSpecifier: moduleSpecifier ?? importDec.moduleSpecifier,
+        moduleSpecifier: importDec.moduleSpecifier,
         attributes: importDec.attributes,
       });
     });
-    this.sourceFile
-      .fixMissingImports()
-      .organizeImports()
-      .fixUnusedIdentifiers();
+    this.sourceFile.fixMissingImports().organizeImports().fixUnusedIdentifiers();
   }
 
   getFileName(): string {
@@ -230,13 +215,9 @@ export default class SourceFileParser {
         const objectLiteral = initializer as any;
         const variableProperty = objectLiteral
           .getProperties()
-          .find(
-            (prop: { getName: () => string }) => prop.getName() === property
-          );
+          .find((prop: { getName: () => string }) => prop.getName() === property);
         if (variableProperty) {
-          const value = variableProperty
-            .getFirstChildByKind(SyntaxKind.StringLiteral)
-            ?.getText();
+          const value = variableProperty.getFirstChildByKind(SyntaxKind.StringLiteral)?.getText();
           if (value) {
             return value;
           } else {
@@ -250,9 +231,7 @@ export default class SourceFileParser {
 
   getVariableDeclarationByType(type: string): VariableDeclaration | undefined {
     const declaration =
-      this.sourceFile.getVariableDeclaration(
-        (v) => v.getType().getText() === type
-      ) ??
+      this.sourceFile.getVariableDeclaration((v) => v.getType().getText() === type) ??
       this.sourceFile.getVariableDeclaration((v) =>
         v
           .getType()
@@ -301,9 +280,7 @@ export default class SourceFileParser {
     const imports = this.sourceFile.getImportDeclarations();
 
     // Check if there's already an import for the specified module
-    const targetImport = imports.find(
-      (imp) => imp.getModuleSpecifierValue() === moduleName
-    );
+    const targetImport = imports.find((imp) => imp.getModuleSpecifierValue() === moduleName);
 
     if (targetImport) {
       // Check if the named import already exists

@@ -9,34 +9,24 @@ describe("simple makeClientTemplate usages", () => {
   it("correctly returns expected file contents", () => {
     const sourceParser = createParser(`const foo = 5; export default foo`);
     const testParser = createParser(``);
-    const templateParser = new TemplateParser(
-      sourceParser
-    ).makeClientTemplateFromSfp(testParser);
+    const templateParser = new TemplateParser(sourceParser).makeClientTemplateFromSfp(testParser);
     expect(templateParser.fileContents).toContain(`const foo = 5;`);
     expect(templateParser.fileContents).toContain(`export default foo`);
   });
 
   it("does not return unnecessary contents ", () => {
-    const sourceParser = createParser(
-      `const foo = 5; const bar = 7; export default foo`
-    );
+    const sourceParser = createParser(`const foo = 5; const bar = 7; export default foo`);
     const testParser = createParser(``);
-    const templateParser = new TemplateParser(
-      sourceParser
-    ).makeClientTemplateFromSfp(testParser);
+    const templateParser = new TemplateParser(sourceParser).makeClientTemplateFromSfp(testParser);
     expect(templateParser.fileContents).not.toContain(`const bar = 7;`);
     expect(templateParser.fileContents).toContain(`const foo = 5;`);
     expect(templateParser.fileContents).toContain(`export default foo`);
   });
 
   it("correctly returns child expressions", () => {
-    const sourceParser = createParser(
-      `const foo = bar + 5; const bar = 7; export default foo`
-    );
+    const sourceParser = createParser(`const foo = bar + 5; const bar = 7; export default foo`);
     const testParser = createParser(``);
-    const templateParser = new TemplateParser(
-      sourceParser
-    ).makeClientTemplateFromSfp(testParser);
+    const templateParser = new TemplateParser(sourceParser).makeClientTemplateFromSfp(testParser);
     expect(templateParser.fileContents).toContain(`const foo = bar + 5;`);
     expect(templateParser.fileContents).toContain(`const bar = 7;`);
     expect(templateParser.fileContents).toContain(`export default foo`);
@@ -49,9 +39,7 @@ describe("simple makeClientTemplate usages", () => {
       export default foo;`
     );
     const testParser = createParser(``);
-    const templateParser = new TemplateParser(
-      sourceParser
-    ).makeClientTemplateFromSfp(testParser);
+    const templateParser = new TemplateParser(sourceParser).makeClientTemplateFromSfp(testParser);
     expect(templateParser.fileContents).toContain(
       `import { Template, TemplateRenderProps } from "@yext/pages";`
     );
@@ -62,9 +50,7 @@ describe("simple makeClientTemplate usages", () => {
       `import { Template, TemplateRenderProps } from "@yext/pages";`
     );
     const testParser = createParser(``);
-    const templateParser = new TemplateParser(
-      sourceParser
-    ).makeClientTemplateFromSfp(testParser);
+    const templateParser = new TemplateParser(sourceParser).makeClientTemplateFromSfp(testParser);
     expect(templateParser.fileContents).not.toContain(
       `import { Template, TemplateRenderProps } from "@yext/pages";`
     );
@@ -79,9 +65,7 @@ describe("simple makeClientTemplate usages", () => {
       export default foo`
     );
     const testParser = createParser(``);
-    const templateParser = new TemplateParser(
-      sourceParser
-    ).makeClientTemplateFromSfp(testParser);
+    const templateParser = new TemplateParser(sourceParser).makeClientTemplateFromSfp(testParser);
     expect(templateParser.fileContents).not.toContain(` mock tsdoc comments`);
   });
 });
@@ -93,9 +77,7 @@ describe("complex makeClientTemplate usages", () => {
       createTsMorphProject()
     );
     const testParser = createParser(``);
-    const templateParser = new TemplateParser(
-      sourceParser
-    ).makeClientTemplateFromSfp(testParser);
+    const templateParser = new TemplateParser(sourceParser).makeClientTemplateFromSfp(testParser);
     const expectedContents = fs.readFileSync(
       "./tests/fixtures/sourceFileTemplates/clientStatic.tsx",
       "utf-8"
@@ -109,9 +91,7 @@ describe("complex makeClientTemplate usages", () => {
       createTsMorphProject()
     );
     const testParser = createParser(``);
-    const templateParser = new TemplateParser(
-      sourceParser
-    ).makeClientTemplateFromSfp(testParser);
+    const templateParser = new TemplateParser(sourceParser).makeClientTemplateFromSfp(testParser);
     const expectedContents = fs.readFileSync(
       "./tests/fixtures/sourceFileTemplates/clientState.tsx",
       "utf-8"
@@ -125,9 +105,7 @@ describe("complex makeClientTemplate usages", () => {
       createTsMorphProject()
     );
     const testParser = createParser(``);
-    const templateParser = new TemplateParser(
-      sourceParser
-    ).makeClientTemplateFromSfp(testParser);
+    const templateParser = new TemplateParser(sourceParser).makeClientTemplateFromSfp(testParser);
     expect(templateParser.fileContents).toEqual("");
   });
 });

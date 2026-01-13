@@ -2,10 +2,7 @@ import path from "path";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import fs from "node:fs";
 import { loadFunctions } from "../../common/src/function/internal/loader.js";
-import {
-  ArtifactsConfig,
-  Plugin,
-} from "../../common/src/artifacts/internal/types.js";
+import { ArtifactsConfig, Plugin } from "../../common/src/artifacts/internal/types.js";
 
 /**
  * Creates the artifacts.json file with the Generator plugin.
@@ -69,10 +66,7 @@ export const getArtifactsConfig = async (
       pluginName: functionModule.config.name,
       event: functionModule.config.event,
       functionName: functionModule.config.functionName,
-      apiPath:
-        functionModule.config.event === "API"
-          ? functionModule.slug.production
-          : undefined,
+      apiPath: functionModule.config.event === "API" ? functionModule.slug.production : undefined,
       sourceFiles: [
         {
           root: path.join(
@@ -86,14 +80,12 @@ export const getArtifactsConfig = async (
     };
 
     if (artifactConfig.artifactStructure.plugins) {
-      const functionPluginIndex =
-        artifactConfig.artifactStructure.plugins.findIndex((plugin) => {
-          return plugin.pluginName === functionModule.config.name;
-        });
+      const functionPluginIndex = artifactConfig.artifactStructure.plugins.findIndex((plugin) => {
+        return plugin.pluginName === functionModule.config.name;
+      });
 
       if (functionPluginIndex !== -1) {
-        artifactConfig.artifactStructure.plugins[functionPluginIndex] =
-          newEntry;
+        artifactConfig.artifactStructure.plugins[functionPluginIndex] = newEntry;
       } else {
         artifactConfig.artifactStructure.plugins?.push(newEntry);
       }

@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  GetPath,
-  Template,
-  TemplateConfig,
-  TemplateProps,
-  TemplateRenderProps,
-} from "@yext/pages";
+import { GetPath, Template, TemplateConfig, TemplateProps, TemplateRenderProps } from "@yext/pages";
 import "../../index.css";
 
 /**

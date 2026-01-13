@@ -39,11 +39,7 @@ export const readTemplateModules = async (
     pathToModule.set(path, importedModule);
   }
 
-  return convertTemplateModuleToTemplateModuleInternal(
-    path,
-    importedModule,
-    true
-  );
+  return convertTemplateModuleToTemplateModuleInternal(path, importedModule, true);
 };
 
 /** The render template information needed by the plugin execution */
@@ -68,8 +64,7 @@ export const getPluginRenderTemplates = async (
     ".."
   );
 
-  const serverRenderTemplateModule =
-    await importRenderTemplate(serverRenderPath);
+  const serverRenderTemplateModule = await importRenderTemplate(serverRenderPath);
 
   return {
     server: serverRenderTemplateModule,
@@ -82,9 +77,7 @@ export const getPluginRenderTemplates = async (
 // number of generations.
 const pluginRenderTemplatesCache = new Map<string, ServerRenderTemplate>();
 
-const importRenderTemplate = async (
-  path: string
-): Promise<ServerRenderTemplate> => {
+const importRenderTemplate = async (path: string): Promise<ServerRenderTemplate> => {
   let module = pluginRenderTemplatesCache.get(path);
   if (!module) {
     module = (await import(path)) as ServerRenderTemplate;
@@ -129,9 +122,7 @@ export const generateTemplateResponses = async (
   const templateRenderProps: TemplateRenderProps = {
     ...templateProps,
     path: path,
-    relativePrefixToRoot: getRelativePrefixToRootFromPath(
-      pathForRelativePrefixToRoot
-    ),
+    relativePrefixToRoot: getRelativePrefixToRootFromPath(pathForRelativePrefixToRoot),
   };
 
   const content = await renderHtml(

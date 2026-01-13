@@ -1,9 +1,6 @@
 import { TemplateModuleInternal } from "../../../../common/src/template/internal/types.js";
 import { getLang } from "../../../../common/src/template/head.js";
-import {
-  TemplateRenderProps,
-  Manifest,
-} from "../../../../common/src/template/types.js";
+import { TemplateRenderProps, Manifest } from "../../../../common/src/template/types.js";
 import {
   getHydrationTemplate,
   getServerTemplatePlugin,
@@ -97,25 +94,15 @@ export const findOriginalTemplatePathInManifest = (
   );
 
   if (projectStructure.config.scope) {
-    const scopedFilepath = path.join(
-      templatesRoot,
-      projectStructure.config.scope,
-      templateName
-    );
+    const scopedFilepath = path.join(templatesRoot, projectStructure.config.scope, templateName);
 
-    if (
-      Object.keys(manifest.bundlerManifest).some((key) =>
-        key.includes(scopedFilepath)
-      )
-    ) {
+    if (Object.keys(manifest.bundlerManifest).some((key) => key.includes(scopedFilepath))) {
       return scopedFilepath;
     }
   }
 
   const filepath = path.join(templatesRoot, templateName);
-  if (
-    Object.keys(manifest.bundlerManifest).some((key) => key.includes(filepath))
-  ) {
+  if (Object.keys(manifest.bundlerManifest).some((key) => key.includes(filepath))) {
     return filepath;
   }
 

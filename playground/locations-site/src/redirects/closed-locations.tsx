@@ -1,9 +1,4 @@
-import {
-  RedirectConfig,
-  TemplateProps,
-  GetDestination,
-  GetSources,
-} from "@yext/pages";
+import { RedirectConfig, TemplateProps, GetDestination, GetSources } from "@yext/pages";
 
 export const config: RedirectConfig = {
   stream: {

@@ -27,12 +27,10 @@ In most circumstance all changes should be associate with a unit test that lives
 - Checkout a topic branch from a base branch (e.g. `main`), and merge back against that branch.
 
 - If adding a new feature:
-
   - Add accompanying test case.
   - Provide a convincing reason to add this feature.
 
 - If fixing a bug:
-
   - If you are resolving a special issue, add `(fix #xxxx[,#xxxx])` (#xxxx is the issue id) in your PR title for a better release log (e.g. `fix: update entities encoding/decoding (fix #3899)`).
   - Provide a detailed description of the bug in the PR.
   - Add appropriate test coverage if applicable.
@@ -42,7 +40,6 @@ In most circumstance all changes should be associate with a unit test that lives
 - Make sure tests pass!
 
 - PR titles must follow the [semantic pull request](https://github.com/marketplace/actions/semantic-pull-request) style so that changelogs can be automatically generated. PR titles are automatically validated by a Github action.
-
   - ```
       feat(dev): add hydration option.
       ^    ^    ^

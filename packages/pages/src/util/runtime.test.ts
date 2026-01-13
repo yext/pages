@@ -90,9 +90,7 @@ describe("runtime", () => {
   });
 });
 
-const setupMockEnvironment = (
-  simulatedEnvironment?: "node" | "deno" | "browser"
-) => {
+const setupMockEnvironment = (simulatedEnvironment?: "node" | "deno" | "browser") => {
   const originalProcess = process;
   (global.process as any) = undefined;
 

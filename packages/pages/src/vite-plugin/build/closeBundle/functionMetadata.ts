@@ -25,17 +25,13 @@ const getFunctionMetadataMap = async (
 ): Promise<Record<string, FunctionMetadata>> => {
   const filepaths = glob
     .sync(
-      convertToPosixPath(
-        path.join(projectStructure.config.rootFolders.functions, "**/*.{js,ts}")
-      ),
+      convertToPosixPath(path.join(projectStructure.config.rootFolders.functions, "**/*.{js,ts}")),
       { nodir: true }
     )
     .map((f) => path.resolve(f));
 
   project.addSourceFilesAtPaths(filepaths);
-  const results = await Promise.allSettled(
-    filepaths.map(generateFunctionMetadata)
-  );
+  const results = await Promise.allSettled(filepaths.map(generateFunctionMetadata));
 
   const functionMetadataArray: [string, FunctionMetadata][] = [];
 
@@ -61,10 +57,7 @@ async function generateFunctionMetadata(
   filepath: string
 ): Promise<[string, FunctionMetadata] | undefined> {
   const relativePath = path.relative(process.cwd(), filepath);
-  const hasMainExport = project
-    .getSourceFile(filepath)
-    ?.getExportedDeclarations()
-    .has("main");
+  const hasMainExport = project.getSourceFile(filepath)?.getExportedDeclarations().has("main");
 
   if (hasMainExport) {
     return;
@@ -105,9 +98,7 @@ async function generateFunctionMetadata(
 }
 
 /** Generates a functionMetadata.json file from the functions directory. */
-export const generateFunctionMetadataFile = async (
-  projectStructure: ProjectStructure
-) => {
+export const generateFunctionMetadataFile = async (projectStructure: ProjectStructure) => {
   const functionMetadataMap = await getFunctionMetadataMap(projectStructure);
   const { rootFolders, distConfigFiles } = projectStructure.config;
 
@@ -118,8 +109,6 @@ export const generateFunctionMetadataFile = async (
 };
 
 /** Returns whether or not a functionMetadata.json file should be generated. */
-export const shouldGenerateFunctionMetadata = (
-  projectStructure: ProjectStructure
-) => {
+export const shouldGenerateFunctionMetadata = (projectStructure: ProjectStructure) => {
   return fs.existsSync(projectStructure.config.rootFolders.functions);
 };

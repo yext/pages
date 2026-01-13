@@ -23,20 +23,15 @@ export const loadTemplateModules = async (
   adjustForFingerprintedAsset: boolean,
   projectStructure: ProjectStructure
 ): Promise<TemplateModuleCollection> => {
-  const importedModules = await loadModules(
-    templateModulePaths,
-    transpile,
-    projectStructure
-  );
+  const importedModules = await loadModules(templateModulePaths, transpile, projectStructure);
 
   const importedTemplateModules = [] as TemplateModuleInternal<any, any>[];
   for (const importedModule of importedModules) {
-    const templateModuleInternal =
-      convertTemplateModuleToTemplateModuleInternal(
-        importedModule.path,
-        importedModule.module,
-        adjustForFingerprintedAsset
-      );
+    const templateModuleInternal = convertTemplateModuleToTemplateModuleInternal(
+      importedModule.path,
+      importedModule.module,
+      adjustForFingerprintedAsset
+    );
 
     importedTemplateModules.push({
       ...templateModuleInternal,
@@ -55,10 +50,7 @@ export const loadTemplateModules = async (
 };
 
 // A TemplateModuleCollection is a collection of template modules indexed by feature name.
-export type TemplateModuleCollection = Map<
-  string,
-  TemplateModuleInternal<any, any>
->;
+export type TemplateModuleCollection = Map<string, TemplateModuleInternal<any, any>>;
 
 /**
  * Simlar to loadTemplateModules above but reuses an existing Vite dev server.
@@ -69,15 +61,8 @@ export const loadTemplateModuleCollectionUsingVite = async (
 ): Promise<TemplateModuleCollection> => {
   const templateModules: TemplateModuleInternal<any, any>[] = await Promise.all(
     templateFilepaths.map(async (templateFilepath) => {
-      const templateModule = await loadViteModule<TemplateModule<any, any>>(
-        vite,
-        templateFilepath
-      );
-      return convertTemplateModuleToTemplateModuleInternal(
-        templateFilepath,
-        templateModule,
-        false
-      );
+      const templateModule = await loadViteModule<TemplateModule<any, any>>(vite, templateFilepath);
+      return convertTemplateModuleToTemplateModuleInternal(templateFilepath, templateModule, false);
     })
   );
   return templateModules.reduce((prev, module) => {

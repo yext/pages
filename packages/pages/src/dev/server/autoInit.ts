@@ -47,15 +47,10 @@ Let's connect to your Yext Account
     if (scope) {
       fs.appendFileSync(
         ".yextrc",
-        `"${scope}":\n` +
-          `  accountId: ${accountId}\n` +
-          `  universe: ${universe}\n\n`
+        `"${scope}":\n` + `  accountId: ${accountId}\n` + `  universe: ${universe}\n\n`
       );
     } else {
-      fs.appendFileSync(
-        ".yextrc",
-        `accountId: ${accountId}\n` + `universe: ${universe}\n\n`
-      );
+      fs.appendFileSync(".yextrc", `accountId: ${accountId}\n` + `universe: ${universe}\n\n`);
     }
     console.log(
       `*******************************************************
@@ -81,7 +76,7 @@ const runCommand = (command: string, args: string[]) => {
     });
 
     childProcess.on("close", (code) => {
-      code === 0 ? resolve(output) : reject(new Error(output));
+      return code === 0 ? resolve(output) : reject(new Error(output));
     });
   });
 };

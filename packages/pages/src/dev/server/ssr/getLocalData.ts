@@ -69,11 +69,7 @@ export const getLocalDataManifest = async (
   const staticPaths: string[] = [];
   for (const fileName of dir) {
     const data = JSON.parse(
-      fs
-        .readFileSync(
-          path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${fileName}`)
-        )
-        .toString()
+      fs.readFileSync(path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${fileName}`)).toString()
     );
 
     const featureName = data.__?.name?.toString();
@@ -98,9 +94,7 @@ export const getLocalDataManifest = async (
     } else {
       // The lack of an entityId signifies that this is a static template.
       if (!templateModuleInternal) {
-        logWarning(
-          `Could not find a static template for feature "${featureName}", skipping.`
-        );
+        logWarning(`Could not find a static template for feature "${featureName}", skipping.`);
         continue;
       }
 
@@ -119,8 +113,7 @@ export const getLocalDataManifest = async (
           logWarning(`${(e as Error).message}, skipping."`);
           continue;
         }
-        let pathToLocalesMap =
-          localDataManifest.static.get(featureName)?.pathToLocalesMap;
+        let pathToLocalesMap = localDataManifest.static.get(featureName)?.pathToLocalesMap;
         if (!pathToLocalesMap) {
           pathToLocalesMap = new Map();
           pathToLocalesMap.set(staticPath, [data.meta.locale]);
@@ -146,9 +139,7 @@ export const readLocalDataFile = async (
   try {
     return JSON.parse(
       fs
-        .readFileSync(
-          path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${localDataFilepath}`)
-        )
+        .readFileSync(path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${localDataFilepath}`))
         .toString()
     );
   } catch (_) {
@@ -172,11 +163,7 @@ export const getLocalData = async (
 
     for (const fileName of dir) {
       const data = JSON.parse(
-        fs
-          .readFileSync(
-            path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${fileName}`)
-          )
-          .toString()
+        fs.readFileSync(path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${fileName}`)).toString()
       );
       if (criterion(data)) {
         return {
@@ -197,19 +184,13 @@ export const getLocalData = async (
 /**
  * Reads through all localData and returns all documents that match criterion.
  */
-export const getAllLocalData = async (
-  criterion: (data: any) => boolean
-): Promise<LocalData[]> => {
+export const getAllLocalData = async (criterion: (data: any) => boolean): Promise<LocalData[]> => {
   try {
     const dir = await readdir(LOCAL_DATA_PATH);
     return dir
       .map((fileName) => {
         const data = JSON.parse(
-          fs
-            .readFileSync(
-              path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${fileName}`)
-            )
-            .toString()
+          fs.readFileSync(path.resolve(process.cwd(), `${LOCAL_DATA_PATH}/${fileName}`)).toString()
         );
         if (criterion(data)) {
           return {
@@ -292,9 +273,7 @@ export const getLocalEntityPageDataForSlug = async (slug: string) => {
   if (localDataForSlug.length === 0) {
     throw new Error(`No localData files match slug: ${slug}`);
   } else if (localDataForSlug.length > 1) {
-    throw new Error(
-      `Multiple localData files match slug: ${slug}, expected only a single file`
-    );
+    throw new Error(`Multiple localData files match slug: ${slug}, expected only a single file`);
   }
   return localDataForSlug[0].document;
 };

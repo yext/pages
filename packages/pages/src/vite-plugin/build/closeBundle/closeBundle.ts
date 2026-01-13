@@ -44,80 +44,40 @@ export default (
         const serverBundles = glob.sync(
           convertToPosixPath(
             path.join(
-              path.resolve(
-                rootFolders.dist,
-                subfolders.assets,
-                subfolders.serverBundle
-              ),
+              path.resolve(rootFolders.dist, subfolders.assets, subfolders.serverBundle),
               "**/*.js"
             )
           ),
           {
             ignore: [
-              path.join(
-                path.resolve(rootFolders.dist, subfolders.serverlessFunctions),
-                "**"
-              ),
-              path.join(
-                path.resolve(rootFolders.dist, subfolders.modules),
-                "**"
-              ),
-              path.join(
-                path.resolve(rootFolders.dist, subfolders.redirects),
-                "**"
-              ),
+              path.join(path.resolve(rootFolders.dist, subfolders.serverlessFunctions), "**"),
+              path.join(path.resolve(rootFolders.dist, subfolders.modules), "**"),
+              path.join(path.resolve(rootFolders.dist, subfolders.redirects), "**"),
             ],
           }
         );
-        templateModules = await loadTemplateModules(
-          serverBundles,
-          false,
-          true,
-          projectStructure
-        );
+        templateModules = await loadTemplateModules(serverBundles, false, true, projectStructure);
 
         const redirectBundles = glob.sync(
           convertToPosixPath(
             path.join(
-              path.resolve(
-                rootFolders.dist,
-                subfolders.assets,
-                subfolders.redirectBundle
-              ),
+              path.resolve(rootFolders.dist, subfolders.assets, subfolders.redirectBundle),
               "**/*.js"
             )
           ),
           {
             ignore: [
-              path.join(
-                path.resolve(rootFolders.dist, subfolders.serverlessFunctions),
-                "**"
-              ),
-              path.join(
-                path.resolve(rootFolders.dist, subfolders.modules),
-                "**"
-              ),
-              path.join(
-                path.resolve(rootFolders.dist, subfolders.templates),
-                "**"
-              ),
+              path.join(path.resolve(rootFolders.dist, subfolders.serverlessFunctions), "**"),
+              path.join(path.resolve(rootFolders.dist, subfolders.modules), "**"),
+              path.join(path.resolve(rootFolders.dist, subfolders.templates), "**"),
             ],
           }
         );
 
-        redirectModules = await loadRedirectModules(
-          redirectBundles,
-          false,
-          true,
-          projectStructure
-        );
+        redirectModules = await loadRedirectModules(redirectBundles, false, true, projectStructure);
 
         validateUniqueFeatureName(templateModules);
-        validateBundles(
-          projectStructure,
-          pluginFilesizeLimit,
-          pluginTotalFilesizeLimit
-        );
+        validateBundles(projectStructure, pluginFilesizeLimit, pluginTotalFilesizeLimit);
         finisher.succeed("Validated template modules");
       } catch (e: any) {
         finisher.fail("One or more template modules failed validation");
@@ -173,11 +133,7 @@ export default (
 
       finisher = logger.timedLog({ startLog: "Writing manifest.json" });
       try {
-        await generateManifestFile(
-          templateModules,
-          redirectModules,
-          projectStructure
-        );
+        await generateManifestFile(templateModules, redirectModules, projectStructure);
         finisher.succeed("Successfully wrote manifest.json");
       } catch (e: any) {
         finisher.fail("Failed to write manifest.json");
@@ -195,10 +151,7 @@ export default (
           );
 
           // src/functions are validated in this process
-          await createArtifactsJson(
-            artifactPath.getAbsolutePath(),
-            projectStructure
-          );
+          await createArtifactsJson(artifactPath.getAbsolutePath(), projectStructure);
 
           finisher.succeed("Successfully wrote artifacts.json");
         } catch (e: any) {
@@ -208,16 +161,11 @@ export default (
       } else {
         finisher = logger.timedLog({ startLog: "Updating ci.json" });
         try {
-          const sitesConfigAbsolutePath = projectStructure
-            .getSitesConfigPath()
-            .getAbsolutePath();
+          const sitesConfigAbsolutePath = projectStructure.getSitesConfigPath().getAbsolutePath();
 
           // src/functions are validated in this process
           await updateCiConfig(
-            path.join(
-              sitesConfigAbsolutePath,
-              projectStructure.config.sitesConfigFiles.ci
-            ),
+            path.join(sitesConfigAbsolutePath, projectStructure.config.sitesConfigFiles.ci),
             false,
             projectStructure
           );
@@ -235,9 +183,7 @@ export default (
  * Checks that a feature name doesn't appear twice in the set of template modules.
  * @param templateModuleCollection
  */
-const validateUniqueFeatureName = (
-  templateModuleCollection: TemplateModuleCollection
-) => {
+const validateUniqueFeatureName = (templateModuleCollection: TemplateModuleCollection) => {
   const featureNames = new Set<string>();
   [...templateModuleCollection.keys()].forEach((featureName) => {
     if (featureNames.has(featureName)) {

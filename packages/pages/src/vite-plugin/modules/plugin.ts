@@ -22,9 +22,7 @@ type FileInfo = {
   name: string;
 };
 
-export const buildModules = async (
-  projectStructure: ProjectStructure
-): Promise<void> => {
+export const buildModules = async (projectStructure: ProjectStructure): Promise<void> => {
   if (!shouldBundleModules(projectStructure)) {
     return;
   }
@@ -64,9 +62,7 @@ export const buildModules = async (
 
   const viteConfigPath = scopedViteConfigPath(projectStructure.config.scope);
   const viteConfigModule = viteConfigPath ? await import(viteConfigPath) : "";
-  const viteConfig = viteConfigModule
-    ? (viteConfigModule.default as UserConfig)
-    : undefined;
+  const viteConfig = viteConfigModule ? (viteConfigModule.default as UserConfig) : undefined;
 
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
@@ -87,11 +83,7 @@ export const buildModules = async (
       },
       publicDir: false,
       css: {
-        postcss: getPostCssConfigFilepath(
-          rootFolders,
-          subfolders,
-          fileInfo.name
-        ),
+        postcss: getPostCssConfigFilepath(rootFolders, subfolders, fileInfo.name),
       },
       esbuild: {
         logOverride: {
@@ -99,16 +91,12 @@ export const buildModules = async (
         },
       },
       experimental: {
-        renderBuiltUrl(
-          filename: string,
-          { type }: { type: "asset" | "public" }
-        ) {
+        renderBuiltUrl(filename: string, { type }: { type: "asset" | "public" }) {
           let domain = `http://localhost:8000`;
           if (typeof process.env.YEXT_SITE_ARGUMENT !== "undefined") {
             try {
               domain = new URL(
-                "https://" +
-                  JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
+                "https://" + JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
               ).toString();
             } catch (_) {
               logErrorAndExit("Cannot parse YEXT_SITE_ARGUMENT");
@@ -147,9 +135,7 @@ export const buildModules = async (
       ],
     };
 
-    await build(
-      mergeConfig(cleanseUserViteConfig(viteConfig), moduleBuildConfig)
-    );
+    await build(mergeConfig(cleanseUserViteConfig(viteConfig), moduleBuildConfig));
   }
 };
 
@@ -165,18 +151,13 @@ const wrappedCode = (moduleName: string, containerName: string): string => {
   );`;
 };
 
-export default function addWrappedCodePlugin(
-  path: string,
-  moduleName: string
-): Plugin {
+export default function addWrappedCodePlugin(path: string, moduleName: string): Plugin {
   return {
     name: "wrapped-code-plugin",
     enforce: "pre",
     transform(source: string, id: string) {
       if (id === path) {
-        return (
-          getReactImports(source) + source + extraModuleCode(path, moduleName)
-        );
+        return getReactImports(source) + source + extraModuleCode(path, moduleName);
       }
       return null;
     },
@@ -188,11 +169,7 @@ const getReactImports = (source: string): string => {
   if (!(source.includes(`from 'react'`) || source.includes(`from "react"`))) {
     imports += `import * as React from 'react';\n`;
   }
-  if (
-    !(
-      source.includes(`from 'react-dom'`) || source.includes(`from "react-dom"`)
-    )
-  ) {
+  if (!(source.includes(`from 'react-dom'`) || source.includes(`from "react-dom"`))) {
     imports += `import * as ReactDOM from 'react-dom';\n`;
   }
   return imports;
@@ -234,11 +211,7 @@ const getPostCssConfigFilepath = (
   subfolders: any,
   filename: string
 ): string | undefined => {
-  const filePath = path.join(
-    rootFolders.source,
-    subfolders.modules,
-    `${filename}/postcss.config`
-  );
+  const filePath = path.join(rootFolders.source, subfolders.modules, `${filename}/postcss.config`);
   let filePaths = glob.sync(filePath + ".{js,cjs,ts,mjs}");
   if (filePaths.length == 1) {
     return filePaths[0];

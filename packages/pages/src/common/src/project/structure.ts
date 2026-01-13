@@ -212,9 +212,7 @@ export class ProjectStructure {
     this.config = mergedConfig;
   }
 
-  static init = async (
-    projectStructureConfig?: Optional<ProjectStructureConfig>
-  ) => {
+  static init = async (projectStructureConfig?: Optional<ProjectStructureConfig>) => {
     const config = merge(defaultProjectStructureConfig, projectStructureConfig);
 
     let viteConfigPath = pathLib.resolve(config.scope ?? "", "vite.config.js");
@@ -223,17 +221,11 @@ export class ProjectStructure {
     }
 
     // TODO: handle other extensions
-    const assetsDir = await determineAssetsFilepath(
-      DEFAULT_ASSETS_DIR,
-      viteConfigPath
-    );
+    const assetsDir = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);
 
     config.subfolders.assets = assetsDir;
 
-    const publicDir = await determinePublicFilepath(
-      DEFAULT_PUBLIC_DIR,
-      viteConfigPath
-    );
+    const publicDir = await determinePublicFilepath(DEFAULT_PUBLIC_DIR, viteConfigPath);
 
     config.subfolders.public = publicDir;
 
@@ -293,39 +285,28 @@ export class ProjectStructure {
    * @returns the {@link Path} to the sites-config folder, taking scope into account.
    */
   getSitesConfigPath = () => {
-    return new Path(
-      pathLib.join(this.config.rootFolders.sitesConfig, this.config.scope ?? "")
-    );
+    return new Path(pathLib.join(this.config.rootFolders.sitesConfig, this.config.scope ?? ""));
   };
 
   /**
    * @returns the {@link Path} to the dist folder, taking scope into account.
    */
   getScopedDistPath = () => {
-    return new Path(
-      pathLib.join(this.config.rootFolders.dist, this.config.scope ?? "")
-    );
+    return new Path(pathLib.join(this.config.rootFolders.dist, this.config.scope ?? ""));
   };
 
   /**
    * @returns the {@link Path} to the config.yaml file, taking scope into account.
    */
   getConfigYamlPath = () => {
-    return new Path(
-      pathLib.join(this.config.scope ?? "", this.config.rootFiles.config)
-    );
+    return new Path(pathLib.join(this.config.scope ?? "", this.config.rootFiles.config));
   };
 
   /**
    * @returns the {@link Path} to the .template-manifest.json file, taking scope into account.
    */
   getTemplateManifestPath = () => {
-    return new Path(
-      pathLib.join(
-        this.config.scope ?? "",
-        this.config.rootFiles.templateManifest
-      )
-    );
+    return new Path(pathLib.join(this.config.scope ?? "", this.config.rootFiles.templateManifest));
   };
 
   /**

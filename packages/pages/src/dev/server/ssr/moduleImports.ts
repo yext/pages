@@ -8,10 +8,7 @@ import { ViteDevServer } from "vite";
  * @param modulePath the module path to load
  * @returns the loaded module
  */
-export async function importFresh<T>(
-  devserver: ViteDevServer,
-  modulePath: string
-): Promise<T> {
+export async function importFresh<T>(devserver: ViteDevServer, modulePath: string): Promise<T> {
   const cacheBustingModulePath = `${modulePath}?update=${Date.now()}`;
   return (await devserver.ssrLoadModule(cacheBustingModulePath)) as T;
 }

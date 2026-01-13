@@ -1,10 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { FunctionModuleInternal } from "../../../common/src/function/internal/types.js";
-import {
-  PagesHttpRequest,
-  Site,
-  HttpFunction,
-} from "../../../common/src/function/types.js";
+import { PagesHttpRequest, Site, HttpFunction } from "../../../common/src/function/types.js";
 import { logError } from "../../../util/logError.js";
 
 export const serveHttpFunction = async (
@@ -24,9 +20,7 @@ export const serveHttpFunction = async (
 
   if (serverlessFunction.default) {
     try {
-      const fnRes = await (serverlessFunction.default as HttpFunction)(
-        argument
-      );
+      const fnRes = await (serverlessFunction.default as HttpFunction)(argument);
       res
         .status(fnRes.statusCode)
         .header({ ...fnRes.headers, "Content-Type": "application/json" })

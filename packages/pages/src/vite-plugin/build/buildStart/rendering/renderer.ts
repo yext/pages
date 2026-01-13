@@ -1,8 +1,5 @@
 import { ProjectStructure } from "../../../../common/src/project/structure.js";
-import {
-  Manifest,
-  TemplateProps,
-} from "../../../../common/src/template/types.js";
+import { Manifest, TemplateProps } from "../../../../common/src/template/types.js";
 import {
   GeneratedPage,
   generateTemplateResponses,
@@ -32,16 +29,9 @@ export default async (
   const projectStructure = new ProjectStructure(manifest.projectStructure);
   const feature = props.document.__.codeTemplate ?? props.document.__.name;
 
-  const template = await readTemplateModules(
-    feature,
-    manifest,
-    projectStructure
-  );
+  const template = await readTemplateModules(feature, manifest, projectStructure);
   if (template) {
-    const pluginRenderTemplates = await getPluginRenderTemplates(
-      manifest,
-      projectStructure
-    );
+    const pluginRenderTemplates = await getPluginRenderTemplates(manifest, projectStructure);
     return await generateTemplateResponses(
       template,
       props,
@@ -51,11 +41,7 @@ export default async (
     );
   }
 
-  const redirect = await readRedirectModules(
-    feature,
-    manifest,
-    projectStructure
-  );
+  const redirect = await readRedirectModules(feature, manifest, projectStructure);
   if (redirect) {
     return await generateRedirectResponses(redirect, props);
   }

@@ -5,8 +5,7 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
+  for (var name in all) __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if ((from && typeof from === "object") || typeof from === "function") {
@@ -28,8 +27,7 @@ var __toESM = (mod, isNodeMode, target) => (
     mod
   )
 );
-var __toCommonJS = (mod) =>
-  __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var stdin_exports = {};
 __export(stdin_exports, {
   config: () => config,
@@ -87,10 +85,6 @@ const getHeadConfig = ({ document }) => {
   };
 };
 const Location = () => {
-  return /* @__PURE__ */ React.createElement(
-    React.Fragment,
-    null,
-    "Hello, World"
-  );
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, "Hello, World");
 };
 var stdin_default = Location;

@@ -17,8 +17,6 @@ const handler = async () => {
 export const modulesCommand = (program: Command) => {
   program
     .command("modules")
-    .description(
-      "Adds the required files and folder structure for a new Pages module."
-    )
+    .description("Adds the required files and folder structure for a new Pages module.")
     .action(handler);
 };

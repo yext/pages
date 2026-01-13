@@ -57,13 +57,7 @@ export const upgradeCommand = (program: Command) => {
   program
     .command("upgrade")
     .description("Upgrade repo to support the latest version of Pages")
-    .option(
-      "--scope <string>",
-      "The subfolder to scope the served templates from"
-    )
-    .option(
-      "--noMigration",
-      "Skip the migration to config.yaml and deletion of sites-config"
-    )
+    .option("--scope <string>", "The subfolder to scope the served templates from")
+    .option("--noMigration", "Skip the migration to config.yaml and deletion of sites-config")
     .action(handler);
 };

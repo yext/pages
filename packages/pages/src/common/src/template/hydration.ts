@@ -27,9 +27,7 @@ export const getHydrationTemplateDev = (
   hydrate: boolean
 ): string => {
   let hydrationTemplate = `
-  import {default as Component} from "${convertToPosixPath(
-    templateModulePath
-  )}";
+  import {default as Component} from "${convertToPosixPath(templateModulePath)}";
   `;
 
   if (hydrate) {
@@ -65,9 +63,7 @@ export const getHydrationTemplate = (
   props: TemplateRenderProps
 ): string => {
   const posixModulePath = makeAbsolute(convertToPosixPath(templateModulePath));
-  const posixRenderPath = makeAbsolute(
-    convertToPosixPath(clientRenderTemplatePath)
-  );
+  const posixRenderPath = makeAbsolute(convertToPosixPath(clientRenderTemplatePath));
   return `
         const componentURL = new URL("${posixModulePath}", import.meta.url)
         const component = await import(componentURL);
@@ -85,9 +81,7 @@ export const getHydrationTemplate = (
 };
 
 const getPagePropsString = (props: TemplateRenderProps) => {
-  return `JSON.parse(decodeURIComponent("${encodeURIComponent(
-    JSON.stringify(props)
-  )}"))`;
+  return `JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(props))}"))`;
 };
 
 const makeAbsolute = (path: string): string => {
@@ -184,12 +178,7 @@ export const getServerTemplatePlugin = (
   appLanguage: string,
   headConfig?: HeadConfig
 ) => {
-  let html = getCommonInjectedIndexHtml(
-    clientHydrationString,
-    serverHtml,
-    appLanguage,
-    headConfig
-  );
+  let html = getCommonInjectedIndexHtml(clientHydrationString, serverHtml, appLanguage, headConfig);
   html = injectIntoHead(html, getCssHtml(templateFilepath, bundlerManifest));
 
   return html;
@@ -205,10 +194,7 @@ type ManifestInfo = {
   css: string[];
 };
 
-const getCssHtml = (
-  templateFilepath: string,
-  bundlerManifest: bundlerManifest
-): string => {
+const getCssHtml = (templateFilepath: string, bundlerManifest: bundlerManifest): string => {
   return Array.from(getCssTags(templateFilepath, bundlerManifest, new Set()))
     .map((f) => `<link rel="stylesheet" href="/${f}"/>`)
     .join("\n");
@@ -219,9 +205,7 @@ const getCssTags = (
   manifest: bundlerManifest,
   seen: Set<string>
 ): Set<string> => {
-  const entry = structuredClone(
-    Object.entries(manifest).find(([file]) => file === filepath)
-  );
+  const entry = structuredClone(Object.entries(manifest).find(([file]) => file === filepath));
   if (!entry) {
     return new Set();
   }
@@ -251,11 +235,7 @@ const injectIntoHead = (html: string, stringToInject: string): string => {
 
   openingHeadIndex += headTag.length;
 
-  return (
-    html.slice(0, openingHeadIndex) +
-    stringToInject +
-    html.slice(openingHeadIndex)
-  );
+  return html.slice(0, openingHeadIndex) + stringToInject + html.slice(openingHeadIndex);
 };
 
 const closingHeadTag = "</head>";
@@ -271,9 +251,5 @@ const injectIntoEndOfHead = (html: string, stringToInject: string): string => {
     throw new Error("_server.tsx: No head tag is defined");
   }
 
-  return (
-    html.slice(0, closingHeadIndex) +
-    stringToInject +
-    html.slice(closingHeadIndex)
-  );
+  return html.slice(0, closingHeadIndex) + stringToInject + html.slice(closingHeadIndex);
 };

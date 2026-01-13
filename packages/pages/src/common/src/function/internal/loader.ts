@@ -1,8 +1,5 @@
 import path from "node:path";
-import {
-  convertFunctionModuleToFunctionModuleInternal,
-  FunctionModuleInternal,
-} from "./types.js";
+import { convertFunctionModuleToFunctionModuleInternal, FunctionModuleInternal } from "./types.js";
 import { getFunctionFilepaths } from "./getFunctionFilepaths.js";
 import { ProjectStructure } from "../../project/structure.js";
 import { loadModules } from "../../loader/vite.js";
@@ -19,24 +16,17 @@ export const loadFunctionModules = async (
   transpile: boolean,
   projectStructure: ProjectStructure
 ): Promise<FunctionModuleCollection> => {
-  const functionPathStrings = functionPaths.map((functionPath) =>
-    path.format(functionPath)
-  );
+  const functionPathStrings = functionPaths.map((functionPath) => path.format(functionPath));
 
-  const importedModules = await loadModules(
-    functionPathStrings,
-    transpile,
-    projectStructure
-  );
+  const importedModules = await loadModules(functionPathStrings, transpile, projectStructure);
 
   const importedFunctionModules = [] as FunctionModuleInternal[];
   for (const importedModule of importedModules) {
-    const functionModuleInternal =
-      convertFunctionModuleToFunctionModuleInternal(
-        path.parse(importedModule.path),
-        importedModule.module,
-        projectStructure
-      );
+    const functionModuleInternal = convertFunctionModuleToFunctionModuleInternal(
+      path.parse(importedModule.path),
+      importedModule.module,
+      projectStructure
+    );
 
     importedFunctionModules.push({
       ...functionModuleInternal,
@@ -69,10 +59,7 @@ export type FunctionModuleCollection = Map<string, FunctionModuleInternal>;
  * @param root the directory to check for functions
  * @return Promise<FunctionModuleCollection>
  */
-export const loadFunctions = async (
-  root: string,
-  projectStructure: ProjectStructure
-) => {
+export const loadFunctions = async (root: string, projectStructure: ProjectStructure) => {
   const functionFilepaths = getFunctionFilepaths(root);
   return await loadFunctionModules(functionFilepaths, true, projectStructure);
 };

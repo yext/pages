@@ -1,10 +1,6 @@
 import fs from "node:fs";
 import SourceFileParser, { createTsMorphProject } from "./sourceFileParser.js";
-import {
-  ObjectLiteralExpression,
-  PropertyAssignment,
-  SyntaxKind,
-} from "ts-morph";
+import { ObjectLiteralExpression, PropertyAssignment, SyntaxKind } from "ts-morph";
 
 export const tailwindConfigFilename = "tailwind.config.ts";
 
@@ -16,10 +12,7 @@ export const addThemeConfigToTailwind = (tailwindConfigPath: string) => {
     throw new Error(`Filepath "${tailwindConfigPath}" is invalid.`);
   }
 
-  const parser = new SourceFileParser(
-    tailwindConfigPath,
-    createTsMorphProject()
-  );
+  const parser = new SourceFileParser(tailwindConfigPath, createTsMorphProject());
 
   const defaultExport = parser
     .getSourceFile()
@@ -46,9 +39,7 @@ export const addThemeConfigToTailwind = (tailwindConfigPath: string) => {
     if (innerExpression.getKind() === SyntaxKind.ObjectLiteralExpression) {
       configObject = innerExpression.asKind(SyntaxKind.ObjectLiteralExpression);
     }
-  } else if (
-    exportInitializer.getKind() === SyntaxKind.ObjectLiteralExpression
-  ) {
+  } else if (exportInitializer.getKind() === SyntaxKind.ObjectLiteralExpression) {
     configObject = exportInitializer.asKind(SyntaxKind.ObjectLiteralExpression);
   }
 
@@ -59,10 +50,7 @@ export const addThemeConfigToTailwind = (tailwindConfigPath: string) => {
   // Locate the "theme" property
   let themeProperty = configObject.getProperty("theme") as PropertyAssignment;
 
-  if (
-    !themeProperty ||
-    themeProperty.getKind() !== SyntaxKind.PropertyAssignment
-  ) {
+  if (!themeProperty || themeProperty.getKind() !== SyntaxKind.PropertyAssignment) {
     // Add the "theme" property if it doesn't exist
     themeProperty = configObject.addPropertyAssignment({
       name: "theme",
@@ -87,17 +75,10 @@ export const addThemeConfigToTailwind = (tailwindConfigPath: string) => {
     }`);
   } else if (themeValue.getKind() === SyntaxKind.ObjectLiteralExpression) {
     // The theme is a regular object literal
-    const extendProperty = (themeValue as ObjectLiteralExpression).getProperty(
-      "extend"
-    );
-    if (
-      extendProperty &&
-      extendProperty.getKind() === SyntaxKind.PropertyAssignment
-    ) {
+    const extendProperty = (themeValue as ObjectLiteralExpression).getProperty("extend");
+    if (extendProperty && extendProperty.getKind() === SyntaxKind.PropertyAssignment) {
       // Modify or replace the "extend" property
-      (extendProperty as PropertyAssignment).setInitializer(
-        `themeResolver({}, themeConfig)`
-      );
+      (extendProperty as PropertyAssignment).setInitializer(`themeResolver({}, themeConfig)`);
     } else {
       // Add "extend" if it doesn't exist
       (themeValue as ObjectLiteralExpression).addPropertyAssignment({

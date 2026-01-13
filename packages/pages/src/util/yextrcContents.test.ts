@@ -6,10 +6,7 @@ describe("parseYextrcContents", () => {
   it("returns a valid accountId and universe from .yextrc", () => {
     const providedAccountId = 1089287;
     const providedUniverse = "prod";
-    fs.writeFileSync(
-      ".yextrc",
-      `accountId: ${providedAccountId}\nuniverse: ${providedUniverse}`
-    );
+    fs.writeFileSync(".yextrc", `accountId: ${providedAccountId}\nuniverse: ${providedUniverse}`);
     const { accountId, universe } = parseYextrcContents();
 
     expect(accountId).toEqual(providedAccountId);
@@ -19,10 +16,7 @@ describe("parseYextrcContents", () => {
   it("returns nothing when the accountId provided in .yextrc in invalid", () => {
     const providedAccountId = "invalidAccountId";
     const providedUniverse = "prod";
-    fs.writeFileSync(
-      ".yextrc",
-      `accountId: ${providedAccountId}\nuniverse: ${providedUniverse}`
-    );
+    fs.writeFileSync(".yextrc", `accountId: ${providedAccountId}\nuniverse: ${providedUniverse}`);
     const { accountId, universe } = parseYextrcContents();
 
     expect(accountId).toBeFalsy();
@@ -32,10 +26,7 @@ describe("parseYextrcContents", () => {
   it("returns nothing when the universe provided in .yextrc in invalid", () => {
     const providedAccountId = "invalidAccountId";
     const providedUniverse = "fakeUniverse";
-    fs.writeFileSync(
-      ".yextrc",
-      `accountId: ${providedAccountId}\nuniverse: ${providedUniverse}`
-    );
+    fs.writeFileSync(".yextrc", `accountId: ${providedAccountId}\nuniverse: ${providedUniverse}`);
     const { accountId, universe } = parseYextrcContents();
 
     expect(accountId).toBeFalsy();

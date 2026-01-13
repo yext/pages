@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  GetPath,
-  Template,
-  TemplateConfig,
-  TemplateProps,
-  TemplateRenderProps,
-} from "@yext/pages";
+import { GetPath, Template, TemplateConfig, TemplateProps, TemplateRenderProps } from "@yext/pages";
 import "../index.css";
 
 /**
@@ -47,9 +41,7 @@ export const getPath: GetPath<TemplateProps> = ({ document }) => {
 const Location: Template<TemplateRenderProps> = ({ document }) => {
   const { address } = document;
 
-  return (
-    <div className="text-4xl font-bold bg-red-500 m-4 p-4">{address.line1}</div>
-  );
+  return <div className="text-4xl font-bold bg-red-500 m-4 p-4">{address.line1}</div>;
 };
 
 export default Location;

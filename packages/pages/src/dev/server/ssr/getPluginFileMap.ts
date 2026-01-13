@@ -27,10 +27,7 @@ type ServerlessFunctionSource = {
 };
 
 /** Returns the pluginFileMap as a mapping of function name to source data. */
-export const getPluginFileMap = (): Record<
-  string,
-  ServerlessFunctionSource
-> => {
+export const getPluginFileMap = (): Record<string, ServerlessFunctionSource> => {
   try {
     return JSON.parse(fs.readFileSync(PLUGIN_FILE_MAP_PATH).toString());
   } catch (err: any) {

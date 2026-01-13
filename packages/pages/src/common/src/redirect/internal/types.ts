@@ -4,12 +4,7 @@ import {
   parse,
   StreamInternal,
 } from "../../template/internal/types.js";
-import {
-  GetDestination,
-  GetSources,
-  RedirectConfig,
-  RedirectModule,
-} from "../types.js";
+import { GetDestination, GetSources, RedirectConfig, RedirectModule } from "../types.js";
 import { validateRedirectModuleInternal } from "./validateRedirectModuleInternal.js";
 
 /**
@@ -55,10 +50,7 @@ export const convertRedirectModuleToRedirectModuleInternal = (
 
   const redirectModuleInternal = {
     ...redirectModule,
-    config: convertRedirectConfigToRedirectConfigInternal(
-      redirectPath.name,
-      redirectModule.config
-    ),
+    config: convertRedirectConfigToRedirectConfigInternal(redirectPath.name, redirectModule.config),
     path: redirectFilepath,
     filename: redirectPath.base,
     redirectName: redirectPath.name,

@@ -1,9 +1,6 @@
 import { ViteDevServer } from "vite";
 import { TemplateModuleInternal } from "../../../common/src/template/internal/types.js";
-import {
-  ServerRenderTemplate,
-  TemplateRenderProps,
-} from "../../../common/src/template/types.js";
+import { ServerRenderTemplate, TemplateRenderProps } from "../../../common/src/template/types.js";
 import { getLang } from "../../../common/src/template/head.js";
 import { Response } from "express-serve-static-core";
 import { getContentType } from "./getContentType.js";
@@ -58,8 +55,7 @@ export default async function sendAppHTML(
     clientServerRenderTemplates.serverRenderTemplatePath
   )) as ServerRenderTemplate;
 
-  const { templateModules, redirectModules } =
-    await getTemplateModules(projectStructure);
+  const { templateModules, redirectModules } = await getTemplateModules(projectStructure);
   const templatesConfig: FeaturesConfig = getTemplatesConfig(
     templateModules,
     projectStructure,

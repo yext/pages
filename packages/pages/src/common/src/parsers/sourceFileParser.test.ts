@@ -5,9 +5,7 @@ import SourceFileParser from "./sourceFileParser.js";
 
 describe("getDefaultExport", () => {
   it("correctly gets default export's name when function", () => {
-    const parser = createParser(
-      `export const no = false; export default function test() {}`
-    );
+    const parser = createParser(`export const no = false; export default function test() {}`);
     const defaultExport = parser.getDefaultExportName();
     expect(defaultExport).toBe("test");
   });
@@ -76,11 +74,7 @@ describe("getAllImports", () => {
       `import {Template, TemplateConfig, TemplateProps} from "@yext/pages";`
     );
     const imports = parser.getAllImports();
-    expect(imports[0].namedImports).toEqual([
-      "Template",
-      "TemplateConfig",
-      "TemplateProps",
-    ]);
+    expect(imports[0].namedImports).toEqual(["Template", "TemplateConfig", "TemplateProps"]);
   });
 
   it("handles types", () => {
@@ -91,9 +85,7 @@ describe("getAllImports", () => {
   });
 
   it("handles aliases", () => {
-    const parser = createParser(
-      `import {Template as Template2} from "@yext/pages";`
-    );
+    const parser = createParser(`import {Template as Template2} from "@yext/pages";`);
     const imports = parser.getAllImports();
     expect(imports[0].namedImports).toEqual(["Template as Template2"]);
   });
@@ -103,11 +95,7 @@ describe("getAllImports", () => {
       `import Foo, {Template, TemplateConfig, TemplateProps} from "@yext/pages";`
     );
     const imports = parser.getAllImports();
-    expect(imports[0].namedImports).toEqual([
-      "Template",
-      "TemplateConfig",
-      "TemplateProps",
-    ]);
+    expect(imports[0].namedImports).toEqual(["Template", "TemplateConfig", "TemplateProps"]);
     expect(imports[0].defaultImport).toBe("Foo");
   });
 });
@@ -142,9 +130,7 @@ describe("getChildExpressions", () => {
   });
 
   it("correctly gets a child function", () => {
-    const parser = createParser(
-      `function foo(){ return 4;} const bar = foo() + 3;`
-    );
+    const parser = createParser(`function foo(){ return 4;} const bar = foo() + 3;`);
     const childExpressions = ["bar"];
     parser.getChildExpressions("bar", childExpressions);
     expect(childExpressions).toEqual(["bar", "foo"]);
@@ -185,10 +171,7 @@ describe("getVariableDeclarationByType", () => {
 describe("getVariablePropertyByName", () => {
   it("correctly gets a config's name", () => {
     const parser = createParser(`export const config = { name: "foo" }`);
-    const variableDeclaration = parser.getVariablePropertyByName(
-      "config",
-      "name"
-    );
+    const variableDeclaration = parser.getVariablePropertyByName("config", "name");
     expect(variableDeclaration).toEqual(`"foo"`);
   });
 });
@@ -209,9 +192,7 @@ describe("removeUnusedImports", () => {
     );
     parser.removeUnusedImports();
     expect(
-      parser
-        .getAllText()
-        .includes(`import { ModuleConfig } from "@yext/pages/*";`)
+      parser.getAllText().includes(`import { ModuleConfig } from "@yext/pages/*";`)
     ).toBeTruthy();
   });
 });
@@ -220,9 +201,7 @@ describe("ensureNamedImport", () => {
   it("correctly adds a new named import and module", () => {
     const parser = createParser("");
     parser.ensureNamedImport("@testModule", "testFunction");
-    expect(parser.getAllText()).toContain(
-      'import { testFunction } from "@testModule";'
-    );
+    expect(parser.getAllText()).toContain('import { testFunction } from "@testModule";');
   });
 
   it("correctly adds a second named import to an existing module", () => {

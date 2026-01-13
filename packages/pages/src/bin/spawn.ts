@@ -11,10 +11,9 @@ const pathToPagesScript = path.resolve(__dirname, "./pages.js");
 const pathToLoader = pathToFileURL(path.resolve(__dirname, "./loader.js")).href;
 
 // Keeping this unused function in case it's needed again
+// eslint-disable-next-line no-unused-vars
 const nodeVersion = Number(
-  spawnSync("node", ["-v"], { encoding: "utf-8" })
-    .stdout.substring(1)
-    .split(".")[0]
+  spawnSync("node", ["-v"], { encoding: "utf-8" }).stdout.substring(1).split(".")[0]
 );
 
 const experimentalFlags = ["--experimental-vm-modules"];

@@ -12,9 +12,7 @@ export const getFunctionFilepaths = (root: string): path.ParsedPath[] => {
   const functionsRoot = new Path(root); // resolve the functions root
   // Get all js/ts files in the directory or subdirectories
   const filepaths = globSync(
-    convertToPosixPath(
-      `${functionsRoot.getAbsolutePath()}/**/*.{tsx,jsx,js,ts}`
-    )
+    convertToPosixPath(`${functionsRoot.getAbsolutePath()}/**/*.{tsx,jsx,js,ts}`)
   );
 
   return filepaths.map((filepath) => {

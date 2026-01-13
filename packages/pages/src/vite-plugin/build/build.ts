@@ -73,10 +73,6 @@ export const build = async (
       };
     },
     buildStart: buildStart(projectStructure),
-    closeBundle: closeBundle(
-      projectStructure,
-      pluginFilesizeLimit,
-      pluginTotalFilesizeLimit
-    ),
+    closeBundle: closeBundle(projectStructure, pluginFilesizeLimit, pluginTotalFilesizeLimit),
   };
 };

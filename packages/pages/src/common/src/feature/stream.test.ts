@@ -68,9 +68,7 @@ describe("formatSiteStream", () => {
       localization: { locales: ["en"] },
       fields: [],
     };
-    const mockExit = vi
-      .spyOn(process, "exit")
-      .mockImplementation(() => undefined as never);
+    const mockExit = vi.spyOn(process, "exit").mockImplementation(() => undefined as never);
     formatSiteStream(testJson, siteStreamPath);
     expect(mockExit).toHaveBeenCalledWith(1);
   });
@@ -146,7 +144,6 @@ describe("readSiteStream", () => {
   });
 
   it("reads siteStream from sites-config/sites-stream.json", () => {
-    projectStructure.getSitesConfigPath;
     const path = "sites-config/site-stream.json";
     fs.mkdirSync("sites-config");
     fs.writeFileSync(

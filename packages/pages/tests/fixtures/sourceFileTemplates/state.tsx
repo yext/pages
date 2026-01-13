@@ -57,9 +57,7 @@ export const getRedirects: GetRedirects<TemplateProps> = ({ document }) => {
   return [`alias/${document.locale}/${document.id.toString()}`];
 };
 
-export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = ({
-  document,
-}): HeadConfig => {
+export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = ({ document }): HeadConfig => {
   return {
     title: document.name,
     charset: "UTF-8",
@@ -91,10 +89,7 @@ export const transformProps: TransformProps<any> = async (data) => {
   };
 };
 
-const State: Template<TemplateRenderProps> = ({
-  relativePrefixToRoot,
-  document,
-}) => {
+const State: Template<TemplateRenderProps> = ({ relativePrefixToRoot, document }) => {
   const {
     name,
     description,
@@ -107,20 +102,11 @@ const State: Template<TemplateRenderProps> = ({
   return (
     <>
       <PageLayout>
-        <Banner
-          name={c_addressRegionDisplayName ? c_addressRegionDisplayName : name}
-        />
-        <div
-          className={dedupe(["centered-container", "centered-container"])[0]}
-        >
-          <Breadcrumbs
-            breadcrumbs={dm_directoryParents}
-            baseUrl={relativePrefixToRoot}
-          />
+        <Banner name={c_addressRegionDisplayName ? c_addressRegionDisplayName : name} />
+        <div className={dedupe(["centered-container", "centered-container"])[0]}>
+          <Breadcrumbs breadcrumbs={dm_directoryParents} baseUrl={relativePrefixToRoot} />
           <DirectoryStateGrid
-            name={
-              c_addressRegionDisplayName ? c_addressRegionDisplayName : name
-            }
+            name={c_addressRegionDisplayName ? c_addressRegionDisplayName : name}
             description={description}
             directoryChildren={dm_directoryChildren}
             relativePrefixToRoot={relativePrefixToRoot}

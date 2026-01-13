@@ -59,15 +59,9 @@ export const updateCiConfig = async (
     }
   }
 
-  const updatedCiConfigJson = await getUpdatedCiConfig(
-    originalCiConfigJson,
-    projectStructure
-  );
+  const updatedCiConfigJson = await getUpdatedCiConfig(originalCiConfigJson, projectStructure);
   if (updatedCiConfigJson) {
-    fs.writeFileSync(
-      ciConfigPath,
-      JSON.stringify(updatedCiConfigJson, null, "  ")
-    );
+    fs.writeFileSync(ciConfigPath, JSON.stringify(updatedCiConfigJson, null, "  "));
   }
 };
 
@@ -101,18 +95,15 @@ export const getUpdatedCiConfig = async (
 
   ciConfigCopy.artifactStructure.plugins = [];
 
-  const generatorPluginIndex = ciConfigCopy.artifactStructure.plugins.findIndex(
-    (plugin) => {
-      return plugin.event === "ON_PAGE_GENERATE";
-    }
-  );
+  const generatorPluginIndex = ciConfigCopy.artifactStructure.plugins.findIndex((plugin) => {
+    return plugin.event === "ON_PAGE_GENERATE";
+  });
 
   const generatorPlugin = getGeneratorPlugin(projectStructure);
 
   // replace the "Generator" plugin if it was already defined
   if (generatorPluginIndex !== -1) {
-    ciConfigCopy.artifactStructure.plugins[generatorPluginIndex] =
-      generatorPlugin;
+    ciConfigCopy.artifactStructure.plugins[generatorPluginIndex] = generatorPlugin;
     // otherwise add it
   } else {
     ciConfigCopy.artifactStructure.plugins.push(generatorPlugin);
@@ -130,10 +121,7 @@ export const getUpdatedCiConfig = async (
       pluginName: functionModule.config.name,
       event: functionModule.config.event,
       functionName: functionModule.config.functionName,
-      apiPath:
-        functionModule.config.event === "API"
-          ? functionModule.slug.production
-          : undefined,
+      apiPath: functionModule.config.event === "API" ? functionModule.slug.production : undefined,
       sourceFiles: [
         {
           root: path.join(
@@ -147,10 +135,9 @@ export const getUpdatedCiConfig = async (
     };
 
     if (ciConfigCopy.artifactStructure.plugins) {
-      const functionPluginIndex =
-        ciConfigCopy.artifactStructure.plugins.findIndex((plugin) => {
-          return plugin.pluginName === functionModule.config.name;
-        });
+      const functionPluginIndex = ciConfigCopy.artifactStructure.plugins.findIndex((plugin) => {
+        return plugin.pluginName === functionModule.config.name;
+      });
 
       if (functionPluginIndex !== -1) {
         ciConfigCopy.artifactStructure.plugins[functionPluginIndex] = newEntry;

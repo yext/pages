@@ -66,33 +66,14 @@ export const devCommand = (program: Command) => {
     )
     .option("--scope <string>", "The subfolder to scope from")
     .option("--local", "Disables dynamically generated test data")
-    .option(
-      "--prod-url",
-      "Use production URLs, instead of /[template-name]/[external-id]",
-      true
-    )
-    .option(
-      "--no-prod-url",
-      "Use local URLs, such as /[template-name]/[external-id]",
-      false
-    )
-    .option(
-      "--open-browser",
-      "Automatically opens the browser on server start-up",
-      true
-    )
-    .option(
-      "--no-open-browser",
-      "Do not open the browser on server start-up",
-      false
-    )
+    .option("--prod-url", "Use production URLs, instead of /[template-name]/[external-id]", true)
+    .option("--no-prod-url", "Use local URLs, such as /[template-name]/[external-id]", false)
+    .option("--open-browser", "Automatically opens the browser on server start-up", true)
+    .option("--no-open-browser", "Do not open the browser on server start-up", false)
     .option("--noInit", "Disables automatic yext init with .yextrc file")
     .option("--noGenFeatures", "Disable feature.json generation step")
     .option("--port <number>", "The port to use for the dev server")
     .option("--module <string>", "Name of the module to load.")
-    .option(
-      "--siteId <number>",
-      "The id of the site to use with in-platform page sets."
-    )
+    .option("--siteId <number>", "The id of the site to use with in-platform page sets.")
     .action(handler);
 };

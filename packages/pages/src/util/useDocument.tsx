@@ -7,15 +7,8 @@ type DocumentProviderProps<T> = {
   children: React.ReactNode;
 };
 
-const DocumentProvider = <T,>({
-  value,
-  children,
-}: DocumentProviderProps<T>) => {
-  return (
-    <DocumentContext.Provider value={value}>
-      {children}
-    </DocumentContext.Provider>
-  );
+const DocumentProvider = <T,>({ value, children }: DocumentProviderProps<T>) => {
+  return <DocumentContext.Provider value={value}>{children}</DocumentContext.Provider>;
 };
 
 const useDocument = <T,>(): T => {

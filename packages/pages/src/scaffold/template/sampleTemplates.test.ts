@@ -24,9 +24,7 @@ describe("newConfigFile", () => {
       fs.writeFileSync(filePath, fileContent);
       const project = new Project();
       project.addSourceFileAtPath(filePath);
-      const diagnostics = project
-        .getPreEmitDiagnostics()
-        .filter(filterOutModuleErrors);
+      const diagnostics = project.getPreEmitDiagnostics().filter(filterOutModuleErrors);
       expect(diagnostics.length).toBe(0);
     } finally {
       if (fs.existsSync("test.tsx")) {
@@ -45,9 +43,7 @@ describe("visualEditorTemplateCode", () => {
       fs.writeFileSync(filePath, fileContent);
       const project = new Project();
       project.addSourceFileAtPath(filePath);
-      const diagnostics = project
-        .getPreEmitDiagnostics()
-        .filter(filterOutModuleErrors);
+      const diagnostics = project.getPreEmitDiagnostics().filter(filterOutModuleErrors);
       expect(diagnostics.length).toBe(0);
     } finally {
       if (fs.existsSync("test.tsx")) {
@@ -66,9 +62,7 @@ describe("staticTemplate", () => {
       fs.writeFileSync(filePath, fileContent);
       const project = new Project();
       project.addSourceFileAtPath(filePath);
-      const diagnostics = project
-        .getPreEmitDiagnostics()
-        .filter(filterOutModuleErrors);
+      const diagnostics = project.getPreEmitDiagnostics().filter(filterOutModuleErrors);
       expect(diagnostics.length).toBe(0);
     } finally {
       if (fs.existsSync("test.tsx")) {
@@ -80,18 +74,14 @@ describe("staticTemplate", () => {
 
 describe("dynamicTemplate", () => {
   it("confirm returned code has no warnings", () => {
-    const fileContent = dynamicTemplate("testTemplate", "entityTypes", [
-      "location",
-    ]);
+    const fileContent = dynamicTemplate("testTemplate", "entityTypes", ["location"]);
     const filePath = "test.tsx";
 
     try {
       fs.writeFileSync(filePath, fileContent);
       const project = new Project();
       project.addSourceFileAtPath(filePath);
-      const diagnostics = project
-        .getPreEmitDiagnostics()
-        .filter(filterOutModuleErrors);
+      const diagnostics = project.getPreEmitDiagnostics().filter(filterOutModuleErrors);
       expect(diagnostics.length).toBe(0);
     } finally {
       if (fs.existsSync("test.tsx")) {

@@ -27,21 +27,11 @@
     {
       "$id": "location-stream",
       "filter": {
-        "entityTypes": [
-          "location"
-        ]
+        "entityTypes": ["location"]
       },
-      "fields": [
-        "id",
-        "uid",
-        "meta",
-        "address",
-        "slug"
-      ],
+      "fields": ["id", "uid", "meta", "address", "slug"],
       "localization": {
-        "locales": [
-          "en"
-        ],
+        "locales": ["en"],
         "primary": false
       },
       "source": "knowledgeGraph",
@@ -49,18 +39,12 @@
     },
     {
       "$id": "closed-location-redirects",
-      "fields": [
-        "slug"
-      ],
+      "fields": ["slug"],
       "filter": {
-        "entityTypes": [
-          "location"
-        ]
+        "entityTypes": ["location"]
       },
       "localization": {
-        "locales": [
-          "en"
-        ],
+        "locales": ["en"],
         "primary": false
       },
       "source": "knowledgeGraph",

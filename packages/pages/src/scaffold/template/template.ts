@@ -17,8 +17,6 @@ const handler = async () => {
 export const templateCommand = (program: Command) => {
   program
     .command("template")
-    .description(
-      "Adds the required files and folder structure for a new Pages template."
-    )
+    .description("Adds the required files and folder structure for a new Pages template.")
     .action(handler);
 };

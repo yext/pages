@@ -27,12 +27,7 @@ ex.
 
 ```tsx
 export const MyComponent = () => {
-  const {
-    hours,
-    address,
-    name: locationName,
-    c_hero: hero,
-  } = useDocument<LocationStream>();
+  const { hours, address, name: locationName, c_hero: hero } = useDocument<LocationStream>();
 };
 ```
 

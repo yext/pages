@@ -16,8 +16,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
       templateType: "entity",
     };
 
-    const featuresConfig =
-      convertTemplateConfigInternalToFeaturesConfig(templateConfig);
+    const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(templateConfig);
 
     const expected: FeaturesConfig = {
       features: [
@@ -49,8 +48,7 @@ describe("features - convertTemplateConfigToFeaturesConfig", () => {
       templateType: "entity",
     };
 
-    const featuresConfig =
-      convertTemplateConfigInternalToFeaturesConfig(templateConfig);
+    const featuresConfig = convertTemplateConfigInternalToFeaturesConfig(templateConfig);
 
     const expected: FeaturesConfig = {
       features: [

@@ -23,9 +23,7 @@ export type HttpFunction = (arg: PagesHttpRequest) => PagesHttpResponse;
  * A function that runs when the path of a production page changes.
  * @public
  */
-export type OnUrlChangeFunction = (
-  arg: PagesOnUrlChangeRequest
-) => PagesOnUrlChangeResponse;
+export type OnUrlChangeFunction = (arg: PagesOnUrlChangeRequest) => PagesOnUrlChangeResponse;
 
 /**
  * The argument passed to a http/api type function.

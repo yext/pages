@@ -62,12 +62,11 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     const functionModule: FunctionModule = {
       default: exampleApiFunction,
     };
-    const functionModuleInternal =
-      convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath(path.join("http", "api", "example.ts")),
-        functionModule,
-        projectStructure
-      );
+    const functionModuleInternal = convertFunctionModuleToFunctionModuleInternal(
+      createMockFilePath(path.join("http", "api", "example.ts")),
+      functionModule,
+      projectStructure
+    );
     const expected = {
       config: {
         name: "example-01535",
@@ -87,31 +86,24 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         production: path.join("api", "example"),
       },
     };
-    expect(JSON.stringify(functionModuleInternal)).toEqual(
-      JSON.stringify(expected)
-    );
+    expect(JSON.stringify(functionModuleInternal)).toEqual(JSON.stringify(expected));
 
     const functionReturnValue = functionModuleInternal.default
-      ? (functionModuleInternal.default as HttpFunction)(
-          exampleHttpFunctionArgument
-        )
+      ? (functionModuleInternal.default as HttpFunction)(exampleHttpFunctionArgument)
       : undefined;
 
-    expect(JSON.stringify(functionReturnValue)).toEqual(
-      JSON.stringify(exampleReturnValue)
-    );
+    expect(JSON.stringify(functionReturnValue)).toEqual(JSON.stringify(exampleReturnValue));
   });
 
   it("converts a function in functions/onUrlChange", async () => {
     const functionModule: FunctionModule = {
       default: exampleOnUrlChangeFunction,
     };
-    const functionModuleInternal =
-      convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath(path.join("onUrlChange", "example.ts")),
-        functionModule,
-        projectStructure
-      );
+    const functionModuleInternal = convertFunctionModuleToFunctionModuleInternal(
+      createMockFilePath(path.join("onUrlChange", "example.ts")),
+      functionModule,
+      projectStructure
+    );
     const expected = {
       config: {
         name: "example-55662",
@@ -131,14 +123,10 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         production: "example",
       },
     };
-    expect(JSON.stringify(functionModuleInternal)).toEqual(
-      JSON.stringify(expected)
-    );
+    expect(JSON.stringify(functionModuleInternal)).toEqual(JSON.stringify(expected));
 
     const functionReturnValue = functionModuleInternal.default
-      ? (functionModuleInternal.default as OnUrlChangeFunction)(
-          exampleOnUrlChangeArgument
-        )
+      ? (functionModuleInternal.default as OnUrlChangeFunction)(exampleOnUrlChangeArgument)
       : undefined;
 
     expect(JSON.stringify(functionReturnValue)).toBeFalsy();
@@ -148,14 +136,11 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
     const functionModule: FunctionModule = {
       default: exampleApiFunction,
     };
-    const functionModuleInternal =
-      convertFunctionModuleToFunctionModuleInternal(
-        createMockFilePath(
-          path.join("http", "api", "example", "[testParam].ts")
-        ),
-        functionModule,
-        projectStructure
-      );
+    const functionModuleInternal = convertFunctionModuleToFunctionModuleInternal(
+      createMockFilePath(path.join("http", "api", "example", "[testParam].ts")),
+      functionModule,
+      projectStructure
+    );
     const expected = {
       config: {
         name: "testParam-00975",
@@ -164,14 +149,7 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
       },
       filePath: {
         root: path.resolve("/"),
-        dir: path.join(
-          process.cwd(),
-          "src",
-          "functions",
-          "http",
-          "api",
-          "example"
-        ),
+        dir: path.join(process.cwd(), "src", "functions", "http", "api", "example"),
         base: "[testParam].ts",
         ext: ".ts",
         name: "[testParam]",
@@ -182,19 +160,13 @@ describe("internal/types - convertFunctionModuleToFunctionModuleInternal", () =>
         production: path.join("api", "example", "{{testParam}}"),
       },
     };
-    expect(JSON.stringify(functionModuleInternal)).toEqual(
-      JSON.stringify(expected)
-    );
+    expect(JSON.stringify(functionModuleInternal)).toEqual(JSON.stringify(expected));
 
     const functionReturnValue = functionModuleInternal.default
-      ? (functionModuleInternal.default as HttpFunction)(
-          exampleHttpFunctionArgument
-        )
+      ? (functionModuleInternal.default as HttpFunction)(exampleHttpFunctionArgument)
       : undefined;
 
-    expect(JSON.stringify(functionReturnValue)).toEqual(
-      JSON.stringify(exampleReturnValue)
-    );
+    expect(JSON.stringify(functionReturnValue)).toEqual(JSON.stringify(exampleReturnValue));
   });
 
   it("throws an error when a function is outside functions/http or functions/onUrlChange", async () => {

@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  convertTemplateModuleToTemplateModuleInternal,
-  TemplateModuleInternal,
-} from "./types.js";
+import { convertTemplateModuleToTemplateModuleInternal, TemplateModuleInternal } from "./types.js";
 import { Template, TemplateModule } from "../types.js";
 import path from "path";
 
@@ -24,12 +21,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       },
     };
 
-    const templateConfigInternal =
-      convertTemplateModuleToTemplateModuleInternal(
-        myTemplateNamePath,
-        templateModule,
-        false
-      );
+    const templateConfigInternal = convertTemplateModuleToTemplateModuleInternal(
+      myTemplateNamePath,
+      templateModule,
+      false
+    );
 
     const expected: TemplateModuleInternal<any, any> = {
       default: {} as Template<any>,
@@ -50,9 +46,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       templateName: "myTemplateName",
     };
 
-    expect(JSON.stringify(templateConfigInternal)).toEqual(
-      JSON.stringify(expected)
-    );
+    expect(JSON.stringify(templateConfigInternal)).toEqual(JSON.stringify(expected));
   });
 
   it("overrides the config.name when defined", async () => {
@@ -66,12 +60,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       },
     };
 
-    const templateConfigInternal =
-      convertTemplateModuleToTemplateModuleInternal(
-        myTemplateNamePath,
-        templateModule,
-        false
-      );
+    const templateConfigInternal = convertTemplateModuleToTemplateModuleInternal(
+      myTemplateNamePath,
+      templateModule,
+      false
+    );
 
     const expected: TemplateModuleInternal<any, any> = {
       default: {} as Template<any>,
@@ -87,9 +80,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       templateName: "myTemplateName",
     };
 
-    expect(JSON.stringify(templateConfigInternal)).toEqual(
-      JSON.stringify(expected)
-    );
+    expect(JSON.stringify(templateConfigInternal)).toEqual(JSON.stringify(expected));
   });
 
   it("uses the filename as the config name when not set and removes the asset fingerprint", async () => {
@@ -102,12 +93,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       },
     };
 
-    const templateConfigInternal =
-      convertTemplateModuleToTemplateModuleInternal(
-        path.join("src", "templates", "myTemplateName.0ab33d.tsx"),
-        templateModule,
-        true
-      );
+    const templateConfigInternal = convertTemplateModuleToTemplateModuleInternal(
+      path.join("src", "templates", "myTemplateName.0ab33d.tsx"),
+      templateModule,
+      true
+    );
 
     const expected: TemplateModuleInternal<any, any> = {
       default: {} as Template<any>,
@@ -123,9 +113,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       templateName: "myTemplateName",
     };
 
-    expect(JSON.stringify(templateConfigInternal)).toEqual(
-      JSON.stringify(expected)
-    );
+    expect(JSON.stringify(templateConfigInternal)).toEqual(JSON.stringify(expected));
   });
 
   it("defaults hydrate to true when not set", async () => {
@@ -142,12 +130,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       },
     };
 
-    const templateConfigInternal =
-      convertTemplateModuleToTemplateModuleInternal(
-        myTemplateNamePath,
-        templateModule,
-        false
-      );
+    const templateConfigInternal = convertTemplateModuleToTemplateModuleInternal(
+      myTemplateNamePath,
+      templateModule,
+      false
+    );
 
     const expected: TemplateModuleInternal<any, any> = {
       default: {} as Template<any>,
@@ -168,9 +155,7 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       templateName: "myTemplateName",
     };
 
-    expect(JSON.stringify(templateConfigInternal)).toEqual(
-      JSON.stringify(expected)
-    );
+    expect(JSON.stringify(templateConfigInternal)).toEqual(JSON.stringify(expected));
   });
 
   it("converts hydrate to false whenever hydrate is set to false", async () => {
@@ -188,12 +173,11 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       },
     };
 
-    const templateConfigInternal =
-      convertTemplateModuleToTemplateModuleInternal(
-        myTemplateNamePath,
-        templateModule,
-        false
-      );
+    const templateConfigInternal = convertTemplateModuleToTemplateModuleInternal(
+      myTemplateNamePath,
+      templateModule,
+      false
+    );
 
     const expected: TemplateModuleInternal<any, any> = {
       default: {} as Template<any>,
@@ -214,8 +198,6 @@ describe("internal/types - convertTemplateModuleToTemplateModuleInternal", () =>
       templateName: "myTemplateName",
     };
 
-    expect(JSON.stringify(templateConfigInternal)).toEqual(
-      JSON.stringify(expected)
-    );
+    expect(JSON.stringify(templateConfigInternal)).toEqual(JSON.stringify(expected));
   });
 });

@@ -29,20 +29,16 @@ export const generateManifestFile = async (
 
   const distPath = new Path(projectStructure.config.rootFolders.dist);
 
-  const relativeBundlePaths = Array.from(featureNameToBundlePath.entries()).map(
-    ([name, path]) => [name, convertToPosixPath(distPath.getRelativePath(path))]
-  );
-  const redirectBundlePaths = Array.from(
-    featureNameToRedirectPath.entries()
-  ).map(([name, path]) => [
+  const relativeBundlePaths = Array.from(featureNameToBundlePath.entries()).map(([name, path]) => [
     name,
     convertToPosixPath(distPath.getRelativePath(path)),
   ]);
+  const redirectBundlePaths = Array.from(featureNameToRedirectPath.entries()).map(
+    ([name, path]) => [name, convertToPosixPath(distPath.getRelativePath(path))]
+  );
 
   // Scans for paths in dist/assets/<assetPath> and finds the paths and file names.
-  const getAssetBundlePaths = async (
-    assetPath: string
-  ): Promise<string[][]> => {
+  const getAssetBundlePaths = async (assetPath: string): Promise<string[][]> => {
     const filePaths = glob.sync(
       convertToPosixPath(
         path.resolve(
@@ -61,9 +57,7 @@ export const generateManifestFile = async (
 
   let bundlerManifest = Buffer.from("{}");
   if (fs.existsSync(path.join(distPath.path, ".vite", "manifest.json"))) {
-    bundlerManifest = fs.readFileSync(
-      path.join(distPath.path, ".vite", "manifest.json")
-    );
+    bundlerManifest = fs.readFileSync(path.join(distPath.path, ".vite", "manifest.json"));
   }
   const manifest: Manifest = {
     serverPaths: Object.fromEntries(relativeBundlePaths),
