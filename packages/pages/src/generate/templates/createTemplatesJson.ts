@@ -33,15 +33,9 @@ export const createTemplatesJson = async (
   projectStructure: ProjectStructure,
   type: "FEATURES" | "TEMPLATES"
 ): Promise<void> => {
-  const { templateModules, redirectModules } =
-    await getTemplateModules(projectStructure);
+  const { templateModules, redirectModules } = await getTemplateModules(projectStructure);
 
-  return createTemplatesJsonFromModule(
-    templateModules,
-    redirectModules,
-    projectStructure,
-    type
-  );
+  return createTemplatesJsonFromModule(templateModules, redirectModules, projectStructure, type);
 };
 
 /**
@@ -88,36 +82,23 @@ export const createTemplatesJsonFromModule = async (
   let templatesJson;
   switch (type) {
     case "FEATURES":
-      templatesJson = mergeFeatureJson(
-        templatesAbsolutePath,
-        features,
-        streams
-      );
+      templatesJson = mergeFeatureJson(templatesAbsolutePath, features, streams);
       break;
     case "TEMPLATES":
       templatesJson = { features, streams };
       break;
   }
 
-  fs.writeFileSync(
-    templatesAbsolutePath,
-    JSON.stringify(templatesJson, null, "  ")
-  );
+  fs.writeFileSync(templatesAbsolutePath, JSON.stringify(templatesJson, null, "  "));
 };
 
 /**
  * Helper to get the template modules from the project structure
  * @param projectStructure
  */
-export const getTemplateModules = async (
-  projectStructure: ProjectStructure
-) => {
-  const templateFilepaths = getTemplateFilepaths(
-    projectStructure.getTemplatePaths()
-  );
-  const redirectFilepaths = getRedirectFilePaths(
-    projectStructure.getRedirectPaths()
-  );
+export const getTemplateModules = async (projectStructure: ProjectStructure) => {
+  const templateFilepaths = getTemplateFilepaths(projectStructure.getTemplatePaths());
+  const redirectFilepaths = getRedirectFilePaths(projectStructure.getRedirectPaths());
   const templateModules = await loadTemplateModules(
     templateFilepaths,
     true,
@@ -143,18 +124,14 @@ export const getTemplatesConfig = (
   const streams: StreamConfig[] = [];
   let inPlatformTemplateNames: string[] = [];
 
-  const templateManifestPath = projectStructure
-    .getTemplateManifestPath()
-    .getAbsolutePath();
+  const templateManifestPath = projectStructure.getTemplateManifestPath().getAbsolutePath();
 
   if (fs.existsSync(templateManifestPath)) {
     const templateManifest = JSON.parse(
       fs.readFileSync(templateManifestPath, "utf-8")
     ) as TemplateManifest;
 
-    inPlatformTemplateNames = templateManifest.templates.map(
-      (templateInfo) => templateInfo.name
-    );
+    inPlatformTemplateNames = templateManifest.templates.map((templateInfo) => templateInfo.name);
   }
 
   for (const module of templateModules.values()) {
@@ -209,9 +186,7 @@ export const pushStreamConfigIfValid = (
   streams: StreamConfig[],
   streamConfig: StreamConfig
 ): void => {
-  const matchingStreamConfig = streams.find(
-    (stream) => stream.$id === streamConfig.$id
-  );
+  const matchingStreamConfig = streams.find((stream) => stream.$id === streamConfig.$id);
   if (!matchingStreamConfig) {
     streams.push(streamConfig);
     return;

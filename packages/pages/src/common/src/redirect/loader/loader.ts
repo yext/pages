@@ -20,20 +20,15 @@ export const loadRedirectModules = async (
   adjustForFingerprintedAsset: boolean,
   projectStructure: ProjectStructure
 ): Promise<RedirectModuleCollection> => {
-  const importedModules = await loadModules(
-    redirectModulePaths,
-    transpile,
-    projectStructure
-  );
+  const importedModules = await loadModules(redirectModulePaths, transpile, projectStructure);
 
   const importedRedirectModules = [] as RedirectModuleInternal<any>[];
   for (const importedModule of importedModules) {
-    const redirectModuleInternal =
-      convertRedirectModuleToRedirectModuleInternal(
-        importedModule.path,
-        importedModule.module,
-        adjustForFingerprintedAsset
-      );
+    const redirectModuleInternal = convertRedirectModuleToRedirectModuleInternal(
+      importedModule.path,
+      importedModule.module,
+      adjustForFingerprintedAsset
+    );
 
     importedRedirectModules.push({
       ...redirectModuleInternal,

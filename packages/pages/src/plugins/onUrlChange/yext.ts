@@ -38,11 +38,7 @@ interface ApiResponse<T> {
   response: T;
 }
 
-export function buildApiUrl(
-  base: string,
-  path: string,
-  params?: Record<string, string>
-) {
+export function buildApiUrl(base: string, path: string, params?: Record<string, string>) {
   const result = new URL(path, base);
   for (const k in params) {
     result.searchParams.append(k, params[k]);

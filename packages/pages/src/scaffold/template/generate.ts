@@ -13,17 +13,12 @@ import {
   visualEditorTemplateCode,
 } from "./sampleTemplates.js";
 import { addDataToPuckConfig } from "../../common/src/parsers/puckConfigParser.js";
-import {
-  installDependencies,
-  updatePackageDependency,
-} from "../../upgrade/pagesUpdater.js";
+import { installDependencies, updatePackageDependency } from "../../upgrade/pagesUpdater.js";
 import { logErrorAndExit } from "../../util/logError.js";
 import { addThemeConfigToTailwind } from "../../common/src/parsers/tailwindConfigParser.js";
 import { TemplateManifest } from "../../common/src/template/types.js";
 
-export const generateTemplate = async (
-  projectStructure: ProjectStructure
-): Promise<void> => {
+export const generateTemplate = async (projectStructure: ProjectStructure): Promise<void> => {
   const questions: PromptObject[] = [
     {
       type: "text",
@@ -55,8 +50,7 @@ export const generateTemplate = async (
     {
       type: "select",
       name: "entityScope",
-      message:
-        "How would you like you to define the entity scope for your template?",
+      message: "How would you like you to define the entity scope for your template?",
       choices: [
         { title: "Entity Type", value: "entityTypes" },
         { title: "Saved Filter", value: "savedFilterIds" },
@@ -64,24 +58,21 @@ export const generateTemplate = async (
       ],
     },
     {
-      type: (prev, values) =>
-        values.entityScope === "entityTypes" ? "list" : null,
+      type: (prev, values) => (values.entityScope === "entityTypes" ? "list" : null),
       name: "filter",
       message: "Enter the entity type(s) as a comma-separated list:",
       initial: "",
       separator: ",",
     },
     {
-      type: (prev, values) =>
-        values.entityScope === "savedFilterIds" ? "list" : null,
+      type: (prev, values) => (values.entityScope === "savedFilterIds" ? "list" : null),
       name: "filter",
       message: "Enter the saved filter ID(s) as a comma-separated list:",
       initial: "",
       separator: ",",
     },
     {
-      type: (prev, values) =>
-        values.entityScope === "entityIds" ? "list" : null,
+      type: (prev, values) => (values.entityScope === "entityIds" ? "list" : null),
       name: "filter",
       message: "Enter the entity ID(s) as a comma-separated list:",
       initial: "",
@@ -96,10 +87,7 @@ export const generateTemplate = async (
   } else {
     if (response.isDynamic) {
       const subsequentResponse = await prompts(entityScopeQuestions);
-      await generateDynamicTemplate(
-        { ...response, ...subsequentResponse },
-        projectStructure
-      );
+      await generateDynamicTemplate({ ...response, ...subsequentResponse }, projectStructure);
     } else {
       await generateStaticTemplate(response.templateName, projectStructure);
     }
@@ -118,10 +106,7 @@ const validateTemplateName = (
     return false;
   }
 
-  const templatePath = path.join(
-    projectStructure.getTemplatePaths()[0].path,
-    formattedFileName
-  );
+  const templatePath = path.join(projectStructure.getTemplatePaths()[0].path, formattedFileName);
   if (fs.existsSync(templatePath)) {
     return false;
   }
@@ -139,8 +124,7 @@ const formatFileName = (templateName: string): string => {
 
   let fileName = words[0].toLowerCase();
   for (let i = 1; i < words.length; i++) {
-    fileName +=
-      words[i].charAt(0).toUpperCase() + words[i].slice(1).toLowerCase();
+    fileName += words[i].charAt(0).toUpperCase() + words[i].slice(1).toLowerCase();
   }
 
   return fileName;
@@ -148,10 +132,7 @@ const formatFileName = (templateName: string): string => {
 
 // Creates a src/templates/ file with a basic template based on provided user responses
 // and adds the new VE template and config to src/ve.config.tsx
-const generateVETemplate = async (
-  response: any,
-  projectStructure: ProjectStructure
-) => {
+const generateVETemplate = async (response: any, projectStructure: ProjectStructure) => {
   const templatePath = projectStructure.getTemplatePaths()[0].path;
   const templateFilename = formatFileName(response.templateName);
 
@@ -172,14 +153,8 @@ const generateVETemplate = async (
   }
 };
 
-const addVETemplateToConfig = (
-  fileName: string,
-  projectStructure: ProjectStructure
-) => {
-  const configPath = path.join(
-    projectStructure.config.rootFolders.source,
-    "ve.config.tsx"
-  );
+const addVETemplateToConfig = (fileName: string, projectStructure: ProjectStructure) => {
+  const configPath = path.join(projectStructure.config.rootFolders.source, "ve.config.tsx");
   if (fs.existsSync(configPath)) {
     addDataToPuckConfig(fileName, configPath);
   } else {
@@ -219,13 +194,8 @@ const addBuildSchemaUtil = (projectStructure: ProjectStructure) => {
   fs.writeFileSync(buildSchemaUtilPath, buildSchemaUtil);
 };
 
-const addTemplateManifest = (
-  templateName: string,
-  projectStructure: ProjectStructure
-) => {
-  const templateManifestPath = projectStructure
-    .getTemplateManifestPath()
-    .getAbsolutePath();
+const addTemplateManifest = (templateName: string, projectStructure: ProjectStructure) => {
+  const templateManifestPath = projectStructure.getTemplateManifestPath().getAbsolutePath();
 
   let templateManifest: TemplateManifest;
   if (fs.existsSync(templateManifestPath)) {
@@ -244,27 +214,17 @@ const addTemplateManifest = (
     defaultLayoutData: defaultLayoutData,
   });
 
-  fs.writeFileSync(
-    templateManifestPath,
-    JSON.stringify(templateManifest, null, 2)
-  );
+  fs.writeFileSync(templateManifestPath, JSON.stringify(templateManifest, null, 2));
 };
 
 const addVEDependencies = async () => {
   await updatePackageDependency("@yext/visual-editor", null, true);
-  await updatePackageDependency(
-    "@measured/puck",
-    { specificVersion: "0.17.1" },
-    true
-  );
+  await updatePackageDependency("@measured/puck", { specificVersion: "0.17.1" }, true);
   await installDependencies();
 };
 
 // Creates a file with a basic dynamic template based on provided user responses
-const generateDynamicTemplate = async (
-  response: any,
-  projectStructure: ProjectStructure
-) => {
+const generateDynamicTemplate = async (response: any, projectStructure: ProjectStructure) => {
   const templatePath = projectStructure.getTemplatePaths()[0].path;
   const templateFileName = formatFileName(response.templateName);
 
@@ -275,10 +235,7 @@ const generateDynamicTemplate = async (
 };
 
 // Creates a file with a basic static template based templateName provided by user
-const generateStaticTemplate = async (
-  templateName: string,
-  projectStructure: ProjectStructure
-) => {
+const generateStaticTemplate = async (templateName: string, projectStructure: ProjectStructure) => {
   const templatePath = projectStructure.getTemplatePaths()[0].path;
   const templateFileName = formatFileName(templateName);
 

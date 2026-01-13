@@ -9,10 +9,7 @@ import { RedirectSource } from "../redirect/types.js";
  *
  * @public
  */
-export interface TemplateModule<
-  T extends TemplateProps,
-  U extends TemplateRenderProps,
-> {
+export interface TemplateModule<T extends TemplateProps, U extends TemplateRenderProps> {
   /** The exported config function */
   config?: TemplateConfig;
   /** The optional exported transformProps function */
@@ -42,9 +39,7 @@ export interface TemplateModule<
  *
  * @public
  */
-export type GetRedirects<T extends TemplateProps> = (
-  props: T
-) => (RedirectSource | string)[];
+export type GetRedirects<T extends TemplateProps> = (props: T) => (RedirectSource | string)[];
 
 /**
  * The type definition for the template's transformProps function. Can be used
@@ -75,9 +70,7 @@ export type GetAuthScope<T extends TemplateProps> = (props: T) => string;
  *
  * @public
  */
-export type GetHeadConfig<T extends TemplateRenderProps> = (
-  props: T
-) => HeadConfig;
+export type GetHeadConfig<T extends TemplateRenderProps> = (props: T) => HeadConfig;
 
 /**
  * The type definition for the template's render function.
@@ -91,9 +84,7 @@ export type Render<T extends TemplateRenderProps<T>> = (props: T) => string;
  *
  * @public
  */
-export type Template<T extends TemplateRenderProps> = (
-  props: T
-) => React.JSX.Element;
+export type Template<T extends TemplateRenderProps> = (props: T) => React.JSX.Element;
 
 /**
  * The exported `config` function's definition.

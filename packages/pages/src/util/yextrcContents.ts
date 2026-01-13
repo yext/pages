@@ -19,9 +19,7 @@ export const parseYextrcContents = (scope: string | undefined = undefined) => {
     const parsedContents = YAML.parse(yextrcContents);
     if (scope && parsedContents[scope]) {
       const scopedContents = parsedContents[scope];
-      accountId = !isNaN(Number(scopedContents.accountId))
-        ? scopedContents.accountId
-        : undefined;
+      accountId = !isNaN(Number(scopedContents.accountId)) ? scopedContents.accountId : undefined;
       universe = validUniverses.includes(scopedContents.universe)
         ? scopedContents.universe
         : undefined;

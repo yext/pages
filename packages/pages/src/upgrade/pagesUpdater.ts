@@ -49,9 +49,7 @@ export async function updatePackageDependency(
 ) {
   const packagePath = path.resolve("package.json");
   if (!fs.existsSync(packagePath)) {
-    console.error(
-      `Could not find package.json, unable to update ${packageName}`
-    );
+    console.error(`Could not find package.json, unable to update ${packageName}`);
     process.exit(1);
   }
   try {
@@ -117,9 +115,7 @@ const getPackageVersion = async (
 async function removePackageDependency(packageName: string): Promise<boolean> {
   const packagePath = path.resolve("package.json");
   if (!fs.existsSync(packagePath)) {
-    console.error(
-      `Could not find package.json, unable to remove ${packageName}`
-    );
+    console.error(`Could not find package.json, unable to remove ${packageName}`);
     process.exit(1);
   }
   try {
@@ -147,10 +143,7 @@ async function removePackageDependency(packageName: string): Promise<boolean> {
  * @param currentPath
  * @param operation
  */
-function processDirectoryRecursively(
-  currentPath: string,
-  operation: (filePath: string) => void
-) {
+function processDirectoryRecursively(currentPath: string, operation: (filePath: string) => void) {
   const files = fs.readdirSync(currentPath);
   files.forEach((file) => {
     const filePath = path.join(currentPath, file);
@@ -161,10 +154,7 @@ function processDirectoryRecursively(
 
     if (isDirectory && !isGitDirectory && !isNodeModulesDirectory) {
       processDirectoryRecursively(filePath, operation);
-    } else if (
-      [".js", ".ts", ".tsx"].includes(fileExtension) &&
-      !isNodeModulesDirectory
-    ) {
+    } else if ([".js", ".ts", ".tsx"].includes(fileExtension) && !isNodeModulesDirectory) {
       try {
         operation(filePath);
       } catch (e) {
@@ -186,15 +176,13 @@ export const updateToUsePagesComponents = async (source: string) => {
   await removePackageDependency("@yext/components-tsx-maps");
   await removePackageDependency("@yext/components-tsx-geo");
   // update imports from pages/components to sites-components
-  const hasPagesSlashComponentsImports =
-    replacePagesSlashComponentsImports(source);
+  const hasPagesSlashComponentsImports = replacePagesSlashComponentsImports(source);
   // update imports from sites-components to pages-components
   const hasSitesComponentsImports = replaceSitesComponentsImports(source);
   // update imports from react-components to pages-components
   const hasReactComponentsImports = replaceReactComponentsImports(source);
   // update imports from sites-react-components to pages-components
-  const hasSitesReactComponentsImports =
-    replaceSitesReactComponentsImports(source);
+  const hasSitesReactComponentsImports = replaceSitesReactComponentsImports(source);
   const movedTsxMapsImports = moveTsxMapsImportsToPagesComponents(source);
 
   await updatePackageDependency(
@@ -207,11 +195,7 @@ export const updateToUsePagesComponents = async (source: string) => {
       movedTsxMapsImports
   );
 
-  if (
-    hasSitesComponentsImports ||
-    hasReactComponentsImports ||
-    hasSitesReactComponentsImports
-  ) {
+  if (hasSitesComponentsImports || hasReactComponentsImports || hasSitesReactComponentsImports) {
     console.log(
       colors.yellow(
         "Some deprecated libraries were automatically removed and updated to use @yext/pages-components. " +
@@ -304,10 +288,7 @@ export const replaceSitesComponentsImports = (source: string): boolean => {
   const operation = async (filePath: string) => {
     const fileContent = fs.readFileSync(filePath, "utf8");
     if (fileContent.match(sitesComponentsRegex)) {
-      const modifiedContent = fileContent.replace(
-        sitesComponentsRegex,
-        pagesComponentsReplacement
-      );
+      const modifiedContent = fileContent.replace(sitesComponentsRegex, pagesComponentsReplacement);
       fs.writeFileSync(filePath, modifiedContent, "utf8");
       hasReplaced = true;
       console.log(`sites-components imports replaced in: ${filePath}`);
@@ -327,10 +308,7 @@ export const replaceReactComponentsImports = (source: string): boolean => {
   const operation = async (filePath: string) => {
     const fileContent = fs.readFileSync(filePath, "utf8");
     if (fileContent.match(reactComponentsRegex)) {
-      const modifiedContent = fileContent.replace(
-        reactComponentsRegex,
-        pagesComponentsReplacement
-      );
+      const modifiedContent = fileContent.replace(reactComponentsRegex, pagesComponentsReplacement);
       fs.writeFileSync(filePath, modifiedContent, "utf8");
       hasReplaced = true;
       console.log(`react-components imports replaced in: ${filePath}`);
@@ -387,9 +365,7 @@ export const moveTsxMapsImportsToPagesComponents = (source: string) => {
     let pagesComponentsImportDeclaration;
     for (let j = 0; j < importDeclarations.length; j++) {
       const importDeclaration = importDeclarations[j];
-      if (
-        importDeclaration.getModuleSpecifierValue() === "@yext/pages-components"
-      ) {
+      if (importDeclaration.getModuleSpecifierValue() === "@yext/pages-components") {
         pagesComponentsImportDeclaration = importDeclaration;
         break;
       }
@@ -398,10 +374,8 @@ export const moveTsxMapsImportsToPagesComponents = (source: string) => {
     for (let j = 0; j < importDeclarations.length; j++) {
       const importDeclaration = importDeclarations[j];
       if (
-        importDeclaration.getModuleSpecifierValue() !==
-          "@yext/components-tsx-maps" &&
-        importDeclaration.getModuleSpecifierValue() !==
-          "@yext/components-tsx-geo"
+        importDeclaration.getModuleSpecifierValue() !== "@yext/components-tsx-maps" &&
+        importDeclaration.getModuleSpecifierValue() !== "@yext/components-tsx-geo"
       ) {
         continue;
       }
@@ -411,18 +385,14 @@ export const moveTsxMapsImportsToPagesComponents = (source: string) => {
       if (pagesComponentsImportDeclaration) {
         for (let k = 0; k < namedImports.length; k++) {
           const namedImport = namedImports[k];
-          pagesComponentsImportDeclaration.addNamedImport(
-            namedImport.getName()
-          );
+          pagesComponentsImportDeclaration.addNamedImport(namedImport.getName());
         }
         importDeclaration.remove();
         updated = true;
       } else {
         // Otherwise add pages-components as an import
         sourceFile.addImportDeclaration({
-          namedImports: namedImports.map((namedImport) =>
-            namedImport.getName()
-          ),
+          namedImports: namedImports.map((namedImport) => namedImport.getName()),
           moduleSpecifier: "@yext/pages-components",
         });
         importDeclaration.remove();
@@ -468,9 +438,7 @@ export const removeFetchImport = (source: string) => {
             namedImport.remove();
           }
           hasRemoved = true;
-          console.log(
-            `Removed legacy fetch import in: ${sourceFile.getFilePath()}`
-          );
+          console.log(`Removed legacy fetch import in: ${sourceFile.getFilePath()}`);
           break;
         }
       }
@@ -550,9 +518,7 @@ export const updatePackageEngines = () => {
  * Checks the version of node that is currently installed and logs an error if it is unsupported.
  */
 export const checkNodeVersion = () => {
-  const ERR_MSG =
-    "Could not determine node version. " +
-    `Please install node ${NODE_ENGINES}.`;
+  const ERR_MSG = "Could not determine node version. " + `Please install node ${NODE_ENGINES}.`;
   try {
     const nodeVersion = execSync("node -v");
     if (!nodeVersion || nodeVersion.length < 4) {
@@ -583,9 +549,7 @@ const serverlessFunctionTypes: { [key: string]: string } = {
  * Updates the imports and usages of e.g. SitesHttpRequest to PagessHttpRequest.
  * @param serverlessFunctionsPath the path to the serverless functions folder
  */
-export const updateServerlessFunctionTypeReferences = (
-  serverlessFunctionsPath: string
-) => {
+export const updateServerlessFunctionTypeReferences = (serverlessFunctionsPath: string) => {
   let updated = false;
   const project = new Project({
     compilerOptions: {
@@ -593,9 +557,7 @@ export const updateServerlessFunctionTypeReferences = (
       sourceRoot: serverlessFunctionsPath,
     },
   });
-  project.addSourceFilesAtPaths(
-    `${serverlessFunctionsPath}/**/*.{ts,tsx,js,jsx}`
-  );
+  project.addSourceFilesAtPaths(`${serverlessFunctionsPath}/**/*.{ts,tsx,js,jsx}`);
   const sourceFiles = project.getSourceFiles();
   for (let i = 0; i < sourceFiles.length; i++) {
     let fileUpdated = false;
@@ -609,24 +571,18 @@ export const updateServerlessFunctionTypeReferences = (
       const namedImports = importDeclaration.getNamedImports();
       for (let k = 0; k < namedImports.length; k++) {
         const namedImport = namedImports[k];
-        if (
-          !Object.keys(serverlessFunctionTypes).includes(namedImport.getName())
-        ) {
+        if (!Object.keys(serverlessFunctionTypes).includes(namedImport.getName())) {
           continue;
         }
 
-        importDeclaration.addNamedImport(
-          serverlessFunctionTypes[namedImport.getName()]
-        );
+        importDeclaration.addNamedImport(serverlessFunctionTypes[namedImport.getName()]);
         namedImport.remove();
 
         fileUpdated = true;
       }
       if (fileUpdated) {
         updated = true;
-        console.log(
-          `Updated serverless function types imported in: ${sourceFile.getFilePath()}`
-        );
+        console.log(`Updated serverless function types imported in: ${sourceFile.getFilePath()}`);
       }
     }
 
@@ -643,9 +599,7 @@ export const updateServerlessFunctionTypeReferences = (
           param.removeType();
           param.setType(serverlessFunctionTypes[paramType]);
 
-          console.log(
-            `Updated serverless function type params in: ${sourceFile.getFilePath()}`
-          );
+          console.log(`Updated serverless function type params in: ${sourceFile.getFilePath()}`);
         }
       });
 
@@ -655,9 +609,7 @@ export const updateServerlessFunctionTypeReferences = (
         functions[j].removeReturnType();
         functions[j].setReturnType(serverlessFunctionTypes[returnType]);
 
-        console.log(
-          `Updated serverless function return type in: ${sourceFile.getFilePath()}`
-        );
+        console.log(`Updated serverless function return type in: ${sourceFile.getFilePath()}`);
       }
     }
   }

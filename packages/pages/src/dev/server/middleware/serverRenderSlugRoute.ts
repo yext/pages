@@ -10,10 +10,7 @@ import { generateTestDataForSlug } from "../ssr/generateTestData.js";
 import { getLocalEntityPageDataForSlug } from "../ssr/getLocalData.js";
 import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
 import send404 from "./send404.js";
-import {
-  getInPlatformPageSetDocuments,
-  PageSetConfig,
-} from "../ssr/inPlatformPageSets.js";
+import { getInPlatformPageSetDocuments, PageSetConfig } from "../ssr/inPlatformPageSets.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -37,8 +34,7 @@ export const serverRenderSlugRoute =
 
       const slug = decodeURIComponent(url.pathname.substring(1));
 
-      const templateFilepaths =
-        getTemplateFilepathsFromProjectStructure(projectStructure);
+      const templateFilepaths = getTemplateFilepathsFromProjectStructure(projectStructure);
 
       const staticTemplateAndProps = await findStaticTemplateModuleAndDocBySlug(
         vite,
@@ -76,12 +72,7 @@ export const serverRenderSlugRoute =
       // If the document is not found (or there are no in-platform page sets),
       // get the document via local data or generate-test-data
       if (!document) {
-        document = await getDocument(
-          dynamicGenerateData,
-          vite,
-          slug,
-          projectStructure
-        );
+        document = await getDocument(dynamicGenerateData, vite, slug, projectStructure);
       }
 
       if (!document) {
@@ -97,10 +88,7 @@ export const serverRenderSlugRoute =
         Boolean(document.__.codeTemplate)
       );
       if (!templateModuleInternal) {
-        send404(
-          res,
-          `Cannot find template corresponding to feature: ${feature}`
-        );
+        send404(res, `Cannot find template corresponding to feature: ${feature}`);
         return;
       }
 
@@ -130,12 +118,7 @@ const getDocument = async (
   projectStructure: ProjectStructure
 ): Promise<any> => {
   if (dynamicGenerateData) {
-    return generateTestDataForSlug(
-      process.stdout,
-      vite,
-      slug,
-      projectStructure
-    );
+    return generateTestDataForSlug(process.stdout, vite, slug, projectStructure);
   }
   return getLocalEntityPageDataForSlug(slug);
 };

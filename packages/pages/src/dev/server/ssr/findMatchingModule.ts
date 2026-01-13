@@ -22,15 +22,9 @@ export const loadModuleInternal = async (
   devserver: ViteDevServer,
   moduleFilePath: string
 ): Promise<ModuleInternal | null> => {
-  const moduleDefinition = await loadViteModule<ModuleDefinition>(
-    devserver,
-    moduleFilePath
-  );
+  const moduleDefinition = await loadViteModule<ModuleDefinition>(devserver, moduleFilePath);
 
-  return convertModuleDefinitionToModuleInternal(
-    moduleFilePath,
-    moduleDefinition
-  );
+  return convertModuleDefinitionToModuleInternal(moduleFilePath, moduleDefinition);
 };
 
 /**
@@ -46,8 +40,7 @@ export const getModuleInfoFromModuleName = async (
   searchName: string,
   projectStructure: ProjectStructure
 ): Promise<ModuleInfo | undefined> => {
-  const moduleFilePaths =
-    getModuleFilepathsFromProjectStructure(projectStructure);
+  const moduleFilePaths = getModuleFilepathsFromProjectStructure(projectStructure);
   const project = createTsMorphProject();
   let moduleName = "";
   let modulePath = "";
@@ -79,10 +72,7 @@ export const getModuleInfoFromModuleName = async (
     return;
   }
 
-  let postCssPath: string | undefined = path.resolve(
-    modulePath,
-    "../postcss.config.js"
-  );
+  let postCssPath: string | undefined = path.resolve(modulePath, "../postcss.config.js");
 
   if (!fs.existsSync(postCssPath)) {
     postCssPath = undefined;

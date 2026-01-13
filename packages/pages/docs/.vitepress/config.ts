@@ -5,8 +5,8 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const API_FOLDER = "api";
 
+// eslint-disable-next-line no-unused-vars
 const getSidebarSubfolder = (subfolderName: string) => {
   const dirPath = path.resolve(__dirname, "..", subfolderName);
   const files = readdirSync(dirPath);

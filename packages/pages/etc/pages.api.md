@@ -30,10 +30,7 @@ export interface ClientServerRenderTemplates {
 export const convertToPosixPath: (p: string) => string;
 
 // @internal (undocumented)
-export const createDevServer: (
-  devServerPort: number,
-  devArgs: DevArgs
-) => Promise<void>;
+export const createDevServer: (devServerPort: number, devArgs: DevArgs) => Promise<void>;
 
 // @internal
 export interface DevArgs {
@@ -85,9 +82,7 @@ export type GetAuthScope<T extends TemplateProps> = (props: T) => string;
 export type GetDestination<T extends TemplateProps> = (props: T) => string;
 
 // @public
-export type GetHeadConfig<T extends TemplateRenderProps> = (
-  props: T
-) => HeadConfig;
+export type GetHeadConfig<T extends TemplateRenderProps> = (props: T) => HeadConfig;
 
 // @public
 export const getLang: <T extends TemplateRenderProps<any>>(
@@ -99,17 +94,13 @@ export const getLang: <T extends TemplateRenderProps<any>>(
 export type GetPath<T extends TemplateProps> = (props: T) => string;
 
 // @public
-export type GetRedirects<T extends TemplateProps> = (
-  props: T
-) => (RedirectSource | string)[];
+export type GetRedirects<T extends TemplateProps> = (props: T) => (RedirectSource | string)[];
 
 // @public
 export const getRelativePrefixToRootFromPath: (path: string) => string;
 
 // @public
-export type GetSources<T extends TemplateProps> = (
-  props: T
-) => RedirectSource[];
+export type GetSources<T extends TemplateProps> = (props: T) => RedirectSource[];
 
 // @public
 export interface HeadConfig {
@@ -176,9 +167,7 @@ export interface ModuleProps<T = Record<string, any>> {
 }
 
 // @public
-export type OnUrlChangeFunction = (
-  arg: PagesOnUrlChangeRequest
-) => PagesOnUrlChangeResponse;
+export type OnUrlChangeFunction = (arg: PagesOnUrlChangeRequest) => PagesOnUrlChangeResponse;
 
 // @internal
 export interface PageContext<T extends TemplateRenderProps<T>> {
@@ -337,19 +326,10 @@ export interface Tag {
 }
 
 // @public
-export type TagType =
-  | "base"
-  | "link"
-  | "style"
-  | "meta"
-  | "script"
-  | "noscript"
-  | "template";
+export type TagType = "base" | "link" | "style" | "meta" | "script" | "noscript" | "template";
 
 // @public
-export type Template<T extends TemplateRenderProps> = (
-  props: T
-) => React_2.JSX.Element;
+export type Template<T extends TemplateRenderProps> = (props: T) => React_2.JSX.Element;
 
 // @public
 export interface TemplateConfig {
@@ -376,10 +356,7 @@ export interface TemplateManifest {
 }
 
 // @public
-export interface TemplateModule<
-  T extends TemplateProps,
-  U extends TemplateRenderProps,
-> {
+export interface TemplateModule<T extends TemplateProps, U extends TemplateRenderProps> {
   config?: TemplateConfig;
   // Warning: (ae-unresolved-link) The @link reference could not be resolved: The package "@yext/pages" does not have an export "render"
   default?: Template<U>;

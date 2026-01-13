@@ -9,12 +9,5 @@ Type that enumerates the allowed types of HTML elements in the document header.
 **Signature:**
 
 ```typescript
-export type TagType =
-  | "base"
-  | "link"
-  | "style"
-  | "meta"
-  | "script"
-  | "noscript"
-  | "template";
+export type TagType = "base" | "link" | "style" | "meta" | "script" | "noscript" | "template";
 ```

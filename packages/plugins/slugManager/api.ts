@@ -120,18 +120,14 @@ export class API implements IAPI {
     return await wrappedFetch<EntityType>(req);
   }
 
-  async listEntities<EntityType = BaseEntity>(
-    additionalParams?: URLSearchParams
-  ) {
+  async listEntities<EntityType = BaseEntity>(additionalParams?: URLSearchParams) {
     const url = this.constructRequestUrl(`entities`, additionalParams);
     const req = new Request(url, { headers });
 
     return await wrappedFetch<ListEntitiesResponse<EntityType>>(req);
   }
 
-  async listLanguageProfiles<T = BaseEntity>(
-    additionalParams?: URLSearchParams
-  ) {
+  async listLanguageProfiles<T = BaseEntity>(additionalParams?: URLSearchParams) {
     const url = this.constructRequestUrl("entityprofiles", additionalParams);
     const req = new Request(url, { headers });
 

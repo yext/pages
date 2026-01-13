@@ -27,10 +27,7 @@ export const getHydrationModuleDev = (
  * @param indexHtml
  * @returns the server template to render in the Vite dev environment
  */
-export const getIndexModuleDev = (
-  clientHydrationString: string,
-  indexHtml: string
-): string => {
+export const getIndexModuleDev = (clientHydrationString: string, indexHtml: string): string => {
   return getCommonInjectedIndexHtml(clientHydrationString, indexHtml);
 };
 
@@ -41,10 +38,7 @@ export const getIndexModuleDev = (
  * @param indexHtml
  * @returns the server template with injected html
  */
-const getCommonInjectedIndexHtml = (
-  clientHydrationString: string,
-  indexHtml: string
-): string => {
+const getCommonInjectedIndexHtml = (clientHydrationString: string, indexHtml: string): string => {
   indexHtml = injectIntoEndOfHead(
     indexHtml,
     `<script type="module">${clientHydrationString}</script>`
@@ -65,9 +59,5 @@ const injectIntoEndOfHead = (html: string, stringToInject: string): string => {
     throw new Error("_server.tsx: No head tag is defined");
   }
 
-  return (
-    html.slice(0, closingHeadIndex) +
-    stringToInject +
-    html.slice(closingHeadIndex)
-  );
+  return html.slice(0, closingHeadIndex) + stringToInject + html.slice(closingHeadIndex);
 };

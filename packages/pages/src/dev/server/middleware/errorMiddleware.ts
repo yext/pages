@@ -29,18 +29,14 @@ export const errorMiddleware =
         ? escapeHtmlBlock(errorString.split("\n", 1)[0] || "Error")
         : "Error";
 
-      const stackTrace = !canInspect
-        ? String(errorString).split("\n").slice(1)
-        : [errorString];
+      const stackTrace = !canInspect ? String(errorString).split("\n").slice(1) : [errorString];
 
       const ansiToHtmlConverter = new Convert({ fg: "#000", bg: "#FFF" });
 
       const escapedStackTrace = stackTrace
         .map(
           (unescapedLine) =>
-            "<li>" +
-            ansiToHtmlConverter.toHtml(escapeHtmlBlock(unescapedLine)) +
-            "</li>"
+            "<li>" + ansiToHtmlConverter.toHtml(escapeHtmlBlock(unescapedLine)) + "</li>"
         )
         .join("");
 
@@ -50,11 +46,7 @@ export const errorMiddleware =
         .replace(STATUS_CODE_HTML_TAG, "500")
         .replace(ERROR_HTML_TAG, topLevelError);
 
-      res
-        .status(500)
-        .end(
-          await vite.transformIndexHtml(req.originalUrl, htmlResponseString)
-        );
+      res.status(500).end(await vite.transformIndexHtml(req.originalUrl, htmlResponseString));
     } catch (e: any) {
       console.error(e);
       next(e);

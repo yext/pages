@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  convertToPosixPath,
-  getRelativePrefixToRootFromPath,
-} from "../../src/template/paths.js";
+import { convertToPosixPath, getRelativePrefixToRootFromPath } from "../../src/template/paths.js";
 import path from "node:path";
 
 describe("getRelativePrefixToRootFromPath", () => {
@@ -16,9 +13,7 @@ describe("getRelativePrefixToRootFromPath", () => {
 
     const expectedRelativePathPrefix = "";
 
-    expect(getRelativePrefixToRootFromPath(path)).toEqual(
-      expectedRelativePathPrefix
-    );
+    expect(getRelativePrefixToRootFromPath(path)).toEqual(expectedRelativePathPrefix);
   });
 
   it("properly returns the relative directory prefix when deeper than root level", async () => {
@@ -26,9 +21,7 @@ describe("getRelativePrefixToRootFromPath", () => {
 
     const expectedRelativePathPrefix = "../../../";
 
-    expect(getRelativePrefixToRootFromPath(p)).toEqual(
-      expectedRelativePathPrefix
-    );
+    expect(getRelativePrefixToRootFromPath(p)).toEqual(expectedRelativePathPrefix);
   });
 
   it("convert to posix path", async () => {

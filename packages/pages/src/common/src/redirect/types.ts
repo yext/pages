@@ -56,6 +56,4 @@ export type GetDestination<T extends TemplateProps> = (props: T) => string;
  *
  * @public
  */
-export type GetSources<T extends TemplateProps> = (
-  props: T
-) => RedirectSource[];
+export type GetSources<T extends TemplateProps> = (props: T) => RedirectSource[];

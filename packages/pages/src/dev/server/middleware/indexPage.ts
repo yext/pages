@@ -1,8 +1,5 @@
 import { RequestHandler } from "express-serve-static-core";
-import {
-  getLocalDataManifest,
-  LocalDataManifest,
-} from "../ssr/getLocalData.js";
+import { getLocalDataManifest, LocalDataManifest } from "../ssr/getLocalData.js";
 import index from "../public/index.js";
 import {
   dynamicModeInfoText,
@@ -24,10 +21,7 @@ import { getPartition } from "../../../util/partition.js";
 import { getYextUrlForPartition } from "../../../util/url.js";
 import path from "node:path";
 import { logWarning } from "../../../util/logError.js";
-import {
-  getInPlatformPageSetDocuments,
-  PageSetConfig,
-} from "../ssr/inPlatformPageSets.js";
+import { getInPlatformPageSetDocuments, PageSetConfig } from "../ssr/inPlatformPageSets.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -53,10 +47,7 @@ export const indexPage =
       const { accountId, universe } = parseYextrcContents();
       if (accountId !== undefined && universe !== undefined) {
         const partition = getPartition(Number(accountId));
-        const accountUrl = `https://${getYextUrlForPartition(
-          universe,
-          partition
-        )}/s/${accountId}/`;
+        const accountUrl = `https://${getYextUrlForPartition(universe, partition)}/s/${accountId}/`;
         accountLink = `
           <span class="link-container">
             <a target="_blank" rel="noopener noreferrer" href="${accountUrl}">
@@ -67,12 +58,8 @@ export const indexPage =
         `;
       }
 
-      const templateFilepaths =
-        getTemplateFilepathsFromProjectStructure(projectStructure);
-      const localDataManifest = await getLocalDataManifest(
-        vite,
-        templateFilepaths
-      );
+      const templateFilepaths = getTemplateFilepathsFromProjectStructure(projectStructure);
+      const localDataManifest = await getLocalDataManifest(vite, templateFilepaths);
 
       // Inject the header
       let indexPageHtml = index.replace(
@@ -142,11 +129,7 @@ export const indexPage =
                     </tr>
                   </thead>
                   <tbody>
-                    ${createEntityPageListItems(
-                      localDataManifest,
-                      templateName,
-                      useProdURLs
-                    )}
+                    ${createEntityPageListItems(localDataManifest, templateName, useProdURLs)}
                   </tbody>
                 </table>`,
             ""
@@ -171,20 +154,15 @@ export const indexPage =
           `<!--in-platform-pages-html-->`,
           `<h3>In-Platform Page Sets</h3>
           <div class="list">
-        ${await inPlatformPageSets.reduce(
-          async (pageSetAccumulator, pageSetConfig) => {
-            const documents = await getInPlatformPageSetDocuments(
-              siteId,
-              pageSetConfig.id
-            );
-            if (documents?.length) {
-              return (
-                (await pageSetAccumulator) +
-                `<h4>
+        ${await inPlatformPageSets.reduce(async (pageSetAccumulator, pageSetConfig) => {
+          const documents = await getInPlatformPageSetDocuments(siteId, pageSetConfig.id);
+          if (documents?.length) {
+            return (
+              (await pageSetAccumulator) +
+              `<h4>
                 ${pageSetConfig.display_name}
                 pages [template: ${pageSetConfig.code_template}] (${
-                  (documents?.filter((d) => !useProdURLs || d.slug) || [])
-                    .length
+                  (documents?.filter((d) => !useProdURLs || d.slug) || []).length
                 }):
               </h4>
                 <table>
@@ -195,19 +173,13 @@ export const indexPage =
                     </tr>
                   </thead>
                   <tbody>
-                    ${createInPlatformPageSetsItems(
-                      documents,
-                      pageSetConfig.id,
-                      useProdURLs
-                    )}
+                    ${createInPlatformPageSetsItems(documents, pageSetConfig.id, useProdURLs)}
                   </tbody>
                 </table>`
-              );
-            }
-            return pageSetAccumulator;
-          },
-          Promise.resolve("")
-        )}
+            );
+          }
+          return pageSetAccumulator;
+        }, Promise.resolve(""))}
         </div>`
         );
       }
@@ -251,10 +223,7 @@ const formatStaticLink = (
   return templateName + localeQuery;
 };
 
-const createStaticPageListItems = (
-  localDataManifest: LocalDataManifest,
-  useProdURLs: boolean
-) => {
+const createStaticPageListItems = (localDataManifest: LocalDataManifest, useProdURLs: boolean) => {
   return Array.from(localDataManifest.static).reduce(
     (templateAccumulator, [, { featureName, pathToLocalesMap }]) => {
       return (
@@ -270,12 +239,7 @@ const createStaticPageListItems = (
           <tbody>
             ${[...pathToLocalesMap].map(([path, locales]) =>
               locales.map((locale) => {
-                const link = formatStaticLink(
-                  useProdURLs,
-                  featureName,
-                  locale,
-                  path
-                );
+                const link = formatStaticLink(useProdURLs, featureName, locale, path);
 
                 return `
                   <tr>
@@ -332,26 +296,19 @@ const createEntityPageListItems = (
   };
 
   const entities = localDataManifest.entity.get(templateName) || [];
-  return entities.reduce(
-    (entityAccumulator, { uid, entityId, slug, locale }) => {
-      if (useProdURLs && !slug) {
-        logWarning(
-          `No document.slug found for entityId "${entityId}", no link will be rendered in the index page.`
-        );
-        return entityAccumulator;
-      }
-
-      const link = formatEntityLink(
-        useProdURLs,
-        templateName,
-        entityId,
-        locale,
-        slug
+  return entities.reduce((entityAccumulator, { uid, entityId, slug, locale }) => {
+    if (useProdURLs && !slug) {
+      logWarning(
+        `No document.slug found for entityId "${entityId}", no link will be rendered in the index page.`
       );
+      return entityAccumulator;
+    }
 
-      return (
-        entityAccumulator +
-        `<tr>
+    const link = formatEntityLink(useProdURLs, templateName, entityId, locale, slug);
+
+    return (
+      entityAccumulator +
+      `<tr>
         <td>
           <a href="/${link}">
             ${link}
@@ -359,16 +316,12 @@ const createEntityPageListItems = (
         </td>
         <td>
           ${
-            accountId && universe
-              ? `<a href="${formatContentLink(uid)}">${entityId}</a>`
-              : entityId
+            accountId && universe ? `<a href="${formatContentLink(uid)}">${entityId}</a>` : entityId
           }
         </td>
     </tr>`
-      );
-    },
-    ""
-  );
+    );
+  }, "");
 };
 
 const createInPlatformPageSetsItems = (
@@ -396,13 +349,7 @@ const createInPlatformPageSetsItems = (
       return entityAccumulator;
     }
 
-    const link = formatEntityLink(
-      useProdURLs,
-      templateName,
-      id,
-      meta.locale,
-      slug
-    );
+    const link = formatEntityLink(useProdURLs, templateName, id, meta.locale, slug);
 
     return (
       entityAccumulator +
@@ -413,11 +360,7 @@ const createInPlatformPageSetsItems = (
            </a>
         </td>
         <td>
-          ${
-            accountId && universe
-              ? `<a href="${formatKnowledgeGraphLink(uid)}">${id}</a>`
-              : id
-          }
+          ${accountId && universe ? `<a href="${formatKnowledgeGraphLink(uid)}">${id}</a>` : id}
         </td>
     </tr>`
     );
@@ -440,10 +383,7 @@ const getInfoMessage = (isDynamic: boolean, isProdUrl: boolean): string => {
   return `<p>${localModeInfoText}</p>`;
 };
 
-const createFunctionsTable = (
-  functionsList: FunctionModuleInternal[],
-  indexPageHtml: string
-) => {
+const createFunctionsTable = (functionsList: FunctionModuleInternal[], indexPageHtml: string) => {
   if (functionsList.length > 0) {
     return indexPageHtml.replace(
       "<!--functions-html-->",

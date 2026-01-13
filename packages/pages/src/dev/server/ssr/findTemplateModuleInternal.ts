@@ -28,22 +28,13 @@ export const findTemplateModuleInternalByName = async (
   // We could load all templates but it's a slight optimization to stop once we
   // find the one we need.
   for (const templateFilepath of templateFilepaths) {
-    const templateModuleInternal = await loadTemplateModuleInternal(
-      devserver,
-      templateFilepath
-    );
+    const templateModuleInternal = await loadTemplateModuleInternal(devserver, templateFilepath);
 
-    if (
-      templateModuleInternal.config.templateType !== "entity" &&
-      !allowCodeTemplates
-    ) {
+    if (templateModuleInternal.config.templateType !== "entity" && !allowCodeTemplates) {
       continue;
     }
 
-    templateNameToTemplateFilepath.set(
-      templateModuleInternal.config.name,
-      templateFilepath
-    );
+    templateNameToTemplateFilepath.set(templateModuleInternal.config.name, templateFilepath);
 
     if (templateName === templateModuleInternal.config.name) {
       return templateModuleInternal;
@@ -63,9 +54,5 @@ export const loadTemplateModuleInternal = async (
     templateFilepath
   );
 
-  return convertTemplateModuleToTemplateModuleInternal(
-    templateFilepath,
-    templateModule,
-    false
-  );
+  return convertTemplateModuleToTemplateModuleInternal(templateFilepath, templateModule, false);
 };

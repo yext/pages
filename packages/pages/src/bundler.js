@@ -18,9 +18,7 @@ if (args.length > 0) {
 rmSync("./dist", { recursive: true, force: true });
 
 const testFilter = (f) =>
-  !f.endsWith(".test.ts") &&
-  !f.endsWith(".test.tsx") &&
-  !f.endsWith(".test.js");
+  !f.endsWith(".test.ts") && !f.endsWith(".test.tsx") && !f.endsWith(".test.js");
 const filters = new Set(["./src/bundler.js"]);
 
 const files = glob

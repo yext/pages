@@ -26,10 +26,7 @@ export type DynamicOptions = {
  * @param options - {@link DynamicOptions}
  * @returns
  */
-export function dynamic(
-  importComponent: () => Promise<any>,
-  options?: DynamicOptions
-) {
+export function dynamic(importComponent: () => Promise<any>, options?: DynamicOptions) {
   const resolvedOptions = {
     componentName: "default",
     loading: () => <></>,

@@ -42,8 +42,7 @@ export const generateTestDataForSlug = async (
   slug: string,
   projectStructure: ProjectStructure
 ): Promise<any> => {
-  const templateFilepaths =
-    getTemplateFilepathsFromProjectStructure(projectStructure);
+  const templateFilepaths = getTemplateFilepathsFromProjectStructure(projectStructure);
 
   const templateModuleCollection = await loadTemplateModuleCollectionUsingVite(
     vite,
@@ -57,10 +56,7 @@ export const generateTestDataForSlug = async (
     }
   }
 
-  const featuresConfig = getTemplatesConfig(
-    templateModuleCollection,
-    projectStructure
-  );
+  const featuresConfig = getTemplatesConfig(templateModuleCollection, projectStructure);
   const featuresConfigForEntityPages: FeaturesConfig = {
     features: featuresConfig.features.filter((f) => "entityPageSet" in f),
     streams: featuresConfig.streams,
@@ -86,12 +82,7 @@ export const generateTestDataForSlug = async (
 
   const parsedData = await spawnTestDataCommand(stdout, "yext", args);
 
-  return getDocumentBySlug(
-    parsedData,
-    slug,
-    Array.from(slugFields),
-    templateModuleCollection
-  );
+  return getDocumentBySlug(parsedData, slug, Array.from(slugFields), templateModuleCollection);
 };
 
 export const generateTestDataForPage = async (
@@ -108,8 +99,7 @@ export const generateTestDataForPage = async (
     args.push("--entityIds", entityId);
   }
 
-  const isAlternateLanguageFields =
-    !!featuresConfig.features[0]?.alternateLanguageFields;
+  const isAlternateLanguageFields = !!featuresConfig.features[0]?.alternateLanguageFields;
   if (!isAlternateLanguageFields) {
     args.push("--locale", locale);
   }
@@ -145,9 +135,7 @@ async function spawnTestDataCommand(
       }
 
       // Remove the Yext boilerplate
-      let lines = chunk
-        .split("\n")
-        .filter((l) => !l.startsWith(CLI_BOILERPLATE_BETA_MESSAGE));
+      let lines = chunk.split("\n").filter((l) => !l.startsWith(CLI_BOILERPLATE_BETA_MESSAGE));
 
       // Check to see if the test data has begun to be printed in this chunk.
       const dataStartIndex = Math.max(
@@ -178,7 +166,9 @@ async function spawnTestDataCommand(
         // so the user can see it. Its main usage is to allow the user to go through the
         // authentication flow from the parent process.
         const out = lines.join("\n").trim();
-        out && stdout.write(out + "\n");
+        if (out) {
+          stdout.write(out + "\n");
+        }
       }
     });
 
@@ -189,17 +179,13 @@ async function spawnTestDataCommand(
           parsedData = JSON.parse(testData.trim());
         } catch {
           stdout.write(
-            `\nUnable to parse test data from command: \`${command} ${args.join(
-              " "
-            )}\``
+            `\nUnable to parse test data from command: \`${command} ${args.join(" ")}\``
           );
           resolve(null);
         }
       } else {
         stdout.write(
-          `\nUnable to generate test data from command: \`${command} ${args.join(
-            " "
-          )}\``
+          `\nUnable to generate test data from command: \`${command} ${args.join(" ")}\``
         );
       }
 
@@ -209,10 +195,7 @@ async function spawnTestDataCommand(
   });
 }
 
-const getCommonArgs = (
-  featuresConfig: FeaturesConfig,
-  projectStructure: ProjectStructure
-) => {
+const getCommonArgs = (featuresConfig: FeaturesConfig, projectStructure: ProjectStructure) => {
   const args = ["pages", "generate-test-data", "--printDocuments"];
 
   args.push("--featuresConfig", prepareJsonForCmd(featuresConfig));
@@ -264,9 +247,7 @@ const getDocumentBySlug = (
   }
 
   // Filter out any non-entity pages
-  const filteredDocuments: any[] = parsedData.filter(
-    (document) => !!document?.__?.entityPageSet
-  );
+  const filteredDocuments: any[] = parsedData.filter((document) => !!document?.__?.entityPageSet);
   if (filteredDocuments.length === 1) {
     return filteredDocuments[0];
   }
@@ -308,9 +289,7 @@ const getDocumentBySlug = (
     const templateNames = matchingTemplateModules
       .map((templateModule) => templateModule.config.name)
       .join(", ");
-    throw new Error(
-      `Multiple templates found (${templateNames}) for slug: "${slug}"`
-    );
+    throw new Error(`Multiple templates found (${templateNames}) for slug: "${slug}"`);
   }
 
   // Return the document that matches the template

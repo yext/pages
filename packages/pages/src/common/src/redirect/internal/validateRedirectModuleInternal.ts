@@ -1,8 +1,6 @@
 import { RedirectConfigInternal, RedirectModuleInternal } from "./types.js";
 
-export const validateRedirectModuleInternal = (
-  redirectModule: RedirectModuleInternal<any>
-) => {
+export const validateRedirectModuleInternal = (redirectModule: RedirectModuleInternal<any>) => {
   validateConfig(redirectModule.filename, redirectModule.config);
 
   if (!redirectModule.getDestination) {
@@ -23,14 +21,10 @@ export const validateConfig = (
   redirectConfigInternal: RedirectConfigInternal
 ) => {
   if (!redirectConfigInternal.name) {
-    throw new Error(
-      `Redirect ${filename} is missing a "name" in the config function.`
-    );
+    throw new Error(`Redirect ${filename} is missing a "name" in the config function.`);
   }
 
   if (redirectConfigInternal.streamId && redirectConfigInternal.stream) {
-    throw new Error(
-      `Redirect ${filename} must not define both a "streamId" and a "stream".`
-    );
+    throw new Error(`Redirect ${filename} must not define both a "streamId" and a "stream".`);
   }
 };

@@ -53,8 +53,6 @@ vi.mock("glob", () => ({
 describe("getFunctionFilepaths", () => {
   it("collects all function files under the src/functions path", () => {
     const templatesFilepath = getFunctionFilepaths(rootPath);
-    expect(JSON.stringify(templatesFilepath.sort())).toEqual(
-      JSON.stringify(expected)
-    );
+    expect(JSON.stringify(templatesFilepath.sort())).toEqual(JSON.stringify(expected));
   });
 });

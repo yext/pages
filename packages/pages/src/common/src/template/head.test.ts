@@ -43,9 +43,9 @@ describe("renderHeadConfigToString", () => {
         <meta charset="UTF-8">
         <meta name="viewport" content="bar">`;
 
-    expect(
-      renderHeadConfigToString(headConfig as HeadConfig).replaceAll(" ", "")
-    ).toEqual(expectedHeadConfig.replaceAll(" ", ""));
+    expect(renderHeadConfigToString(headConfig as HeadConfig).replaceAll(" ", "")).toEqual(
+      expectedHeadConfig.replaceAll(" ", "")
+    );
   });
 
   it("properly renders the title and optionals", async () => {
@@ -146,9 +146,7 @@ describe("renderHeadConfigToString", () => {
     );
 
     vi.clearAllMocks();
-    const logMock = vi
-      .spyOn(console, "log")
-      .mockImplementation(() => undefined);
+    const logMock = vi.spyOn(console, "log").mockImplementation(() => undefined);
 
     expect(logMock.mock.calls.length).toBe(0);
     renderHeadConfigToString(headConfig as HeadConfig);

@@ -45,13 +45,9 @@ type ExternalImageData = TemplateProps & { externalImage: ExternalImage };
  *
  * If the page is truly static this function is not necessary.
  */
-export const transformProps: TransformProps<ExternalImageData> = async (
-  data
-) => {
+export const transformProps: TransformProps<ExternalImageData> = async (data) => {
   const url = YEXT_PUBLIC_EXTERNAL_IMAGE_API_BASE_URL + "/2";
-  const externalImage = (await fetch(url).then((res: any) =>
-    res.json()
-  )) as ExternalImage;
+  const externalImage = (await fetch(url).then((res: any) => res.json())) as ExternalImage;
   return { ...data, externalImage };
 };
 
@@ -75,9 +71,7 @@ type ExternalImageRenderData = TemplateRenderProps & {
  * will be used to generate the inner contents of the HTML document's <head> tag.
  * This can include the title, meta tags, script tags, etc.
  */
-export const getHeadConfig: GetHeadConfig<
-  TemplateRenderProps
-> = (): HeadConfig => {
+export const getHeadConfig: GetHeadConfig<TemplateRenderProps> = (): HeadConfig => {
   return {
     title: "Static Page Example",
     charset: "UTF-8",

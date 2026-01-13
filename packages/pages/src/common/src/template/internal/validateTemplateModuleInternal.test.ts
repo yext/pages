@@ -17,8 +17,7 @@ describe("validateTemplateModuleInternal - validateConfig", () => {
       templateType: "static",
     };
 
-    const validateConfigFunc = () =>
-      validateConfig("foo.tsx", templateConfigInternal);
+    const validateConfigFunc = () => validateConfig("foo.tsx", templateConfigInternal);
 
     expect(validateConfigFunc).toThrowError(
       `Template foo.tsx is missing a "name" in the config function.`
@@ -41,8 +40,7 @@ describe("validateTemplateModuleInternal - validateConfig", () => {
       templateType: "entity",
     };
 
-    const validateConfigFunc = () =>
-      validateConfig("foo.tsx", templateConfigInternal);
+    const validateConfigFunc = () => validateConfig("foo.tsx", templateConfigInternal);
 
     expect(validateConfigFunc).toThrowError(
       `Template foo.tsx must not define both a "streamId" and a "stream".`
@@ -68,9 +66,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
     };
 
     const validateTemplateModuleInternalFunc = () =>
-      validateTemplateModuleInternal(
-        templateModuleInteral as TemplateModuleInternal<any, any>
-      );
+      validateTemplateModuleInternal(templateModuleInteral as TemplateModuleInternal<any, any>);
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
       `Template foo.tsx is missing an exported getPath function.`
@@ -94,9 +90,7 @@ describe("validateTemplateModuleInternal - validateTemplateModuleInternal", () =
     };
 
     const validateTemplateModuleInternalFunc = () =>
-      validateTemplateModuleInternal(
-        templateModuleInteral as TemplateModuleInternal<any, any>
-      );
+      validateTemplateModuleInternal(templateModuleInteral as TemplateModuleInternal<any, any>);
 
     expect(validateTemplateModuleInternalFunc).toThrowError(
       `Template foo.tsx does not have the necessary exports to produce page. ` +

@@ -7,9 +7,7 @@ import { loadEnv } from "vite";
  *
  * @param prefix string specifying the beginning of the keys to match
  */
-export const processEnvVariables = (
-  prefix = "VITE"
-): Record<string, string> => {
+export const processEnvVariables = (prefix = "VITE"): Record<string, string> => {
   const mode = process.env.NODE_ENV || "development";
 
   // If we're in development return all env var keys, otherwise use Vite's default
@@ -34,8 +32,7 @@ export const processEnvVariables = (
 };
 
 const startRunes = "_$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const continueRunes =
-  "_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const continueRunes = "_$0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 // Partially translated from https://github.com/evanw/esbuild which is ultimately
 // what's used to validate define keys. The difference with this function is that

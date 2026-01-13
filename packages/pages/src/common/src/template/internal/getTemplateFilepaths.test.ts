@@ -16,9 +16,7 @@ describe("getTemplateFilepaths", () => {
       path.join(rootPath, "test.tsx"),
     ]);
 
-    const templatesFilepath = getTemplateFilepaths([
-      new Path(path.join(process.cwd(), rootPath)),
-    ]);
+    const templatesFilepath = getTemplateFilepaths([new Path(path.join(process.cwd(), rootPath))]);
     expect(templatesFilepath.sort()).toEqual(
       [path.join(rootPath, "share.tsx"), path.join(rootPath, "test.tsx")].sort()
     );
@@ -65,9 +63,9 @@ describe("getTemplateFilepaths", () => {
       ]);
 
       expect(clientServerRenderTemplates.isCustomRenderTemplate).toBeFalsy();
-      expect(
-        path.basename(clientServerRenderTemplates.clientRenderTemplatePath)
-      ).toEqual("_client17.js");
+      expect(path.basename(clientServerRenderTemplates.clientRenderTemplatePath)).toEqual(
+        "_client17.js"
+      );
     });
 
     it("uses React 18 client template when no custom client", async () => {
@@ -85,9 +83,9 @@ describe("getTemplateFilepaths", () => {
       ]);
 
       expect(clientServerRenderTemplates.isCustomRenderTemplate).toBeFalsy();
-      expect(
-        path.basename(clientServerRenderTemplates.clientRenderTemplatePath)
-      ).toEqual("_client.js");
+      expect(path.basename(clientServerRenderTemplates.clientRenderTemplatePath)).toEqual(
+        "_client.js"
+      );
     });
 
     it("uses custom client template when React 17", async () => {
@@ -106,9 +104,9 @@ describe("getTemplateFilepaths", () => {
       ]);
 
       expect(clientServerRenderTemplates.isCustomRenderTemplate).toBeTruthy();
-      expect(
-        path.basename(clientServerRenderTemplates.clientRenderTemplatePath)
-      ).toEqual("_client.tsx");
+      expect(path.basename(clientServerRenderTemplates.clientRenderTemplatePath)).toEqual(
+        "_client.tsx"
+      );
     });
 
     it("uses custom client template when React 18", async () => {
@@ -127,9 +125,9 @@ describe("getTemplateFilepaths", () => {
       ]);
 
       expect(clientServerRenderTemplates.isCustomRenderTemplate).toBeTruthy();
-      expect(
-        path.basename(clientServerRenderTemplates.clientRenderTemplatePath)
-      ).toEqual("_client.tsx");
+      expect(path.basename(clientServerRenderTemplates.clientRenderTemplatePath)).toEqual(
+        "_client.tsx"
+      );
     });
   });
 });

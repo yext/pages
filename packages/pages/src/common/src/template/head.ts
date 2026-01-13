@@ -42,14 +42,7 @@ export type Attributes = Record<string, string>;
  *
  * @public
  */
-export type TagType =
-  | "base"
-  | "link"
-  | "style"
-  | "meta"
-  | "script"
-  | "noscript"
-  | "template";
+export type TagType = "base" | "link" | "style" | "meta" | "script" | "noscript" | "template";
 
 /**
  * Interface for an HTML tag. Can set attributes on the tag, but
@@ -82,9 +75,7 @@ export const renderHeadConfigToString = (headConfig: HeadConfig): string => {
 
   return `<title>${headConfig.title}</title>
     <meta charset="${headConfig.charset || "UTF-8"}">
-    <meta name="viewport" content="${
-      headConfig.viewport || "width=device-width, initial-scale=1"
-    }">
+    <meta name="viewport" content="${headConfig.viewport || "width=device-width, initial-scale=1"}">
     ${headConfig.tags ? headConfig.tags.map(renderTag).join("\n") : ""}
     ${headConfig.other ? headConfig.other : ""}`
     .split("\n")

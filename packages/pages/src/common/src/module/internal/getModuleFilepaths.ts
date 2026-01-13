@@ -26,9 +26,7 @@ export const getModuleFilepaths = (paths: Path[]): string[] => {
       .filter((dir) => dir.isDirectory())
       .map((dir) => dir.name)
       .forEach((dir) => {
-        const filePaths = globSync(
-          convertToPosixPath(`${p.getAbsolutePath()}/${dir}/*.tsx`)
-        );
+        const filePaths = globSync(convertToPosixPath(`${p.getAbsolutePath()}/${dir}/*.tsx`));
         if (filePaths.length != 1) {
           console.error(
             `Multiple or no source files found for module "${dir}". There must be one .tsx file per module.`
@@ -56,24 +54,19 @@ const globalClientRenderFilename17 = "_client17.tsx";
 const globalClientRenderFilename = "_client.tsx";
 const globalServerRenderFilename = "_server.tsx";
 
-export const getGlobalClientServerRenderModules =
-  (): ModuleClientServerRenderTemplates => {
-    const shouldUseReactRoot = getReactVersion() >= 18;
+export const getGlobalClientServerRenderModules = (): ModuleClientServerRenderTemplates => {
+  const shouldUseReactRoot = getReactVersion() >= 18;
 
-    const clientRenderModulePath = findGlobalRenderFile(
-      shouldUseReactRoot
-        ? globalClientRenderFilename
-        : globalClientRenderFilename17
-    );
-    const serverRenderModulePath = findGlobalRenderFile(
-      globalServerRenderFilename
-    );
+  const clientRenderModulePath = findGlobalRenderFile(
+    shouldUseReactRoot ? globalClientRenderFilename : globalClientRenderFilename17
+  );
+  const serverRenderModulePath = findGlobalRenderFile(globalServerRenderFilename);
 
-    return {
-      clientRenderModulePath: clientRenderModulePath,
-      serverRenderModulePath: serverRenderModulePath,
-    };
+  return {
+    clientRenderModulePath: clientRenderModulePath,
+    serverRenderModulePath: serverRenderModulePath,
   };
+};
 
 /**
  * @param defaultFilename the name of the provided file to use
