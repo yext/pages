@@ -52,23 +52,25 @@ const slugFormatFunc = (lang: string, profile: BaseEntity) => {
 };
 const slugFormatFuncFields = ["c_customField"];
 
-Deno.test("getUpdates returns correct number of updates", () => {
-  const updates = getUpdates(
+Deno.test("getUpdates returns correct number of updates", async () => {
+  const updates = await getUpdates(
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormatString
+    slugFormatString,
+    baseMockAPI
   );
 
   assertEquals(updates.length, 3);
 });
 
-Deno.test("getUpdates correctly sets isAlternateProfile", () => {
-  const updates = getUpdates(
+Deno.test("getUpdates correctly sets isAlternateProfile", async () => {
+  const updates = await getUpdates(
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormatString
+    slugFormatString,
+    baseMockAPI
   );
 
   for (const update of updates) {
@@ -79,23 +81,25 @@ Deno.test("getUpdates correctly sets isAlternateProfile", () => {
   }
 });
 
-Deno.test("getUpdates sets correct slug field", () => {
-  const updates = getUpdates(
+Deno.test("getUpdates sets correct slug field", async () => {
+  const updates = await getUpdates(
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormatString
+    slugFormatString,
+    baseMockAPI
   );
 
   updates.forEach((update) => assertExists(update[slugField]));
 });
 
-Deno.test("getUpdates respects slug format", () => {
-  const updates = getUpdates(
+Deno.test("getUpdates respects slug format", async () => {
+  const updates = await getUpdates(
     profiles,
     idToPrimaryLanguage,
     slugField,
-    slugFormatFunc
+    slugFormatFunc,
+    baseMockAPI
   );
 
   updates.forEach((update, idx) => {
