@@ -25,11 +25,7 @@ describe("bundleValidator", () => {
     });
 
     expect(() =>
-      validateBundles(
-        projectStructure,
-        PLUGIN_FILESIZE_LIMIT,
-        PLUGIN_TOTAL_FILESIZE_LIMIT
-      )
+      validateBundles(projectStructure, PLUGIN_FILESIZE_LIMIT, PLUGIN_TOTAL_FILESIZE_LIMIT)
     ).toThrowError("Bundled file file1.js exceeds max size of 10 MB");
   });
 
@@ -46,19 +42,11 @@ describe("bundleValidator", () => {
       "file7.js",
     ]);
 
-    vi.spyOn(bundleValidatorHelper, "statSync").mockImplementation(() =>
-      getStats(1.5)
-    );
+    vi.spyOn(bundleValidatorHelper, "statSync").mockImplementation(() => getStats(1.5));
 
     expect(() =>
-      validateBundles(
-        projectStructure,
-        PLUGIN_FILESIZE_LIMIT,
-        PLUGIN_TOTAL_FILESIZE_LIMIT
-      )
-    ).toThrowError(
-      "The total size of all bundles exceeds the max size of 10 MB"
-    );
+      validateBundles(projectStructure, PLUGIN_FILESIZE_LIMIT, PLUGIN_TOTAL_FILESIZE_LIMIT)
+    ).toThrowError("The total size of all bundles exceeds the max size of 10 MB");
   });
 
   it("does not throw an error when all individual file sizes and total are under the limits", async () => {
@@ -73,16 +61,10 @@ describe("bundleValidator", () => {
       "file6.js",
       "file7.js",
     ]);
-    vi.spyOn(bundleValidatorHelper, "statSync").mockImplementation(() =>
-      getStats(0.5)
-    );
+    vi.spyOn(bundleValidatorHelper, "statSync").mockImplementation(() => getStats(0.5));
 
     expect(() =>
-      validateBundles(
-        projectStructure,
-        PLUGIN_FILESIZE_LIMIT,
-        PLUGIN_TOTAL_FILESIZE_LIMIT
-      )
+      validateBundles(projectStructure, PLUGIN_FILESIZE_LIMIT, PLUGIN_TOTAL_FILESIZE_LIMIT)
     ).not.toThrowError();
   });
 });

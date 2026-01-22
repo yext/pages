@@ -9,10 +9,8 @@ Function that takes in a [HeadConfig](./pages.headconfig.md) interface and a pro
 **Signature:**
 
 ```typescript
-getLang: <T extends TemplateRenderProps<any>>(
-  headConfig: HeadConfig | undefined,
-  props: T
-) => string;
+getLang: <T extends TemplateRenderProps<any>>(headConfig: HeadConfig | undefined, props: T) =>
+  string;
 ```
 
 ## Parameters

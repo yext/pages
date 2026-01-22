@@ -1,6 +1,4 @@
-import SourceFileParser, {
-  createTsMorphProject,
-} from "../../parsers/sourceFileParser.js";
+import SourceFileParser, { createTsMorphProject } from "../../parsers/sourceFileParser.js";
 
 /**
  * @param modulePath

@@ -36,10 +36,7 @@ export const convertModuleDefinitionToModuleInternal = (
 ): ModuleInternal => {
   const modulePath = parse(moduleFilepath, false);
 
-  const config = convertModuleConfigToModuleConfigInternal(
-    modulePath.name,
-    module.config
-  );
+  const config = convertModuleConfigToModuleConfigInternal(modulePath.name, module.config);
 
   const moduleInternal = {
     ...module,

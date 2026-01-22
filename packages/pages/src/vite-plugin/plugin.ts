@@ -2,10 +2,7 @@ import { PluginOption, Plugin } from "vite";
 import { ProjectStructure } from "../common/src/project/structure.js";
 import { build } from "./build/build.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import {
-  makeClientFiles,
-  removeHydrationClientFiles,
-} from "../common/src/template/client.js";
+import { makeClientFiles, removeHydrationClientFiles } from "../common/src/template/client.js";
 import fs from "node:fs";
 import path from "path";
 
@@ -13,16 +10,10 @@ const plugin = async (): Promise<PluginOption[]> => {
   const projectStructure = await ProjectStructure.init({
     scope: process.env.YEXT_PAGES_SCOPE,
   });
-  const pluginFilesizeLimit = Number(
-    process.env.YEXT_PAGES_PLUGIN_FILESIZE_LIMIT
-  );
-  const pluginTotalFilesizeLimit = Number(
-    process.env.YEXT_PAGES_PLUGIN_TOTAL_FILESIZE_LIMIT
-  );
+  const pluginFilesizeLimit = Number(process.env.YEXT_PAGES_PLUGIN_FILESIZE_LIMIT);
+  const pluginTotalFilesizeLimit = Number(process.env.YEXT_PAGES_PLUGIN_TOTAL_FILESIZE_LIMIT);
 
-  const hasPublicAssets = fs.existsSync(
-    projectStructure.config.subfolders.public
-  );
+  const hasPublicAssets = fs.existsSync(projectStructure.config.subfolders.public);
 
   return [
     clientHydration(projectStructure),
@@ -39,9 +30,7 @@ const plugin = async (): Promise<PluginOption[]> => {
   ];
 };
 
-const clientHydration = async (
-  projectStructure: ProjectStructure
-): Promise<Plugin> => {
+const clientHydration = async (projectStructure: ProjectStructure): Promise<Plugin> => {
   return {
     name: "client-hydration:build",
     apply: "build",
@@ -66,20 +55,14 @@ const cleanup = async (projectStructure: ProjectStructure): Promise<Plugin> => {
   };
 };
 
-const copyPublicAssets = async (
-  projectStructure: ProjectStructure
-): Promise<Plugin> => {
+const copyPublicAssets = async (projectStructure: ProjectStructure): Promise<Plugin> => {
   const { rootFolders, subfolders } = projectStructure.config;
   return {
     name: "copy-public-assets",
     buildEnd: () => {
-      fs.cpSync(
-        subfolders.public,
-        path.join(`${rootFolders.dist}/public_assets`),
-        {
-          recursive: true,
-        }
-      );
+      fs.cpSync(subfolders.public, path.join(`${rootFolders.dist}/public_assets`), {
+        recursive: true,
+      });
     },
   };
 };

@@ -19,10 +19,7 @@ import { validateTemplateModuleInternal } from "./validateTemplateModuleInternal
  * A domain representation of a template module. Contains all fields from an imported module as well
  * as metadata about the module used in downstream processing.
  */
-export interface TemplateModuleInternal<
-  T extends TemplateProps,
-  U extends TemplateRenderProps,
-> {
+export interface TemplateModuleInternal<T extends TemplateProps, U extends TemplateRenderProps> {
   /**
    * The filepath to the template file. This can be the raw TSX file when used during dev mode or
    * the path to the server bundle this module was imported from during prod build.
@@ -119,20 +116,14 @@ export interface StreamInternal {
 /**
  * Parses a filepath and returns the relevant parts, such as the base filename.
  */
-export const parse = (
-  filepath: string,
-  adjustForFingerprintedAsset: boolean
-) => {
+export const parse = (filepath: string, adjustForFingerprintedAsset: boolean) => {
   let base = filepath.split(path.sep)[filepath.split(path.sep).length - 1];
   const extension = base.slice(base.lastIndexOf("."));
   let name = base.slice(0, base.lastIndexOf("."));
 
   // Removes the fingerprint portion (for server bundles)
   if (adjustForFingerprintedAsset) {
-    base =
-      base
-        .split(extension)[0]
-        .slice(0, base.split(extension)[0].lastIndexOf(".")) + extension;
+    base = base.split(extension)[0].slice(0, base.split(extension)[0].lastIndexOf(".")) + extension;
     name = name.slice(0, name.lastIndexOf("."));
   }
 
@@ -158,10 +149,7 @@ export const convertTemplateModuleToTemplateModuleInternal = (
 
   const templateModuleInternal = {
     ...templateModule,
-    config: convertTemplateConfigToTemplateConfigInternal(
-      templatePath.name,
-      templateModule.config
-    ),
+    config: convertTemplateConfigToTemplateConfigInternal(templatePath.name, templateModule.config),
     path: templateFilepath,
     filename: templatePath.base,
     templateName: templatePath.name,
@@ -183,9 +171,7 @@ export const convertTemplateConfigToTemplateConfigInternal = (
     hydrate: templateConfig?.hydrate ?? true,
     ...templateConfig,
     stream: stream,
-    templateType: isStaticTemplateConfig(templateConfig?.streamId, stream)
-      ? "static"
-      : "entity",
+    templateType: isStaticTemplateConfig(templateConfig?.streamId, stream) ? "static" : "entity",
   };
 };
 

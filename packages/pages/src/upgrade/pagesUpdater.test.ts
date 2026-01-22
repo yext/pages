@@ -48,16 +48,12 @@ describe("test pages updater fetch import", () => {
       "  quesadillas,\n" +
       "  chimichangas,\n" +
       '} from "@yext/pages/util";';
-    expect(
-      testUpdater(beforeContent, expected, removeFetchImport)
-    ).toBeTruthy();
+    expect(testUpdater(beforeContent, expected, removeFetchImport)).toBeTruthy();
   });
 
   it("does not remove fetch import from other sources", () => {
     const beforeContent = 'import { fetch } from "@yext/papers/utilities";';
-    expect(
-      testUpdater(beforeContent, beforeContent, removeFetchImport)
-    ).toBeTruthy();
+    expect(testUpdater(beforeContent, beforeContent, removeFetchImport)).toBeTruthy();
   });
 });
 
@@ -116,11 +112,7 @@ describe("test pages updater serverless function types", () => {
     `;
 
     expect(
-      testUpdater(
-        beforeContent,
-        expected,
-        updateServerlessFunctionTypeReferences
-      )
+      testUpdater(beforeContent, expected, updateServerlessFunctionTypeReferences)
     ).toBeTruthy();
   });
 });
@@ -137,9 +129,7 @@ describe("test pages updater moveTsxMapsImportsToPagesComponents", () => {
       import { Maps, GoogleMaps, Coordinate } from "@yext/pages-components";
     `;
 
-    expect(
-      testUpdater(beforeContent, expected, moveTsxMapsImportsToPagesComponents)
-    ).toBeTruthy();
+    expect(testUpdater(beforeContent, expected, moveTsxMapsImportsToPagesComponents)).toBeTruthy();
   });
 
   it("adds GoogleMaps to new pages-components import", () => {
@@ -151,8 +141,6 @@ describe("test pages updater moveTsxMapsImportsToPagesComponents", () => {
       import { GoogleMaps } from "@yext/pages-components";
     `;
 
-    expect(
-      testUpdater(beforeContent, expected, moveTsxMapsImportsToPagesComponents)
-    ).toBeTruthy();
+    expect(testUpdater(beforeContent, expected, moveTsxMapsImportsToPagesComponents)).toBeTruthy();
   });
 });

@@ -20,9 +20,7 @@ export const getTemplateFilepaths = (paths: Path[]): string[] => {
   const templateFilepaths: string[] = [];
   const addedFilenames: Set<string> = new Set();
   paths.forEach((p) => {
-    const filepaths = globSync(
-      convertToPosixPath(`${p.getAbsolutePath()}/*.{tsx,jsx,js,ts}`)
-    );
+    const filepaths = globSync(convertToPosixPath(`${p.getAbsolutePath()}/*.{tsx,jsx,js,ts}`));
     filepaths
       // Don't include the client/server rendering templates
       .filter(
@@ -72,9 +70,7 @@ export const getGlobalClientServerRenderTemplates = (
   const [clientRenderTemplatePath, usingCustomClient] = findGlobalRenderFile(
     templatePaths,
     globalClientRenderFilename,
-    shouldUseReactRoot
-      ? globalClientRenderFilename
-      : globalClientRenderFilename17
+    shouldUseReactRoot ? globalClientRenderFilename : globalClientRenderFilename17
   );
   const [serverRenderTemplatePath, usingCustomServer] = findGlobalRenderFile(
     templatePaths,
@@ -101,10 +97,7 @@ const findGlobalRenderFile = (
   defaultFilename: string
 ): [string, boolean] => {
   if (templatePaths.length > 0) {
-    const pathToGlobalFile = path.join(
-      templatePaths[0].getAbsolutePath(),
-      globalFilename
-    );
+    const pathToGlobalFile = path.join(templatePaths[0].getAbsolutePath(), globalFilename);
 
     if (existsSync(pathToGlobalFile)) {
       return [pathToGlobalFile, true];

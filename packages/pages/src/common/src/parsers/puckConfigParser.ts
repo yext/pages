@@ -17,22 +17,14 @@ export function addDataToPuckConfig(fileName: string, filepath: string) {
 
   const puckConfigsStatement = parser.getVariableStatement("componentRegistry");
 
-  const formattedTemplateName =
-    fileName.charAt(0).toUpperCase() + fileName.slice(1);
+  const formattedTemplateName = fileName.charAt(0).toUpperCase() + fileName.slice(1);
 
   const puckConfigsStartLocation = puckConfigsStatement.getStart();
-  parser.insertStatement(
-    newConfig(formattedTemplateName, fileName),
-    puckConfigsStartLocation
-  );
+  parser.insertStatement(newConfig(formattedTemplateName, fileName), puckConfigsStartLocation);
 
-  const puckConfigsDeclaration =
-    parser.getVariableDeclaration("componentRegistry");
+  const puckConfigsDeclaration = parser.getVariableDeclaration("componentRegistry");
   const puckConfigsInitializer = puckConfigsDeclaration.getInitializer();
-  if (
-    puckConfigsInitializer &&
-    puckConfigsInitializer.getKind() === SyntaxKind.NewExpression
-  ) {
+  if (puckConfigsInitializer && puckConfigsInitializer.getKind() === SyntaxKind.NewExpression) {
     const newExpression = puckConfigsInitializer;
     const puckConfigsArray = newExpression.getFirstChildByKindOrThrow(
       SyntaxKind.ArrayLiteralExpression

@@ -1,9 +1,6 @@
 import { describe, it, expect } from "vitest";
 import fs from "node:fs";
-import {
-  addThemeConfigToTailwind,
-  tailwindConfigFilename,
-} from "./tailwindConfigParser.js";
+import { addThemeConfigToTailwind, tailwindConfigFilename } from "./tailwindConfigParser.js";
 
 describe("addDataToPuckConfig", () => {
   it("should throw an error if the filepath is invalid", () => {
@@ -32,12 +29,8 @@ export default {
       expect(modifiedContent).toContain(`theme: {
         extend: themeResolver({}, themeConfig)
     }`);
-      expect(modifiedContent).toContain(
-        `import { themeConfig } from "./theme.config";`
-      );
-      expect(modifiedContent).toContain(
-        `import { themeResolver } from "@yext/visual-editor";`
-      );
+      expect(modifiedContent).toContain(`import { themeConfig } from "./theme.config";`);
+      expect(modifiedContent).toContain(`import { themeResolver } from "@yext/visual-editor";`);
     } finally {
       if (fs.existsSync(tailwindConfigFilename)) {
         fs.unlinkSync(tailwindConfigFilename);

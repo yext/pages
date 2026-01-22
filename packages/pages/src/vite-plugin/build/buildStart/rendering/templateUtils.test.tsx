@@ -70,10 +70,7 @@ describe("generateResponses", () => {
       { ...baseTemplateModule, transformProps: fn },
       baseProps,
       {
-        client: path.join(
-          process.cwd(),
-          "src/common/src/template/internal/_client.tsx"
-        ),
+        client: path.join(process.cwd(), "src/common/src/template/internal/_client.tsx"),
         server: serverRenderTemplate,
       },
       manifest,
@@ -88,10 +85,7 @@ describe("generateResponses", () => {
       { ...baseTemplateModule, getRedirects: fn },
       baseProps,
       {
-        client: path.join(
-          process.cwd(),
-          "src/common/src/template/internal/_client.tsx"
-        ),
+        client: path.join(process.cwd(), "src/common/src/template/internal/_client.tsx"),
         server: serverRenderTemplate,
       },
       manifest,

@@ -33,8 +33,7 @@ describe("createArtifactsJson - getArtifactsConfig", () => {
               },
               {
                 root: "dist",
-                pattern:
-                  "assets/{server,static,renderer,render,client,redirect}/**/*{.js,.css}",
+                pattern: "assets/{server,static,renderer,render,client,redirect}/**/*{.js,.css}",
               },
             ],
             event: "ON_PAGE_GENERATE",

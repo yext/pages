@@ -1,10 +1,4 @@
-import {
-  build,
-  createLogger,
-  InlineConfig,
-  mergeConfig,
-  UserConfig,
-} from "vite";
+import { build, createLogger, InlineConfig, mergeConfig, UserConfig } from "vite";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { glob } from "glob";
 import path from "node:path";
@@ -30,11 +24,7 @@ export const buildServerlessFunctions = async (
   glob
     .sync(
       convertToPosixPath(
-        path.join(
-          rootFolders.source,
-          subfolders.serverlessFunctions,
-          "**/*.{js,ts}"
-        )
+        path.join(rootFolders.source, subfolders.serverlessFunctions, "**/*.{js,ts}")
       ),
       { nodir: true }
     )
@@ -50,17 +40,12 @@ export const buildServerlessFunctions = async (
 
   const viteConfigPath = scopedViteConfigPath(projectStructure.config.scope);
   const viteConfigModule = viteConfigPath ? await import(viteConfigPath) : "";
-  const viteConfig = viteConfigModule
-    ? (viteConfigModule.default as UserConfig)
-    : undefined;
+  const viteConfig = viteConfigModule ? (viteConfigModule.default as UserConfig) : undefined;
 
   for (const [name, filepath] of Object.entries(filepaths)) {
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
-        loggerInfo(
-          pc.green(`\nBuilding serverless function ${name}...`),
-          options
-        );
+        loggerInfo(pc.green(`\nBuilding serverless function ${name}...`), options);
         return;
       }
       loggerInfo(msg, options);
@@ -120,11 +105,7 @@ export const buildServerlessFunctions = async (
   }
 };
 
-export const shouldBundleServerlessFunctions = (
-  projectStructure: ProjectStructure
-) => {
+export const shouldBundleServerlessFunctions = (projectStructure: ProjectStructure) => {
   const { rootFolders, subfolders } = projectStructure.config;
-  return fs.existsSync(
-    path.join(rootFolders.source, subfolders.serverlessFunctions)
-  );
+  return fs.existsSync(path.join(rootFolders.source, subfolders.serverlessFunctions));
 };

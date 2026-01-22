@@ -29,8 +29,7 @@ export const addResponseHeadersToConfigYaml = (
   if (
     Object.hasOwn(yaml, "responseHeaders") &&
     yaml.responseHeaders.find(
-      (e: ResponseHeaderProps) =>
-        e.pathPattern === responseHeaderProps.pathPattern
+      (e: ResponseHeaderProps) => e.pathPattern === responseHeaderProps.pathPattern
     )
   ) {
     return;

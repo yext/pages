@@ -1,7 +1,4 @@
-import {
-  TemplateConfigInternal,
-  TemplateModuleInternal,
-} from "../internal/types.js";
+import { TemplateConfigInternal, TemplateModuleInternal } from "../internal/types.js";
 
 export const validateTemplateModuleInternal = (
   templateModule: TemplateModuleInternal<any, any>
@@ -9,9 +6,7 @@ export const validateTemplateModuleInternal = (
   validateConfig(templateModule.filename, templateModule.config);
 
   if (!templateModule.getPath) {
-    throw new Error(
-      `Template ${templateModule.filename} is missing an exported getPath function.`
-    );
+    throw new Error(`Template ${templateModule.filename} is missing an exported getPath function.`);
   }
 
   if (!templateModule.default && !templateModule.render) {
@@ -27,14 +22,10 @@ export const validateConfig = (
   templateConfigInternal: TemplateConfigInternal
 ) => {
   if (!templateConfigInternal.name) {
-    throw new Error(
-      `Template ${filename} is missing a "name" in the config function.`
-    );
+    throw new Error(`Template ${filename} is missing a "name" in the config function.`);
   }
 
   if (templateConfigInternal.streamId && templateConfigInternal.stream) {
-    throw new Error(
-      `Template ${filename} must not define both a "streamId" and a "stream".`
-    );
+    throw new Error(`Template ${filename} must not define both a "streamId" and a "stream".`);
   }
 };

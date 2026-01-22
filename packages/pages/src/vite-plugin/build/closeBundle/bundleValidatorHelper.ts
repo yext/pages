@@ -5,18 +5,14 @@ import path from "path";
 
 // Helper functions extracted from bundleValidator.ts for testing purposes.
 
-export const getBundlePaths = (
-  projectStructure: ProjectStructure
-): string[] => {
+export const getBundlePaths = (projectStructure: ProjectStructure): string[] => {
   const { rootFolders, subfolders } = projectStructure.config;
 
   return globSync(
     convertToPosixPath(
       `${path.resolve(rootFolders.dist, subfolders.assets)}/{${
         subfolders.renderBundle
-      },${subfolders.renderer},${subfolders.serverBundle},${
-        subfolders.static
-      }}/**/*.*`
+      },${subfolders.renderer},${subfolders.serverBundle},${subfolders.static}}/**/*.*`
     )
   );
 };

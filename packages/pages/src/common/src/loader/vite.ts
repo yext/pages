@@ -6,9 +6,7 @@ import { loadViteModule } from "../../../dev/server/ssr/loadViteModule.js";
 import { scopedViteConfigPath } from "../../../util/viteConfig.js";
 import { createModuleLogger } from "../module/internal/logger.js";
 
-export const getViteServerConfig = (
-  projectStructure: ProjectStructure
-): InlineConfig => {
+export const getViteServerConfig = (projectStructure: ProjectStructure): InlineConfig => {
   return {
     configFile: scopedViteConfigPath(projectStructure.config.scope),
     server: {
@@ -17,9 +15,7 @@ export const getViteServerConfig = (
     appType: "custom",
     envDir: projectStructure.config.envVarConfig.envVarDir,
     envPrefix: projectStructure.config.envVarConfig.envVarPrefix,
-    define: processEnvVariables(
-      projectStructure.config.envVarConfig.envVarPrefix
-    ),
+    define: processEnvVariables(projectStructure.config.envVarConfig.envVarPrefix),
     optimizeDeps: {
       include: ["react-dom", "react-dom/client"],
     },

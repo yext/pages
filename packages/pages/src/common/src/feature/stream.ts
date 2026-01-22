@@ -92,11 +92,7 @@ export const convertTemplateConfigToStreamConfig = (
     return;
   }
 
-  if (
-    config.stream &&
-    !config.stream.filter &&
-    !config.additionalProperties?.isVETemplate
-  ) {
+  if (config.stream && !config.stream.filter && !config.additionalProperties?.isVETemplate) {
     logErrorAndExit("Filter is required in StreamConfig for templates.");
   }
 
@@ -133,10 +129,7 @@ export const convertRedirectConfigToStreamConfig = (
  * string values that match keys in the envVars map. Returns a
  * new object with substituted values.
  */
-const substituteEnvVars = <T>(
-  configData: T,
-  envVars: Record<string, string>
-): T => {
+const substituteEnvVars = <T>(configData: T, envVars: Record<string, string>): T => {
   if (typeof configData === "string") {
     const envValue = envVars[configData];
     if (envValue !== undefined) {
@@ -170,9 +163,7 @@ const substituteEnvVars = <T>(
 /**
  * Loads the site stream specified in config.yaml or site-stream.json into a {@link SiteStream}.
  */
-export const readSiteStream = (
-  projectStructure: ProjectStructure
-): SiteStream | undefined => {
+export const readSiteStream = (projectStructure: ProjectStructure): SiteStream | undefined => {
   // read site stream from deprecated sites-config directory if it exists
   const siteStreamJsonPath = path.resolve(
     projectStructure.getSitesConfigPath().path,
@@ -187,9 +178,7 @@ export const readSiteStream = (
   const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
   if (fs.existsSync(configYamlPath)) {
     let yamlDoc = YAML.parse(fs.readFileSync(configYamlPath, "utf-8"));
-    const envVars = processEnvVariables(
-      projectStructure.config.envVarConfig.envVarPrefix
-    );
+    const envVars = processEnvVariables(projectStructure.config.envVarConfig.envVarPrefix);
     yamlDoc = substituteEnvVars(yamlDoc, envVars);
 
     if (yamlDoc.siteStream) {
@@ -205,17 +194,12 @@ export const readSiteStream = (
  * Converts the deprecated format of a siteStream specified in site-stream.json into
  * the format of a siteStream specified in config.yaml
  */
-export const formatSiteStream = (
-  sitesJson: Stream,
-  siteStreamPath: string
-): SiteStream => {
+export const formatSiteStream = (sitesJson: Stream, siteStreamPath: string): SiteStream => {
   let entityId;
   if (sitesJson.filter?.entityIds && sitesJson.filter?.entityIds.length === 1) {
     entityId = sitesJson.filter.entityIds[0];
   } else if (sitesJson.filter?.entityIds) {
-    logErrorAndExit(
-      `Unable to migrate ${siteStreamPath} due to multiple entityIds`
-    );
+    logErrorAndExit(`Unable to migrate ${siteStreamPath} due to multiple entityIds`);
   }
 
   return {

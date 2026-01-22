@@ -9,9 +9,7 @@ The type definiton for the redirect's getSources function.
 **Signature:**
 
 ```typescript
-export type GetSources<T extends TemplateProps> = (
-  props: T
-) => RedirectSource[];
+export type GetSources<T extends TemplateProps> = (props: T) => RedirectSource[];
 ```
 
 **References:** [TemplateProps](./pages.templateprops.md)<!-- -->, [RedirectSource](./pages.redirectsource.md)

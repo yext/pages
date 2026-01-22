@@ -12,10 +12,7 @@ import { readdir } from "fs/promises";
 import { NormalizedInputOptions } from "rollup";
 
 export default (projectStructure: ProjectStructure) => {
-  return async function (
-    this: PluginContext,
-    inputOptions: NormalizedInputOptions
-  ): Promise<void> {
+  return async function (this: PluginContext, inputOptions: NormalizedInputOptions): Promise<void> {
     inputOptions.input = await discoverInputs(
       projectStructure.getTemplatePaths(),
       projectStructure.getRedirectPaths(),
@@ -47,10 +44,7 @@ const copyPluginFiles = (fileEmitter: EmitFile) => {
   });
 
   const currentPath = fileURLToPath(import.meta.url);
-  const pathToPluginsDir = path.resolve(
-    currentPath,
-    path.join("..", "..", "..", "..", "plugin")
-  );
+  const pathToPluginsDir = path.resolve(currentPath, path.join("..", "..", "..", "..", "plugin"));
 
   // We must use path.resolve to reconcile filepaths on Windows as glob returns filepaths with forward slashes by default.
   const pluginFiles = glob
@@ -75,10 +69,7 @@ const copyPluginFiles = (fileEmitter: EmitFile) => {
 };
 
 // Injects the renderer module which is needed for all sites built with yss as an entrypoint chunk.
-const injectRenderer = async (
-  fileEmitter: EmitFile,
-  projectStructure: ProjectStructure
-) => {
+const injectRenderer = async (fileEmitter: EmitFile, projectStructure: ProjectStructure) => {
   const finisher = logger.timedLog({
     startLog: "Injecting template renderer.",
   });
@@ -145,10 +136,7 @@ const discoverInputs = async (
     (await readdir(dir, { withFileTypes: true }))
       .filter((dirent) => !dirent.isDirectory())
       .map((file) => file.name)
-      .filter(
-        (f) =>
-          f !== "_client17.tsx" && f !== "_client.tsx" && f !== "_server.tsx"
-      )
+      .filter((f) => f !== "_client17.tsx" && f !== "_client.tsx" && f !== "_server.tsx")
       .forEach((template) => {
         const parsedPath = parse(template);
         const bundlePath = isRedirect
@@ -156,10 +144,7 @@ const discoverInputs = async (
           : template.includes(".client")
             ? projectStructure.config.subfolders.clientBundle
             : projectStructure.config.subfolders.serverBundle;
-        const outputPath = `${bundlePath}/${parsedPath.name.replace(
-          ".client",
-          ""
-        )}`;
+        const outputPath = `${bundlePath}/${parsedPath.name.replace(".client", "")}`;
         if (entryPoints[outputPath]) {
           return;
         }
@@ -182,9 +167,7 @@ const discoverInputs = async (
  *
  * @param projectStructure
  */
-const discoverRenderTemplates = (
-  projectStructure: ProjectStructure
-): Record<string, string> => {
+const discoverRenderTemplates = (projectStructure: ProjectStructure): Record<string, string> => {
   const entryPoints: Record<string, string> = {};
 
   // Move the [compiled] _server.ts and _client.ts render template to /assets/render
@@ -195,12 +178,10 @@ const discoverRenderTemplates = (
   const { renderBundle } = projectStructure.config.subfolders;
 
   // server
-  entryPoints[`${renderBundle}/_server`] =
-    clientServerRenderTemplates.serverRenderTemplatePath;
+  entryPoints[`${renderBundle}/_server`] = clientServerRenderTemplates.serverRenderTemplatePath;
 
   // client
-  entryPoints[`${renderBundle}/_client`] =
-    clientServerRenderTemplates.clientRenderTemplatePath;
+  entryPoints[`${renderBundle}/_client`] = clientServerRenderTemplates.clientRenderTemplatePath;
 
   return entryPoints;
 };

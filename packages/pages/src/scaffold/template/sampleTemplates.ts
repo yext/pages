@@ -1,6 +1,5 @@
 export const visualEditorTemplateCode = (templateName: string): string => {
-  const formattedTemplateName =
-    templateName.charAt(0).toUpperCase() + templateName.slice(1);
+  const formattedTemplateName = templateName.charAt(0).toUpperCase() + templateName.slice(1);
   const config = `${templateName}Config`;
 
   return `import "@yext/visual-editor/style.css";
@@ -70,8 +69,7 @@ export default ${formattedTemplateName};
 };
 
 export const newConfigFile = (templateName: string) => {
-  const formattedTemplateName =
-    templateName.charAt(0).toUpperCase() + templateName.slice(1);
+  const formattedTemplateName = templateName.charAt(0).toUpperCase() + templateName.slice(1);
 
   return `import type { Config } from "@measured/puck";
 ${newConfig(formattedTemplateName, templateName)}
@@ -97,13 +95,8 @@ export const ${fileName}Config: Config<${formattedTemplateName}Props> = {
 `;
 };
 
-export const dynamicTemplate = (
-  templateName: string,
-  entityScope: string,
-  filter: string[]
-) => {
-  const formattedTemplateName =
-    templateName.charAt(0).toUpperCase() + templateName.slice(1);
+export const dynamicTemplate = (templateName: string, entityScope: string, filter: string[]) => {
+  const formattedTemplateName = templateName.charAt(0).toUpperCase() + templateName.slice(1);
   const filterCode = `${entityScope}: ${JSON.stringify(filter)},`;
 
   return `import {
@@ -160,8 +153,7 @@ export default ${formattedTemplateName};
 };
 
 export const staticTemplate = (templateName: string) => {
-  const formattedTemplateName =
-    templateName.charAt(0).toUpperCase() + templateName.slice(1);
+  const formattedTemplateName = templateName.charAt(0).toUpperCase() + templateName.slice(1);
 
   return `import {
   GetPath,

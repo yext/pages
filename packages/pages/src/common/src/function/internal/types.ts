@@ -49,10 +49,7 @@ export const convertFunctionModuleToFunctionModuleInternal = (
   functionModule: FunctionModule,
   projectStructure: ProjectStructure
 ): FunctionModuleInternal => {
-  const fmp = new FunctionMetadataParser(
-    path.format(functionFilepath),
-    projectStructure
-  );
+  const fmp = new FunctionMetadataParser(path.format(functionFilepath), projectStructure);
   const { filepath, name, slug, functionType } = fmp.functionMetadata;
 
   if (functionType === "http" || functionType === "onUrlChange") {

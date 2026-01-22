@@ -2,16 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { glob } from "glob";
 import prompts, { PromptObject } from "prompts";
-import {
-  indexCssCode,
-  moduleCode,
-  postcssCode,
-  tailwindCode,
-} from "./templates.js";
-import {
-  installDependencies,
-  updatePackageDependency,
-} from "../../upgrade/pagesUpdater.js";
+import { indexCssCode, moduleCode, postcssCode, tailwindCode } from "./templates.js";
+import { installDependencies, updatePackageDependency } from "../../upgrade/pagesUpdater.js";
 import { logErrorAndExit } from "../../util/logError.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { addResponseHeadersToConfigYaml } from "../../util/editConfigYaml.js";
@@ -26,9 +18,7 @@ const moduleResponseHeaderProps = {
  * the responses. Also, installs necessary dependencies.
  * SIGINT is handled such that any generated files are removed.
  */
-export const generateModule = async (
-  projectStructure: ProjectStructure
-): Promise<void> => {
+export const generateModule = async (projectStructure: ProjectStructure): Promise<void> => {
   const questions: PromptObject[] = [
     {
       type: "text",
@@ -47,25 +37,17 @@ export const generateModule = async (
   ];
   const response = await prompts(questions);
 
-  const modulePath = path.join(
-    projectStructure.getModulePaths()[0].path,
-    response.moduleName
-  );
+  const modulePath = path.join(projectStructure.getModulePaths()[0].path, response.moduleName);
 
   // Handle interruption signal (Ctrl+C)
-  process.on("SIGINT", () =>
-    handleCancel(response.moduleName, projectStructure)
-  );
+  process.on("SIGINT", () => handleCancel(response.moduleName, projectStructure));
 
   fs.mkdirSync(modulePath, { recursive: true });
   fs.writeFileSync(
     path.join(modulePath, `${response.moduleName}.tsx`),
     moduleCode(response.moduleName, response.useTailwind)
   );
-  fs.writeFileSync(
-    path.join(modulePath, "index.css"),
-    indexCssCode(response.useTailwind)
-  );
+  fs.writeFileSync(path.join(modulePath, "index.css"), indexCssCode(response.useTailwind));
   if (response.useTailwind) {
     fs.writeFileSync(
       path.join(modulePath, "tailwind.config.ts"),
@@ -95,9 +77,7 @@ export const generateModule = async (
   );
 
   process.removeListener("SIGINT", () => handleCancel);
-  console.log(
-    `\nModule "${response.moduleName}" created successfully at ${modulePath}`
-  );
+  console.log(`\nModule "${response.moduleName}" created successfully at ${modulePath}`);
 };
 
 /**
@@ -107,14 +87,8 @@ export const generateModule = async (
  *  the name has no spaces
  *  the name only contains alphanumeric characters, hyphens, underscores, or dollar signs.
  */
-const validateModuleName = (
-  moduleName: string,
-  projectStructure: ProjectStructure
-): boolean => {
-  const modulePath = path.join(
-    projectStructure.getModulePaths()[0].path,
-    moduleName
-  );
+const validateModuleName = (moduleName: string, projectStructure: ProjectStructure): boolean => {
+  const modulePath = path.join(projectStructure.getModulePaths()[0].path, moduleName);
   if (fs.existsSync(modulePath)) {
     return false;
   }
@@ -145,15 +119,7 @@ function handleCancel(moduleName: string, projectStructure: ProjectStructure) {
 
 const getDependencies = async () => {
   await updatePackageDependency("@yext/pages-components", null, true);
-  await updatePackageDependency(
-    "tailwindcss",
-    { latestMajorVersion: "3" },
-    true
-  );
-  await updatePackageDependency(
-    "tailwindcss-scoped-preflight",
-    { latestMajorVersion: "3" },
-    true
-  );
+  await updatePackageDependency("tailwindcss", { latestMajorVersion: "3" }, true);
+  await updatePackageDependency("tailwindcss-scoped-preflight", { latestMajorVersion: "3" }, true);
   await installDependencies();
 };

@@ -18,9 +18,7 @@ export const getRedirectFilePaths = (paths: Path[]): string[] => {
   const redirectFilepaths: string[] = [];
   const addedFilenames: Set<string> = new Set();
   paths.forEach((p) => {
-    const filepaths = globSync(
-      convertToPosixPath(`${p.getAbsolutePath()}/*.{tsx,jsx,js,ts}`)
-    );
+    const filepaths = globSync(convertToPosixPath(`${p.getAbsolutePath()}/*.{tsx,jsx,js,ts}`));
     filepaths.forEach((f) => {
       const fileName = path.basename(f);
       if (!addedFilenames.has(fileName)) {

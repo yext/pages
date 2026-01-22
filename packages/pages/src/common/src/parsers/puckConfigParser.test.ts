@@ -20,9 +20,7 @@ describe("addDataToPuckConfig", () => {
       addDataToPuckConfig("foo", "test.tsx");
       const modifiedContent = fs.readFileSync("test.tsx", "utf-8");
       expect(modifiedContent).toContain('["foo", fooConfig]');
-      expect(modifiedContent).toContain(
-        `export const fooConfig: Config<FooProps>`
-      );
+      expect(modifiedContent).toContain(`export const fooConfig: Config<FooProps>`);
     } finally {
       if (fs.existsSync("test.tsx")) {
         fs.unlinkSync("test.tsx");

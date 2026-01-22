@@ -9,9 +9,7 @@ The type definition for the template's default function.
 **Signature:**
 
 ```typescript
-export type Template<T extends TemplateRenderProps> = (
-  props: T
-) => React.JSX.Element;
+export type Template<T extends TemplateRenderProps> = (props: T) => React.JSX.Element;
 ```
 
 **References:** [TemplateRenderProps](./pages.templaterenderprops.md)

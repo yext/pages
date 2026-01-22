@@ -9,9 +9,7 @@ The type definition for the template's getHeadConfig function. getHeadConfig tak
 **Signature:**
 
 ```typescript
-export type GetHeadConfig<T extends TemplateRenderProps> = (
-  props: T
-) => HeadConfig;
+export type GetHeadConfig<T extends TemplateRenderProps> = (props: T) => HeadConfig;
 ```
 
 **References:** [TemplateRenderProps](./pages.templaterenderprops.md)<!-- -->, [HeadConfig](./pages.headconfig.md)

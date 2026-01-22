@@ -6,10 +6,7 @@ export const formatModuleName = (moduleName: string): string => {
     .replace(/^\w/, (char) => char.toUpperCase()); // first char is uppercased
 };
 
-export const moduleCode = (
-  moduleName: string,
-  useTailwind: boolean
-): string => {
+export const moduleCode = (moduleName: string, useTailwind: boolean): string => {
   const tailwind = useTailwind ? ` className="tw-${moduleName}"` : ``;
   const formattedModuleName = formatModuleName(moduleName);
 
@@ -79,10 +76,7 @@ export const indexCssCode = (useTailwind: boolean): string => {
     : ``;
 };
 
-export const tailwindCode = (
-  projectStructure: ProjectStructure,
-  moduleName: string
-) => {
+export const tailwindCode = (projectStructure: ProjectStructure, moduleName: string) => {
   return `import type { Config } from 'tailwindcss';
   import { scopedPreflightStyles, isolateInsideOfContainer } from 'tailwindcss-scoped-preflight';
 

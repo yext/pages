@@ -8,9 +8,7 @@ import { ProjectStructure } from "../../project/structure.js";
 describe("loadTemplateModules", () => {
   it("loads and transpiles raw templates", async () => {
     const templateFile = glob.sync(
-      convertToPosixPath(
-        path.join(process.cwd(), "tests/fixtures/template.tsx")
-      )
+      convertToPosixPath(path.join(process.cwd(), "tests/fixtures/template.tsx"))
     );
     const templateModules = await loadTemplateModules(
       templateFile,

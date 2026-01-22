@@ -22,10 +22,7 @@ describe("getAssetsFilepath - determineAssetsFilepath", () => {
     const importSpy = vi.spyOn(importHelper, "import_");
     importSpy.mockImplementation(async () => viteConfig);
 
-    const actual = await determineAssetsFilepath(
-      "assets",
-      "does not matter since mocked"
-    );
+    const actual = await determineAssetsFilepath("assets", "does not matter since mocked");
 
     expect(actual).toEqual("viteConfigAssetsDir");
   });

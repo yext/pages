@@ -56,8 +56,7 @@ describe("ci - getUpdatedCiConfig", () => {
               },
               {
                 root: "dist",
-                pattern:
-                  "assets/{server,static,renderer,render,client}/**/*{.js,.css}",
+                pattern: "assets/{server,static,renderer,render,client}/**/*{.js,.css}",
               },
             ],
             event: "ON_PAGE_GENERATE",
@@ -77,9 +76,7 @@ describe("ci - getUpdatedCiConfig", () => {
       },
     };
 
-    expect(getUpdatedCiConfig(input, projectStructure)).resolves.toEqual(
-      expected
-    );
+    expect(getUpdatedCiConfig(input, projectStructure)).resolves.toEqual(expected);
   });
 
   it("updates the Generator plugin if it exists", async () => {
@@ -149,8 +146,7 @@ describe("ci - getUpdatedCiConfig", () => {
               },
               {
                 root: "dist",
-                pattern:
-                  "assets/{server,static,renderer,render,client}/**/*{.js,.css}",
+                pattern: "assets/{server,static,renderer,render,client}/**/*{.js,.css}",
               },
             ],
             event: "ON_PAGE_GENERATE",
@@ -170,8 +166,6 @@ describe("ci - getUpdatedCiConfig", () => {
       },
     };
 
-    expect(getUpdatedCiConfig(input, projectStructure)).resolves.toEqual(
-      expected
-    );
+    expect(getUpdatedCiConfig(input, projectStructure)).resolves.toEqual(expected);
   });
 });

@@ -24,28 +24,17 @@ export interface FunctionMetadata {
 export class FunctionMetadataParser {
   functionMetadata: FunctionMetadata;
 
-  constructor(
-    absolutePathToFunction: string,
-    projectStructure: ProjectStructure
-  ) {
+  constructor(absolutePathToFunction: string, projectStructure: ProjectStructure) {
     const { rootFolders, subfolders } = projectStructure.config;
 
-    const sourcePath = path.join(
-      rootFolders.source,
-      subfolders.serverlessFunctions
-    );
+    const sourcePath = path.join(rootFolders.source, subfolders.serverlessFunctions);
 
-    const distPath = path.join(
-      rootFolders.dist,
-      subfolders.serverlessFunctions
-    );
+    const distPath = path.join(rootFolders.dist, subfolders.serverlessFunctions);
 
     const testsPath = path.join("tests", "fixtures", "src", "functions");
 
     // The path after /src/functions
-    const relativePath = absolutePathToFunction.split(
-      `${path.sep}${sourcePath}${path.sep}`
-    )[1];
+    const relativePath = absolutePathToFunction.split(`${path.sep}${sourcePath}${path.sep}`)[1];
 
     // Should be onUrlChange or http
     const functionType = relativePath.split(path.sep)[0];
@@ -87,10 +76,7 @@ export class FunctionMetadataParser {
     const prodSlug = defaultSlug.replaceAll("[", "{{").replaceAll("]", "}}");
 
     const name =
-      path
-        .parse(absolutePathToFunction)
-        .name.replaceAll("[", "")
-        .replaceAll("]", "") +
+      path.parse(absolutePathToFunction).name.replaceAll("[", "").replaceAll("]", "") +
       "-" +
       unsecureHashPluginName(relativePath);
 

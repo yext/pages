@@ -8,8 +8,5 @@ export { render };
 
 const render = async (pageContext: PageContext<any>) => {
   const { Page, pageProps } = pageContext;
-  ReactDOM.hydrateRoot(
-    document.getElementById("reactele")!,
-    <Page {...pageProps} />
-  );
+  ReactDOM.hydrateRoot(document.getElementById("reactele")!, <Page {...pageProps} />);
 };
