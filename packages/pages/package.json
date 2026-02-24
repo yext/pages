@@ -92,7 +92,6 @@
     "@types/glob": "^8.1.0",
     "@types/lodash": "^4.17.0",
     "@types/mime-types": "^2.1.4",
-    "@types/minimatch": "^5.1.2",
     "@types/node": "^20.11.28",
     "@types/prompts": "^2.4.9",
     "@types/react": "^18.3.12",
@@ -101,7 +100,7 @@
     "generate-license-file": "^3.6.0",
     "glob": "^10.3.10",
     "jsdom": "24.0.0",
-    "minimatch": "^9.0.3",
+    "minimatch": "^10.2.2",
     "type-fest": "^4.27.0",
     "typescript": "^5.4.2",
     "vitest": "^3.0.5"
