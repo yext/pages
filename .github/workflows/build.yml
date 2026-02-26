@@ -17,11 +17,12 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x, 22.x, 24.x]
+        react-major: ${{ fromJson(inputs.package == 'pages' && '["18","19"]' || '["18"]') }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4.1.6
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }} (react ${{ matrix.react-major }})
         uses: actions/setup-node@v4.0.2
         with:
           node-version: ${{ matrix.node-version }}
@@ -32,6 +33,22 @@ jobs:
       - name: Install deps
         run: pnpm i
 
+      - name: Set React types for pages build
+        if: ${{ inputs.package == 'pages' }}
+        working-directory: ./
+        run: |
+          if [ "${{ matrix.react-major }}" = "18" ]; then
+            REACT_TYPES_VERSION="^18.3.12"
+            REACT_DOM_TYPES_VERSION="^18.3.1"
+          else
+            REACT_TYPES_VERSION="^19.0.0"
+            REACT_DOM_TYPES_VERSION="^19.0.0"
+          fi
+
+          pnpm --filter @yext/pages up \
+            @types/react@${REACT_TYPES_VERSION} \
+            @types/react-dom@${REACT_DOM_TYPES_VERSION}
+
       - name: Build
         run: pnpm run build:js
 
@@ -41,5 +58,5 @@ jobs:
       - name: Create build-output artifact
         uses: actions/upload-artifact@v4.3.3
         with:
-          name: build-output-${{ matrix.node-version }}
+          name: ${{ inputs.package == 'pages' && matrix.react-major == '19' && format('build-output-{0}-react-19', matrix.node-version) || format('build-output-{0}', matrix.node-version) }}
           path: "./packages/${{ inputs.package }}/dist"

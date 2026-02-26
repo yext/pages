@@ -145,9 +145,8 @@ const wrappedCode = (moduleName: string, containerName: string): string => {
   if (!moduleContainerForBuildUseOnly) {
     throw new Error('could not find ${containerName} element');
   }
-  ReactDOM.render(
-    <${moduleName}/>,
-    moduleContainerForBuildUseOnly
+  createRoot(moduleContainerForBuildUseOnly).render(
+    <${moduleName}/>
   );`;
 };
 
@@ -169,8 +168,8 @@ const getReactImports = (source: string): string => {
   if (!(source.includes(`from 'react'`) || source.includes(`from "react"`))) {
     imports += `import * as React from 'react';\n`;
   }
-  if (!(source.includes(`from 'react-dom'`) || source.includes(`from "react-dom"`))) {
-    imports += `import * as ReactDOM from 'react-dom';\n`;
+  if (!(source.includes(`from 'react-dom/client'`) || source.includes(`from "react-dom/client"`))) {
+    imports += `import { createRoot } from 'react-dom/client';\n`;
   }
   return imports;
 };
