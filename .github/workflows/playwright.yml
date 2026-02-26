@@ -13,6 +13,7 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
         node-version: [20.x, 22.x, 24.x]
+        react-major: [18, 19]
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout"
@@ -26,7 +27,7 @@ jobs:
           cache: "pnpm"
       - uses: actions/download-artifact@v4.1.7
         with:
-          name: build-output-${{ matrix.node-version }}
+          name: ${{ matrix.react-major == 19 && format('build-output-{0}-react-19', matrix.node-version) || format('build-output-{0}', matrix.node-version) }}
           path: packages/pages/dist
 
       # It's important to not run the build for @yext/pages on Windows.
@@ -50,7 +51,7 @@ jobs:
         uses: EndBug/add-and-commit@v9
         if: ${{ failure() && github.ref_name != 'main' }}
         with:
-          message: Commit new snapshots for ${{ matrix.os }}
+          message: Commit new snapshots for ${{ matrix.os }} node-${{ matrix.node-version }} react-${{ matrix.react-major }}
           add: playground/*
           push: true
           pull: --rebase --autostash
@@ -60,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.3
         if: always()
         with:
-          name: playwright-reports-${{ matrix.os }}-${{ matrix.node-version }}
+          name: playwright-reports-${{ matrix.os }}-${{ matrix.node-version }}-react-${{ matrix.react-major }}
           path: playground/*/playwright-report/
           retention-days: 30
 

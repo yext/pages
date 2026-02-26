@@ -41,8 +41,8 @@ jobs:
             REACT_TYPES_VERSION="^18.3.12"
             REACT_DOM_TYPES_VERSION="^18.3.1"
           else
-            REACT_TYPES_VERSION="^19.0.0"
-            REACT_DOM_TYPES_VERSION="^19.0.0"
+            REACT_TYPES_VERSION="^19.2.3"
+            REACT_DOM_TYPES_VERSION="^19.2.3"
           fi
 
           pnpm --filter @yext/pages up \

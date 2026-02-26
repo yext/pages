@@ -66,10 +66,10 @@ set_react_versions() {
     REACT_TYPES_VERSION="^18.3.12"
     REACT_DOM_TYPES_VERSION="^18.3.1"
   elif [ "$react_major" = "19" ]; then
-    REACT_VERSION="^19.0.0"
-    REACT_DOM_VERSION="^19.0.0"
-    REACT_TYPES_VERSION="^19.0.0"
-    REACT_DOM_TYPES_VERSION="^19.0.0"
+    REACT_VERSION="^19.2.3"
+    REACT_DOM_VERSION="^19.2.3"
+    REACT_TYPES_VERSION="^19.2.3"
+    REACT_DOM_TYPES_VERSION="^19.2.3"
   else
     echo "Error: unsupported react major '$react_major'. Expected 18 or 19."
     exit 1
