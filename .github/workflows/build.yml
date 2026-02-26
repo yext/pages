@@ -55,6 +55,9 @@ jobs:
       - name: Generate types
         run: pnpm run build:types
 
+      - name: Run tests
+        run: pnpm run test
+
       - name: Create build-output artifact
         uses: actions/upload-artifact@v4.3.3
         with:

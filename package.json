@@ -53,7 +53,7 @@
     "yaml": "^2.3.4"
   },
   "lint-staged": {
-    "!(**/THIRD-PARTY-NOTICES)": "oxfmt",
+    "*.{js,jsx,ts,tsx,json,html,css}": "oxfmt",
     "*.{ts,js,tsx,jsx}": "oxlint --fix"
   },
   "engines": {
