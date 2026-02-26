@@ -168,11 +168,16 @@ const getReactImports = (source: string): string => {
   if (!(source.includes(`from 'react'`) || source.includes(`from "react"`))) {
     imports += `import * as React from 'react';\n`;
   }
-  if (!(source.includes(`from 'react-dom/client'`) || source.includes(`from "react-dom/client"`))) {
+  if (!hasCreateRootImportFromReactDomClient(source)) {
     imports += `import { createRoot } from 'react-dom/client';\n`;
   }
   return imports;
 };
+
+const hasCreateRootImportFromReactDomClient = (source: string): boolean =>
+  /import\s+(?!type\b)[\s\S]*\{[\s\S]*\bcreateRoot(?:\s+as\s+createRoot)?\b[\s\S]*\}\s+from\s+['"]react-dom\/client['"]/.test(
+    source
+  );
 
 const shouldBundleModules = (projectStructure: ProjectStructure) => {
   const { rootFolders, subfolders } = projectStructure.config;

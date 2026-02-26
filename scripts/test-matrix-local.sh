@@ -58,12 +58,16 @@ PASS_COUNT=0
 FAIL_COUNT=0
 MATRIX_RESULTS=()
 
-set_type_versions() {
+set_react_versions() {
   local react_major="$1"
   if [ "$react_major" = "18" ]; then
+    REACT_VERSION="^18.3.1"
+    REACT_DOM_VERSION="^18.3.1"
     REACT_TYPES_VERSION="^18.3.12"
     REACT_DOM_TYPES_VERSION="^18.3.1"
   elif [ "$react_major" = "19" ]; then
+    REACT_VERSION="^19.0.0"
+    REACT_DOM_VERSION="^19.0.0"
     REACT_TYPES_VERSION="^19.0.0"
     REACT_DOM_TYPES_VERSION="^19.0.0"
   else
@@ -92,14 +96,16 @@ for node_version in "${NODE_VERSIONS[@]}"; do
   for react_major in "${REACT_MAJORS[@]}"; do
     combo_label="Node ${node_version}, React ${react_major}"
     echo "--- ${combo_label} ---"
-    set_type_versions "$react_major"
+    set_react_versions "$react_major"
 
     failure_reason=""
 
     if ! pnpm --filter @yext/pages up \
+      "react@${REACT_VERSION}" \
+      "react-dom@${REACT_DOM_VERSION}" \
       "@types/react@${REACT_TYPES_VERSION}" \
       "@types/react-dom@${REACT_DOM_TYPES_VERSION}"; then
-      failure_reason="failed to update React type deps"
+      failure_reason="failed to update React deps"
     elif ! pnpm --filter @yext/pages run build:js; then
       failure_reason="build:js failed"
     elif ! pnpm --filter @yext/pages run build:types; then

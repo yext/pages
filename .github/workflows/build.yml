@@ -46,8 +46,8 @@ jobs:
           fi
 
           pnpm --filter @yext/pages up \
-            @types/react@${REACT_TYPES_VERSION} \
-            @types/react-dom@${REACT_DOM_TYPES_VERSION}
+            "@types/react@${REACT_TYPES_VERSION}" \
+            "@types/react-dom@${REACT_DOM_TYPES_VERSION}"
 
       - name: Build
         run: pnpm run build:js
