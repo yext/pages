@@ -33,19 +33,25 @@ jobs:
       - name: Install deps
         run: pnpm i
 
-      - name: Set React types for pages build
+      - name: Set React deps for pages build
         if: ${{ inputs.package == 'pages' }}
         working-directory: ./
         run: |
           if [ "${{ matrix.react-major }}" = "18" ]; then
+            REACT_VERSION="^18.3.1"
+            REACT_DOM_VERSION="^18.3.1"
             REACT_TYPES_VERSION="^18.3.12"
             REACT_DOM_TYPES_VERSION="^18.3.1"
           else
+            REACT_VERSION="^19.2.3"
+            REACT_DOM_VERSION="^19.2.3"
             REACT_TYPES_VERSION="^19.2.3"
             REACT_DOM_TYPES_VERSION="^19.2.3"
           fi
 
           pnpm --filter @yext/pages up \
+            "react@${REACT_VERSION}" \
+            "react-dom@${REACT_DOM_VERSION}" \
             "@types/react@${REACT_TYPES_VERSION}" \
             "@types/react-dom@${REACT_DOM_TYPES_VERSION}"
 
