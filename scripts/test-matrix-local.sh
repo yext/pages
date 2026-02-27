@@ -58,6 +58,27 @@ PASS_COUNT=0
 FAIL_COUNT=0
 MATRIX_RESULTS=()
 
+run_playground_playwright() {
+  local had_failure=0
+  local playground_dir
+
+  for playground_dir in "$ROOT_DIR"/playground/*; do
+    [ -d "$playground_dir" ] || continue
+    [ -f "$playground_dir/package.json" ] || continue
+
+    if ! grep -q '"playwright"[[:space:]]*:' "$playground_dir/package.json"; then
+      continue
+    fi
+
+    echo "Running Playwright in ${playground_dir#$ROOT_DIR/}"
+    if ! PLAYWRIGHT_HTML_OPEN=never pnpm --dir "$playground_dir" exec playwright test --reporter=line; then
+      had_failure=1
+    fi
+  done
+
+  return "$had_failure"
+}
+
 set_react_versions() {
   local react_major="$1"
   if [ "$react_major" = "18" ]; then
@@ -112,6 +133,8 @@ for node_version in "${NODE_VERSIONS[@]}"; do
       failure_reason="build:types failed"
     elif ! pnpm --filter "./playground/*" run build-test-site; then
       failure_reason="playground build-test-site failed"
+    elif ! run_playground_playwright; then
+      failure_reason="playground playwright failed"
     fi
 
     if [ -z "$failure_reason" ]; then
