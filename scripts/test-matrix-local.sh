@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -uo pipefail
+set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR" || exit
@@ -40,7 +40,16 @@ if command -v node >/dev/null 2>&1; then
 fi
 
 cleanup() {
+  if [ ! -s "$PACKAGE_JSON_BAK" ]; then
+    echo "Error: backup file missing or empty: $PACKAGE_JSON_BAK" >&2
+    exit 1
+  fi
   cp "$PACKAGE_JSON_BAK" "$PACKAGE_JSON_PATH"
+
+  if [ ! -s "$LOCKFILE_BAK" ]; then
+    echo "Error: backup file missing or empty: $LOCKFILE_BAK" >&2
+    exit 1
+  fi
   cp "$LOCKFILE_BAK" "$LOCKFILE_PATH"
   rm -f "$PACKAGE_JSON_BAK" "$LOCKFILE_BAK"
 
