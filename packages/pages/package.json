@@ -96,7 +96,7 @@
     "@types/prompts": "^2.4.9",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "esbuild": "^0.20.2",
+    "esbuild": "^0.25.0",
     "generate-license-file": "^3.6.0",
     "glob": "^10.3.10",
     "jsdom": "24.0.0",
@@ -106,8 +106,8 @@
     "vitest": "^3.0.5"
   },
   "peerDependencies": {
-    "react": "^17.0.2 || ^18.2.0",
-    "react-dom": "^17.0.2 || ^18.2.0",
+    "react": "^18.2.0 || ^19.2.3",
+    "react-dom": "^18.2.0 || ^19.2.3",
     "vite": "^4.3.0 || ^5.0.2"
   },
   "engines": {

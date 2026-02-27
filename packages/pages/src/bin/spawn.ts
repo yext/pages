@@ -3,12 +3,10 @@ import { spawnSync } from "child_process";
 import { fileURLToPath } from "url";
 import process from "process";
 import path from "path";
-import { pathToFileURL } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const pathToPagesScript = path.resolve(__dirname, "./pages.js");
-const pathToLoader = pathToFileURL(path.resolve(__dirname, "./loader.js")).href;
 
 // Keeping this unused function in case it's needed again
 // eslint-disable-next-line no-unused-vars
@@ -17,9 +15,6 @@ const nodeVersion = Number(
 );
 
 const experimentalFlags = ["--experimental-vm-modules"];
-// Coercion to any is necessary because @types/node is not properly recognizing when dymanically importing
-const { register }: any = await import("node:module");
-register(pathToLoader);
 
 const results = spawnSync(
   "node",

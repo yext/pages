@@ -8,12 +8,6 @@ jobs:
     with:
       package: "pages"
 
-  call_unit_test:
-    needs: call_build
-    uses: ./.github/workflows/unit_test.yml
-    with:
-      package: "pages"
-  
   call_playwright:
     needs: call_build
     uses: ./.github/workflows/playwright.yml

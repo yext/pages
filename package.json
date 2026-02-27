@@ -18,6 +18,7 @@
   "scripts": {
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
+    "test:matrix:local": "bash scripts/test-matrix-local.sh",
     "release": "tsx scripts/release.ts",
     "fmt": "oxfmt",
     "lint": "oxlint --fix",
@@ -52,7 +53,7 @@
     "yaml": "^2.3.4"
   },
   "lint-staged": {
-    "!(**/THIRD-PARTY-NOTICES)": "oxfmt",
+    "*.{js,jsx,ts,tsx,json,html,css}": "oxfmt",
     "*.{ts,js,tsx,jsx}": "oxlint --fix"
   },
   "engines": {

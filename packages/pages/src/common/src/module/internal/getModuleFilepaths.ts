@@ -4,7 +4,6 @@ import { Path } from "../../project/path.js";
 import { convertToPosixPath } from "../../template/paths.js";
 import { ProjectStructure } from "../../project/structure.js";
 import { readdirSync } from "fs";
-import { getReactVersion } from "../../template/internal/util.js";
 import { ModuleClientServerRenderTemplates } from "../types.js";
 import { fileURLToPath } from "url";
 
@@ -50,16 +49,11 @@ export const getModuleFilepathsFromProjectStructure = (
   return getModuleFilepaths(projectStructure.getModulePaths());
 };
 
-const globalClientRenderFilename17 = "_client17.tsx";
 const globalClientRenderFilename = "_client.tsx";
 const globalServerRenderFilename = "_server.tsx";
 
 export const getGlobalClientServerRenderModules = (): ModuleClientServerRenderTemplates => {
-  const shouldUseReactRoot = getReactVersion() >= 18;
-
-  const clientRenderModulePath = findGlobalRenderFile(
-    shouldUseReactRoot ? globalClientRenderFilename : globalClientRenderFilename17
-  );
+  const clientRenderModulePath = findGlobalRenderFile(globalClientRenderFilename);
   const serverRenderModulePath = findGlobalRenderFile(globalServerRenderFilename);
 
   return {

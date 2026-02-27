@@ -4,7 +4,7 @@ import { ProjectStructure } from "../../project/structure.js";
 import { ClientServerRenderTemplates } from "../types.js";
 import { fileURLToPath } from "node:url";
 import { convertToPosixPath } from "../paths.js";
-import { existsSync, getReactVersion, globSync } from "./util.js";
+import { existsSync, globSync } from "./util.js";
 
 /**
  * Get all the template files in the provided template folder path(s).
@@ -47,7 +47,6 @@ export const getTemplateFilepathsFromProjectStructure = (
   return getTemplateFilepaths(projectStructure.getTemplatePaths());
 };
 
-const globalClientRenderFilename17 = "_client17.tsx";
 const globalClientRenderFilename = "_client.tsx";
 const globalServerRenderFilename = "_server.tsx";
 const globalHydrationClientFilename = ".client";
@@ -65,12 +64,10 @@ const globalHydrationClientFilename = ".client";
 export const getGlobalClientServerRenderTemplates = (
   templatePaths: Path[]
 ): ClientServerRenderTemplates => {
-  const shouldUseReactRoot = getReactVersion() >= 18;
-
   const [clientRenderTemplatePath, usingCustomClient] = findGlobalRenderFile(
     templatePaths,
     globalClientRenderFilename,
-    shouldUseReactRoot ? globalClientRenderFilename : globalClientRenderFilename17
+    globalClientRenderFilename
   );
   const [serverRenderTemplatePath, usingCustomServer] = findGlobalRenderFile(
     templatePaths,
@@ -88,7 +85,7 @@ export const getGlobalClientServerRenderTemplates = (
 /**
  * @param templatesRootPath the path where the templates live, typically src/templates
  * @param globalFilename the file to find
- * @param defaultFilename the name of the provided file if globalFilename cannot be found - necessary for _client.js vs _client17.js
+ * @param defaultFilename the name of the provided file if globalFilename cannot be found
  * @returns the path to the appropriate file along with a boolean denoting if the path returned is a custom render template
  */
 const findGlobalRenderFile = (

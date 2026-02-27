@@ -145,9 +145,8 @@ const wrappedCode = (moduleName: string, containerName: string): string => {
   if (!moduleContainerForBuildUseOnly) {
     throw new Error('could not find ${containerName} element');
   }
-  ReactDOM.render(
-    <${moduleName}/>,
-    moduleContainerForBuildUseOnly
+  createRoot(moduleContainerForBuildUseOnly).render(
+    <${moduleName}/>
   );`;
 };
 
@@ -169,11 +168,16 @@ const getReactImports = (source: string): string => {
   if (!(source.includes(`from 'react'`) || source.includes(`from "react"`))) {
     imports += `import * as React from 'react';\n`;
   }
-  if (!(source.includes(`from 'react-dom'`) || source.includes(`from "react-dom"`))) {
-    imports += `import * as ReactDOM from 'react-dom';\n`;
+  if (!hasCreateRootImportFromReactDomClient(source)) {
+    imports += `import { createRoot } from 'react-dom/client';\n`;
   }
   return imports;
 };
+
+const hasCreateRootImportFromReactDomClient = (source: string): boolean =>
+  /import\s+(?!type\b)[\s\S]*\{[\s\S]*\bcreateRoot(?:\s+as\s+createRoot)?\b[\s\S]*\}\s+from\s+['"]react-dom\/client['"]/.test(
+    source
+  );
 
 const shouldBundleModules = (projectStructure: ProjectStructure) => {
   const { rootFolders, subfolders } = projectStructure.config;

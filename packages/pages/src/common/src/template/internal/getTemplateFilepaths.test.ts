@@ -48,30 +48,9 @@ describe("getTemplateFilepaths", () => {
   });
 
   describe("getGlobalClientServerRenderTemplates", async () => {
-    it("uses React 17 client template when no custom client", async () => {
+    it("uses default client template when no custom client", async () => {
       const rootPath = path.join("src", "templates");
       const util = await import("./util.js");
-      vi.spyOn(util, "getReactVersion").mockImplementation(() => 17);
-      vi.spyOn(util, "globSync").mockImplementation(() => [
-        path.join(rootPath, "_client.tsx"),
-        path.join(rootPath, "_server.tsx"),
-        path.join(rootPath, "custom.tsx"),
-      ]);
-
-      const clientServerRenderTemplates = getGlobalClientServerRenderTemplates([
-        new Path(path.join(process.cwd(), rootPath)),
-      ]);
-
-      expect(clientServerRenderTemplates.isCustomRenderTemplate).toBeFalsy();
-      expect(path.basename(clientServerRenderTemplates.clientRenderTemplatePath)).toEqual(
-        "_client17.js"
-      );
-    });
-
-    it("uses React 18 client template when no custom client", async () => {
-      const rootPath = path.join("src", "templates");
-      const util = await import("./util.js");
-      vi.spyOn(util, "getReactVersion").mockImplementation(() => 18);
       vi.spyOn(util, "globSync").mockImplementation(() => [
         path.join(rootPath, "_client.tsx"),
         path.join(rootPath, "_server.tsx"),
@@ -88,31 +67,9 @@ describe("getTemplateFilepaths", () => {
       );
     });
 
-    it("uses custom client template when React 17", async () => {
+    it("uses custom client template when present", async () => {
       const rootPath = path.join("src", "templates");
       const util = await import("./util.js");
-      vi.spyOn(util, "getReactVersion").mockImplementation(() => 17);
-      vi.spyOn(util, "globSync").mockImplementation(() => [
-        path.join(rootPath, "_client.tsx"),
-        path.join(rootPath, "_server.tsx"),
-        path.join(rootPath, "custom.tsx"),
-      ]);
-      vi.spyOn(util, "existsSync").mockImplementation(() => true);
-
-      const clientServerRenderTemplates = getGlobalClientServerRenderTemplates([
-        new Path(path.join(process.cwd(), rootPath)),
-      ]);
-
-      expect(clientServerRenderTemplates.isCustomRenderTemplate).toBeTruthy();
-      expect(path.basename(clientServerRenderTemplates.clientRenderTemplatePath)).toEqual(
-        "_client.tsx"
-      );
-    });
-
-    it("uses custom client template when React 18", async () => {
-      const rootPath = path.join("src", "templates");
-      const util = await import("./util.js");
-      vi.spyOn(util, "getReactVersion").mockImplementation(() => 18);
       vi.spyOn(util, "globSync").mockImplementation(() => [
         path.join(rootPath, "_client.tsx"),
         path.join(rootPath, "_server.tsx"),
