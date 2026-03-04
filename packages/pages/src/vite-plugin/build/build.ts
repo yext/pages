@@ -1,11 +1,11 @@
 import { Plugin, UserConfig } from "vite";
-import path from "node:path";
 import buildStart from "./buildStart/buildStart.js";
 import closeBundle from "./closeBundle/closeBundle.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { buildServerlessFunctions } from "../serverless-functions/plugin.js";
 import { buildModules } from "../modules/plugin.js";
+import { sanitizeSubpath } from "../../common/src/assets/sanitizeSubpath.js";
 
 const intro = `
 var global = globalThis;
@@ -85,20 +85,5 @@ export const build = async (
  * relative and cannot escape the output directory.
  */
 const sanitizeOutputSubpath = (value: string, fallback: string): string => {
-  const trimmed = value.trim();
-  if (trimmed.length === 0) {
-    return fallback;
-  }
-
-  const withoutDrive = trimmed.replace(/^[a-zA-Z]:/, "");
-  const withoutLeading = withoutDrive.replace(/^[/\\]+/, "");
-  const normalized = path.posix
-    .normalize(withoutLeading.replace(/\\/g, "/"))
-    .replace(/^(\.\/)+/, "");
-
-  if (normalized === "" || normalized === "." || normalized.startsWith("..")) {
-    return fallback;
-  }
-
-  return normalized;
+  return sanitizeSubpath(value, fallback);
 };

@@ -187,15 +187,25 @@ const shouldBundleModules = (projectStructure: ProjectStructure) => {
 
 /**
  * Sanitizes module names used for entryFileNames to avoid path traversal and
- * keep output files within the Rollup output directory.
+ * keep output files within the Rollup output directory. Appends a short hash
+ * so distinct module names do not collide after sanitization.
  */
 const sanitizeModuleEntryName = (moduleName: string): string => {
   const normalized = path.posix.normalize(moduleName.replace(/\\/g, "/")).replace(/^(\.\/)+/, "");
   const base = path.posix.basename(normalized);
   if (base === "" || base === "." || base === "..") {
-    return "module";
+    return `module-${shortHash(moduleName)}`;
   }
-  return base;
+  return `${base}-${shortHash(moduleName)}`;
+};
+
+const shortHash = (value: string): string => {
+  let hash = 0;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash << 5) - hash + value.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash).toString(36).padStart(6, "0").slice(0, 6);
 };
 
 /**
