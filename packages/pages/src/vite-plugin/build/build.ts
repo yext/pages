@@ -1,4 +1,5 @@
 import { Plugin, UserConfig } from "vite";
+import path from "node:path";
 import buildStart from "./buildStart/buildStart.js";
 import closeBundle from "./closeBundle/closeBundle.js";
 import { ProjectStructure } from "../../common/src/project/structure.js";
@@ -21,6 +22,8 @@ export const build = async (
   pluginTotalFilesizeLimit: number
 ): Promise<Plugin> => {
   const { envVarConfig, subfolders } = projectStructure.config;
+  const safeAssetsSubfolder = sanitizeOutputSubpath(subfolders.assets, "assets");
+  const safeStaticSubfolder = sanitizeOutputSubpath(subfolders.static, "static");
 
   return {
     name: "vite-plugin:build",
@@ -54,11 +57,11 @@ export const build = async (
             preserveEntrySignatures: "strict",
             output: {
               intro,
-              assetFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash][extname]`,
-              chunkFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash].js`,
+              assetFileNames: `${safeAssetsSubfolder}/${safeStaticSubfolder}/[name]-[hash][extname]`,
+              chunkFileNames: `${safeAssetsSubfolder}/${safeStaticSubfolder}/[name]-[hash].js`,
               sanitizeFileName: false,
               entryFileNames: () => {
-                return `${subfolders.assets}/[name].[hash].js`;
+                return `${safeAssetsSubfolder}/[name].[hash].js`;
               },
               manualChunks: (id) => {
                 // Fixes an error where the output is prefixed like \x00commonjsHelpers-hash.js
@@ -67,7 +70,7 @@ export const build = async (
             },
           },
           reportCompressedSize: false,
-          assetsDir: subfolders.assets,
+          assetsDir: safeAssetsSubfolder,
         },
         define: processEnvVariables(envVarConfig.envVarPrefix),
       };
@@ -75,4 +78,27 @@ export const build = async (
     buildStart: buildStart(projectStructure),
     closeBundle: closeBundle(projectStructure, pluginFilesizeLimit, pluginTotalFilesizeLimit),
   };
+};
+
+/**
+ * Sanitizes subfolder values used in Rollup output paths so they remain
+ * relative and cannot escape the output directory.
+ */
+const sanitizeOutputSubpath = (value: string, fallback: string): string => {
+  const trimmed = value.trim();
+  if (trimmed.length === 0) {
+    return fallback;
+  }
+
+  const withoutDrive = trimmed.replace(/^[a-zA-Z]:/, "");
+  const withoutLeading = withoutDrive.replace(/^[/\\]+/, "");
+  const normalized = path.posix
+    .normalize(withoutLeading.replace(/\\/g, "/"))
+    .replace(/^(\.\/)+/, "");
+
+  if (normalized === "" || normalized === "." || normalized.startsWith("..")) {
+    return fallback;
+  }
+
+  return normalized;
 };

@@ -1,4 +1,5 @@
 import { pathToFileURL } from "url";
+import path from "node:path";
 import { UserConfig } from "vite";
 import { import_ } from "./import.js";
 
@@ -19,5 +20,28 @@ export const determineAssetsFilepath = async (
   const viteConfig = await import_(pathToFileURL(viteConfigPath).toString());
   const userConfig = viteConfig.default as UserConfig;
 
-  return userConfig.build?.assetsDir ?? defaultAssetsDir;
+  return sanitizeAssetsDir(userConfig.build?.assetsDir ?? defaultAssetsDir, defaultAssetsDir);
+};
+
+/**
+ * Ensures the assets directory is a safe, relative subpath for Rollup output.
+ * Falls back when the value is empty, absolute, or would escape the output dir.
+ */
+const sanitizeAssetsDir = (assetsDir: string, fallback: string): string => {
+  const trimmed = assetsDir.trim();
+  if (trimmed.length === 0) {
+    return fallback;
+  }
+
+  const withoutDrive = trimmed.replace(/^[a-zA-Z]:/, "");
+  const withoutLeading = withoutDrive.replace(/^[/\\]+/, "");
+  const normalized = path.posix
+    .normalize(withoutLeading.replace(/\\/g, "/"))
+    .replace(/^(\.\/)+/, "");
+
+  if (normalized === "" || normalized === "." || normalized.startsWith("..")) {
+    return fallback;
+  }
+
+  return normalized;
 };

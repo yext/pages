@@ -65,6 +65,7 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
   const viteConfig = viteConfigModule ? (viteConfigModule.default as UserConfig) : undefined;
 
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
+    const safeModuleEntryName = sanitizeModuleEntryName(moduleName);
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
         loggerInfo(pc.green(`\nBuilding ${moduleName} module...`));
@@ -117,7 +118,7 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
           input: fileInfo.path,
           output: {
             format: "umd",
-            entryFileNames: `${moduleName}.umd.js`,
+            entryFileNames: `${safeModuleEntryName}.umd.js`,
           },
         },
         reportCompressedSize: false,
@@ -182,6 +183,19 @@ const hasCreateRootImportFromReactDomClient = (source: string): boolean =>
 const shouldBundleModules = (projectStructure: ProjectStructure) => {
   const { rootFolders, subfolders } = projectStructure.config;
   return fs.existsSync(path.join(rootFolders.source, subfolders.modules));
+};
+
+/**
+ * Sanitizes module names used for entryFileNames to avoid path traversal and
+ * keep output files within the Rollup output directory.
+ */
+const sanitizeModuleEntryName = (moduleName: string): string => {
+  const normalized = path.posix.normalize(moduleName.replace(/\\/g, "/")).replace(/^(\.\/)+/, "");
+  const base = path.posix.basename(normalized);
+  if (base === "" || base === "." || base === "..") {
+    return "module";
+  }
+  return base;
 };
 
 /**
