@@ -5,19 +5,25 @@ import path from "node:path";
  * and cannot escape the output directory. Falls back for empty or unsafe inputs.
  */
 export const sanitizeSubpath = (value: string, fallback: string): string => {
-  const trimmed = value.trim();
-  if (trimmed.length === 0) {
-    return fallback;
+  const normalizeCandidate = (input: string): string => {
+    const trimmed = input.trim();
+    const withoutDrive = trimmed.replace(/^[a-zA-Z]:/, "");
+    const withoutLeading = withoutDrive.replace(/^[/\\]+/, "");
+    return path.posix.normalize(withoutLeading.replace(/\\/g, "/")).replace(/^(\.\/)+/, "");
+  };
+
+  const normalizedFallback = normalizeCandidate(fallback);
+  if (
+    normalizedFallback === "" ||
+    normalizedFallback === "." ||
+    normalizedFallback.startsWith("..")
+  ) {
+    throw new Error(`Invalid sanitizeSubpath fallback: ${fallback}`);
   }
 
-  const withoutDrive = trimmed.replace(/^[a-zA-Z]:/, "");
-  const withoutLeading = withoutDrive.replace(/^[/\\]+/, "");
-  const normalized = path.posix
-    .normalize(withoutLeading.replace(/\\/g, "/"))
-    .replace(/^(\.\/)+/, "");
-
+  const normalized = normalizeCandidate(value);
   if (normalized === "" || normalized === "." || normalized.startsWith("..")) {
-    return fallback;
+    return normalizedFallback;
   }
 
   return normalized;

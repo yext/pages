@@ -22,8 +22,8 @@ export const build = async (
   pluginTotalFilesizeLimit: number
 ): Promise<Plugin> => {
   const { envVarConfig, subfolders } = projectStructure.config;
-  const safeAssetsSubfolder = sanitizeOutputSubpath(subfolders.assets, "assets");
-  const safeStaticSubfolder = sanitizeOutputSubpath(subfolders.static, "static");
+  const safeAssetsSubfolder = sanitizeSubpath(subfolders.assets, "assets");
+  const safeStaticSubfolder = sanitizeSubpath(subfolders.static, "static");
 
   return {
     name: "vite-plugin:build",
@@ -78,12 +78,4 @@ export const build = async (
     buildStart: buildStart(projectStructure),
     closeBundle: closeBundle(projectStructure, pluginFilesizeLimit, pluginTotalFilesizeLimit),
   };
-};
-
-/**
- * Sanitizes subfolder values used in Rollup output paths so they remain
- * relative and cannot escape the output directory.
- */
-const sanitizeOutputSubpath = (value: string, fallback: string): string => {
-  return sanitizeSubpath(value, fallback);
 };

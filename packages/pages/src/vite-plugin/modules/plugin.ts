@@ -20,6 +20,7 @@ import { scopedViteConfigPath } from "../../util/viteConfig.js";
 type FileInfo = {
   path: string;
   name: string;
+  isScoped: boolean;
 };
 
 export const buildModules = async (projectStructure: ProjectStructure): Promise<void> => {
@@ -31,8 +32,13 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
   const outdir = path.join(rootFolders.dist, subfolders.modules);
 
   const filepaths: { [s: string]: FileInfo } = {};
+  const scopedModulesRoot = projectStructure.config.scope
+    ? path.resolve(rootFolders.source, subfolders.modules, projectStructure.config.scope)
+    : undefined;
   const modulePaths = projectStructure.getModulePaths();
   modulePaths.forEach((modulePath) => {
+    const isScopedPath =
+      scopedModulesRoot !== undefined && path.resolve(modulePath.path) === scopedModulesRoot;
     glob
       .sync(convertToPosixPath(path.join(modulePath.path, "*/*.{jsx,tsx}")), {
         nodir: true,
@@ -41,14 +47,44 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
         const filepath = path.resolve(f);
         const moduleName = getModuleName(filepath);
         const { name } = path.parse(filepath);
-        // If that name exists already, don't overwrite the filepaths
+        const resolvedModuleName = moduleName ?? name;
+        const existing = filepaths[resolvedModuleName];
+        // If that name exists already, don't overwrite the filepaths.
         // Example, if scope is declared, the scoped module's info should stay
         // in filepaths and not be overwritten by a non-scoped module.
-        if (!((moduleName ?? name) in filepaths)) {
-          filepaths[moduleName ?? name] = { path: filepath, name: name };
+        if (existing) {
+          if (existing.isScoped && !isScopedPath) {
+            return;
+          }
+          if (!existing.isScoped && isScopedPath) {
+            filepaths[resolvedModuleName] = { path: filepath, name: name, isScoped: true };
+            return;
+          }
+          logErrorAndExit(
+            `Duplicate module name "${resolvedModuleName}" found in:\n` +
+              `- ${existing.path}\n` +
+              `- ${filepath}\n` +
+              `Module names must be unique.`
+          );
         }
+        filepaths[resolvedModuleName] = { path: filepath, name: name, isScoped: isScopedPath };
       });
   });
+
+  const moduleEntryNames = new Map<string, string>();
+  const moduleByEntryName = new Map<string, string>();
+  for (const moduleName of Object.keys(filepaths)) {
+    const entryName = sanitizeModuleEntryName(moduleName);
+    const existingModule = moduleByEntryName.get(entryName);
+    if (existingModule) {
+      logErrorAndExit(
+        `Module names "${existingModule}" and "${moduleName}" resolve to the same ` +
+          `output filename "${entryName}.umd.js". Rename modules to be unique.`
+      );
+    }
+    moduleByEntryName.set(entryName, moduleName);
+    moduleEntryNames.set(moduleName, entryName);
+  }
 
   const logger = createModuleLogger();
   const loggerInfo = logger.info;
@@ -65,7 +101,8 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
   const viteConfig = viteConfigModule ? (viteConfigModule.default as UserConfig) : undefined;
 
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
-    const safeModuleEntryName = sanitizeModuleEntryName(moduleName);
+    const safeModuleEntryName =
+      moduleEntryNames.get(moduleName) ?? sanitizeModuleEntryName(moduleName);
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
         loggerInfo(pc.green(`\nBuilding ${moduleName} module...`));
@@ -187,25 +224,16 @@ const shouldBundleModules = (projectStructure: ProjectStructure) => {
 
 /**
  * Sanitizes module names used for entryFileNames to avoid path traversal and
- * keep output files within the Rollup output directory. Appends a short hash
- * so distinct module names do not collide after sanitization.
+ * keep output files within the Rollup output directory.
  */
 const sanitizeModuleEntryName = (moduleName: string): string => {
   const normalized = path.posix.normalize(moduleName.replace(/\\/g, "/")).replace(/^(\.\/)+/, "");
-  const base = path.posix.basename(normalized);
-  if (base === "" || base === "." || base === "..") {
-    return `module-${shortHash(moduleName)}`;
-  }
-  return `${base}-${shortHash(moduleName)}`;
-};
+  const safeName = normalized
+    .split("/")
+    .filter((segment) => segment !== "" && segment !== "." && segment !== "..")
+    .join("-");
 
-const shortHash = (value: string): string => {
-  let hash = 0;
-  for (let i = 0; i < value.length; i += 1) {
-    hash = (hash << 5) - hash + value.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash).toString(36).padStart(6, "0").slice(0, 6);
+  return safeName.length > 0 ? safeName : "module";
 };
 
 /**
