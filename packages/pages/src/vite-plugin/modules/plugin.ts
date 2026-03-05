@@ -20,7 +20,6 @@ import { scopedViteConfigPath } from "../../util/viteConfig.js";
 type FileInfo = {
   path: string;
   name: string;
-  isScoped: boolean;
 };
 
 export const buildModules = async (projectStructure: ProjectStructure): Promise<void> => {
@@ -32,13 +31,8 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
   const outdir = path.join(rootFolders.dist, subfolders.modules);
 
   const filepaths: { [s: string]: FileInfo } = {};
-  const scopedModulesRoot = projectStructure.config.scope
-    ? path.resolve(rootFolders.source, subfolders.modules, projectStructure.config.scope)
-    : undefined;
   const modulePaths = projectStructure.getModulePaths();
   modulePaths.forEach((modulePath) => {
-    const isScopedPath =
-      scopedModulesRoot !== undefined && path.resolve(modulePath.path) === scopedModulesRoot;
     glob
       .sync(convertToPosixPath(path.join(modulePath.path, "*/*.{jsx,tsx}")), {
         nodir: true,
@@ -48,43 +42,15 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
         const moduleName = getModuleName(filepath);
         const { name } = path.parse(filepath);
         const resolvedModuleName = moduleName ?? name;
-        const existing = filepaths[resolvedModuleName];
+        validateModuleNameForEntryFile(resolvedModuleName, filepath);
         // If that name exists already, don't overwrite the filepaths.
         // Example, if scope is declared, the scoped module's info should stay
         // in filepaths and not be overwritten by a non-scoped module.
-        if (existing) {
-          if (existing.isScoped && !isScopedPath) {
-            return;
-          }
-          if (!existing.isScoped && isScopedPath) {
-            filepaths[resolvedModuleName] = { path: filepath, name: name, isScoped: true };
-            return;
-          }
-          logErrorAndExit(
-            `Duplicate module name "${resolvedModuleName}" found in:\n` +
-              `- ${existing.path}\n` +
-              `- ${filepath}\n` +
-              `Module names must be unique.`
-          );
+        if (!(resolvedModuleName in filepaths)) {
+          filepaths[resolvedModuleName] = { path: filepath, name: name };
         }
-        filepaths[resolvedModuleName] = { path: filepath, name: name, isScoped: isScopedPath };
       });
   });
-
-  const moduleEntryNames = new Map<string, string>();
-  const moduleByEntryName = new Map<string, string>();
-  for (const moduleName of Object.keys(filepaths)) {
-    const entryName = sanitizeModuleEntryName(moduleName);
-    const existingModule = moduleByEntryName.get(entryName);
-    if (existingModule) {
-      logErrorAndExit(
-        `Module names "${existingModule}" and "${moduleName}" resolve to the same ` +
-          `output filename "${entryName}.umd.js". Rename modules to be unique.`
-      );
-    }
-    moduleByEntryName.set(entryName, moduleName);
-    moduleEntryNames.set(moduleName, entryName);
-  }
 
   const logger = createModuleLogger();
   const loggerInfo = logger.info;
@@ -101,8 +67,6 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
   const viteConfig = viteConfigModule ? (viteConfigModule.default as UserConfig) : undefined;
 
   for (const [moduleName, fileInfo] of Object.entries(filepaths)) {
-    const safeModuleEntryName =
-      moduleEntryNames.get(moduleName) ?? sanitizeModuleEntryName(moduleName);
     logger.info = (msg, options) => {
       if (msg.includes("building for production")) {
         loggerInfo(pc.green(`\nBuilding ${moduleName} module...`));
@@ -155,7 +119,7 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
           input: fileInfo.path,
           output: {
             format: "umd",
-            entryFileNames: `${safeModuleEntryName}.umd.js`,
+            entryFileNames: `${moduleName}.umd.js`,
           },
         },
         reportCompressedSize: false,
@@ -223,17 +187,22 @@ const shouldBundleModules = (projectStructure: ProjectStructure) => {
 };
 
 /**
- * Sanitizes module names used for entryFileNames to avoid path traversal and
- * keep output files within the Rollup output directory.
+ * Guards Rollup output naming from path traversal by requiring module names
+ * to be a single filename segment (no separators, absolute, or parent paths).
  */
-const sanitizeModuleEntryName = (moduleName: string): string => {
-  const normalized = path.posix.normalize(moduleName.replace(/\\/g, "/")).replace(/^(\.\/)+/, "");
-  const safeName = normalized
-    .split("/")
-    .filter((segment) => segment !== "" && segment !== "." && segment !== "..")
-    .join("-");
+const validateModuleNameForEntryFile = (moduleName: string, filepath: string): void => {
+  const normalized = path.posix.normalize(moduleName.replace(/\\/g, "/"));
+  const hasPathSeparator = moduleName.includes("/") || moduleName.includes("\\");
+  const isAbsolute = normalized.startsWith("/") || /^[a-zA-Z]:/.test(moduleName);
+  const isDotOrParentPath =
+    normalized === "." || normalized === ".." || normalized.startsWith("../");
 
-  return safeName.length > 0 ? safeName : "module";
+  if (hasPathSeparator || isAbsolute || isDotOrParentPath) {
+    logErrorAndExit(
+      `Invalid module name "${moduleName}" in ${filepath}. ` +
+        `Module names must not contain path separators or relative path segments.`
+    );
+  }
 };
 
 /**

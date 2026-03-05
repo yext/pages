@@ -5,7 +5,6 @@ import { ProjectStructure } from "../../common/src/project/structure.js";
 import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { buildServerlessFunctions } from "../serverless-functions/plugin.js";
 import { buildModules } from "../modules/plugin.js";
-import { sanitizeSubpath } from "../../common/src/assets/sanitizeSubpath.js";
 
 const intro = `
 var global = globalThis;
@@ -22,8 +21,6 @@ export const build = async (
   pluginTotalFilesizeLimit: number
 ): Promise<Plugin> => {
   const { envVarConfig, subfolders } = projectStructure.config;
-  const safeAssetsSubfolder = sanitizeSubpath(subfolders.assets, "assets");
-  const safeStaticSubfolder = sanitizeSubpath(subfolders.static, "static");
 
   return {
     name: "vite-plugin:build",
@@ -57,11 +54,11 @@ export const build = async (
             preserveEntrySignatures: "strict",
             output: {
               intro,
-              assetFileNames: `${safeAssetsSubfolder}/${safeStaticSubfolder}/[name]-[hash][extname]`,
-              chunkFileNames: `${safeAssetsSubfolder}/${safeStaticSubfolder}/[name]-[hash].js`,
+              assetFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash][extname]`,
+              chunkFileNames: `${subfolders.assets}/${subfolders.static}/[name]-[hash].js`,
               sanitizeFileName: false,
               entryFileNames: () => {
-                return `${safeAssetsSubfolder}/[name].[hash].js`;
+                return `${subfolders.assets}/[name].[hash].js`;
               },
               manualChunks: (id) => {
                 // Fixes an error where the output is prefixed like \x00commonjsHelpers-hash.js
@@ -70,7 +67,7 @@ export const build = async (
             },
           },
           reportCompressedSize: false,
-          assetsDir: safeAssetsSubfolder,
+          assetsDir: subfolders.assets,
         },
         define: processEnvVariables(envVarConfig.envVarPrefix),
       };
