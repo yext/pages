@@ -30,7 +30,7 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
   const { rootFolders, subfolders, envVarConfig } = projectStructure.config;
   const outdir = path.join(rootFolders.dist, subfolders.modules);
 
-  const filepaths: { [s: string]: FileInfo } = {};
+  const filepaths: { [s: string]: FileInfo } = Object.create(null);
   const modulePaths = projectStructure.getModulePaths();
   modulePaths.forEach((modulePath) => {
     glob
@@ -41,11 +41,13 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
         const filepath = path.resolve(f);
         const moduleName = getModuleName(filepath);
         const { name } = path.parse(filepath);
-        // If that name exists already, don't overwrite the filepaths
+        const resolvedModuleName = moduleName ?? name;
+        validateModuleNameForEntryFile(resolvedModuleName, filepath);
+        // If that name exists already, don't overwrite the filepaths.
         // Example, if scope is declared, the scoped module's info should stay
         // in filepaths and not be overwritten by a non-scoped module.
-        if (!((moduleName ?? name) in filepaths)) {
-          filepaths[moduleName ?? name] = { path: filepath, name: name };
+        if (!Object.prototype.hasOwnProperty.call(filepaths, resolvedModuleName)) {
+          filepaths[resolvedModuleName] = { path: filepath, name: name };
         }
       });
   });
@@ -182,6 +184,25 @@ const hasCreateRootImportFromReactDomClient = (source: string): boolean =>
 const shouldBundleModules = (projectStructure: ProjectStructure) => {
   const { rootFolders, subfolders } = projectStructure.config;
   return fs.existsSync(path.join(rootFolders.source, subfolders.modules));
+};
+
+/**
+ * Guards Rollup output naming from path traversal by requiring module names
+ * to be a single filename segment (no separators, absolute, or parent paths).
+ */
+const validateModuleNameForEntryFile = (moduleName: string, filepath: string): void => {
+  const normalized = path.posix.normalize(moduleName.replace(/\\/g, "/"));
+  const hasPathSeparator = moduleName.includes("/") || moduleName.includes("\\");
+  const isAbsolute = normalized.startsWith("/") || /^[a-zA-Z]:/.test(moduleName);
+  const isDotOrParentPath =
+    normalized === "." || normalized === ".." || normalized.startsWith("../");
+
+  if (hasPathSeparator || isAbsolute || isDotOrParentPath) {
+    logErrorAndExit(
+      `Invalid module name "${moduleName}" in ${filepath}. ` +
+        `Module names must not contain path separators or relative path segments.`
+    );
+  }
 };
 
 /**
