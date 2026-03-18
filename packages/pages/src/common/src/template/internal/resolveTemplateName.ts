@@ -1,4 +1,4 @@
-const normalizeTemplateName = (value: unknown): string | undefined => {
+export const normalizeTemplateName = (value: unknown): string | undefined => {
   if (typeof value !== "string") {
     return undefined;
   }

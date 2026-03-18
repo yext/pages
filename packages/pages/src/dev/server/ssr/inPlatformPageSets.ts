@@ -1,4 +1,5 @@
 import { spawn } from "child_process";
+import { normalizeTemplateName } from "../../../common/src/template/internal/resolveTemplateName.js";
 
 export type PageSetConfig = {
   name: string;
@@ -13,13 +14,6 @@ export type PageSetConfig = {
     entity_types: string[];
   };
   display_name: string;
-};
-
-const normalizeTemplateName = (value: unknown): string | undefined => {
-  if (typeof value !== "string") {
-    return undefined;
-  }
-  return value.trim() || undefined;
 };
 
 export const getPageSetTemplateName = (pageSet: PageSetConfig): string | undefined => {

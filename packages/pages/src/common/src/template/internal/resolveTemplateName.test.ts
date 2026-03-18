@@ -1,19 +1,23 @@
 import { describe, expect, it } from "vitest";
 import { getDocumentTemplateName } from "./resolveTemplateName.js";
 
+const baseDocument = {
+  __: {
+    codeTemplate: "legacy-template",
+    name: "page-set-name",
+  },
+};
+
 describe("getDocumentTemplateName", () => {
   it("prefers _pageset.config.template over codeTemplate", () => {
     expect(
       getDocumentTemplateName({
+        ...baseDocument,
         _pageset: JSON.stringify({
           config: {
             template: "accounts/123/visualEditorTemplates/main",
           },
         }),
-        __: {
-          codeTemplate: "legacy-template",
-          name: "page-set-name",
-        },
       })
     ).toBe("accounts/123/visualEditorTemplates/main");
   });
@@ -21,14 +25,11 @@ describe("getDocumentTemplateName", () => {
   it("supports _pageset when it is already an object", () => {
     expect(
       getDocumentTemplateName({
+        ...baseDocument,
         _pageset: {
           config: {
             template: "accounts/123/visualEditorTemplates/main",
           },
-        },
-        __: {
-          codeTemplate: "legacy-template",
-          name: "page-set-name",
         },
       })
     ).toBe("accounts/123/visualEditorTemplates/main");
@@ -37,38 +38,25 @@ describe("getDocumentTemplateName", () => {
   it("falls back when _pageset cannot be parsed", () => {
     expect(
       getDocumentTemplateName({
+        ...baseDocument,
         _pageset: "{not-json",
-        __: {
-          codeTemplate: "legacy-template",
-          name: "page-set-name",
-        },
       })
     ).toBe("legacy-template");
   });
 
   it("falls back to document.__.codeTemplate", () => {
-    expect(
-      getDocumentTemplateName({
-        __: {
-          codeTemplate: "legacy-template",
-          name: "page-set-name",
-        },
-      })
-    ).toBe("legacy-template");
+    expect(getDocumentTemplateName(baseDocument)).toBe("legacy-template");
   });
 
   it("falls back to codeTemplate when _pageset.config.template is blank", () => {
     expect(
       getDocumentTemplateName({
+        ...baseDocument,
         _pageset: JSON.stringify({
           config: {
             template: "   ",
           },
         }),
-        __: {
-          codeTemplate: "legacy-template",
-          name: "page-set-name",
-        },
       })
     ).toBe("legacy-template");
   });
@@ -76,9 +64,10 @@ describe("getDocumentTemplateName", () => {
   it("falls back to document.__.name when codeTemplate is blank", () => {
     expect(
       getDocumentTemplateName({
+        ...baseDocument,
         __: {
+          ...baseDocument.__,
           codeTemplate: "   ",
-          name: "page-set-name",
         },
       })
     ).toBe("page-set-name");
@@ -87,8 +76,10 @@ describe("getDocumentTemplateName", () => {
   it("falls back to document.__.name", () => {
     expect(
       getDocumentTemplateName({
+        ...baseDocument,
         __: {
-          name: "page-set-name",
+          ...baseDocument.__,
+          codeTemplate: undefined,
         },
       })
     ).toBe("page-set-name");

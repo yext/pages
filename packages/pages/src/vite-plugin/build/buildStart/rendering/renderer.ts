@@ -28,13 +28,13 @@ export default async (
   manifest: Manifest
 ): Promise<GeneratedPage | GeneratedRedirect> => {
   const projectStructure = new ProjectStructure(manifest.projectStructure);
-  const feature = getDocumentTemplateName(props.document);
+  const templateName = getDocumentTemplateName(props.document);
 
-  if (!feature) {
+  if (!templateName) {
     throw new Error("Could not determine template name from document metadata");
   }
 
-  const template = await readTemplateModules(feature, manifest, projectStructure);
+  const template = await readTemplateModules(templateName, manifest, projectStructure);
   if (template) {
     const pluginRenderTemplates = await getPluginRenderTemplates(manifest, projectStructure);
     return await generateTemplateResponses(
@@ -46,10 +46,10 @@ export default async (
     );
   }
 
-  const redirect = await readRedirectModules(feature, manifest, projectStructure);
+  const redirect = await readRedirectModules(templateName, manifest, projectStructure);
   if (redirect) {
     return await generateRedirectResponses(redirect, props);
   }
 
-  throw new Error(`Could not find path for feature ${feature}`);
+  throw new Error(`Could not find path for feature ${templateName}`);
 };
