@@ -81,19 +81,19 @@ export const serverRenderSlugRoute =
         return;
       }
 
-      const feature = getDocumentTemplateName(document);
-      if (!feature) {
+      const templateName = getDocumentTemplateName(document);
+      if (!templateName) {
         send404(res, `Cannot find template corresponding to slug: ${slug}`);
         return;
       }
       const templateModuleInternal = await findTemplateModuleInternalByName(
         vite,
-        feature,
+        templateName,
         templateFilepaths,
         Boolean(document._pageset || document.__?.codeTemplate)
       );
       if (!templateModuleInternal) {
-        send404(res, `Cannot find template corresponding to feature: ${feature}`);
+        send404(res, `Cannot find template corresponding to feature: ${templateName}`);
         return;
       }
 
