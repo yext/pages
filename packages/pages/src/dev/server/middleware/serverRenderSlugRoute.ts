@@ -58,6 +58,7 @@ export const serverRenderSlugRoute =
 
       // If in-platform page sets exist, try to match the slug to a page set
       let document;
+      let isInPlatformDocument = false;
       if (siteId && inPlatformPageSets.length) {
         for (const ps of inPlatformPageSets) {
           document = (
@@ -66,6 +67,7 @@ export const serverRenderSlugRoute =
             })
           )?.[0];
           if (document) {
+            isInPlatformDocument = true;
             break;
           }
         }
@@ -90,7 +92,7 @@ export const serverRenderSlugRoute =
         vite,
         templateName,
         templateFilepaths,
-        Boolean(document._pageset || document.__?.codeTemplate)
+        isInPlatformDocument
       );
       if (!templateModuleInternal) {
         send404(res, `Cannot find template corresponding to feature: ${templateName}`);
