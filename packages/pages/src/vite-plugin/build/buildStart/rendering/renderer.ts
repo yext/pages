@@ -51,5 +51,5 @@ export default async (
     return await generateRedirectResponses(redirect, props);
   }
 
-  throw new Error(`Could not find path for feature ${templateName}`);
+  throw new Error(`Could not find path for template ${templateName}`);
 };
