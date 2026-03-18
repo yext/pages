@@ -13,7 +13,11 @@ import { generateTestDataForPage } from "../ssr/generateTestData.js";
 import { entityPageCriterion, getLocalData } from "../ssr/getLocalData.js";
 import send404 from "./send404.js";
 import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
-import { getInPlatformPageSetDocuments, PageSetConfig } from "../ssr/inPlatformPageSets.js";
+import {
+  getInPlatformPageSetDocuments,
+  getPageSetTemplateName,
+  PageSetConfig,
+} from "../ssr/inPlatformPageSets.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -77,12 +81,14 @@ export const serverRenderRoute =
         return;
       }
 
-      // Look up the template by code_template if in-platform or feature if in-repo
+      // Look up the template by the in-platform configured template if present, otherwise
+      // fall back to the legacy code_template value.
+      const pageSetTemplateName = pageSet && getPageSetTemplateName(pageSet);
       const templateModuleInternal =
         siteId && pageSet
           ? await findTemplateModuleInternalByName(
               vite,
-              pageSet.code_template,
+              pageSetTemplateName ?? "",
               templateFilepaths,
               true
             )
@@ -91,7 +97,7 @@ export const serverRenderRoute =
         send404(
           res,
           pageSet
-            ? `Cannot find template: ${pageSet.code_template}`
+            ? `Cannot find template: ${pageSetTemplateName}`
             : `Cannot find template corresponding to feature: ${feature}`
         );
         return;

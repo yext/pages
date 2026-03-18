@@ -3,13 +3,20 @@ import { spawn } from "child_process";
 export type PageSetConfig = {
   name: string;
   id: string;
-  code_template: string;
+  code_template?: string;
+  config?: {
+    template?: string;
+  };
   scope: {
     locales: string[];
     saved_filters: string[];
     entity_types: string[];
   };
   display_name: string;
+};
+
+export const getPageSetTemplateName = (pageSet: PageSetConfig): string | undefined => {
+  return pageSet.config?.template ?? pageSet.code_template;
 };
 
 export const getInPlatformPageSets = async (siteId: number): Promise<PageSetConfig[]> => {
@@ -51,12 +58,14 @@ export const getInPlatformPageSetDocuments = async (
     args.push("--slug", filters.slug);
   }
 
-  return await spawnPageSetCommands(
+  const documents = await spawnPageSetCommands(
     process.stdout,
     "yext",
     ["pages", "visual-editor", "document", ...args],
     "["
   );
+
+  return documents;
 };
 
 async function spawnPageSetCommands(
