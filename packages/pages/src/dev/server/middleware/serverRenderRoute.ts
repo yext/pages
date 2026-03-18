@@ -83,25 +83,29 @@ export const serverRenderRoute =
 
       // Look up the template by the in-platform configured template if present, otherwise
       // fall back to the legacy code_template value.
-      const pageSetTemplateName = pageSet ? getPageSetTemplateName(pageSet) : undefined;
-      if (siteId && pageSet && !pageSetTemplateName) {
+      const isInPlatformPageSet = Boolean(siteId && pageSet);
+      let templateName = feature;
+      if (isInPlatformPageSet && pageSet) {
+        templateName = getPageSetTemplateName(pageSet);
+      }
+
+      if (!templateName && pageSet) {
         send404(res, `Cannot determine template for in-platform page set: ${pageSet.id}`);
         return;
       }
-      const templateModuleInternal =
-        siteId && pageSet
-          ? await findTemplateModuleInternalByName(
-              vite,
-              pageSetTemplateName,
-              templateFilepaths,
-              true
-            )
-          : await findTemplateModuleInternalByName(vite, feature, templateFilepaths, false);
+
+      const templateModuleInternal = await findTemplateModuleInternalByName(
+        vite,
+        templateName,
+        templateFilepaths,
+        isInPlatformPageSet
+      );
+
       if (!templateModuleInternal) {
         send404(
           res,
-          pageSet
-            ? `Cannot find template: ${pageSetTemplateName}`
+          isInPlatformPageSet
+            ? `Cannot find template: ${templateName}`
             : `Cannot find template corresponding to feature: ${feature}`
         );
         return;
