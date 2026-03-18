@@ -19,11 +19,9 @@ export type PageSetConfig = {
 /*
  * getPageSetTemplateName gets the template name for a fetched pageset, as opposed to the pageset on the document.
  */
-export const getPageSetTemplateName = (pageSet: PageSetConfig): string => {
+export const getPageSetTemplateName = (pageSet: PageSetConfig): string | undefined => {
   return (
-    normalizeTemplateName(pageSet.config?.template) ??
-    normalizeTemplateName(pageSet.code_template) ??
-    "unknown"
+    normalizeTemplateName(pageSet.config?.template) ?? normalizeTemplateName(pageSet.code_template)
   );
 };
 

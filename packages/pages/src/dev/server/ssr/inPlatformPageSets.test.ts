@@ -40,4 +40,14 @@ describe("getPageSetTemplateName", () => {
       })
     ).toBe("legacy-template");
   });
+
+  it("returns undefined when no template metadata exists", () => {
+    expect(
+      getPageSetTemplateName({
+        ...pageSet,
+        code_template: undefined,
+        config: undefined,
+      })
+    ).toBeUndefined();
+  });
 });
