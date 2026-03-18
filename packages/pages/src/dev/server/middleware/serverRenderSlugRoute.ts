@@ -5,10 +5,7 @@ import { findTemplateModuleInternalByName } from "../ssr/findTemplateModuleInter
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { TemplateRenderProps } from "../../../common/src/template/types.js";
-import {
-  getDocumentTemplateName,
-  hasDocumentTemplateMetadata,
-} from "../../../common/src/template/internal/resolveTemplateName.js";
+import { getDocumentTemplateName } from "../../../common/src/template/internal/resolveTemplateName.js";
 import sendAppHTML from "./sendAppHTML.js";
 import { generateTestDataForSlug } from "../ssr/generateTestData.js";
 import { getLocalEntityPageDataForSlug } from "../ssr/getLocalData.js";
@@ -93,7 +90,7 @@ export const serverRenderSlugRoute =
         vite,
         feature,
         templateFilepaths,
-        hasDocumentTemplateMetadata(document)
+        Boolean(document._pageset || document.__?.codeTemplate)
       );
       if (!templateModuleInternal) {
         send404(res, `Cannot find template corresponding to feature: ${feature}`);

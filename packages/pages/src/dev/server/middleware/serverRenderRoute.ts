@@ -83,12 +83,16 @@ export const serverRenderRoute =
 
       // Look up the template by the in-platform configured template if present, otherwise
       // fall back to the legacy code_template value.
-      const pageSetTemplateName = pageSet && getPageSetTemplateName(pageSet);
+      const pageSetTemplateName = pageSet ? getPageSetTemplateName(pageSet) : undefined;
+      if (siteId && pageSet && !pageSetTemplateName) {
+        send404(res, `Cannot determine template for in-platform page set: ${pageSet.id}`);
+        return;
+      }
       const templateModuleInternal =
         siteId && pageSet
           ? await findTemplateModuleInternalByName(
               vite,
-              pageSetTemplateName ?? "",
+              pageSetTemplateName,
               templateFilepaths,
               true
             )

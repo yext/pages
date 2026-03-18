@@ -21,6 +21,17 @@ describe("getPageSetTemplateName", () => {
     expect(getPageSetTemplateName(pageSet)).toBe("new-template");
   });
 
+  it("falls back to code_template when config.template is blank", () => {
+    expect(
+      getPageSetTemplateName({
+        ...pageSet,
+        config: {
+          template: "   ",
+        },
+      })
+    ).toBe("legacy-template");
+  });
+
   it("falls back to code_template", () => {
     expect(
       getPageSetTemplateName({

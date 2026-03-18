@@ -165,7 +165,7 @@ export const indexPage =
               (await pageSetAccumulator) +
               `<h4>
                 ${pageSetConfig.display_name}
-                pages [template: ${getPageSetTemplateName(pageSetConfig)}] (${
+                pages [template: ${getPageSetTemplateName(pageSetConfig) ?? "unknown"}] (${
                   (documents?.filter((d) => !useProdURLs || d.slug) || []).length
                 }):
               </h4>

@@ -15,8 +15,17 @@ export type PageSetConfig = {
   display_name: string;
 };
 
+const normalizeTemplateName = (value: unknown): string | undefined => {
+  if (typeof value !== "string") {
+    return undefined;
+  }
+  return value.trim() || undefined;
+};
+
 export const getPageSetTemplateName = (pageSet: PageSetConfig): string | undefined => {
-  return pageSet.config?.template ?? pageSet.code_template;
+  return (
+    normalizeTemplateName(pageSet.config?.template) ?? normalizeTemplateName(pageSet.code_template)
+  );
 };
 
 export const getInPlatformPageSets = async (siteId: number): Promise<PageSetConfig[]> => {
@@ -58,14 +67,12 @@ export const getInPlatformPageSetDocuments = async (
     args.push("--slug", filters.slug);
   }
 
-  const documents = await spawnPageSetCommands(
+  return await spawnPageSetCommands(
     process.stdout,
     "yext",
     ["pages", "visual-editor", "document", ...args],
     "["
   );
-
-  return documents;
 };
 
 async function spawnPageSetCommands(

@@ -1,9 +1,12 @@
-const getPageSetTemplateNameFromDocument = (document: Record<string, any>): string | undefined => {
-  const pageSet = document._pageset;
-  if (!pageSet) {
+const normalizeTemplateName = (value: unknown): string | undefined => {
+  if (typeof value !== "string") {
     return undefined;
   }
+  return value.trim() || undefined;
+};
 
+export const getDocumentTemplateName = (document: Record<string, any>): string | undefined => {
+  const pageSet = document._pageset;
   const parsedPageSet =
     typeof pageSet === "string"
       ? (() => {
@@ -15,15 +18,9 @@ const getPageSetTemplateNameFromDocument = (document: Record<string, any>): stri
         })()
       : pageSet;
 
-  return parsedPageSet?.config?.template;
-};
-
-export const getDocumentTemplateName = (document: Record<string, any>): string | undefined => {
   return (
-    getPageSetTemplateNameFromDocument(document) ?? document.__?.codeTemplate ?? document.__?.name
+    normalizeTemplateName(parsedPageSet?.config?.template) ??
+    normalizeTemplateName(document.__?.codeTemplate) ??
+    normalizeTemplateName(document.__?.name)
   );
-};
-
-export const hasDocumentTemplateMetadata = (document: Record<string, any>): boolean => {
-  return Boolean(getPageSetTemplateNameFromDocument(document) ?? document.__?.codeTemplate);
 };
