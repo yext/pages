@@ -86,12 +86,12 @@ export const serverRenderRoute =
       const isInPlatformPageSet = Boolean(siteId && pageSet);
       let templateName = feature;
       if (isInPlatformPageSet && pageSet) {
-        templateName = getPageSetTemplateName(pageSet);
-      }
-
-      if (!templateName && pageSet) {
-        send404(res, `Cannot determine template for in-platform page set: ${pageSet.id}`);
-        return;
+        const pageSetTemplateName = getPageSetTemplateName(pageSet);
+        if (!pageSetTemplateName) {
+          send404(res, `Cannot find template for in-platform page set: ${pageSet.id}`);
+          return;
+        }
+        templateName = pageSetTemplateName;
       }
 
       const templateModuleInternal = await findTemplateModuleInternalByName(
