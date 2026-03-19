@@ -7,7 +7,7 @@ const pageSet = {
   display_name: "Locations",
   code_template: "legacy-template",
   config: {
-    template: "new-template",
+    template: "accounts/123/visualEditorTemplates/new-template",
   },
   scope: {
     locales: ["en"],
@@ -19,6 +19,17 @@ const pageSet = {
 describe("getPageSetTemplateName", () => {
   it("prefers config.template over code_template", () => {
     expect(getPageSetTemplateName(pageSet)).toBe("new-template");
+  });
+
+  it("supports plain template ids in config.template", () => {
+    expect(
+      getPageSetTemplateName({
+        ...pageSet,
+        config: {
+          template: "new-template",
+        },
+      })
+    ).toBe("new-template");
   });
 
   it("falls back to code_template when config.template is blank", () => {

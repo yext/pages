@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getDocumentTemplateName } from "./resolveTemplateName.js";
+import { getDocumentTemplateName, getTemplateIdFromConfigTemplate } from "./resolveTemplateName.js";
 
 const baseDocument = {
   __: {
@@ -19,7 +19,7 @@ describe("getDocumentTemplateName", () => {
           },
         }),
       })
-    ).toBe("accounts/123/visualEditorTemplates/main");
+    ).toBe("main");
   });
 
   it("supports _pageset when it is already an object", () => {
@@ -32,7 +32,7 @@ describe("getDocumentTemplateName", () => {
           },
         },
       })
-    ).toBe("accounts/123/visualEditorTemplates/main");
+    ).toBe("main");
   });
 
   it("falls back when _pageset cannot be parsed", () => {
@@ -83,5 +83,15 @@ describe("getDocumentTemplateName", () => {
         },
       })
     ).toBe("page-set-name");
+  });
+});
+
+describe("getTemplateIdFromConfigTemplate", () => {
+  it("extracts the trailing template id from a resource name", () => {
+    expect(getTemplateIdFromConfigTemplate("accounts/123/visualEditorTemplates/main")).toBe("main");
+  });
+
+  it("returns plain template ids unchanged", () => {
+    expect(getTemplateIdFromConfigTemplate("main")).toBe("main");
   });
 });

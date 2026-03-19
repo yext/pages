@@ -1,5 +1,8 @@
 import { spawn } from "child_process";
-import { normalizeTemplateName } from "../../../common/src/template/internal/resolveTemplateName.js";
+import {
+  getTemplateIdFromConfigTemplate,
+  normalizeTemplateName,
+} from "../../../common/src/template/internal/resolveTemplateName.js";
 
 export type PageSetConfig = {
   name: string;
@@ -21,7 +24,8 @@ export type PageSetConfig = {
  */
 export const getPageSetTemplateName = (pageSet: PageSetConfig): string | undefined => {
   return (
-    normalizeTemplateName(pageSet.config?.template) ?? normalizeTemplateName(pageSet.code_template)
+    getTemplateIdFromConfigTemplate(pageSet.config?.template) ??
+    normalizeTemplateName(pageSet.code_template)
   );
 };
 
