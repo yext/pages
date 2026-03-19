@@ -19,6 +19,7 @@ import send404 from "./send404.js";
 import { findStaticTemplateModuleAndDocBySlug } from "../ssr/findMatchingStaticTemplate.js";
 import {
   getInPlatformPageSetDocuments,
+  getPageSetTemplateName,
   PageSetConfig,
 } from "../ssr/inPlatformPageSets.js";
 
@@ -86,26 +87,34 @@ export const serverRenderRoute =
         return;
       }
 
-      // Look up the template by code_template if in-platform or feature if in-repo
-      const templateModuleInternal =
-        siteId && pageSet
-          ? await findTemplateModuleInternalByName(
-              vite,
-              pageSet.code_template,
-              templateFilepaths,
-              true
-            )
-          : await findTemplateModuleInternalByName(
-              vite,
-              feature,
-              templateFilepaths,
-              false
-            );
+      // Look up the template by the in-platform configured template if present, otherwise
+      // fall back to the legacy code_template value.
+      const isInPlatformPageSet = Boolean(siteId && pageSet);
+      let templateName = feature;
+      if (isInPlatformPageSet && pageSet) {
+        const pageSetTemplateName = getPageSetTemplateName(pageSet);
+        if (!pageSetTemplateName) {
+          send404(
+            res,
+            `Cannot find template for in-platform page set: ${pageSet.id}`
+          );
+          return;
+        }
+        templateName = pageSetTemplateName;
+      }
+
+      const templateModuleInternal = await findTemplateModuleInternalByName(
+        vite,
+        templateName,
+        templateFilepaths,
+        isInPlatformPageSet
+      );
+
       if (!templateModuleInternal) {
         send404(
           res,
-          pageSet
-            ? `Cannot find template: ${pageSet.code_template}`
+          isInPlatformPageSet
+            ? `Cannot find template: ${templateName}`
             : `Cannot find template corresponding to feature: ${feature}`
         );
         return;

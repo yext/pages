@@ -26,6 +26,7 @@ import path from "node:path";
 import { logWarning } from "../../../util/logError.js";
 import {
   getInPlatformPageSetDocuments,
+  getPageSetTemplateName,
   PageSetConfig,
 } from "../ssr/inPlatformPageSets.js";
 
@@ -53,10 +54,7 @@ export const indexPage =
       const { accountId, universe } = parseYextrcContents();
       if (accountId !== undefined && universe !== undefined) {
         const partition = getPartition(Number(accountId));
-        const accountUrl = `https://${getYextUrlForPartition(
-          universe,
-          partition
-        )}/s/${accountId}/`;
+        const accountUrl = `https://${getYextUrlForPartition(universe, partition)}/s/${accountId}/`;
         accountLink = `
           <span class="link-container">
             <a target="_blank" rel="noopener noreferrer" href="${accountUrl}">
@@ -142,11 +140,7 @@ export const indexPage =
                     </tr>
                   </thead>
                   <tbody>
-                    ${createEntityPageListItems(
-                      localDataManifest,
-                      templateName,
-                      useProdURLs
-                    )}
+                    ${createEntityPageListItems(localDataManifest, templateName, useProdURLs)}
                   </tbody>
                 </table>`,
             ""
@@ -182,7 +176,7 @@ export const indexPage =
                 (await pageSetAccumulator) +
                 `<h4>
                 ${pageSetConfig.display_name}
-                pages [template: ${pageSetConfig.code_template}] (${
+                pages [template: ${getPageSetTemplateName(pageSetConfig) ?? "unknown"}] (${
                   (documents?.filter((d) => !useProdURLs || d.slug) || [])
                     .length
                 }):
@@ -195,11 +189,7 @@ export const indexPage =
                     </tr>
                   </thead>
                   <tbody>
-                    ${createInPlatformPageSetsItems(
-                      documents,
-                      pageSetConfig.id,
-                      useProdURLs
-                    )}
+                    ${createInPlatformPageSetsItems(documents, pageSetConfig.id, useProdURLs)}
                   </tbody>
                 </table>`
               );
@@ -413,11 +403,7 @@ const createInPlatformPageSetsItems = (
            </a>
         </td>
         <td>
-          ${
-            accountId && universe
-              ? `<a href="${formatKnowledgeGraphLink(uid)}">${id}</a>`
-              : id
-          }
+          ${accountId && universe ? `<a href="${formatKnowledgeGraphLink(uid)}">${id}</a>` : id}
         </td>
     </tr>`
     );
