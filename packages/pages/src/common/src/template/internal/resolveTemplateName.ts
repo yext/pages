@@ -27,7 +27,7 @@ export const getDocumentTemplateName = (document: Record<string, any>): string |
 
 // getVisualEditorTemplateId extracts the template ID from the visualEditorTemplate
 // which comes in the format of "accounts/{accountId}/visualEditorTemplates/{templateId}"
-const getVisualEditorTemplateId = (value: unknown): string | undefined => {
+export const getVisualEditorTemplateId = (value: unknown): string | undefined => {
   const normalizedTemplateName = normalizeTemplateName(value);
   if (!normalizedTemplateName) {
     return undefined;

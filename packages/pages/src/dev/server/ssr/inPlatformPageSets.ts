@@ -1,6 +1,6 @@
 import { spawn } from "child_process";
 import {
-  getTemplateIdFromConfigTemplate,
+  getVisualEditorTemplateId,
   normalizeTemplateName,
 } from "../../../common/src/template/internal/resolveTemplateName.js";
 
@@ -24,7 +24,7 @@ export type PageSetConfig = {
  */
 export const getPageSetTemplateName = (pageSet: PageSetConfig): string | undefined => {
   return (
-    getTemplateIdFromConfigTemplate(pageSet.config?.template) ??
+    getVisualEditorTemplateId(pageSet.config?.template) ??
     normalizeTemplateName(pageSet.code_template)
   );
 };
