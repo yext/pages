@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getDocumentTemplateName, getTemplateIdFromConfigTemplate } from "./resolveTemplateName.js";
+import { getDocumentTemplateName, getVisualEditorTemplateId } from "./resolveTemplateName.js";
 
 const baseDocument = {
   __: {
@@ -86,12 +86,12 @@ describe("getDocumentTemplateName", () => {
   });
 });
 
-describe("getTemplateIdFromConfigTemplate", () => {
+describe("getVisualEditorTemplateId", () => {
   it("extracts the trailing template id from a resource name", () => {
-    expect(getTemplateIdFromConfigTemplate("accounts/123/visualEditorTemplates/main")).toBe("main");
+    expect(getVisualEditorTemplateId("accounts/123/visualEditorTemplates/main")).toBe("main");
   });
 
   it("returns plain template ids unchanged", () => {
-    expect(getTemplateIdFromConfigTemplate("main")).toBe("main");
+    expect(getVisualEditorTemplateId("main")).toBe("main");
   });
 });
