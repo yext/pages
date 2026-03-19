@@ -1,15 +1,32 @@
 import { spawn } from "child_process";
+import {
+  getVisualEditorTemplateId,
+  normalizeTemplateName,
+} from "../../../common/src/template/internal/resolveTemplateName.js";
 
 export type PageSetConfig = {
   name: string;
   id: string;
-  code_template: string;
+  code_template?: string;
+  config?: {
+    template?: string;
+  };
   scope: {
     locales: string[];
     saved_filters: string[];
     entity_types: string[];
   };
   display_name: string;
+};
+
+/*
+ * getPageSetTemplateName gets the template name for a fetched pageset, as opposed to the pageset on the document.
+ */
+export const getPageSetTemplateName = (pageSet: PageSetConfig): string | undefined => {
+  return (
+    getVisualEditorTemplateId(pageSet.config?.template) ??
+    normalizeTemplateName(pageSet.code_template)
+  );
 };
 
 export const getInPlatformPageSets = async (siteId: number): Promise<PageSetConfig[]> => {

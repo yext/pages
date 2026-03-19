@@ -21,7 +21,11 @@ import { getPartition } from "../../../util/partition.js";
 import { getYextUrlForPartition } from "../../../util/url.js";
 import path from "node:path";
 import { logWarning } from "../../../util/logError.js";
-import { getInPlatformPageSetDocuments, PageSetConfig } from "../ssr/inPlatformPageSets.js";
+import {
+  getInPlatformPageSetDocuments,
+  getPageSetTemplateName,
+  PageSetConfig,
+} from "../ssr/inPlatformPageSets.js";
 
 type Props = {
   vite: ViteDevServer;
@@ -161,7 +165,7 @@ export const indexPage =
               (await pageSetAccumulator) +
               `<h4>
                 ${pageSetConfig.display_name}
-                pages [template: ${pageSetConfig.code_template}] (${
+                pages [template: ${getPageSetTemplateName(pageSetConfig) ?? "unknown"}] (${
                   (documents?.filter((d) => !useProdURLs || d.slug) || []).length
                 }):
               </h4>

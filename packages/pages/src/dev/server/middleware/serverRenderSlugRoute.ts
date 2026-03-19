@@ -5,6 +5,7 @@ import { findTemplateModuleInternalByName } from "../ssr/findTemplateModuleInter
 import { ProjectStructure } from "../../../common/src/project/structure.js";
 import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { TemplateRenderProps } from "../../../common/src/template/types.js";
+import { getDocumentTemplateName } from "../../../common/src/template/internal/resolveTemplateName.js";
 import sendAppHTML from "./sendAppHTML.js";
 import { generateTestDataForSlug } from "../ssr/generateTestData.js";
 import { getLocalEntityPageDataForSlug } from "../ssr/getLocalData.js";
@@ -57,6 +58,7 @@ export const serverRenderSlugRoute =
 
       // If in-platform page sets exist, try to match the slug to a page set
       let document;
+      let isInPlatformDocument = false;
       if (siteId && inPlatformPageSets.length) {
         for (const ps of inPlatformPageSets) {
           document = (
@@ -65,6 +67,7 @@ export const serverRenderSlugRoute =
             })
           )?.[0];
           if (document) {
+            isInPlatformDocument = true;
             break;
           }
         }
@@ -80,15 +83,19 @@ export const serverRenderSlugRoute =
         return;
       }
 
-      const feature = document.__.codeTemplate || document.__.name;
+      const templateName = getDocumentTemplateName(document);
+      if (!templateName) {
+        send404(res, `Cannot find template corresponding to slug: ${slug}`);
+        return;
+      }
       const templateModuleInternal = await findTemplateModuleInternalByName(
         vite,
-        feature,
+        templateName,
         templateFilepaths,
-        Boolean(document.__.codeTemplate)
+        isInPlatformDocument
       );
       if (!templateModuleInternal) {
-        send404(res, `Cannot find template corresponding to feature: ${feature}`);
+        send404(res, `Cannot find template corresponding to feature: ${templateName}`);
         return;
       }
 
