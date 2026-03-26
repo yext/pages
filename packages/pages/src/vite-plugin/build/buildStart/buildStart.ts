@@ -10,6 +10,9 @@ import { convertToPosixPath } from "../../../common/src/template/paths.js";
 import { getGlobalClientServerRenderTemplates } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { readdir } from "fs/promises";
 import { NormalizedInputOptions } from "rollup";
+import { loadModules } from "../../../common/src/loader/vite.js";
+import { convertTemplateModuleToTemplateModuleInternal } from "../../../common/src/template/internal/types.js";
+import { TemplateModule } from "../../../common/src/template/types.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async function (this: PluginContext, inputOptions: NormalizedInputOptions): Promise<void> {
@@ -114,6 +117,10 @@ const yextBanner = `
       Built with the Yext SSG Plugin
 `;
 
+const EDIT_TEMPLATE_NAME = "edit";
+const EDIT_TEMPLATE_SERVER_EXTENSIONS = [".tsx", ".jsx", ".js", ".ts"];
+const editTemplateEntryNames = new Map<string, string>();
+
 /**
  * Produces a {@link InputOption} by adding all templates at {@link rootTemplateDir} and
  * {@link scopedTemplateDir} to be output at {@code server/}. If there are two files
@@ -126,30 +133,43 @@ const yextBanner = `
  * @param projectStructure
  * @returns
  */
-const discoverInputs = async (
+export const discoverInputs = async (
   templatePaths: Path[],
   redirectPaths: Path[],
   projectStructure: ProjectStructure
 ): Promise<{ [entryAlias: string]: string }> => {
   const entryPoints: Record<string, string> = {};
-  const updateEntryPoints = async (dir: string, isRedirect: boolean) =>
-    (await readdir(dir, { withFileTypes: true }))
+  const addedTemplateFilenames = new Set<string>();
+  const updateEntryPoints = async (dir: string, isRedirect: boolean) => {
+    const templates = (await readdir(dir, { withFileTypes: true }))
       .filter((dirent) => !dirent.isDirectory())
       .map((file) => file.name)
-      .filter((f) => f !== "_client17.tsx" && f !== "_client.tsx" && f !== "_server.tsx")
-      .forEach((template) => {
-        const parsedPath = parse(template);
-        const bundlePath = isRedirect
-          ? projectStructure.config.subfolders.redirectBundle
-          : template.includes(".client")
-            ? projectStructure.config.subfolders.clientBundle
-            : projectStructure.config.subfolders.serverBundle;
-        const outputPath = `${bundlePath}/${parsedPath.name.replace(".client", "")}`;
-        if (entryPoints[outputPath]) {
-          return;
-        }
-        entryPoints[outputPath] = path.join(dir, template);
-      });
+      .filter((f) => f !== "_client17.tsx" && f !== "_client.tsx" && f !== "_server.tsx");
+
+    for (const template of templates) {
+      const parsedPath = parse(template);
+      const bundlePath = isRedirect
+        ? projectStructure.config.subfolders.redirectBundle
+        : template.includes(".client")
+          ? projectStructure.config.subfolders.clientBundle
+          : projectStructure.config.subfolders.serverBundle;
+      const templateFilepath = path.join(dir, template);
+      const duplicateTemplateKey = `${bundlePath}:${template}`;
+      if (addedTemplateFilenames.has(duplicateTemplateKey)) {
+        continue;
+      }
+
+      const entryName = isRedirect
+        ? parsedPath.name.replace(".client", "")
+        : await resolveTemplateEntryName(templateFilepath, projectStructure);
+      const outputPath = `${bundlePath}/${entryName}`;
+      if (entryPoints[outputPath]) {
+        continue;
+      }
+      addedTemplateFilenames.add(duplicateTemplateKey);
+      entryPoints[outputPath] = templateFilepath;
+    }
+  };
 
   for (const templatePath of templatePaths) {
     await updateEntryPoints(templatePath.getAbsolutePath(), false);
@@ -159,6 +179,55 @@ const discoverInputs = async (
   }
 
   return { ...entryPoints, ...discoverRenderTemplates(projectStructure) };
+};
+
+export const resolveTemplateEntryName = async (
+  templateFilepath: string,
+  projectStructure: ProjectStructure
+): Promise<string> => {
+  const parsedPath = parse(templateFilepath);
+  const templateName = parsedPath.name.replace(".client", "");
+  if (templateName !== EDIT_TEMPLATE_NAME) {
+    return templateName;
+  }
+
+  const editTemplateFilepath = findEditServerTemplateFilepath(templateFilepath);
+  const cachedEntryName = editTemplateEntryNames.get(editTemplateFilepath);
+  if (cachedEntryName) {
+    return cachedEntryName;
+  }
+
+  const [importedTemplateModule] = await loadModules(
+    [editTemplateFilepath],
+    true,
+    projectStructure
+  );
+  const templateModuleInternal = convertTemplateModuleToTemplateModuleInternal(
+    editTemplateFilepath,
+    importedTemplateModule.module as TemplateModule<any, any>,
+    false
+  );
+
+  editTemplateEntryNames.set(editTemplateFilepath, templateModuleInternal.config.name);
+  return templateModuleInternal.config.name;
+};
+
+const findEditServerTemplateFilepath = (templateFilepath: string): string => {
+  if (!templateFilepath.includes(`${EDIT_TEMPLATE_NAME}.client.`)) {
+    return templateFilepath;
+  }
+
+  const templateDir = path.dirname(templateFilepath);
+  for (const extension of EDIT_TEMPLATE_SERVER_EXTENSIONS) {
+    const serverTemplateFilepath = path.join(templateDir, `${EDIT_TEMPLATE_NAME}${extension}`);
+    if (fs.existsSync(serverTemplateFilepath)) {
+      return serverTemplateFilepath;
+    }
+  }
+
+  throw new Error(
+    `Could not find a sibling ${EDIT_TEMPLATE_NAME} template for ${templateFilepath}`
+  );
 };
 
 /**x

@@ -5,17 +5,14 @@ import {
   getHydrationTemplate,
   getServerTemplatePlugin,
 } from "../../../../common/src/template/hydration.js";
-import path from "node:path";
 import { PluginRenderTemplates } from "./templateUtils.js";
-import { ProjectStructure } from "../../../../common/src/project/structure.js";
 
 export const reactWrapper = async <T extends TemplateRenderProps>(
   props: T,
   templateModuleInternal: TemplateModuleInternal<any, any>,
   hydrate: boolean,
   pluginRenderTemplates: PluginRenderTemplates,
-  manifest: Manifest,
-  projectStructure: ProjectStructure
+  manifest: Manifest
 ): Promise<string | undefined> => {
   if (!manifest) {
     throw new Error("Manifest is undefined");
@@ -25,9 +22,8 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
     : undefined;
 
   const templateFilepath = findOriginalTemplatePathInManifest(
-    projectStructure,
     manifest,
-    `${templateModuleInternal.templateName}.tsx`
+    manifest.serverPaths[templateModuleInternal.config.name]
   );
   if (!templateFilepath) {
     return;
@@ -74,37 +70,26 @@ export const reactWrapper = async <T extends TemplateRenderProps>(
 };
 
 /**
- * Finds the original template path based on the template name and scope. If a scope is set it
- * first tries to find the scoped template, otherwise falls back to the root templates. Note that
- * a template of the same name cannot exist in the scoped folder and the root. The scope overrides
- * it.
- *
- * @param templateName
- * @param manifest
+ * Finds the original template path by matching the emitted server bundle back to the Vite manifest.
  */
 export const findOriginalTemplatePathInManifest = (
-  projectStructure: ProjectStructure,
   manifest: Manifest,
-  templateName: string // with extension
+  serverBundlePath: string | undefined
 ) => {
-  // src/templates
-  const templatesRoot = path.join(
-    projectStructure.config.rootFolders.source,
-    projectStructure.config.subfolders.templates
-  );
-
-  if (projectStructure.config.scope) {
-    const scopedFilepath = path.join(templatesRoot, projectStructure.config.scope, templateName);
-
-    if (Object.keys(manifest.bundlerManifest).some((key) => key.includes(scopedFilepath))) {
-      return scopedFilepath;
-    }
+  if (!serverBundlePath) {
+    console.error("Template server bundle path was not found in manifest");
+    return;
   }
 
-  const filepath = path.join(templatesRoot, templateName);
-  if (Object.keys(manifest.bundlerManifest).some((key) => key.includes(filepath))) {
-    return filepath;
+  const matchingEntry = Object.entries(manifest.bundlerManifest ?? {}).find(([, info]) => {
+    return (
+      typeof info === "object" && info !== null && "file" in info && info.file === serverBundlePath
+    );
+  });
+
+  if (matchingEntry) {
+    return matchingEntry[0];
   }
 
-  console.error(`Template ${templateName} not found in manifest`);
+  console.error(`Template bundle ${serverBundlePath} not found in manifest`);
 };

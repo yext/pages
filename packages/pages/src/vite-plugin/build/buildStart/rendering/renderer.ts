@@ -37,13 +37,7 @@ export default async (
   const template = await readTemplateModules(feature, manifest, projectStructure);
   if (template) {
     const pluginRenderTemplates = await getPluginRenderTemplates(manifest, projectStructure);
-    return await generateTemplateResponses(
-      template,
-      props,
-      pluginRenderTemplates,
-      manifest,
-      projectStructure
-    );
+    return await generateTemplateResponses(template, props, pluginRenderTemplates, manifest);
   }
 
   const redirect = await readRedirectModules(feature, manifest, projectStructure);

@@ -8,7 +8,6 @@ import {
 } from "../../../../common/src/template/types.js";
 import { generateTemplateResponses } from "./templateUtils.js";
 import path from "node:path";
-import { ProjectStructure } from "../../../../common/src/project/structure.js";
 
 const baseTemplateModule: TemplateModuleInternal<any, any> = {
   path: "path",
@@ -30,7 +29,51 @@ const manifest: Manifest = {
   redirectPaths: {},
   clientPaths: {},
   renderPaths: {},
-  projectStructure: new ProjectStructure().config,
+  projectStructure: {
+    rootFolders: {
+      source: "src",
+      dist: "dist",
+      sitesConfig: "sites-config",
+      functions: "functions",
+    },
+    subfolders: {
+      templates: "templates",
+      modules: "modules",
+      redirects: "redirects",
+      serverlessFunctions: "functions",
+      assets: "assets",
+      public: "public",
+      clientBundle: "client",
+      serverBundle: "server",
+      redirectBundle: "redirect",
+      renderBundle: "render",
+      renderer: "renderer",
+      static: "static",
+      plugin: "plugin",
+    },
+    sitesConfigFiles: {
+      ci: "ci.json",
+      features: "features.json",
+      siteStream: "site-stream.json",
+      serving: "serving.json",
+      sitemap: "sitemap.json",
+      redirects: "redirects.csv",
+      auth: "auth.json",
+    },
+    distConfigFiles: {
+      templates: "templates.json",
+      artifacts: "artifacts.json",
+      functionMetadata: "functionMetadata.json",
+    },
+    rootFiles: {
+      config: "config.yaml",
+      templateManifest: ".template-manifest.json",
+    },
+    envVarConfig: {
+      envVarDir: "",
+      envVarPrefix: "YEXT_PUBLIC",
+    },
+  },
   bundlerManifest: {},
 };
 
@@ -62,8 +105,6 @@ const serverRenderTemplate: ServerRenderTemplate = {
 };
 
 describe("generateResponses", () => {
-  const projectStructure = new ProjectStructure();
-
   it("calls transformProps when transformProps is defined", async () => {
     const fn = vi.fn((props) => props);
     await generateTemplateResponses(
@@ -73,8 +114,7 @@ describe("generateResponses", () => {
         client: path.join(process.cwd(), "src/common/src/template/internal/_client.tsx"),
         server: serverRenderTemplate,
       },
-      manifest,
-      projectStructure
+      manifest
     );
     expect(fn).toHaveBeenCalled();
   });
@@ -88,8 +128,7 @@ describe("generateResponses", () => {
         client: path.join(process.cwd(), "src/common/src/template/internal/_client.tsx"),
         server: serverRenderTemplate,
       },
-      manifest,
-      projectStructure
+      manifest
     );
     expect(fn).toHaveBeenCalled();
   });
