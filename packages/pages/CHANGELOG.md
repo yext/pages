@@ -1,3 +1,9 @@
+#### 1.2.10 (2026-04-22)
+
+##### Bug Fixes
+
+*  getDocumentByLocale not filtering out unused templates ([#611](https://github.com/yext/pages/pull/611)) ([70ecff08](https://github.com/yext/pages/commit/70ecff08348f4be4aded7308aa8c51d16fc29b1e))
+
 #### 1.2.9 (2026-01-12)
 
 ##### Chores
