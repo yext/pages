@@ -273,12 +273,20 @@ const getDocumentBySlug = (
 
   // Find the slugField where the slug value matches
   const matchingSlugFieldsSet: Set<string> = new Set();
+  // Find the actual templates that have entity data (based on their scope)
+  const templateModulesMatchingDocuments: Set<TemplateModuleInternal<any, any>> = new Set();
   for (const document of filteredDocuments) {
     for (const slugField of slugFields) {
       if (document[slugField] === slug) {
         matchingSlugFieldsSet.add(slugField);
       }
     }
+
+    templateModuleCollection.forEach((templateModule) => {
+      if (document.__.name === templateModule.config.name) {
+        templateModulesMatchingDocuments.add(templateModule);
+      }
+    });
   }
 
   const matchingSlugFields = Array.from(matchingSlugFieldsSet);
@@ -295,7 +303,7 @@ const getDocumentBySlug = (
 
   // Find the template that uses the slugfield
   const matchingTemplateModules: TemplateModuleInternal<any, any>[] = [];
-  templateModuleCollection.forEach((templateModule) => {
+  templateModulesMatchingDocuments.forEach((templateModule) => {
     const slugField = templateModule.config?.slugField || "slug";
     if (slugField === matchingSlugFields[0]) {
       matchingTemplateModules.push(templateModule);

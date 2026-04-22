@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { generateTestDataForPage } from "./generateTestData.js";
+import {
+  generateTestDataForPage,
+  generateTestDataForSlug,
+} from "./generateTestData.js";
 import { EventEmitter } from "stream";
 import {
   CLI_BOILERPLATE_WITH_UPGRADE_LINES,
@@ -17,6 +20,11 @@ import {
 } from "../../../../tests/fixtures/feature_config.js";
 import { Socket } from "net";
 import { ProjectStructure } from "../../../common/src/project/structure.js";
+import { getTemplateFilepathsFromProjectStructure } from "../../../common/src/template/internal/getTemplateFilepaths.js";
+import { loadTemplateModuleCollectionUsingVite } from "../../../common/src/template/loader/loader.js";
+import { getTemplatesConfig } from "../../../generate/templates/createTemplatesJson.js";
+import type { FeaturesConfig } from "../../../common/src/feature/features.js";
+import type { TemplateModuleCollection } from "../../../common/src/template/loader/loader.js";
 
 const mockParentProcessStdout = vi.mocked(process.stdout) as any;
 mockParentProcessStdout.write = vi.fn();
@@ -31,6 +39,18 @@ let mockChildProcess = {
   emit: mockChildProcessEventEmitter.emit,
 };
 
+vi.mock("../../../common/src/template/internal/getTemplateFilepaths.js", () => ({
+  getTemplateFilepathsFromProjectStructure: vi.fn(),
+}));
+
+vi.mock("../../../common/src/template/loader/loader.js", () => ({
+  loadTemplateModuleCollectionUsingVite: vi.fn(),
+}));
+
+vi.mock("../../../generate/templates/createTemplatesJson.js", () => ({
+  getTemplatesConfig: vi.fn(),
+}));
+
 afterEach(() => {
   // After each unit test, destroy the streams associated with the previous
   // and create fresh ones.
@@ -43,6 +63,9 @@ afterEach(() => {
 
   // Reset the mockParentProcessStdout's write function.
   mockParentProcessStdout.write = vi.fn();
+  mockGetTemplateFilepathsFromProjectStructure.mockReset();
+  mockLoadTemplateModuleCollectionUsingVite.mockReset();
+  mockGetTemplatesConfig.mockReset();
 
   mockChildProcess = {
     stdin: new Socket(),
@@ -63,6 +86,14 @@ vi.mock("child_process", () => ({
     return mockChildProcess;
   }),
 }));
+
+const mockGetTemplateFilepathsFromProjectStructure = vi.mocked(
+  getTemplateFilepathsFromProjectStructure
+);
+const mockLoadTemplateModuleCollectionUsingVite = vi.mocked(
+  loadTemplateModuleCollectionUsingVite
+);
+const mockGetTemplatesConfig = vi.mocked(getTemplatesConfig);
 
 describe("generateTestDataForPage", () => {
   const projectStructure = new ProjectStructure();
@@ -254,5 +285,93 @@ describe("generateTestDataForPage", () => {
     expect(mockParentProcessStdout.write).toHaveBeenCalledWith(
       `Generated 1 files for stream "my-stream-id-1"\n`
     );
+  });
+});
+
+describe("generateTestDataForSlug", () => {
+  const projectStructure = new ProjectStructure();
+  const featuresConfig: FeaturesConfig = {
+    features: [
+      {
+        name: "location",
+        streamId: "location-stream",
+        templateType: "JS",
+        entityPageSet: {},
+      },
+      {
+        name: "faq",
+        streamId: "faq-stream",
+        templateType: "JS",
+        entityPageSet: {},
+      },
+    ],
+    streams: [],
+  };
+
+  it("ignores templates without matching documents when multiple templates share a slug field", async () => {
+    const templateModules = new Map([
+      [
+        "location",
+        {
+          config: {
+            name: "location",
+            templateType: "entity",
+            slugField: "slug",
+          },
+        },
+      ],
+      [
+        "faq",
+        {
+          config: {
+            name: "faq",
+            templateType: "entity",
+            slugField: "slug",
+          },
+        },
+      ],
+    ]) as TemplateModuleCollection;
+
+    const generatedDocuments = [
+      {
+        __: {
+          name: "location",
+          entityPageSet: {},
+        },
+        slug: "target-slug",
+      },
+      {
+        __: {
+          name: "location",
+          entityPageSet: {},
+        },
+        slug: "different-slug",
+      },
+    ];
+
+    mockGetTemplateFilepathsFromProjectStructure.mockReturnValue([
+      "src/templates/location.tsx",
+      "src/templates/faq.tsx",
+    ]);
+    mockLoadTemplateModuleCollectionUsingVite.mockResolvedValue(templateModules);
+    mockGetTemplatesConfig.mockReturnValue(featuresConfig);
+
+    const testRunnerPromise = generateTestDataForSlug(
+      mockParentProcessStdout,
+      {} as any,
+      "target-slug",
+      projectStructure
+    );
+
+    await Promise.resolve();
+
+    mockChildProcess.stdout.emit(
+      "data",
+      JSON.stringify(generatedDocuments, null, "  ")
+    );
+    mockChildProcess.emit("close");
+
+    await expect(testRunnerPromise).resolves.toEqual(generatedDocuments[0]);
+    expect(mockParentProcessStdout.write).toBeCalledTimes(0);
   });
 });
