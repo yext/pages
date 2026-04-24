@@ -98,8 +98,9 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
           if (typeof process.env.YEXT_SITE_ARGUMENT !== "undefined") {
             try {
               domain = new URL(
-                "https://" + JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
-              ).toString();
+                "https://" +
+                  JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
+              ).origin;
             } catch (_) {
               logErrorAndExit("Cannot parse YEXT_SITE_ARGUMENT");
             }
