@@ -1,3 +1,9 @@
+#### 1.2.11 (2026-04-24)
+
+##### Bug Fixes
+
+*  module asset paths had double slash in production ([#612](https://github.com/yext/pages/pull/612)) ([0f9dba0a](https://github.com/yext/pages/commit/0f9dba0a0208d799152373e99c8cbc537bc37500))
+
 #### 1.2.10 (2026-04-22)
 
 ##### Bug Fixes
