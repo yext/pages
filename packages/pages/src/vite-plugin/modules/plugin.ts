@@ -109,7 +109,7 @@ export const buildModules = async (
               domain = new URL(
                 "https://" +
                   JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
-              ).toString();
+              ).origin;
             } catch (_) {
               logErrorAndExit("Cannot parse YEXT_SITE_ARGUMENT");
             }
