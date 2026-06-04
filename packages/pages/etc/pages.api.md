@@ -85,7 +85,7 @@ export type GetDestination<T extends TemplateProps> = (props: T) => string;
 export type GetHeadConfig<T extends TemplateRenderProps> = (props: T) => HeadConfig;
 
 // @public
-export const getLang: <T extends TemplateRenderProps<any>>(
+export const getLang: <T extends TemplateRenderProps>(
   headConfig: HeadConfig | undefined,
   props: T
 ) => string;
