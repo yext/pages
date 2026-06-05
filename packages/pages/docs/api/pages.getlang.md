@@ -9,10 +9,14 @@ Function that takes in a [HeadConfig](./pages.headconfig.md) interface and a pro
 **Signature:**
 
 ```typescript
+<<<<<<< HEAD
 getLang: <T extends TemplateRenderProps<any>>(
   headConfig: HeadConfig | undefined,
   props: T
 ) => string;
+=======
+getLang: <T extends TemplateRenderProps>(headConfig: HeadConfig | undefined, props: T) => string;
+>>>>>>> 8ba6b60 (chore: update minimatch (#614))
 ```
 
 ## Parameters
