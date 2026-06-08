@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { build } from "vite";
 import { scopedViteConfigPath } from "../util/viteConfig.js";
+import { applyReverseProxyBuildOverride } from "../util/reverseProxyBuildOverride.js";
 
 /**
  * The arguments passed to the build CLI command.
@@ -10,10 +11,18 @@ export interface BuildArgs {
   scope?: string;
   pluginFilesizeLimit: number;
   pluginTotalFilesizeLimit: number;
+  reverseProxyPrefix?: string;
 }
 
+/**
+ * Applies build-time repo overrides, then runs the Pages production build.
+ */
 const handler = async (buildArgs: BuildArgs) => {
-  const { scope, pluginFilesizeLimit, pluginTotalFilesizeLimit } = buildArgs;
+  const { scope, pluginFilesizeLimit, pluginTotalFilesizeLimit, reverseProxyPrefix } = buildArgs;
+
+  if (reverseProxyPrefix) {
+    applyReverseProxyBuildOverride(scope, reverseProxyPrefix);
+  }
 
   // Pass CLI arguments as env variables to use in vite-plugin
   if (scope) {
@@ -38,5 +47,6 @@ export const buildCommand = (program: Command) => {
       "The max size of all plugin files combined in MB",
       "10"
     )
+    .option("--reverse-proxy-prefix <string>", "The reverse proxy prefix to apply to the build")
     .action(handler);
 };

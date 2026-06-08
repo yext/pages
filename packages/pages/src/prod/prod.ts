@@ -5,16 +5,31 @@ interface ProdArgs {
   noBuild?: boolean;
   noRender?: boolean;
   scope?: string;
+  reverseProxyPrefix?: string;
 }
 
-const handler = async ({ noBuild, noRender, scope }: ProdArgs) => {
+/**
+ * Runs the local production flow by chaining build, render, and serve commands.
+ */
+const handler = async ({ noBuild, noRender, scope, reverseProxyPrefix }: ProdArgs) => {
   const command = "yext pages";
 
   if (!noBuild) {
-    await runSubprocess(command, ["build", scope ? `--scope ${scope}` : ""]);
+    const buildArgs = ["build"];
+    if (scope) {
+      buildArgs.push(`--scope ${scope}`);
+    }
+    if (reverseProxyPrefix) {
+      buildArgs.push(`--reverse-proxy-prefix ${reverseProxyPrefix}`);
+    }
+    await runSubprocess(command, buildArgs);
   }
   if (!noRender) {
-    await runSubprocess(command, ["render", scope ? `--scope ${scope}` : ""]);
+    const renderArgs = ["render"];
+    if (scope) {
+      renderArgs.push(`--scope ${scope}`);
+    }
+    await runSubprocess(command, renderArgs);
   }
   await runSubprocess(command, ["serve"]);
 };
@@ -26,5 +41,9 @@ export const prodCommand = (program: Command) => {
     .option("--noBuild", "Disable build step")
     .option("--noRender", "Disable render step")
     .option("--scope  <string>", "The subfolder to scope from")
+    .option(
+      "--reverse-proxy-prefix <string>",
+      "The reverse proxy prefix to apply to the build step"
+    )
     .action(handler);
 };
