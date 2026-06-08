@@ -3,15 +3,15 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  applyReverseProxyBuildOverride,
-  parseReverseProxyBuildOverride,
+  applyReverseProxyOverride,
+  buildReverseProxyOverride,
   updateConfigYaml,
   updateViteConfig,
-} from "./reverseProxyBuildOverride.js";
+} from "./reverseProxyOverride.js";
 
 describe("parseReverseProxyBuildOverride", () => {
   it("returns the derived build values", () => {
-    expect(parseReverseProxyBuildOverride("www.brand.com/locations")).toEqual({
+    expect(buildReverseProxyOverride("www.brand.com/locations")).toEqual({
       reverseProxyPrefix: "www.brand.com/locations",
       assetsDir: "locations/assets",
       dynamicRoute: {
@@ -23,7 +23,7 @@ describe("parseReverseProxyBuildOverride", () => {
   });
 
   it("supports nested subpaths", () => {
-    expect(parseReverseProxyBuildOverride("www.brand.com/foo/bar")).toEqual({
+    expect(buildReverseProxyOverride("www.brand.com/foo/bar")).toEqual({
       reverseProxyPrefix: "www.brand.com/foo/bar",
       assetsDir: "foo/bar/assets",
       dynamicRoute: {
@@ -35,13 +35,11 @@ describe("parseReverseProxyBuildOverride", () => {
   });
 
   it("throws when the reverse proxy prefix has no slash", () => {
-    expect(() => parseReverseProxyBuildOverride("www.brand.com")).toThrow(
-      /Expected a host and subpath/
-    );
+    expect(() => buildReverseProxyOverride("www.brand.com")).toThrow(/Expected a host and subpath/);
   });
 
   it("throws when the reverse proxy prefix has an empty subpath", () => {
-    expect(() => parseReverseProxyBuildOverride("www.brand.com/")).toThrow(
+    expect(() => buildReverseProxyOverride("www.brand.com/")).toThrow(
       /Expected a non-empty subpath/
     );
   });
@@ -70,7 +68,7 @@ sitemap:
 `
       );
 
-      updateConfigYaml(configYamlPath, parseReverseProxyBuildOverride("www.brand.com/locations"));
+      updateConfigYaml(configYamlPath, buildReverseProxyOverride("www.brand.com/locations"));
 
       expect(fs.readFileSync(configYamlPath, "utf-8")).toContain(
         "reverseProxyPrefix: www.brand.com/locations"
@@ -95,12 +93,35 @@ sitemap:
 `
       );
 
-      updateConfigYaml(configYamlPath, parseReverseProxyBuildOverride("www.brand.com/locations"));
+      updateConfigYaml(configYamlPath, buildReverseProxyOverride("www.brand.com/locations"));
 
       expect(fs.readFileSync(configYamlPath, "utf-8")).toContain("from: /assets/*");
       expect(fs.readFileSync(configYamlPath, "utf-8")).toContain(
         "reverseProxyPrefix: www.brand.com/locations"
       );
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("preserves existing yaml comments when updating the file", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-config-yaml-"));
+    const configYamlPath = path.join(tempDir, "config.yaml");
+
+    try {
+      fs.writeFileSync(
+        configYamlPath,
+        `# serving comment
+serving:
+  # reverse proxy comment
+  reverseProxyPrefix: old.example.com/legacy
+`
+      );
+
+      updateConfigYaml(configYamlPath, buildReverseProxyOverride("www.brand.com/locations"));
+
+      expect(fs.readFileSync(configYamlPath, "utf-8")).toContain("# serving comment");
+      expect(fs.readFileSync(configYamlPath, "utf-8")).toContain("# reverse proxy comment");
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
@@ -156,6 +177,23 @@ export default defineConfig({
     }
   });
 
+  it("formats the config after updating assetsDir", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-vite-config-"));
+    const viteConfigPath = path.join(tempDir, "vite.config.js");
+
+    try {
+      fs.writeFileSync(viteConfigPath, 'export default {build:{assetsDir:"old/assets"}};\n');
+
+      updateViteConfig(viteConfigPath, "locations/assets");
+
+      expect(fs.readFileSync(viteConfigPath, "utf-8")).toBe(
+        'export default { build: { assetsDir: "locations/assets" } };\n'
+      );
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   it("fails clearly when the file cannot be safely updated", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-vite-config-"));
     const viteConfigPath = path.join(tempDir, "vite.config.js");
@@ -196,7 +234,7 @@ describe("applyReverseProxyBuildOverride", () => {
       );
       process.chdir(tempDir);
 
-      applyReverseProxyBuildOverride("brand", "www.brand.com/locations");
+      applyReverseProxyOverride("brand", "www.brand.com/locations");
 
       expect(fs.readFileSync(path.join(tempDir, "brand", "config.yaml"), "utf-8")).toContain(
         "reverseProxyPrefix: www.brand.com/locations"
@@ -226,7 +264,7 @@ describe("applyReverseProxyBuildOverride", () => {
       );
       process.chdir(tempDir);
 
-      expect(() => applyReverseProxyBuildOverride("brand", "www.brand.com/locations")).toThrow(
+      expect(() => applyReverseProxyOverride("brand", "www.brand.com/locations")).toThrow(
         /vite\.config\.js does not exist/
       );
     } finally {

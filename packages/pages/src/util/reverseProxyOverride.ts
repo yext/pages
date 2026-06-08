@@ -4,7 +4,7 @@ import { Node, ObjectLiteralExpression, Project, SyntaxKind } from "ts-morph";
 import YAML from "yaml";
 import logger from "../vite-plugin/log.js";
 
-export interface ReverseProxyBuildOverride {
+export interface ReverseProxyOverride {
   reverseProxyPrefix: string;
   assetsDir: string;
   dynamicRoute: {
@@ -18,9 +18,7 @@ export interface ReverseProxyBuildOverride {
  * Parses a reverse proxy prefix into the concrete build-time values needed to
  * update config.yaml and vite.config.js.
  */
-export const parseReverseProxyBuildOverride = (
-  reverseProxyPrefix: string
-): ReverseProxyBuildOverride => {
+export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReverseProxyOverride => {
   const firstSlashIndex = reverseProxyPrefix.indexOf("/");
   if (firstSlashIndex === -1) {
     throw new Error(
@@ -50,14 +48,14 @@ export const parseReverseProxyBuildOverride = (
  * Updates the scoped config.yaml and vite.config.js files that the build will
  * read so the normal build pipeline picks up the reverse proxy override.
  */
-export const applyReverseProxyBuildOverride = (
+export const applyReverseProxyOverride = (
   scope: string | undefined,
   reverseProxyPrefix: string
 ): void => {
   const finisher = logger.timedLog({
     startLog: "Applying reverse proxy override",
   });
-  const reverseProxyBuildOverride = parseReverseProxyBuildOverride(reverseProxyPrefix);
+  const reverseProxyBuildOverride = buildReverseProxyOverride(reverseProxyPrefix);
   const configYamlPath = path.resolve(scope ?? "", "config.yaml");
   const viteConfigPath = path.resolve(scope ?? "", "vite.config.js");
 
@@ -84,44 +82,61 @@ export const applyReverseProxyBuildOverride = (
  */
 export const updateConfigYaml = (
   configYamlPath: string,
-  reverseProxyBuildOverride: ReverseProxyBuildOverride
+  reverseProxyBuildOverride: ReverseProxyOverride
 ): void => {
   const finisher = logger.timedLog({
     startLog: "Updating config.yaml",
   });
-  const configYaml =
-    (YAML.parse(fs.readFileSync(configYamlPath, "utf-8")) as {
-      serving?: Record<string, unknown>;
-      dynamicRoutes?: Array<Record<string, unknown>>;
-      [key: string]: unknown;
-    }) ?? {};
+  const configYamlDoc = YAML.parseDocument(fs.readFileSync(configYamlPath, "utf-8"));
+  if (configYamlDoc.errors.length > 0) {
+    throw new Error(
+      `Cannot update ${configYamlPath}. Failed to parse config.yaml: ${configYamlDoc.errors[0]?.message}`
+    );
+  }
 
-  configYaml.serving = {
-    ...configYaml.serving,
-    reverseProxyPrefix: reverseProxyBuildOverride.reverseProxyPrefix,
-  };
+  if (!configYamlDoc.contents) {
+    configYamlDoc.contents = YAML.createNode({});
+  }
 
-  const routeToWrite: Record<string, unknown> = {
+  const servingNode = configYamlDoc.get("serving", true);
+  if (servingNode && !YAML.isMap(servingNode)) {
+    throw new Error(`Cannot update ${configYamlPath}. Expected serving to be a YAML mapping.`);
+  }
+
+  if (!servingNode) {
+    configYamlDoc.set("serving", {});
+  }
+
+  configYamlDoc.setIn(
+    ["serving", "reverseProxyPrefix"],
+    reverseProxyBuildOverride.reverseProxyPrefix
+  );
+
+  const routeToWrite = {
     from: reverseProxyBuildOverride.dynamicRoute.from,
     to: reverseProxyBuildOverride.dynamicRoute.to,
     status: reverseProxyBuildOverride.dynamicRoute.status,
   };
-  const dynamicRoutes = configYaml.dynamicRoutes ?? [];
-  const reverseProxyRouteIndex = dynamicRoutes.findIndex((route) => {
-    return route.from === reverseProxyBuildOverride.dynamicRoute.from;
-  });
-
-  if (reverseProxyRouteIndex === -1) {
-    configYaml.dynamicRoutes = [...dynamicRoutes, routeToWrite];
-  } else {
-    configYaml.dynamicRoutes = [...dynamicRoutes];
-    configYaml.dynamicRoutes[reverseProxyRouteIndex] = {
-      ...configYaml.dynamicRoutes[reverseProxyRouteIndex],
-      ...routeToWrite,
-    };
+  const dynamicRoutesNode = configYamlDoc.get("dynamicRoutes", true);
+  if (dynamicRoutesNode && !YAML.isSeq(dynamicRoutesNode)) {
+    throw new Error(`Cannot update ${configYamlPath}. Expected dynamicRoutes to be a YAML list.`);
   }
 
-  fs.writeFileSync(configYamlPath, YAML.stringify(configYaml));
+  if (!dynamicRoutesNode) {
+    configYamlDoc.set("dynamicRoutes", [routeToWrite]);
+  } else {
+    const reverseProxyRouteIndex = dynamicRoutesNode.items.findIndex((routeNode) => {
+      return YAML.isMap(routeNode) && routeNode.get("from", true)?.toJSON() === routeToWrite.from;
+    });
+
+    if (reverseProxyRouteIndex === -1) {
+      dynamicRoutesNode.add(routeToWrite);
+    } else {
+      dynamicRoutesNode.set(reverseProxyRouteIndex, routeToWrite);
+    }
+  }
+
+  fs.writeFileSync(configYamlPath, configYamlDoc.toString());
   finisher.succeed(
     `Updated ${path.relative(process.cwd(), configYamlPath) || "config.yaml"} for ${reverseProxyBuildOverride.reverseProxyPrefix}`
   );
@@ -173,42 +188,30 @@ export const updateViteConfig = (viteConfigPath: string, assetsDir: string): voi
     assetsDir: "${assetsDir}"
   }`,
     });
-    sourceFile.saveSync();
-    finisher.succeed(
-      `Updated ${path.relative(process.cwd(), viteConfigPath) || "vite.config.js"} with build.assetsDir=${assetsDir}`
-    );
-    return;
-  }
-
-  if (!buildProperty.isKind(SyntaxKind.PropertyAssignment)) {
+  } else if (!buildProperty.isKind(SyntaxKind.PropertyAssignment)) {
     throw new Error(`Cannot update ${viteConfigPath}. Expected build to be a property assignment.`);
+  } else {
+    const buildObject = buildProperty.getInitializerIfKind(SyntaxKind.ObjectLiteralExpression);
+    if (!buildObject) {
+      throw new Error(`Cannot update ${viteConfigPath}. Expected build to be an object literal.`);
+    }
+
+    const assetsDirProperty = buildObject.getProperty("assetsDir");
+    if (!assetsDirProperty) {
+      buildObject.addPropertyAssignment({
+        name: "assetsDir",
+        initializer: `"${assetsDir}"`,
+      });
+    } else if (!assetsDirProperty.isKind(SyntaxKind.PropertyAssignment)) {
+      throw new Error(
+        `Cannot update ${viteConfigPath}. Expected build.assetsDir to be a property assignment.`
+      );
+    } else {
+      assetsDirProperty.setInitializer(`"${assetsDir}"`);
+    }
   }
 
-  const buildObject = buildProperty.getInitializerIfKind(SyntaxKind.ObjectLiteralExpression);
-  if (!buildObject) {
-    throw new Error(`Cannot update ${viteConfigPath}. Expected build to be an object literal.`);
-  }
-
-  const assetsDirProperty = buildObject.getProperty("assetsDir");
-  if (!assetsDirProperty) {
-    buildObject.addPropertyAssignment({
-      name: "assetsDir",
-      initializer: `"${assetsDir}"`,
-    });
-    sourceFile.saveSync();
-    finisher.succeed(
-      `Updated ${path.relative(process.cwd(), viteConfigPath) || "vite.config.js"} with build.assetsDir=${assetsDir}`
-    );
-    return;
-  }
-
-  if (!assetsDirProperty.isKind(SyntaxKind.PropertyAssignment)) {
-    throw new Error(
-      `Cannot update ${viteConfigPath}. Expected build.assetsDir to be a property assignment.`
-    );
-  }
-
-  assetsDirProperty.setInitializer(`"${assetsDir}"`);
+  sourceFile.formatText();
   sourceFile.saveSync();
   finisher.succeed(
     `Updated ${path.relative(process.cwd(), viteConfigPath) || "vite.config.js"} with build.assetsDir=${assetsDir}`

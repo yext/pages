@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { build } from "vite";
 import { scopedViteConfigPath } from "../util/viteConfig.js";
-import { applyReverseProxyBuildOverride } from "../util/reverseProxyBuildOverride.js";
+import { applyReverseProxyOverride } from "../util/reverseProxyOverride.js";
 
 /**
  * The arguments passed to the build CLI command.
@@ -21,7 +21,7 @@ const handler = async (buildArgs: BuildArgs) => {
   const { scope, pluginFilesizeLimit, pluginTotalFilesizeLimit, reverseProxyPrefix } = buildArgs;
 
   if (reverseProxyPrefix) {
-    applyReverseProxyBuildOverride(scope, reverseProxyPrefix);
+    applyReverseProxyOverride(scope, reverseProxyPrefix);
   }
 
   // Pass CLI arguments as env variables to use in vite-plugin
