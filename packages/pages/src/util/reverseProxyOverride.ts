@@ -55,7 +55,7 @@ export const applyReverseProxyOverride = (
   const finisher = logger.timedLog({
     startLog: "Applying reverse proxy override",
   });
-  const reverseProxyBuildOverride = buildReverseProxyOverride(reverseProxyPrefix);
+  const reverseProxyOverride = buildReverseProxyOverride(reverseProxyPrefix);
   const configYamlPath = path.resolve(scope ?? "", "config.yaml");
   const viteConfigPath = path.resolve(scope ?? "", "vite.config.js");
 
@@ -67,12 +67,12 @@ export const applyReverseProxyOverride = (
     throw new Error(`Cannot apply reverseProxyPrefix because ${viteConfigPath} does not exist.`);
   }
 
-  updateConfigYaml(configYamlPath, reverseProxyBuildOverride);
-  updateViteConfig(viteConfigPath, reverseProxyBuildOverride.assetsDir);
+  updateConfigYaml(configYamlPath, reverseProxyOverride);
+  updateViteConfig(viteConfigPath, reverseProxyOverride.assetsDir);
   finisher.succeed(
     scope
-      ? `Applied reverse proxy override for ${scope}: ${reverseProxyBuildOverride.reverseProxyPrefix}`
-      : `Applied reverse proxy override: ${reverseProxyBuildOverride.reverseProxyPrefix}`
+      ? `Applied reverse proxy override for ${scope}: ${reverseProxyOverride.reverseProxyPrefix}`
+      : `Applied reverse proxy override: ${reverseProxyOverride.reverseProxyPrefix}`
   );
 };
 
@@ -82,7 +82,7 @@ export const applyReverseProxyOverride = (
  */
 export const updateConfigYaml = (
   configYamlPath: string,
-  reverseProxyBuildOverride: ReverseProxyOverride
+  reverseProxyOverride: ReverseProxyOverride
 ): void => {
   const finisher = logger.timedLog({
     startLog: "Updating config.yaml",
@@ -95,7 +95,7 @@ export const updateConfigYaml = (
   }
 
   if (!configYamlDoc.contents) {
-    configYamlDoc.contents = YAML.createNode({});
+    configYamlDoc.contents = YAML.parseDocument("{}").contents;
   }
 
   const servingNode = configYamlDoc.get("serving", true);
@@ -107,15 +107,12 @@ export const updateConfigYaml = (
     configYamlDoc.set("serving", {});
   }
 
-  configYamlDoc.setIn(
-    ["serving", "reverseProxyPrefix"],
-    reverseProxyBuildOverride.reverseProxyPrefix
-  );
+  configYamlDoc.setIn(["serving", "reverseProxyPrefix"], reverseProxyOverride.reverseProxyPrefix);
 
   const routeToWrite = {
-    from: reverseProxyBuildOverride.dynamicRoute.from,
-    to: reverseProxyBuildOverride.dynamicRoute.to,
-    status: reverseProxyBuildOverride.dynamicRoute.status,
+    from: reverseProxyOverride.dynamicRoute.from,
+    to: reverseProxyOverride.dynamicRoute.to,
+    status: reverseProxyOverride.dynamicRoute.status,
   };
   const dynamicRoutesNode = configYamlDoc.get("dynamicRoutes", true);
   if (dynamicRoutesNode && !YAML.isSeq(dynamicRoutesNode)) {
@@ -125,20 +122,21 @@ export const updateConfigYaml = (
   if (!dynamicRoutesNode) {
     configYamlDoc.set("dynamicRoutes", [routeToWrite]);
   } else {
-    const reverseProxyRouteIndex = dynamicRoutesNode.items.findIndex((routeNode) => {
+    const dynamicRoutesSeq = dynamicRoutesNode as YAML.YAMLSeq<unknown>;
+    const reverseProxyRouteIndex = dynamicRoutesSeq.items.findIndex((routeNode: unknown) => {
       return YAML.isMap(routeNode) && routeNode.get("from", true)?.toJSON() === routeToWrite.from;
     });
 
     if (reverseProxyRouteIndex === -1) {
-      dynamicRoutesNode.add(routeToWrite);
+      dynamicRoutesSeq.add(routeToWrite);
     } else {
-      dynamicRoutesNode.set(reverseProxyRouteIndex, routeToWrite);
+      dynamicRoutesSeq.set(reverseProxyRouteIndex, routeToWrite);
     }
   }
 
   fs.writeFileSync(configYamlPath, configYamlDoc.toString());
   finisher.succeed(
-    `Updated ${path.relative(process.cwd(), configYamlPath) || "config.yaml"} for ${reverseProxyBuildOverride.reverseProxyPrefix}`
+    `Updated ${path.relative(process.cwd(), configYamlPath) || "config.yaml"} for ${reverseProxyOverride.reverseProxyPrefix}`
   );
 };
 

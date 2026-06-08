@@ -9,8 +9,8 @@ import {
   updateViteConfig,
 } from "./reverseProxyOverride.js";
 
-describe("parseReverseProxyBuildOverride", () => {
-  it("returns the derived build values", () => {
+describe("parseReverseProxyOverride", () => {
+  it("returns the derived override values", () => {
     expect(buildReverseProxyOverride("www.brand.com/locations")).toEqual({
       reverseProxyPrefix: "www.brand.com/locations",
       assetsDir: "locations/assets",
@@ -210,7 +210,7 @@ export default defineConfig({
   });
 });
 
-describe("applyReverseProxyBuildOverride", () => {
+describe("applyReverseProxyOverride", () => {
   const previousCwd = process.cwd();
 
   afterEach(() => {
