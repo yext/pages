@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { Node, ObjectLiteralExpression, Project, SyntaxKind } from "ts-morph";
 import YAML from "yaml";
-import { getConfigYamlPath, getViteConfigPath } from "../common/src/project/paths.js";
 import logger from "../vite-plugin/log.js";
 
 type ReverseProxyOverride = {
@@ -21,32 +20,22 @@ type ReverseProxyOverride = {
  */
 export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReverseProxyOverride => {
   const trimmedReverseProxyPrefix = reverseProxyPrefix.trim();
+  if (trimmedReverseProxyPrefix.includes("://")) {
+    throw new Error(
+      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Do not include a protocol. Expected a host and subpath like "www.brand.com/locations".`
+    );
+  }
+
   if (!trimmedReverseProxyPrefix.includes("/")) {
     throw new Error(
       `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a host and subpath like "www.brand.com/locations".`
     );
   }
 
-  let rawSubpath = "";
-  if (trimmedReverseProxyPrefix.includes("://")) {
-    try {
-      rawSubpath = new URL(trimmedReverseProxyPrefix).pathname;
-    } catch {
-      throw new Error(
-        `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a valid URL or host and subpath like "www.brand.com/locations".`
-      );
-    }
-  } else {
-    try {
-      rawSubpath = new URL(`https://${trimmedReverseProxyPrefix}`).pathname;
-    } catch {
-      throw new Error(
-        `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a host and subpath like "www.brand.com/locations".`
-      );
-    }
-  }
-
-  const normalizedPathSegments = rawSubpath
+  const subpathAfterHost = trimmedReverseProxyPrefix.substring(
+    trimmedReverseProxyPrefix.indexOf("/") + 1
+  );
+  const normalizedPathSegments = subpathAfterHost
     .split("/")
     .filter(Boolean)
     .map((segment) => {
@@ -95,8 +84,8 @@ export const applyReverseProxyOverride = (
     startLog: "Applying reverse proxy override",
   });
   const reverseProxyOverride = buildReverseProxyOverride(reverseProxyPrefix);
-  const configYamlPath = getConfigYamlPath(scope).getAbsolutePath();
-  const viteConfigPath = getViteConfigPath(scope).getAbsolutePath();
+  const configYamlPath = path.resolve(scope ?? "", "config.yaml");
+  const viteConfigPath = path.resolve(scope ?? "", "vite.config.js");
 
   if (!fs.existsSync(configYamlPath)) {
     throw new Error(`Cannot apply reverseProxyPrefix because ${configYamlPath} does not exist.`);

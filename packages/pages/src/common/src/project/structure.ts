@@ -2,7 +2,6 @@ import pathLib from "node:path";
 import merge from "lodash/merge.js";
 import fs from "node:fs";
 import { Path } from "./path.js";
-import { getConfigYamlPath, getTemplateManifestPath, getViteConfigPath } from "./paths.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
 import { determinePublicFilepath } from "../assets/getPublicFilepath.js";
 
@@ -216,9 +215,9 @@ export class ProjectStructure {
   static init = async (projectStructureConfig?: Optional<ProjectStructureConfig>) => {
     const config = merge(defaultProjectStructureConfig, projectStructureConfig);
 
-    let viteConfigPath = getViteConfigPath(config.scope).getAbsolutePath();
+    let viteConfigPath = pathLib.resolve(config.scope ?? "", "vite.config.js");
     if (config.scope && !fs.existsSync(viteConfigPath)) {
-      viteConfigPath = getViteConfigPath().getAbsolutePath();
+      viteConfigPath = pathLib.resolve("vite.config.js");
     }
 
     // TODO: handle other extensions
@@ -300,14 +299,14 @@ export class ProjectStructure {
    * @returns the {@link Path} to the config.yaml file, taking scope into account.
    */
   getConfigYamlPath = () => {
-    return getConfigYamlPath(this.config.scope);
+    return new Path(pathLib.join(this.config.scope ?? "", this.config.rootFiles.config));
   };
 
   /**
    * @returns the {@link Path} to the .template-manifest.json file, taking scope into account.
    */
   getTemplateManifestPath = () => {
-    return getTemplateManifestPath(this.config.scope);
+    return new Path(pathLib.join(this.config.scope ?? "", this.config.rootFiles.templateManifest));
   };
 
   /**

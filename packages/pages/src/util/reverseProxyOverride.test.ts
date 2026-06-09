@@ -34,16 +34,10 @@ describe("buildReverseProxyOverride", () => {
     });
   });
 
-  it("parses full urls and uses only the normalized path", () => {
-    expect(buildReverseProxyOverride("https://www.brand.com/locations/")).toEqual({
-      reverseProxyPrefix: "https://www.brand.com/locations/",
-      assetsDir: "locations/assets",
-      dynamicRoute: {
-        from: "/assets/*",
-        to: "/locations/assets/:splat",
-        status: 200,
-      },
-    });
+  it("throws when the reverse proxy prefix includes a protocol", () => {
+    expect(() => buildReverseProxyOverride("https://www.brand.com/locations/")).toThrow(
+      /Do not include a protocol/
+    );
   });
 
   it("collapses duplicate slashes in the subpath", () => {
