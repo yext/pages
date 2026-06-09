@@ -9,7 +9,7 @@ import {
   updateViteConfig,
 } from "./reverseProxyOverride.js";
 
-describe("parseReverseProxyOverride", () => {
+describe("buildReverseProxyOverride", () => {
   it("returns the derived override values", () => {
     expect(buildReverseProxyOverride("www.brand.com/locations")).toEqual({
       reverseProxyPrefix: "www.brand.com/locations",

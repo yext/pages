@@ -1,39 +1,30 @@
-import { existsSync } from "node:fs";
 import pathLib from "node:path";
 import { Path } from "./path.js";
 
-type PathOptions = { fallbackToRoot?: boolean };
-
 /**
- * Resolves a scoped root-level file path and optionally falls back to the root
- * file when the scoped file does not exist.
+ * Resolves a scoped root-level file path.
  */
-const getRootFilePath = (fileName: string, scope?: string, options?: PathOptions): Path => {
-  const scopedPath = new Path(pathLib.resolve(scope ?? "", fileName));
-  if (scope && options?.fallbackToRoot && !existsSync(scopedPath.getAbsolutePath())) {
-    return new Path(pathLib.resolve(fileName));
-  }
-
-  return scopedPath;
+const getScopedFilePath = (fileName: string, scope?: string): Path => {
+  return new Path(pathLib.resolve(scope ?? "", fileName));
 };
 
 /**
  * Returns the scoped config.yaml path.
  */
-export const getConfigYamlPath = (scope?: string, options?: PathOptions): Path => {
-  return getRootFilePath("config.yaml", scope, options);
+export const getConfigYamlPath = (scope?: string): Path => {
+  return getScopedFilePath("config.yaml", scope);
 };
 
 /**
  * Returns the scoped vite.config.js path.
  */
-export const getViteConfigPath = (scope?: string, options?: PathOptions): Path => {
-  return getRootFilePath("vite.config.js", scope, options);
+export const getViteConfigPath = (scope?: string): Path => {
+  return getScopedFilePath("vite.config.js", scope);
 };
 
 /**
  * Returns the scoped .template-manifest.json path.
  */
-export const getTemplateManifestPath = (scope?: string, options?: PathOptions): Path => {
-  return getRootFilePath(".template-manifest.json", scope, options);
+export const getTemplateManifestPath = (scope?: string): Path => {
+  return getScopedFilePath(".template-manifest.json", scope);
 };

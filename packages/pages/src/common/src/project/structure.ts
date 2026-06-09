@@ -216,9 +216,10 @@ export class ProjectStructure {
   static init = async (projectStructureConfig?: Optional<ProjectStructureConfig>) => {
     const config = merge(defaultProjectStructureConfig, projectStructureConfig);
 
-    const viteConfigPath = getViteConfigPath(config.scope, {
-      fallbackToRoot: true,
-    }).getAbsolutePath();
+    let viteConfigPath = getViteConfigPath(config.scope).getAbsolutePath();
+    if (config.scope && !fs.existsSync(viteConfigPath)) {
+      viteConfigPath = getViteConfigPath().getAbsolutePath();
+    }
 
     // TODO: handle other extensions
     const assetsDir = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);
