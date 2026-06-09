@@ -62,7 +62,7 @@ export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReversePr
   }
 
   return {
-    reverseProxyPrefix,
+    reverseProxyPrefix: trimmedReverseProxyPrefix,
     assetsDir: `${subpath}/assets`,
     dynamicRoute: {
       from: "/assets/*",
