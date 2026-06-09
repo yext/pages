@@ -2,11 +2,7 @@ import pathLib from "node:path";
 import merge from "lodash/merge.js";
 import fs from "node:fs";
 import { Path } from "./path.js";
-import {
-  getConfigYamlPath as getScopedConfigYamlPath,
-  getTemplateManifestPath as getScopedTemplateManifestPath,
-  getViteConfigPath,
-} from "./paths.js";
+import { getConfigYamlPath, getTemplateManifestPath, getViteConfigPath } from "./paths.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
 import { determinePublicFilepath } from "../assets/getPublicFilepath.js";
 
@@ -220,10 +216,9 @@ export class ProjectStructure {
   static init = async (projectStructureConfig?: Optional<ProjectStructureConfig>) => {
     const config = merge(defaultProjectStructureConfig, projectStructureConfig);
 
-    let viteConfigPath = getViteConfigPath(config.scope).getAbsolutePath();
-    if (config.scope && !fs.existsSync(viteConfigPath)) {
-      viteConfigPath = getViteConfigPath().getAbsolutePath();
-    }
+    const viteConfigPath = getViteConfigPath(config.scope, {
+      fallbackToRoot: true,
+    }).getAbsolutePath();
 
     // TODO: handle other extensions
     const assetsDir = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);
@@ -304,14 +299,14 @@ export class ProjectStructure {
    * @returns the {@link Path} to the config.yaml file, taking scope into account.
    */
   getConfigYamlPath = () => {
-    return getScopedConfigYamlPath(this.config.scope);
+    return getConfigYamlPath(this.config.scope);
   };
 
   /**
    * @returns the {@link Path} to the .template-manifest.json file, taking scope into account.
    */
   getTemplateManifestPath = () => {
-    return getScopedTemplateManifestPath(this.config.scope);
+    return getTemplateManifestPath(this.config.scope);
   };
 
   /**
