@@ -143,10 +143,15 @@ export const updateConfigYaml = (
   }
 
   if (!servingNode) {
-    configYamlDoc.set("serving", {});
+    configYamlDoc.set("serving", {
+      reverseProxyPrefix: reverseProxyOverride.reverseProxyPrefix,
+    });
+  } else {
+    (servingNode as YAML.YAMLMap<unknown, unknown>).set(
+      "reverseProxyPrefix",
+      reverseProxyOverride.reverseProxyPrefix
+    );
   }
-
-  configYamlDoc.setIn(["serving", "reverseProxyPrefix"], reverseProxyOverride.reverseProxyPrefix);
 
   const routeToWrite = {
     from: reverseProxyOverride.dynamicRoute.from,

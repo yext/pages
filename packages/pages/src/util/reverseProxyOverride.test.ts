@@ -156,6 +156,49 @@ serving:
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
   });
+
+  it("adds serving and dynamicRoutes when both sections are missing", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-config-yaml-"));
+    const configYamlPath = path.join(tempDir, "config.yaml");
+
+    try {
+      fs.writeFileSync(
+        configYamlPath,
+        `buildConfiguration:
+  buildCommand: npm run build
+`
+      );
+
+      updateConfigYaml(configYamlPath, buildReverseProxyOverride("www.brand.com/locations"));
+
+      const updatedConfigYaml = fs.readFileSync(configYamlPath, "utf-8");
+      expect(updatedConfigYaml).toContain("buildCommand: npm run build");
+      expect(updatedConfigYaml).toContain("reverseProxyPrefix: www.brand.com/locations");
+      expect(updatedConfigYaml).toContain("from: /assets/*");
+      expect(updatedConfigYaml).toContain("to: /locations/assets/:splat");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("adds serving and dynamicRoutes to an empty config file", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-config-yaml-"));
+    const configYamlPath = path.join(tempDir, "config.yaml");
+
+    try {
+      fs.writeFileSync(configYamlPath, "");
+
+      updateConfigYaml(configYamlPath, buildReverseProxyOverride("www.brand.com/locations"));
+
+      const updatedConfigYaml = fs.readFileSync(configYamlPath, "utf-8");
+      expect(updatedConfigYaml).toContain("serving:");
+      expect(updatedConfigYaml).toContain("reverseProxyPrefix: www.brand.com/locations");
+      expect(updatedConfigYaml).toContain("dynamicRoutes:");
+      expect(updatedConfigYaml).toContain("to: /locations/assets/:splat");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("updateViteConfig", () => {
