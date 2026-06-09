@@ -1,17 +1,15 @@
 import { existsSync } from "node:fs";
-import path from "node:path";
-
-const VITE_CONFIG = "vite.config.js";
+import { getViteConfigPath } from "../common/src/project/paths.js";
 
 export const scopedViteConfigPath = (scope?: string) => {
   if (scope) {
-    const scopedViteConfigPath = path.resolve(scope, VITE_CONFIG);
+    const scopedViteConfigPath = getViteConfigPath(scope).getAbsolutePath();
     if (existsSync(scopedViteConfigPath)) {
       return scopedViteConfigPath;
     }
   }
 
-  const viteConfigPath = path.resolve(VITE_CONFIG);
+  const viteConfigPath = getViteConfigPath().getAbsolutePath();
   if (existsSync(viteConfigPath)) {
     return viteConfigPath;
   }
