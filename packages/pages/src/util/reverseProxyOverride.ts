@@ -19,17 +19,55 @@ export interface ReverseProxyOverride {
  * update config.yaml and vite.config.js.
  */
 export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReverseProxyOverride => {
-  const firstSlashIndex = reverseProxyPrefix.indexOf("/");
-  if (firstSlashIndex === -1) {
+  const trimmedReverseProxyPrefix = reverseProxyPrefix.trim();
+  if (!trimmedReverseProxyPrefix.includes("/")) {
     throw new Error(
       `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a host and subpath like "www.brand.com/locations".`
     );
   }
 
-  const subpath = reverseProxyPrefix.substring(firstSlashIndex + 1);
+  let rawSubpath = "";
+  if (trimmedReverseProxyPrefix.includes("://")) {
+    try {
+      rawSubpath = new URL(trimmedReverseProxyPrefix).pathname;
+    } catch {
+      throw new Error(
+        `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a valid URL or host and subpath like "www.brand.com/locations".`
+      );
+    }
+  } else {
+    try {
+      rawSubpath = new URL(`https://${trimmedReverseProxyPrefix}`).pathname;
+    } catch {
+      throw new Error(
+        `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a host and subpath like "www.brand.com/locations".`
+      );
+    }
+  }
+
+  const normalizedPathSegments = rawSubpath
+    .split("/")
+    .filter(Boolean)
+    .map((segment) => {
+      try {
+        return decodeURIComponent(segment);
+      } catch {
+        throw new Error(
+          `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected valid percent-encoding in the subpath.`
+        );
+      }
+    });
+
+  const subpath = normalizedPathSegments.join("/");
   if (!subpath) {
     throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a non-empty subpath after the first slash.`
+      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a non-empty subpath after the host.`
+    );
+  }
+
+  if (!normalizedPathSegments.every((segment) => /^[A-Za-z0-9_-]+$/.test(segment))) {
+    throw new Error(
+      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected the subpath to contain only letters, numbers, "-", "_", and "/".`
     );
   }
 

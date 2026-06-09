@@ -34,6 +34,30 @@ describe("parseReverseProxyOverride", () => {
     });
   });
 
+  it("parses full urls and uses only the normalized path", () => {
+    expect(buildReverseProxyOverride("https://www.brand.com/locations/")).toEqual({
+      reverseProxyPrefix: "https://www.brand.com/locations/",
+      assetsDir: "locations/assets",
+      dynamicRoute: {
+        from: "/assets/*",
+        to: "/locations/assets/:splat",
+        status: 200,
+      },
+    });
+  });
+
+  it("collapses duplicate slashes in the subpath", () => {
+    expect(buildReverseProxyOverride("www.brand.com/foo//bar/")).toEqual({
+      reverseProxyPrefix: "www.brand.com/foo//bar/",
+      assetsDir: "foo/bar/assets",
+      dynamicRoute: {
+        from: "/assets/*",
+        to: "/foo/bar/assets/:splat",
+        status: 200,
+      },
+    });
+  });
+
   it("throws when the reverse proxy prefix has no slash", () => {
     expect(() => buildReverseProxyOverride("www.brand.com")).toThrow(/Expected a host and subpath/);
   });
@@ -41,6 +65,12 @@ describe("parseReverseProxyOverride", () => {
   it("throws when the reverse proxy prefix has an empty subpath", () => {
     expect(() => buildReverseProxyOverride("www.brand.com/")).toThrow(
       /Expected a non-empty subpath/
+    );
+  });
+
+  it("throws when the normalized subpath contains invalid characters", () => {
+    expect(() => buildReverseProxyOverride("www.brand.com/location name")).toThrow(
+      /Expected the subpath to contain only letters, numbers, "-", "_", and "\/"/
     );
   });
 });
