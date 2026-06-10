@@ -8,7 +8,6 @@ import { processEnvVariables } from "../../util/processEnvVariables.js";
 import { FunctionMetadataParser } from "../../common/src/function/internal/functionMetadataParser.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import pc from "picocolors";
-import { scopedViteConfigPath } from "../../util/viteConfig.js";
 
 export const buildServerlessFunctions = async (
   projectStructure: ProjectStructure
@@ -38,7 +37,7 @@ export const buildServerlessFunctions = async (
   const logger = createLogger();
   const loggerInfo = logger.info;
 
-  const viteConfigPath = scopedViteConfigPath(projectStructure.config.scope);
+  const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath();
   const viteConfigModule = viteConfigPath ? await import(viteConfigPath) : "";
   const viteConfig = viteConfigModule ? (viteConfigModule.default as UserConfig) : undefined;
 

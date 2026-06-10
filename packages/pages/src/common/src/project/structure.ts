@@ -86,6 +86,8 @@ export interface DistConfigFiles {
 export interface RootFiles {
   /** The config.yaml file */
   config: string;
+  /** The vite.config.js file */
+  viteConfig: string;
   /** The .template-manifest.json file for in-platform page sets */
   templateManifest: string;
 }
@@ -182,6 +184,7 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
   },
   rootFiles: {
     config: "config.yaml",
+    viteConfig: "vite.config.js",
     templateManifest: ".template-manifest.json",
   },
   envVarConfig: {
@@ -214,11 +217,9 @@ export class ProjectStructure {
 
   static init = async (projectStructureConfig?: Optional<ProjectStructureConfig>) => {
     const config = merge(defaultProjectStructureConfig, projectStructureConfig);
+    const projectStructure = new ProjectStructure(config);
 
-    let viteConfigPath = pathLib.resolve(config.scope ?? "", "vite.config.js");
-    if (config.scope && !fs.existsSync(viteConfigPath)) {
-      viteConfigPath = pathLib.resolve("vite.config.js");
-    }
+    const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath() ?? "";
 
     // TODO: handle other extensions
     const assetsDir = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);
@@ -229,7 +230,7 @@ export class ProjectStructure {
 
     config.subfolders.public = publicDir;
 
-    return new ProjectStructure(config);
+    return projectStructure;
   };
 
   /**
@@ -300,6 +301,32 @@ export class ProjectStructure {
    */
   getConfigYamlPath = () => {
     return new Path(pathLib.join(this.config.scope ?? "", this.config.rootFiles.config));
+  };
+
+  /**
+   * Resolves the vite.config.js file the build should use.
+   *
+   * 1. If a scoped vite config exists, use it.
+   * 2. Otherwise, if a root vite config exists, use it.
+   * 3. Otherwise, return undefined.
+   *
+   * @returns the {@link Path} to the existing vite.config.js file, or undefined when none exists.
+   */
+  getViteConfigPath = () => {
+    if (this.config.scope) {
+      const scopedViteConfigPath = pathLib.join(
+        this.config.scope,
+        this.config.rootFiles.viteConfig
+      );
+      if (fs.existsSync(scopedViteConfigPath)) {
+        return new Path(scopedViteConfigPath);
+      }
+    }
+
+    const viteConfigPath = new Path(this.config.rootFiles.viteConfig);
+    if (fs.existsSync(viteConfigPath.getAbsolutePath())) {
+      return viteConfigPath;
+    }
   };
 
   /**
