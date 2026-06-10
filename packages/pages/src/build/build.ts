@@ -1,7 +1,6 @@
 import { Command } from "commander";
 import { build } from "vite";
 import { ProjectStructure } from "../common/src/project/structure.js";
-import { scopedViteConfigPath } from "../util/viteConfig.js";
 import { applyReverseProxyOverride } from "../util/reverseProxyOverride.js";
 
 /**
@@ -21,9 +20,9 @@ export interface BuildArgs {
 const handler = async (buildArgs: BuildArgs) => {
   const { scope, pluginFilesizeLimit, pluginTotalFilesizeLimit, reverseProxyPrefix } = buildArgs;
   const trimmedReverseProxyPrefix = reverseProxyPrefix?.trim();
+  const projectStructure = await ProjectStructure.init({ scope });
 
   if (trimmedReverseProxyPrefix) {
-    const projectStructure = await ProjectStructure.init({ scope });
     applyReverseProxyOverride(projectStructure, trimmedReverseProxyPrefix);
   }
 
@@ -35,7 +34,7 @@ const handler = async (buildArgs: BuildArgs) => {
   process.env.YEXT_PAGES_PLUGIN_TOTAL_FILESIZE_LIMIT = String(pluginTotalFilesizeLimit);
 
   await build({
-    configFile: scopedViteConfigPath(scope),
+    configFile: projectStructure.getViteConfigPath().getAbsolutePath(),
   });
 };
 

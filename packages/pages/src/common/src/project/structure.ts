@@ -309,7 +309,15 @@ export class ProjectStructure {
    * @returns the {@link Path} to the vite.config.js file, taking scope into account.
    */
   getViteConfigPath = () => {
-    return new Path(pathLib.join(this.config.scope ?? "", this.config.rootFiles.viteConfig));
+    const scopedViteConfigPath = pathLib.join(
+      this.config.scope ?? "",
+      this.config.rootFiles.viteConfig
+    );
+    if (this.config.scope && fs.existsSync(scopedViteConfigPath)) {
+      return new Path(scopedViteConfigPath);
+    }
+
+    return new Path(this.config.rootFiles.viteConfig);
   };
 
   /**

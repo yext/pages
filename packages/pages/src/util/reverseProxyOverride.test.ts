@@ -329,6 +329,7 @@ describe("applyReverseProxyOverride", () => {
 
     try {
       fs.mkdirSync(path.join(tempDir, "brand"), { recursive: true });
+      fs.writeFileSync(path.join(tempDir, "vite.config.js"), "export default { build: {} };\n");
       fs.writeFileSync(
         path.join(tempDir, "brand", "config.yaml"),
         "serving:\n  reverseProxyPrefix: scoped\n"
@@ -340,7 +341,29 @@ describe("applyReverseProxyOverride", () => {
           new ProjectStructure({ scope: "brand" }),
           "www.brand.com/locations"
         )
-      ).toThrow(/vite\.config\.js does not exist/);
+      ).not.toThrow();
+      expect(fs.readFileSync(path.join(tempDir, "vite.config.js"), "utf-8")).toContain(
+        'assetsDir: "locations/assets"'
+      );
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("fails clearly when a scoped config yaml is missing", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
+
+    try {
+      fs.mkdirSync(path.join(tempDir, "brand"), { recursive: true });
+      fs.writeFileSync(path.join(tempDir, "vite.config.js"), "export default { build: {} };\n");
+      process.chdir(tempDir);
+
+      expect(() =>
+        applyReverseProxyOverride(
+          new ProjectStructure({ scope: "brand" }),
+          "www.brand.com/locations"
+        )
+      ).toThrow(/config\.yaml does not exist/);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
