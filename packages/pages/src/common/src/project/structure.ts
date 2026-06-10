@@ -219,7 +219,7 @@ export class ProjectStructure {
     const config = merge(defaultProjectStructureConfig, projectStructureConfig);
     const projectStructure = new ProjectStructure(config);
 
-    const viteConfigPath = projectStructure.getViteConfigPath().getAbsolutePath();
+    const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath() ?? "";
 
     // TODO: handle other extensions
     const assetsDir = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);
@@ -304,15 +304,29 @@ export class ProjectStructure {
   };
 
   /**
-   * @returns the {@link Path} to the vite.config.js file, taking scope into account.
+   * Resolves the vite.config.js file the build should use.
+   *
+   * 1. If a scoped vite config exists, use it.
+   * 2. Otherwise, if a root vite config exists, use it.
+   * 3. Otherwise, return undefined.
+   *
+   * @returns the {@link Path} to the existing vite.config.js file, or undefined when none exists.
    */
   getViteConfigPath = () => {
-    const viteConfigPath = pathLib.join(this.config.scope ?? "", this.config.rootFiles.viteConfig);
-    if (this.config.scope && fs.existsSync(viteConfigPath)) {
-      return new Path(viteConfigPath);
+    if (this.config.scope) {
+      const scopedViteConfigPath = pathLib.join(
+        this.config.scope,
+        this.config.rootFiles.viteConfig
+      );
+      if (fs.existsSync(scopedViteConfigPath)) {
+        return new Path(scopedViteConfigPath);
+      }
     }
 
-    return new Path(this.config.rootFiles.viteConfig);
+    const viteConfigPath = new Path(this.config.rootFiles.viteConfig);
+    if (fs.existsSync(viteConfigPath.getAbsolutePath())) {
+      return viteConfigPath;
+    }
   };
 
   /**

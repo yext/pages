@@ -37,7 +37,7 @@ export const buildServerlessFunctions = async (
   const logger = createLogger();
   const loggerInfo = logger.info;
 
-  const viteConfigPath = projectStructure.getViteConfigPath().getAbsolutePath();
+  const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath();
   const viteConfigModule = viteConfigPath ? await import(viteConfigPath) : "";
   const viteConfig = viteConfigModule ? (viteConfigModule.default as UserConfig) : undefined;
 

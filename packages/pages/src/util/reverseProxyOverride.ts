@@ -86,14 +86,14 @@ export const applyReverseProxyOverride = (
   });
   const reverseProxyOverride = buildReverseProxyOverride(reverseProxyPrefix);
   const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
-  const viteConfigPath = projectStructure.getViteConfigPath().getAbsolutePath();
+  const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath();
   const scope = projectStructure.config.scope;
 
   if (!fs.existsSync(configYamlPath)) {
     throw new Error(`Cannot apply reverseProxyPrefix because ${configYamlPath} does not exist.`);
   }
 
-  if (!fs.existsSync(viteConfigPath)) {
+  if (!viteConfigPath || !fs.existsSync(viteConfigPath)) {
     throw new Error(`Cannot apply reverseProxyPrefix because ${viteConfigPath} does not exist.`);
   }
 

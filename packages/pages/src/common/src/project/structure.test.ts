@@ -20,11 +20,11 @@ describe("ProjectStructure.getViteConfigPath", () => {
       fs.writeFileSync(path.join(tempDir, "vite.config.js"), "export default {};\n");
       process.chdir(tempDir);
 
-      expect(
-        fs.realpathSync(
-          new ProjectStructure({ scope: "brand" }).getViteConfigPath().getAbsolutePath()
-        )
-      ).toBe(fs.realpathSync(path.join(tempDir, "brand", "vite.config.js")));
+      const viteConfigPath = new ProjectStructure({ scope: "brand" }).getViteConfigPath();
+      expect(viteConfigPath).toBeDefined();
+      expect(fs.realpathSync(viteConfigPath!.getAbsolutePath())).toBe(
+        fs.realpathSync(path.join(tempDir, "brand", "vite.config.js"))
+      );
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
@@ -38,11 +38,24 @@ describe("ProjectStructure.getViteConfigPath", () => {
       fs.writeFileSync(path.join(tempDir, "vite.config.js"), "export default {};\n");
       process.chdir(tempDir);
 
-      expect(
-        fs.realpathSync(
-          new ProjectStructure({ scope: "brand" }).getViteConfigPath().getAbsolutePath()
-        )
-      ).toBe(fs.realpathSync(path.join(tempDir, "vite.config.js")));
+      const viteConfigPath = new ProjectStructure({ scope: "brand" }).getViteConfigPath();
+      expect(viteConfigPath).toBeDefined();
+      expect(fs.realpathSync(viteConfigPath!.getAbsolutePath())).toBe(
+        fs.realpathSync(path.join(tempDir, "vite.config.js"))
+      );
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("returns undefined when neither the scoped nor root vite config exists", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-project-structure-"));
+
+    try {
+      fs.mkdirSync(path.join(tempDir, "brand"), { recursive: true });
+      process.chdir(tempDir);
+
+      expect(new ProjectStructure({ scope: "brand" }).getViteConfigPath()).toBeUndefined();
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

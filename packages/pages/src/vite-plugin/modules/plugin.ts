@@ -61,7 +61,7 @@ export const buildModules = async (projectStructure: ProjectStructure): Promise<
     );
   }
 
-  const viteConfigPath = projectStructure.getViteConfigPath().getAbsolutePath();
+  const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath();
   const viteConfigModule = viteConfigPath ? await import(viteConfigPath) : "";
   const viteConfig = viteConfigModule ? (viteConfigModule.default as UserConfig) : undefined;
 

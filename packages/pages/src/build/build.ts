@@ -34,7 +34,7 @@ const handler = async (buildArgs: BuildArgs) => {
   process.env.YEXT_PAGES_PLUGIN_TOTAL_FILESIZE_LIMIT = String(pluginTotalFilesizeLimit);
 
   await build({
-    configFile: projectStructure.getViteConfigPath().getAbsolutePath(),
+    configFile: projectStructure.getViteConfigPath()?.getAbsolutePath(),
   });
 };
 

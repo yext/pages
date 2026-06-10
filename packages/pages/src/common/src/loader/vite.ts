@@ -7,7 +7,7 @@ import { createModuleLogger } from "../module/internal/logger.js";
 
 export const getViteServerConfig = (projectStructure: ProjectStructure): InlineConfig => {
   return {
-    configFile: projectStructure.getViteConfigPath().getAbsolutePath(),
+    configFile: projectStructure.getViteConfigPath()?.getAbsolutePath(),
     server: {
       middlewareMode: true,
     },
