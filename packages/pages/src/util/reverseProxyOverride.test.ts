@@ -2,6 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import { ProjectStructure } from "../common/src/project/structure.js";
 import {
   applyReverseProxyOverride,
   buildReverseProxyOverride,
@@ -301,7 +302,10 @@ describe("applyReverseProxyOverride", () => {
       );
       process.chdir(tempDir);
 
-      applyReverseProxyOverride("brand", "www.brand.com/locations");
+      applyReverseProxyOverride(
+        new ProjectStructure({ scope: "brand" }),
+        "www.brand.com/locations"
+      );
 
       expect(fs.readFileSync(path.join(tempDir, "brand", "config.yaml"), "utf-8")).toContain(
         "reverseProxyPrefix: www.brand.com/locations"
@@ -331,9 +335,12 @@ describe("applyReverseProxyOverride", () => {
       );
       process.chdir(tempDir);
 
-      expect(() => applyReverseProxyOverride("brand", "www.brand.com/locations")).toThrow(
-        /vite\.config\.js does not exist/
-      );
+      expect(() =>
+        applyReverseProxyOverride(
+          new ProjectStructure({ scope: "brand" }),
+          "www.brand.com/locations"
+        )
+      ).toThrow(/vite\.config\.js does not exist/);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

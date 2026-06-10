@@ -86,6 +86,8 @@ export interface DistConfigFiles {
 export interface RootFiles {
   /** The config.yaml file */
   config: string;
+  /** The vite.config.js file */
+  viteConfig: string;
   /** The .template-manifest.json file for in-platform page sets */
   templateManifest: string;
 }
@@ -182,6 +184,7 @@ const defaultProjectStructureConfig: ProjectStructureConfig = {
   },
   rootFiles: {
     config: "config.yaml",
+    viteConfig: "vite.config.js",
     templateManifest: ".template-manifest.json",
   },
   envVarConfig: {
@@ -215,9 +218,9 @@ export class ProjectStructure {
   static init = async (projectStructureConfig?: Optional<ProjectStructureConfig>) => {
     const config = merge(defaultProjectStructureConfig, projectStructureConfig);
 
-    let viteConfigPath = pathLib.resolve(config.scope ?? "", "vite.config.js");
+    let viteConfigPath = pathLib.resolve(config.scope ?? "", config.rootFiles.viteConfig);
     if (config.scope && !fs.existsSync(viteConfigPath)) {
-      viteConfigPath = pathLib.resolve("vite.config.js");
+      viteConfigPath = pathLib.resolve(config.rootFiles.viteConfig);
     }
 
     // TODO: handle other extensions
@@ -300,6 +303,13 @@ export class ProjectStructure {
    */
   getConfigYamlPath = () => {
     return new Path(pathLib.join(this.config.scope ?? "", this.config.rootFiles.config));
+  };
+
+  /**
+   * @returns the {@link Path} to the vite.config.js file, taking scope into account.
+   */
+  getViteConfigPath = () => {
+    return new Path(pathLib.join(this.config.scope ?? "", this.config.rootFiles.viteConfig));
   };
 
   /**

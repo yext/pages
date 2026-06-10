@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { Node, ObjectLiteralExpression, Project, SyntaxKind } from "ts-morph";
 import YAML from "yaml";
+import { ProjectStructure } from "../common/src/project/structure.js";
 import logger from "../vite-plugin/log.js";
 
 type ReverseProxyOverride = {
@@ -77,15 +78,16 @@ export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReversePr
  * read so the normal build pipeline picks up the reverse proxy override.
  */
 export const applyReverseProxyOverride = (
-  scope: string | undefined,
+  projectStructure: ProjectStructure,
   reverseProxyPrefix: string
 ): void => {
   const finisher = logger.timedLog({
     startLog: "Applying reverse proxy override",
   });
   const reverseProxyOverride = buildReverseProxyOverride(reverseProxyPrefix);
-  const configYamlPath = path.resolve(scope ?? "", "config.yaml");
-  const viteConfigPath = path.resolve(scope ?? "", "vite.config.js");
+  const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
+  const viteConfigPath = projectStructure.getViteConfigPath().getAbsolutePath();
+  const scope = projectStructure.config.scope;
 
   if (!fs.existsSync(configYamlPath)) {
     throw new Error(`Cannot apply reverseProxyPrefix because ${configYamlPath} does not exist.`);
