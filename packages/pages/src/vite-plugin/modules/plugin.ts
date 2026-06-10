@@ -15,7 +15,6 @@ import postcss from "postcss";
 import nested from "postcss-nested";
 import { createModuleLogger } from "../../common/src/module/internal/logger.js";
 import { getModuleName } from "../../common/src/module/internal/getModuleConfig.js";
-import { scopedViteConfigPath } from "../../util/viteConfig.js";
 
 type FileInfo = {
   path: string;
@@ -62,7 +61,7 @@ export const buildModules = async (
     );
   }
 
-  const viteConfigPath = scopedViteConfigPath(projectStructure.config.scope);
+  const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath();
   const viteConfigModule = viteConfigPath ? await import(viteConfigPath) : "";
   const viteConfig = viteConfigModule
     ? (viteConfigModule.default as UserConfig)
@@ -107,8 +106,7 @@ export const buildModules = async (
           if (typeof process.env.YEXT_SITE_ARGUMENT !== "undefined") {
             try {
               domain = new URL(
-                "https://" +
-                  JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
+                "https://" + JSON.parse(process.env.YEXT_SITE_ARGUMENT).productionDomain
               ).origin;
             } catch (_) {
               logErrorAndExit("Cannot parse YEXT_SITE_ARGUMENT");
