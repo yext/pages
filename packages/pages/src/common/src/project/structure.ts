@@ -217,11 +217,9 @@ export class ProjectStructure {
 
   static init = async (projectStructureConfig?: Optional<ProjectStructureConfig>) => {
     const config = merge(defaultProjectStructureConfig, projectStructureConfig);
+    const projectStructure = new ProjectStructure(config);
 
-    let viteConfigPath = pathLib.resolve(config.scope ?? "", config.rootFiles.viteConfig);
-    if (config.scope && !fs.existsSync(viteConfigPath)) {
-      viteConfigPath = pathLib.resolve(config.rootFiles.viteConfig);
-    }
+    const viteConfigPath = projectStructure.getViteConfigPath().getAbsolutePath();
 
     // TODO: handle other extensions
     const assetsDir = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);
@@ -232,7 +230,7 @@ export class ProjectStructure {
 
     config.subfolders.public = publicDir;
 
-    return new ProjectStructure(config);
+    return projectStructure;
   };
 
   /**
@@ -309,12 +307,9 @@ export class ProjectStructure {
    * @returns the {@link Path} to the vite.config.js file, taking scope into account.
    */
   getViteConfigPath = () => {
-    const scopedViteConfigPath = pathLib.join(
-      this.config.scope ?? "",
-      this.config.rootFiles.viteConfig
-    );
-    if (this.config.scope && fs.existsSync(scopedViteConfigPath)) {
-      return new Path(scopedViteConfigPath);
+    const viteConfigPath = pathLib.join(this.config.scope ?? "", this.config.rootFiles.viteConfig);
+    if (this.config.scope && fs.existsSync(viteConfigPath)) {
+      return new Path(viteConfigPath);
     }
 
     return new Path(this.config.rootFiles.viteConfig);
