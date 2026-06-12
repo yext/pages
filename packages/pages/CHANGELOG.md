@@ -1,3 +1,14 @@
+#### 1.3.0 (2026-06-12)
+
+##### Chores
+
+*  update minimatch ([#614](https://github.com/yext/pages/pull/614)) ([55197051](https://github.com/yext/pages/commit/551970510c53996b2994d9ff60a114e4602de502))
+*  prevent shell injection in github action (vuln-44057) ([#613](https://github.com/yext/pages/pull/613)) ([c9d82c4e](https://github.com/yext/pages/commit/c9d82c4e3ccbabdd0148b9021234d896028b1096))
+
+##### New Features
+
+*  add reverse-proxy-prefix option to build ([#616](https://github.com/yext/pages/pull/616)) ([dd3b4167](https://github.com/yext/pages/commit/dd3b4167a984662eef53d732c5866f0ef781feaa))
+
 #### 1.2.11 (2026-04-24)
 
 ##### Bug Fixes
