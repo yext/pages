@@ -48,6 +48,7 @@ export const build = async (
         },
         publicDir: false,
         build: {
+          target: "es2022",
           outDir: projectStructure.config.rootFolders.dist,
           manifest: true,
           rollupOptions: {
