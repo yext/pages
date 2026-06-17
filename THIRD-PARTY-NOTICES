@@ -201,7 +201,7 @@ The following npm packages may be included in this product:
  - @types/markdown-it@14.1.2
  - @types/mdast@4.0.4
  - @types/mdurl@2.0.0
- - @types/node@25.9.3
+ - @types/node@20.19.43
  - @types/prop-types@15.7.15
  - @types/react@18.3.28
  - @types/unist@3.0.3
@@ -8317,7 +8317,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 The following npm package may be included in this product:
 
- - undici-types@7.24.6
+ - undici-types@6.21.0
 
 This package contains the following license:
 
