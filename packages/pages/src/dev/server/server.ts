@@ -31,6 +31,7 @@ import { DevArgs } from "../dev.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SERVERLESS_FUNCTION_POST_REQUEST_LIMIT = "50mb";
+const DEV_SERVER_HOST = "localhost";
 
 /**
  * @internal
@@ -82,12 +83,14 @@ export const createServer = async (devServerPort: number, devArgs: DevArgs) => {
           modulePath: moduleInfo.modulePath,
         })
       );
-      app.listen(devServerPort, () =>
-        process.stdout.write(`listening on :${devServerPort}\n`)
+      app.listen(devServerPort, DEV_SERVER_HOST, () =>
+        process.stdout.write(
+          `listening on http://${DEV_SERVER_HOST}:${devServerPort}\n`
+        )
       );
       if (openBrowser) {
         await open(
-          `http://localhost:${devServerPort}/modules/${moduleInfo.moduleName}`
+          `http://${DEV_SERVER_HOST}:${devServerPort}/modules/${moduleInfo.moduleName}`
         );
       }
       return;
@@ -263,7 +266,9 @@ export const createServer = async (devServerPort: number, devArgs: DevArgs) => {
 
   app.use(errorMiddleware(vite));
 
-  app.listen(devServerPort, () =>
-    process.stdout.write(`listening on :${devServerPort}\n`)
+  app.listen(devServerPort, DEV_SERVER_HOST, () =>
+    process.stdout.write(
+      `listening on http://${DEV_SERVER_HOST}:${devServerPort}\n`
+    )
   );
 };
