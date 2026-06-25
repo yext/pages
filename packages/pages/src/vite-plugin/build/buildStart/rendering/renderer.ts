@@ -1,4 +1,5 @@
 import { ProjectStructure } from "../../../../common/src/project/structure.js";
+import { getDocumentTemplateName } from "../../../../common/src/template/internal/resolveTemplateName.js";
 import {
   Manifest,
   TemplateProps,
@@ -30,7 +31,11 @@ export default async (
   manifest: Manifest
 ): Promise<GeneratedPage | GeneratedRedirect> => {
   const projectStructure = new ProjectStructure(manifest.projectStructure);
-  const feature = props.document.__.codeTemplate ?? props.document.__.name;
+  const feature = getDocumentTemplateName(props.document);
+
+  if (!feature) {
+    throw new Error("Could not determine template name from document metadata");
+  }
 
   const template = await readTemplateModules(
     feature,
