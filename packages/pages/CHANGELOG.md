@@ -1,3 +1,9 @@
+#### 1.3.1 (2026-06-25)
+
+##### New Features
+
+*  use template from _pageset.config ([#608](https://github.com/yext/pages/pull/608)) ([#622](https://github.com/yext/pages/pull/622)) ([d373b466](https://github.com/yext/pages/commit/d373b466f1dcd2ce4e0a36d1e56745d691975993))
+
 #### 1.3.0 (2026-06-12)
 
 ##### Chores
