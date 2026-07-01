@@ -11,7 +11,8 @@ jobs:
   call_playwright:
     needs: call_build
     uses: ./.github/workflows/playwright.yml
-    secrets: inherit
+    secrets:
+      BOT_REPO_SCOPED_TOKEN: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
     
   call_jstest:
     needs: call_build
