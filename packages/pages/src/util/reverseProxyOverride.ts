@@ -2,10 +2,15 @@ import fs from "node:fs";
 import path from "node:path";
 import { Node, ObjectLiteralExpression, Project, SyntaxKind } from "ts-morph";
 import YAML from "yaml";
-import { ProjectStructure } from "../common/src/project/structure.js";
+import type { ProjectStructure } from "../common/src/project/structure.js";
 import logger from "../vite-plugin/log.js";
 
-type ReverseProxyOverride = {
+export type ParsedReverseProxyPrefix = {
+  reverseProxyPrefix: string;
+  subpath: string;
+};
+
+export type ReverseProxyOverride = {
   reverseProxyPrefix: string;
   assetsDir: string;
   dynamicRoute: {
@@ -16,10 +21,9 @@ type ReverseProxyOverride = {
 };
 
 /**
- * Parses a reverse proxy prefix into the concrete build-time values needed to
- * update config.yaml and vite.config.js.
+ * Validates and parses a reverse proxy prefix into its normalized value and subpath.
  */
-export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReverseProxyOverride => {
+export const parseReverseProxyPrefix = (reverseProxyPrefix: string): ParsedReverseProxyPrefix => {
   const trimmedReverseProxyPrefix = reverseProxyPrefix.trim();
   if (trimmedReverseProxyPrefix.includes("://")) {
     throw new Error(
@@ -64,6 +68,20 @@ export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReversePr
 
   return {
     reverseProxyPrefix: trimmedReverseProxyPrefix,
+    subpath,
+  };
+};
+
+/**
+ * Validates and parses a reverse proxy prefix into the concrete build-time
+ * values needed to initialize the project and update its configuration.
+ */
+export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReverseProxyOverride => {
+  const parsedReverseProxyPrefix = parseReverseProxyPrefix(reverseProxyPrefix);
+  const { subpath } = parsedReverseProxyPrefix;
+
+  return {
+    reverseProxyPrefix: parsedReverseProxyPrefix.reverseProxyPrefix,
     assetsDir: `${subpath}/assets`,
     dynamicRoute: {
       from: "/assets/*",
@@ -79,12 +97,11 @@ export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReversePr
  */
 export const applyReverseProxyOverride = (
   projectStructure: ProjectStructure,
-  reverseProxyPrefix: string
+  reverseProxyOverride: ReverseProxyOverride
 ): void => {
   const finisher = logger.timedLog({
     startLog: "Applying reverse proxy override",
   });
-  const reverseProxyOverride = buildReverseProxyOverride(reverseProxyPrefix);
   const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
   const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath();
   const scope = projectStructure.config.scope;
@@ -98,7 +115,7 @@ export const applyReverseProxyOverride = (
   }
 
   updateConfigYaml(configYamlPath, reverseProxyOverride);
-  updateViteConfig(viteConfigPath, reverseProxyOverride.assetsDir);
+  updateViteConfig(viteConfigPath, projectStructure.config.subfolders.assets);
   finisher.succeed(
     scope
       ? `Applied reverse proxy override for ${scope}: ${reverseProxyOverride.reverseProxyPrefix}`

@@ -285,7 +285,7 @@ describe("applyReverseProxyOverride", () => {
     process.chdir(previousCwd);
   });
 
-  it("modifies only the scoped files", () => {
+  it("modifies only the scoped files", async () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
 
     try {
@@ -302,10 +302,12 @@ describe("applyReverseProxyOverride", () => {
       );
       process.chdir(tempDir);
 
-      applyReverseProxyOverride(
-        new ProjectStructure({ scope: "brand" }),
-        "www.brand.com/locations"
-      );
+      const reverseProxyOverride = buildReverseProxyOverride("www.brand.com/locations");
+      const projectStructure = await ProjectStructure.init({
+        scope: "brand",
+        reverseProxyPrefix: reverseProxyOverride.reverseProxyPrefix,
+      });
+      applyReverseProxyOverride(projectStructure, reverseProxyOverride);
 
       expect(fs.readFileSync(path.join(tempDir, "brand", "config.yaml"), "utf-8")).toContain(
         "reverseProxyPrefix: www.brand.com/locations"
@@ -324,7 +326,7 @@ describe("applyReverseProxyOverride", () => {
     }
   });
 
-  it("fails clearly when a scoped file is missing", () => {
+  it("fails clearly when a scoped file is missing", async () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
 
     try {
@@ -336,12 +338,12 @@ describe("applyReverseProxyOverride", () => {
       );
       process.chdir(tempDir);
 
-      expect(() =>
-        applyReverseProxyOverride(
-          new ProjectStructure({ scope: "brand" }),
-          "www.brand.com/locations"
-        )
-      ).not.toThrow();
+      const reverseProxyOverride = buildReverseProxyOverride("www.brand.com/locations");
+      const projectStructure = await ProjectStructure.init({
+        scope: "brand",
+        reverseProxyPrefix: reverseProxyOverride.reverseProxyPrefix,
+      });
+      expect(() => applyReverseProxyOverride(projectStructure, reverseProxyOverride)).not.toThrow();
       expect(fs.readFileSync(path.join(tempDir, "vite.config.js"), "utf-8")).toContain(
         'assetsDir: "locations/assets"'
       );
@@ -350,7 +352,7 @@ describe("applyReverseProxyOverride", () => {
     }
   });
 
-  it("fails clearly when a scoped config yaml is missing", () => {
+  it("fails clearly when a scoped config yaml is missing", async () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
 
     try {
@@ -358,12 +360,14 @@ describe("applyReverseProxyOverride", () => {
       fs.writeFileSync(path.join(tempDir, "vite.config.js"), "export default { build: {} };\n");
       process.chdir(tempDir);
 
-      expect(() =>
-        applyReverseProxyOverride(
-          new ProjectStructure({ scope: "brand" }),
-          "www.brand.com/locations"
-        )
-      ).toThrow(/config\.yaml does not exist/);
+      const reverseProxyOverride = buildReverseProxyOverride("www.brand.com/locations");
+      const projectStructure = await ProjectStructure.init({
+        scope: "brand",
+        reverseProxyPrefix: reverseProxyOverride.reverseProxyPrefix,
+      });
+      expect(() => applyReverseProxyOverride(projectStructure, reverseProxyOverride)).toThrow(
+        /config\.yaml does not exist/
+      );
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

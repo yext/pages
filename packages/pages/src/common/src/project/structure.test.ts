@@ -61,3 +61,32 @@ describe("ProjectStructure.getViteConfigPath", () => {
     }
   });
 });
+
+describe("ProjectStructure.init", () => {
+  const previousCwd = process.cwd();
+
+  afterEach(() => {
+    process.chdir(previousCwd);
+  });
+
+  it("uses the reverse proxy assets directory without loading vite.config.js", async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-project-structure-"));
+
+    try {
+      fs.writeFileSync(
+        path.join(tempDir, "vite.config.js"),
+        'throw new Error("vite config loaded before reverse proxy override");\n'
+      );
+      process.chdir(tempDir);
+
+      const projectStructure = await ProjectStructure.init({
+        reverseProxyPrefix: "www.brand.com/locations",
+      });
+
+      expect(projectStructure.config.subfolders.assets).toBe("locations/assets");
+      expect(new ProjectStructure().config.reverseProxyPrefix).toBeUndefined();
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+});

@@ -2,6 +2,7 @@ import pathLib from "node:path";
 import merge from "lodash/merge.js";
 import fs from "node:fs";
 import { Path } from "./path.js";
+import { parseReverseProxyPrefix } from "../../../util/reverseProxyOverride.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
 import { determinePublicFilepath } from "../assets/getPublicFilepath.js";
 
@@ -140,6 +141,11 @@ export interface ProjectStructureConfig {
    * Modules scoping is also supported.
    */
   scope?: string;
+
+  /**
+   * The reverse proxy prefix for the current build.
+   */
+  reverseProxyPrefix?: string;
 }
 
 const DEFAULT_ASSETS_DIR = "assets";
@@ -211,24 +217,30 @@ export class ProjectStructure {
   config: ProjectStructureConfig;
 
   constructor(config?: Optional<ProjectStructureConfig>) {
-    const mergedConfig = merge(defaultProjectStructureConfig, config);
+    const mergedConfig = merge({}, defaultProjectStructureConfig, config);
     this.config = mergedConfig;
   }
 
   static init = async (projectStructureConfig?: Optional<ProjectStructureConfig>) => {
-    const config = merge(defaultProjectStructureConfig, projectStructureConfig);
-    const projectStructure = new ProjectStructure(config);
+    const projectStructure = new ProjectStructure(projectStructureConfig);
+    const config = projectStructure.config;
 
     const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath() ?? "";
 
-    // TODO: handle other extensions
-    const assetsDir = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);
+    if (config.reverseProxyPrefix) {
+      const parsedReverseProxyPrefix = parseReverseProxyPrefix(config.reverseProxyPrefix);
+      config.reverseProxyPrefix = parsedReverseProxyPrefix.reverseProxyPrefix;
+      config.subfolders.assets = `${parsedReverseProxyPrefix.subpath}/assets`;
+    } else {
+      // TODO: handle other extensions
+      const assetsDir = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);
 
-    config.subfolders.assets = assetsDir;
+      config.subfolders.assets = assetsDir;
 
-    const publicDir = await determinePublicFilepath(DEFAULT_PUBLIC_DIR, viteConfigPath);
+      const publicDir = await determinePublicFilepath(DEFAULT_PUBLIC_DIR, viteConfigPath);
 
-    config.subfolders.public = publicDir;
+      config.subfolders.public = publicDir;
+    }
 
     return projectStructure;
   };
