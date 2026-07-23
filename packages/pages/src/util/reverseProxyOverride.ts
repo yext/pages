@@ -95,10 +95,12 @@ export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReversePr
  * Updates the scoped config.yaml and vite.config.js files that the build will
  * read so the normal build pipeline picks up the reverse proxy override.
  */
-export const applyReverseProxyOverride = (
-  projectStructure: ProjectStructure,
-  reverseProxyOverride: ReverseProxyOverride
-): void => {
+export const applyReverseProxyOverride = (projectStructure: ProjectStructure): void => {
+  const reverseProxyOverride = projectStructure.config.reverseProxyOverride;
+  if (!reverseProxyOverride) {
+    throw new Error("Cannot apply reverse proxy override because none is configured.");
+  }
+
   const finisher = logger.timedLog({
     startLog: "Applying reverse proxy override",
   });

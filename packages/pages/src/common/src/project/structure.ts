@@ -2,7 +2,11 @@ import pathLib from "node:path";
 import merge from "lodash/merge.js";
 import fs from "node:fs";
 import { Path } from "./path.js";
-import { parseReverseProxyPrefix } from "../../../util/reverseProxyOverride.js";
+import {
+  applyReverseProxyOverride,
+  buildReverseProxyOverride,
+  type ReverseProxyOverride,
+} from "../../../util/reverseProxyOverride.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
 import { determinePublicFilepath } from "../assets/getPublicFilepath.js";
 
@@ -143,9 +147,9 @@ export interface ProjectStructureConfig {
   scope?: string;
 
   /**
-   * The reverse proxy prefix for the current build.
+   * The build configuration derived from the reverse proxy prefix.
    */
-  reverseProxyPrefix?: string;
+  reverseProxyOverride?: ReverseProxyOverride;
 }
 
 const DEFAULT_ASSETS_DIR = "assets";
@@ -221,16 +225,20 @@ export class ProjectStructure {
     this.config = mergedConfig;
   }
 
-  static init = async (projectStructureConfig?: Optional<ProjectStructureConfig>) => {
+  static init = async (
+    projectStructureConfig?: Optional<ProjectStructureConfig>,
+    reverseProxyPrefix?: string
+  ) => {
     const projectStructure = new ProjectStructure(projectStructureConfig);
     const config = projectStructure.config;
 
     const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath() ?? "";
 
-    if (config.reverseProxyPrefix) {
-      const parsedReverseProxyPrefix = parseReverseProxyPrefix(config.reverseProxyPrefix);
-      config.reverseProxyPrefix = parsedReverseProxyPrefix.reverseProxyPrefix;
-      config.subfolders.assets = `${parsedReverseProxyPrefix.subpath}/assets`;
+    if (reverseProxyPrefix) {
+      const reverseProxyOverride = buildReverseProxyOverride(reverseProxyPrefix);
+      config.reverseProxyOverride = reverseProxyOverride;
+      config.subfolders.assets = reverseProxyOverride.assetsDir;
+      applyReverseProxyOverride(projectStructure);
     } else {
       // TODO: handle other extensions
       const assetsDir = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);

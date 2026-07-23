@@ -4,7 +4,6 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { ProjectStructure } from "../common/src/project/structure.js";
 import {
-  applyReverseProxyOverride,
   buildReverseProxyOverride,
   updateConfigYaml,
   updateViteConfig,
@@ -278,7 +277,7 @@ export default defineConfig({
   });
 });
 
-describe("applyReverseProxyOverride", () => {
+describe("ProjectStructure.init with a reverse proxy override", () => {
   const previousCwd = process.cwd();
 
   afterEach(() => {
@@ -302,12 +301,7 @@ describe("applyReverseProxyOverride", () => {
       );
       process.chdir(tempDir);
 
-      const reverseProxyOverride = buildReverseProxyOverride("www.brand.com/locations");
-      const projectStructure = await ProjectStructure.init({
-        scope: "brand",
-        reverseProxyPrefix: reverseProxyOverride.reverseProxyPrefix,
-      });
-      applyReverseProxyOverride(projectStructure, reverseProxyOverride);
+      await ProjectStructure.init({ scope: "brand" }, "www.brand.com/locations");
 
       expect(fs.readFileSync(path.join(tempDir, "brand", "config.yaml"), "utf-8")).toContain(
         "reverseProxyPrefix: www.brand.com/locations"
@@ -338,12 +332,9 @@ describe("applyReverseProxyOverride", () => {
       );
       process.chdir(tempDir);
 
-      const reverseProxyOverride = buildReverseProxyOverride("www.brand.com/locations");
-      const projectStructure = await ProjectStructure.init({
-        scope: "brand",
-        reverseProxyPrefix: reverseProxyOverride.reverseProxyPrefix,
-      });
-      expect(() => applyReverseProxyOverride(projectStructure, reverseProxyOverride)).not.toThrow();
+      await expect(
+        ProjectStructure.init({ scope: "brand" }, "www.brand.com/locations")
+      ).resolves.toBeDefined();
       expect(fs.readFileSync(path.join(tempDir, "vite.config.js"), "utf-8")).toContain(
         'assetsDir: "locations/assets"'
       );
@@ -360,14 +351,9 @@ describe("applyReverseProxyOverride", () => {
       fs.writeFileSync(path.join(tempDir, "vite.config.js"), "export default { build: {} };\n");
       process.chdir(tempDir);
 
-      const reverseProxyOverride = buildReverseProxyOverride("www.brand.com/locations");
-      const projectStructure = await ProjectStructure.init({
-        scope: "brand",
-        reverseProxyPrefix: reverseProxyOverride.reverseProxyPrefix,
-      });
-      expect(() => applyReverseProxyOverride(projectStructure, reverseProxyOverride)).toThrow(
-        /config\.yaml does not exist/
-      );
+      await expect(
+        ProjectStructure.init({ scope: "brand" }, "www.brand.com/locations")
+      ).rejects.toThrow(/config\.yaml does not exist/);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

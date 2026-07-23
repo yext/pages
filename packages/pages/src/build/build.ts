@@ -1,10 +1,6 @@
 import { Command } from "commander";
 import { build } from "vite";
 import { ProjectStructure } from "../common/src/project/structure.js";
-import {
-  applyReverseProxyOverride,
-  buildReverseProxyOverride,
-} from "../util/reverseProxyOverride.js";
 
 /**
  * The arguments passed to the build CLI command.
@@ -22,18 +18,7 @@ export interface BuildArgs {
  */
 const handler = async (buildArgs: BuildArgs) => {
   const { scope, pluginFilesizeLimit, pluginTotalFilesizeLimit, reverseProxyPrefix } = buildArgs;
-  const trimmedReverseProxyPrefix = reverseProxyPrefix?.trim();
-  const projectStructure = await ProjectStructure.init({
-    scope,
-    reverseProxyPrefix: trimmedReverseProxyPrefix || undefined,
-  });
-
-  if (projectStructure.config.reverseProxyPrefix) {
-    const reverseProxyOverride = buildReverseProxyOverride(
-      projectStructure.config.reverseProxyPrefix
-    );
-    applyReverseProxyOverride(projectStructure, reverseProxyOverride);
-  }
+  const projectStructure = await ProjectStructure.init({ scope }, reverseProxyPrefix);
 
   // Pass CLI arguments as env variables to use in vite-plugin
   if (scope) {

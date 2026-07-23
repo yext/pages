@@ -75,16 +75,30 @@ describe("ProjectStructure.init", () => {
     try {
       fs.writeFileSync(
         path.join(tempDir, "vite.config.js"),
-        'throw new Error("vite config loaded before reverse proxy override");\n'
+        'throw new Error("vite config loaded before reverse proxy override");\nexport default { build: {} };\n'
       );
+      fs.writeFileSync(path.join(tempDir, "config.yaml"), "");
       process.chdir(tempDir);
 
-      const projectStructure = await ProjectStructure.init({
-        reverseProxyPrefix: "www.brand.com/locations",
-      });
+      const projectStructure = await ProjectStructure.init(
+        undefined,
+        "  www.brand.com/locations  "
+      );
 
+      expect(projectStructure.config.reverseProxyOverride).toEqual({
+        reverseProxyPrefix: "www.brand.com/locations",
+        assetsDir: "locations/assets",
+        dynamicRoute: {
+          from: "/assets/*",
+          to: "/locations/assets/:splat",
+          status: 200,
+        },
+      });
       expect(projectStructure.config.subfolders.assets).toBe("locations/assets");
-      expect(new ProjectStructure().config.reverseProxyPrefix).toBeUndefined();
+      expect(fs.readFileSync(path.join(tempDir, "vite.config.js"), "utf-8")).toContain(
+        'assetsDir: "locations/assets"'
+      );
+      expect(new ProjectStructure().config.reverseProxyOverride).toBeUndefined();
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
