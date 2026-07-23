@@ -2,11 +2,6 @@ import pathLib from "node:path";
 import merge from "lodash/merge.js";
 import fs from "node:fs";
 import { Path } from "./path.js";
-import {
-  applyReverseProxyOverride,
-  buildReverseProxyOverride,
-  type ReverseProxyOverride,
-} from "../../../util/reverseProxyOverride.js";
 import { determineAssetsFilepath } from "../assets/getAssetsFilepath.js";
 import { determinePublicFilepath } from "../assets/getPublicFilepath.js";
 
@@ -118,6 +113,24 @@ export interface EnvVar {
 }
 
 /**
+ * Build configuration derived from a reverse proxy prefix.
+ */
+export type ReverseProxyOverride = {
+  reverseProxyPrefix: string;
+  assetsDir: string;
+  dynamicRoute: {
+    from: string;
+    to: string;
+    status: number;
+  };
+};
+
+export type ParsedReverseProxyPrefix = {
+  reverseProxyPrefix: string;
+  subpath: string;
+};
+
+/**
  * The configuration structure of a project.
  *
  * @public
@@ -155,6 +168,82 @@ export interface ProjectStructureConfig {
 const DEFAULT_ASSETS_DIR = "assets";
 
 const DEFAULT_PUBLIC_DIR = "public";
+
+/**
+ * Validates and parses a reverse proxy prefix into its normalized value and subpath.
+ */
+export const parseReverseProxyPrefix = (reverseProxyPrefix: string): ParsedReverseProxyPrefix => {
+  const trimmedReverseProxyPrefix = reverseProxyPrefix.trim();
+  if (trimmedReverseProxyPrefix.includes("://")) {
+    throw new Error(
+      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Do not include a protocol. Expected a host and subpath like "www.brand.com/locations".`
+    );
+  }
+
+  if (!trimmedReverseProxyPrefix.includes("/")) {
+    throw new Error(
+      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a host and subpath like "www.brand.com/locations".`
+    );
+  }
+
+  const subpathAfterHost = trimmedReverseProxyPrefix.substring(
+    trimmedReverseProxyPrefix.indexOf("/") + 1
+  );
+  const normalizedPathSegments = subpathAfterHost
+    .split("/")
+    .filter(Boolean)
+    .map((segment) => {
+      try {
+        return decodeURIComponent(segment);
+      } catch {
+        throw new Error(
+          `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected valid percent-encoding in the subpath.`
+        );
+      }
+    });
+
+  const subpath = normalizedPathSegments.join("/");
+  if (!subpath) {
+    throw new Error(
+      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a non-empty subpath after the host.`
+    );
+  }
+
+  if (!normalizedPathSegments.every((segment) => /^[A-Za-z0-9_-]+$/.test(segment))) {
+    throw new Error(
+      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected the subpath to contain only letters, numbers, "-", "_", and "/".`
+    );
+  }
+
+  return {
+    reverseProxyPrefix: trimmedReverseProxyPrefix,
+    subpath,
+  };
+};
+
+/**
+ * Validates and parses a reverse proxy prefix into the concrete build-time
+ * values needed to initialize the project and update its configuration.
+ */
+export const buildReverseProxyOverride = (
+  projectStructure: ProjectStructure,
+  reverseProxyPrefix: string
+): ReverseProxyOverride => {
+  const parsedReverseProxyPrefix = parseReverseProxyPrefix(reverseProxyPrefix);
+  const { subpath } = parsedReverseProxyPrefix;
+  const originalAssetsPath = projectStructure.config.subfolders.assets;
+  const rppAssetsPath = `${subpath}/${originalAssetsPath}`;
+
+  return {
+    reverseProxyPrefix: parsedReverseProxyPrefix.reverseProxyPrefix,
+    assetsDir: rppAssetsPath,
+    dynamicRoute: {
+      from: `/${originalAssetsPath}/*`,
+      to: `/${rppAssetsPath}/:splat`,
+      status: 200,
+    },
+  };
+};
 
 const defaultProjectStructureConfig: ProjectStructureConfig = {
   rootFolders: {
@@ -235,10 +324,9 @@ export class ProjectStructure {
     const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath() ?? "";
 
     if (reverseProxyPrefix) {
-      const reverseProxyOverride = buildReverseProxyOverride(reverseProxyPrefix);
+      const reverseProxyOverride = buildReverseProxyOverride(projectStructure, reverseProxyPrefix);
       config.reverseProxyOverride = reverseProxyOverride;
       config.subfolders.assets = reverseProxyOverride.assetsDir;
-      applyReverseProxyOverride(projectStructure);
     } else {
       // TODO: handle other extensions
       const assetsDir = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);

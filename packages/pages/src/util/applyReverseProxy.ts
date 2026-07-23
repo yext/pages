@@ -2,103 +2,17 @@ import fs from "node:fs";
 import path from "node:path";
 import { Node, ObjectLiteralExpression, Project, SyntaxKind } from "ts-morph";
 import YAML from "yaml";
-import type { ProjectStructure } from "../common/src/project/structure.js";
+import type { ProjectStructure, ReverseProxyOverride } from "../common/src/project/structure.js";
 import logger from "../vite-plugin/log.js";
-
-export type ParsedReverseProxyPrefix = {
-  reverseProxyPrefix: string;
-  subpath: string;
-};
-
-export type ReverseProxyOverride = {
-  reverseProxyPrefix: string;
-  assetsDir: string;
-  dynamicRoute: {
-    from: string;
-    to: string;
-    status: number;
-  };
-};
-
-/**
- * Validates and parses a reverse proxy prefix into its normalized value and subpath.
- */
-export const parseReverseProxyPrefix = (reverseProxyPrefix: string): ParsedReverseProxyPrefix => {
-  const trimmedReverseProxyPrefix = reverseProxyPrefix.trim();
-  if (trimmedReverseProxyPrefix.includes("://")) {
-    throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Do not include a protocol. Expected a host and subpath like "www.brand.com/locations".`
-    );
-  }
-
-  if (!trimmedReverseProxyPrefix.includes("/")) {
-    throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a host and subpath like "www.brand.com/locations".`
-    );
-  }
-
-  const subpathAfterHost = trimmedReverseProxyPrefix.substring(
-    trimmedReverseProxyPrefix.indexOf("/") + 1
-  );
-  const normalizedPathSegments = subpathAfterHost
-    .split("/")
-    .filter(Boolean)
-    .map((segment) => {
-      try {
-        return decodeURIComponent(segment);
-      } catch {
-        throw new Error(
-          `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected valid percent-encoding in the subpath.`
-        );
-      }
-    });
-
-  const subpath = normalizedPathSegments.join("/");
-  if (!subpath) {
-    throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a non-empty subpath after the host.`
-    );
-  }
-
-  if (!normalizedPathSegments.every((segment) => /^[A-Za-z0-9_-]+$/.test(segment))) {
-    throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected the subpath to contain only letters, numbers, "-", "_", and "/".`
-    );
-  }
-
-  return {
-    reverseProxyPrefix: trimmedReverseProxyPrefix,
-    subpath,
-  };
-};
-
-/**
- * Validates and parses a reverse proxy prefix into the concrete build-time
- * values needed to initialize the project and update its configuration.
- */
-export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReverseProxyOverride => {
-  const parsedReverseProxyPrefix = parseReverseProxyPrefix(reverseProxyPrefix);
-  const { subpath } = parsedReverseProxyPrefix;
-
-  return {
-    reverseProxyPrefix: parsedReverseProxyPrefix.reverseProxyPrefix,
-    assetsDir: `${subpath}/assets`,
-    dynamicRoute: {
-      from: "/assets/*",
-      to: `/${subpath}/assets/:splat`,
-      status: 200,
-    },
-  };
-};
 
 /**
  * Updates the scoped config.yaml and vite.config.js files that the build will
  * read so the normal build pipeline picks up the reverse proxy override.
  */
-export const applyReverseProxyOverride = (projectStructure: ProjectStructure): void => {
+export const applyReverseProxy = (projectStructure: ProjectStructure): void => {
   const reverseProxyOverride = projectStructure.config.reverseProxyOverride;
   if (!reverseProxyOverride) {
-    throw new Error("Cannot apply reverse proxy override because none is configured.");
+    return;
   }
 
   const finisher = logger.timedLog({

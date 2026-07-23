@@ -2,72 +2,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { ProjectStructure } from "../common/src/project/structure.js";
-import {
-  buildReverseProxyOverride,
-  updateConfigYaml,
-  updateViteConfig,
-} from "./reverseProxyOverride.js";
+import { buildReverseProxyOverride, ProjectStructure } from "../common/src/project/structure.js";
+import { applyReverseProxy, updateConfigYaml, updateViteConfig } from "./applyReverseProxy.js";
 
-describe("buildReverseProxyOverride", () => {
-  it("returns the derived override values", () => {
-    expect(buildReverseProxyOverride("www.brand.com/locations")).toEqual({
-      reverseProxyPrefix: "www.brand.com/locations",
-      assetsDir: "locations/assets",
-      dynamicRoute: {
-        from: "/assets/*",
-        to: "/locations/assets/:splat",
-        status: 200,
-      },
-    });
-  });
-
-  it("supports nested subpaths", () => {
-    expect(buildReverseProxyOverride("www.brand.com/foo/bar")).toEqual({
-      reverseProxyPrefix: "www.brand.com/foo/bar",
-      assetsDir: "foo/bar/assets",
-      dynamicRoute: {
-        from: "/assets/*",
-        to: "/foo/bar/assets/:splat",
-        status: 200,
-      },
-    });
-  });
-
-  it("throws when the reverse proxy prefix includes a protocol", () => {
-    expect(() => buildReverseProxyOverride("https://www.brand.com/locations/")).toThrow(
-      /Do not include a protocol/
-    );
-  });
-
-  it("collapses duplicate slashes in the subpath", () => {
-    expect(buildReverseProxyOverride("www.brand.com/foo//bar/")).toEqual({
-      reverseProxyPrefix: "www.brand.com/foo//bar/",
-      assetsDir: "foo/bar/assets",
-      dynamicRoute: {
-        from: "/assets/*",
-        to: "/foo/bar/assets/:splat",
-        status: 200,
-      },
-    });
-  });
-
-  it("throws when the reverse proxy prefix has no slash", () => {
-    expect(() => buildReverseProxyOverride("www.brand.com")).toThrow(/Expected a host and subpath/);
-  });
-
-  it("throws when the reverse proxy prefix has an empty subpath", () => {
-    expect(() => buildReverseProxyOverride("www.brand.com/")).toThrow(
-      /Expected a non-empty subpath/
-    );
-  });
-
-  it("throws when the normalized subpath contains invalid characters", () => {
-    expect(() => buildReverseProxyOverride("www.brand.com/location name")).toThrow(
-      /Expected the subpath to contain only letters, numbers, "-", "_", and "\/"/
-    );
-  });
-});
+const buildDefaultReverseProxyOverride = (reverseProxyPrefix: string) =>
+  buildReverseProxyOverride(new ProjectStructure(), reverseProxyPrefix);
 
 describe("updateConfigYaml", () => {
   it("overwrites reverse proxy values and preserves unrelated config", () => {
@@ -92,7 +31,7 @@ sitemap:
 `
       );
 
-      updateConfigYaml(configYamlPath, buildReverseProxyOverride("www.brand.com/locations"));
+      updateConfigYaml(configYamlPath, buildDefaultReverseProxyOverride("www.brand.com/locations"));
 
       expect(fs.readFileSync(configYamlPath, "utf-8")).toContain(
         "reverseProxyPrefix: www.brand.com/locations"
@@ -117,7 +56,7 @@ sitemap:
 `
       );
 
-      updateConfigYaml(configYamlPath, buildReverseProxyOverride("www.brand.com/locations"));
+      updateConfigYaml(configYamlPath, buildDefaultReverseProxyOverride("www.brand.com/locations"));
 
       expect(fs.readFileSync(configYamlPath, "utf-8")).toContain("from: /assets/*");
       expect(fs.readFileSync(configYamlPath, "utf-8")).toContain(
@@ -142,7 +81,7 @@ serving:
 `
       );
 
-      updateConfigYaml(configYamlPath, buildReverseProxyOverride("www.brand.com/locations"));
+      updateConfigYaml(configYamlPath, buildDefaultReverseProxyOverride("www.brand.com/locations"));
 
       expect(fs.readFileSync(configYamlPath, "utf-8")).toContain("# serving comment");
       expect(fs.readFileSync(configYamlPath, "utf-8")).toContain("# reverse proxy comment");
@@ -163,7 +102,7 @@ serving:
 `
       );
 
-      updateConfigYaml(configYamlPath, buildReverseProxyOverride("www.brand.com/locations"));
+      updateConfigYaml(configYamlPath, buildDefaultReverseProxyOverride("www.brand.com/locations"));
 
       const updatedConfigYaml = fs.readFileSync(configYamlPath, "utf-8");
       expect(updatedConfigYaml).toContain("buildCommand: npm run build");
@@ -182,7 +121,7 @@ serving:
     try {
       fs.writeFileSync(configYamlPath, "");
 
-      updateConfigYaml(configYamlPath, buildReverseProxyOverride("www.brand.com/locations"));
+      updateConfigYaml(configYamlPath, buildDefaultReverseProxyOverride("www.brand.com/locations"));
 
       const updatedConfigYaml = fs.readFileSync(configYamlPath, "utf-8");
       expect(updatedConfigYaml).toContain("serving:");
@@ -277,14 +216,18 @@ export default defineConfig({
   });
 });
 
-describe("ProjectStructure.init with a reverse proxy override", () => {
+describe("applyReverseProxy", () => {
   const previousCwd = process.cwd();
 
   afterEach(() => {
     process.chdir(previousCwd);
   });
 
-  it("modifies only the scoped files", async () => {
+  it("does nothing when the project has no reverse proxy override", () => {
+    expect(() => applyReverseProxy(new ProjectStructure())).not.toThrow();
+  });
+
+  it("modifies only the scoped files", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
 
     try {
@@ -301,7 +244,13 @@ describe("ProjectStructure.init with a reverse proxy override", () => {
       );
       process.chdir(tempDir);
 
-      await ProjectStructure.init({ scope: "brand" }, "www.brand.com/locations");
+      const reverseProxyOverride = buildDefaultReverseProxyOverride("www.brand.com/locations");
+      const projectStructure = new ProjectStructure({
+        scope: "brand",
+        reverseProxyOverride,
+        subfolders: { assets: reverseProxyOverride.assetsDir },
+      });
+      applyReverseProxy(projectStructure);
 
       expect(fs.readFileSync(path.join(tempDir, "brand", "config.yaml"), "utf-8")).toContain(
         "reverseProxyPrefix: www.brand.com/locations"
@@ -320,7 +269,7 @@ describe("ProjectStructure.init with a reverse proxy override", () => {
     }
   });
 
-  it("fails clearly when a scoped file is missing", async () => {
+  it("falls back to the root vite config when the scoped file is missing", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
 
     try {
@@ -332,9 +281,14 @@ describe("ProjectStructure.init with a reverse proxy override", () => {
       );
       process.chdir(tempDir);
 
-      await expect(
-        ProjectStructure.init({ scope: "brand" }, "www.brand.com/locations")
-      ).resolves.toBeDefined();
+      const reverseProxyOverride = buildDefaultReverseProxyOverride("www.brand.com/locations");
+      const projectStructure = new ProjectStructure({
+        scope: "brand",
+        reverseProxyOverride,
+        subfolders: { assets: reverseProxyOverride.assetsDir },
+      });
+      applyReverseProxy(projectStructure);
+
       expect(fs.readFileSync(path.join(tempDir, "vite.config.js"), "utf-8")).toContain(
         'assetsDir: "locations/assets"'
       );
@@ -343,7 +297,7 @@ describe("ProjectStructure.init with a reverse proxy override", () => {
     }
   });
 
-  it("fails clearly when a scoped config yaml is missing", async () => {
+  it("fails clearly when a scoped config yaml is missing", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
 
     try {
@@ -351,9 +305,13 @@ describe("ProjectStructure.init with a reverse proxy override", () => {
       fs.writeFileSync(path.join(tempDir, "vite.config.js"), "export default { build: {} };\n");
       process.chdir(tempDir);
 
-      await expect(
-        ProjectStructure.init({ scope: "brand" }, "www.brand.com/locations")
-      ).rejects.toThrow(/config\.yaml does not exist/);
+      const reverseProxyOverride = buildDefaultReverseProxyOverride("www.brand.com/locations");
+      const projectStructure = new ProjectStructure({
+        scope: "brand",
+        reverseProxyOverride,
+        subfolders: { assets: reverseProxyOverride.assetsDir },
+      });
+      expect(() => applyReverseProxy(projectStructure)).toThrow(/config\.yaml does not exist/);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
