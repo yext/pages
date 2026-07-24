@@ -2,11 +2,19 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { buildReverseProxyOverride, ProjectStructure } from "../common/src/project/structure.js";
+import {
+  buildReverseProxyOverride,
+  parseReverseProxyPrefix,
+  ProjectStructure,
+} from "../common/src/project/structure.js";
 import { applyReverseProxy, updateConfigYaml, updateViteConfig } from "./applyReverseProxy.js";
 
 const buildDefaultReverseProxyOverride = (reverseProxyPrefix: string) =>
-  buildReverseProxyOverride(new ProjectStructure(), reverseProxyPrefix);
+  buildReverseProxyOverride("assets", parseReverseProxyPrefix(reverseProxyPrefix));
+
+const writeEsmPackageJson = (directory: string) => {
+  fs.writeFileSync(path.join(directory, "package.json"), '{"type":"module"}\n');
+};
 
 describe("updateConfigYaml", () => {
   it("overwrites reverse proxy values and preserves unrelated config", () => {
@@ -223,14 +231,15 @@ describe("applyReverseProxy", () => {
     process.chdir(previousCwd);
   });
 
-  it("does nothing when the project has no reverse proxy override", () => {
-    expect(() => applyReverseProxy(new ProjectStructure())).not.toThrow();
+  it("does nothing when no reverse proxy prefix is provided", async () => {
+    await expect(applyReverseProxy(undefined, undefined)).resolves.toBeUndefined();
   });
 
-  it("modifies only the scoped files", () => {
+  it("modifies only the scoped files", async () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
 
     try {
+      writeEsmPackageJson(tempDir);
       fs.mkdirSync(path.join(tempDir, "brand"), { recursive: true });
       fs.writeFileSync(path.join(tempDir, "config.yaml"), "serving:\n  reverseProxyPrefix: root\n");
       fs.writeFileSync(path.join(tempDir, "vite.config.js"), "export default { build: {} };\n");
@@ -244,13 +253,7 @@ describe("applyReverseProxy", () => {
       );
       process.chdir(tempDir);
 
-      const reverseProxyOverride = buildDefaultReverseProxyOverride("www.brand.com/locations");
-      const projectStructure = new ProjectStructure({
-        scope: "brand",
-        reverseProxyOverride,
-        subfolders: { assets: reverseProxyOverride.assetsDir },
-      });
-      applyReverseProxy(projectStructure);
+      await applyReverseProxy("brand", parseReverseProxyPrefix("www.brand.com/locations"));
 
       expect(fs.readFileSync(path.join(tempDir, "brand", "config.yaml"), "utf-8")).toContain(
         "reverseProxyPrefix: www.brand.com/locations"
@@ -269,10 +272,11 @@ describe("applyReverseProxy", () => {
     }
   });
 
-  it("falls back to the root vite config when the scoped file is missing", () => {
+  it("falls back to the root vite config when the scoped file is missing", async () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
 
     try {
+      writeEsmPackageJson(tempDir);
       fs.mkdirSync(path.join(tempDir, "brand"), { recursive: true });
       fs.writeFileSync(path.join(tempDir, "vite.config.js"), "export default { build: {} };\n");
       fs.writeFileSync(
@@ -281,13 +285,7 @@ describe("applyReverseProxy", () => {
       );
       process.chdir(tempDir);
 
-      const reverseProxyOverride = buildDefaultReverseProxyOverride("www.brand.com/locations");
-      const projectStructure = new ProjectStructure({
-        scope: "brand",
-        reverseProxyOverride,
-        subfolders: { assets: reverseProxyOverride.assetsDir },
-      });
-      applyReverseProxy(projectStructure);
+      await applyReverseProxy("brand", parseReverseProxyPrefix("www.brand.com/locations"));
 
       expect(fs.readFileSync(path.join(tempDir, "vite.config.js"), "utf-8")).toContain(
         'assetsDir: "locations/assets"'
@@ -297,21 +295,46 @@ describe("applyReverseProxy", () => {
     }
   });
 
-  it("fails clearly when a scoped config yaml is missing", () => {
+  it("preserves publicDir and derives the override from the configured assetsDir", async () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
 
     try {
+      writeEsmPackageJson(tempDir);
+      fs.writeFileSync(path.join(tempDir, "config.yaml"), "{}\n");
+      fs.writeFileSync(
+        path.join(tempDir, "vite.config.js"),
+        `export default {
+  publicDir: "custom-public",
+  build: {
+    assetsDir: "static"
+  }
+};
+`
+      );
+      process.chdir(tempDir);
+
+      await applyReverseProxy(undefined, parseReverseProxyPrefix("www.brand.com/locations"));
+      const projectStructure = await ProjectStructure.init();
+
+      expect(projectStructure.config.subfolders.assets).toBe("locations/static");
+      expect(projectStructure.config.subfolders.public).toBe("custom-public");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("fails clearly when a scoped config yaml is missing", async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
+
+    try {
+      writeEsmPackageJson(tempDir);
       fs.mkdirSync(path.join(tempDir, "brand"), { recursive: true });
       fs.writeFileSync(path.join(tempDir, "vite.config.js"), "export default { build: {} };\n");
       process.chdir(tempDir);
 
-      const reverseProxyOverride = buildDefaultReverseProxyOverride("www.brand.com/locations");
-      const projectStructure = new ProjectStructure({
-        scope: "brand",
-        reverseProxyOverride,
-        subfolders: { assets: reverseProxyOverride.assetsDir },
-      });
-      expect(() => applyReverseProxy(projectStructure)).toThrow(/config\.yaml does not exist/);
+      await expect(
+        applyReverseProxy("brand", parseReverseProxyPrefix("www.brand.com/locations"))
+      ).rejects.toThrow(/config\.yaml does not exist/);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

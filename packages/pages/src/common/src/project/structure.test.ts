@@ -35,6 +35,16 @@ describe("parseReverseProxyPrefix", () => {
       expectedError: /Expected a host and subpath/,
     },
     {
+      name: "no host",
+      reverseProxyPrefix: "/locations",
+      expectedError: /Expected a host and subpath/,
+    },
+    {
+      name: "an empty value",
+      reverseProxyPrefix: "",
+      expectedError: /Expected a host and subpath/,
+    },
+    {
       name: "an empty subpath",
       reverseProxyPrefix: "www.brand.com/",
       expectedError: /Expected a non-empty subpath/,
@@ -56,7 +66,9 @@ describe("parseReverseProxyPrefix", () => {
 
 describe("buildReverseProxyOverride", () => {
   it("returns the derived override values", () => {
-    expect(buildReverseProxyOverride(new ProjectStructure(), "www.brand.com/locations")).toEqual({
+    expect(
+      buildReverseProxyOverride("assets", parseReverseProxyPrefix("www.brand.com/locations"))
+    ).toEqual({
       reverseProxyPrefix: "www.brand.com/locations",
       assetsDir: "locations/assets",
       dynamicRoute: {
@@ -68,7 +80,9 @@ describe("buildReverseProxyOverride", () => {
   });
 
   it("supports nested subpaths", () => {
-    expect(buildReverseProxyOverride(new ProjectStructure(), "www.brand.com/foo/bar")).toEqual({
+    expect(
+      buildReverseProxyOverride("assets", parseReverseProxyPrefix("www.brand.com/foo/bar"))
+    ).toEqual({
       reverseProxyPrefix: "www.brand.com/foo/bar",
       assetsDir: "foo/bar/assets",
       dynamicRoute: {
@@ -79,14 +93,10 @@ describe("buildReverseProxyOverride", () => {
     });
   });
 
-  it("uses the project structure assets path", () => {
-    const projectStructure = new ProjectStructure({
-      subfolders: {
-        assets: "static",
-      },
-    });
-
-    expect(buildReverseProxyOverride(projectStructure, "www.brand.com/locations")).toEqual({
+  it("uses the provided assets path", () => {
+    expect(
+      buildReverseProxyOverride("static", parseReverseProxyPrefix("www.brand.com/locations"))
+    ).toEqual({
       reverseProxyPrefix: "www.brand.com/locations",
       assetsDir: "locations/static",
       dynamicRoute: {
@@ -95,42 +105,6 @@ describe("buildReverseProxyOverride", () => {
         status: 200,
       },
     });
-  });
-
-  it("throws when the reverse proxy prefix includes a protocol", () => {
-    expect(() =>
-      buildReverseProxyOverride(new ProjectStructure(), "https://www.brand.com/locations/")
-    ).toThrow(/Do not include a protocol/);
-  });
-
-  it("collapses duplicate slashes in the subpath", () => {
-    expect(buildReverseProxyOverride(new ProjectStructure(), "www.brand.com/foo//bar/")).toEqual({
-      reverseProxyPrefix: "www.brand.com/foo//bar/",
-      assetsDir: "foo/bar/assets",
-      dynamicRoute: {
-        from: "/assets/*",
-        to: "/foo/bar/assets/:splat",
-        status: 200,
-      },
-    });
-  });
-
-  it("throws when the reverse proxy prefix has no slash", () => {
-    expect(() => buildReverseProxyOverride(new ProjectStructure(), "www.brand.com")).toThrow(
-      /Expected a host and subpath/
-    );
-  });
-
-  it("throws when the reverse proxy prefix has an empty subpath", () => {
-    expect(() => buildReverseProxyOverride(new ProjectStructure(), "www.brand.com/")).toThrow(
-      /Expected a non-empty subpath/
-    );
-  });
-
-  it("throws when the normalized subpath contains invalid characters", () => {
-    expect(() =>
-      buildReverseProxyOverride(new ProjectStructure(), "www.brand.com/location name")
-    ).toThrow(/Expected the subpath to contain only letters, numbers, "-", "_", and "\/"/);
   });
 });
 
@@ -199,32 +173,16 @@ describe("ProjectStructure.init", () => {
     process.chdir(previousCwd);
   });
 
-  it("uses the reverse proxy assets directory without loading vite.config.js", async () => {
+  it("uses the default paths when no vite config exists", async () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-project-structure-"));
 
     try {
-      fs.writeFileSync(
-        path.join(tempDir, "vite.config.js"),
-        'throw new Error("vite config loaded before reverse proxy override");\nexport default { build: {} };\n'
-      );
       process.chdir(tempDir);
 
-      const projectStructure = await ProjectStructure.init(
-        undefined,
-        "  www.brand.com/locations  "
-      );
+      const projectStructure = await ProjectStructure.init();
 
-      expect(projectStructure.config.reverseProxyOverride).toEqual({
-        reverseProxyPrefix: "www.brand.com/locations",
-        assetsDir: "locations/assets",
-        dynamicRoute: {
-          from: "/assets/*",
-          to: "/locations/assets/:splat",
-          status: 200,
-        },
-      });
-      expect(projectStructure.config.subfolders.assets).toBe("locations/assets");
-      expect(new ProjectStructure().config.reverseProxyOverride).toBeUndefined();
+      expect(projectStructure.config.subfolders.assets).toBe("assets");
+      expect(projectStructure.config.subfolders.public).toBe("public");
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

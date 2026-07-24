@@ -2,25 +2,33 @@ import fs from "node:fs";
 import path from "node:path";
 import { Node, ObjectLiteralExpression, Project, SyntaxKind } from "ts-morph";
 import YAML from "yaml";
-import type { ProjectStructure, ReverseProxyOverride } from "../common/src/project/structure.js";
+import { determineAssetsFilepath } from "../common/src/assets/getAssetsFilepath.js";
+import {
+  buildReverseProxyOverride,
+  ProjectStructure,
+  type ReverseProxyOverride,
+  parseReverseProxyPrefix,
+} from "../common/src/project/structure.js";
 import logger from "../vite-plugin/log.js";
 
 /**
  * Updates the scoped config.yaml and vite.config.js files that the build will
  * read so the normal build pipeline picks up the reverse proxy override.
  */
-export const applyReverseProxy = (projectStructure: ProjectStructure): void => {
-  const reverseProxyOverride = projectStructure.config.reverseProxyOverride;
-  if (!reverseProxyOverride) {
+export const applyReverseProxy = async (
+  scope: string | undefined,
+  parsedReverseProxyPrefix: ReturnType<typeof parseReverseProxyPrefix> | undefined
+): Promise<void> => {
+  if (!parsedReverseProxyPrefix) {
     return;
   }
 
+  const projectStructure = new ProjectStructure({ scope });
   const finisher = logger.timedLog({
     startLog: "Applying reverse proxy override",
   });
   const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
   const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath();
-  const scope = projectStructure.config.scope;
 
   if (!fs.existsSync(configYamlPath)) {
     throw new Error(`Cannot apply reverseProxyPrefix because ${configYamlPath} does not exist.`);
@@ -30,8 +38,17 @@ export const applyReverseProxy = (projectStructure: ProjectStructure): void => {
     throw new Error(`Cannot apply reverseProxyPrefix because ${viteConfigPath} does not exist.`);
   }
 
+  const originalAssetsPath = await determineAssetsFilepath(
+    projectStructure.config.subfolders.assets,
+    viteConfigPath
+  );
+  const reverseProxyOverride = buildReverseProxyOverride(
+    originalAssetsPath,
+    parsedReverseProxyPrefix
+  );
+
   updateConfigYaml(configYamlPath, reverseProxyOverride);
-  updateViteConfig(viteConfigPath, projectStructure.config.subfolders.assets);
+  updateViteConfig(viteConfigPath, reverseProxyOverride.assetsDir);
   finisher.succeed(
     scope
       ? `Applied reverse proxy override for ${scope}: ${reverseProxyOverride.reverseProxyPrefix}`

@@ -125,7 +125,7 @@ export type ReverseProxyOverride = {
   };
 };
 
-export type ParsedReverseProxyPrefix = {
+type ParsedReverseProxyPrefix = {
   reverseProxyPrefix: string;
   subpath: string;
 };
@@ -158,11 +158,6 @@ export interface ProjectStructureConfig {
    * Modules scoping is also supported.
    */
   scope?: string;
-
-  /**
-   * The build configuration derived from the reverse proxy prefix.
-   */
-  reverseProxyOverride?: ReverseProxyOverride;
 }
 
 const DEFAULT_ASSETS_DIR = "assets";
@@ -180,15 +175,14 @@ export const parseReverseProxyPrefix = (reverseProxyPrefix: string): ParsedRever
     );
   }
 
-  if (!trimmedReverseProxyPrefix.includes("/")) {
+  const subpathSeparatorIndex = trimmedReverseProxyPrefix.indexOf("/");
+  if (subpathSeparatorIndex <= 0) {
     throw new Error(
       `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a host and subpath like "www.brand.com/locations".`
     );
   }
 
-  const subpathAfterHost = trimmedReverseProxyPrefix.substring(
-    trimmedReverseProxyPrefix.indexOf("/") + 1
-  );
+  const subpathAfterHost = trimmedReverseProxyPrefix.substring(subpathSeparatorIndex + 1);
   const normalizedPathSegments = subpathAfterHost
     .split("/")
     .filter(Boolean)
@@ -226,12 +220,10 @@ export const parseReverseProxyPrefix = (reverseProxyPrefix: string): ParsedRever
  * values needed to initialize the project and update its configuration.
  */
 export const buildReverseProxyOverride = (
-  projectStructure: ProjectStructure,
-  reverseProxyPrefix: string
+  originalAssetsPath: string,
+  parsedReverseProxyPrefix: ParsedReverseProxyPrefix
 ): ReverseProxyOverride => {
-  const parsedReverseProxyPrefix = parseReverseProxyPrefix(reverseProxyPrefix);
   const { subpath } = parsedReverseProxyPrefix;
-  const originalAssetsPath = projectStructure.config.subfolders.assets;
   const rppAssetsPath = `${subpath}/${originalAssetsPath}`;
 
   return {
@@ -314,29 +306,16 @@ export class ProjectStructure {
     this.config = mergedConfig;
   }
 
-  static init = async (
-    projectStructureConfig?: Optional<ProjectStructureConfig>,
-    reverseProxyPrefix?: string
-  ) => {
+  static init = async (projectStructureConfig?: Optional<ProjectStructureConfig>) => {
     const projectStructure = new ProjectStructure(projectStructureConfig);
     const config = projectStructure.config;
 
     const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath() ?? "";
 
-    if (reverseProxyPrefix) {
-      const reverseProxyOverride = buildReverseProxyOverride(projectStructure, reverseProxyPrefix);
-      config.reverseProxyOverride = reverseProxyOverride;
-      config.subfolders.assets = reverseProxyOverride.assetsDir;
-    } else {
-      // TODO: handle other extensions
-      const assetsDir = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);
+    // TODO: handle other extensions
+    config.subfolders.assets = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);
 
-      config.subfolders.assets = assetsDir;
-
-      const publicDir = await determinePublicFilepath(DEFAULT_PUBLIC_DIR, viteConfigPath);
-
-      config.subfolders.public = publicDir;
-    }
+    config.subfolders.public = await determinePublicFilepath(DEFAULT_PUBLIC_DIR, viteConfigPath);
 
     return projectStructure;
   };
