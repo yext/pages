@@ -113,24 +113,6 @@ export interface EnvVar {
 }
 
 /**
- * Build configuration derived from a reverse proxy prefix.
- */
-export type ReverseProxyOverride = {
-  reverseProxyPrefix: string;
-  assetsDir: string;
-  dynamicRoute: {
-    from: string;
-    to: string;
-    status: number;
-  };
-};
-
-type ParsedReverseProxyPrefix = {
-  reverseProxyPrefix: string;
-  subpath: string;
-};
-
-/**
  * The configuration structure of a project.
  *
  * @public
@@ -163,79 +145,6 @@ export interface ProjectStructureConfig {
 const DEFAULT_ASSETS_DIR = "assets";
 
 const DEFAULT_PUBLIC_DIR = "public";
-
-/**
- * Validates and parses a reverse proxy prefix into its normalized value and subpath.
- */
-export const parseReverseProxyPrefix = (reverseProxyPrefix: string): ParsedReverseProxyPrefix => {
-  const trimmedReverseProxyPrefix = reverseProxyPrefix.trim();
-  if (trimmedReverseProxyPrefix.includes("://")) {
-    throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Do not include a protocol. Expected a host and subpath like "www.brand.com/locations".`
-    );
-  }
-
-  const subpathSeparatorIndex = trimmedReverseProxyPrefix.indexOf("/");
-  if (subpathSeparatorIndex <= 0) {
-    throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a host and subpath like "www.brand.com/locations".`
-    );
-  }
-
-  const subpathAfterHost = trimmedReverseProxyPrefix.substring(subpathSeparatorIndex + 1);
-  const normalizedPathSegments = subpathAfterHost
-    .split("/")
-    .filter(Boolean)
-    .map((segment) => {
-      try {
-        return decodeURIComponent(segment);
-      } catch {
-        throw new Error(
-          `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected valid percent-encoding in the subpath.`
-        );
-      }
-    });
-
-  const subpath = normalizedPathSegments.join("/");
-  if (!subpath) {
-    throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a non-empty subpath after the host.`
-    );
-  }
-
-  if (!normalizedPathSegments.every((segment) => /^[A-Za-z0-9_-]+$/.test(segment))) {
-    throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected the subpath to contain only letters, numbers, "-", "_", and "/".`
-    );
-  }
-
-  return {
-    reverseProxyPrefix: trimmedReverseProxyPrefix,
-    subpath,
-  };
-};
-
-/**
- * Validates and parses a reverse proxy prefix into the concrete build-time
- * values needed to initialize the project and update its configuration.
- */
-export const buildReverseProxyOverride = (
-  originalAssetsPath: string,
-  parsedReverseProxyPrefix: ParsedReverseProxyPrefix
-): ReverseProxyOverride => {
-  const { subpath } = parsedReverseProxyPrefix;
-  const rppAssetsPath = `${subpath}/${originalAssetsPath}`;
-
-  return {
-    reverseProxyPrefix: parsedReverseProxyPrefix.reverseProxyPrefix,
-    assetsDir: rppAssetsPath,
-    dynamicRoute: {
-      from: `/${originalAssetsPath}/*`,
-      to: `/${rppAssetsPath}/:splat`,
-      status: 200,
-    },
-  };
-};
 
 const defaultProjectStructureConfig: ProjectStructureConfig = {
   rootFolders: {
@@ -313,9 +222,15 @@ export class ProjectStructure {
     const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath() ?? "";
 
     // TODO: handle other extensions
-    config.subfolders.assets = await determineAssetsFilepath(DEFAULT_ASSETS_DIR, viteConfigPath);
+    config.subfolders.assets = await determineAssetsFilepath(
+      config.subfolders.assets,
+      viteConfigPath
+    );
 
-    config.subfolders.public = await determinePublicFilepath(DEFAULT_PUBLIC_DIR, viteConfigPath);
+    config.subfolders.public = await determinePublicFilepath(
+      config.subfolders.public,
+      viteConfigPath
+    );
 
     return projectStructure;
   };

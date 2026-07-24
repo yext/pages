@@ -2,111 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import {
-  buildReverseProxyOverride,
-  parseReverseProxyPrefix,
-  ProjectStructure,
-} from "./structure.js";
-
-describe("parseReverseProxyPrefix", () => {
-  it("trims the prefix and normalizes the subpath", () => {
-    expect(parseReverseProxyPrefix("  www.brand.com/foo//bar/  ")).toEqual({
-      reverseProxyPrefix: "www.brand.com/foo//bar/",
-      subpath: "foo/bar",
-    });
-  });
-
-  it("decodes percent-encoded path segments", () => {
-    expect(parseReverseProxyPrefix("www.brand.com/%6Cocations")).toEqual({
-      reverseProxyPrefix: "www.brand.com/%6Cocations",
-      subpath: "locations",
-    });
-  });
-
-  it.each([
-    {
-      name: "a protocol",
-      reverseProxyPrefix: "https://www.brand.com/locations",
-      expectedError: /Do not include a protocol/,
-    },
-    {
-      name: "no subpath separator",
-      reverseProxyPrefix: "www.brand.com",
-      expectedError: /Expected a host and subpath/,
-    },
-    {
-      name: "no host",
-      reverseProxyPrefix: "/locations",
-      expectedError: /Expected a host and subpath/,
-    },
-    {
-      name: "an empty value",
-      reverseProxyPrefix: "",
-      expectedError: /Expected a host and subpath/,
-    },
-    {
-      name: "an empty subpath",
-      reverseProxyPrefix: "www.brand.com/",
-      expectedError: /Expected a non-empty subpath/,
-    },
-    {
-      name: "invalid percent-encoding",
-      reverseProxyPrefix: "www.brand.com/%ZZ",
-      expectedError: /Expected valid percent-encoding/,
-    },
-    {
-      name: "invalid subpath characters",
-      reverseProxyPrefix: "www.brand.com/location name",
-      expectedError: /Expected the subpath to contain only/,
-    },
-  ])("rejects a prefix with $name", ({ reverseProxyPrefix, expectedError }) => {
-    expect(() => parseReverseProxyPrefix(reverseProxyPrefix)).toThrow(expectedError);
-  });
-});
-
-describe("buildReverseProxyOverride", () => {
-  it("returns the derived override values", () => {
-    expect(
-      buildReverseProxyOverride("assets", parseReverseProxyPrefix("www.brand.com/locations"))
-    ).toEqual({
-      reverseProxyPrefix: "www.brand.com/locations",
-      assetsDir: "locations/assets",
-      dynamicRoute: {
-        from: "/assets/*",
-        to: "/locations/assets/:splat",
-        status: 200,
-      },
-    });
-  });
-
-  it("supports nested subpaths", () => {
-    expect(
-      buildReverseProxyOverride("assets", parseReverseProxyPrefix("www.brand.com/foo/bar"))
-    ).toEqual({
-      reverseProxyPrefix: "www.brand.com/foo/bar",
-      assetsDir: "foo/bar/assets",
-      dynamicRoute: {
-        from: "/assets/*",
-        to: "/foo/bar/assets/:splat",
-        status: 200,
-      },
-    });
-  });
-
-  it("uses the provided assets path", () => {
-    expect(
-      buildReverseProxyOverride("static", parseReverseProxyPrefix("www.brand.com/locations"))
-    ).toEqual({
-      reverseProxyPrefix: "www.brand.com/locations",
-      assetsDir: "locations/static",
-      dynamicRoute: {
-        from: "/static/*",
-        to: "/locations/static/:splat",
-        status: 200,
-      },
-    });
-  });
-});
+import { ProjectStructure } from "./structure.js";
 
 describe("ProjectStructure.getViteConfigPath", () => {
   const previousCwd = process.cwd();
@@ -183,6 +79,26 @@ describe("ProjectStructure.init", () => {
 
       expect(projectStructure.config.subfolders.assets).toBe("assets");
       expect(projectStructure.config.subfolders.public).toBe("public");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("preserves configured paths when no vite config exists", async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-project-structure-"));
+
+    try {
+      process.chdir(tempDir);
+
+      const projectStructure = await ProjectStructure.init({
+        subfolders: {
+          assets: "custom-assets",
+          public: "custom-public",
+        },
+      });
+
+      expect(projectStructure.config.subfolders.assets).toBe("custom-assets");
+      expect(projectStructure.config.subfolders.public).toBe("custom-public");
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

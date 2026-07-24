@@ -2,12 +2,15 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import YAML from "yaml";
+import { ProjectStructure } from "../common/src/project/structure.js";
 import {
+  applyReverseProxy,
   buildReverseProxyOverride,
   parseReverseProxyPrefix,
-  ProjectStructure,
-} from "../common/src/project/structure.js";
-import { applyReverseProxy, updateConfigYaml, updateViteConfig } from "./applyReverseProxy.js";
+  updateConfigYaml,
+  updateViteConfig,
+} from "./applyReverseProxy.js";
 
 const buildDefaultReverseProxyOverride = (reverseProxyPrefix: string) =>
   buildReverseProxyOverride("assets", parseReverseProxyPrefix(reverseProxyPrefix));
@@ -15,6 +18,106 @@ const buildDefaultReverseProxyOverride = (reverseProxyPrefix: string) =>
 const writeEsmPackageJson = (directory: string) => {
   fs.writeFileSync(path.join(directory, "package.json"), '{"type":"module"}\n');
 };
+
+describe("parseReverseProxyPrefix", () => {
+  it("trims the prefix and normalizes the subpath", () => {
+    expect(parseReverseProxyPrefix("  www.brand.com/foo//bar/  ")).toEqual({
+      reverseProxyPrefix: "www.brand.com/foo//bar/",
+      subpath: "foo/bar",
+    });
+  });
+
+  it("decodes percent-encoded path segments", () => {
+    expect(parseReverseProxyPrefix("www.brand.com/%6Cocations")).toEqual({
+      reverseProxyPrefix: "www.brand.com/%6Cocations",
+      subpath: "locations",
+    });
+  });
+
+  it.each([
+    {
+      name: "a protocol",
+      reverseProxyPrefix: "https://www.brand.com/locations",
+      expectedError: /Do not include a protocol/,
+    },
+    {
+      name: "no subpath separator",
+      reverseProxyPrefix: "www.brand.com",
+      expectedError: /Expected a host and subpath/,
+    },
+    {
+      name: "no host",
+      reverseProxyPrefix: "/locations",
+      expectedError: /Expected a host and subpath/,
+    },
+    {
+      name: "an empty value",
+      reverseProxyPrefix: "",
+      expectedError: /Expected a host and subpath/,
+    },
+    {
+      name: "an empty subpath",
+      reverseProxyPrefix: "www.brand.com/",
+      expectedError: /Expected a non-empty subpath/,
+    },
+    {
+      name: "invalid percent-encoding",
+      reverseProxyPrefix: "www.brand.com/%ZZ",
+      expectedError: /Expected valid percent-encoding/,
+    },
+    {
+      name: "invalid subpath characters",
+      reverseProxyPrefix: "www.brand.com/location name",
+      expectedError: /Expected the subpath to contain only/,
+    },
+  ])("rejects a prefix with $name", ({ reverseProxyPrefix, expectedError }) => {
+    expect(() => parseReverseProxyPrefix(reverseProxyPrefix)).toThrow(expectedError);
+  });
+});
+
+describe("buildReverseProxyOverride", () => {
+  it("returns the derived override values", () => {
+    expect(
+      buildReverseProxyOverride("assets", parseReverseProxyPrefix("www.brand.com/locations"))
+    ).toEqual({
+      reverseProxyPrefix: "www.brand.com/locations",
+      assetsDir: "locations/assets",
+      dynamicRoute: {
+        from: "/assets/*",
+        to: "/locations/assets/:splat",
+        status: 200,
+      },
+    });
+  });
+
+  it("supports nested subpaths", () => {
+    expect(
+      buildReverseProxyOverride("assets", parseReverseProxyPrefix("www.brand.com/foo/bar"))
+    ).toEqual({
+      reverseProxyPrefix: "www.brand.com/foo/bar",
+      assetsDir: "foo/bar/assets",
+      dynamicRoute: {
+        from: "/assets/*",
+        to: "/foo/bar/assets/:splat",
+        status: 200,
+      },
+    });
+  });
+
+  it("uses the provided assets path", () => {
+    expect(
+      buildReverseProxyOverride("static", parseReverseProxyPrefix("www.brand.com/locations"))
+    ).toEqual({
+      reverseProxyPrefix: "www.brand.com/locations",
+      assetsDir: "locations/static",
+      dynamicRoute: {
+        from: "/static/*",
+        to: "/locations/static/:splat",
+        status: 200,
+      },
+    });
+  });
+});
 
 describe("updateConfigYaml", () => {
   it("overwrites reverse proxy values and preserves unrelated config", () => {
@@ -318,6 +421,80 @@ describe("applyReverseProxy", () => {
 
       expect(projectStructure.config.subfolders.assets).toBe("locations/static");
       expect(projectStructure.config.subfolders.public).toBe("custom-public");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("initializes config-side plugins after assetsDir is prefixed", async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
+
+    try {
+      writeEsmPackageJson(tempDir);
+      fs.writeFileSync(path.join(tempDir, "config.yaml"), "{}\n");
+      fs.writeFileSync(
+        path.join(tempDir, "plugin.js"),
+        `import fs from "node:fs";
+
+export const plugin = () => {
+  const viteConfig = fs.readFileSync(new URL("./vite.config.js", import.meta.url), "utf-8");
+  if (!viteConfig.includes('assetsDir: "locations/assets"')) {
+    throw new Error("plugin initialized before reverse proxy override");
+  }
+  return {};
+};
+`
+      );
+      fs.writeFileSync(
+        path.join(tempDir, "vite.config.js"),
+        `import { plugin } from "./plugin.js";
+
+export default {
+  plugins: [plugin()],
+  build: {
+    assetsDir: "assets"
+  }
+};
+`
+      );
+      process.chdir(tempDir);
+
+      await applyReverseProxy(undefined, parseReverseProxyPrefix("www.brand.com/locations"));
+      const projectStructure = await ProjectStructure.init();
+
+      expect(projectStructure.config.subfolders.assets).toBe("locations/assets");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("does not duplicate the assets prefix or route on repeated runs", async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
+
+    try {
+      writeEsmPackageJson(tempDir);
+      fs.writeFileSync(path.join(tempDir, "config.yaml"), "{}\n");
+      fs.writeFileSync(
+        path.join(tempDir, "vite.config.js"),
+        'export default { build: { assetsDir: "static" } };\n'
+      );
+      process.chdir(tempDir);
+
+      const parsedReverseProxyPrefix = parseReverseProxyPrefix("www.brand.com/locations");
+      await applyReverseProxy(undefined, parsedReverseProxyPrefix);
+      await applyReverseProxy(undefined, parsedReverseProxyPrefix);
+
+      expect(fs.readFileSync(path.join(tempDir, "vite.config.js"), "utf-8")).toContain(
+        'assetsDir: "locations/static"'
+      );
+      const configYaml = YAML.parse(fs.readFileSync(path.join(tempDir, "config.yaml"), "utf-8"));
+      expect(configYaml.dynamicRoutes).toEqual([
+        {
+          from: "/static/*",
+          to: "/locations/static/:splat",
+          status: 200,
+        },
+      ]);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }

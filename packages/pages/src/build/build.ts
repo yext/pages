@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { build } from "vite";
-import { parseReverseProxyPrefix, ProjectStructure } from "../common/src/project/structure.js";
-import { applyReverseProxy } from "../util/applyReverseProxy.js";
+import { ProjectStructure } from "../common/src/project/structure.js";
+import { applyReverseProxy, parseReverseProxyPrefix } from "../util/applyReverseProxy.js";
 
 /**
  * The arguments passed to the build CLI command.
