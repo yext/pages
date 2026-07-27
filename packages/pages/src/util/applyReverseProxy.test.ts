@@ -13,13 +13,17 @@ import {
 } from "./applyReverseProxy.js";
 
 const buildDefaultReverseProxyOverride = (reverseProxyPrefix: string) =>
-  buildReverseProxyOverride("assets", parseReverseProxyPrefix(reverseProxyPrefix));
+  buildReverseProxyOverride("assets", parseReverseProxyPrefix(reverseProxyPrefix)!);
 
 const writeEsmPackageJson = (directory: string) => {
   fs.writeFileSync(path.join(directory, "package.json"), '{"type":"module"}\n');
 };
 
 describe("parseReverseProxyPrefix", () => {
+  it("returns undefined when no prefix is provided", () => {
+    expect(parseReverseProxyPrefix(undefined)).toBeUndefined();
+  });
+
   it("trims the prefix and normalizes the subpath", () => {
     expect(parseReverseProxyPrefix("  www.brand.com/foo//bar/  ")).toEqual({
       reverseProxyPrefix: "www.brand.com/foo//bar/",
@@ -78,7 +82,7 @@ describe("parseReverseProxyPrefix", () => {
 describe("buildReverseProxyOverride", () => {
   it("returns the derived override values", () => {
     expect(
-      buildReverseProxyOverride("assets", parseReverseProxyPrefix("www.brand.com/locations"))
+      buildReverseProxyOverride("assets", parseReverseProxyPrefix("www.brand.com/locations")!)
     ).toEqual({
       reverseProxyPrefix: "www.brand.com/locations",
       assetsDir: "locations/assets",
@@ -92,7 +96,7 @@ describe("buildReverseProxyOverride", () => {
 
   it("supports nested subpaths", () => {
     expect(
-      buildReverseProxyOverride("assets", parseReverseProxyPrefix("www.brand.com/foo/bar"))
+      buildReverseProxyOverride("assets", parseReverseProxyPrefix("www.brand.com/foo/bar")!)
     ).toEqual({
       reverseProxyPrefix: "www.brand.com/foo/bar",
       assetsDir: "foo/bar/assets",
@@ -106,7 +110,7 @@ describe("buildReverseProxyOverride", () => {
 
   it("uses the provided assets path", () => {
     expect(
-      buildReverseProxyOverride("static", parseReverseProxyPrefix("www.brand.com/locations"))
+      buildReverseProxyOverride("static", parseReverseProxyPrefix("www.brand.com/locations")!)
     ).toEqual({
       reverseProxyPrefix: "www.brand.com/locations",
       assetsDir: "locations/static",

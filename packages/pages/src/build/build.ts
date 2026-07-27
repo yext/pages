@@ -19,8 +19,7 @@ export interface BuildArgs {
  */
 const handler = async (buildArgs: BuildArgs) => {
   const { scope, pluginFilesizeLimit, pluginTotalFilesizeLimit, reverseProxyPrefix } = buildArgs;
-  const parsedReverseProxyPrefix =
-    reverseProxyPrefix === undefined ? undefined : parseReverseProxyPrefix(reverseProxyPrefix);
+  const parsedReverseProxyPrefix = parseReverseProxyPrefix(reverseProxyPrefix);
 
   // Pass CLI arguments as env variables to use in vite-plugin
   if (scope) {

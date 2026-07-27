@@ -26,7 +26,13 @@ type ParsedReverseProxyPrefix = {
 /**
  * Validates and parses a reverse proxy prefix into its normalized value and subpath.
  */
-export const parseReverseProxyPrefix = (reverseProxyPrefix: string): ParsedReverseProxyPrefix => {
+export const parseReverseProxyPrefix = (
+  reverseProxyPrefix: string | undefined
+): ParsedReverseProxyPrefix | undefined => {
+  if (reverseProxyPrefix === undefined) {
+    return undefined;
+  }
+
   const trimmedReverseProxyPrefix = reverseProxyPrefix.trim();
   if (trimmedReverseProxyPrefix.includes("://")) {
     throw new Error(
@@ -102,7 +108,7 @@ export const buildReverseProxyOverride = (
  */
 export const applyReverseProxy = async (
   scope: string | undefined,
-  parsedReverseProxyPrefix: ReturnType<typeof parseReverseProxyPrefix> | undefined
+  parsedReverseProxyPrefix: ParsedReverseProxyPrefix | undefined
 ): Promise<void> => {
   if (!parsedReverseProxyPrefix) {
     return;
