@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { build } from "vite";
 import { ProjectStructure } from "../common/src/project/structure.js";
-import { applyReverseProxyOverride } from "../util/reverseProxyOverride.js";
+import { applyReverseProxy, parseReverseProxyPrefix } from "../util/applyReverseProxy.js";
 
 /**
  * The arguments passed to the build CLI command.
@@ -19,12 +19,7 @@ export interface BuildArgs {
  */
 const handler = async (buildArgs: BuildArgs) => {
   const { scope, pluginFilesizeLimit, pluginTotalFilesizeLimit, reverseProxyPrefix } = buildArgs;
-  const trimmedReverseProxyPrefix = reverseProxyPrefix?.trim();
-  const projectStructure = await ProjectStructure.init({ scope });
-
-  if (trimmedReverseProxyPrefix) {
-    applyReverseProxyOverride(projectStructure, trimmedReverseProxyPrefix);
-  }
+  const parsedReverseProxyPrefix = parseReverseProxyPrefix(reverseProxyPrefix);
 
   // Pass CLI arguments as env variables to use in vite-plugin
   if (scope) {
@@ -34,6 +29,9 @@ const handler = async (buildArgs: BuildArgs) => {
   process.env.YEXT_PAGES_PLUGIN_TOTAL_FILESIZE_LIMIT = String(
     pluginTotalFilesizeLimit
   );
+
+  await applyReverseProxy(scope, parsedReverseProxyPrefix);
+  const projectStructure = await ProjectStructure.init({ scope });
 
   await build({
     configFile: projectStructure.getViteConfigPath()?.getAbsolutePath(),

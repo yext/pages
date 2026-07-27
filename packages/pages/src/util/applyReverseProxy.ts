@@ -1,10 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
-import { Node, ObjectLiteralExpression, Project, SyntaxKind } from "ts-morph";
+import { Node, ObjectLiteralExpression, Project, SourceFile, SyntaxKind } from "ts-morph";
 import YAML from "yaml";
 import { ProjectStructure } from "../common/src/project/structure.js";
 import logger from "../vite-plugin/log.js";
 
+/**
+ * Build configuration derived from a reverse proxy prefix.
+ */
 type ReverseProxyOverride = {
   reverseProxyPrefix: string;
   assetsDir: string;
@@ -15,11 +18,21 @@ type ReverseProxyOverride = {
   };
 };
 
+type ParsedReverseProxyPrefix = {
+  reverseProxyPrefix: string;
+  subpath: string;
+};
+
 /**
- * Parses a reverse proxy prefix into the concrete build-time values needed to
- * update config.yaml and vite.config.js.
+ * Validates and parses a reverse proxy prefix into its normalized value and subpath.
  */
-export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReverseProxyOverride => {
+export const parseReverseProxyPrefix = (
+  reverseProxyPrefix: string | undefined
+): ParsedReverseProxyPrefix | undefined => {
+  if (reverseProxyPrefix === undefined) {
+    return undefined;
+  }
+
   const trimmedReverseProxyPrefix = reverseProxyPrefix.trim();
   if (trimmedReverseProxyPrefix.includes("://")) {
     throw new Error(
@@ -27,15 +40,14 @@ export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReversePr
     );
   }
 
-  if (!trimmedReverseProxyPrefix.includes("/")) {
+  const subpathSeparatorIndex = trimmedReverseProxyPrefix.indexOf("/");
+  if (subpathSeparatorIndex <= 0) {
     throw new Error(
       `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a host and subpath like "www.brand.com/locations".`
     );
   }
 
-  const subpathAfterHost = trimmedReverseProxyPrefix.substring(
-    trimmedReverseProxyPrefix.indexOf("/") + 1
-  );
+  const subpathAfterHost = trimmedReverseProxyPrefix.substring(subpathSeparatorIndex + 1);
   const normalizedPathSegments = subpathAfterHost
     .split("/")
     .filter(Boolean)
@@ -64,10 +76,27 @@ export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReversePr
 
   return {
     reverseProxyPrefix: trimmedReverseProxyPrefix,
-    assetsDir: `${subpath}/assets`,
+    subpath,
+  };
+};
+
+/**
+ * Parses a reverse proxy prefix into the concrete build-time
+ * values needed to initialize the project and update its configuration.
+ */
+export const buildReverseProxyOverride = (
+  originalAssetsPath: string,
+  parsedReverseProxyPrefix: ParsedReverseProxyPrefix
+): ReverseProxyOverride => {
+  const { subpath } = parsedReverseProxyPrefix;
+  const rppAssetsPath = `${subpath}/${originalAssetsPath}`;
+
+  return {
+    reverseProxyPrefix: parsedReverseProxyPrefix.reverseProxyPrefix,
+    assetsDir: rppAssetsPath,
     dynamicRoute: {
-      from: "/assets/*",
-      to: `/${subpath}/assets/:splat`,
+      from: `/${originalAssetsPath}/*`,
+      to: `/${rppAssetsPath}/:splat`,
       status: 200,
     },
   };
@@ -77,17 +106,20 @@ export const buildReverseProxyOverride = (reverseProxyPrefix: string): ReversePr
  * Updates the scoped config.yaml and vite.config.js files that the build will
  * read so the normal build pipeline picks up the reverse proxy override.
  */
-export const applyReverseProxyOverride = (
-  projectStructure: ProjectStructure,
-  reverseProxyPrefix: string
-): void => {
+export const applyReverseProxy = async (
+  scope: string | undefined,
+  parsedReverseProxyPrefix: ParsedReverseProxyPrefix | undefined
+): Promise<void> => {
+  if (!parsedReverseProxyPrefix) {
+    return;
+  }
+
+  const projectStructure = new ProjectStructure({ scope });
   const finisher = logger.timedLog({
     startLog: "Applying reverse proxy override",
   });
-  const reverseProxyOverride = buildReverseProxyOverride(reverseProxyPrefix);
   const configYamlPath = projectStructure.getConfigYamlPath().getAbsolutePath();
   const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath();
-  const scope = projectStructure.config.scope;
 
   if (!fs.existsSync(configYamlPath)) {
     throw new Error(`Cannot apply reverseProxyPrefix because ${configYamlPath} does not exist.`);
@@ -97,6 +129,23 @@ export const applyReverseProxyOverride = (
     throw new Error(`Cannot apply reverseProxyPrefix because ${viteConfigPath} does not exist.`);
   }
 
+  const configuredAssetsPath = readAssetsDirFromViteConfigSource(
+    projectStructure.config.subfolders.assets,
+    viteConfigPath
+  );
+  const existingReverseProxySubpath = readExistingReverseProxySubpath(configYamlPath);
+  const existingAssetsPathPrefix = existingReverseProxySubpath
+    ? `${existingReverseProxySubpath}/`
+    : undefined;
+  const originalAssetsPath =
+    existingAssetsPathPrefix && configuredAssetsPath.startsWith(existingAssetsPathPrefix)
+      ? configuredAssetsPath.slice(existingAssetsPathPrefix.length)
+      : configuredAssetsPath;
+  const reverseProxyOverride = buildReverseProxyOverride(
+    originalAssetsPath,
+    parsedReverseProxyPrefix
+  );
+
   updateConfigYaml(configYamlPath, reverseProxyOverride);
   updateViteConfig(viteConfigPath, reverseProxyOverride.assetsDir);
   finisher.succeed(
@@ -104,6 +153,66 @@ export const applyReverseProxyOverride = (
       ? `Applied reverse proxy override for ${scope}: ${reverseProxyOverride.reverseProxyPrefix}`
       : `Applied reverse proxy override: ${reverseProxyOverride.reverseProxyPrefix}`
   );
+};
+
+/**
+ * Determines build.assetsDir without executing the Vite config. Config-side
+ * plugin initialization must only run after the reverse proxy override is
+ * written.
+ */
+const readAssetsDirFromViteConfigSource = (
+  defaultAssetsDir: string,
+  viteConfigPath: string
+): string => {
+  const { configObject } = parseViteConfig(viteConfigPath);
+  const buildProperty = configObject.getProperty("build");
+  if (!buildProperty) {
+    return defaultAssetsDir;
+  }
+  if (!buildProperty.isKind(SyntaxKind.PropertyAssignment)) {
+    throw new Error(`Cannot update ${viteConfigPath}. Expected build to be a property assignment.`);
+  }
+
+  const buildObject = buildProperty.getInitializerIfKind(SyntaxKind.ObjectLiteralExpression);
+  if (!buildObject) {
+    throw new Error(`Cannot update ${viteConfigPath}. Expected build to be an object literal.`);
+  }
+
+  const assetsDirProperty = buildObject.getProperty("assetsDir");
+  if (!assetsDirProperty) {
+    return defaultAssetsDir;
+  }
+  if (!assetsDirProperty.isKind(SyntaxKind.PropertyAssignment)) {
+    throw new Error(
+      `Cannot update ${viteConfigPath}. Expected build.assetsDir to be a property assignment.`
+    );
+  }
+
+  const initializer = assetsDirProperty.getInitializer();
+  if (
+    initializer &&
+    (Node.isStringLiteral(initializer) || Node.isNoSubstitutionTemplateLiteral(initializer))
+  ) {
+    return initializer.getLiteralValue();
+  }
+
+  throw new Error(
+    `Cannot update ${viteConfigPath}. Expected build.assetsDir to be a string literal.`
+  );
+};
+
+const readExistingReverseProxySubpath = (configYamlPath: string): string | undefined => {
+  const configYamlDoc = parseConfigYaml(configYamlPath);
+  const reverseProxyPrefix = configYamlDoc.getIn(["serving", "reverseProxyPrefix"]);
+  if (typeof reverseProxyPrefix !== "string") {
+    return undefined;
+  }
+
+  try {
+    return parseReverseProxyPrefix(reverseProxyPrefix)?.subpath;
+  } catch {
+    return undefined;
+  }
 };
 
 /**
@@ -117,12 +226,7 @@ export const updateConfigYaml = (
   const finisher = logger.timedLog({
     startLog: "Updating config.yaml",
   });
-  const configYamlDoc = YAML.parseDocument(fs.readFileSync(configYamlPath, "utf-8"));
-  if (configYamlDoc.errors.length > 0) {
-    throw new Error(
-      `Cannot update ${configYamlPath}. Failed to parse config.yaml: ${configYamlDoc.errors[0]?.message}`
-    );
-  }
+  const configYamlDoc = parseConfigYaml(configYamlPath);
 
   if (!configYamlDoc.contents) {
     configYamlDoc.contents = YAML.parseDocument("{}").contents;
@@ -175,6 +279,16 @@ export const updateConfigYaml = (
   );
 };
 
+const parseConfigYaml = (configYamlPath: string) => {
+  const configYamlDoc = YAML.parseDocument(fs.readFileSync(configYamlPath, "utf-8"));
+  if (configYamlDoc.errors.length > 0) {
+    throw new Error(
+      `Failed to parse config.yaml at ${configYamlPath}: ${configYamlDoc.errors[0]?.message}`
+    );
+  }
+  return configYamlDoc;
+};
+
 /**
  * Updates vite.config.js in place so build.assetsDir matches the reverse proxy
  * asset path. The file must export a config object directly or via defineConfig.
@@ -183,35 +297,7 @@ export const updateViteConfig = (viteConfigPath: string, assetsDir: string): voi
   const finisher = logger.timedLog({
     startLog: "Updating vite.config.js",
   });
-  const project = new Project({
-    useInMemoryFileSystem: false,
-    skipAddingFilesFromTsConfig: true,
-  });
-  const sourceFile = project.addSourceFileAtPath(viteConfigPath);
-  const exportAssignment = sourceFile.getExportAssignment((value) => !value.isExportEquals());
-
-  if (!exportAssignment) {
-    throw new Error(
-      `Cannot update ${viteConfigPath}. Expected the file to export a Vite config object.`
-    );
-  }
-
-  const exportExpression = exportAssignment.getExpression();
-  let configObject: ObjectLiteralExpression | undefined;
-
-  if (Node.isCallExpression(exportExpression)) {
-    configObject = exportExpression.getArguments().find((argument) => {
-      return Node.isObjectLiteralExpression(argument);
-    }) as ObjectLiteralExpression | undefined;
-  } else if (Node.isObjectLiteralExpression(exportExpression)) {
-    configObject = exportExpression;
-  }
-
-  if (!configObject) {
-    throw new Error(
-      `Cannot update ${viteConfigPath}. Expected export default defineConfig({ ... }) or export default { ... }.`
-    );
-  }
+  const { sourceFile, configObject } = parseViteConfig(viteConfigPath);
 
   const buildProperty = configObject.getProperty("build");
   if (!buildProperty) {
@@ -249,4 +335,40 @@ export const updateViteConfig = (viteConfigPath: string, assetsDir: string): voi
   finisher.succeed(
     `Updated ${path.relative(process.cwd(), viteConfigPath) || "vite.config.js"} with build.assetsDir=${assetsDir}`
   );
+};
+
+const parseViteConfig = (
+  viteConfigPath: string
+): { sourceFile: SourceFile; configObject: ObjectLiteralExpression } => {
+  const project = new Project({
+    useInMemoryFileSystem: false,
+    skipAddingFilesFromTsConfig: true,
+  });
+  const sourceFile = project.addSourceFileAtPath(viteConfigPath);
+  const exportAssignment = sourceFile.getExportAssignment((value) => !value.isExportEquals());
+
+  if (!exportAssignment) {
+    throw new Error(
+      `Cannot update ${viteConfigPath}. Expected the file to export a Vite config object.`
+    );
+  }
+
+  const exportExpression = exportAssignment.getExpression();
+  let configObject: ObjectLiteralExpression | undefined;
+
+  if (Node.isCallExpression(exportExpression)) {
+    configObject = exportExpression.getArguments().find((argument) => {
+      return Node.isObjectLiteralExpression(argument);
+    }) as ObjectLiteralExpression | undefined;
+  } else if (Node.isObjectLiteralExpression(exportExpression)) {
+    configObject = exportExpression;
+  }
+
+  if (!configObject) {
+    throw new Error(
+      `Cannot update ${viteConfigPath}. Expected export default defineConfig({ ... }) or export default { ... }.`
+    );
+  }
+
+  return { sourceFile, configObject };
 };

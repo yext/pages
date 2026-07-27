@@ -19,6 +19,7 @@ describe("getAssetsFilepath - determineAssetsFilepath", () => {
       },
     };
 
+    vi.spyOn(importHelper, "versionedFileUrl").mockResolvedValue("versioned file path");
     const importSpy = vi.spyOn(importHelper, "import_");
     importSpy.mockImplementation(async () => viteConfig);
 

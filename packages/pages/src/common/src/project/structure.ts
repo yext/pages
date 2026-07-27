@@ -211,32 +211,29 @@ export class ProjectStructure {
   config: ProjectStructureConfig;
 
   constructor(config?: Optional<ProjectStructureConfig>) {
-    const mergedConfig = merge(defaultProjectStructureConfig, config);
+    const mergedConfig = merge({}, defaultProjectStructureConfig, config);
     this.config = mergedConfig;
   }
 
   static init = async (
     projectStructureConfig?: Optional<ProjectStructureConfig>
   ) => {
-    const config = merge(defaultProjectStructureConfig, projectStructureConfig);
-    const projectStructure = new ProjectStructure(config);
+    const projectStructure = new ProjectStructure(projectStructureConfig);
+    const config = projectStructure.config;
 
-    const viteConfigPath = projectStructure.getViteConfigPath()?.getAbsolutePath() ?? "";
+    const viteConfigPath =
+      projectStructure.getViteConfigPath()?.getAbsolutePath() ?? "";
 
     // TODO: handle other extensions
-    const assetsDir = await determineAssetsFilepath(
-      DEFAULT_ASSETS_DIR,
+    config.subfolders.assets = await determineAssetsFilepath(
+      config.subfolders.assets,
       viteConfigPath
     );
 
-    config.subfolders.assets = assetsDir;
-
-    const publicDir = await determinePublicFilepath(
-      DEFAULT_PUBLIC_DIR,
+    config.subfolders.public = await determinePublicFilepath(
+      config.subfolders.public,
       viteConfigPath
     );
-
-    config.subfolders.public = publicDir;
 
     return projectStructure;
   };
