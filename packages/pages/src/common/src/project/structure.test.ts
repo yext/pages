@@ -61,3 +61,46 @@ describe("ProjectStructure.getViteConfigPath", () => {
     }
   });
 });
+
+describe("ProjectStructure.init", () => {
+  const previousCwd = process.cwd();
+
+  afterEach(() => {
+    process.chdir(previousCwd);
+  });
+
+  it("uses the default paths when no vite config exists", async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-project-structure-"));
+
+    try {
+      process.chdir(tempDir);
+
+      const projectStructure = await ProjectStructure.init();
+
+      expect(projectStructure.config.subfolders.assets).toBe("assets");
+      expect(projectStructure.config.subfolders.public).toBe("public");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("preserves configured paths when no vite config exists", async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-project-structure-"));
+
+    try {
+      process.chdir(tempDir);
+
+      const projectStructure = await ProjectStructure.init({
+        subfolders: {
+          assets: "custom-assets",
+          public: "custom-public",
+        },
+      });
+
+      expect(projectStructure.config.subfolders.assets).toBe("custom-assets");
+      expect(projectStructure.config.subfolders.public).toBe("custom-public");
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+});

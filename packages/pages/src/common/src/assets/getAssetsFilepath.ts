@@ -1,6 +1,5 @@
-import { pathToFileURL } from "url";
 import { UserConfig } from "vite";
-import { import_ } from "./import.js";
+import { import_, versionedFileUrl } from "./import.js";
 
 /**
  * Determines the assets directory to use by checking
@@ -16,7 +15,7 @@ export const determineAssetsFilepath = async (
     return defaultAssetsDir;
   }
 
-  const viteConfig = await import_(pathToFileURL(viteConfigPath).toString());
+  const viteConfig = await import_(await versionedFileUrl(viteConfigPath));
   const userConfig = viteConfig.default as UserConfig;
 
   return userConfig.build?.assetsDir ?? defaultAssetsDir;
