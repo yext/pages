@@ -504,6 +504,42 @@ export default {
     }
   });
 
+  it("replaces the existing assets prefix when the reverse proxy prefix changes", async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
+
+    try {
+      writeEsmPackageJson(tempDir);
+      fs.writeFileSync(path.join(tempDir, "config.yaml"), "{}\n");
+      fs.writeFileSync(
+        path.join(tempDir, "vite.config.js"),
+        'export default { build: { assetsDir: "static" } };\n'
+      );
+      process.chdir(tempDir);
+
+      await applyReverseProxy(undefined, parseReverseProxyPrefix("www.brand.com/locations"));
+      await applyReverseProxy(undefined, parseReverseProxyPrefix("www.brand.com/stores"));
+
+      expect(fs.readFileSync(path.join(tempDir, "vite.config.js"), "utf-8")).toContain(
+        'assetsDir: "stores/static"'
+      );
+      const configYaml = YAML.parse(fs.readFileSync(path.join(tempDir, "config.yaml"), "utf-8"));
+      expect(configYaml).toMatchObject({
+        serving: {
+          reverseProxyPrefix: "www.brand.com/stores",
+        },
+        dynamicRoutes: [
+          {
+            from: "/static/*",
+            to: "/stores/static/:splat",
+            status: 200,
+          },
+        ],
+      });
+    } finally {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   it("fails clearly when a scoped config yaml is missing", async () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-build-override-"));
 

@@ -81,7 +81,7 @@ export const parseReverseProxyPrefix = (
 };
 
 /**
- * Validates and parses a reverse proxy prefix into the concrete build-time
+ * Parses a reverse proxy prefix into the concrete build-time
  * values needed to initialize the project and update its configuration.
  */
 export const buildReverseProxyOverride = (
@@ -133,10 +133,14 @@ export const applyReverseProxy = async (
     projectStructure.config.subfolders.assets,
     viteConfigPath
   );
-  const assetsPathPrefix = `${parsedReverseProxyPrefix.subpath}/`;
-  const originalAssetsPath = configuredAssetsPath.startsWith(assetsPathPrefix)
-    ? configuredAssetsPath.slice(assetsPathPrefix.length)
-    : configuredAssetsPath;
+  const existingReverseProxySubpath = readExistingReverseProxySubpath(configYamlPath);
+  const existingAssetsPathPrefix = existingReverseProxySubpath
+    ? `${existingReverseProxySubpath}/`
+    : undefined;
+  const originalAssetsPath =
+    existingAssetsPathPrefix && configuredAssetsPath.startsWith(existingAssetsPathPrefix)
+      ? configuredAssetsPath.slice(existingAssetsPathPrefix.length)
+      : configuredAssetsPath;
   const reverseProxyOverride = buildReverseProxyOverride(
     originalAssetsPath,
     parsedReverseProxyPrefix
@@ -197,6 +201,20 @@ const readAssetsDirFromViteConfigSource = (
   );
 };
 
+const readExistingReverseProxySubpath = (configYamlPath: string): string | undefined => {
+  const configYamlDoc = parseConfigYaml(configYamlPath);
+  const reverseProxyPrefix = configYamlDoc.getIn(["serving", "reverseProxyPrefix"]);
+  if (typeof reverseProxyPrefix !== "string") {
+    return undefined;
+  }
+
+  try {
+    return parseReverseProxyPrefix(reverseProxyPrefix)?.subpath;
+  } catch {
+    return undefined;
+  }
+};
+
 /**
  * Updates config.yaml in place with the provided reverse proxy serving settings.
  * Existing unrelated config fields and routes are preserved.
@@ -208,12 +226,7 @@ export const updateConfigYaml = (
   const finisher = logger.timedLog({
     startLog: "Updating config.yaml",
   });
-  const configYamlDoc = YAML.parseDocument(fs.readFileSync(configYamlPath, "utf-8"));
-  if (configYamlDoc.errors.length > 0) {
-    throw new Error(
-      `Cannot update ${configYamlPath}. Failed to parse config.yaml: ${configYamlDoc.errors[0]?.message}`
-    );
-  }
+  const configYamlDoc = parseConfigYaml(configYamlPath);
 
   if (!configYamlDoc.contents) {
     configYamlDoc.contents = YAML.parseDocument("{}").contents;
@@ -264,6 +277,16 @@ export const updateConfigYaml = (
   finisher.succeed(
     `Updated ${path.relative(process.cwd(), configYamlPath) || "config.yaml"} for ${reverseProxyOverride.reverseProxyPrefix}`
   );
+};
+
+const parseConfigYaml = (configYamlPath: string) => {
+  const configYamlDoc = YAML.parseDocument(fs.readFileSync(configYamlPath, "utf-8"));
+  if (configYamlDoc.errors.length > 0) {
+    throw new Error(
+      `Failed to parse config.yaml at ${configYamlPath}: ${configYamlDoc.errors[0]?.message}`
+    );
+  }
+  return configYamlDoc;
 };
 
 /**
