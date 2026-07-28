@@ -1,18 +1,3 @@
-#### 1.3.2 (2026-07-28)
-
-##### Chores
-
-*  restrict secrets in playwright github action ([#623](https://github.com/yext/pages/pull/623)) ([8e0a605a](https://github.com/yext/pages/commit/8e0a605ad72d8021b32c16311be8ea8b191fc521))
-*  adjust @types/node ([#620](https://github.com/yext/pages/pull/620)) ([bb480aac](https://github.com/yext/pages/commit/bb480aac628e2ec3f9ffb9321e6b8ada99709ecd))
-*  ensure vite's dev server is loopback bound ([#619](https://github.com/yext/pages/pull/619)) ([b207d149](https://github.com/yext/pages/commit/b207d149efc52293d49fa4929cf4d42f17a7fe5f))
-*  update esbuild ([#618](https://github.com/yext/pages/pull/618)) ([016d4e4e](https://github.com/yext/pages/commit/016d4e4ec54d81f7e3b2ac279d25b3412b561552))
-
-##### Bug Fixes
-
-*  make getFileContentHash sync ([#626](https://github.com/yext/pages/pull/626)) ([040fc361](https://github.com/yext/pages/commit/040fc3612cbef5a4c84ce329387978d4f771888f))
-*  use createHash instead of globalThis webcrypto ([#625](https://github.com/yext/pages/pull/625)) ([9cfc7922](https://github.com/yext/pages/commit/9cfc79228ce9229593ade65cdaff5c46c59dc3b1))
-*  apply reverse proxy prefix to config ([#624](https://github.com/yext/pages/pull/624)) ([15f04de5](https://github.com/yext/pages/commit/15f04de525e31570a27eb12a58026d01d9d810ee))
-
 #### 1.3.1 (2026-06-25)
 
 ##### New Features
