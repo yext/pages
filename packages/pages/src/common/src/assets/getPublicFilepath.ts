@@ -14,7 +14,7 @@ export const determinePublicFilepath = async (
     return defaultPublicDir;
   }
 
-  const viteConfig = await import_(await versionedFileUrl(viteConfigPath));
+  const viteConfig = await import_(versionedFileUrl(viteConfigPath));
   const userConfig = viteConfig.default as UserConfig;
 
   return userConfig.publicDir || defaultPublicDir;

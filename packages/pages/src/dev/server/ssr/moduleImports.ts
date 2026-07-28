@@ -13,7 +13,7 @@ export async function importFresh<T>(
   devserver: ViteDevServer,
   modulePath: string
 ): Promise<T> {
-  const contentHash = await getFileContentHash(modulePath);
+  const contentHash = getFileContentHash(modulePath);
   const cacheBustingModulePath = `${modulePath}?update=${contentHash}`;
   return (await devserver.ssrLoadModule(cacheBustingModulePath)) as T;
 }

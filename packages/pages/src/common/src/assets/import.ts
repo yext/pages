@@ -4,9 +4,9 @@ import { getFileContentHash } from "../../../util/fileContentHash.js";
 /**
  * Returns a file URL versioned with a stable hash of its contents.
  */
-export const versionedFileUrl = async (filepath: string): Promise<string> => {
+export const versionedFileUrl = (filepath: string): string => {
   const moduleUrl = pathToFileURL(filepath);
-  moduleUrl.searchParams.set("contentHash", await getFileContentHash(filepath));
+  moduleUrl.searchParams.set("contentHash", getFileContentHash(filepath));
   return moduleUrl.href;
 };
 
