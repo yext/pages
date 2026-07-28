@@ -16,14 +16,14 @@ describe("getFileContentHash", () => {
       contents: Buffer.from([0x66, 0x80, 0x6f]),
       expectedHash: "edb3d848684a3437ea1944dd1361b87aa07f7dbefbf5498b83d85875f50f0444",
     },
-  ])("hashes the raw bytes for $name contents", async ({ contents, expectedHash }) => {
+  ])("hashes the raw bytes for $name contents", ({ contents, expectedHash }) => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "pages-file-content-hash-"));
     const filepath = path.join(tempDir, "contents");
 
     try {
       fs.writeFileSync(filepath, contents);
 
-      await expect(getFileContentHash(filepath)).resolves.toBe(expectedHash);
+      expect(getFileContentHash(filepath)).toBe(expectedHash);
     } finally {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
