@@ -11,11 +11,11 @@ describe("versionedFileUrl", () => {
 
     try {
       fs.writeFileSync(modulePath, 'export default { value: "first" };\n');
-      const firstUrl = await versionedFileUrl(modulePath);
+      const firstUrl = versionedFileUrl(modulePath);
       expect((await import_(firstUrl)).default.value).toBe("first");
 
       fs.writeFileSync(modulePath, 'export default { value: "second" };\n');
-      const secondUrl = await versionedFileUrl(modulePath);
+      const secondUrl = versionedFileUrl(modulePath);
       expect(secondUrl).not.toBe(firstUrl);
       expect((await import_(secondUrl)).default.value).toBe("second");
     } finally {
