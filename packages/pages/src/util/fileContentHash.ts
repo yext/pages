@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 
 /**
@@ -5,6 +6,5 @@ import fs from "node:fs";
  */
 export const getFileContentHash = async (filepath: string): Promise<string> => {
   const contents = fs.readFileSync(filepath);
-  const digest = await globalThis.crypto.subtle.digest("SHA-256", contents);
-  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  return createHash("sha256").update(contents).digest("hex");
 };
