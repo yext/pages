@@ -20,8 +20,21 @@ const writeEsmPackageJson = (directory: string) => {
 };
 
 describe("parseReverseProxyPrefix", () => {
-  it("returns undefined when no prefix is provided", () => {
-    expect(parseReverseProxyPrefix(undefined)).toBeUndefined();
+  it.each([
+    {
+      name: "undefined",
+      reverseProxyPrefix: undefined,
+    },
+    {
+      name: "empty",
+      reverseProxyPrefix: "",
+    },
+    {
+      name: "whitespace-only",
+      reverseProxyPrefix: "   ",
+    },
+  ])("returns undefined when the prefix is $name", ({ reverseProxyPrefix }) => {
+    expect(parseReverseProxyPrefix(reverseProxyPrefix)).toBeUndefined();
   });
 
   it("trims the prefix and normalizes the subpath", () => {
@@ -52,11 +65,6 @@ describe("parseReverseProxyPrefix", () => {
     {
       name: "no host",
       reverseProxyPrefix: "/locations",
-      expectedError: /Expected a host and subpath/,
-    },
-    {
-      name: "an empty value",
-      reverseProxyPrefix: "",
       expectedError: /Expected a host and subpath/,
     },
     {

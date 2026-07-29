@@ -34,6 +34,10 @@ export const parseReverseProxyPrefix = (
   }
 
   const trimmedReverseProxyPrefix = reverseProxyPrefix.trim();
+  if (!trimmedReverseProxyPrefix) {
+    return undefined;
+  }
+
   if (trimmedReverseProxyPrefix.includes("://")) {
     throw new Error(
       `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Do not include a protocol. Expected a host and subpath like "www.brand.com/locations".`
