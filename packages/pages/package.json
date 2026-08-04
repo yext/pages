@@ -72,7 +72,7 @@
     "open": "^10.1.0",
     "ora": "^8.0.1",
     "picocolors": "^1.0.0",
-    "postcss": "^8.4.35",
+    "postcss": "^8.5.18",
     "postcss-nested": "^6.0.1",
     "pretty-ms": "^9.0.0",
     "prompts": "^2.4.2",
