@@ -11,7 +11,7 @@ import logger from "../vite-plugin/log.js";
 type ReverseProxyOverride = {
   reverseProxyPrefix: string;
   assetsDir: string;
-  dynamicRoute: {
+  dynamicRoute?: {
     from: string;
     to: string;
     status: number;
@@ -20,7 +20,7 @@ type ReverseProxyOverride = {
 
 type ParsedReverseProxyPrefix = {
   reverseProxyPrefix: string;
-  subpath: string;
+  subpath: string | undefined;
 };
 
 /**
@@ -40,18 +40,21 @@ export const parseReverseProxyPrefix = (
 
   if (trimmedReverseProxyPrefix.includes("://")) {
     throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Do not include a protocol. Expected a host and subpath like "www.brand.com/locations".`
+      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Do not include a protocol. Expected a host like "www.brand.com" or a host and subpath like "www.brand.com/locations".`
     );
   }
 
   const subpathSeparatorIndex = trimmedReverseProxyPrefix.indexOf("/");
-  if (subpathSeparatorIndex <= 0) {
+  if (subpathSeparatorIndex === 0) {
     throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a host and subpath like "www.brand.com/locations".`
+      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a host like "www.brand.com" or a host and subpath like "www.brand.com/locations".`
     );
   }
 
-  const subpathAfterHost = trimmedReverseProxyPrefix.substring(subpathSeparatorIndex + 1);
+  const subpathAfterHost =
+    subpathSeparatorIndex === -1
+      ? ""
+      : trimmedReverseProxyPrefix.substring(subpathSeparatorIndex + 1);
   const normalizedPathSegments = subpathAfterHost
     .split("/")
     .filter(Boolean)
@@ -65,12 +68,7 @@ export const parseReverseProxyPrefix = (
       }
     });
 
-  const subpath = normalizedPathSegments.join("/");
-  if (!subpath) {
-    throw new Error(
-      `Invalid reverseProxyPrefix "${reverseProxyPrefix}". Expected a non-empty subpath after the host.`
-    );
-  }
+  const subpath = normalizedPathSegments.join("/") || undefined;
 
   if (!normalizedPathSegments.every((segment) => /^[A-Za-z0-9_-]+$/.test(segment))) {
     throw new Error(
@@ -93,16 +91,18 @@ export const buildReverseProxyOverride = (
   parsedReverseProxyPrefix: ParsedReverseProxyPrefix
 ): ReverseProxyOverride => {
   const { subpath } = parsedReverseProxyPrefix;
-  const rppAssetsPath = `${subpath}/${originalAssetsPath}`;
+  const rppAssetsPath = subpath ? `${subpath}/${originalAssetsPath}` : originalAssetsPath;
 
   return {
     reverseProxyPrefix: parsedReverseProxyPrefix.reverseProxyPrefix,
     assetsDir: rppAssetsPath,
-    dynamicRoute: {
-      from: `/${originalAssetsPath}/*`,
-      to: `/${rppAssetsPath}/:splat`,
-      status: 200,
-    },
+    ...(subpath && {
+      dynamicRoute: {
+        from: `/${originalAssetsPath}/*`,
+        to: `/${rppAssetsPath}/:splat`,
+        status: 200,
+      },
+    }),
   };
 };
 
@@ -231,6 +231,15 @@ export const updateConfigYaml = (
     startLog: "Updating config.yaml",
   });
   const configYamlDoc = parseConfigYaml(configYamlPath);
+  const previousReverseProxyPrefix = configYamlDoc.getIn(["serving", "reverseProxyPrefix"]);
+  let previousSubpath: string | undefined;
+  if (typeof previousReverseProxyPrefix === "string") {
+    try {
+      previousSubpath = parseReverseProxyPrefix(previousReverseProxyPrefix)?.subpath;
+    } catch {
+      // An invalid previous prefix cannot identify a generated asset route.
+    }
+  }
 
   if (!configYamlDoc.contents) {
     configYamlDoc.contents = YAML.parseDocument("{}").contents;
@@ -252,28 +261,40 @@ export const updateConfigYaml = (
     );
   }
 
-  const routeToWrite = {
-    from: reverseProxyOverride.dynamicRoute.from,
-    to: reverseProxyOverride.dynamicRoute.to,
-    status: reverseProxyOverride.dynamicRoute.status,
-  };
+  const routeToWrite = reverseProxyOverride.dynamicRoute;
   const dynamicRoutesNode = configYamlDoc.get("dynamicRoutes", true);
   if (dynamicRoutesNode && !YAML.isSeq(dynamicRoutesNode)) {
     throw new Error(`Cannot update ${configYamlPath}. Expected dynamicRoutes to be a YAML list.`);
   }
 
-  if (!dynamicRoutesNode) {
+  if (!dynamicRoutesNode && routeToWrite) {
     configYamlDoc.set("dynamicRoutes", [routeToWrite]);
-  } else {
+  } else if (dynamicRoutesNode) {
     const dynamicRoutesSeq = dynamicRoutesNode as YAML.YAMLSeq<unknown>;
-    const reverseProxyRouteIndex = dynamicRoutesSeq.items.findIndex((routeNode: unknown) => {
-      return YAML.isMap(routeNode) && routeNode.get("from", true)?.toJSON() === routeToWrite.from;
-    });
+    if (routeToWrite) {
+      const reverseProxyRouteIndex = dynamicRoutesSeq.items.findIndex((routeNode: unknown) => {
+        return YAML.isMap(routeNode) && routeNode.get("from", true)?.toJSON() === routeToWrite.from;
+      });
 
-    if (reverseProxyRouteIndex === -1) {
-      dynamicRoutesSeq.add(routeToWrite);
-    } else {
-      dynamicRoutesSeq.set(reverseProxyRouteIndex, routeToWrite);
+      if (reverseProxyRouteIndex === -1) {
+        dynamicRoutesSeq.add(routeToWrite);
+      } else {
+        dynamicRoutesSeq.set(reverseProxyRouteIndex, routeToWrite);
+      }
+    } else if (previousSubpath) {
+      const previousRouteFrom = `/${reverseProxyOverride.assetsDir}/*`;
+      const previousRouteTo = `/${previousSubpath}/${reverseProxyOverride.assetsDir}/:splat`;
+      const previousRouteIndex = dynamicRoutesSeq.items.findIndex((routeNode: unknown) => {
+        return (
+          YAML.isMap(routeNode) &&
+          routeNode.get("from", true)?.toJSON() === previousRouteFrom &&
+          routeNode.get("to", true)?.toJSON() === previousRouteTo &&
+          routeNode.get("status", true)?.toJSON() === 200
+        );
+      });
+      if (previousRouteIndex !== -1) {
+        dynamicRoutesSeq.delete(previousRouteIndex);
+      }
     }
   }
 
