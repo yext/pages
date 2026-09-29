@@ -1,3 +1,9 @@
+#### 1.3.3 (2026-09-29)
+
+##### New Features
+
+*  make subpath optional for reverse proxy prefix ([#631](https://github.com/yext/pages/pull/631)) ([2c9e6abe](https://github.com/yext/pages/commit/2c9e6abeb963029df650e92f3f71bac9dd3ec4f3))
+
 #### 1.3.2 (2026-07-28)
 
 ##### Chores
