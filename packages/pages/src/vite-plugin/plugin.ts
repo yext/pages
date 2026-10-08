@@ -2,7 +2,7 @@ import { PluginOption, Plugin } from "vite";
 import { ProjectStructure } from "../common/src/project/structure.js";
 import { build } from "./build/build.js";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import { makeClientFiles, removeHydrationClientFiles } from "../common/src/template/client.js";
+import { clientHydration } from "./clientHydration.js";
 import fs from "node:fs";
 import path from "path";
 
@@ -16,7 +16,7 @@ const plugin = async (): Promise<PluginOption[]> => {
   const hasPublicAssets = fs.existsSync(projectStructure.config.subfolders.public);
 
   return [
-    clientHydration(projectStructure),
+    clientHydration(),
     build(projectStructure, pluginFilesizeLimit, pluginTotalFilesizeLimit),
     nodePolyfills({
       globals: {
@@ -26,33 +26,7 @@ const plugin = async (): Promise<PluginOption[]> => {
       },
     }),
     hasPublicAssets ? copyPublicAssets(projectStructure) : null,
-    cleanup(projectStructure),
   ];
-};
-
-const clientHydration = async (projectStructure: ProjectStructure): Promise<Plugin> => {
-  return {
-    name: "client-hydration:build",
-    apply: "build",
-    buildStart: {
-      sequential: true,
-      async handler() {
-        await makeClientFiles(projectStructure);
-      },
-    },
-  };
-};
-
-const cleanup = async (projectStructure: ProjectStructure): Promise<Plugin> => {
-  return {
-    name: "client-hydration:cleanup",
-    apply: "build",
-    closeBundle: {
-      handler() {
-        removeHydrationClientFiles(projectStructure);
-      },
-    },
-  };
 };
 
 const copyPublicAssets = async (projectStructure: ProjectStructure): Promise<Plugin> => {
@@ -66,28 +40,6 @@ const copyPublicAssets = async (projectStructure: ProjectStructure): Promise<Plu
     },
   };
 };
-
-// cleanup on interruption (ctrl + C)
-const handleCleanupAndExit = async () => {
-  try {
-    const projectStructure = await ProjectStructure.init({
-      scope: process.env.YEXT_PAGES_SCOPE,
-    });
-    await removeHydrationClientFiles(projectStructure);
-    process.exit(0);
-  } catch (error) {
-    console.error("Error during cleanup:", error);
-    process.exit(1);
-  }
-};
-
-process.on("SIGINT", () => {
-  void handleCleanupAndExit();
-});
-
-process.on("SIGTERM", () => {
-  void handleCleanupAndExit();
-});
 
 export default plugin;
 export { plugin as yextSSG };
