@@ -8,7 +8,8 @@ import { generateClientTemplate, getClientTemplateId } from "../common/src/templ
 import { discoverInputs } from "./build/buildStart/buildStart.js";
 import { clientHydration } from "./clientHydration.js";
 
-describe("virtual client hydration", () => {
+// Real Vite builds and ts-morph cold starts can exceed the default timeout on CI.
+describe("virtual client hydration", { timeout: 30_000 }, () => {
   const tempDirs: string[] = [];
 
   afterEach(() => {
