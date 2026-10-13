@@ -10,6 +10,7 @@ import { convertToPosixPath } from "../../../common/src/template/paths.js";
 import { getGlobalClientServerRenderTemplates } from "../../../common/src/template/internal/getTemplateFilepaths.js";
 import { readdir } from "fs/promises";
 import { NormalizedInputOptions } from "rollup";
+import { getClientTemplateId } from "../../../common/src/template/client.js";
 
 export default (projectStructure: ProjectStructure) => {
   return async function (
@@ -128,14 +129,14 @@ const yextBanner = `
  * {@link scopedTemplateDir} to be output at {@code server/}. If there are two files
  * that share the same name between the two provided template folders, only the file
  * in scoped template folder path is included. Also adds an additional entry-point
- * for all templates ending in tsx to be used to hydrate the bundle.
+ * for each template's virtual client module to be used to hydrate the bundle.
  *
  * @param templatePaths
  * @param redirectPaths
  * @param projectStructure
  * @returns
  */
-const discoverInputs = async (
+export const discoverInputs = async (
   templatePaths: Path[],
   redirectPaths: Path[],
   projectStructure: ProjectStructure
@@ -147,23 +148,28 @@ const discoverInputs = async (
       .map((file) => file.name)
       .filter(
         (f) =>
-          f !== "_client17.tsx" && f !== "_client.tsx" && f !== "_server.tsx"
+          f !== "_client17.tsx" &&
+          f !== "_client.tsx" &&
+          f !== "_server.tsx" &&
+          !f.includes(".client") &&
+          /\.(tsx|jsx|js|ts)$/.test(f)
       )
       .forEach((template) => {
         const parsedPath = parse(template);
         const bundlePath = isRedirect
           ? projectStructure.config.subfolders.redirectBundle
-          : template.includes(".client")
-            ? projectStructure.config.subfolders.clientBundle
-            : projectStructure.config.subfolders.serverBundle;
-        const outputPath = `${bundlePath}/${parsedPath.name.replace(
-          ".client",
-          ""
-        )}`;
+          : projectStructure.config.subfolders.serverBundle;
+        const outputPath = `${bundlePath}/${parsedPath.name}`;
         if (entryPoints[outputPath]) {
           return;
         }
-        entryPoints[outputPath] = path.join(dir, template);
+        const templatePath = path.join(dir, template);
+        entryPoints[outputPath] = templatePath;
+        if (!isRedirect) {
+          entryPoints[
+            `${projectStructure.config.subfolders.clientBundle}/${parsedPath.name}`
+          ] = getClientTemplateId(templatePath);
+        }
       });
 
   for (const templatePath of templatePaths) {
