@@ -1,3 +1,9 @@
+#### 1.3.4 (2026-10-13)
+
+##### New Features
+
+*  instead of making *.client.tsx files, use Vite's virtual files ([#632](https://github.com/yext/pages/pull/632)) ([5e1b4818](https://github.com/yext/pages/commit/5e1b481836385d086a492cf9147c29bf0c84edd6))
+
 #### 1.3.3 (2026-09-29)
 
 ##### New Features
