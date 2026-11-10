@@ -62,7 +62,7 @@
     "browser-or-node": "^2.1.1",
     "commander": "^12.1.0",
     "escape-html": "^1.0.3",
-    "express": "^4.18.3",
+    "express": "^4.22.3",
     "fs-extra": "^11.2.0",
     "get-port": "^7.0.0",
     "glob": "^11.0.3",
